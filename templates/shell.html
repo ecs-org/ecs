@@ -10,17 +10,11 @@
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
             {% compress css %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
-                 {% if use_textboxlist %}
-                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
-                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
-                {% endif %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/base.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/core.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/forms.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/readonly.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/icons.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/diff.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/meetings.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/communication.scss" />
@@ -34,9 +28,15 @@
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/submission.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/administration.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/boilerplate.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/field_history.scss" />
                 <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/autocomplete.scss" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL}}camera/camera.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
+                 {% if use_textboxlist %}
+                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
+                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                {% endif %}
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
             {% endcompress %}
         {% endblock %}         
         {% block jshead %}{% endblock %}

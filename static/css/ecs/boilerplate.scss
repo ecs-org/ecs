@@ -12,9 +12,9 @@
     position: absolute;
     width: 300px;
     height: auto;
-    left: 160px;
+    left: 140px;
     background: #fff;
-    border: 3px solid #B7D4E5;
+    border: 3px solid $mainnav-bg;
     z-index: 1000;
     
     a {
@@ -32,7 +32,7 @@
         
         &:hover {
             text-decoration: none;
-            background: #B7D4E5;
+            background: $mainnav-bg;
         }
     }
     
@@ -50,10 +50,10 @@
 }
 
 
-#content .boilerplate {
+#content div.boilerplate {
   margin: 20px 0;
   
-  h4{
+  h4 {
       display: inline-block;
       font-size: 16px;
   }
@@ -61,9 +61,7 @@
 
 .boilerplate_text {
   padding: 10px;
-  border: 1px solid #999;
+  border: 1px solid $light-grey;
   background: #fff;
   border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px
 }

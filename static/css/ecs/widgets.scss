@@ -1,14 +1,16 @@
+@import "ecs/variables.scss";
+
 .ecs-Popup {
     position: fixed;
     top: 200px;
     left: 300px;
     z-index: 2500000;
-    background-color: #ffffff;
-    border: 3px solid #B7D4E5;
-    -moz-border-radius: 10px;
+    background: #fff;
+    border: 3px solid $light-blue;
+    border-radius: 10px;
     padding: 10px;
     
-    h4{
+    h4 {
         font-size: 1em;
         letter-spacing: 1px;
     }
@@ -20,22 +22,12 @@
         margin-bottom: 0px;;
         -moz-border-radius: 7px 7px 0px 0px;
         padding: 2px;
-        background-color: #B7D4E5;
+        background: $light-blue;
         padding-left: 10px;
         
         & > a {
           color: #ffffff;
           
-          &.close {
-              background: url(/static/images/icons.png) 0 -192px no-repeat;
-              height: 16px;
-              width: 16px;
-              text-indent: -9999px;
-              display: block;
-              float: right;
-              margin-right: 10px;
-              cursor: pointer;
-          }
         }
     }
     

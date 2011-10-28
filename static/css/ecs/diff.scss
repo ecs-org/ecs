@@ -1,3 +1,14 @@
+@import "ecs/variables.scss";
+
+.field_history .change {
+  padding: 5px;
+  
+  .diff{
+      .inserted, .deleted{
+          display: inline;
+      }
+  }
+}
 
 ul.diff {
   list-style: none;
@@ -36,7 +47,7 @@ ul.diff {
         margin: 5px 10px 0;
         padding: 5px;
         background: #fff;
-        border: 1px dotted #cccccc;
+        border: 1px dotted $cold-grey;
         
         .title{
             display: inline-block;
@@ -63,22 +74,20 @@ ul.diff {
 #content .diff_toggles {
     margin-bottom: 10px;
 
-    a{
+    a {
         display: inline-block;
         padding: 3px 8px;
         margin: 10px 5px 10px 0;
-        background: #666;
+        background: $grey;
         text-align: center;
         font-size: 12px;
         clear: both;  
         color: #fff;
         border-radius: 3px;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
 
         &:hover{
             text-decoration: none;
-            background: #333;
+            background: $dark-grey;
         }
     }
 }

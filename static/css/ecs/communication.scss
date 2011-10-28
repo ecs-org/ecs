@@ -1,3 +1,4 @@
+@import "ecs/variables.scss";
 
 .message_display {
     display: block;
@@ -77,8 +78,8 @@
         right: 0px;
         top: 0;
         padding: 10px;
-        border-left: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+        border-left: 1px solid $cold-grey;
+        border-bottom: 1px solid $cold-grey;
         
         a {
             display: inline-block;
@@ -127,7 +128,7 @@
         }
         
         input, textarea{
-            border: 1px solid #999;
+            border: 1px solid $light-grey;
             padding: 2px;
         }
         
@@ -148,7 +149,7 @@
 .thread_list_choose,
 .messages_header .sort_options {
   margin-right: 10px;
-  background: #EFEFDD;
+  background: $middle-light-brown-bg;
   border-radius: 3px;
 }
 .thread_list_choose {
@@ -172,53 +173,13 @@
         clear: both;
         
         .threadstart {
-          border-top: 1px solid #cccccc;
+          border-top: 1px solid $cold-grey;
         }
     }
 }
 
 #content .messages th, #content .messages td {
   padding: 5px;
-}
-
-/* icons */
-
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send, .icon_in, .icon_out, .icon_pending {
-  display: inline-block;
-  text-indent: -9999px;
-  width: 16px;
-  height: 16px;
-  margin-right: 3px;
-}
-.icon_read {
-  background: url(/static/images/icons.png) -160px -128px no-repeat;
-}
-.icon_bump {
-  background: url(/static/images/icons.png) -240px -128px no-repeat;
-}
-.icon_answer {
-  background: url(/static/images/icons.png) -160px -64px no-repeat;
-}
-.icon_delegate {
-  background: url(/static/images/icons.png) -240px -208px no-repeat;
-}
-.icon_done {
-  background: url(/static/images/icons.png) -0 -160px no-repeat;
-}
-.icon_sort {
-  background: url(/static/images/icons.png) -240px -256px no-repeat;
-}
-.icon_send {
-  background: url(/static/images/icons.png) -160px -48px no-repeat;
-}
-.icon_in {
-  background: url(/static/images/icons.png) -240px -288px no-repeat;
-}
-.icon_out {
-  background: url(/static/images/icons.png) -240px -272px no-repeat;
-}
-.icon_pending {
-  background: url(/static/images/icons.png) 0 -672px no-repeat;
 }
 
 
@@ -232,70 +193,69 @@ ul.thread {
   margin: 20px 0px !important;
 }
 
-.thread > .message {
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  background: #fff;
-  border: 1px solid #999;
-  padding: 10px;
-  margin-bottom: 2px;
-}
-.thread > .message.collapsed {
-  border-radius-bottom-left: 0px;
-  border-radius-bottom-right: 0px;
-  -webkit-border-radius-bottom-left: 0px;
-  -webkit-border-radius-bottom-right: 0px;
-  -moz-border-radius-bottomleft: 0px;
-  -moz-border-radius-bottomright: 0px;
-  margin-bottom: -5px;
+.thread { 
+    .message {
+      border-radius: 5px;
+      background: #fff;
+      border: 1px solid $light-grey;
+      padding: 10px;
+      margin-bottom: 2px;
+      
+        .head {
+          border-bottom: 1px solid $light-grey;
+          cursor: pointer;
+          
+            .preview {
+              margin-left: 5px;
+              color: #777;
+              display: none;
+            }
+            
+            .time {
+              float: right;
+              color: #777;
+            }
+        }
+        
+        .body {
+          margin-top: 10px;
+          white-space: pre-wrap;
+          overflow: hidden;
+        }
+    }
+    
+    .message.collapsed {
+      border-radius-bottom-left: 0px;
+      border-radius-bottom-right: 0px;
+      margin-bottom: -5px;
+      
+        .head {
+          border: none;
+        }
+        
+        .preview {
+          display: inline;
+        }
+        
+        .body {
+          display: none;
+        }
+    }
 }
 
-/* head */
-
-.thread > .message > .head {
-  border-bottom: 1px solid #999;
-  cursor: pointer;
-}
-.thread > .message.collapsed > .head {
-    border: none;
-}
-.thread > .message > .head > .preview {
-  margin-left: 5px;
-  color: #777;
-}
-.thread > .message > .head > .time {
-  float: right;
-  color: #777;
-}
-.thread > .message > .head > .preview {
-  display: none;
-}
-.thread > .message.collapsed > .head > .preview {
-  display: inline;
-}
-
-/* body */
-
-.thread > .message > .body {
-  margin-top: 10px;
-  white-space: pre-wrap;
-  overflow: hidden;
-}
-.thread > .message.collapsed > .body {
-  display: none;
-}
-.communication_thread form.send {
-  margin: 20px 0px;
-}
-.communication_thread .expand_collapse {
-  float: right;
-  margin-top: -15px;
-}
-.communication_thread input[type=submit] {
-  margin-left: 74px;
-}
-.communication_thread label {
-  display: inline-block;
-  width: 60px;
+.communication_thread {
+    form.send {
+      margin: 20px 0px;
+    }
+    .expand_collapse {
+      float: right;
+      margin-top: -15px;
+    }
+    input[type=submit] {
+      margin-left: 74px;
+    }
+    label {
+      display: inline-block;
+      width: 60px;
+    }
 }

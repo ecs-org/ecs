@@ -1,13 +1,10 @@
+@import "ecs/variables.scss";
+
 @mixin field-list{
     display: inline-block;
     width: 100%;
     margin-bottom: 10px;
     list-style: none;
-}
-
-#content ol {
-    /* FIXME: is this necessary ? */
-    @include field-list;
 }
 
 .errorlist {
@@ -20,6 +17,7 @@
   background: #FAE5E3;
   border: 1px solid #F4CECB;
   border-radius: 3px;
+  max-width: 400px;
 }
 
 .form_main {
@@ -45,7 +43,7 @@
     }
     
     .paperform_number{
-        color: #666666;
+        color: $grey;
         font-size: 10px;
         
         &:before{
@@ -65,13 +63,13 @@
         background: #eee;
     }
     
-    ol{
+    ol {
         @include field-list;
-        li{
+        li {
             display: block;
             clear: both;
             
-            &.focus{
+            &.focus {
                 background-color: #eeeeff;
             }
             
@@ -86,23 +84,23 @@
             &.max40 input { width: 200px;}
             &.max60 input { width: 340px;}
 
-            label, input[type=text], input[type=file], textarea, select{
+            label, input[type=text], input[type=file], textarea, select {
                 float: left;
                 display: block;
                 margin-bottom: 10px;
             }
 
-            textarea{
+            textarea {
                 height: 40px;
             }
 
-            label{
+            label {
                 width: 220px;
                 padding: 0 10px;
                 text-align: right;
             }
             
-            th.label{
+            th.label {
                 text-align: left;
             }
             
@@ -112,7 +110,7 @@
             
             .notes {
                 font-size: 0.9em;
-                color: #666666;
+                color: $grey;
                 padding-left: 10px;
             }
             
@@ -120,11 +118,11 @@
                 margin: 0 0 3px 230px;
                 display: block;
                 clear: both;
-                color: #666;
+                color: $grey;
                 padding-left: 10px;
             }
             
-            &.BooleanField{
+            &.BooleanField {
                 padding-left: 240px;
                 
                 input{
@@ -150,167 +148,144 @@
                     height: 15px;
                     display: block;
                     clear: both;
-                    color: #666;
+                    color: $grey;
                 }
             }
         }
     }
     
-    table td li{
+    .star {
+      margin: 0 5px 0 3px;
+      font-size: 14px;
+      color: red;
+    }
+    
+    #id_start_1,
+    #id_deadline_1,
+    #id_deadline_diplomathesis_1 {
+      margin-left: 30px;
+    }
+    
+    textarea {
+    /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
+      width: 400px;
+    }
+    textarea#id_project_title, textarea#id_german_summary {
+      height: 90px;
+    }
+    
+    input#id_title {
+      width: 350px;
+    }
+    input[type=submit] {
+      margin: 10px 10px 10px 240px;
+    }
+    input[type=submit].hidden {
+      display: none;
+    }
+    
+    table td li {
         margin: 0px;
         float: none;
     }
-    
     th.label .notes {
       display: block;
     }
     
     ul.errorlist li {
-        margin-left: 220px;
-        margin-bottom: 5px;
-        color: red;
+      margin-left: 210px;
+      margin-bottom: 5px;
+      color: red;
+    }
+
+    .investigator_header {
+      position: relative;
+    }
+    
+    ul.investigator_list {
+      margin: 0 0 20px -5px !important;
+      
+        li {
+          display: inline-block;
+          margin: 2px;
+          line-height: 20px;
+          padding: 0px 5px;
+          border-radius: 3px;
+          border: 1px solid #bbb;
+          background-color: $readonly-navitem-bg;
+          
+            a {
+              text-decoration: none !important;
+              color: $dark-grey !important;
+            }
+            &.active {
+              background: $middle-light-brown-bg; 
+            }
+            &.errors {
+              border: 1px solid $red;
+              background-color: $navitem-error-red-bg;
+            }
+            &.errors a {
+              color: #fff !important;
+            }
+            &.errors.active {
+              background-color: $navitem-error-orange-bg;
+            }
+        }        
+    }
+    
+    table.inline_formset td ul.errorlist {
+      margin-left: 0px !important;
+      width: 100%;
+      
+        li {
+          margin-left: 0px;
+        }
     }
 }
 
+li.ModelChoiceField select {
+  width: 35em;
+}
+td.TypedChoiceField select {
+  width: 6em;
+}
+li.TypedChoiceField select {
+  min-width: 10em;
+  max-width: 22em;
+}
+li.NullBooleanField select {
+  width: 8em;
+}
+li.TypedChoiceField ul{
+  float: left;
+  
+    li label {
+      float: none;
+      margin-left: none;
+    }
+}
 
 .inline_formset .form {
   position: relative;
   margin-top: 20px;
 }
-#content .inline_formset td {
-	padding: 0;
-}
-.form ol {
-  margin: 10px;
-  list-style-type: none;
-}
-.form .notes {
-  margin: 0 5px;
-}
-tr.form td {
-  vertical-align: top;
-}
-.form_main .investigator .field a.delete_row,
-.inline_formset .form a.delete_row {
-  background: url(/static/images/icons.png) -240px -336px no-repeat;
-  height: 16px;
-  width: 20px;
-  display: inline-block;
-  overflow: hidden;
-  cursor: pointer;
-  text-indent: -9999px;
-  margin-left: -2px;
-}
-div.inline_formset .form a.delete_row {
-  display: block;
-  height: 20px;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-.form_main a.add_row, 
-#meeting_constraint_editor a.add_row {
-  background: url(/static/images/icons.png) -240px -320px no-repeat;
-  width: auto;
-  height: 16px;
-  /*display: inline-block;*/
-  overflow: visible;
-  cursor: pointer;
-  text-indent: -9999px;
-  padding-left: 20px;
-}
+
 table.inline_formset td {
   vertical-align: top;
 }
-.form_main table.inline_formset td ul.errorlist li {
-  margin-left: 0px;
-}
-#content .form_main table.inline_formset td ul.errorlist {
-  margin-left: 0px;
-  width: 100%;
-}
 
-#meeting_constraint_editor a.add_row {
-  margin-left: 2px;
+.form {
+    ol {
+      margin: 10px;
+      list-style-type: none;
+    }
+    .form .notes {
+      margin: 0 5px;
+    }
 }
-
-.form_main ul.investigator_list li a {
-    text-decoration: none;
-    color: #2b558e !important;
-}
-.form_main ul.investigator_list li.active a {
-    color: #e2eaf0 !important;
-}
-.form_main ul.investigator_list li a {
-    color: #333333 !important;
-}
-.form_main ul.investigator_list li.errors a {
-    color: #ffffff !important;
-}
-
-.form_main .investigator_header {
-  position: relative;
-}
-#content .form_main ul.investigator_list {
-  margin: 0 0 0 -5px;
-}
-.form_main ul.investigator_list li {
-  display: inline-block;
-  margin: 2px;
-  line-height: 20px;
-  padding: 0px 5px;
-  border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border: 1px solid #B7D4E5;
-  background-color: #e2eaf0;
-}
-#content .form_main ul.investigator_list li a:hover {
-  text-decoration: none;
-}
-
-.form_main ul.investigator_list li.active {
-  background-color: #2b558e;
-}
-.form_main ul.investigator_list li {
-  border: 1px solid #bbbbbb;
-  background-color: #dddac8;
-}
-.form_main ul.investigator_list li.active {
-  background-color: #f2f0e5;
-}
-.form_main ul.investigator_list li.errors {
-  border: 1px solid #ff0000;
-  background-color: #fb6464;
-}
-.form_main ul.investigator_list li.errors.active {
-  background-color: #ff8000;
-}
-.form_main .investigator_list_clear {
-  height: 20px;
-}
-.form_main .investigator_list a.add_centre,
-.form_main .investigator_header a.delete_row {
-  display: inline-block;
-  overflow: visible;
-  width: auto;
-  height: 16px;
-  text-indent: 0px;
-  margin-left: 0;
-  padding-left: 20px;
-  padding-right: 10px;
-  cursor: pointer;
-  line-height: 14px;
-}
-.form_main .investigator_list a.add_centre {
-  background: url(/static/images/icons.png) -240px -320px no-repeat;
-}
-.form_main .investigator_header a.delete_row {
-  background: url(/static/images/icons.png) -240px -336px no-repeat;
-  position: absolute;
-  top: 13px;
-  left: 150px;
-  padding: 0 5px 0 20px;
+tr.form td {
+  vertical-align: top;
 }
 
 fieldset.disabled {

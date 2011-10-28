@@ -1,3 +1,5 @@
+@import "ecs/variables.scss";
+
 .ecs-Autocomplete{
     position: relative;
     
@@ -9,7 +11,7 @@
         height: auto;
         z-index: 1000;
         color: #000;
-        background: #E8E8D8;
+        background: $middle-dark-brown-bg;
         border: 1px solid #B7B7B7;
         min-width: 300px;
         max-width: 500px;
@@ -17,11 +19,11 @@
         & > div {
             display: block;
             padding: 3px 5px;
-            color: #333;
+            color: $dark-grey;
             border-bottom: 1px solid #B7B7B7;
             
             &:hover, &.highlight{
-                background: #333;
+                background: $dark-grey;
                 color: #fff;
             }
         }

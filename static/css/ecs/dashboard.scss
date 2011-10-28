@@ -1,3 +1,4 @@
+@import "ecs/variables.scss";
 
 #dashboard {
     display: block;
@@ -21,12 +22,10 @@
 .dashboard_widget {
     display: block;
     float: left;
-    border: 1px solid #ebdfc3;
+    border: 1px solid $light-brown-border;
     padding: 10px;
-    background: #f8f8ef;
+    background: $light-brown-bg;
     border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
     margin: 0 10px 10px 0;
     width: 92%;
     min-width: 340px;
@@ -62,24 +61,16 @@
         }
     }
     
-    .submission_widget_list{
-        padding: 5px 10px;
+    .submission_widget_list li {
+        padding: 5px;
     }
     
     .messages_header {
         display: inline-block;
-        background: #EFEFDD;
+        background: $middle-light-brown-bg;
         border-radius: 3px;
         padding: 3px 5px !important;
         margin-bottom: 5px;
-    }
-    
-    .unread {
-        display: inline-block;
-        background: url(/static/images/icons.png) -160px -32px no-repeat;
-        width: 16px;
-        height: 16px;
-        margin-left: -20px;
     }
 
     .actions {

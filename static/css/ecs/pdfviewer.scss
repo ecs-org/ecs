@@ -1,37 +1,35 @@
-#pdfviewer_loading{
+@import "ecs/variables.scss";
+
+#pdfviewer_loading {
     background-color: #444;
     color: #fff;
     height: 1150px;
     width: 100%;
+    
+      .text{
+          padding-top: 100px;
+          width: 800px;
+          margin: auto;
+          text-align: left;
+          
+            img {
+                float: left;
+                margin-right: 10px;
+            }
+      }
 }
 
-#pdfviewer_loading .text{
-    padding-top: 100px;
-    width: 800px;
-    margin: auto;
-    text-align: left;
-}
-
-#pdfviewer_loading .text img{
-    float: left;
-    margin-right: 10px;
-}
-
-body.pdfviewer{
+body.pdfviewer {
     overflow: auto;
     background-color: #000;
     overflow-x: hidden;
     height: 100%;
     padding: 0px;
     margin: 0px;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
 }
 
-.selectable, input, textarea{
+body.pdfviewer,
+.selectable, input, textarea {
     -webkit-user-select: auto;
     -khtml-user-select: auto;
     -moz-user-select: auto;
@@ -39,520 +37,436 @@ body.pdfviewer{
     user-select: auto;
 }
 
-body.pdfviewer .hidden{
+body.pdfviewer .hidden {
     display: none;
 }
 
-#pdfviewer{
+#pdfviewer {
     margin: auto;
     width: 800px;
     position: relative;
     height: 100%;
-}
-
-#pdfviewer .header{
-    color: #000;
-    font-size: 15px;
-    line-height: 17px;
-    background-color: #ccd9e6;
-    text-shadow: #fff 1px 1px 0px;
-    box-shadow: 0px 1px 3px #999;
-    z-index: 200;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-
-    padding: 10px;
-    height: 34px;
-    width: 780px;
-}
-
-#pdfviewer .header .details{
-    font-size: 11px;
-    color: #666;
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-}
-
-#pdfviewer .header .location{
-    display: inline-block;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
-
-#pdfviewer .body{
-    border-top: 1px solid #fff;
-    position: relative;
-    background-color: #444;
-    height: 1150px;
-}
-
-#pdfviewer .clearfix{
-    height: 0px;
-    clear: both;
-}
-
-#pdfviewer .page{
-    float: left;
-    border: 1px solid transparent;
-    background-repeat: no-repeat;
-    position: relative;
-    overflow: visible;
-    background-color: #fff;
-}
-
-#pdfviewer .page.current{
-    border-color: #88bbdd;
-}
-
-#pdfviewer .page.current > .info{
-    display: block;
-    color: #88bbdd;
-}
-
-#pdfviewer .i1x1 .page.current{
-    border: none;
-}
-
-#pdfviewer .page.loading{
-    background-position: 45% 45%;
-    background-image: url(/static/images/loading_small.gif);
-}
-
-#pdfviewer .page > .info{
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 20px;
-    display: none;
-    text-align: center;
-    vertical-align: bottom;
-    z-index: 1;
-}
-
-#pdfviewer .page > .annotationOverlay{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #000066;
-    opacity: 0.1;
-    z-index: 10;
-}
-
-#pdfviewer .page > .annotationOverlay .ecs-DragDropFrameOverlay{
-    background-color: #ffff00;
-    border: 1px dashed #ff0000;
-    opacity: 1;
-}
-
-#pdfviewer .page:hover{
-    border: 1px dashed #ccd9e6;
-}
-
-#pdfviewer .page:hover > .info{
-    display: block;
-}
-
-#pdfviewer .screen.i1x1 .page > .info{
-    display: block;
-}
-
-#pdfviewer .viewport{
-    position: absolute;
-    left: 0px;
-    bottom: 0px;
-    height: 1150px;
-    width: 800px;
-    overflow: hidden;
-}
-
-#pdfviewer .viewport > div{
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 800px;
-    overflow: visible;
-}
-
-#pdfviewer a.next{
-    right: 0px;
-}
-#pdfviewer a.previous{
-    left: 0px;
-}
-
-#pdfviewer a.next, #pdfviewer a.previous{
-    display: block;
-    width: 60px;
-    height: 1150px;
-    position: absolute;
-    top: 0px;
-    z-index: 100;
-    overflow: hidden;
-    color: #ffffff;
-    opacity: 0.2;
-    font-size: 30px;
-}
-
-#pdfviewer a.next > b{
-    -moz-transform: rotate(90deg);
-}
-
-#pdfviewer a.previous > b{
-    -moz-transform: rotate(-90deg);
-}
-
-#pdfviewer a.next:hover, #pdfviewer a.previous:hover{
-    background-color: #ccd9e6;
-}
-
-body.touch #pdfviewer a.next:hover, #pdfviewer a.previous:hover{
-    background-color: transparent;
-}
-
-
-#pdfviewer .screen{
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    position: absolute;
-    top: 0px;
-    width: 800px;
-}
-
-#pdfviewer .screen .row{
-    float: left;
-    clear: both;
-}
-
-body.pdfviewer #navigation{
-    background-color: #222222;
-    -moz-border-radius: 10px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    margin-left: -270px;
-    margin-top: -170px;
-    width: 500px;
-    height: 300px;
-    padding: 20px;
-    opacity: 0.9;
-    color: #ffffff;
-    z-index: 10000;
-    font-size: 90%;
-}
-
-#pdfviewer .annotation{
-    position: absolute;
-    left: 0px;
-    overflow: visible;
-    width: 100%;
-    z-index: 20;
-}
-
-#pdfviewer .annotation > .overlay{
-    position: absolute;
-    background-color: #ffff00;
-    opacity: 0.2;
-    border: 1px solid transparent;
-}
-
-#pdfviewer .annotation:hover > .overlay{
-    border: 1px dotted #ff0000;
-    opacity: 0.3;
-}
-
-#pdfviewer .annotation > .overlay > .resizeHandle{
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    width: 10px;
-    height: 10px;
-    background-color: #ff0000;
-}
-
-#pdfviewer .annotation > .overlay > .dragHandle{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-#pdfviewer .annotation > .marker{
-    position: absolute;
-    left: 99%;
-    width: 8px;
-    height: 8px;
-    border: 2px solid #88bbdd;
-    background-color: #fff;
-    border-radius: 6px;
-    opacity: 0.5;
-    margin-left: -11px;
-}
-
-#pdfviewer .annotation.foreign > .overlay,
-#pdfviewer .annotation.foreign > .marker{
-    background-color: #00ffff;
-}
-
-#pdfviewer .annotation:hover > .text{
-    display: block;
-}
-
-body.pdfviewer .annotationDisplay{
-    position: fixed;
-    width: 300px;
-    height: 200px;
-    left: 50%;
-    top: 300px;
-    margin-left: -170px;
-    margin-top: -120px;
-    padding: 20px;
-    z-index: 1000;
-}
-body.pdfviewer .popup > .background{
-    position: absolute;
-    margin: -20px;
-    width: 100%;
-    height: 100%;
-    background-color: #222;
-    opacity: 0.9;
-    -moz-border-radius: 10px;
-    z-index: 1;
-}
-
-body.pdfviewer .annotationDisplay > .content{
-    width: 300px;
-    height: 200px;
-    position: absolute;
-    z-index: 2;
-}
-
-body.pdfviewer .annotationDisplay textarea{
-    width: 280px;
-    padding: 10px;
-    height: 150px;
-}
-
-body.pdfviewer .annotationDisplay.foreign textarea{
-    height: 130px;
-}
-
-body.pdfviewer .annotationDisplay .authorInfo{
-    display: none;
-    height: 18px;
-    background-color: #ffffff;
-    border: 1px solid #999999;
-    border-bottom: none;
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-top: 2px;
-    width: 280px;
-    font-size: 90%;
-    font-style: italic;
-}
-
-body.pdfviewer .annotationDisplay.foreign .authorInfo{
-    display: block;
-}
-
-body.pdfviewer .annotationDisplay a{
-    color: #99ddff;
-    border: 1px solid #666666;
-    display: inline-block;
-    width: 76px;
-    text-align: center;
-    margin-top: 5px;
-    padding: 5px 3px 5px 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 5px;
-}
-
-body.pdfviewer .annotationDisplay a + a{
-    margin-left: 24px;
-}
-
-body.pdfviewer .annotationDisplay a.close{
-    width: 30px;
-    text-align: right;
-}
-
-body.pdfviewer .annotationDisplay a:hover{
-    border-color: #99ddff;
-}
-
-body.pdfviewer .annotationDisplay a.next,
-body.pdfviewer .annotationDisplay a.previous{
-    position: absolute;
-    display: block;
-    top: 20px;
-    width: 20px;
-    height: 40px;
-    padding: 10px;
-    font-size: 20px;
-    background-color: #222;
-    border: none;
-    margin: 0px;
-}
-
-body.pdfviewer .annotationDisplay a.next:hover,
-body.pdfviewer .annotationDisplay a.previous:hover{
-    text-decoration: none;
-    color: #fff;
-    background-color: #000;
-}
-
-body.pdfviewer .annotationDisplay a.next{
-    right: -45px;
-}
-
-body.pdfviewer .annotationDisplay a.previous{
-    left: -45px;
-}
-
-
-body.pdfviewer .cover{
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 9000;
-}
-
-/* popups */
-body.pdfviewer .popup{
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-
-body.pdfviewer .popup > a.close{
-    position: absolute;
-    top: -10px;
-    right: 0px;
-    color: #ffffff;
-    z-index: 1000;
-    border: none;
-    font-size: 30px;
-    display: inline-block;
-}
-
-body.pdfviewer .popup > a.close:hover{
-    text-decoration: none;
-    color: #cc0000;
-}
-
-body.pdfviewer .popup span.label{
-    color: #ffffff;
-}
-
-/* search popup */
-body.pdfviewer .searchPopup{
-    width: 700px;
-    height: 400px;
-    margin-left: -370px;
-    margin-top: -200px;
-}
-body.pdfviewer .searchPopup > .content{
-    width: 700px;
-    height: 400px;
-}
-
-body.pdfviewer .searchPopup input{
-    font-size: 14px;
-    padding: 3px;
-    margin: 3px;
-    width: 590px;
-}
-body.pdfviewer .searchPopup .results{
-    color: #ccc;
-    margin: 3px;
-    font-size: 13px;
-    overflow: auto;
-    height: 360px;
-    clear: both;
-}
-
-body.pdfviewer .searchPopup .results div{
-    margin-bottom: 3px;
-    padding: 3px;
-}
-body.pdfviewer .searchPopup .results div:hover{
-    background-color: #000000;
-}
-
-body.pdfviewer .searchPopup .results .highlighted{
-    background-color: #000000;
-    color: #99ddff;
-}
-
-/*
-FIXME: unused?
-body.pdfviewer .slider{
-    width: 200px;
-    height: 8px;
-    background-color: #ffffff;
-    opacity: 0.9;
-}
-
-body.pdfviewer .slider .knob{
-    width: 8px;
-    height: 8px;
-    background-color: #cc0000;
-}
-*/
-
-body.pdfviewer .popup input{
-    background-color: #444;
-    border: 1px solid #666666;
-    display: inline-block;
-    -moz-box-shadow: none;
-    color: #fff;
-    -moz-border-radius: 3px;
-    letter-spacing: 1px;
-}
-
-body.pdfviewer .popup input:focus{
-    background-color: #000;
-}
-
-/* goto page popup */
-body.pdfviewer .popup.gotoPage input{
-    width: 60px;
-    margin-left: 10px;
-}
-
-body.pdfviewer .popup.gotoPage{
-    height: 30px;
-    width: 220px;
-    font-size: 15px;
-}
+    
+      .header {
+        color: #000;
+        font-size: 15px;
+        line-height: 17px;
+        background-color: #ccd9e6;
+        text-shadow: #fff 1px 1px 0px;
+        box-shadow: 0px 1px 3px $light-grey;
+        z-index: 200;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        padding: 10px;
+        height: 34px;
+        width: 780px;
+        
+        .details {
+            font-size: 11px;
+            color: $grey;
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+        }
+        .location {
+            display: inline-block;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+      }
+      .body {
+          border-top: 1px solid #fff;
+          position: relative;
+          background-color: #444;
+          height: 1150px;
+      }
+      .clearfix {
+          height: 0px;
+          clear: both;
+      }
+      .page {
+          float: left;
+          border: 1px solid transparent;
+          background-repeat: no-repeat;
+          position: relative;
+          overflow: visible;
+          background-color: #fff;
+          
+            .info {
+                position: absolute;
+                bottom: 0px;
+                width: 100%;
+                height: 20px;
+                display: none;
+                text-align: center;
+                vertical-align: bottom;
+                z-index: 1;
+            }
+            
+            .annotationOverlay {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: #000066;
+                opacity: 0.1;
+                z-index: 10;
+                
+                    .ecs-DragDropFrameOverlay{
+                        background-color: #ffff00;
+                        border: 1px dashed $red;
+                        opacity: 1;
+                    }
+            }
+            &:hover {
+                border: 1px dashed #ccd9e6;
+                
+                    .info{
+                        display: block;
+                    }
+            }
+      }
+      .page.current {
+          border-color: #88bbdd;
+          
+            .info {
+                display: block;
+                color: #88bbdd;
+            }
+      }
+      
+      .i1x1 .page.current{
+          border: none;
+      }
+      
+      .screen.i1x1 .page > .info{
+          display: block;
+      }
+      
+      .page.loading {
+          background-position: 45% 45%;
+          background-image: url(/static/images/loading_small.gif);
+      }
+      
+      .viewport {
+          position: absolute;
+          left: 0px;
+          bottom: 0px;
+          height: 1150px;
+          width: 800px;
+          overflow: hidden;
+          
+              div {
+                  position: absolute;
+                  left: 0px;
+                  top: 0px;
+                  width: 800px;
+                  overflow: visible;
+              }
+
+      }
+      a.next {
+          right: 0px;
+          
+               b {
+                  -moz-transform: rotate(90deg);
+              }
+
+      }
+      a.previous {
+          left: 0px;
+          
+              b {
+                  -moz-transform: rotate(-90deg);
+              }
+      }
+      
+      #pdfviewer .screen{
+          -moz-user-select: none;
+          -webkit-user-select: none;
+          user-select: none;
+          position: absolute;
+          top: 0px;
+          width: 800px;
+          
+            .row {
+                float: left;
+                clear: both;
+            }
+      }
+      .annotation{
+          position: absolute;
+          left: 0px;
+          overflow: visible;
+          width: 100%;
+          z-index: 20;
+          
+              &:hover .overlay {
+                  border: 1px dotted $red;
+                  opacity: 0.3;
+              }
+          
+              .overlay {
+                  position: absolute;
+                  background-color: #ffff00;
+                  opacity: 0.2;
+                  border: 1px solid transparent;
+                  
+                      .resizeHandle{
+                          position: absolute;
+                          bottom: 0px;
+                          right: 0px;
+                          width: 10px;
+                          height: 10px;
+                          background-color: $red;
+                      }
+                      
+                      .dragHandle {
+                          position: absolute;
+                          width: 100%;
+                          height: 100%;
+                      }
+              }
+              
+              .marker {
+                  position: absolute;
+                  left: 99%;
+                  width: 8px;
+                  height: 8px;
+                  border: 2px solid #88bbdd;
+                  background-color: #fff;
+                  border-radius: 6px;
+                  opacity: 0.5;
+                  margin-left: -11px;
+              }
+              &:hover .text {
+                  display: block;
+              }
+      }
+}
+
+body.pdfviewer {
+    #navigation {
+        background-color: #222222;
+        border-radius: 10px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-left: -270px;
+        margin-top: -170px;
+        width: 500px;
+        height: 300px;
+        padding: 20px;
+        opacity: 0.9;
+        color: #ffffff;
+        z-index: 10000;
+        font-size: 90%;
+    }
+    .annotationDisplay {
+        position: fixed;
+        width: 300px;
+        height: 200px;
+        left: 50%;
+        top: 300px;
+        margin-left: -170px;
+        margin-top: -120px;
+        padding: 20px;
+        z-index: 1000;
+        
+            .content {
+                width: 300px;
+                height: 200px;
+                position: absolute;
+                z-index: 2;
+            }
+            
+            textarea {
+                width: 280px;
+                padding: 10px;
+                height: 150px;
+            }
+            .authorInfo {
+                display: none;
+                height: 18px;
+                background-color: #ffffff;
+                border: 1px solid $light-grey;
+                border-bottom: none;
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-top: 2px;
+                width: 280px;
+                font-size: 90%;
+                font-style: italic;
+            }
+            a {
+                color: #99ddff;
+                border: 1px solid $grey;
+                display: inline-block;
+                width: 76px;
+                text-align: center;
+                margin-top: 5px;
+                padding: 5px 3px 5px 3px;
+                border-radius: 5px;
+                
+                    &.close {
+                        width: 30px;
+                        text-align: right;
+                    }
+                    &.next {
+                        right: -45px;
+                    }
+                    &.previous {
+                        left: -45px;
+                    }
+                    &:hover{
+                        border-color: #99ddff;
+                    }
+            }
+            a + a {
+                margin-left: 24px;
+            }
+
+    }
+    .annotationDisplay.foreign {
+          textarea {
+            height: 130px;
+          }
+          .authorInfo {
+              display: block;
+          }
+    }
+    
+    .popup .background {
+        position: absolute;
+        margin: -20px;
+        width: 100%;
+        height: 100%;
+        background-color: #222;
+        opacity: 0.9;
+        border-radius: 10px;
+        z-index: 1;
+    }
+
+    .cover {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 9000;
+    }
+    
+    .popup {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        
+            a.close {
+              position: absolute;
+              top: -10px;
+              right: 0px;
+              color: #ffffff;
+              z-index: 1000;
+              border: none;
+              font-size: 30px;
+              display: inline-block;
+              
+                  &:hover {
+                      text-decoration: none;
+                      color: #cc0000;
+                  }
+          }
+          span.label {
+              color: #ffffff;
+          }
+          .input {
+              background-color: #444;
+              border: 1px solid $grey;
+              display: inline-block;
+              box-shadow: none;
+              color: #fff;
+              border-radius: 3px;
+              letter-spacing: 1px;
+              
+                  &:focus{
+                      background-color: #000;
+                  }
+          }
+    }
+    
+    .searchPopup {
+        width: 700px;
+        height: 400px;
+        margin-left: -370px;
+        margin-top: -200px;
+        
+            .content{
+                width: 700px;
+                height: 400px;
+            }
+            input {
+                font-size: 14px;
+                padding: 3px;
+                margin: 3px;
+                width: 590px;
+            }
+            .results {
+                color: $cold-grey;
+                margin: 3px;
+                font-size: 13px;
+                overflow: auto;
+                height: 360px;
+                clear: both;
+                
+                    div {
+                        margin-bottom: 3px;
+                        padding: 3px;
+                        
+                            &:hover {
+                                background-color: #000000;
+                            }
+                    }
+                    .highlighted {
+                        background-color: #000000;
+                        color: #99ddff;
+                    }
+            }
+    }
+
+    .popup.gotoPage {
+        height: 30px;
+        width: 220px;
+        font-size: 15px;
+        
+            input {
+                width: 60px;
+                margin-left: 10px;
+            }
+            
+            input::-moz-selection {
+                background-color: #2E1428;
+            }
+    }
 
-body.pdfviewer .popup.gotoPage input::-moz-selection{
-    background-color: #2E1428;
 }
 
 /* menu popup */
 body.pdfviewer .popup.menu,
-body.pdfviewer .popup.menu > .content{
+body.pdfviewer .popup.menu > .content {
     width: 312px;
     height: 312px;
     /*margin-top: -156px;
     margin-left: -156px;*/
 }
-body.pdfviewer .popup.menu a.close{
+body.pdfviewer .popup.menu a.close {
     display: none;
 }
-body.pdfviewer .popup.menu a{
+body.pdfviewer .popup.menu a {
     float: left;
     display: block;
-
     width: 100px;
     height: 70px;
     padding: 0px;
     padding-top: 30px;
-
     font-size: 14px;
     background-color: #ccd9e6;
     text-align: center;
@@ -563,7 +477,7 @@ body.pdfviewer .popup.menu a{
     margin: 2px;
 }
 
-body.pdfviewer .popup.menu a:hover{
+body.pdfviewer .popup.menu a:hover {
     background-color: #C1CDDA;
     text-decoration: none;
 }
@@ -588,3 +502,63 @@ body.pdfviewer .touchStop{
     right: 0px;
     bottom: 0px;
 }
+
+#pdfviewer a.next,
+#pdfviewer a.previous {
+    display: block;
+    width: 60px;
+    height: 1150px;
+    position: absolute;
+    top: 0px;
+    z-index: 100;
+    overflow: hidden;
+    color: #ffffff;
+    opacity: 0.2;
+    font-size: 30px;
+}
+
+body.pdfviewer .annotationDisplay a.next,
+body.pdfviewer .annotationDisplay a.previous{
+    position: absolute;
+    display: block;
+    top: 20px;
+    width: 20px;
+    height: 40px;
+    padding: 10px;
+    font-size: 20px;
+    background-color: #222;
+    border: none;
+    margin: 0px;
+}
+
+body.pdfviewer .annotationDisplay a.next:hover,
+body.pdfviewer .annotationDisplay a.previous:hover{
+    text-decoration: none;
+    color: #fff;
+    background-color: #000;
+}
+#pdfviewer a.next:hover, #pdfviewer a.previous:hover{
+    background-color: #ccd9e6;
+}
+#pdfviewer .annotation.foreign > .overlay,
+#pdfviewer .annotation.foreign > .marker{
+    background-color: #00ffff;
+}
+body.touch #pdfviewer a.next:hover, #pdfviewer a.previous:hover{
+    background-color: transparent;
+}
+/*
+FIXME: unused?
+body.pdfviewer .slider{
+    width: 200px;
+    height: 8px;
+    background-color: #ffffff;
+    opacity: 0.9;
+}
+
+body.pdfviewer .slider .knob{
+    width: 8px;
+    height: 8px;
+    background-color: #cc0000;
+}
+*/

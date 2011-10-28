@@ -1,3 +1,5 @@
+@import "ecs/variables.scss";
+
 /* meeting list */
 
 #meeting_list ol {
@@ -12,6 +14,7 @@
 
 #experts_tab ol li {
     margin-bottom: 10px;
+    list-style: none;
 
     span {
         display: block;
@@ -41,7 +44,7 @@
             padding: 2px;
             
             li {
-                border-top: 1px solid #ccc;
+                border-top: 1px solid $cold-grey;
                 padding: 5px;
             }
         }
@@ -130,7 +133,7 @@
             padding: 5px;
             margin-right: 5px;
             width: 50px;
-            background-color: #B7D4E5;
+            background-color: $mainnav-bg;
             height: 70px;
             border-radius: 3px 0 0 3px;
             -moz-border-radius: 3px 0 0 3px;
@@ -159,7 +162,7 @@
         }
     }
     
-    .constraints_hurt, .waiting_time{
+    .constraints_hurt, .waiting_time {
         font-size: 12px;
         margin: 5px 0;
     }
@@ -228,7 +231,7 @@
         .user_list > span {
             margin-right: 0.5em;
             padding: 2px;
-            border: 1px solid #ccccff;
+            border: 1px solid $cold-greycff;
             background-color: #eeeeff;
         }
     }
@@ -239,7 +242,7 @@
 #meeting_constraint_editor {
     width: 800px;
 
-    form{
+    form {
         ol {
             margin: 0px;
             height: 50px;
@@ -275,6 +278,10 @@
             }
         }
     }
+    
+    a.add_row {
+      margin-left: 2px;
+    }
 }
 
 
@@ -284,7 +291,7 @@
   width: 800px;
   margin-top: 20px;
   
-  th{
+  th {
       text-align: left;
       width: 200px;
       
@@ -326,16 +333,16 @@
       list-style: none
     }
     
-    .navigation, .info{
+    .navigation, .info {
         display: block;
         width: 100%;
         float: left;
-        border-top: 1px solid #ccc;
+        border-top: 1px solid $cold-grey;
         padding: 5px 0;
         margin: 5px 0;
     }
     
-    .navigation h4{
+    .navigation h4 {
         font-size: 12px;
     }
     
@@ -364,8 +371,6 @@
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
         
         h3 {
             margin-bottom: 5px;
@@ -385,11 +390,11 @@
         }
 
         .odd {
-            background: #EFEFDD;
+            background: $middle-light-brown-bg;
         }
 
         .even {
-            background: #E8E8D8;
+            background: $middle-dark-brown-bg;
         }
 
         input[type=submit] {
@@ -409,7 +414,7 @@
             min-width: 350px;
             width: 450px;
             padding-right: 5px;
-            border-right: 1px solid #ccc
+            border-right: 1px solid $cold-grey
         }
         
         .reviews, .column_main form {
@@ -440,7 +445,7 @@
         a {
             display: block;
             float: left;
-            background: #666;
+            background: $grey;
             color: #fff;
             margin: 0 0 5px;
             padding: 5px;
@@ -448,7 +453,7 @@
             
             &:hover {
                 text-decoration: none;
-                background: #333;
+                background: $dark-grey;
             }
             
             &.selected {
@@ -465,8 +470,8 @@
     
     .search {
         float: left;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
+        border-top: 1px solid $cold-grey;
+        border-bottom: 1px solid $cold-grey;
         margin-top: 10px;
         padding: 10px 0;
         width: 100%;
@@ -477,8 +482,8 @@
         }
         
         input[type=submit] {
-            background: url("/static/images/icons.png?38c54595d43f") no-repeat scroll -324px -198px #CCCCCC;
-            border: 1px solid #999999;
+            background: url("/static/images/icons.png?38c54595d43f") no-repeat scroll -324px -198px $cold-grey;
+            border: 1px solid $light-grey;
             border-radius: 0;
             display: inline-block;
             float: right;
@@ -522,29 +527,27 @@
     display: block;
     padding: 3px;
     margin-bottom: 7px;
-    background: #666;
+    background: $grey;
     text-align: center;
     font-size: 12px;
     clear: both;  
     color: #fff;
     border-radius: 3px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
 
     &:hover{
         text-decoration: none;
-        background: #333;
+        background: $dark-grey;
     }
 }
 
 #meeting_assistant .navigation a {
-    background: #ccc;
-    color: #333;
+    background: $cold-grey;
+    color: $dark-grey;
     font-size: 10px;
 
     &:hover {
         text-decoration: none;
-        background: #333;
+        background: $dark-grey;
         color: #fff;
     }
 }
@@ -562,8 +565,6 @@
         margin-top: 2px;
         background: #efefef;
         border-radius: 3px;
-        -moz-border-radius: 3px;
-        -webkit-border-radius: 3px;
     }
 
     ul {
@@ -574,13 +575,11 @@
             padding: 5px 8px;
             margin-bottom: 5px;
             border-radius: 3px;
-            -moz-border-radius: 3px;
-            -webkit-border-radius: 3px;
             font-weight: bolder;
         
             &.absent {
                 background: #ededed;
-                border: 1px solid #ccc;
+                border: 1px solid $cold-grey;
             }
         
             &.positive {
@@ -609,7 +608,7 @@
         
             &.incomplete {
                 background: #ededed;
-                border: 1px solid #ccc;
+                border: 1px solid $cold-grey;
                 color: #000;
             }
         }

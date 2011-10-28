@@ -1,3 +1,5 @@
+@import "ecs/variables.scss";
+
 #headerworkflow {
     float: left;
     width: 85%;
@@ -52,7 +54,7 @@
     }
 
     .errors {
-        color: #ff0000;
+        color: $red;
     }
 
     .lockInfo {
@@ -108,42 +110,11 @@
     }
 }
 
-/* 
-#task_form .textboxlist-bits {
-  width: auto;
-}
-#task_form .textboxlist-bit {
-  width: auto;
-  clear: none;
-}
-*/
-
 .task_message .ecs-TextAreaToolbar {
   clear: both;
 }
 .show_all {
   margin-bottom: 10px;
-}
-.task_complete, 
-.task_reject,
-.task_delegate,
-.task_ask {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  padding-left: 5px;
-}
-.task_complete {
-  background: url(/static/images/icons.png) 0 -160px no-repeat;
-}
-.task_reject {
-  background: url(/static/images/icons.png) -240px -160px no-repeat;
-}
-.task_delegate {
-  background: url(/static/images/icons.png) -240px -208px no-repeat;
-}
-.task_ask {
-  background: url(/static/images/icons.png) 0 -224px no-repeat;
 }
 
 /* TaskList */
@@ -205,54 +176,4 @@
   font-size: 12px;
   background: #DDD4D4;
   border-radius: 3px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-}
-.task_list .preview {
-  display: inline-block;
-  text-indent: -9999px;
-  background: url(/static/images/icons.png) 0 -1056px no-repeat;
-  width: 16px;
-  height: 16px;
-}
-
-a {
-  text-decoration: none;
-  color: #2b558e;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-/* icons */
-
-.task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  margin-right: 3px;
-}
-.task_mine {
-  background: url(/static/images/icons.png) 0 -16px no-repeat;
-}
-.task_assigned {
-  background: url(/static/images/icons.png) -80px -320px no-repeat;
-}
-.task_open {
-  background: url(/static/images/icons.png) 0 0 no-repeat;
-}
-.task_proxy {
-  background: url(/static/images/icons.png) 0 -48px no-repeat;
-}
-.task_amg {
-  background: url(/static/images/icons.png) 0 -496px no-repeat;
-}
-.task_mpg {
-  background: url(/static/images/icons.png) 0 -512px no-repeat;
-}
-.task_thesis {
-  background: url(/static/images/icons.png) 0 -480px no-repeat;
-}
-.task_other {
-  background: url(/static/images/icons.png) 0 -64px no-repeat;
 }
