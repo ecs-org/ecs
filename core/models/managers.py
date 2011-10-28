@@ -185,6 +185,8 @@ class SubmissionFormQuerySet(models.query.QuerySet):
     def with_vote(self, **kwargs):
         return self.filter(get_vote_filter_q(None, **kwargs))
 
+    def with_any_vote(self, **kwargs):
+        return self.filter(get_vote_filter_q('submission__forms', **kwargs))
 
 class SubmissionFormManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -195,3 +197,6 @@ class SubmissionFormManager(AuthorizationManager):
         
     def with_vote(self, *args, **kwargs):
         return self.all().with_vote(*args, **kwargs)
+        
+    def with_any_vote(self, *args, **kwargs):
+        return self.all().with_any_vote(*args, **kwargs)

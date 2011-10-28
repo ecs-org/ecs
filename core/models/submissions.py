@@ -128,11 +128,7 @@ class Submission(models.Model):
         
     @property
     def is_active(self):
-        submission_form = self.current_submission_form
-        if submission_form:
-            if submission_form.current_published_vote:
-                return submission_form.current_published_vote.activates
-        return False
+        return self.forms.with_vote(published=True, valid=True, permanent=True, positive=True).exists()
         
     @property
     def lifecycle_phase(self):

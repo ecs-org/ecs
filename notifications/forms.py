@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.notifications.models import NotificationAnswer
-from ecs.core.models import SubmissionForm
+from ecs.core.models import SubmissionForm, Submission
 from ecs.users.utils import get_current_user
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
@@ -24,7 +24,7 @@ class RejectableNotificationAnswerForm(NotificationAnswerForm):
 
 
 def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+    return SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
