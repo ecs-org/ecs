@@ -1,6 +1,6 @@
-Antwort auf {{ notification }} ({% url ecs.notifications.views.view_notification notification_pk=notification.pk %}) für
+Antwort auf {{ notification }} ({{ ABSOLUTE_URL_PREFIX }}{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}) für
 
-    {% for sf in notification.submission_forms.all %}- {{ sf.submission }}: {% url ecs.core.views.view_submission submission_pk=sf.submission.pk %}
+    {% for sf in notification.submission_forms.all %}- {{ sf.submission }}: {{ ABSOLUTE_URL_PREFIX }}{% url ecs.core.views.view_submission submission_pk=sf.submission.pk %}
 {% endfor %}
 vom {{ notification.timestamp|date:'d.m.Y' }}.
 
