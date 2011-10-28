@@ -40,14 +40,18 @@
                 
                 {% ifequal tab "Änderungen" %}
                     <div class="field">
-                        <div class="diff_toggles">
-                            <a href="#" id="diff_show_old">{% trans "old" %}</a>
-                            <a href="#" id="diff_show_new">{% trans "new" %}</a>
-                            <a href="#" id="diff_show_all">{% trans "all" %}</a>
-                        </div>
-                        <div class="diff">
-                            {{ request.docstash.extra.diff|safe }}
-                        </div>
+                        {% if request.docstash.extra.diff %}
+                            <div class="diff_toggles">
+                                <a href="#" id="diff_show_old">{% trans "old" %}</a>
+                                <a href="#" id="diff_show_new">{% trans "new" %}</a>
+                                <a href="#" id="diff_show_all">{% trans "all" %}</a>
+                            </div>
+                            <div class="diff">
+                                {{ request.docstash.extra.diff|safe }}
+                            </div>
+                        {% else %}
+                            <em>{% trans 'No changes.' %}</em>
+                        {% endif %}
                     </div>
                 {% endifequal %}
                 
