@@ -25,6 +25,7 @@ class BaseMessageForm(forms.ModelForm):
         fields = ('text',)
 
     def __init__(self, submission, user, *args, **kwargs):
+        self.to_user = kwargs.pop('to', None)
         super(BaseMessageForm, self).__init__(*args, **kwargs)
 
         self.submission = submission
@@ -56,10 +57,17 @@ class BaseMessageForm(forms.ModelForm):
 
         self.fields['receiver_type'].choices = receiver_type_choices
         self.fields['receiver_type'].initial = receiver_type_initial
+        
+        if self.to_user:
+            self.fields['receiver_type'].required = False
 
     def clean_receiver(self):
         cd = self.cleaned_data
-
+        
+        if self.to_user:
+            cd['receiver'] = self.to_user
+            return self.to_user
+        
         receiver = None
         receiver_type = cd.get('receiver_type', None)
 

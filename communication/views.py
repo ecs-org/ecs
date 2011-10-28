@@ -34,7 +34,7 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
         task = get_object_or_404(Task, pk=task_pk)
         submission = task.data.get_submission() or submission
 
-    form = SendMessageForm(submission, request.user, request.POST or None)
+    form = SendMessageForm(submission, request.user, request.POST or None, to=to_user)
     thread = None
 
     if request.method == 'POST' and form.is_valid():
