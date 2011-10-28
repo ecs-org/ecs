@@ -257,7 +257,7 @@ def categorization_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
 
 
-@user_flag_required('is_internal')
+@task_required()
 def initial_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
