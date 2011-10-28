@@ -12,7 +12,7 @@ from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import download_document
 from ecs.signature.views import sign
-from ecs.users.utils import user_group_required
+from ecs.users.utils import user_group_required, user_flag_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render, pdf_response
@@ -87,6 +87,9 @@ def download_signed_vote(request, vote_pk=None):
         raise Http404('No signed document for vote %s available' % (vote_pk))
     return download_document(request, signed_vote_doc.pk)
 
+
+@user_flag_required('is_internal')
+@user_group_required("EC-Signing Group")
 def vote_sign_finished(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     vote = document.parent_object
@@ -97,13 +100,14 @@ def vote_sign_finished(request, document_pk=None):
         'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 
+@user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     #print 'vote_sign vote "%s"' % (vote_pk)
     
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
-    html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'   
+    html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
     context = vote_context(vote)
     
     sign_dict = {
