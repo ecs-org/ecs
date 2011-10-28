@@ -43,7 +43,7 @@ class ExternalReview(Activity):
     def receive_token(self, *args, **kwargs):
         c = self.workflow.data
         token = super(ExternalReview, self).receive_token(*args, **kwargs)
-        token.task.assign(c.user)
+        token.task.accept(c.user)
         if c.status == 'new':
             send_system_message_template(c.user, _('External Review Invitation'), 'checklists/external_reviewer_invitation.txt', None, submission=c.submission)
         return token
