@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
+from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.security import readonly
@@ -18,6 +19,7 @@ from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
 
 
+@readonly()
 @user_flag_required('is_internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     with sudo():
@@ -123,6 +125,7 @@ def task_list(request, **kwargs):
     return my_tasks(request, **kwargs)
 
 
+@require_POST
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
@@ -132,9 +135,12 @@ def accept_task(request, task_pk=None, full=False):
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
     return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
 
+@require_POST
 def accept_task_full(request, task_pk=None):
     return accept_task(request, task_pk=task_pk, full=True)
 
+
+@require_POST
 def decline_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
     task.assign(None)
@@ -144,8 +150,10 @@ def decline_task(request, task_pk=None, full=False):
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
     return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
 
+@require_POST
 def decline_task_full(request, task_pk=None):
     return decline_task(request, task_pk=task_pk, full=True)
+
 
 def reopen_task(request, task_pk=None):
     task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)

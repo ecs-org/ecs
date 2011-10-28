@@ -101,15 +101,7 @@
             var page_input = form.getElement('input[name="page"]');
 
             ecs.setupAutocomplete(form);
-            
-            function submitParentForm(e){
-                $(e.target).getParent('form').submit();
-                return false;
-            }
-            
-            $$('a.submit_parent').each(function(a){
-                a.addEvent('click', submitParentForm);
-            });
+            ecs.setupSubmitLinks('a.submit_parent');
 
             form.getElements('input').each(function(input){
                 input.addEvent('change', function(){

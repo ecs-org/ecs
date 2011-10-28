@@ -686,6 +686,16 @@ ecs.setupMessagePopup = function(container, prefix) {
     }, this);
 };
 
+ecs.setupSubmitLinks = function(selector){
+    function submitParentForm(e){
+        $(e.target).getParent('form').submit();
+        return false;
+    }
+    $$(selector).each(function(el){
+        el.addEvent('click', submitParentForm);
+    });
+};
+
 /* windmill helper stuff*/
 ecs.windmill_upload = function(filename) {
     var element = document.createElement('UploadAssistantDataElement');

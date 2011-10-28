@@ -55,13 +55,14 @@
             <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
+                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a></form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
                         {% endif %}
                     {% endwith %}
-                    | <a href="{% url ecs.tasks.views.decline_task_full task_pk=task.pk %}">{% trans "Decline" %}</a>{% if not forloop.last %}, {% endif %}
+                    | 
+                    <form action="{% url ecs.tasks.views.decline_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{% trans "Decline" %}</a></form>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -77,7 +78,7 @@
             <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
+                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a></form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
@@ -98,7 +99,7 @@
             <div class="task_item toggle_collapse">
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper }}</h3>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}">{{ task.data }}</a>
+                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a></form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>

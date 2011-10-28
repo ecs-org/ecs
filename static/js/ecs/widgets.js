@@ -78,6 +78,14 @@ ecs.widgets.Widget = new Class({
                 return false;
             });
         });
+        function submitInWidget(e){
+            console.log(e);
+            $(e.target).getParent('form.open-in-widget').submit();
+            return false;
+        }
+        this.element.getElements('a.submit-in-widget').each(function(link){
+            link.addEvent('click', submitInWidget);
+        });
         this.fireEvent('load', this);
     },
     onPopupSpawned: function(popup){

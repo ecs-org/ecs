@@ -60,6 +60,8 @@
           elipsis.inject(item.getElement('ul'));
           toggle_collapse.apply(toggler);
       });
-  });
+      
+      ecs.setupSubmitLinks('a.submit_parent');
+});
 </script>
 
