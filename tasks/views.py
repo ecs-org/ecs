@@ -10,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
@@ -31,6 +32,7 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     })
 
 
+@readonly()
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     usersettings = request.user.ecs_settings
     submission_ct = ContentType.objects.get_for_model(Submission)
@@ -114,9 +116,12 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
 
     return render(request, template, data)
 
+
+@readonly()
 def task_list(request, **kwargs):
     kwargs.setdefault('template', 'tasks/list.html')
     return my_tasks(request, **kwargs)
+
 
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
