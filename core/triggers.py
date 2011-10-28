@@ -80,7 +80,7 @@ def on_initial_review(sender, **kwargs):
             for u in involved_users:
                 send_submission_message(submission, u, 'Changes to study EC-Nr. {ec_number}', 'submissions/change_message.txt')
     else:
-        send_submission_message(submission, 'Submission not accepted', 'submissions/decline_message.txt')
+        send_submission_message(submission, submission_form.presenter, 'Submission not accepted', 'submissions/decline_message.txt')
 
 
 @connect(signals.on_categorization_review)
