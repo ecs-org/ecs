@@ -62,6 +62,8 @@ class InitialAmendmentReview(InitialNotificationReview):
     def pre_perform(self, choice):
         n = self.workflow.data
         n.needs_executive_review = choice
+        n.new_submission_form.is_acknowledged = True
+        n.new_submission_form.save()
         n.save()
 
 
