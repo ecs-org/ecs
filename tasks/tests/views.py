@@ -29,7 +29,7 @@ class ViewTestCase(LoginTestCase, WorkflowTestCase):
         self.failUnless(task in response.context['open_tasks'])
         
         # accept the task
-        response = self.client.get(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
+        response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
         task = refetch()
         self.failUnlessEqual(response.status_code, 302)
         self.failUnlessEqual(self.user, task.assigned_to)

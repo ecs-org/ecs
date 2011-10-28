@@ -249,7 +249,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         refetch = lambda: Task.objects.get(pk=task.pk)
 
         # accept initial review task
-        response = self.client.get(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
+        response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
         self.failUnlessEqual(response.status_code, 302)
         task = refetch()
         self.failUnlessEqual(self.office_user, task.assigned_to)
@@ -265,7 +265,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.failUnlessEqual(None, task.assigned_to)
 
         # accept the task again
-        response = self.client.get(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
+        response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
         self.failUnlessEqual(response.status_code, 302)
         task = refetch()
         self.failUnlessEqual(self.office_user, task.assigned_to)
