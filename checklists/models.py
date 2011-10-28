@@ -56,12 +56,16 @@ class Checklist(models.Model):
 
     def __unicode__(self):
         if self.blueprint.multiple:
-            return "%s (%s)" % (self.blueprint, self.user)
-        return u"%s" % self.blueprint
-
+            u = "%s (%s)" % (self.blueprint, self.user)
+        else:
+            u = unicode(self.blueprint)
+        if self.submission:
+            u += u' für %s' % unicode(self.submission)
+        return u
+        
     @property
     def is_complete(self):
-        return self.answers.filter(answer=None).count() == 0
+        return not self.answers.filter(answer=None).exists()
 
     @property
     def is_positive(self):
