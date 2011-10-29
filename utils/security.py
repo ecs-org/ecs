@@ -12,7 +12,7 @@ def readonly(methods=('GET', 'POST')):
     return decorator
 
 
-IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models')
+IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models', 'django.contrib.sessions')
 IGNORABLE_MODELS = ('ecs.users.models.UserSettings',)
 
 def fqn(obj):
