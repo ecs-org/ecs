@@ -6,11 +6,18 @@ from django.db import models
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
 from django.utils.translation import ugettext as _
+from django.template import loader
 
 from ecs.documents.models import Document
 from ecs.authorization.managers import AuthorizationManager
 from ecs.core.parties import get_presenting_parties
 from ecs.communication.utils import send_system_message_template
+
+
+def _get_notification_template(notification, pattern):
+    template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
+    return loader.select_template(template_names)
+
 
 
 class NotificationType(models.Model):
@@ -89,6 +96,28 @@ class Notification(models.Model):
             return self.submission_forms.all()[0].submission
         else:
             return None
+
+    def render_pdf(self):
+        doctype = DocumentType.objects.get(identifier='notification')
+        tpl = _get_notification_template(self, tpl_pattern)
+        submission_forms = self.submission_forms.select_related('submission').all()
+        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+        protocol_numbers.sort()
+        pdf = render_pdf_context(tpl, {
+            'notification': self,
+            'protocol_numbers': protocol_numbers,
+            'submission_forms': submission_forms,
+            'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+        })
+
+        self.pdf_document = Document.objects.create_from_buffer(pdf, doctype=doctype, 
+            parent_object=self, name=name, original_file_name=filename,
+            version=str(self.version),
+            date= datetime.now())
+        self.pdf_document = pdf_document
+        self.save()
+        
+        return self.pdf_document
 
 
 class ReportNotification(Notification):

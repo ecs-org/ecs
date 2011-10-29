@@ -126,6 +126,10 @@ class Task(models.Model):
     def get_preview_url(self):
         from ecs.core.models import Submission
         from ecs.votes.models import Vote
+        from ecs.notifications.models import Notification
+
+        if isinstance(self.data, Notification):
+            return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.data.pk})
 
         submission_form = None
         if self.content_type == ContentType.objects.get_for_model(Submission):
