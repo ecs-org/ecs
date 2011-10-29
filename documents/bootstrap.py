@@ -29,6 +29,7 @@ def document_types():
         Args(_(u"Submission Form"), u"submissionform", _(u"Submission Form"), is_hidden=True),
         Args(_(u"Checklist"), u"checklist", _(u"Checklist"), is_hidden=True),
         Args(_(u"vote"), u"votes", _(u"Vote"), is_hidden=True),
+        Args(_(u"Notification"), u"notification", _(u"Notification"), is_hidden=True),
     )
 
     for args in names:

@@ -47,7 +47,7 @@ def download_document(request, document_pk=None):
         return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()
-
+        
 def document_search_json(request, document_pk=None):
     q = request.GET.get('q', '')
     results = []

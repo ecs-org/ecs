@@ -20,6 +20,7 @@ from ecs.documents.models import Document
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
+from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
 from ecs.users.utils import user_flag_required
@@ -176,8 +177,10 @@ def create_notification(request, notification_type_pk=None):
             form.save_m2m()
             notification.documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             notification.save() # send another post_save signal (required to properly start the workflow)
-
             request.docstash.delete()
+            
+            on_notification_submit.send(type(notification), notification=notification)
+
             return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
 
     return render(request, 'notifications/form.html', {
@@ -230,16 +233,10 @@ def view_notification_answer(request, notification_pk=None):
 @readonly()
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
-    submission_forms = notification.submission_forms.select_related('submission').all()
-    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-    protocol_numbers.sort()
-    return _notification_pdf_response(notification, 'db/notifications/wkhtml2pdf/%s.html', suffix='.pdf', context={
-        'notification': notification,
-        'protocol_numbers': protocol_numbers,
-        'submission_forms': submission_forms,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'url': request.build_absolute_uri(),
-    })
+    url = notification.pdf_document.get_downloadurl()
+    if not url:
+        return HttpResponseForbidden()
+    return HttpResponseRedirect(url) 
 
 
 @readonly()

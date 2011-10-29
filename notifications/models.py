@@ -7,17 +7,13 @@ from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
 from django.utils.translation import ugettext as _
 from django.template import loader
+from django.template.defaultfilters import slugify
 
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DocumentType
 from ecs.authorization.managers import AuthorizationManager
 from ecs.core.parties import get_presenting_parties
 from ecs.communication.utils import send_system_message_template
-
-
-def _get_notification_template(notification, pattern):
-    template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
-    return loader.select_template(template_names)
-
+from ecs.utils.viewutils import render_pdf_context
 
 
 class NotificationType(models.Model):
@@ -36,6 +32,10 @@ class NotificationType(models.Model):
             module, cls_name = self.form.rsplit('.', 1)
             self._form_cls = getattr(import_module(module), cls_name)
         return self._form_cls
+        
+    def get_template(self, pattern):
+        template_names = [pattern % name for name in (self.form_cls.__name__, 'base')]
+        return loader.select_template(template_names)
     
     def __unicode__(self):
         return self.name
@@ -70,7 +70,7 @@ class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
     submission_forms = models.ManyToManyField('core.SubmissionForm', related_name='notifications')
     documents = GenericRelation(Document)
-    #documents = models.ManyToManyField(Document)
+    pdf_document = models.OneToOneField(Document, related_name='_notification', null=True)
 
     comments = models.TextField(default="", blank=True)
     date_of_receipt = models.DateField(null=True, blank=True)
@@ -96,10 +96,11 @@ class Notification(models.Model):
             return self.submission_forms.all()[0].submission
         else:
             return None
-
+            
     def render_pdf(self):
         doctype = DocumentType.objects.get(identifier='notification')
-        tpl = _get_notification_template(self, tpl_pattern)
+
+        tpl = self.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = self.submission_forms.select_related('submission').all()
         protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
         protocol_numbers.sort()
@@ -109,12 +110,19 @@ class Notification(models.Model):
             'submission_forms': submission_forms,
             'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })
+        
+        ec_num = '_'.join(str(s['submission__ec_number']) for s in submission_forms.order_by('submission__ec_number').values('submission__ec_number').distinct())
+        filename = "%s.pdf" % slugify("%s-%s" % (ec_num, self.type.name))
+        now = datetime.datetime.now()
 
-        self.pdf_document = Document.objects.create_from_buffer(pdf, doctype=doctype, 
-            parent_object=self, name=name, original_file_name=filename,
-            version=str(self.version),
-            date= datetime.now())
-        self.pdf_document = pdf_document
+        self.pdf_document = Document.objects.create_from_buffer(pdf, 
+            doctype=doctype, 
+            parent_object=self, 
+            name=unicode(self), 
+            original_file_name=filename,
+            version=str(now),
+            date=now,
+        )
         self.save()
         
         return self.pdf_document
