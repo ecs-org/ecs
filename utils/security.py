@@ -13,6 +13,7 @@ def readonly(methods=('GET', 'POST')):
 
 
 IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models')
+IGNORABLE_MODELS = ('ecs.users.models.UserSettings',)
 
 def fqn(obj):
     return "%s.%s" % (obj.__module__, obj.__name__)
@@ -29,7 +30,7 @@ class SecurityReviewMiddleware(threading.local):
 
     def _post_save(self, sender, **kwargs):
         if self._is_readonly():
-            if sender.__module__ in IGNORABLE_MODULES:
+            if sender.__module__ in IGNORABLE_MODULES or fqn(sender) in IGNORABLE_MODELS:
                 return
             logger.warn("readonly view %s used %s: %s" % (
                 fqn(self._current_view), 
