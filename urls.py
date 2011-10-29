@@ -5,14 +5,9 @@ from django.views.static import serve
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
-from ecs import workflow
 
 # stuff that needs called at the beginning, but not in settings.py
-admin.autodiscover()    # discover admin view enabled models
-workflow.autodiscover() # discover workflow items
-
-import ecs.core.triggers
-import ecs.votes.triggers
+admin.autodiscover()
 
 # configure logging
 import logging

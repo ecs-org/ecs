@@ -135,6 +135,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'ecs.utils.startup.StartupMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -152,7 +153,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'ecs.utils.security.SecurityReviewMiddleware',
-)   
+)
+
+STARTUP_CALLS = (
+    'ecs.integration.startup.startup',
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
