@@ -30,13 +30,15 @@ def field_history(request, model_name=None, pk=None):
 
     history = []
     last_value = u""
+    last_change = None
     i = 0
     with sudo():
         versions = list(get_versions(obj).order_by('created_at'))
     for change in versions:
-        i += 1
         value = simplejson.loads(change.data)[0]['fields'][fieldname]
         diff = dmp.diff_main(last_value, value)
+        if len(diff) == 1 and diff[0][0] == 0 and last_change and last_change.user == change.user:
+            continue
         dmp.diff_cleanupSemantic(diff)
         html_diff = []
         for op, line in diff:
@@ -48,6 +50,7 @@ def field_history(request, model_name=None, pk=None):
         if len(html_diff) == 1 and not html_diff[0]:
             html_diff = []
         
+        i += 1
         
         history.append({
             'timestamp': change.created_at,
@@ -57,6 +60,7 @@ def field_history(request, model_name=None, pk=None):
             'version_number': i,
         })
         last_value = value
+        last_change = change
     
     history.reverse()
 
