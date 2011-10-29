@@ -35,6 +35,8 @@ def trim_docstring(docstring):
     return '\n'.join(trimmed)
 
 class Command(BaseCommand):
+    help = "convert a xml nosetests file to a restructured text file using the docstrings of the test objects and functions"
+
     option_list = BaseCommand.option_list + (
         make_option('-o', action='store', dest='outfile', help='output file', default=None),
         make_option('-i', action='store', dest='infile', help='input file', default=None),
@@ -58,8 +60,6 @@ class Command(BaseCommand):
         #FIXME
         print "DEBUG FIXME for workflow model to import 'test' must be in sys.argv at import time:"
         print "test in sys.argv:", 'test' in sys.argv
-        
-        
         
         #parse xml:
         dom1 = parse(options['infile'])
@@ -353,7 +353,3 @@ class RstTable():
                 line = u'%s%s' % (line, "%s%s" % (linemarker*(maxw+2),"+"))
             i +=1
         self.out.append(line)
-    
-    
-    
-    
