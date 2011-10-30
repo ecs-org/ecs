@@ -30,18 +30,6 @@ def _get_notification_template(notification, pattern):
     template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
     return loader.select_template(template_names)
 
-def _get_notification_download_name(notification, suffix=''):
-    ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
-    return slugify("%s-%s" % (ec_num, notification.type.name)) + suffix
-
-def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context=None):
-    tpl = _get_notification_template(notification, tpl_pattern)
-    html = tpl.render(Context(context or {}))
-    pdf = wkhtml2pdf(html)
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=%s' % _get_notification_download_name(notification, suffix)
-    return response
-
 
 def _get_notifications(**lookups):
     return Notification.objects.filter(**lookups).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
@@ -213,6 +201,8 @@ def edit_notification_answer(request, notification_pk=None):
         answer.notification = notification
         answer.save()
         #return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
+    else:
+        print form.errors
     return render(request, 'notifications/answers/form.html', {
         'notification': notification,
         'answer': answer,
@@ -232,7 +222,7 @@ def view_notification_answer(request, notification_pk=None):
 
 @readonly()
 def notification_pdf(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
+    notification = get_object_or_404(Notification, pk=notification_pk, pdf_document__isnull=False)
     url = notification.pdf_document.get_downloadurl()
     if not url:
         return HttpResponseForbidden()
@@ -241,9 +231,8 @@ def notification_pdf(request, notification_pk=None):
 
 @readonly()
 def notification_answer_pdf(request, notification_pk=None):
-    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
-    return _notification_pdf_response(answer.notification, 'db/notifications/answers/wkhtml2pdf/%s.html', suffix='-answer.pdf', context={
-        'notification': answer.notification,
-        'documents': answer.notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'answer': answer,
-    })
+    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk, pdf_document__isnull=False)
+    url = answer.pdf_document.get_downloadurl()
+    if not url:
+        return HttpResponseForbidden()
+    return HttpResponseRedirect(url) 

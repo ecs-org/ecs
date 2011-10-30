@@ -727,7 +727,7 @@ def all_submissions(request):
             submissions_q |= Q(pk__in=document_q)
             ct = ContentType.objects.get_for_model(SubmissionForm)
             documents = list(Document.objects.filter(uuid__icontains=keyword, content_type=ct))
-            if [d for d in documents if not d.parent_object == d.parent_object.submission.current_submission_form]:
+            if any(d.parent_object != d.parent_object.submission.current_submission_form for d in documents):
                 extra_context['warning'] = _('This document is an old version.')
             submissions_q |= Q(forms__pk__in=[d.object_id for d in documents])
 

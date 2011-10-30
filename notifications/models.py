@@ -97,9 +97,11 @@ class Notification(models.Model):
         else:
             return None
             
+    def get_filename(self, suffix=".pdf"):
+        ec_num = '_'.join(str(s['submission__ec_number']) for s in self.submission_forms.order_by('submission__ec_number').values('submission__ec_number').distinct())
+        return "%s%s" % (slugify("%s-%s" % (ec_num, self.type.name)), suffix)
+            
     def render_pdf(self):
-        doctype = DocumentType.objects.get(identifier='notification')
-
         tpl = self.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = self.submission_forms.select_related('submission').all()
         protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
@@ -110,16 +112,13 @@ class Notification(models.Model):
             'submission_forms': submission_forms,
             'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })
-        
-        ec_num = '_'.join(str(s['submission__ec_number']) for s in submission_forms.order_by('submission__ec_number').values('submission__ec_number').distinct())
-        filename = "%s.pdf" % slugify("%s-%s" % (ec_num, self.type.name))
         now = datetime.datetime.now()
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
-            doctype=doctype, 
+            doctype='notification', 
             parent_object=self, 
             name=unicode(self), 
-            original_file_name=filename,
+            original_file_name=self.get_filename(),
             version=str(now),
             date=now,
         )
@@ -162,14 +161,38 @@ class NotificationAnswer(models.Model):
     text = models.TextField()
     is_valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     is_rejected = models.BooleanField(default=False)
+    pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     
     @property
     def needs_further_review(self):
         # further review is required iff: the answer is not valid or has not been reviewed by a multiple of four eyes.
         return not self.is_valid or self.review_count == 0 or self.review_count % 2 != 0
+        
+    def render_pdf(self):
+        notification = self.notification
+        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        pdf = render_pdf_context(tpl, {
+            'notification': notification,
+            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'answer': self,
+        })
+
+        now = datetime.datetime.now()
+        self.pdf_document = Document.objects.create_from_buffer(pdf, 
+            doctype='notification_answer', 
+            parent_object=self, 
+            name=unicode(self), 
+            original_file_name=notification.get_filename('-answer.pdf'),
+            version=str(now),
+            date=now,
+        )
+        self.save()
+        return self.pdf_document
     
     def distribute(self):
         from ecs.core.models.submissions import Submission
+        
+        self.render_pdf()
 
         if not self.is_rejected and self.notification.type.includes_diff:
             try:

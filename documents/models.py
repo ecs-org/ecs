@@ -83,6 +83,9 @@ class DocumentManager(AuthorizationManager):
         tmp.write(buf)
         tmp.flush()
         tmp.seek(0)
+        
+        if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
+            kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
 
         kwargs.setdefault('date', datetime.datetime.now())
         doc = self.create(file=File(open(tmpname,'rb')), **kwargs)
