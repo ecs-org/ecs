@@ -168,7 +168,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     checklist_summary = []
     for checklist in checklists:
         if checklist.is_negative or checklist.get_all_answers_with_comments().count():
-            answers = checklist.answers.filter(Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True) | ~(Q(comment=None) | Q(comment='')))
+            q = Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True)
+            q |= Q(question__requires_comment=False) & ~(Q(comment=None) | Q(comment=''))
+            answers = checklist.answers.filter(q)
             checklist_summary.append((checklist, answers))
 
     submission_forms = list(submission.forms.order_by('created_at'))
@@ -331,15 +333,10 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         complete_task = request.POST.get('complete_task') == 'complete_task'
         really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
         if form.is_valid():
-            questions = []
-            for question in blueprint.questions.all():
-                m = re.match(r'(\d+)(\w*)', question.number)
-                questions.append(('{0:03}{1}'.format(int(m.group(1)), m.group(2)), question,))
-
-            for i, question in sorted(questions, key=lambda x: x[0]):
+            for question in blueprint.questions.all().order_by('index'):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-                answer.answer = form.cleaned_data['q%s' % i]
-                answer.comment = form.cleaned_data['c%s' % i]
+                answer.answer = form.cleaned_data['q%s' % question.index]
+                answer.comment = form.cleaned_data['c%s' % question.index]
                 answer.save()
 
             checklist.save() # touch the checklist instance to trigger the post_save signal

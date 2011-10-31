@@ -28,6 +28,7 @@ class ChecklistQuestion(models.Model):
     description = models.CharField(max_length=500, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
     is_inverted = models.BooleanField(default=False)
+    requires_comment = models.BooleanField(default=False)
 
     class Meta:
         unique_together = (('blueprint', 'number'),)

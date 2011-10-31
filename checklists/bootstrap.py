@@ -41,6 +41,7 @@ def checklist_blueprints():
                 'text': text,
                 'description': question.pop('description', u''),
                 'is_inverted': question.pop('is_inverted', False),
+                'requires_comment': question.pop('requires_comment', False),
             }
             cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number, defaults=data)
             update_instance(cq, data)
