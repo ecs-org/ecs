@@ -58,7 +58,8 @@ class ManageTaskForm(forms.Form):
         if action == 'delegate':
             if 'assign_to' not in cd:
                 self._errors['assign_to'] = self.error_class([_(u'You must select a user.')])
-
+        elif action == 'complete' and self.task and self.task.is_locked:
+            self._errors['locked'] = self.error_class([_(u'Fill out the form completely to complete the task.')])
         return cd
 
 class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
