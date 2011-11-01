@@ -6,7 +6,7 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 from ecs.bootstrap.utils import update_instance
 from ecs.notifications.workflow import (
-    InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
+    InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SafetyNotificationReview,
     SignNotificationAnswer, needs_executive_review, is_susar, is_report, is_amendment, needs_further_review
 )
 
@@ -18,8 +18,8 @@ _ = lambda s: s
 def notification_types():
     types = (
         dict(
-            name = u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)", 
-            form = "ecs.notifications.forms.SusarNotificationForm",
+            name = u"Sicherheitsbericht (SUSAR / SAE / Annual Safety Reports)", 
+            form = "ecs.notifications.forms.SafetyNotificationForm",
             default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
             includes_diff = False,
             grants_vote_extension = False,
@@ -66,12 +66,13 @@ def notification_workflow():
     OFFICE_GROUP = 'EC-Office'
     NOTIFICATION_REVIEW_GROUP = 'EC-Notification Review Group'
     SIGNING_GROUP = 'EC-Signing Group'
+    SAFETY_GROUP = 'EC-Safety Report Review Group'
 
     setup_workflow_graph(Notification,
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name=_('Start')),
-            'susar_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Susar Review')),
+            'safety_review': Args(SafetyNotificationReview, group=SAFETY_GROUP, name=_('Safety Review')),
             'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
@@ -85,7 +86,7 @@ def notification_workflow():
             'executive_amendment_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
         },
         edges={
-            ('start', 'susar_review'): Args(guard=is_susar),
+            ('start', 'safety_review'): Args(guard=is_susar),
             ('start', 'office_group_review'): Args(guard=is_report),
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),
 
@@ -104,8 +105,6 @@ def notification_workflow():
             ('executive_amendment_review', 'notification_group_review'): Args(guard=needs_further_review),
             ('executive_amendment_review', 'notification_answer_signing'): Args(guard=needs_further_review, negated=True),
             ('notification_answer_signing', 'distribute_notification_answer'): None,
-
-            ('susar_review', 'distribute_notification_answer'): None,
             
         }
     )

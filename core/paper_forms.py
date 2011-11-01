@@ -2,7 +2,7 @@
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator, InvestigatorEmployee
-from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification
+from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification, SafetyNotification
 from ecs.documents.models import Document
 
 _form_info = {}
@@ -39,6 +39,10 @@ class FormInfo(object):
 FormInfo(Notification, fields=(
     FieldInfo(None, 'submission_forms', _(u'studies')),
     FieldInfo('3.', 'comments', _(u'Statement/Conclusion/Notice')),
+))
+
+FormInfo(SafetyNotification, fields=(
+    FieldInfo(None, 'safety_type', _(u'Type')),
 ))
 
 FormInfo(ReportNotification, fields=(

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext as _
 
-from ecs.notifications.forms import NotificationForm, ProgressReportNotificationForm, \
-    CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm
+from ecs.notifications.forms import (NotificationForm, ProgressReportNotificationForm,
+    CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm, SafetyNotificationForm)
 
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
 #  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
@@ -131,6 +131,15 @@ NOTIFICATION_FORM_TABS[NotificationForm] = [
     (_(u'General information'), [
         (_(u'General information'), [
             'submission_forms', 'comments',
+        ]),
+    ]),
+    (_(u'documents'), []),
+]
+
+NOTIFICATION_FORM_TABS[SafetyNotificationForm] = [
+    (_(u'General information'), [
+        (_(u'General information'), [
+            'safety_type', 'submission_forms', 'comments',
         ]),
     ]),
     (_(u'documents'), []),

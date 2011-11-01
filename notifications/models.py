@@ -10,10 +10,11 @@ from django.template import loader
 from django.template.defaultfilters import slugify
 
 from ecs.documents.models import Document, DocumentType
-from ecs.authorization.managers import AuthorizationManager
 from ecs.core.parties import get_presenting_parties
 from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
+from ecs.notifications.constants import SAFETY_TYPE_CHOICES
+from ecs.notifications.managers import NotificationManager
 
 
 class NotificationType(models.Model):
@@ -79,7 +80,7 @@ class Notification(models.Model):
 
     needs_executive_review = models.BooleanField(default=False)
     
-    objects = AuthorizationManager()
+    objects = NotificationManager()
     
     def __unicode__(self):
         return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
@@ -145,14 +146,18 @@ class CompletionReportNotification(ReportNotification):
     completion_date = models.DateField()
 
 
-
 class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
     extension_of_vote_requested = models.BooleanField(default=False, blank=True)
-    
+
 
 class AmendmentNotification(DiffNotification, Notification):
     pass
+
+
+class SafetyNotification(Notification):
+    safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES)
+    is_acknowledged = models.BooleanField(default=False)
 
 
 class NotificationAnswer(models.Model):

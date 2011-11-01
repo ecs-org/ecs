@@ -181,6 +181,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission_forms = reversed(submission_forms)
 
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
+    notifications = submission.notifications.order_by('-timestamp')
+    votes = submission.votes
 
     context = {
         'form': form,
@@ -194,10 +196,10 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
         'show_reviews': any(checklist_reviews),
-        'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True).order_by('-timestamp'),
-        'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False).order_by('-timestamp'),
-        'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
-        'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
+        'open_notifications': notifications.unanswered(),
+        'answered_notifications': notifications.answered(),
+        'pending_votes': votes.filter(published_at__isnull=True),
+        'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
     }

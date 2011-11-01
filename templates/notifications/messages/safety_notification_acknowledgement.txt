@@ -1,0 +1,7 @@
+Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung zu den Studien
+{% for sf in submission_forms %}
+  * {{ sf }}
+    {{ ABSOLUTE_URL_PREFIX }}{% url ecs.core.views.readonly_submission_form submission_form_pk=sf.pk %}
+{% endfor %}
+
+Sicherheitsmeldung: {{ ABSOLUTE_URL_PREFIX }}{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}
