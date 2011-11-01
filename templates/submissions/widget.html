@@ -19,6 +19,9 @@
         <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
         {% endwith %}
     {% else %}
+    
+        {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
+        
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}
             <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}"> <span class="submission_inprogress"></span> </a>
@@ -44,9 +47,6 @@
                 <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
-        <div class="actions">
-            {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
-        </div>
         {% endwith %}
     {% endif %}
     </li>
