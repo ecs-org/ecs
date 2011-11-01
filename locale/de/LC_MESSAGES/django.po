@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-31 20:04+0100\n"
+"POT-Creation-Date: 2011-11-01 13:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,21 +157,21 @@ msgstr "GCP Bewertung"
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
-#: checklists/bootstrap.py:28 checklists/bootstrap.py:56
+#: checklists/bootstrap.py:28 checklists/bootstrap.py:57
 #: checklists/workflow.py:85
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:55 core/bootstrap.py:125
+#: checklists/bootstrap.py:56 core/bootstrap.py:125
 #: notifications/bootstrap.py:73 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
 
-#: checklists/bootstrap.py:57
+#: checklists/bootstrap.py:58
 msgid "External Review Review"
 msgstr "Gutachten Überprüfung"
 
-#: checklists/forms.py:23
+#: checklists/forms.py:18
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
@@ -1737,27 +1737,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:619
+#: core/views/submissions.py:616
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:715 templates/core.html:41
+#: core/views/submissions.py:712 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:717
+#: core/views/submissions.py:714
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:731
+#: core/views/submissions.py:728
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:753 templates/core.html:44
+#: core/views/submissions.py:750 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:763 templates/core.html:47
+#: core/views/submissions.py:760 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2465,6 +2465,10 @@ msgstr "sortieren"
 #: templates/communication/sort_options.inc:7
 msgid "Old/New"
 msgstr "Alt/Neu"
+
+#: templates/communication/thread.html:28
+msgid "Me"
+msgstr "Ich"
 
 #: templates/communication/thread.html:37
 msgid "Collapse all"
@@ -3265,11 +3269,11 @@ msgstr "Bearbeiten"
 msgid "Vote Review"
 msgstr "B2 Voten"
 
-#: templates/submissions/list.html:93 templates/submissions/widget.html:39
+#: templates/submissions/list.html:93 templates/submissions/widget.html:42
 msgid "Categories"
 msgstr "Fachgebiete"
 
-#: templates/submissions/list.html:98 templates/submissions/widget.html:44
+#: templates/submissions/list.html:98 templates/submissions/widget.html:47
 msgid "ExpeditedReviewCategories"
 msgstr "Expedited Review Fachgebiete"
 
