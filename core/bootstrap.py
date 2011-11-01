@@ -118,6 +118,7 @@ def submission_workflow():
     STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
     GCP_REVIEW_GROUP = 'GCP Review Group'
+    PAPER_GROUP = u'EC-Paper Submission Review Group'
     
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -128,7 +129,7 @@ def submission_workflow():
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
-            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
+            'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
@@ -138,7 +139,7 @@ def submission_workflow():
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
             'thesis_categorization_review': Args(ThesisCategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Thesis Paper Submission Review")),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Thesis Paper Submission Review")),
             'thesis_recommendation': Args(NonRepeatableChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
@@ -155,6 +156,7 @@ def submission_workflow():
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
             ('initial_review_barrier', 'categorization_review'): Args(guard=is_localec, negated=True),
+            ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
 
             # retrospective thesis lane
             ('start', 'initial_thesis_review'): Args(guard=is_thesis),
@@ -183,7 +185,6 @@ def submission_workflow():
             ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
             ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
-            ('generic_review', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
         }
     )
 
@@ -201,6 +202,8 @@ def auth_groups():
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
         u'EC-B2 Review Group',
+        u'EC-Paper Submission Review Group',
+        u'EC-Safety Report Review Group',
         u'Expedited Review Group',
         u'Local-EC Review Group',
         u'EC-Board Member',
@@ -365,6 +368,8 @@ def auth_user_testusers():
         ('localec.rev', u'Local-EC Review Group', {'is_internal': True}),
         ('b2.rev', u'EC-B2 Review Group', {'is_internal': True}),
         ('ext.rev.rev', u'External Review Review Group', {'is_internal': True}),
+        ('paper.rev', u'EC-Paper Submission Review Group', {'is_internal': True}),
+        ('safety.rev', u'EC-Safety Report Review Group', {'is_internal': True}),
     )
 
     boardtestusers = (

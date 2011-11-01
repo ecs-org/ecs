@@ -3,9 +3,10 @@ from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
+from ecs.notifications.signals import on_safety_notification_review
 
-NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification)
+NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
 
 for cls in NOTIFICATION_MODELS:
     register(cls, autostart_if=lambda n, created: n.submission_forms.exists() and not n.workflow.workflows.exists())
@@ -17,7 +18,7 @@ def needs_executive_review(wf):
 
 @guard(model=Notification)
 def is_susar(wf):
-    return wf.data.type.name == u"Nebenwirkungsmeldung (SAE/SUSAR Bericht)"
+    return SafetyNotification.objects.filter(pk=wf.data.pk).exists()
 
 @guard(model=Notification)
 def is_report(wf):
@@ -82,6 +83,18 @@ class EditNotificationAnswer(BaseNotificationReview):
         answer.is_valid = choice
         answer.review_count += 1
         answer.save()
+
+
+class SafetyNotificationReview(Activity):
+    class Meta:
+        model = Notification
+
+    def get_url(self):
+        return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.workflow.data.pk})
+        
+    def pre_perform(self, choice):
+        notification = self.workflow.data
+        on_safety_notification_review.send(type(notification), notification=notification)
 
 
 class SignNotificationAnswer(Activity):

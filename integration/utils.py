@@ -27,7 +27,7 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
     return False
 
 
-def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
+def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
     """
     created a new workflow graph if a graph with the same structure does not already exists. 
     old graphs will loose their auto_start=True flag.
@@ -37,6 +37,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
     except Graph.MultipleObjectsReturned:
         raise ValueError("There is more than one graph for %s with %s" % (model, kwargs))
     if not created:
+        # FIXME: workflow_graph_needs_upgrade is broken because it alters the Args instance.
         if not force and not workflow_graph_needs_upgrade(graph, nodes, edges):
             return False
         graph.auto_start = False
@@ -52,11 +53,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=False, **kwargs):
         node_instances[name] = node
         if group:
             task_type = TaskType.objects.get(workflow_node=node)
-            try:
-                task_type.groups.add(Group.objects.get(name=group))
-            except Group.DoesNotExist:
-                print "no such group: %s" % group
-                raise
+            task_type.groups.add(Group.objects.get(name=group))
     for node_names, args in edges.iteritems():
         if not args:
             args = Args()

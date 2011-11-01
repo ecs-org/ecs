@@ -5,7 +5,7 @@ from ecs.notifications.models import NotificationAnswer
 from ecs.core.models import SubmissionForm, Submission
 from ecs.users.utils import get_current_user
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
 from ecs.core.forms.fields import DateField
 
 
@@ -36,10 +36,14 @@ class MultiNotificationForm(NotificationForm):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
         self.fields['submission_forms'].queryset = get_usable_submission_forms()
 
-class SusarNotificationForm(MultiNotificationForm):
+class SafetyNotificationForm(MultiNotificationForm):
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
         self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+        
+    class Meta:
+        model = SafetyNotification
+        exclude = NotificationForm._meta.exclude
 
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))

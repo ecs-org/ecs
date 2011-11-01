@@ -115,6 +115,11 @@
                 {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
             </div>
         {% endif %}
+        {% if matched_document.parent_object == submission or matched_document.parent_object.submission == submission %}
+            <div class="matched_document">
+                {% trans 'Document' %}: <a href="{% url ecs.pdfviewer.views.show document_pk=matched_document.pk %}">{{ matched_document }}</a>
+            </div>
+        {% endif %}
         {% endwith %}
         {% endwith %}
     {% endif %}

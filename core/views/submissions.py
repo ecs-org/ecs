@@ -181,6 +181,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission_forms = reversed(submission_forms)
 
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
+    notifications = submission.notifications.order_by('-timestamp')
+    votes = submission.votes
 
     context = {
         'form': form,
@@ -194,10 +196,10 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
         'show_reviews': any(checklist_reviews),
-        'open_notifications': submission_form.submission.notifications.filter(answer__isnull=True).order_by('-timestamp'),
-        'answered_notifications': submission_form.submission.notifications.filter(answer__isnull=False).order_by('-timestamp'),
-        'pending_votes': submission_form.submission.votes.filter(published_at__isnull=True),
-        'published_votes': submission_form.submission.votes.filter(published_at__isnull=False),
+        'open_notifications': notifications.unanswered(),
+        'answered_notifications': notifications.answered(),
+        'pending_votes': votes.filter(published_at__isnull=True),
+        'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
     }
@@ -565,6 +567,7 @@ def delete_docstash_entry(request):
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     url = submission_form.pdf_document.get_downloadurl()
+    print submission_form.pdf_document.uuid
     if url:
         return HttpResponseRedirect(url)
     else:
@@ -708,7 +711,9 @@ def all_submissions(request):
     keyword = request.GET.get('keyword', None)
 
     submissions = Submission.objects.all()
-    extra_context = {}
+    extra_context = {
+        'matched_document': None,
+    }
     title = _('All Studies')
     if keyword:
         title = _('Study Search')
@@ -718,15 +723,15 @@ def all_submissions(request):
             num = int(m.group(1))
             year = int(m.group(2))
             submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
-        if re.match(r'([a-zA-Z0-9]{5,32})', keyword):
-            ct = ContentType.objects.get_for_model(Submission)
-            document_q = Document.objects.filter(uuid__icontains=keyword, content_type=ct).values('object_id').query
-            submissions_q |= Q(pk__in=document_q)
-            ct = ContentType.objects.get_for_model(SubmissionForm)
-            documents = list(Document.objects.filter(uuid__icontains=keyword, content_type=ct))
-            if any(d.parent_object != d.parent_object.submission.current_submission_form for d in documents):
-                extra_context['warning'] = _('This document is an old version.')
-            submissions_q |= Q(forms__pk__in=[d.object_id for d in documents])
+        if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
+            try:
+                doc = Document.objects.get(uuid=keyword)
+                extra_context['matched_document'] = doc
+                submissions_q |= Q(pk=doc.object_id) | Q(forms__pk=doc.object_id)
+                if isinstance(doc.parent_object, SubmissionForm) and not doc.parent_object.is_current:
+                    extra_context['warning'] = _('This document is an old version.')
+            except Document.DoesNotExist:
+                pass
 
         fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
         for field_name in fields:
