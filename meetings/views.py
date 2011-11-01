@@ -79,6 +79,47 @@ def reschedule_submission(request, submission_pk=None):
     })
 
 @user_flag_required('is_internal')
+def open_tasks(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    open_tasks = {}
+    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index'):
+        with sudo():
+            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
+        if len(ts):
+            open_tasks[top] = ts
+
+    return render(request, 'meetings/tabs/open_tasks.html', {
+        'meeting': meeting,
+        'open_tasks': open_tasks,
+    })
+
+@user_flag_required('is_internal')
+def tops(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    next_tops = meeting.timetable_entries.filter(vote__isnull=True).order_by('timetable_index')[:3]
+
+    tops_without_votes = {}
+    for top in meeting.timetable_entries.filter(vote__isnull=True).order_by('timetable_index'):
+        medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+            category__in=top.submission.medical_categories.values('pk').query)
+        bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).distinct())
+        if bms in tops_without_votes:
+            tops_without_votes[bms].append(top)
+        else:
+            tops_without_votes[bms] = [top]
+
+    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True).order_by('timetable_index')
+
+    return render(request, 'meetings/tabs/tops.html', {
+        'meeting': meeting,
+        'next_tops': next_tops,
+        'tops_without_votes': tops_without_votes,
+        'tops_with_votes': tops_with_votes,
+    })
+
+@user_flag_required('is_internal')
 def add_free_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     form = FreeTimetableEntryForm(request.POST or None)
@@ -514,13 +555,6 @@ def meeting_details(request, meeting_pk=None, active=None):
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
 
-    open_tasks = {}
-    for top in meeting.timetable_entries.filter(submission__isnull=False):
-        with sudo():
-            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
-        if len(ts):
-            open_tasks[top] = ts
-
     tops = meeting.timetable_entries.all()
     votes_list = [ ]
     for top in tops:
@@ -532,19 +566,6 @@ def meeting_details(request, meeting_pk=None, active=None):
         else:
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
-
-    board_members = meeting.medical_categories.exclude(board_member__isnull=True).values('board_member').distinct().values_list('board_member', flat=True)
-    tops_without_votes = []
-    for bm in board_members:
-        amcs = meeting.medical_categories.filter(board_member=bm).order_by('category__abbrev')
-        tops = list(meeting.timetable_entries.filter(submission__medical_categories__pk__in=[amc.category.pk for amc in amcs], vote__isnull=True).order_by('timetable_index'))
-        if tops:
-            tops_without_votes.append({'board_member': amcs[0].board_member, 'amcs': amcs, 'tops': tops})
-    tops = meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).exclude(submission__medical_categories__pk__in=meeting.medical_categories.exclude(board_member__isnull=True).values('category__pk').query)
-    if tops:
-        tops_without_votes.append({'board_member': None, 'amcs': None, 'tops': tops})
-
-    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True)
 
     return render(request, 'meetings/details.html', {
         'cumulative_count': meeting.submissions.all().count(),
@@ -563,10 +584,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'b3_not_examined_submissions': Vote.objects.filter(result='3a', top__meeting__pk=meeting.pk),
         'meeting': meeting,
         'expert_formset': expert_formset,
-        'open_tasks': open_tasks,
         'votes_list': votes_list,
-        'tops_without_votes': tops_without_votes,
-        'tops_with_votes': tops_with_votes,
         'active': active,
     })
 

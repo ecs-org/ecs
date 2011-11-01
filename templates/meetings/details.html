@@ -37,10 +37,10 @@
         {% include 'meetings/tabs/status.html' %}
     </div>
     <div id="open_tasks_tab">
-        {% include 'meetings/tabs/open_tasks.html' %}
+        <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
     </div>
     <div id="tops_tab">
-        {% include 'meetings/tabs/tops.html' %}
+        <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
     </div>
     {% if user|is_member_of:"EC-Signing Group" %}
     <div id="signing_tab">
