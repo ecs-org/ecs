@@ -515,11 +515,11 @@ def meeting_details(request, meeting_pk=None, active=None):
                     meeting.create_boardmember_reviews()
 
     open_tasks = {}
-    for submission in meeting.submissions.all():
+    for top in meeting.timetable_entries.filter(submission__isnull=False):
         with sudo():
-            ts = list(Task.objects.for_submission(submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
+            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
         if len(ts):
-            open_tasks[submission] = ts
+            open_tasks[top] = ts
 
     tops = meeting.timetable_entries.all()
     votes_list = [ ]
