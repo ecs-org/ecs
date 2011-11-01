@@ -48,19 +48,73 @@
 <p><strong>{% trans 'Gesamt' %}:</strong> {{ cumulative_count }}</p>
 
 <table>
-    <tr><th>{% trans "AMG" %}</th><td>{{ amg_count }}</td></tr>
-    <tr><th>{% trans "MPG" %}</th><td>{{ mpg_count }}</td></tr>
-    <tr><th>{% trans "AMG/MPG" %}</th><td>{{ amg_mpg_count }}</td></tr>
-    <tr><th>{% trans "Retrospective Thesis" %}</th><td>{{ retrospective_thesis_count }}</td></tr>
-    <tr><th>{% trans "Expedited" %}</th><td>{{ expedited_count }}</td></tr>
-    <tr><th>{% trans "Local EC" %}</th><td>{{ localec_count }}</td></tr>
-    <tr><th>{% trans "Other" %}</th><td>{{ other_count }}</td></tr>
+    <tr>
+        <th>{% trans "AMG" %}</th>
+        <td>
+            {{ amg_submissions|length }}
+            {% for submission in amg_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <th>{% trans "MPG" %}</th>
+        <td>{{ mpg_submissions|length }}</td>
+        <td>{% for submission in mpg_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "AMG/MPG" %}</th>
+        <td>{{ amg_mpg_submissions|length }}</td>
+        <td>{% for submission in amg_mpg_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Retrospective Thesis" %}</th>
+        <td>{{ retrospective_thesis_submissions|length }}</td>
+        <td>{% for submission in retrospective_thesis_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Expedited" %}</th>
+        <td>{{ expedited_submissions|length }}</td>
+        <td>{% for submission in expedited_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Local EC" %}</th>
+        <td>{{ localec_submissions|length }}</td>
+        <td>{% for submission in localec_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Other" %}</th>
+        <td>{{ other_submissions|length }}</td>
+        <td>{% for submission in other_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
 </table>
 <table>
-    <tr><th>{% trans "Dissertation" %}</th><td>{{ dissertation_count }}</td></tr>
-    <tr><th>{% trans "Diploma Thesis" %}</th><td>{{ diploma_thesis_count }}</td></tr>
-    <tr><th>{% trans "Multicentric, Main EC" %}</th><td>{{ amg_multi_main_count }}</td></tr>
-    <tr><th>{% trans "Remission" %}</th><td>{{ remission_count }}</td></tr>
-    <tr><th>{% trans "B3 (examined)" %}</th><td>{{ b3_examined_count }}</td></tr>
-    <tr><th>{% trans "B3 (not examined)" %}</th><td>{{ b3_not_examined_count }}</td></tr>
+    <tr>
+        <th>{% trans "Dissertation" %}</th>
+        <td>{{ dissertation_submissions|length }}</td>
+        <td>{% for submission in dissertation_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Diploma Thesis" %}</th>
+        <td>{{ diploma_thesis_submissions|length }}</td>
+        <td>{% for submission in diploma_thesis_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Multicentric, Main EC" %}</th>
+        <td>{{ amg_multi_main_submissions|length }}</td>
+        <td>{% for submission in amg_multi_main_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Remission" %}</th>
+        <td>{{ remission_submissions|length }}</td>
+        <td>{% for submission in remission_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "B3 (examined)" %}</th>
+        <td>{{ b3_examined_submissions|length }}</td>
+        <td>{% for submission in b3_examined_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
+    <tr>
+        <th>{% trans "B3 (not examined)" %}</th>
+        <td>{{ b3_not_examined_submissions|length }}</td>
+        <td>{% for submission in b3_not_examined_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
+    </tr>
 </table>
