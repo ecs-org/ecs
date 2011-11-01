@@ -22,7 +22,7 @@
     <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}">
             <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
             <h4>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}

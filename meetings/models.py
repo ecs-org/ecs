@@ -220,6 +220,7 @@ class Meeting(models.Model):
         del self.duration
         del self.timetable
         del self.users_with_constraints
+        del self.timetable_entries_which_violate_constraints
 
     def create_boardmember_reviews(self):
         task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
@@ -292,6 +293,23 @@ class Meeting(models.Model):
             user.constraints = constraints_by_user_id.get(user.id, [])
             users.append(user)
         return users
+
+    @cached_property
+    def timetable_entries_which_violate_constraints(self):
+        start_date = self.start.date()
+        start_data = self.start.date()
+        entries_which_violate_constraints = []
+        for constraint in self.constraints.all():
+            constraint_start = datetime.combine(start_date, constraint.start_time)
+            constraint_end = datetime.combine(start_date, constraint.end_time)
+            for participation in Participation.objects.filter(user=constraint.user):
+                start = participation.entry.start
+                end = participation.entry.end
+                if (constraint_start >= start and constraint_start < end) or \
+                    (constraint_end >= start and constraint_end < end) or \
+                    (constraint_start < start and constraint_end >= end):
+                    entries_which_violate_constraints.append(participation.entry)
+        return entries_which_violate_constraints
 
     @cached_property
     def timetable(self):

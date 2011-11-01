@@ -102,12 +102,12 @@
         height: 80px;
         background-color: #fff;
         position: relative;
-        
+
         h4 {
             margin-bottom: 2px;
             padding-right: 20px;
         }
-        
+
         &.free {
             background-color: #eff1f5;
         }
@@ -115,7 +115,11 @@
         &.break {
             background-color: #ffffcc;
         }
-        
+
+        &.violates_constraint {
+            background-color: #ff0000;
+        }
+
         a.remove {
             position: absolute;
             top: 0px;
