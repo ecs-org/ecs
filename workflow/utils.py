@@ -1,4 +1,5 @@
 from ecs.workflow.models import NODE_TYPE_CATEGORY_SUBGRAPH, NODE_TYPE_CATEGORY_CONTROL, NODE_TYPE_CATEGORY_ACTIVITY
+from ecs.tasks.models import TaskType
 
 def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
     common_edge_attrs = {'fontname': 'Helvetica', 'style': 'bold'}
@@ -24,10 +25,16 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
     nodes = g.nodes.all()
     
     for node in nodes:
+        try:
+            group = ', '.join(node.tasktype.groups.values_list('name', flat=True))
+        except TaskType.DoesNotExist:
+            group = ''
+
+        label = '{%s: %s | %s}' % (node.pk, node.name or " ".join(node.node_type.name.rsplit('.', 1)[-1].split('_')), group)
         opts = {
-            'label': "%s: %s" % (node.pk, node.name or " ".join(node.node_type.name.rsplit('.', 1)[-1].split('_'))),
+            'label': label,
             'style': 'rounded',
-            'shape': 'box',
+            'shape': 'record',
         }
         
         if node.is_end_node:
