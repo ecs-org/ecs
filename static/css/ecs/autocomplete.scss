@@ -33,3 +33,54 @@
         display: inline-block;
     }
 }
+
+/* textbox list mods */
+
+#content .textboxlist {
+  display: inline-block;
+  width: 250px;
+}
+#task_main .textboxlist {
+  width: auto;
+}
+#content .textboxlist ul {
+  margin: 0;
+}
+.textboxlist-bits {
+  border: 1px solid #B7B7B7;
+}
+.textboxlist-autocomplete-result {
+  background: $middle-dark-brown-bg;
+  border-bottom: 1px solid #B7B7B7;
+}
+li.textboxlist-bit-box:nth-child(odd) ,
+li.textboxlist-bit-box:nth-child(even) {
+  background: $middle-dark-brown-bg;
+}
+li.textboxlist-bit-box {
+  padding: 0 20px 0 5px;
+}
+
+#task_main li.textboxlist-autocomplete-result,
+.form_main.readonly li.textboxlist-autocomplete-result {
+  float: none;
+  display: block;
+  margin-bottom: 0;
+}
+.message_display li.textboxlist-bit {
+  padding-right: 20px;
+}
+.textboxlist-autocomplete {
+  z-index: 100;
+}
+#content .textboxlist-autocomplete-result-focus {
+  background: $dark-grey;
+  color: #fff;
+}
+#content .textboxlist-autocomplete-highlight {
+  color: $dark-grey;
+}
+.textboxlist-autocomplete,
+#task_main .textboxlist-autocomplete {
+  min-width: 300px !important;
+}
