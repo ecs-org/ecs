@@ -1,19 +1,34 @@
 {% load core i18n userutils %}
 
+{% if next_tops %}
+<h2>{% trans 'Next TOPs' %}</h2>
+<ul>
+{% for top in next_tops %}
+    <li>
+        {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+        <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
+        | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+    </li>
+{% endfor %}
+</ul>
+{% endif %}
+
 {% if tops_without_votes %}
 <h2>{% trans "Open TOPs" %}</h2>
 <ul>
-{% for data in tops_without_votes %}
+{% for board_members, tops in tops_without_votes.iteritems %}
     <li>
-        {% if data.board_member %}
-            {{ data.board_member }} ({% for amc in data.amcs %}{{ amc.category.abbrev }}{% if not forloop.last %}, {% endif %}{% endfor %})
+        {% if board_members %}
+            {% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}
         {% else %}
             <i>{% trans "No board member." %}</i>
         {% endif %}
         <ul>
-        {% for top in data.tops %}
+        {% for top in tops %}
             <li>
-                {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}
+                {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
+                | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
             </li>
         {% endfor %}
         </ul>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-01 13:41+0100\n"
+"POT-Creation-Date: 2011-11-01 19:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1442,14 +1442,14 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:301 core/forms/layout.py:66 core/forms/layout.py:68
-#: templates/meetings/tabs/status.html:51
+#: templates/meetings/tabs/status.html:52
 #: templates/submissions/tabs/status.html:129 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:302 core/forms/layout.py:75 core/forms/layout.py:77
-#: templates/meetings/tabs/status.html:52
+#: templates/meetings/tabs/status.html:59
 #: templates/submissions/tabs/status.html:136 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
@@ -1459,12 +1459,12 @@ msgstr "MPG"
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:304 templates/meetings/tabs/status.html:55
+#: core/forms/forms.py:304 templates/meetings/tabs/status.html:74
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:305 templates/meetings/tabs/status.html:57
+#: core/forms/forms.py:305 templates/meetings/tabs/status.html:84
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
@@ -2001,39 +2001,39 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:111
+#: meetings/views.py:152
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:221
+#: meetings/views.py:262
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:230
+#: meetings/views.py:271
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:236
+#: meetings/views.py:277
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:250
+#: meetings/views.py:291
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:386 meetings/views.py:397
+#: meetings/views.py:427 meetings/views.py:438
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:399 meetings/views.py:457
+#: meetings/views.py:440 meetings/views.py:498
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:407
+#: meetings/views.py:448
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:417
+#: meetings/views.py:458
 msgid "protocol"
 msgstr "Protokoll"
 
@@ -2467,6 +2467,7 @@ msgid "Old/New"
 msgstr "Alt/Neu"
 
 #: templates/communication/thread.html:28
+#: templates/communication/widgets/overview.inc:11
 msgid "Me"
 msgstr "Ich"
 
@@ -2823,57 +2824,66 @@ msgstr "Statistik"
 msgid "Gesamt"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:53
+#: templates/meetings/tabs/status.html:64
 msgid "AMG/MPG"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:54
+#: templates/meetings/tabs/status.html:69
 #, fuzzy
 msgid "Retrospective Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/status.html:56
+#: templates/meetings/tabs/status.html:79
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: templates/meetings/tabs/status.html:60
+#: templates/meetings/tabs/status.html:91
 #, fuzzy
 msgid "Dissertation"
 msgstr "Diplomarbeit / Dissertation"
 
-#: templates/meetings/tabs/status.html:61
+#: templates/meetings/tabs/status.html:96
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
 
-#: templates/meetings/tabs/status.html:62
+#: templates/meetings/tabs/status.html:101
 msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
-#: templates/meetings/tabs/status.html:63
+#: templates/meetings/tabs/status.html:106
 msgid "Remission"
 msgstr "Gebührenbefreiung"
 
-#: templates/meetings/tabs/status.html:64
+#: templates/meetings/tabs/status.html:111
 msgid "B3 (examined)"
 msgstr "B3 (behandelt)"
 
-#: templates/meetings/tabs/status.html:65
+#: templates/meetings/tabs/status.html:116
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
 #: templates/meetings/tabs/tops.html:4
+msgid "Next TOPs"
+msgstr "Nächste TOPs"
+
+#: templates/meetings/tabs/tops.html:10 templates/meetings/tabs/tops.html:31
+#: templates/scratchpad/popup.html:7
+msgid "Scratchpad"
+msgstr "Notizblock"
+
+#: templates/meetings/tabs/tops.html:17
 msgid "Open TOPs"
 msgstr "Offene TOPs"
 
-#: templates/meetings/tabs/tops.html:11
+#: templates/meetings/tabs/tops.html:24
 msgid "No board member."
 msgstr ""
 
-#: templates/meetings/tabs/tops.html:27
+#: templates/meetings/tabs/tops.html:42
 msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
-#: templates/meetings/tabs/tops.html:31
+#: templates/meetings/tabs/tops.html:46
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
@@ -3042,10 +3052,6 @@ msgstr "geteilt mit:"
 #, python-format
 msgid "Scratchpad for submission %(ec_number)s"
 msgstr "Notizblock für die Studie %(ec_number)s"
-
-#: templates/scratchpad/popup.html:7
-msgid "Scratchpad"
-msgstr "Notizblock"
 
 #: templates/scratchpad/popup.html:10
 msgid "Show all my scratchpads"
