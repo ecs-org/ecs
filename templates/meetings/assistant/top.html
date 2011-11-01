@@ -160,7 +160,9 @@
                     var request = new Request({
                         url: link.href,
                         onSuccess: function(responseText){
-                            $('id_text').value += "\n\n" + responseText;
+                            var textarea = $('id_text');
+                            textarea.value += "\n\n" + responseText;
+                            textarea.retrieve('ecs.textarea.TextArea').updateHeight();
                         }
                     });
                     request.send();
