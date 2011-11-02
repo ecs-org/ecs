@@ -9,6 +9,7 @@ from ecs.workflow import Activity, guard, register
 from ecs.checklists.models import Checklist
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.signals import task_declined
+from ecs.users.utils import get_current_user
 
 register(Checklist)
 
@@ -82,6 +83,6 @@ class ExternalReviewReview(Activity):
             c.render_pdf()
             presenting_users = set([p.user for p in c.submission.current_submission_form.get_presenting_parties() if p.user])
             for u in presenting_users:
-                send_system_message_template(u, _('External Review'), 'checklists/external_review_publish.txt', {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
+                send_system_message_template(u, _('External Review'), 'checklists/external_review_publish.txt', {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission, reply_receiver=get_current_user())
         elif c.status == 'review_fail':
-            send_system_message_template(c.user, _('External Review Declined'), 'checklists/external_review_declined.txt', None, submission=c.submission)
+            send_system_message_template(c.user, _('External Review Declined'), 'checklists/external_review_declined.txt', None, submission=c.submission, reply_receiver=get_current_user())

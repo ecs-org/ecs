@@ -11,7 +11,6 @@ from ecs.core.signals import on_initial_review, on_categorization_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
-from ecs.communication.utils import send_system_message_template
 from ecs.tasks.utils import block_if_task_exists
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)

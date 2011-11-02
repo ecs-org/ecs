@@ -119,7 +119,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None):
+    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None, reply_receiver=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -141,8 +141,15 @@ class Thread(models.Model):
             smtp_delivery_state= smtp_delivery_state,
             rawmsg= rawmsg,
             rawmsg_msgid= rawmsg_msgid,
-            rawmsg_digest_hex= rawmsg_digest_hex
+            rawmsg_digest_hex= rawmsg_digest_hex,
+            reply_receiver=reply_receiver
         )
+        previous_message = self.last_message
+        if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
+            if user.id == self.receiver_id:
+                self.sender = previous_message.reply_receiver
+            else:
+                self.receiver = previous_message.reply_receiver
         self.last_message = msg
         self.closed_by_sender = False
         self.closed_by_receiver = False
@@ -185,6 +192,8 @@ class Message(models.Model):
                             db_index=True)
     
     uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().get_hex(), db_index=True)
+    
+    reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
     
     objects = MessageManager()
     

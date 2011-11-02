@@ -15,8 +15,8 @@ from ecs.users.utils import get_or_create_user
 def _create_root_user():
     settings.ENABLE_AUDIT_LOG = False
     root, _ = get_or_create_user('root@example.org')
-    root.first_name = 'System'
-    root.last_name = 'Administrator'
+    root.first_name = ''
+    root.last_name = 'Ethik-Kommission'
     root.is_staff = True
     root.is_superuser = True
     root.set_unusable_password() # root (System) is not supposed to login, its an auditlog role only
@@ -25,7 +25,7 @@ def _create_root_user():
     profile = root.get_profile()
     profile.is_approved_by_office = True
     profile.forward_messages_after_minutes = 0 # Never forward messages
-    profile.gender = 'f'
+    profile.gender = 'x'
     profile.save()
 
     settings.ENABLE_AUDIT_LOG = True

@@ -30,7 +30,7 @@ def msg_fun(func):
     return _inner
 
 @msg_fun
-def send_message(sender, receiver, subject, text, submission=None, task=None):
+def send_message(sender, receiver, subject, text, submission=None, task=None, reply_receiver=None):
     thread = Thread.objects.create(
         subject=subject,
         sender=sender, 
@@ -38,7 +38,7 @@ def send_message(sender, receiver, subject, text, submission=None, task=None):
         submission=submission,
         task=task,
     )
-    message = thread.add_message(sender, text=text)
+    message = thread.add_message(sender, text=text, reply_receiver=reply_receiver)
     return thread
 
 def send_system_message(*args, **kwargs):
