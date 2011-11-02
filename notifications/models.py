@@ -73,7 +73,7 @@ class Notification(models.Model):
     documents = GenericRelation(Document)
     pdf_document = models.OneToOneField(Document, related_name='_notification', null=True)
 
-    comments = models.TextField(default="", blank=True)
+    comments = models.TextField()
     date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     user = models.ForeignKey('auth.User', null=True)
