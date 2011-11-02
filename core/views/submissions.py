@@ -677,6 +677,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         'filterform': filterform,
         'keyword': keyword,
         'title': title,
+        'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
     }
     data.update(extra_context or {})
 
