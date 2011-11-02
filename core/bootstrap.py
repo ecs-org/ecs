@@ -409,10 +409,10 @@ def auth_user_testusers():
                 'is_approved_by_office': True,
                 'start_workflow': True,
             })
-            update_instance(profile, flags)
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 flags['is_help_writer'] = True
+            update_instance(profile, flags)
 
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
