@@ -86,33 +86,7 @@ def on_initial_review(sender, **kwargs):
 @connect(signals.on_categorization_review)
 def on_categorization_review(sender, **kwargs):
     submission = kwargs['submission']
-    
-    # FIXME: this could use some cleanup
-    is_retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=submission.pk).exists()
-    is_special = submission.is_expedited or is_retrospective_thesis or submission.current_submission_form.is_categorized_multicentric_and_local
+
     is_acknowledged = submission.newest_submission_form.is_acknowledged
-    
-    if is_acknowledged and (not is_special or submission.meetings.filter(started=None).exists()):
+    if is_acknowledged:
         submission.schedule_to_meeting()
-
-
-@connect(signals.on_thesis_recommendation_review)
-def on_thesis_recommendation_review(sender, **kwargs):
-    submission = kwargs['submission']
-    if get_checklist_answer(submission, 'thesis_review', 1):
-        submission.schedule_to_meeting()
-
-
-@connect(signals.on_expedited_recommendation_review)
-def on_expedited_recommendation_review(sender, **kwargs):
-    submission = kwargs['submission']
-    if get_checklist_answer(submission, 'expedited_review', 1):
-        submission.schedule_to_meeting()
-
-
-@connect(signals.on_local_ec_recommendation_review)
-def on_local_ec_recommendation_review(sender, **kwargs):
-    submission = kwargs['submission']
-    submission.schedule_to_meeting()
-    
-    

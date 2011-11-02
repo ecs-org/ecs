@@ -28,10 +28,7 @@ from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
 from ecs.notifications.models import NotificationType
 
-from ecs.core.workflow import (ChecklistReview,
-    ThesisRecommendationReview,
-    ExpeditedRecommendation, ExpeditedRecommendationReview,
-    LocalEcRecommendationReview, BoardMemberReview)
+from ecs.core.workflow import ChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview
 
 from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
@@ -136,8 +133,8 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
-CHECKLIST_ACTIVITIES = (ChecklistReview, ThesisRecommendationReview,
-    ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
+CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview,
+    ExpeditedRecommendation, BoardMemberReview)
 
 
 @readonly()
@@ -233,7 +230,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
-@user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group')
+@user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group', 'Local-EC Review Group')
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     task = request.task_management.task

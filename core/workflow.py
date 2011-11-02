@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
-from ecs.core.signals import on_initial_review, on_categorization_review, on_thesis_recommendation_review, on_expedited_recommendation_review, on_local_ec_recommendation_review
+from ecs.core.signals import on_initial_review, on_categorization_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
@@ -47,16 +47,6 @@ def is_localec(wf):
 @guard(model=Submission)
 def is_expedited_or_retrospective_thesis(wf):
     return is_expedited(wf) or is_retrospective_thesis(wf)
-
-@guard(model=Submission)
-def is_acknowledged_and_localec(wf):
-    # legacy: only for backwards compatibility
-    return is_acknowledged(wf) and is_localec(wf)
-
-@guard(model=Submission)
-def is_acknowledged_and_not_localec(wf):
-    # legacy: only for backwards compatibility
-    return is_acknowledged(wf) and not is_localec(wf)
 
 @guard(model=Submission)
 def has_expedited_recommendation(wf):
@@ -132,7 +122,7 @@ class Resubmission(Activity):
         token.task.assign(self.workflow.data.current_submission_form.presenter)
         return token
 
-class _CategorizationReviewBase(Activity):
+class CategorizationReview(Activity):
     class Meta:
         model = Submission
 
@@ -158,23 +148,7 @@ class _CategorizationReviewBase(Activity):
             for task in expedited_recommendation_tasks:
                 task.expedited_review_categories = s.expedited_review_categories.all()
 
-class CategorizationReview(_CategorizationReviewBase):
-    class Meta:
-        model = Submission
-
-    def pre_perform(self, choice):
-        super(CategorizationReview, self).pre_perform(choice)
         on_categorization_review.send(Submission, submission=self.workflow.data)
-
-
-class ThesisCategorizationReview(_CategorizationReviewBase):
-    class Meta:
-        model = Submission
-
-    def pre_perform(self, choice):
-        super(ThesisCategorizationReview, self).pre_perform(choice)
-        # stub
-
 
 class PaperSubmissionReview(Activity):
     class Meta:
@@ -248,19 +222,6 @@ def unlock_boardmember_review(sender, **kwargs):
 post_save.connect(unlock_boardmember_review, sender=Checklist)
 
 
-# XXX: This could be done without the additional signal handler if `ecs.workflow` properly supported activity inheritance. (FMD3)
-class ThesisRecommendationReview(NonRepeatableChecklistReview):
-    def is_reentrant(self):
-        return True
-
-    def pre_perform(self, choice):
-        super(ThesisRecommendationReview, self).pre_perform(choice)
-        on_thesis_recommendation_review.send(Submission, submission=self.workflow.data)
-
-def unlock_thesis_recommendation_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ThesisRecommendationReview)
-post_save.connect(unlock_thesis_recommendation_review, sender=Checklist)
-
 class ExpeditedRecommendation(NonRepeatableChecklistReview):
     def receive_token(self, *args, **kwargs):
         token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
@@ -272,28 +233,11 @@ def unlock_expedited_recommendation(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendation)
 post_save.connect(unlock_expedited_recommendation, sender=Checklist)
 
-class ExpeditedRecommendationReview(NonRepeatableChecklistReview):
+
+class RecommendationReview(NonRepeatableChecklistReview):
     def is_reentrant(self):
         return True
 
-    def pre_perform(self, choice):
-        super(ExpeditedRecommendationReview, self).pre_perform(choice)
-        on_expedited_recommendation_review.send(Submission, submission=self.workflow.data)
-            
-
-def unlock_expedited_recommendation_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendationReview)
-post_save.connect(unlock_expedited_recommendation_review, sender=Checklist)
-
-
-class LocalEcRecommendationReview(NonRepeatableChecklistReview):
-    def is_reentrant(self):
-        return True
-
-    def pre_perform(self, choice):
-        super(LocalEcRecommendationReview, self).pre_perform(choice)
-        on_local_ec_recommendation_review.send(Submission, submission=self.workflow.data)
-
-def unlock_localec_recommendation_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
-post_save.connect(unlock_localec_recommendation_review, sender=Checklist)
+def unlock_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(RecommendationReview)
+post_save.connect(unlock_recommendation_review, sender=Checklist)

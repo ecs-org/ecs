@@ -7,6 +7,3 @@ on_presenter_change = Signal() # sender=Submission, kwargs: submission, form, ol
 on_susar_presenter_change = Signal() # sender=Submission, kwargs: submission, form, old_susar_presenter, new_susar_presenter
 on_initial_review = Signal() # sender=Submission, kwargs: submission, form
 on_categorization_review = Signal() # sender=Submission, kwargs: submission
-on_thesis_recommendation_review = Signal() # sender=Submission, kwargs: submission
-on_expedited_recommendation_review = Signal() # sender=Submission, kwargs: submission
-on_local_ec_recommendation_review = Signal() # sender=Submission, kwargs: submission
