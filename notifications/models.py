@@ -21,6 +21,7 @@ class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.notifications.forms.NotificationForm')
     default_response = models.TextField(blank=True)
+    position = models.IntegerField(default=0)
 
     includes_diff = models.BooleanField(default=False)
     grants_vote_extension = models.BooleanField(default=False)
@@ -148,7 +149,6 @@ class CompletionReportNotification(ReportNotification):
 
 class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
-    extension_of_vote_requested = models.BooleanField(default=False, blank=True)
 
 
 class AmendmentNotification(DiffNotification, Notification):
@@ -207,10 +207,7 @@ class NotificationAnswer(models.Model):
         extend, finish = False, False
         if not self.is_rejected:
             if self.notification.type.grants_vote_extension:
-                try:
-                    extend = ProgressReportNotification.objects.get(pk=self.notification.pk).extension_of_vote_requested
-                except ProgressReportNotification.DoesNotExist:
-                    assert False, "we should never get here"
+                extend = True
             if self.notification.type.finishes_study:
                 finish = True
         interested_parties = set()

@@ -26,24 +26,27 @@ def notification_types():
             grants_vote_extension = False,
             is_rejectable = False,
             finishes_study = False,
+            position = 1,
         ),
         dict(
-            name = u"Zwischenbericht",
+            name = u"Verlängerung der Gültigkeit des Votums",
             form = "ecs.notifications.forms.ProgressReportNotificationForm",
             default_response = u"",
             includes_diff = False,
             grants_vote_extension = True,
             is_rejectable = True,
             finishes_study = False,
+            position = 2,
         ),
         dict(
-            name = u"Abschlussbericht",
+            name = u"Beendigung der Studie / Abschlussbericht",
             form = "ecs.notifications.forms.CompletionReportNotificationForm",
             default_response = u"",
             includes_diff = False,
             grants_vote_extension = False,
             is_rejectable = True,
             finishes_study = True,
+            position = 3,
         ),
         dict(
             name = u"Amendment",
@@ -53,13 +56,17 @@ def notification_types():
             grants_vote_extension = False,
             is_rejectable = True,
             finishes_study = False,
+            position = 4,
         ),
     )
 
+    objs = set()
     for data in types:
         data = data.copy()
         t, created = NotificationType.objects.get_or_create(name=data.pop('name'), defaults=data)
         update_instance(t, data)
+        objs.add(t)
+    NotificationType.objects.exclude(pk__in=[obj.pk for obj in objs]).delete()
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
