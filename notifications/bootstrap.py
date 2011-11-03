@@ -19,7 +19,7 @@ _ = lambda s: s
 def notification_types():
     types = (
         dict(
-            name = u"Sicherheitsbericht (SUSAR / SAE / Annual Safety Reports)", 
+            name = u"Sicherheitsbericht (SUSAR / SAE / Jährlicher Sicherheitsbericht)", 
             form = "ecs.notifications.forms.SafetyNotificationForm",
             default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
             includes_diff = False,
