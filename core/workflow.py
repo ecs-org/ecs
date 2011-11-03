@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from ecs.workflow import Activity, guard, register
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
 from ecs.core.signals import on_initial_review, on_categorization_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
@@ -28,20 +29,16 @@ def is_acknowledged_and_initial_submission(wf):
     return is_acknowledged(wf) and is_initial_submission(wf)
 
 @guard(model=Submission)
-def is_thesis(wf):
-    return Submission.objects.thesis().filter(pk=wf.data.pk).exists() and not is_expedited(wf)
-
-@guard(model=Submission)
 def is_retrospective_thesis(wf):
-    return Submission.objects.retrospective_thesis().filter(pk=wf.data.pk).exists() and not is_expedited(wf)
+    return wf.data.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return wf.data.is_expedited and wf.data.expedited_review_categories.exists()
+    return wf.data.workflow_lane == SUBMISSION_LANE_EXPEDITED
 
 @guard(model=Submission)
 def is_localec(wf):
-    return wf.data.current_submission_form.is_categorized_multicentric_and_local
+    return wf.data.workflow_lane == SUBMISSION_LANE_LOCALEC
 
 @guard(model=Submission)
 def is_expedited_or_retrospective_thesis(wf):

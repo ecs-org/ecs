@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
     Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory)
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document, DocumentPersonalization, Page
@@ -34,11 +35,11 @@ class SubmissionQFactory(authorization.QFactory):
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(external_reviewers=user)
         if profile.is_thesis_reviewer:
-            until_vote_q |= self.make_q(is_thesis=True)
+            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
         if profile.is_board_member:
             until_vote_q |= self.make_q(timetable_entries__participations__user=user)
         if profile.is_expedited_reviewer:
-            until_vote_q |= self.make_q(is_expedited=True)
+            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_EXPEDITED)
         if profile.is_insurance_reviewer:
             until_vote_q |= self.make_q(insurance_review_required=True)
         q |= until_vote_q & (
@@ -140,7 +141,7 @@ authorization.register(DocumentAnnotation, factory=DocumentAnnotationQFactory)
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        if profile.is_internal:
+        if profile.is_internal or user.groups.filter(name='EC-Thesis Executive Group').exists():
             return self.make_q()
         else:
             return self.make_deny_q()

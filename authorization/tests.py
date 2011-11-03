@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import Submission
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
@@ -97,16 +98,16 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.is_thesis = True
+        self.sf.submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
 
         with sudo(self.expedited_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.is_expedited = True
+        self.sf.submission.workflow_lane = SUBMISSION_LANE_EXPEDITED
         self.sf.submission.save()
-        with sudo(self.thesis_review_user):
+        with sudo(self.expedited_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
     
     @contextmanager

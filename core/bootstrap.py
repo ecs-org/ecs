@@ -18,7 +18,7 @@ from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview
     ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
-    has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
+    has_expedited_recommendation, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
 
 
 # We use this helper function for marking task names as translatable, they are
@@ -152,14 +152,14 @@ def submission_workflow():
             'localec_recommendation_review': Args(RecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
+            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
             ('initial_review_barrier', 'categorization_review'): Args(guard=is_localec, negated=True),
             ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
 
             # retrospective thesis lane
-            ('start', 'initial_thesis_review'): Args(guard=is_thesis),
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('thesis_categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),

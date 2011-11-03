@@ -16,3 +16,15 @@ SUBMISSION_INFORMATION_PRIVACY_CHOICES = (
     ('personal', _('individual-related')), 
     ('non-personal', _('implicit individual-related')),
 )
+
+SUBMISSION_LANE_RETROSPECTIVE_THESIS = 1
+SUBMISSION_LANE_EXPEDITED = 2
+SUBMISSION_LANE_BOARD = 3
+SUBMISSION_LANE_LOCALEC = 4
+
+SUBMISSION_LANE_CHOICES = (
+    (SUBMISSION_LANE_RETROSPECTIVE_THESIS, _('retrospective thesis')),
+    (SUBMISSION_LANE_EXPEDITED, _('expedited')),
+    (SUBMISSION_LANE_BOARD, _('board')),
+    (SUBMISSION_LANE_LOCALEC, _('Local EC')),
+)

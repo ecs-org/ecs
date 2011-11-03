@@ -23,7 +23,6 @@ class VoteRemindersTest(CommunicationTestCase):
         
         # there has to be a test submission
         self.submission_form = create_submission_form()
-        self.submission_form.submission.is_thesis = False
         self.submission_form.submission.save()
         self.submission_form.project_type_education_context = None
         self.submission_form.submitter_email = self.alice.email
@@ -31,8 +30,10 @@ class VoteRemindersTest(CommunicationTestCase):
 
         self.submission_form_thesis = create_submission_form()
         self.submission_form_thesis.submission.is_thesis = True
-        self.submission_form_thesis.submitter_email = self.alice.email
         self.submission_form_thesis.submission.save()
+        self.submission_form_thesis.project_type_education_context = 1  # "Dissertation"
+        self.submission_form_thesis.submitter_email = self.alice.email
+        self.submission_form_thesis.save()
 
         self.january_meeting = Meeting.objects.create(title='January Meeting', start=datetime(2042, 1, 1))
         self.february_meeting = Meeting.objects.create(title='February Meeting', start=datetime(2042, 2, 1))

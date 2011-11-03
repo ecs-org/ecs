@@ -9,7 +9,8 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
-    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES,
+    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
     SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
@@ -32,28 +33,23 @@ from ecs.tasks.models import Task
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
-    is_thesis = models.NullBooleanField()
-    is_retrospective = models.NullBooleanField()
-    is_expedited = models.NullBooleanField()
+    workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES)
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    remission = models.NullBooleanField()
+    remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     valid_until = models.DateField(null=True, blank=True)
 
-    sponsor_required_for_next_meeting = models.BooleanField(default=False)
-    insurance_review_required = models.NullBooleanField()
+    legal_and_patient_review_required = models.NullBooleanField(default=False)
+    statistical_review_required = models.NullBooleanField(default=False)
+    insurance_review_required = models.NullBooleanField(default=False)
     gcp_review_required = models.NullBooleanField(default=False)
-    legal_and_patient_review_required = models.NullBooleanField(default=True)
-    statistical_review_required = models.NullBooleanField(default=True)
+    sponsor_required_for_next_meeting = models.BooleanField(default=False)
 
     is_transient = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
 
-    is_amg = models.NullBooleanField()   # Arzneimittelgesetz
-    is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
-    
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions')
@@ -63,6 +59,10 @@ class Submission(models.Model):
     @property
     def newest_submission_form(self):
         return self.forms.all().order_by('-pk')[0]
+
+    @property
+    def is_expedited(self):
+        return self.workflow_lane == SUBMISSION_LANE_EXPEDITED
 
     def get_submission(self):
         return self
@@ -203,10 +203,7 @@ class Submission(models.Model):
         )
 
     def schedule_to_meeting(self):
-        expedited = self.is_expedited and self.expedited_review_categories.exists()
-        retrospective_thesis = Submission.objects.retrospective_thesis().filter(pk=self.pk).exists()
-        localec = self.current_submission_form.is_categorized_multicentric_and_local
-        visible = not expedited and not retrospective_thesis and not localec
+        visible = self.workflow_lane == SUBMISSION_LANE_BOARD
         duration = timedelta(minutes=7.5 if visible else 0)
 
         def _schedule():
@@ -544,20 +541,14 @@ class SubmissionForm(models.Model):
 
     @property
     def is_amg(self):
-        if self.submission.is_amg is not None:
-            return self.submission.is_amg
         return self.project_type_drug
 
     @property
     def is_mpg(self):
-        if self.submission.is_mpg is not None:
-            return self.submission.is_mpg
         return self.project_type_medical_device
 
     @property
     def is_thesis(self):
-        if self.submission.is_thesis is not None:
-            return self.submission.is_thesis
         return self.project_type_education_context is not None
 
     @property
@@ -676,20 +667,18 @@ def _post_submission_form_save(**kwargs):
     
     if not old_sf:
         submission.current_submission_form = new_sf
+        if new_sf.is_amg:
+            submission.legal_and_patient_review_required = True
+            submission.statistical_review_required = True
+            submission.insurance_review_required = True
+            submission.sponsor_required_for_next_meeting = True
+        if new_sf.is_thesis:
+            submission.remission = True
+        if new_sf.project_type_retrospective and new_sf.is_thesis:
+            submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
+        elif new_sf.is_categorized_multicentric_and_local:
+            submission.workflow_lane = SUBMISSION_LANE_LOCALEC
         submission.save()
-
-    defaults = {
-        'is_amg': new_sf.project_type_drug,
-        'is_mpg': new_sf.project_type_medical_device_or_method,
-        'insurance_review_required': bool(new_sf.insurance_name),
-        'is_thesis': new_sf.project_type_education_context is not None,
-        'is_retrospective': new_sf.project_type_retrospective,
-    }
-
-    for k, v in defaults.iteritems():
-        if getattr(submission, k) is None:
-            setattr(submission, k, v)
-    submission.save(force_update=True)
 
     on_study_change.send(Submission, submission=submission, old_form=old_sf, new_form=new_sf)
 

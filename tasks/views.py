@@ -81,7 +81,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
             amg_q = Q(data_id__in=Submission.objects.amg().values('pk').query)
             mpg_q = Q(data_id__in=Submission.objects.mpg().values('pk').query)
             retrospective_thesis_q = Q(data_id__in=Submission.objects.retrospective_thesis().values('pk').query)
-            expedited_q = Q(data_id__in=Submission.objects.filter(is_expedited=True))
+            expedited_q = Q(data_id__in=Submission.objects.expedited())
             submission_tasks = all_tasks.filter(content_type=submission_ct)
             if amg:
                 tasks |= submission_tasks.filter(amg_q)

@@ -3,7 +3,7 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
 from ecs.authorization import AuthorizationManager
-from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_LANE_EXPEDITED
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 
 def get_vote_filter_q(prefix, *args, **kwargs):
@@ -32,17 +32,10 @@ def get_vote_filter_q(prefix, *args, **kwargs):
 
 class SubmissionQuerySet(models.query.QuerySet):
     def amg(self):
-        return self.filter(Q(is_amg=True) | (
-            Q(is_amg=None) & (
-                Q(current_submission_form__project_type_non_reg_drug=True)
-                | Q(current_submission_form__project_type_reg_drug=True)
-            )
-        ))
+        return self.filter(Q(current_submission_form__project_type_non_reg_drug=True)|Q(current_submission_form__project_type_reg_drug=True))
 
     def mpg(self):
-        return self.filter(Q(is_mpg=True) | (
-            Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
-        ))
+        return self.filter(current_submission_form__project_type_medical_device=True)
 
     def amg_mpg(self):
         return self.amg() & self.mpg()
@@ -69,16 +62,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(meetings__isnull=True)
 
     def thesis(self):
-        return self.filter(Q(is_thesis=True)|(Q(is_thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
+        return self.exclude(current_submission_form__project_type_education_context=None)
 
     def retrospective(self):
-        return self.filter(Q(is_retrospective=True)|Q(is_retrospective=None, current_submission_form__project_type_retrospective=True))
+        return self.filter(current_submission_form__project_type_retrospective=True)
 
     def retrospective_thesis(self):
         return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
 
     def expedited(self):
-        return self.filter(is_expedited=True)
+        return self.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
     def localec(self):
         return self.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)

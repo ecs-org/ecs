@@ -79,7 +79,7 @@ def send_reminder_messages(today=None):
         except IndexError:
             continue
         
-        if vote.submission_form.submission.is_thesis or not vote.submission_form.project_type_education_context is None:
+        if vote.submission_form.is_thesis or not vote.submission_form.project_type_education_context is None:
             deadline = until_meeting.deadline_diplomathesis.date()
         else:
             deadline = until_meeting.deadline.date()

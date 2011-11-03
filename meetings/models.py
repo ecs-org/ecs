@@ -8,6 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 from ecs.utils.viewutils import render_pdf
@@ -126,9 +127,7 @@ class MeetingManager(AuthorizationManager):
 
     def next_schedulable_meeting(self, submission):
         sf = submission.current_submission_form
-        is_thesis = submission.is_thesis
-        if is_thesis is None:
-            is_thesis = sf.project_type_education_context is not None
+        is_thesis = submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
 
         meetings = self.filter(deadline__gt=sf.created_at)
         if is_thesis:
@@ -168,15 +167,15 @@ class Meeting(models.Model):
 
     @property
     def retrospective_thesis_submissions(self):
-        return self.submissions.retrospective_thesis()
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
 
     @property
     def expedited_submissions(self):
-        return self.submissions.expedited()
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
     @property
     def localec_submissions(self):
-        return self.submission.localec()
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_LOCALEC)
 
     @property
     def retrospective_thesis_entries(self):
@@ -184,11 +183,11 @@ class Meeting(models.Model):
 
     @property
     def expedited_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.expedited().values('pk').query)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
     @property
     def localec_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.localec().values('pk').query)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
 
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
@@ -491,13 +490,13 @@ class TimetableEntry(models.Model):
     def is_retrospective(self):
         if not self.submission_id:
             return False
-        return self.submission.is_retrospective
+        return self.submission.current_submission_form.is_retrospective
     
     @cached_property
     def is_thesis(self):
         if not self.submission_id:
             return False
-        return self.submission.is_thesis
+        return self.submission.current_submission_form.is_thesis
         
     @cached_property
     def is_expedited(self):
