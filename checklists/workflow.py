@@ -81,8 +81,9 @@ class ExternalReviewReview(Activity):
         c.save()
         if c.status == 'review_ok':
             c.render_pdf()
-            presenting_users = set([p.user for p in c.submission.current_submission_form.get_presenting_parties() if p.user])
-            for u in presenting_users:
-                send_system_message_template(u, _('External Review'), 'checklists/external_review_publish.txt', {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission, reply_receiver=get_current_user())
+            presenting_parties = c.submission.current_submission_form.get_presenting_parties()
+            presenting_parties.send_message(_('External Review'), 'checklists/external_review_publish.txt',
+                {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX},
+                submission=c.submission, reply_receiver=get_current_user())
         elif c.status == 'review_fail':
             send_system_message_template(c.user, _('External Review Declined'), 'checklists/external_review_declined.txt', None, submission=c.submission, reply_receiver=get_current_user())

@@ -15,7 +15,6 @@ from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Submission
-from ecs.core.parties import get_presenting_parties
 from ecs.documents.models import Document
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer

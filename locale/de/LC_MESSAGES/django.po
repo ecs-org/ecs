@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-02 00:39+0100\n"
+"POT-Creation-Date: 2011-11-03 00:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,23 +137,23 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: checklists/bootstrap.py:23 core/bootstrap.py:135
+#: checklists/bootstrap.py:23 core/bootstrap.py:134
 msgid "Statistical Review"
 msgstr "Statistische Bewertung"
 
-#: checklists/bootstrap.py:24 core/bootstrap.py:133
+#: checklists/bootstrap.py:24 core/bootstrap.py:132
 msgid "Legal and Patient Review"
 msgstr "Pat.info Bewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:134
+#: checklists/bootstrap.py:25 core/bootstrap.py:133
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
-#: checklists/bootstrap.py:26 core/bootstrap.py:137
+#: checklists/bootstrap.py:26 core/bootstrap.py:136
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-#: checklists/bootstrap.py:27 core/bootstrap.py:136
+#: checklists/bootstrap.py:27 core/bootstrap.py:135
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -162,7 +162,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:126
+#: checklists/bootstrap.py:56 core/bootstrap.py:125
 #: notifications/bootstrap.py:74 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
@@ -197,23 +197,23 @@ msgstr "Überprüfung fehlgeschlagen"
 msgid "Dropped"
 msgstr "Fallengelassen"
 
-#: checklists/workflow.py:48
+#: checklists/workflow.py:49
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: checklists/workflow.py:72
+#: checklists/workflow.py:73
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: checklists/workflow.py:73
+#: checklists/workflow.py:74
 msgid "Send back to external Reviewer"
 msgstr "Zurück zum Gutachter"
 
-#: checklists/workflow.py:74
+#: checklists/workflow.py:75
 msgid "Drop"
 msgstr "Fallen lassen"
 
-#: checklists/workflow.py:87
+#: checklists/workflow.py:89
 msgid "External Review Declined"
 msgstr "Gutachten Abgelehnt"
 
@@ -225,7 +225,7 @@ msgstr "Ethik-Kommission"
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:50
+#: communication/forms.py:50 templates/communication/sort_options.inc:6
 msgid "Person"
 msgstr "Person"
 
@@ -254,64 +254,69 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:127 votes/bootstrap.py:27
+#: core/bootstrap.py:126 votes/bootstrap.py:27
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:128
+#: core/bootstrap.py:127
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:129
+#: core/bootstrap.py:128
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:130
+#: core/bootstrap.py:129
 #, fuzzy
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:131 templates/submissions/readonly_form.html:82
+#: core/bootstrap.py:130 templates/submissions/readonly_form.html:82
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:132 templates/submissions/list.html:87
+#: core/bootstrap.py:131 templates/submissions/list.html:87
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:140
+#: core/bootstrap.py:139
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:141
+#: core/bootstrap.py:140
 msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
 
-#: core/bootstrap.py:142
+#: core/bootstrap.py:141
 #, fuzzy
 msgid "Thesis Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:143
+#: core/bootstrap.py:142
 #, fuzzy
 msgid "Thesis Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:144
+#: core/bootstrap.py:143
 #, fuzzy
 msgid "Thesis Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:147
+#: core/bootstrap.py:146
 #, fuzzy
 msgid "Expedited Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:147
 #, fuzzy
 msgid "Expedited Recommendation Review"
 msgstr "Empfehlungsgutachten"
+
+#: core/bootstrap.py:150
+#, fuzzy
+msgid "Local EC Categorization Review"
+msgstr "Einstufung und Zuteilung"
 
 #: core/bootstrap.py:151
 #, fuzzy
@@ -1365,45 +1370,69 @@ msgstr "Institution"
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
-#: core/parties.py:34 templates/submissions/catalog.html:38
+#: core/parties.py:43 templates/submissions/catalog.html:38
 msgid "Sponsor"
 msgstr ""
 
-#: core/parties.py:41
+#: core/parties.py:50
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: core/parties.py:47 templates/meetings/assistant/top.html:9
+#: core/parties.py:56 templates/meetings/assistant/top.html:9
 #: templates/submissions/catalog.html:34
 msgid "Submitter"
 msgstr "Antragsteller"
 
-#: core/parties.py:49
+#: core/parties.py:58
 msgid "Presenter"
 msgstr "Präsentator"
 
-#: core/parties.py:50
+#: core/parties.py:59
 #, fuzzy
 msgid "Susar Presenter"
 msgstr "Susar Präsentator Ändern"
 
-#: core/parties.py:53
+#: core/parties.py:62
 msgid "Primary Investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: core/parties.py:91
+#: core/parties.py:100
 msgid "Meeting Participant"
 msgstr "Sitzungsteilnehmer"
 
-#: core/parties.py:95
+#: core/parties.py:104
 msgid "Meeting Participant (assigned for category)"
 msgstr "Sitzungsteilnehmer (ausgewählt für Kategorie)"
 
-#: core/workflow.py:106
+#: core/triggers.py:25 core/triggers.py:34
+#, fuzzy
+msgid "Creation of study EC-Nr. {ec_number}"
+msgstr "Erstellung der Studie EK-Nr. {0}"
+
+#: core/triggers.py:56 core/triggers.py:58 core/triggers.py:67
+#: core/triggers.py:69
+#, fuzzy
+msgid "Studie {ec_number}"
+msgstr "Studien"
+
+#: core/triggers.py:76
+msgid "Submission accepted"
+msgstr "Einreichung akzeptiert"
+
+#: core/triggers.py:81
+#, fuzzy
+msgid "Changes to study EC-Nr. {ec_number}"
+msgstr "Änderungen an Studie EK-Nr. {0}"
+
+#: core/triggers.py:83
+msgid "Submission not accepted"
+msgstr "Einreichung nicht akzeptiert"
+
+#: core/workflow.py:95
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:107
+#: core/workflow.py:96
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1448,13 +1477,15 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:301 core/forms/layout.py:66 core/forms/layout.py:68
 #: templates/meetings/tabs/status.html:52
-#: templates/submissions/tabs/status.html:129
+#: templates/submissions/tabs/status.html:129 templates/tasks/tasks.inc:20
+#: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:302 core/forms/layout.py:75 core/forms/layout.py:77
 #: templates/meetings/tabs/status.html:59
-#: templates/submissions/tabs/status.html:136
+#: templates/submissions/tabs/status.html:136 templates/tasks/tasks.inc:21
+#: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
@@ -1468,7 +1499,8 @@ msgid "Expedited"
 msgstr "Expedited"
 
 #: core/forms/forms.py:305 templates/meetings/tabs/status.html:84
-#: templates/submissions/tabs/status.html:133
+#: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:24
+#: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
@@ -1492,11 +1524,13 @@ msgstr "Andere Voten"
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:311
+#: core/forms/forms.py:311 templates/tasks/tasks.inc:14
+#: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:312
+#: core/forms/forms.py:312 templates/tasks/tasks.inc:15
+#: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
@@ -1619,7 +1653,8 @@ msgstr "Status"
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: core/forms/review.py:32
+#: core/forms/review.py:32 templates/tasks/tasks.inc:22
+#: templates/tasks/tasks_full.inc:21
 msgid "thesis"
 msgstr "Diplomarbeit"
 
@@ -1631,7 +1666,8 @@ msgstr "Retrospektiv"
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:35
+#: core/forms/review.py:35 templates/tasks/tasks.inc:23
+#: templates/tasks/tasks_full.inc:22
 msgid "expedited"
 msgstr "Expedited"
 
@@ -1736,27 +1772,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:619
+#: core/views/submissions.py:616
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:717 templates/core.html:41
+#: core/views/submissions.py:714 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:719
+#: core/views/submissions.py:716
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:732
+#: core/views/submissions.py:729
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:755 templates/core.html:44
+#: core/views/submissions.py:752 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:765 templates/core.html:47
+#: core/views/submissions.py:762 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -1979,11 +2015,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:596
+#: meetings/models.py:614
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/models.py:597
+#: meetings/models.py:615
 msgid "impossible"
 msgstr "unmöglich"
 
@@ -2085,7 +2121,7 @@ msgstr ""
 msgid "Study"
 msgstr "Studie"
 
-#: notifications/models.py:231
+#: notifications/models.py:229
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -2093,22 +2129,22 @@ msgstr "Neue Meldungsantwort"
 msgid "Sicherheitsmeldungseingangsbestätigung"
 msgstr ""
 
-#: notifications/views.py:39 templates/core.html:59
+#: notifications/views.py:38 templates/core.html:59
 #: templates/submissions/readonly_form.html:109
 #: templates/submissions/readonly_form.html:158
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: notifications/views.py:42
+#: notifications/views.py:41
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:45 templates/core.html:58
+#: notifications/views.py:44 templates/core.html:58
 #: templates/submissions/readonly_form.html:140
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:156
+#: notifications/views.py:155
 msgid "save successful"
 msgstr "speichern erflogreich"
 
@@ -2234,7 +2270,7 @@ msgid "Communication"
 msgstr "Nachrichten"
 
 #: templates/core.html:35 templates/tasks/list.html:6
-#: templates/tasks/list.html.py:7
+#: templates/tasks/list.html.py:7 templates/tasks/tasks.inc:5
 msgid "Tasks"
 msgstr "Aufgaben"
 
@@ -2377,6 +2413,60 @@ msgstr "Löschen"
 msgid "No boilerplate yet!"
 msgstr "Es gibt nocht keinen Textbaustein!"
 
+#: templates/checklists/external_review_declined.txt:2
+#, python-format
+msgid ""
+"\n"
+"Your external review for the study %(ec_number)s can not be accepted in the\n"
+"present shape.\n"
+"Please check your inbox for more precise information. You can resubmit\n"
+"your external review as appropriate.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ihr Gutachten fur die Studie (%(ec_number)s) kann in der vorliegenden Form "
+"nicht angenommen werden.\n"
+"Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
+"das Guthaben ggf. neu einsenden.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
+#: templates/checklists/external_review_publish.txt:2
+#, python-format
+msgid ""
+"\n"
+"There is an new external review for the study %(ec_number)s available.\n"
+"Please click the following link to download the review as PDF file:\n"
+msgstr ""
+"\n"
+"Es liegt ein neues Gutachten für die Studie %(ec_number)s vor.\n"
+"Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei "
+"herunterzuladen:\n"
+
+#: templates/checklists/external_review_publish.txt:8
+msgid ""
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
+#: templates/checklists/external_reviewer_invitation.txt:2
+#, python-format
+msgid ""
+"\n"
+"You have been invited to make an external review for the study "
+"%(ec_number)s.\n"
+msgstr ""
+"\n"
+"Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
+
 #: templates/communication/list.html:12 templates/pdfviewer/viewer.html:46
 msgid "Date"
 msgstr "Datum"
@@ -2424,7 +2514,16 @@ msgstr "Anmerkungen einfügen"
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
 
+#: templates/communication/sort_options.inc:2
+msgid "sort"
+msgstr "sortieren"
+
+#: templates/communication/sort_options.inc:7
+msgid "Old/New"
+msgstr "Alt/Neu"
+
 #: templates/communication/thread.html:28
+#: templates/communication/widgets/overview.inc:11
 msgid "Me"
 msgstr "Ich"
 
@@ -2461,10 +2560,12 @@ msgid "Von/An"
 msgstr "Von/An"
 
 #: templates/communication/threads.html:32
+#: templates/communication/widgets/messages.inc:16
 msgid "an"
 msgstr "an"
 
 #: templates/communication/threads.html:34
+#: templates/communication/widgets/messages.inc:16
 msgid "von"
 msgstr "von"
 
@@ -2570,7 +2671,8 @@ msgstr ""
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:10
+#: templates/meetings/details.html:10 templates/tasks/tasks.inc:73
+#: templates/tasks/tasks_full.inc:75
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
@@ -3032,6 +3134,23 @@ msgstr "Allgemeiner Notizblock"
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
+#: templates/submissions/acknowledge_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"Your submission \"%(project_title)s\" (%(ec_number)s) has be accepted for "
+"further processing.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur weiteren "
+"Bearbeitung akzeptiert.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
 #: templates/submissions/base_form.html:12
 msgid "Submission"
 msgstr "Einreichung"
@@ -3068,6 +3187,19 @@ msgstr "Klinik"
 msgid "Additional Investigators"
 msgstr "Zusätzliche Zentren"
 
+#: templates/submissions/change_message.txt:2
+#, fuzzy, python-format
+msgid ""
+"\n"
+"The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
+"können die Studie neu einreichen.\n"
+
 #: templates/submissions/change_presenter.html:4
 #: templates/submissions/change_presenter.html:5
 #: templates/submissions/change_presenter.html:11
@@ -3079,6 +3211,52 @@ msgstr "Einreicher Ändern"
 #: templates/submissions/change_susar_presenter.html:11
 msgid "Change Susar Presenter"
 msgstr "Susar Präsentator Ändern"
+
+#: templates/submissions/checklist_review_form.inc:47
+#: templates/submissions/review_form.inc:20
+msgid "save"
+msgstr "Speichern"
+
+#: templates/submissions/checklist_summary.inc:20
+#, fuzzy
+msgid "No Checklist yet."
+msgstr "Formale Prüfung Diplomarbeit"
+
+#: templates/submissions/creation_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"The study \"%(project_title)s\" (%(ec_number)s) has been created.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Die Studie \"%(project_title)s\" (%(ec_number)s) wurde erstellt.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
+#: templates/submissions/decline_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"Your submission \"%(project_title)s\" (%(ec_number)s) cannot be accepted in "
+"the present shape.\n"
+"Please check your inbox for more precise information. You can resubmit\n"
+"your study as appropriate.\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
+"vorliegenden Form nicht angenommen werden.\n"
+"Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
+"die Studie ggf. neu einreichen.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/submissions/form.html:28
 msgid "Submit Amendment"
@@ -3179,6 +3357,31 @@ msgstr "Unterlagen"
 #: templates/submissions/list.html:128 templates/submissions/widget.html:54
 msgid "No Submissions."
 msgstr "Keine Einreichung."
+
+#: templates/submissions/new_version_message.txt:2
+#, python-format
+msgid ""
+"\n"
+"A new version of study \"%(project_title)s\" (%(ec_number)s)\n"
+"has been submitted.\n"
+msgstr ""
+"\n"
+"Eine neue Version der Studie \"%(project_title)s\" (%(ec_number)s)\n"
+"wurde eingereicht.\n"
+
+#: templates/submissions/presenter_change_new.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie wurden als Einreicher für die Studie %(ec_number)s ausgewählt.\n"
+msgstr ""
+
+#: templates/submissions/presenter_change_previous.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie sind nun nicht mehr Einreicher der Studie %(ec_number)s.\n"
+msgstr ""
 
 #: templates/submissions/readonly_form.html:11
 #, fuzzy
@@ -3291,6 +3494,41 @@ msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
 
+#: templates/submissions/susar_presenter_change_new.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie wurden als Susar Präsentator für die Studie %(ec_number)s ausgewählt.\n"
+msgstr ""
+
+#: templates/submissions/susar_presenter_change_previous.txt:2
+#, python-format
+msgid ""
+"\n"
+"Sie sind nun nicht mehr Susar Präsentator der Studie %(ec_number)s.\n"
+msgstr ""
+
+#: templates/submissions/vote_publish.txt:2
+#, python-format
+msgid ""
+"\n"
+"The Vote for the study %(ec_number)s \"%(project_title)s\" (Your "
+"involvement: %(involvement)s) has been published.\n"
+"\n"
+"The result of the voting is: %(vote_result)s\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Das Votum für die Studie  %(ec_number)s \"%(project_title)s\" (Ihre "
+"Beteiligung: %(involvement)s) ist Ihnen nun zugänglich.\n"
+"\n"
+"Der Beschluss der Abstimmung lautet: %(vote_result)s\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
+
 #: templates/submissions/tabs/involved_parties.html:5
 msgid "Involvement"
 msgstr "Beteiligung"
@@ -3375,6 +3613,66 @@ msgstr "Schließen"
 msgid "Delegate"
 msgstr "Abgeben"
 
+#: templates/tasks/tasks.inc:11 templates/tasks/tasks_full.inc:10
+msgid "Sort by"
+msgstr "Sortieren nach"
+
+#: templates/tasks/tasks.inc:16 templates/tasks/tasks_full.inc:15
+msgid "Open"
+msgstr "Offen"
+
+#: templates/tasks/tasks.inc:17 templates/tasks/tasks_full.inc:16
+msgid "Proxy"
+msgstr "Vertretung"
+
+#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:36
+msgid "My Tasks"
+msgstr "Meine Aufgaben"
+
+#: templates/tasks/tasks.inc:46 templates/tasks/tasks_full.inc:52
+msgid "Tasks assigned to me"
+msgstr "Übernommene Aufgaben"
+
+#: templates/tasks/tasks.inc:57 templates/tasks/tasks.inc.py:85
+#: templates/tasks/tasks.inc:110 templates/tasks/tasks_full.inc:61
+#: templates/tasks/tasks_full.inc.py:84 templates/tasks/tasks_full.inc:105
+msgid "Preview"
+msgstr "Vorschau"
+
+#: templates/tasks/tasks.inc:62 templates/tasks/tasks_full.inc:65
+msgid "Decline"
+msgstr "Ablehnen"
+
+#: templates/tasks/tasks.inc:98 templates/tasks/tasks_full.inc:96
+msgid "Proxy Tasks"
+msgstr "Vertretungsaufgaben"
+
+#: templates/tasks/tasks.inc:122 templates/tasks/tasks_full.inc:116
+msgid "There are no tasks for you."
+msgstr "Sie haben derzeit keine Aufgaben."
+
+#: templates/tasks/tasks_full.inc:26
+msgid "Task Type"
+msgstr "Aufgabenart"
+
+#: templates/tasks/tasks_full.inc:29
+msgid "Drag the bookmark link to your bookmark bar to save it."
+msgstr ""
+"Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
+"speichern."
+
+#: templates/tasks/tasks_full.inc:30
+msgid "Bookmark"
+msgstr "Lesezeichen"
+
+#: templates/tasks/tasks_js.inc:32
+msgid "Collapse"
+msgstr "weniger"
+
+#: templates/tasks/tasks_js.inc:36
+msgid "Expand"
+msgstr "mehr"
+
 #: templates/users/administration.html:7
 msgid "List of Users"
 msgstr "Liste der Benutzer"
@@ -3410,7 +3708,7 @@ msgstr "Unbestätigte Benutzer können nicht einreichen"
 msgid "If you mark an user indisposed, somone else has to do the users work"
 msgstr ""
 
-#: templates/users/administration.html:42
+#: templates/users/administration.html:42 templates/users/base_profile.inc:25
 msgid "Indisposed"
 msgstr "Verhindert"
 
@@ -3450,6 +3748,10 @@ msgstr "Keine Benutzer."
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
+#: templates/users/base_profile.inc:28
+msgid "Reset"
+msgstr "Zurücksetzen"
+
 #: templates/users/login.html:33
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
@@ -3457,6 +3759,21 @@ msgstr "Öffentliches Register"
 #: templates/users/login.html:46
 msgid "Your username and password did not match. Please try again."
 msgstr ""
+
+#: templates/users/new_signing_user.txt:2
+#, python-format
+msgid ""
+"\n"
+"A new Signing User has been created: %(name)s\n"
+"\n"
+"Sincerly yours,\n"
+"    The Team of the Ethics Commission\n"
+msgstr ""
+"\n"
+"Ein neuer Zeichnungberechtigter wurde hinzugefügt: %(name)s\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/users/profile.html:9
 msgid "Edit Profile"
@@ -3840,7 +4157,7 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: votes/triggers.py:13
+#: votes/triggers.py:12
 msgid "Publication of {vote}"
 msgstr "Veröffentlichung von {vote}"
 
@@ -3852,238 +4169,14 @@ msgstr ""
 msgid "B3"
 msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "Your external review for the study %(ec_number)s can not be accepted in "
-#~ "the\n"
-#~ "present shape.\n"
-#~ "Please check your inbox for more precise information. You can resubmit\n"
-#~ "your external review as appropriate.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ihr Gutachten fur die Studie (%(ec_number)s) kann in der vorliegenden "
-#~ "Form nicht angenommen werden.\n"
-#~ "Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
-#~ "das Guthaben ggf. neu einsenden.\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "There is an new external review for the study %(ec_number)s available.\n"
-#~ "Please click the following link to download the review as PDF file:\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Es liegt ein neues Gutachten für die Studie %(ec_number)s vor.\n"
-#~ "Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei "
-#~ "herunterzuladen:\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "You have been invited to make an external review for the study "
-#~ "%(ec_number)s.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
-#~ "erstellen.\n"
-
-#~ msgid "sort"
-#~ msgstr "sortieren"
-
-#~ msgid "Old/New"
-#~ msgstr "Alt/Neu"
-
-#~ msgid ""
-#~ "\n"
-#~ "Your submission \"%(project_title)s\" (%(ec_number)s) has be accepted for "
-#~ "further processing.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur weiteren "
-#~ "Bearbeitung akzeptiert.\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#, fuzzy
-#~ msgid ""
-#~ "\n"
-#~ "The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
-#~ "können die Studie neu einreichen.\n"
-
-#~ msgid "save"
-#~ msgstr "Speichern"
-
-#, fuzzy
-#~ msgid "No Checklist yet."
-#~ msgstr "Formale Prüfung Diplomarbeit"
-
-#~ msgid ""
-#~ "\n"
-#~ "The study \"%(project_title)s\" (%(ec_number)s) has been created.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Die Studie \"%(project_title)s\" (%(ec_number)s) wurde erstellt.\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "Your submission \"%(project_title)s\" (%(ec_number)s) cannot be accepted "
-#~ "in the present shape.\n"
-#~ "Please check your inbox for more precise information. You can resubmit\n"
-#~ "your study as appropriate.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
-#~ "vorliegenden Form nicht angenommen werden.\n"
-#~ "Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
-#~ "die Studie ggf. neu einreichen.\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "A new version of study \"%(project_title)s\" (%(ec_number)s)\n"
-#~ "has been submitted.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Eine neue Version der Studie \"%(project_title)s\" (%(ec_number)s)\n"
-#~ "wurde eingereicht.\n"
-
-#~ msgid ""
-#~ "\n"
-#~ "The Vote for the study %(ec_number)s \"%(project_title)s\" (Your "
-#~ "involvement: %(involvement)s) has been published.\n"
-#~ "\n"
-#~ "The result of the voting is: %(vote_result)s\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Das Votum für die Studie  %(ec_number)s \"%(project_title)s\" (Ihre "
-#~ "Beteiligung: %(involvement)s) ist Ihnen nun zugänglich.\n"
-#~ "\n"
-#~ "Der Beschluss der Abstimmung lautet: %(vote_result)s\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid "Sort by"
-#~ msgstr "Sortieren nach"
-
-#~ msgid "Open"
-#~ msgstr "Offen"
-
-#~ msgid "Proxy"
-#~ msgstr "Vertretung"
-
-#~ msgid "My Tasks"
-#~ msgstr "Meine Aufgaben"
-
-#~ msgid "Tasks assigned to me"
-#~ msgstr "Übernommene Aufgaben"
-
-#~ msgid "Preview"
-#~ msgstr "Vorschau"
-
-#~ msgid "Decline"
-#~ msgstr "Ablehnen"
-
-#~ msgid "Proxy Tasks"
-#~ msgstr "Vertretungsaufgaben"
-
-#~ msgid "There are no tasks for you."
-#~ msgstr "Sie haben derzeit keine Aufgaben."
-
-#~ msgid "Task Type"
-#~ msgstr "Aufgabenart"
-
-#~ msgid "Drag the bookmark link to your bookmark bar to save it."
-#~ msgstr ""
-#~ "Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
-#~ "speichern."
-
-#~ msgid "Bookmark"
-#~ msgstr "Lesezeichen"
-
-#~ msgid "Collapse"
-#~ msgstr "weniger"
-
-#~ msgid "Expand"
-#~ msgstr "mehr"
-
-#~ msgid "Reset"
-#~ msgstr "Zurücksetzen"
-
-#~ msgid ""
-#~ "\n"
-#~ "A new Signing User has been created: %(name)s\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Ein neuer Zeichnungberechtigter wurde hinzugefügt: %(name)s\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
 #~ msgid "Type of Task"
 #~ msgstr "Art der Aufgabe"
 
 #~ msgid "Vote Publication"
 #~ msgstr "Votum Bekanntmachung"
 
-#~ msgid "Submission accepted"
-#~ msgstr "Einreichung akzeptiert"
-
-#~ msgid "Changes to study EC-Nr. {0}"
-#~ msgstr "Änderungen an Studie EK-Nr. {0}"
-
-#~ msgid "Submission not accepted"
-#~ msgstr "Einreichung nicht akzeptiert"
-
-#~ msgid "Creation of study EC-Nr. {0}"
-#~ msgstr "Erstellung der Studie EK-Nr. {0}"
-
 #~ msgid "New version of study EC-Nr. {0}"
 #~ msgstr "Neue Version der Studie EK-Nr. {0}"
-
-#, fuzzy
-#~ msgid "Studie {0}"
-#~ msgstr "Studien"
 
 #, fuzzy
 #~ msgid "Version"
