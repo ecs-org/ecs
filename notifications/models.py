@@ -13,7 +13,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.core.parties import get_presenting_parties
 from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
-from ecs.notifications.constants import SAFETY_TYPE_CHOICES
+from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
 from ecs.notifications.managers import NotificationManager
 
 
@@ -77,8 +77,8 @@ class Notification(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     user = models.ForeignKey('auth.User', null=True)
-
-    needs_executive_review = models.BooleanField(default=False)
+    
+    review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)
     
     objects = NotificationManager()
     
@@ -162,7 +162,6 @@ class SafetyNotification(Notification):
 
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
-    review_count = models.PositiveIntegerField(default=0)
     text = models.TextField()
     is_valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     is_rejected = models.BooleanField(default=False)
@@ -170,8 +169,7 @@ class NotificationAnswer(models.Model):
     
     @property
     def needs_further_review(self):
-        # further review is required iff: the answer is not valid or has not been reviewed by a multiple of four eyes.
-        return not self.is_valid or self.review_count == 0 or self.review_count % 2 != 0
+        return not self.is_valid
         
     def render_pdf(self):
         notification = self.notification

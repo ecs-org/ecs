@@ -5,6 +5,7 @@ from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
 from ecs.notifications.signals import on_safety_notification_review
+from ecs.notifications.constants import NOTIFICATION_REVIEW_LANE_CHOICES
 
 NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
 
@@ -13,8 +14,16 @@ for cls in NOTIFICATION_MODELS:
 
 
 @guard(model=Notification)
-def needs_executive_review(wf):
-    return wf.data.needs_executive_review
+def needs_executive_group_review(wf):
+    return wf.data.review_lane == 'exerev'
+
+@guard(model=Notification)
+def needs_notification_group_review(wf):
+    return wf.data.review_lane == 'notrev'
+
+@guard(model=Notification)
+def needs_insurance_group_review(wf):
+    return wf.data.review_lane == 'insrev'
 
 @guard(model=Notification)
 def is_susar(wf):
@@ -55,16 +64,11 @@ class InitialAmendmentReview(InitialNotificationReview):
         model = Notification
         
     def get_choices(self):
-        return (
-            (False, _('Notification Group Review')),
-            (True, _('Executive Review')),
-        )
+        return NOTIFICATION_REVIEW_LANE_CHOICES
 
     def pre_perform(self, choice):
         n = self.workflow.data
-        n.needs_executive_review = choice
-        n.new_submission_form.is_acknowledged = True
-        n.new_submission_form.save()
+        n.review_lane = choice
         n.save()
 
 
@@ -81,9 +85,27 @@ class EditNotificationAnswer(BaseNotificationReview):
     def pre_perform(self, choice):
         answer = self.workflow.data.answer
         answer.is_valid = choice
-        answer.review_count += 1
         answer.save()
 
+
+class AmendmentReview(BaseNotificationReview):
+    class Meta:
+        model = Notification
+        
+    def get_choices(self):
+        options = ('notrev', 'exerev')
+        choices = [(None, _('Ready'))]
+        n = self.workflow.data
+        for value, label in NOTIFICATION_REVIEW_LANE_CHOICES:
+            if value in options and value != n.review_lane:
+                choices.append((value, label))
+        return choices
+        
+    def pre_perform(self, choice):
+        if choice:
+            n = self.workflow.data
+            n.review_lane = choice
+            n.save()
 
 class SafetyNotificationReview(Activity):
     class Meta:
