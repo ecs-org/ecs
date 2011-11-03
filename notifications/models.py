@@ -5,7 +5,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.template import loader
 from django.template.defaultfilters import slugify
 
@@ -156,7 +157,7 @@ class AmendmentNotification(DiffNotification, Notification):
 
 
 class SafetyNotification(Notification):
-    safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES)
+    safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES, verbose_name=_('Type'))
     is_acknowledged = models.BooleanField(default=False)
 
 
@@ -221,6 +222,7 @@ class NotificationAnswer(models.Model):
             if finish:
                 submission.finish()
             presenting_parties = submission.current_submission_form.get_presenting_parties()
+            _ = ugettext
             presenting_parties.send_message(_('New Notification Answer'), 'notifications/answers/new_message.txt', context={
                 'notification': self.notification,
                 'answer': self,

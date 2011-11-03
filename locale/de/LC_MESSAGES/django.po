@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-03 17:15+0100\n"
+"POT-Creation-Date: 2011-11-03 18:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -163,7 +163,7 @@ msgid "External Review"
 msgstr "Gutachten"
 
 #: checklists/bootstrap.py:56 core/bootstrap.py:125
-#: notifications/bootstrap.py:76 users/bootstrap.py:22 votes/bootstrap.py:26
+#: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
 
@@ -382,10 +382,9 @@ msgstr "Studien"
 msgid "Statement/Conclusion/Notice"
 msgstr "Begründung/Stellungnahme/Mitteilung"
 
-#: core/paper_forms.py:45
-#, fuzzy
+#: core/paper_forms.py:45 notifications/models.py:160
 msgid "Type"
-msgstr "Aufgabenart"
+msgstr "Typ"
 
 #: core/paper_forms.py:49
 msgid "The study has been started"
@@ -427,100 +426,96 @@ msgstr "Datum der Beendigung"
 msgid "Estimated end date"
 msgstr "Voraussichtliches Enddatum"
 
-#: core/paper_forms.py:65
-msgid "I apply for an extension of the validity of the vote"
-msgstr "Ich beantrage die Verlängerung der Gültigkeit des Votums."
-
-#: core/paper_forms.py:69
+#: core/paper_forms.py:68
 msgid "PDF-file"
 msgstr "PDF-Datei"
 
-#: core/paper_forms.py:70
+#: core/paper_forms.py:69
 msgid "file name"
 msgstr "Dateiname"
 
-#: core/paper_forms.py:71
+#: core/paper_forms.py:70
 msgid "version"
 msgstr "Version"
 
-#: core/paper_forms.py:72
+#: core/paper_forms.py:71
 msgid "date of document creation"
 msgstr "Datum der Dokumenterstellung"
 
-#: core/paper_forms.py:73 core/paper_forms.py:84
+#: core/paper_forms.py:72 core/paper_forms.py:83
 msgid "type"
 msgstr "Typ"
 
-#: core/paper_forms.py:74
+#: core/paper_forms.py:73
 msgid "replace document"
 msgstr "Ersetze Dokument"
 
-#: core/paper_forms.py:78
+#: core/paper_forms.py:77
 msgid "name"
 msgstr "Name"
 
-#: core/paper_forms.py:79
+#: core/paper_forms.py:78
 msgid "investigator"
 msgstr "Prüfarzt"
 
-#: core/paper_forms.py:83
+#: core/paper_forms.py:82
 msgid "study reference"
 msgstr "Studienbezug"
 
-#: core/paper_forms.py:85
+#: core/paper_forms.py:84
 msgid "number/dose"
 msgstr "Anzahl/Dosis"
 
-#: core/paper_forms.py:86 core/paper_forms.py:182
+#: core/paper_forms.py:85 core/paper_forms.py:181
 msgid "period"
 msgstr "Zeitraum"
 
-#: core/paper_forms.py:87
+#: core/paper_forms.py:86
 msgid "total"
 msgstr "Insgesamt"
 
-#: core/paper_forms.py:91
+#: core/paper_forms.py:90
 msgid "Generic Name"
 msgstr "Generic Name"
 
-#: core/paper_forms.py:92
+#: core/paper_forms.py:91
 msgid "dosage Form"
 msgstr "Darreichungsform"
 
-#: core/paper_forms.py:93
+#: core/paper_forms.py:92
 msgid "dosage"
 msgstr "Dosis"
 
-#: core/paper_forms.py:99
+#: core/paper_forms.py:98
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:99 core/tests/submission_diffs.py:36
+#: core/paper_forms.py:98 core/tests/submission_diffs.py:36
 #: core/tests/submission_diffs.py:37
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
-#: core/paper_forms.py:100
+#: core/paper_forms.py:99
 msgid "protocol number/-name"
 msgstr "Protokollnummer/-bezeichnung"
 
-#: core/paper_forms.py:101
+#: core/paper_forms.py:100
 msgid "date of protocol"
 msgstr "Datum des Protokolls"
 
-#: core/paper_forms.py:102
+#: core/paper_forms.py:101
 msgid "EudraCT-Nr."
 msgstr "EudraCT-Nr."
 
-#: core/paper_forms.py:103
+#: core/paper_forms.py:102
 msgid "ISRCTN-Nr."
 msgstr "ISRCTN-Nr."
 
-#: core/paper_forms.py:104
+#: core/paper_forms.py:103
 msgid "external reviewer suggestions"
 msgstr "Vorschläge für Gutachter (Nicht aus dem AKH Wien)"
 
-#: core/paper_forms.py:104
+#: core/paper_forms.py:103
 msgid ""
 "for graduate work or retrospective or non-interventional studies specify "
 "\"not applicable\""
@@ -528,286 +523,286 @@ msgstr ""
 "Bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
 "\"nicht zutreffend\" angeben."
 
-#: core/paper_forms.py:106
+#: core/paper_forms.py:105
 msgid "sponsor name"
 msgstr "Firma/Organisation"
 
-#: core/paper_forms.py:107 core/paper_forms.py:119
+#: core/paper_forms.py:106 core/paper_forms.py:118
 msgid "sex of contact person"
 msgstr "Anrede der Kontaktperson"
 
-#: core/paper_forms.py:108 core/paper_forms.py:120
+#: core/paper_forms.py:107 core/paper_forms.py:119
 msgid "title of contact person"
 msgstr "Titel der Kontaktperson"
 
-#: core/paper_forms.py:109 core/paper_forms.py:121
+#: core/paper_forms.py:108 core/paper_forms.py:120
 msgid "first name of contact person"
 msgstr "Vorname der Kontaktperson"
 
-#: core/paper_forms.py:110 core/paper_forms.py:122
+#: core/paper_forms.py:109 core/paper_forms.py:121
 msgid "last name of contact person"
 msgstr "Nachname der Kontaktperson"
 
-#: core/paper_forms.py:111 core/paper_forms.py:123 core/paper_forms.py:200
+#: core/paper_forms.py:110 core/paper_forms.py:122 core/paper_forms.py:199
 msgid "address"
 msgstr "Adresse"
 
-#: core/paper_forms.py:112 core/paper_forms.py:124
+#: core/paper_forms.py:111 core/paper_forms.py:123
 msgid "postal code"
 msgstr "Postleitzahl"
 
-#: core/paper_forms.py:113 core/paper_forms.py:125
+#: core/paper_forms.py:112 core/paper_forms.py:124
 msgid "city"
 msgstr "Stadt"
 
-#: core/paper_forms.py:114 core/paper_forms.py:126
+#: core/paper_forms.py:113 core/paper_forms.py:125
 msgid "telephone"
 msgstr "Telefon"
 
-#: core/paper_forms.py:115 core/paper_forms.py:127
+#: core/paper_forms.py:114 core/paper_forms.py:126
 msgid "fax"
 msgstr "FAX"
 
-#: core/paper_forms.py:116 core/paper_forms.py:128 core/paper_forms.py:284
-#: core/paper_forms.py:309
+#: core/paper_forms.py:115 core/paper_forms.py:127 core/paper_forms.py:283
+#: core/paper_forms.py:308
 msgid "e-mail"
 msgstr "E-Mail"
 
-#: core/paper_forms.py:117 core/paper_forms.py:130
+#: core/paper_forms.py:116 core/paper_forms.py:129
 msgid "VAT Nr"
 msgstr "MWST Nr"
 
-#: core/paper_forms.py:118
+#: core/paper_forms.py:117
 msgid "invoice name"
 msgstr "Firma/Organisation"
 
-#: core/paper_forms.py:129
+#: core/paper_forms.py:128
 msgid "UID-Nummer"
 msgstr "UID-Nummer"
 
-#: core/paper_forms.py:133
+#: core/paper_forms.py:132
 msgid "Clinical trial of an unregistered drug"
 msgstr "Klinische Prüfung eines nicht registrierten Arzneimittels"
 
-#: core/paper_forms.py:134
+#: core/paper_forms.py:133
 msgid "Clinical testing of a registered product"
 msgstr "Klinische Prüfung eines registrierten Arzneimittels"
 
-#: core/paper_forms.py:135
+#: core/paper_forms.py:134
 msgid "according to the indication"
 msgstr "gemäß der Indikation"
 
-#: core/paper_forms.py:136
+#: core/paper_forms.py:135
 msgid "not according to the indication"
 msgstr "nicht gemäß der Indikation"
 
-#: core/paper_forms.py:137
+#: core/paper_forms.py:136
 msgid "Clinical testing of a new medical method"
 msgstr "Klinische Prüfung einer neuen medizinischen Methode"
 
-#: core/paper_forms.py:138
+#: core/paper_forms.py:137
 msgid "Clinical investigation of medical devices"
 msgstr "Klinische Prüfung eines Medizinproduktes"
 
-#: core/paper_forms.py:139
+#: core/paper_forms.py:138
 msgid "with CE-marking"
 msgstr "mit CE-Kennzeichnung"
 
-#: core/paper_forms.py:140
+#: core/paper_forms.py:139
 msgid "without CE-marking"
 msgstr "ohne CE-Kennzeichnung"
 
-#: core/paper_forms.py:141
+#: core/paper_forms.py:140
 msgid "Performance evaluation (in-vitro diagnostics)"
 msgstr "Leistungsbewertungsprüfung (In-vitro-Diagnostika)"
 
-#: core/paper_forms.py:142
+#: core/paper_forms.py:141
 msgid ""
 "Non-therapeutic biomedical research involving human subjects (basic research)"
 msgstr ""
 "Nicht-therapeutische biomedizinische Forschung am Menschen "
 "(Grundlagenforschung)"
 
-#: core/paper_forms.py:143
+#: core/paper_forms.py:142
 msgid "Genetic survey"
 msgstr "Genetische Untersuchung"
 
-#: core/paper_forms.py:144
+#: core/paper_forms.py:143
 msgid "Other, please specify"
 msgstr "Sonstige Kategorien"
 
-#: core/paper_forms.py:144
+#: core/paper_forms.py:143
 msgid "e.g. Dietetics, epidemiology, etc."
 msgstr ""
 "z.B.: immunologische Untersuchung, Epidemiologische Untersuchung, Diätetik, "
 "etc."
 
-#: core/paper_forms.py:145
+#: core/paper_forms.py:144
 msgid "Dissertation / Thesis"
 msgstr "Diplomarbeit / Dissertation"
 
-#: core/paper_forms.py:146
+#: core/paper_forms.py:145
 msgid "Register"
 msgstr ""
 
-#: core/paper_forms.py:147
+#: core/paper_forms.py:146
 msgid "Biobank"
 msgstr ""
 
-#: core/paper_forms.py:148
+#: core/paper_forms.py:147
 msgid "Retrospective data analysis"
 msgstr "Retrospektive Datenauswertung"
 
-#: core/paper_forms.py:149
+#: core/paper_forms.py:148
 msgid "Questionnaire investigation"
 msgstr "Fragebogen Untersuchung"
 
-#: core/paper_forms.py:150
+#: core/paper_forms.py:149
 msgid "Psychological study"
 msgstr "Psychologische Studie"
 
-#: core/paper_forms.py:151
+#: core/paper_forms.py:150
 msgid "Nursing Scientific Study"
 msgstr "Pflegewissenschaftliche Studie"
 
-#: core/paper_forms.py:152
+#: core/paper_forms.py:151
 msgid "Non-interventional Study (NIS)"
 msgstr "Nicht-interventionelle Studie (NIS)"
 
-#: core/paper_forms.py:153
+#: core/paper_forms.py:152
 msgid "Gender medicine"
 msgstr "Gendermedizin"
 
-#: core/paper_forms.py:154
+#: core/paper_forms.py:153
 msgid "special field"
 msgstr "Fachgebiet"
 
-#: core/paper_forms.py:156
+#: core/paper_forms.py:155
 msgid "Test substances"
 msgstr "Prüfsubstanz(en)"
 
-#: core/paper_forms.py:157
+#: core/paper_forms.py:156
 msgid "Reference substance"
 msgstr "Referenzsubstanz"
 
-#: core/paper_forms.py:159
+#: core/paper_forms.py:158
 msgid "Test products(e)"
 msgstr "Prüfprodukt/e"
 
-#: core/paper_forms.py:160
+#: core/paper_forms.py:159
 msgid "reference product"
 msgstr "Referenzprodukt"
 
-#: core/paper_forms.py:161
+#: core/paper_forms.py:160
 msgid "Clinical Phase"
 msgstr "Klinische Phase"
 
-#: core/paper_forms.py:161
+#: core/paper_forms.py:160
 msgid ""
 "Necessarily indicate, in case of an AMG-study the clinical phase, in case of "
 "medical devices the most appropriate phase."
 msgstr ""
 "Bei AMG-Prüfung unbedingt angeben, bei MPG die am ehesten zutreffende Phase."
 
-#: core/paper_forms.py:162
+#: core/paper_forms.py:161
 msgid "There are already votes of other ethics commissions."
 msgstr "Es liegen bereits Voten anderer Ethikkommissionen vor."
 
-#: core/paper_forms.py:162
+#: core/paper_forms.py:161
 msgid "If so, upload the votes on the documents tab"
 msgstr "Falls ja, laden Sie die Voten über den Reiter \"Unterlagen\" hoch"
 
-#: core/paper_forms.py:163
+#: core/paper_forms.py:162
 msgid "Planned number of trial participants total"
 msgstr "Geplante Anzahl der Prüfungsteilnehmer/innen gesamt"
 
-#: core/paper_forms.py:163
+#: core/paper_forms.py:162
 msgid "all participating centers"
 msgstr "Gesamtanzahl in allen österreichischen Zentren"
 
-#: core/paper_forms.py:165
+#: core/paper_forms.py:164
 msgid "minimum age"
 msgstr "Mindestalter"
 
-#: core/paper_forms.py:166
+#: core/paper_forms.py:165
 msgid "maximum age"
 msgstr "Höchstalter"
 
-#: core/paper_forms.py:168
+#: core/paper_forms.py:167
 msgid "non competent participants"
 msgstr "Nicht-persönlich-Einwilligungsfähige"
 
-#: core/paper_forms.py:168
+#: core/paper_forms.py:167
 msgid "The study includes:"
 msgstr "In die Studie eingeschlossen werden:"
 
-#: core/paper_forms.py:169
+#: core/paper_forms.py:168
 msgid "male participants"
 msgstr "männliche Teilnehmer"
 
-#: core/paper_forms.py:170
+#: core/paper_forms.py:169
 msgid "female participants"
 msgstr "weibliche Teilnehmerinnen"
 
-#: core/paper_forms.py:171
+#: core/paper_forms.py:170
 msgid "women of childbearing age"
 msgstr "gebärfähige Frauen"
 
-#: core/paper_forms.py:173
+#: core/paper_forms.py:172
 msgid ""
 "Duration of participation of the individual test participants in the study"
 msgstr ""
 "Dauer der Teilnahme der einzelnen Prüfungsteilnehmer/innen an der Studie"
 
-#: core/paper_forms.py:174
+#: core/paper_forms.py:173
 msgid "active phase"
 msgstr "Aktive Phase"
 
-#: core/paper_forms.py:175
+#: core/paper_forms.py:174
 msgid "Follow-up inspections"
 msgstr "Nachkontrollen"
 
-#: core/paper_forms.py:176
+#: core/paper_forms.py:175
 msgid "Expected total duration of the study"
 msgstr "Voraussichtliche Gesamtdauer der Studie"
 
-#: core/paper_forms.py:178
+#: core/paper_forms.py:177
 msgid "Registration in other states?"
 msgstr "Registrierung in anderen Staaten?"
 
-#: core/paper_forms.py:179
+#: core/paper_forms.py:178
 msgid "Are there already results of clinical trials for the tested drug?"
 msgstr ""
 "Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse "
 "von klinischen Prüfungen vor?"
 
-#: core/paper_forms.py:180
+#: core/paper_forms.py:179
 msgid "3.2.1 Countries in which the tests were conducted"
 msgstr "In welchen Staaten wurden die Prüfungen durchgeführt?"
 
-#: core/paper_forms.py:181
+#: core/paper_forms.py:180
 msgid "Phase"
 msgstr "Phase"
 
-#: core/paper_forms.py:181
+#: core/paper_forms.py:180
 msgid "If studies are cited in several phases, indicate the highest stage."
 msgstr ""
 "Wenn Studien in mehreren Phasen angeführt sind, die höchste Phase angeben"
 
-#: core/paper_forms.py:183
+#: core/paper_forms.py:182
 msgid "application type(s)"
 msgstr "Anwendungsart(en)"
 
-#: core/paper_forms.py:184
+#: core/paper_forms.py:183
 msgid "Were the clinical tests made according to GCP guidelines"
 msgstr ""
 "Wurde(n), die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt?"
 
-#: core/paper_forms.py:185
+#: core/paper_forms.py:184
 msgid "Does a final report exist?"
 msgstr "Liegt ein Abschlussbericht vor?"
 
-#: core/paper_forms.py:185
+#: core/paper_forms.py:184
 msgid ""
 "If yes, upload the investigator's brochure, relevant data or a report of the "
 "Pharmaceutical Advisory Council using the upload tab"
@@ -815,35 +810,35 @@ msgstr ""
 "Falls ja, laden Sie die Investigator's Brochure, relevante Daten oder ein "
 "Gutachten des Arzneimittelbeirates über den Reiter \"Unterlagen\" hoch"
 
-#: core/paper_forms.py:186
+#: core/paper_forms.py:185
 msgid "Submit as"
 msgstr "Einreichen als"
 
-#: core/paper_forms.py:188
+#: core/paper_forms.py:187
 msgid "Name of the product"
 msgstr "Bezeichnung des Produktes"
 
-#: core/paper_forms.py:189
+#: core/paper_forms.py:188
 msgid "Manufacturer"
 msgstr "Hersteller"
 
-#: core/paper_forms.py:190
+#: core/paper_forms.py:189
 msgid "Certified for this indication"
 msgstr "Zertifiziert für diese Indikation"
 
-#: core/paper_forms.py:191
+#: core/paper_forms.py:190
 msgid "Certified, but for another indication"
 msgstr "Zertifiziert, aber für eine andere Indikation"
 
-#: core/paper_forms.py:192
+#: core/paper_forms.py:191
 msgid "The medical product carries a CE mark"
 msgstr "Das Medizinprodukt trägt ein CE-Zeichen"
 
-#: core/paper_forms.py:193
+#: core/paper_forms.py:192
 msgid "The product brochure is included."
 msgstr "Die Produktbroschüre liegt bei."
 
-#: core/paper_forms.py:194
+#: core/paper_forms.py:193
 msgid ""
 "What rules or standards have been used for the construction and testing of "
 "the medical product (technical safety)"
@@ -851,31 +846,31 @@ msgstr ""
 "Welche Bestimmungen bzw. Normen sind für die Konstruktion und Prüfung des "
 "Medizinproduktes herangezogen worden (Technische Sicherheit)"
 
-#: core/paper_forms.py:195
+#: core/paper_forms.py:194
 msgid "Any deviations from the above provisions (standards)"
 msgstr "Allfällige Abweichungen von den o.a. Bestimmungen (Normen)"
 
-#: core/paper_forms.py:198
+#: core/paper_forms.py:197
 msgid "No insurance is required"
 msgstr "Eine Versicherung ist nicht erforderlich"
 
-#: core/paper_forms.py:199
+#: core/paper_forms.py:198
 msgid "insurance company"
 msgstr "Versicherungsgesellschaft"
 
-#: core/paper_forms.py:201 core/paper_forms.py:306
+#: core/paper_forms.py:200 core/paper_forms.py:305
 msgid "phone"
 msgstr "Telefon"
 
-#: core/paper_forms.py:202
+#: core/paper_forms.py:201
 msgid "policy number"
 msgstr "Polizzennummer"
 
-#: core/paper_forms.py:203
+#: core/paper_forms.py:202
 msgid "validity"
 msgstr "Gültigkeitsdauer"
 
-#: core/paper_forms.py:205
+#: core/paper_forms.py:204
 msgid ""
 "Additional information on study-related activities and any necessary "
 "deviations from the routine treatment"
@@ -883,25 +878,25 @@ msgstr ""
 "Ergänzende Informationen zu studienbezogenen Maßnahmen und alle "
 "erforderlichen Abweichungen von der Routinebehandlung"
 
-#: core/paper_forms.py:207
+#: core/paper_forms.py:206
 msgid ""
 "If original project title is not in German: German translation of the title"
 msgstr ""
 "Wenn Original-Projekttitel nicht in Deutsch: Deutsche Übersetzung des Titels"
 
-#: core/paper_forms.py:207
+#: core/paper_forms.py:206
 msgid "project title (kraut-speak)"
 msgstr "Projekttitel (deutsch)"
 
-#: core/paper_forms.py:208
+#: core/paper_forms.py:207
 msgid "project summary"
 msgstr "Zusammenfassung des Projektes"
 
-#: core/paper_forms.py:208
+#: core/paper_forms.py:207
 msgid "Justification, relevance, design, measures and procedure"
 msgstr "Rechtfertigung, Relevanz, Design, Maßnahmen und Vorgehensweise"
 
-#: core/paper_forms.py:209
+#: core/paper_forms.py:208
 msgid ""
 "Results of pre-clinical tests or justification for the waiving of pre-"
 "clinical tests"
@@ -909,63 +904,63 @@ msgstr ""
 "Ergebnisse der präklinischen Tests oder Begründung für den Verzicht auf "
 "präklinische Tests"
 
-#: core/paper_forms.py:210
+#: core/paper_forms.py:209
 msgid "Primary hypothesis of the study"
 msgstr "Primäre Hypothese der Studie"
 
-#: core/paper_forms.py:210
+#: core/paper_forms.py:209
 msgid "if relevant, secondary hypotheses"
 msgstr "wenn relevant auch sekundäre Hypothesen"
 
-#: core/paper_forms.py:211
+#: core/paper_forms.py:210
 msgid "Relevant in- and exclusion criteria"
 msgstr "Relevante Ein- und Ausschlusskriterien"
 
-#: core/paper_forms.py:212
+#: core/paper_forms.py:211
 msgid "ethical considerations"
 msgstr "Ethische Überlegungen"
 
-#: core/paper_forms.py:213
+#: core/paper_forms.py:212
 msgid "Justification for the inclusion of persons from protected groups"
 msgstr "Begründung für den Einschluss von Personen aus geschützten Gruppen"
 
-#: core/paper_forms.py:213
+#: core/paper_forms.py:212
 msgid "e.g. Minor, temporary or permanent non-competent person, if applicable"
 msgstr ""
 "z.B. Minderjährige, temporär oder permanent nicht-einwilligungsfähige "
 "Personen; wenn zutreffend"
 
-#: core/paper_forms.py:214
+#: core/paper_forms.py:213
 msgid "Description of the recruitment process"
 msgstr "Beschreibung des Rekrutierungsverfahrens"
 
-#: core/paper_forms.py:215
+#: core/paper_forms.py:214
 msgid ""
 "Approach at test center(s), for informing and  obtaining an informed consent "
 "of candidates"
 msgstr ""
 "Vorgehensweise an der Prüfstelle, zur Erlangung der informierten Einwilligung"
 
-#: core/paper_forms.py:216
+#: core/paper_forms.py:215
 msgid "Risk assessment"
 msgstr "Risikoabschätzung"
 
-#: core/paper_forms.py:217
+#: core/paper_forms.py:216
 msgid "Expected benefits for the included test participants"
 msgstr ""
 "Voraussichtliche Vorteile für die eingeschlossenen Prüfungsteilnehmer/innen"
 
-#: core/paper_forms.py:218
+#: core/paper_forms.py:217
 msgid "Relation between subject and investigator"
 msgstr "Relation zwischen Prüfungsteilnehmer/in und Prüfer/in"
 
-#: core/paper_forms.py:218
+#: core/paper_forms.py:217
 msgid "e.g. Patient - doctor, student - teacher, employee - employer, etc."
 msgstr ""
 "z.B. Patient/in - Ärztin/Arzt, Student/in - Lehrer/in, Dienstnehmer/in - "
 "Dienstgeber/in, etc."
 
-#: core/paper_forms.py:219
+#: core/paper_forms.py:218
 msgid ""
 "Procedures on the site, to determine whether a person at a time to be "
 "included in another study, participate or whether a required period of time "
@@ -976,7 +971,7 @@ msgstr ""
 "ob eine erforderliche Zeitspanne seit einer Teilnahme an einer anderen "
 "Studie verstrichen ist"
 
-#: core/paper_forms.py:219
+#: core/paper_forms.py:218
 msgid ""
 "Of particular importance when healthy volunteers are included in "
 "pharmacological studies."
@@ -984,13 +979,13 @@ msgstr ""
 "von besonderer Bedeutung, wenn gesunde Proband/inn/en in pharmakologische "
 "Studien eingeschlossen werden"
 
-#: core/paper_forms.py:220
+#: core/paper_forms.py:219
 msgid "Methods to identify, record, and report undesirable effects"
 msgstr ""
 "Methoden, um unerwünschte Effekte ausfindig zu machen, sie aufzuzeichnen und "
 "zu berichten"
 
-#: core/paper_forms.py:220
+#: core/paper_forms.py:219
 msgid ""
 "Describe when, by whom and how, for example \"free\" interviews and/or "
 "interviews using lists"
@@ -998,7 +993,7 @@ msgstr ""
 "Beschreiben Sie wann, von wem und wie, z.B. freies Befragen und/oder an Hand "
 "von Listen"
 
-#: core/paper_forms.py:221
+#: core/paper_forms.py:220
 msgid ""
 "Statistical considerations and reasons for the number of people who should "
 "be included in the study"
@@ -1006,11 +1001,11 @@ msgstr ""
 "Statistische Überlegungen und Gründe für die Anzahl der Personen, die in die "
 "Studie eingeschlossen werden sollen"
 
-#: core/paper_forms.py:221 core/paper_forms.py:222
+#: core/paper_forms.py:220 core/paper_forms.py:221
 msgid "additional information on section 8, if necessary"
 msgstr "ergänzende Informationen zu Punkt 8, wenn erforderlich"
 
-#: core/paper_forms.py:222
+#: core/paper_forms.py:221
 msgid ""
 "Methods used to protect the confidentiality of the data collected, the "
 "source documents and the samples"
@@ -1018,7 +1013,7 @@ msgstr ""
 "Verwendete Verfahren zum Schutz der Vertraulichkeit der erhobenen Daten, der "
 "Quelldokumente und von Proben"
 
-#: core/paper_forms.py:223
+#: core/paper_forms.py:222
 msgid ""
 "Plan for treatment or care after the person has completed their "
 "participation in the study"
@@ -1026,14 +1021,14 @@ msgstr ""
 "Plan zur Behandlung oder Versorgung nachdem die Personen ihre Teilnahme an "
 "der Studie beendet haben"
 
-#: core/paper_forms.py:224
+#: core/paper_forms.py:223
 msgid ""
 "Amount and method of compensation or remuneration to the test participants"
 msgstr ""
 "Betrag und Verfahren der Entschädigung oder Vergütung an die "
 "Prüfungsteilnehmer/innen"
 
-#: core/paper_forms.py:224
+#: core/paper_forms.py:223
 msgid ""
 "Description of the amount to be paid during the exam take and what, for "
 "example, Travel expenses, lost income, pain and discomfort, etc."
@@ -1042,7 +1037,7 @@ msgstr ""
 "und wofür, z.B. Fahrtspesen, Einkommensverlust, Schmerzen und "
 "Unannehmlichkeiten, etc."
 
-#: core/paper_forms.py:225
+#: core/paper_forms.py:224
 msgid ""
 "Rules for the suspension or premature termination of the study at the test "
 "center, at the Member State or the entire study"
@@ -1050,14 +1045,14 @@ msgstr ""
 "Regeln für das Aussetzen oder vorzeitige Beenden der Studie an der/den "
 "Prüfstelle(n), in diesem Mitgliedstaat oder der gesamten Studie"
 
-#: core/paper_forms.py:226
+#: core/paper_forms.py:225
 msgid ""
 "Agreement on access of the examiner(s) to data, publication guidelines, etc"
 msgstr ""
 "Vereinbarung über den Zugriff der Prüferin/des Prüfers/der Prüfer auf Daten, "
 "Publikationsrichtlinien, etc."
 
-#: core/paper_forms.py:227
+#: core/paper_forms.py:226
 msgid ""
 "Financing of the study and information on financial or other interests of "
 "the examiner"
@@ -1065,169 +1060,169 @@ msgstr ""
 "Finanzierung der Studie und Informationen über finanzielle oder andere "
 "Interessen der Prüferin/des Prüfers/der Prüfer"
 
-#: core/paper_forms.py:228
+#: core/paper_forms.py:227
 msgid "additional information"
 msgstr "Weitere Informationen"
 
-#: core/paper_forms.py:231
+#: core/paper_forms.py:230
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:232 core/models/submissions.py:411
+#: core/paper_forms.py:231 core/models/submissions.py:411
 msgid "open"
 msgstr "offen"
 
-#: core/paper_forms.py:233
+#: core/paper_forms.py:232
 msgid "randomized"
 msgstr "randomisiert"
 
-#: core/paper_forms.py:234
+#: core/paper_forms.py:233
 msgid "parallel groups"
 msgstr "Parallelgruppen"
 
-#: core/paper_forms.py:235 core/models/constants.py:10
+#: core/paper_forms.py:234 core/models/constants.py:10
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:236 core/models/submissions.py:411
+#: core/paper_forms.py:235 core/models/submissions.py:411
 msgid "blind"
 msgstr "blind"
 
-#: core/paper_forms.py:237
+#: core/paper_forms.py:236
 msgid "controlled"
 msgstr "kontrolliert"
 
-#: core/paper_forms.py:238
+#: core/paper_forms.py:237
 msgid "cross-over"
 msgstr "cross-over"
 
-#: core/paper_forms.py:239
+#: core/paper_forms.py:238
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:240 core/models/submissions.py:411
+#: core/paper_forms.py:239 core/models/submissions.py:411
 msgid "double-blind"
 msgstr "doppelblind"
 
-#: core/paper_forms.py:241
+#: core/paper_forms.py:240
 msgid "placebo"
 msgstr "Placebo"
 
-#: core/paper_forms.py:242
+#: core/paper_forms.py:241
 msgid "factorized"
 msgstr "faktoriell"
 
-#: core/paper_forms.py:243
+#: core/paper_forms.py:242
 msgid "pilot project"
 msgstr "Pilotprojekt"
 
-#: core/paper_forms.py:244
+#: core/paper_forms.py:243
 msgid "observer-blinded"
 msgstr "observer-blinded"
 
-#: core/paper_forms.py:245
+#: core/paper_forms.py:244
 msgid "equivalence testing"
 msgstr "Äquivalenzprüfung"
 
-#: core/paper_forms.py:246
+#: core/paper_forms.py:245
 msgid "misc"
 msgstr "Sonstiges"
 
-#: core/paper_forms.py:247
+#: core/paper_forms.py:246
 msgid "number of groups"
 msgstr "Anzahl der Gruppen"
 
-#: core/paper_forms.py:248
+#: core/paper_forms.py:247
 msgid "stratification"
 msgstr "Stratifizierung"
 
-#: core/paper_forms.py:249
+#: core/paper_forms.py:248
 msgid "sample frequency"
 msgstr "Messwiederholungen"
 
-#: core/paper_forms.py:250
+#: core/paper_forms.py:249
 msgid "primary objectives"
 msgstr "Hauptzielgröße"
 
-#: core/paper_forms.py:251
+#: core/paper_forms.py:250
 msgid "null hypothesis"
 msgstr "Nullhypothese(n)"
 
-#: core/paper_forms.py:252
+#: core/paper_forms.py:251
 msgid "alternative hypothesis"
 msgstr "Alternativhypothese(n)"
 
-#: core/paper_forms.py:253
+#: core/paper_forms.py:252
 msgid "secondary objectives"
 msgstr "Nebenzielgrößen"
 
-#: core/paper_forms.py:256
+#: core/paper_forms.py:255
 msgid "Alpha"
 msgstr "Alpha"
 
-#: core/paper_forms.py:256
+#: core/paper_forms.py:255
 msgid "first order error"
 msgstr "Fehler 1. Art"
 
-#: core/paper_forms.py:257
+#: core/paper_forms.py:256
 msgid "Power"
 msgstr "Power"
 
-#: core/paper_forms.py:257
+#: core/paper_forms.py:256
 msgid "1 - Beta = 1 - second order error"
 msgstr "1 - Beta = 1 - Fehler 2. Art"
 
-#: core/paper_forms.py:258
+#: core/paper_forms.py:257
 msgid "statistical algorithm"
 msgstr "Stat.Verfahren"
 
-#: core/paper_forms.py:259
+#: core/paper_forms.py:258
 msgid "multiple testing"
 msgstr "Multiples Testen"
 
-#: core/paper_forms.py:260
+#: core/paper_forms.py:259
 msgid "correctionalgorithm"
 msgstr "Korrekturverfahren"
 
-#: core/paper_forms.py:261
+#: core/paper_forms.py:260
 msgid "Expected number of study dropouts(Drop-out-Quota)"
 msgstr "Erwartete Anzahl von Studienabbrecher/inne/n (Drop-out-Quote)"
 
-#: core/paper_forms.py:263
+#: core/paper_forms.py:262
 msgid "Intention-to-treat"
 msgstr "Intention-to-treat"
 
-#: core/paper_forms.py:264
+#: core/paper_forms.py:263
 #, fuzzy
 msgid "Per Protocol"
 msgstr "Per Protocol"
 
-#: core/paper_forms.py:265
+#: core/paper_forms.py:264
 msgid "Interim evaluation"
 msgstr "Zwischenauswertung"
 
-#: core/paper_forms.py:266
+#: core/paper_forms.py:265
 msgid "Termination criteria"
 msgstr "Abbruchkriterien"
 
-#: core/paper_forms.py:267
+#: core/paper_forms.py:266
 msgid "Planned use of statistical methods"
 msgstr "Geplante statistische Verfahren"
 
-#: core/paper_forms.py:269
+#: core/paper_forms.py:268
 msgid "Information on the data quality audit"
 msgstr "Angaben zur Datenqualitätsprüfung"
 
-#: core/paper_forms.py:270
+#: core/paper_forms.py:269
 msgid "Information on data management"
 msgstr "Angaben zum Datenmanagement"
 
-#: core/paper_forms.py:272
+#: core/paper_forms.py:271
 msgid "Who did the biometric planning (if applicable, proof of qualification)?"
 msgstr ""
 "Wer führte die biometrische Planung durch (ggf. Nachweis der Qualifikation)?"
 
-#: core/paper_forms.py:273
+#: core/paper_forms.py:272
 msgid ""
 "Who will conduct the statistical analysis (if applicable, proof of "
 "qualification)?"
@@ -1235,72 +1230,72 @@ msgstr ""
 "Wer wird die statistische Auswertung durchführen (ggf. Nachweis der "
 "Qualifikation)?"
 
-#: core/paper_forms.py:275
+#: core/paper_forms.py:274
 msgid "Information privacy"
 msgstr "Die Datenverarbeitung erfolgt"
 
-#: core/paper_forms.py:276
+#: core/paper_forms.py:275
 msgid "Justification"
 msgstr "Begründung"
 
-#: core/paper_forms.py:277
+#: core/paper_forms.py:276
 msgid "DPR-Nr."
 msgstr "DVR-Nummer"
 
-#: core/paper_forms.py:278
+#: core/paper_forms.py:277
 msgid "How is the anonymization done?"
 msgstr "Wie erfolgt die Anonymisierung?"
 
-#: core/paper_forms.py:280
+#: core/paper_forms.py:279
 msgid "salutation"
 msgstr "Anrede"
 
-#: core/paper_forms.py:281 core/paper_forms.py:319 meetings/forms.py:24
+#: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:24
 #: meetings/forms.py:39 users/forms.py:155 users/forms.py:201
 msgid "title"
 msgstr "Titel"
 
-#: core/paper_forms.py:282 core/paper_forms.py:320
+#: core/paper_forms.py:281 core/paper_forms.py:319
 msgid "first name"
 msgstr "Vorname"
 
-#: core/paper_forms.py:283 core/paper_forms.py:321
+#: core/paper_forms.py:282 core/paper_forms.py:320
 msgid "last name"
 msgstr "Nachname"
 
-#: core/paper_forms.py:286
+#: core/paper_forms.py:285
 msgid "Institution / Company"
 msgstr "Institution/ Firma"
 
-#: core/paper_forms.py:287
+#: core/paper_forms.py:286
 msgid "position"
 msgstr "Position"
 
-#: core/paper_forms.py:289
+#: core/paper_forms.py:288
 msgid "coordinating examiner (multicentric study)"
 msgstr "koordinierende/r Prüfer/in (multizentrische Studie)"
 
-#: core/paper_forms.py:289
+#: core/paper_forms.py:288
 msgid "[9.4] The Submitter is"
 msgstr "[9.4] Antragsteller/in ist"
 
-#: core/paper_forms.py:290
+#: core/paper_forms.py:289
 msgid "Principal investigator (monocentric study)"
 msgstr "Koordinierende/r Prüfärztin/arzt (monozentrische Studie)"
 
-#: core/paper_forms.py:291
+#: core/paper_forms.py:290
 msgid "sponsor / representative of the sponsor"
 msgstr "Sponsor bzw. Vertreter/in des Sponsors"
 
-#: core/paper_forms.py:292
+#: core/paper_forms.py:291
 msgid "person/organization authorized by the sponsor"
 msgstr "vom Sponsor autorisierte Person/Organisation"
 
-#: core/paper_forms.py:293
+#: core/paper_forms.py:292
 msgid "The sponsor agrees with the publication."
 msgstr "Der Sponsor stimmt der Veröffentlichung zu."
 
-#: core/paper_forms.py:294
+#: core/paper_forms.py:293
 msgid ""
 "The sponsor agrees with the publication of following data by the Ethics "
 "Commission as appropiate: EC-Number, Submission Date, Project Title, Main "
@@ -1311,67 +1306,67 @@ msgstr ""
 "transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, "
 "Koordinierende/r Prüfärztin/arzt, Sponsor/CRO und weitere Zentren"
 
-#: core/paper_forms.py:299
+#: core/paper_forms.py:298
 msgid "study site"
 msgstr "Prüfzentrum"
 
-#: core/paper_forms.py:300
+#: core/paper_forms.py:299
 msgid "ethics commission"
 msgstr "Ethik-Kommission"
 
-#: core/paper_forms.py:301
+#: core/paper_forms.py:300
 msgid "principal investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: core/paper_forms.py:302
+#: core/paper_forms.py:301
 msgid "salutation of the Investigator"
 msgstr "Anrede des Prüfarztes"
 
-#: core/paper_forms.py:303
+#: core/paper_forms.py:302
 msgid "title of the Investigator"
 msgstr "Titel des Prüfarztes"
 
-#: core/paper_forms.py:304
+#: core/paper_forms.py:303
 msgid "first name of the Investigator"
 msgstr "Vorname des Prüfarztes"
 
-#: core/paper_forms.py:305
+#: core/paper_forms.py:304
 msgid "last name of the Investigator"
 msgstr "Nachname des Prüfarztes"
 
-#: core/paper_forms.py:307
+#: core/paper_forms.py:306
 msgid "mobile"
 msgstr "\"Pieps\"/Mobil"
 
-#: core/paper_forms.py:308
+#: core/paper_forms.py:307
 msgid "FAX"
 msgstr "FAX"
 
-#: core/paper_forms.py:310
+#: core/paper_forms.py:309
 msgid "Jus practicandi"
 msgstr ""
 
-#: core/paper_forms.py:311
+#: core/paper_forms.py:310
 msgid "specialist for"
 msgstr "Facharzt für"
 
-#: core/paper_forms.py:312
+#: core/paper_forms.py:311
 msgid "certified"
 msgstr "Prüfärztekurs"
 
-#: core/paper_forms.py:314
+#: core/paper_forms.py:313
 msgid "number of participants"
 msgstr "Anzahl Teilnehmer/innen"
 
-#: core/paper_forms.py:318
+#: core/paper_forms.py:317
 msgid "Ms/Mr"
 msgstr "Fr/Hr"
 
-#: core/paper_forms.py:322
+#: core/paper_forms.py:321
 msgid "Institution"
 msgstr "Institution"
 
-#: core/paper_forms.py:326
+#: core/paper_forms.py:325
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
@@ -2070,58 +2065,57 @@ msgstr "Einladung zur Sitzung"
 msgid "protocol"
 msgstr "Protokoll"
 
-#: notifications/bootstrap.py:77
+#: notifications/bootstrap.py:84
 #, fuzzy
 msgid "Safety Review"
 msgstr "Gutachten Statistik"
 
-#: notifications/bootstrap.py:78
+#: notifications/bootstrap.py:85
 #, fuzzy
 msgid "Notification Answer Signing"
 msgstr "Meldungsantwort"
 
-#: notifications/bootstrap.py:79
+#: notifications/bootstrap.py:86
 msgid "Distribute Notification Answer"
 msgstr "Meldungsantwort Verteilen"
 
-#: notifications/bootstrap.py:82 notifications/bootstrap.py:83
+#: notifications/bootstrap.py:89 notifications/bootstrap.py:90
 #, fuzzy
 msgid "Notification Review"
 msgstr "Meldungen"
 
-#: notifications/bootstrap.py:86
+#: notifications/bootstrap.py:93
 msgid "Initial Amendment Review"
 msgstr "Formale Prüfung Amendment"
 
-#: notifications/bootstrap.py:87 notifications/bootstrap.py:88
-#: notifications/bootstrap.py:89 notifications/bootstrap.py:90
-#: notifications/bootstrap.py:91 notifications/bootstrap.py:92
+#: notifications/bootstrap.py:94 notifications/bootstrap.py:95
+#: notifications/bootstrap.py:96 notifications/bootstrap.py:97
+#: notifications/bootstrap.py:98 notifications/bootstrap.py:99
 #, fuzzy
 msgid "Amendment Review"
 msgstr "Formale Prüfung Amendment"
 
 #: notifications/constants.py:5
-#, fuzzy
 msgid "SUSAR"
-msgstr "SUSAR Zahl"
+msgstr "SUSAR"
 
 #: notifications/constants.py:6
 msgid "SAE"
-msgstr ""
+msgstr "SAE"
 
 #: notifications/constants.py:7
 msgid "Annual Safety Report"
-msgstr ""
+msgstr "Jährlicher Sicherheitsbericht"
 
 #: notifications/constants.py:8
 msgid "Other Safety Report"
-msgstr ""
+msgstr "Andere Sicherheitsmeldung"
 
 #: notifications/forms.py:49
 msgid "Study"
 msgstr "Studie"
 
-#: notifications/models.py:227
+#: notifications/models.py:226
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -3873,6 +3867,9 @@ msgstr ""
 #: votes/workflow.py:70
 msgid "B3"
 msgstr ""
+
+#~ msgid "I apply for an extension of the validity of the vote"
+#~ msgstr "Ich beantrage die Verlängerung der Gültigkeit des Votums."
 
 #, fuzzy
 #~ msgid "Notification Group Review"
