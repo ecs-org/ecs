@@ -4,7 +4,7 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
     submission_list, upload_document_for_submission, delete_document_from_submission,
     delete_docstash_entry, view_submission, all_submissions, my_submissions, assigned_submissions,
     delete_task, show_checklist_review, drop_checklist_review, change_submission_presenter,
-    change_submission_susar_presenter, paper_submission_review, initial_review,
+    change_submission_susar_presenter, paper_submission_review, initial_review, vote_preparation,
 )
 from ecs.core.views.autocomplete import autocomplete, internal_autocomplete
 from ecs.core.views.fieldhistory import field_history

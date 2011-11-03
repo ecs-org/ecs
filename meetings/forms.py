@@ -118,11 +118,8 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
         cd = self.cleaned_data
         votes = []
         for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])) + list(cd.get('localec_entries', [])):
-            vote = Vote.objects.create(top=entry, result='1')
+            vote, created = Vote.objects.get_or_create(top=entry, defaults={'result': '1'})
             with sudo():
-                open_tasks = Task.objects.for_data(vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
+                Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
             votes.append(vote)
         return votes

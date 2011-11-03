@@ -297,13 +297,9 @@ def meeting_assistant_stop(request, meeting_pk=None):
     for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
         tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
         for top in tops:
-            vote = Vote.objects.create(top=top, result='3a')
             with sudo():
-                open_tasks = Task.objects.for_data(top.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
-
+                Task.objects.for_data(top.submission).open().mark_deleted()
+            vote = Vote.objects.create(top=top, result='3a')
             top.submission.schedule_to_meeting()
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
