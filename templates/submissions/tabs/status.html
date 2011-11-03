@@ -139,8 +139,27 @@
         </td>
     </tr>
     <tr>
+        <th>Kategorien:</th>
+        <td colspan="3">
+            {% for cat in submission_form.submission.medical_categories.all %}
+                {{ cat }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
         <th>Ethikkommission:</th>
         <td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
+    </tr>
+    {% if user|has_flag:'is_internal' %}
+    <tr>
+        <th>Arbeitsablauf:</th>
+        <td colspan="3">
+            {% if submission_form.submission.workflow_lane %}
+                {{ submission_form.submission.get_workflow_lane_display }}
+            {% else %}
+                {% trans 'New/Undecided' %}
+            {% endif %}
+        </td>
     </tr>
     <tr>
         <th>Sitzungen:</th>
@@ -161,7 +180,6 @@
             {% endif %}
         </td>
     </tr>
-    {% if user|has_flag:'is_internal' %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
@@ -175,18 +193,6 @@
         </td>
     </tr>
     {% endif %}
-    <tr>
-        <th>Kategorien:</th>
-        <td colspan="3">
-            {% for cat in submission_form.submission.medical_categories.all %}
-                {{ cat }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>Expedited Review:</th>
-        <td colspan="3">{{ submission_form.submission.is_expedited|yesno }}</td>
-    </tr>
     {% if user|has_flag:'is_internal' and submission_form.submission.external_reviewers.exists %}
     <tr>
         <th>Gutachten:</th>
