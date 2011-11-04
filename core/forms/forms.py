@@ -238,6 +238,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
         profile = get_current_user().get_profile()
+        self.fields['susar_presenter'].label = _('Susar presenter')
         if not profile.is_executive_board_member:
             self.fields['susar_presenter'].widget = EmailUserSelectWidget()
         else:
