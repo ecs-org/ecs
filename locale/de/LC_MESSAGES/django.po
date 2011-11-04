@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-04 02:02+0100\n"
+"POT-Creation-Date: 2011-11-04 11:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1727,12 +1727,12 @@ msgstr "Gremium"
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/models/names.py:37 core/models/submissions.py:723 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:740 users/forms.py:54
 #: users/models.py:31
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:723 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:740 users/forms.py:54
 #: users/models.py:31
 msgid "Mr"
 msgstr "Herr"
@@ -1751,11 +1751,11 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigen"
 
-#: core/models/submissions.py:757
+#: core/models/submissions.py:774
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:757
+#: core/models/submissions.py:774
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 

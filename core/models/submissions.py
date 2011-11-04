@@ -707,6 +707,23 @@ class Investigator(models.Model):
     class Meta:
         app_label = 'core'
 
+    def save(self, **kwargs):
+        if self.email:
+            try:
+                user = get_user(self.email)
+            except User.DoesNotExist:
+                user = create_phantom_user(self.email, role='investigator')
+                user.first_name = self.contact_first_name
+                user.last_name = self.contact_last_name
+                user.save()
+                profile = user.get_profile()
+                profile.title = self.contact_title
+                profile.gender = self.contact_gender
+                profile.organisation = self.organisation
+                profile.save()
+            self.user = user
+
+        return super(Investigator, self).save(**kwargs)
 
 def _post_investigator_save(sender, **kwargs):
     investigator = kwargs['instance']
