@@ -138,12 +138,9 @@
     }
     
     pre {
-        display: inline-block;
-        border: 1px solid $light-grey;
-        background-color: #ffffff;
+        background-color: $white;
         font-style: normal;
         line-height: 1.5;
-        padding: 4px;
         
         table & {
             margin-left: 0;

@@ -283,10 +283,10 @@ ul.thread {
       vertical-align: bottom;
     }
     .ecs-Autocomplete {
-      margin-left: 5px;
+      display: block;
       
         input[type="text"] {
-          width: 423px;
+          width: 300px;
         }
     }
     .boilerplate_selector {
