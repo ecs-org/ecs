@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-04 11:52+0100\n"
+"POT-Creation-Date: 2011-11-04 14:20+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,23 +137,23 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: checklists/bootstrap.py:23 core/bootstrap.py:134
+#: checklists/bootstrap.py:23 core/bootstrap.py:135
 msgid "Statistical Review"
 msgstr "Statistische Bewertung"
 
-#: checklists/bootstrap.py:24 core/bootstrap.py:132
+#: checklists/bootstrap.py:24 core/bootstrap.py:133
 msgid "Legal and Patient Review"
 msgstr "Pat.info Bewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:133
+#: checklists/bootstrap.py:25 core/bootstrap.py:134
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
-#: checklists/bootstrap.py:26 core/bootstrap.py:136
+#: checklists/bootstrap.py:26 core/bootstrap.py:137
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-#: checklists/bootstrap.py:27 core/bootstrap.py:135
+#: checklists/bootstrap.py:27 core/bootstrap.py:136
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -162,7 +162,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:125
+#: checklists/bootstrap.py:56 core/bootstrap.py:126
 #: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
@@ -175,7 +175,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:42 core/forms/forms.py:298
+#: checklists/models.py:42 core/forms/forms.py:299
 #: core/models/submissions.py:141 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
@@ -254,81 +254,81 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:126 votes/bootstrap.py:27
+#: core/bootstrap.py:127 votes/bootstrap.py:27
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:127
+#: core/bootstrap.py:128
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:128
+#: core/bootstrap.py:129
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:129
+#: core/bootstrap.py:130
 #, fuzzy
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:130 templates/submissions/readonly_form.html:82
+#: core/bootstrap.py:131 templates/submissions/readonly_form.html:82
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:131 templates/submissions/list.html:87
+#: core/bootstrap.py:132 templates/submissions/list.html:87
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:139
+#: core/bootstrap.py:140
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:140
+#: core/bootstrap.py:141
 msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
 
-#: core/bootstrap.py:141
+#: core/bootstrap.py:142
 #, fuzzy
 msgid "Thesis Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:142
+#: core/bootstrap.py:143
 #, fuzzy
 msgid "Thesis Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:143
+#: core/bootstrap.py:144
 #, fuzzy
 msgid "Thesis Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:146
+#: core/bootstrap.py:147
 #, fuzzy
 msgid "Expedited Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:147
+#: core/bootstrap.py:148
 #, fuzzy
 msgid "Expedited Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:149
 #, fuzzy
 msgid "Vote Preparation"
 msgstr "Votum Bekanntmachung"
 
-#: core/bootstrap.py:151
+#: core/bootstrap.py:152
 #, fuzzy
 msgid "Local EC Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:152
+#: core/bootstrap.py:153
 #, fuzzy
 msgid "Local EC Recommendation"
 msgstr "Empfehlungsgutachten"
 
-#: core/bootstrap.py:153
+#: core/bootstrap.py:154
 #, fuzzy
 msgid "Local EC Recommendation Review"
 msgstr "Empfehlungsgutachten"
@@ -1463,86 +1463,90 @@ msgstr "Keine Angaben"
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:254
+#: core/forms/forms.py:241
+msgid "Susar presenter"
+msgstr "Sicherheitsmeldungsersteller"
+
+#: core/forms/forms.py:255
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:299 templates/core.html:67
+#: core/forms/forms.py:300 templates/core.html:67
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:300
+#: core/forms/forms.py:301
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:301 core/forms/layout.py:66 core/forms/layout.py:68
+#: core/forms/forms.py:302 core/forms/layout.py:66 core/forms/layout.py:68
 #: templates/meetings/tabs/status.html:52
 #: templates/submissions/tabs/status.html:129 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:302 core/forms/layout.py:75 core/forms/layout.py:77
+#: core/forms/forms.py:303 core/forms/layout.py:75 core/forms/layout.py:77
 #: templates/meetings/tabs/status.html:59
 #: templates/submissions/tabs/status.html:136 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:303
+#: core/forms/forms.py:304
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:304 templates/meetings/tabs/status.html:74
+#: core/forms/forms.py:305 templates/meetings/tabs/status.html:74
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:305 templates/meetings/tabs/status.html:84
+#: core/forms/forms.py:306 templates/meetings/tabs/status.html:84
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:24
 #: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:306
+#: core/forms/forms.py:307
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:307
+#: core/forms/forms.py:308
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:308
+#: core/forms/forms.py:309
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:309
+#: core/forms/forms.py:310
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:310
+#: core/forms/forms.py:311
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:311 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:312 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:312 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:313 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:313
+#: core/forms/forms.py:314
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:379
+#: core/forms/forms.py:380
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:390
+#: core/forms/forms.py:391
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
@@ -1771,27 +1775,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:636
+#: core/views/submissions.py:638
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:735 templates/core.html:41
+#: core/views/submissions.py:737 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:737
+#: core/views/submissions.py:739
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:750
+#: core/views/submissions.py:752
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:773 templates/core.html:44
+#: core/views/submissions.py:775 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:783 templates/core.html:47
+#: core/views/submissions.py:785 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3497,11 +3501,11 @@ msgid ""
 msgstr ""
 
 #: templates/submissions/vote_publish.txt:2
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
-"The Vote for the study %(ec_number)s \"%(project_title)s\" (Your "
-"involvement: %(involvement)s) has been published.\n"
+"The Vote for the study %(ec_number)s \"%(project_title)s\" has been "
+"published.\n"
 "\n"
 "The result of the voting is: %(vote_result)s\n"
 "\n"
@@ -4112,7 +4116,7 @@ msgstr "4 Negativ"
 msgid "5 withdrawn (applicant)"
 msgstr "5 Zurückgezogen (Antragsteller)"
 
-#: votes/forms.py:54 votes/forms.py:62
+#: votes/forms.py:51 votes/forms.py:59
 msgid "Proofread and valid"
 msgstr "Korrektur gelesen und gültig"
 
@@ -4120,7 +4124,7 @@ msgstr "Korrektur gelesen und gültig"
 msgid "comment"
 msgstr "Kommentar"
 
-#: votes/models.py:35
+#: votes/models.py:36
 msgid "No Result"
 msgstr ""
 
