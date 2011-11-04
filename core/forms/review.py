@@ -16,7 +16,7 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',
             'legal_and_patient_review_required', 'statistical_review_required', 'insurance_review_required',
-            'gcp_review_required', 'sponsor_required_for_next_meeting', 'external_reviewers')
+            'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers')
         widgets = {
             'remission': NullBooleanWidget,
             'legal_and_patient_review_required': NullBooleanWidget,
@@ -33,7 +33,7 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
             'statistical_review_required': _('statistical_review_required'),
             'insurance_review_required': _('insurance_review_required'),
             'gcp_review_required': _('gcp_review_required'),
-            'sponsor_required_for_next_meeting': _('sponsor_required_for_next_meeting'),
+            'invite_primary_investigator_to_meeting': _('invite_primary_investigator_to_meeting'),
             'external_reviewers': _('external_reviewers'),
         }
 

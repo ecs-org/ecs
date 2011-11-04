@@ -407,7 +407,6 @@ class TimetableEntry(models.Model):
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
-    is_sponsor_invited = models.BooleanField(default=False)
     optimal_start = models.TimeField(null=True)
     is_open = models.BooleanField(default=True)
 
