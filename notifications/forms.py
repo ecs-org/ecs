@@ -29,7 +29,7 @@ def get_usable_submission_forms():
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document')
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document', 'review_lane')
 
 class MultiNotificationForm(NotificationForm):
     def __init__(self, *args, **kwargs):

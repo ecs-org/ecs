@@ -109,7 +109,7 @@ def notification_workflow():
             ('executive_report_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
 
             # amendments
-            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_group_review, negated=True),
+            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_group_review),
             ('initial_amendment_review', 'executive_amendment_review'): Args(guard=needs_notification_group_review),
             ('initial_amendment_review', 'insurance_group_review'): Args(guard=needs_insurance_group_review),
 

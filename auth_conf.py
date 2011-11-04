@@ -42,6 +42,7 @@ class SubmissionQFactory(authorization.QFactory):
             until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_EXPEDITED)
         if profile.is_insurance_reviewer:
             until_vote_q |= self.make_q(insurance_review_required=True)
+            q |= self.make_q(forms__notifications__review_lane='insrev')
         q |= until_vote_q & (
             self.make_q(current_submission_form__current_published_vote=None)
             | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)

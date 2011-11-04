@@ -96,8 +96,11 @@ class AmendmentReview(BaseNotificationReview):
         options = ('notrev', 'exerev')
         choices = [(None, _('Ready'))]
         n = self.workflow.data
+        lane = n.review_lane
+        if lane == 'insrev':
+            lane = 'exerev'
         for value, label in NOTIFICATION_REVIEW_LANE_CHOICES:
-            if value in options and value != n.review_lane:
+            if value in options and value != lane:
                 choices.append((value, label))
         return choices
         

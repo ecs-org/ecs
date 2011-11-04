@@ -23,6 +23,7 @@ from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
 from ecs.users.utils import user_flag_required
+from ecs.tasks.utils import task_required
 
 
 def _get_notification_template(notification, pattern):
@@ -169,6 +170,7 @@ def create_notification(request, notification_type_pk=None):
             on_notification_submit.send(type(notification), notification=notification)
 
             return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
+            
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
@@ -177,7 +179,7 @@ def create_notification(request, notification_type_pk=None):
     })
 
 
-@user_flag_required('is_internal')
+@task_required()
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     kwargs = {}
@@ -199,9 +201,7 @@ def edit_notification_answer(request, notification_pk=None):
         answer = form.save(commit=False)
         answer.notification = notification
         answer.save()
-        #return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
-    else:
-        print form.errors
+
     return render(request, 'notifications/answers/form.html', {
         'notification': notification,
         'answer': answer,
