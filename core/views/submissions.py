@@ -384,7 +384,9 @@ def vote_preparation(request, submission_form_pk=None):
     form.bound_to_task = request.task_management.task
     
     if form.is_valid():
-        vote = form.save()
+        vote = form.save(commit=False)
+        vote.submission_form = submission_form
+        vote.save()
         
     return readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': form,

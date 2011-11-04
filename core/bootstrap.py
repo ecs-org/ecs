@@ -118,6 +118,7 @@ def submission_workflow():
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
     GCP_REVIEW_GROUP = 'GCP Review Group'
     PAPER_GROUP = u'EC-Paper Submission Review Group'
+    VOTE_PREPARATION_GROUP = u'EC-Vote Preparation Group'
     
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -145,7 +146,7 @@ def submission_workflow():
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
             'expedited_recommendation_review': Args(RecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
-            'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
+            'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # local ec lane
             'localec_categorization_review': Args(CategorizationReview, name=_("Local EC Categorization Review"), group=LOCALEC_REVIEW_GROUP),
@@ -216,6 +217,7 @@ def auth_groups():
         u'translators',
         u'sentryusers',
         u'External Review Review Group',
+        u'EC-Vote Preparation Group',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -374,6 +376,7 @@ def auth_user_testusers():
         ('ext.rev.rev', u'External Review Review Group', {'is_internal': True}),
         ('paper.rev', u'EC-Paper Submission Review Group', {'is_internal': True}),
         ('safety.rev', u'EC-Safety Report Review Group', {'is_internal': True}),
+        ('vote.prep', u'EC-Vote Preparation Group', {'is_internal': True}),
     )
 
     boardtestusers = (

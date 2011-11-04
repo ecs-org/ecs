@@ -118,7 +118,12 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
         cd = self.cleaned_data
         votes = []
         for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])) + list(cd.get('localec_entries', [])):
-            vote, created = Vote.objects.get_or_create(top=entry, defaults={'result': '1'})
+            submission_form = entry.submission.current_submission_form
+            vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'top': entry})
+            if not created:
+                vote.top = entry
+                vote.is_draft = False
+                vote.save()
             with sudo():
                 Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
             votes.append(vote)

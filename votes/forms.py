@@ -39,10 +39,7 @@ class VoteForm(SaveVoteForm):
         if instance.result in PERMANENT_VOTE_RESULTS:
             # abort all tasks
             with sudo():
-                open_tasks = Task.objects.for_data(instance.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
+                Task.objects.for_data(instance.submission_form.submission).open().mark_deleted()
 
         return instance
         
@@ -69,3 +66,9 @@ class VotePreparationForm(forms.ModelForm):
         model = Vote
         fields = ('result', 'text')
 
+    def save(self, commit=True):
+        vote = super(VotePreparationForm, self).save(commit=False)
+        vote.is_draft = True
+        if commit:
+            vote.save()
+        return vote
