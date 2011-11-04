@@ -17,15 +17,16 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 
-from ecs.core.forms import SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, \
-    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, \
-    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, \
-    PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm
+from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, 
+    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
+    PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.votes.forms import VoteReviewForm
+from ecs.votes.forms import VoteReviewForm, VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
+from ecs.checklists.utils import get_checklist_comment
 from ecs.notifications.models import NotificationType
 
 from ecs.core.workflow import ChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview
@@ -372,6 +373,25 @@ def vote_review(request, submission_form_pk=None):
     })
 
 
+@task_required()
+def vote_preparation(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    vote = submission_form.current_vote
+    form = VotePreparationForm(request.POST or None, instance=vote, initial={
+        'text': get_checklist_comment(submission_form.submission, 'expedited_review', 1)
+    })
+    
+    form.bound_to_task = request.task_management.task
+    
+    if form.is_valid():
+        vote = form.save()
+        
+    return readonly_submission_form(request, submission_form=submission_form, extra_context={
+        'vote_review_form': form,
+        'vote_version': get_version_number(vote) if vote else 0,
+    })
+
+
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def upload_document_for_submission(request):
     return upload_document(request, 'submissions/upload_form.html')
@@ -677,6 +697,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         'filterform': filterform,
         'keyword': keyword,
         'title': title,
+        'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
     }
     data.update(extra_context or {})
 

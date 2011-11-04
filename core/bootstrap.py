@@ -14,7 +14,7 @@ from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
 from ecs.bootstrap.utils import update_instance
-from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview,
+from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
@@ -145,6 +145,7 @@ def submission_workflow():
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
             'expedited_recommendation_review': Args(RecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
 
             # local ec lane
             'localec_categorization_review': Args(CategorizationReview, name=_("Local EC Categorization Review"), group=LOCALEC_REVIEW_GROUP),
@@ -175,6 +176,7 @@ def submission_workflow():
             ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
             ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
             ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
+            ('expedited_recommendation_review', 'vote_preparation'): Args(guard=has_expedited_recommendation),
 
             # local ec lane
             ('initial_review_barrier', 'localec_categorization_review'): Args(guard=is_localec),

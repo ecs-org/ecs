@@ -12,7 +12,7 @@ from ecs.core.forms.fields import DateField
 class NotificationAnswerForm(forms.ModelForm):
     class Meta:
         model = NotificationAnswer
-        fields = ('text',)
+        fields = ('text', 'is_valid',)
 
 
 class RejectableNotificationAnswerForm(NotificationAnswerForm):

@@ -32,6 +32,12 @@ class TaskQuerySet(models.query.QuerySet):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
         return self.filter(content_type=ct, data_id=data.pk)
+        
+    def open(self):
+        return self.filter(deleted_at__isnull=True, closed_at=None)
+        
+    def mark_deleted(self):
+        return self.update(deleted_at=datetime.now())
 
     def acceptable_for_user(self, user):
         return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
@@ -94,6 +100,9 @@ class TaskManager(AuthorizationManager):
 
     def for_submission(self, submission, related=True):
         return self.all().for_submission(submission, related=related)
+        
+    def open(self):
+        return self.all().open()
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')

@@ -237,3 +237,13 @@ class RecommendationReview(NonRepeatableChecklistReview):
 def unlock_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(RecommendationReview)
 post_save.connect(unlock_recommendation_review, sender=Checklist)
+
+
+class VotePreparation(Activity):
+    class Meta:
+        model = Submission
+        
+    def get_url(self):
+        return reverse('ecs.core.views.vote_preparation', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+
+

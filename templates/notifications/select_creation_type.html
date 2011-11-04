@@ -13,7 +13,10 @@
         <li><a href="{% url ecs.notifications.views.create_notification notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a></li>
     {% endfor %}
     </ul>
-
+    
+    <div class="info">
+        Um eine Protokolländerung zu machen, gehen Sie in die betreffende Studie und klicken Sie auf den Knopf Amendment.
+    </div>
 {% endblock %}
 
 {% block menuSelection %}notifications{% endblock %}

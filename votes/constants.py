@@ -1,8 +1,11 @@
 from django.utils.translation import ugettext_lazy as _
 
-VOTE_RESULT_CHOICES = (
+VOTE_PREPARATION_CHOICES = (
     ('1', _(u'1 positive')),
     ('2', _(u'2 positive under reserve')),
+)
+
+VOTE_RESULT_CHOICES = VOTE_PREPARATION_CHOICES + (
     ('3a', _(u'3a recessed (not examined)')),
     ('3b', _(u'3b recessed (examined)')),
     ('4', _(u'4 negative')),

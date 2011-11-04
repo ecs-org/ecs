@@ -87,6 +87,11 @@
                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
                 {% endif %}
             {% endwith %}
+            {% if submission_form|allows_amendments_by:request.user %}
+                {% for notification_type in diff_notification_types %}
+                    | <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
+                {% endfor %}
+            {% endif %}
         </div>
         {% with submission.medical_categories.all as categories %}
             {% if categories and user|has_flag:'is_internal' %}

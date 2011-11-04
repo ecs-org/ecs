@@ -5,7 +5,8 @@ from django.conf import settings
 from django.db import models
 from django.utils.importlib import import_module
 from django.contrib.contenttypes.generic import GenericRelation
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.template import loader
 from django.template.defaultfilters import slugify
 
@@ -13,7 +14,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.core.parties import get_presenting_parties
 from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
-from ecs.notifications.constants import SAFETY_TYPE_CHOICES
+from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
 from ecs.notifications.managers import NotificationManager
 
 
@@ -21,6 +22,7 @@ class NotificationType(models.Model):
     name = models.CharField(max_length=80, unique=True)
     form = models.CharField(max_length=80, default='ecs.notifications.forms.NotificationForm')
     default_response = models.TextField(blank=True)
+    position = models.IntegerField(default=0)
 
     includes_diff = models.BooleanField(default=False)
     grants_vote_extension = models.BooleanField(default=False)
@@ -73,12 +75,12 @@ class Notification(models.Model):
     documents = GenericRelation(Document)
     pdf_document = models.OneToOneField(Document, related_name='_notification', null=True)
 
-    comments = models.TextField(default="", blank=True)
+    comments = models.TextField()
     date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     user = models.ForeignKey('auth.User', null=True)
-
-    needs_executive_review = models.BooleanField(default=False)
+    
+    review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)
     
     objects = NotificationManager()
     
@@ -148,7 +150,6 @@ class CompletionReportNotification(ReportNotification):
 
 class ProgressReportNotification(ReportNotification):
     runs_till = models.DateField(null=True, blank=True)
-    extension_of_vote_requested = models.BooleanField(default=False, blank=True)
 
 
 class AmendmentNotification(DiffNotification, Notification):
@@ -156,13 +157,12 @@ class AmendmentNotification(DiffNotification, Notification):
 
 
 class SafetyNotification(Notification):
-    safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES)
+    safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES, verbose_name=_('Type'))
     is_acknowledged = models.BooleanField(default=False)
 
 
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
-    review_count = models.PositiveIntegerField(default=0)
     text = models.TextField()
     is_valid = models.BooleanField(default=True) # if the notification has been accepted by the office
     is_rejected = models.BooleanField(default=False)
@@ -170,8 +170,7 @@ class NotificationAnswer(models.Model):
     
     @property
     def needs_further_review(self):
-        # further review is required iff: the answer is not valid or has not been reviewed by a multiple of four eyes.
-        return not self.is_valid or self.review_count == 0 or self.review_count % 2 != 0
+        return not self.is_valid
         
     def render_pdf(self):
         notification = self.notification
@@ -209,10 +208,7 @@ class NotificationAnswer(models.Model):
         extend, finish = False, False
         if not self.is_rejected:
             if self.notification.type.grants_vote_extension:
-                try:
-                    extend = ProgressReportNotification.objects.get(pk=self.notification.pk).extension_of_vote_requested
-                except ProgressReportNotification.DoesNotExist:
-                    assert False, "we should never get here"
+                extend = True
             if self.notification.type.finishes_study:
                 finish = True
         interested_parties = set()
@@ -226,6 +222,7 @@ class NotificationAnswer(models.Model):
             if finish:
                 submission.finish()
             presenting_parties = submission.current_submission_form.get_presenting_parties()
+            _ = ugettext
             presenting_parties.send_message(_('New Notification Answer'), 'notifications/answers/new_message.txt', context={
                 'notification': self.notification,
                 'answer': self,

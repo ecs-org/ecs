@@ -182,7 +182,7 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
 NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
     (_(u'General information'), [
         (_(u'General information'), [
-            'submission_form', 'extension_of_vote_requested', 'comments',
+            'submission_form', 'comments',
         ]),
     ]),
     (_(u'Study status'), [

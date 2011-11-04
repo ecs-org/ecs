@@ -29,6 +29,7 @@ urlpatterns = patterns(
     url(r'^submission_form/(?P<submission_pk>\d+)/review/paper_submission/$', 'ecs.core.views.paper_submission_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/befangene/$', 'ecs.core.views.befangene_review'),
     url(r'^submission_form/(?P<submission_form_pk>\d+)/review/vote/$', 'ecs.core.views.vote_review'),
+    url(r'^submission_form/(?P<submission_form_pk>\d+)/vote/prepare/$', 'ecs.core.views.vote_preparation'),
 
     url(r'^submission_form/doc/upload/(?P<docstash_key>.+)/$', 'ecs.core.views.upload_document_for_submission'),
     url(r'^submission_form/doc/delete/(?P<docstash_key>.+)/$', 'ecs.core.views.delete_document_from_submission'),

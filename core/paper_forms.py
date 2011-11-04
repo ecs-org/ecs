@@ -62,7 +62,6 @@ FormInfo(CompletionReportNotification, fields=(
 
 FormInfo(ProgressReportNotification, fields=(
     FieldInfo(None, 'runs_till', None, short_label=_(u'Estimated end date')),
-    FieldInfo(None, 'extension_of_vote_requested', _(u'I apply for an extension of the validity of the vote')),
 ))
 
 FormInfo(Document, fields=(

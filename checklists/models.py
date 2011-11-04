@@ -111,6 +111,7 @@ class Checklist(models.Model):
     def get_submission(self):
         return self.submission
 
+
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)

@@ -84,7 +84,7 @@ def submission_data_for_notification(request):
 @readonly()
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
-        'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('name')
+        'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('position')
     })
 
 

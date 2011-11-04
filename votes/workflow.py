@@ -62,7 +62,7 @@ class VoteB2Review(Activity):
         model = Vote
 
     def get_url(self):
-        return reverse('ecs.votes.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form.pk})
+        return reverse('ecs.votes.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
     def get_choices(self):
         return (
@@ -82,3 +82,4 @@ class VoteB2Review(Activity):
                     task.save()
         if choice == '3b':
             sf.submission.schedule_to_meeting()
+
