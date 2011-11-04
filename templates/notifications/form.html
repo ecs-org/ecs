@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="form_main notification">
+<div class="form_main">
 <form action="" method="post" enctype="multipart/form-data">
     <div id="tabs">
         {% for tab, fieldsets in tabs %}
@@ -56,6 +56,7 @@
                 {% endifequal %}
                 
                 {% for legend, fields in fieldsets %}
+                  <div class="notification">
                     <div class="fieldset_{{ forloop.counter }}">
                         {% if legend %}
                             <h3>{{ legend }}</h3>
@@ -68,6 +69,7 @@
                             {% endfor %}
                         </ol>
                     </div>
+                  </div>
                 {% endfor %}
             </div>
         {% endfor %}

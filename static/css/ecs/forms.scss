@@ -7,9 +7,10 @@
     width: 100%;
 }
 
-.errorlist {
+ul.errorlist {
   clear: both;
   list-style-type: none;
+  margin: 0 !important;
 }
 .errorlist li {
   color: red;
@@ -97,7 +98,6 @@
             label {
                 width: 220px;
                 padding: 0 10px;
-                text-align: right;
             }
             
             th.label {
@@ -241,6 +241,17 @@
       
         li {
           margin-left: 0px;
+        }
+    }
+    
+    .notification {
+        .fieldset_1 {
+            ol li label {
+                padding: 0;
+                width: 100%;
+                margin-bottom: 2px;
+                font-weight: normal;
+            }
         }
     }
 }

@@ -25,6 +25,12 @@
           color: $dark-grey;
           text-shadow: 0 1px 2px #fff;
         }
+        
+        &.errors {
+          background: $navitem-error-red-bg;
+          color: #fff !important;
+          text-shadow: 0 1px 2px $navitem-error-red-bg;
+        }
     }
     
     .tab_headers {
@@ -52,6 +58,12 @@
         li.readonly_review a {
             background: $link-lightblue;
             color: $link-blue;
+        }
+        
+        li.errors a {
+          background: $navitem-error-red-bg;
+          color: #fff !important;
+          text-shadow: 0 1px 2px $navitem-error-red-bg;
         }
     }
 }
@@ -183,7 +195,7 @@
 
 /* Readonly Checklist Review Forms */
 
-.form_main.readonly .checklist_review_tab{
+.form_main.readonly .checklist_review_tab {
     ol li label {
         width: auto;
         clear: both;
@@ -196,19 +208,28 @@
         clear: both;
     }
     
-    span.NullBooleanField, span.CharField{
+    span.NullBooleanField, span.CharField {
         float: left;
     }
     
     span.NullBooleanField {
         clear: left;
-        margin: 0 10px 0 20px; 
+        margin: 0 10px 0 20px;
     }
     
     span.CharField label {
         margin-right: 5px;
     }
+
+    span.CharField.required label:after {
+        content: " *";
+        color: $red;
+    }
     
+    ul.errorlist li {
+        margin-left: 0;  
+    }
+        
     textarea {
         clear: both;
         display: inline-block;
@@ -217,5 +238,9 @@
     
     input {
         display: none;
+    }
+    
+    span.required textarea {
+        border: 1px solid $red;
     }
 }
