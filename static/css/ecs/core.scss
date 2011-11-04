@@ -266,15 +266,6 @@ table.notification td {
   display: block;
     a {
       margin: 0 10px 5px 0;
-        
-        &.annotations,
-        &.boilerplate,
-        &.versions {
-          display: inline-block;
-          text-indent: -9999px;
-          height: 16px;
-          width: 16px;
-        }
     }
 }
 
@@ -453,7 +444,7 @@ table.notif_meta {
 .task_item:nth-child(even),
 .field_history .change:nth-child(even) {
   background: $middle-dark-brown-bg;
-  border-bottom: 1px solid #eddfbf;  
+  border-bottom: 1px solid #eddfbf;
 }
 #content ol.submission_list li:hover,
 .submission_list li:hover,

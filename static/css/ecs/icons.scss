@@ -190,7 +190,7 @@
 .form_main ol li .datepicker_toggler {
   background-position: -80px 0;
   margin-left: 5px;
-  float: left;
+  display: inline-block;
 }
 .document_upload .icon_warning {
   padding-left: 20px;
@@ -230,7 +230,7 @@
 }
 
 
-.ecs-TextAreaToolbar {  
+.ecs-TextAreaToolbar {
     a.annotations {
       @include icon_bg_16;
       background-position: 0 -1088px;
