@@ -45,7 +45,7 @@ class Submission(models.Model):
     statistical_review_required = models.NullBooleanField(default=False)
     insurance_review_required = models.NullBooleanField(default=False)
     gcp_review_required = models.NullBooleanField(default=False)
-    sponsor_required_for_next_meeting = models.BooleanField(default=False)
+    invite_primary_investigator_to_meeting = models.BooleanField(default=False)
 
     is_transient = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
@@ -671,7 +671,7 @@ def _post_submission_form_save(**kwargs):
             submission.legal_and_patient_review_required = True
             submission.statistical_review_required = True
             submission.insurance_review_required = True
-            submission.sponsor_required_for_next_meeting = True
+            submission.invite_primary_investigator_to_meeting = True
         if new_sf.is_thesis:
             submission.remission = True
         if new_sf.project_type_retrospective and new_sf.is_thesis:

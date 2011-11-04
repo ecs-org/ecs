@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-04 14:20+0100\n"
+"POT-Creation-Date: 2011-11-04 15:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1691,8 +1691,8 @@ msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
 #: core/forms/review.py:36
-msgid "sponsor_required_for_next_meeting"
-msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
+msgid "invite_primary_investigator_to_meeting"
+msgstr "Hauptprüfer einladen"
 
 #: core/forms/review.py:37
 msgid "external_reviewers"
@@ -4168,6 +4168,9 @@ msgstr ""
 #: votes/workflow.py:70
 msgid "B3"
 msgstr ""
+
+#~ msgid "sponsor_required_for_next_meeting"
+#~ msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
 
 #~ msgid "I apply for an extension of the validity of the vote"
 #~ msgstr "Ich beantrage die Verlängerung der Gültigkeit des Votums."

@@ -12,7 +12,6 @@ from django.template.defaultfilters import slugify
 
 from ecs.documents.models import Document, DocumentType
 from ecs.core.parties import get_presenting_parties
-from ecs.communication.utils import send_system_message_template
 from ecs.utils.viewutils import render_pdf_context
 from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
 from ecs.notifications.managers import NotificationManager
