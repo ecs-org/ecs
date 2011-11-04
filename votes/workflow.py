@@ -8,7 +8,7 @@ from ecs.votes.models import Vote
 from ecs.tasks.models import Task
 
 def vote_workflow_start_if(vote, created):
-    return vote.result and (not vote.top_id or vote.top.meeting.ended) and not vote.workflow
+    return vote.result and (not vote.top_id or vote.top.meeting.ended) and not vote.workflow and not vote.is_draft
 
 register(Vote, autostart_if=vote_workflow_start_if)
 
