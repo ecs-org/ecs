@@ -86,8 +86,8 @@ ul.errorlist {
             &.max60 input { width: 340px;}
 
             label, input[type=text], input[type=file], textarea, select {
-                float: left;
-                display: block;
+                display: inline-block;
+                vertical-align: top;
                 margin-bottom: 10px;
             }
             
@@ -244,14 +244,14 @@ ul.errorlist {
         }
     }
     
-    .notification {
-        .fieldset_1 {
-            ol li label {
-                padding: 0;
-                width: 100%;
-                margin-bottom: 2px;
-                font-weight: normal;
-            }
+    &.notifications {
+        #tabs-1 {
+          ol li label {
+              padding: 0;
+              width: 100%;
+              margin-bottom: 2px;
+              font-weight: normal;
+          }
         }
     }
 }

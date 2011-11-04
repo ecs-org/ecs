@@ -25,6 +25,7 @@
             &:hover, &.highlight{
                 background: $dark-grey;
                 color: #fff;
+                cursor: pointer;
             }
         }
     }
