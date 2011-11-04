@@ -10,7 +10,7 @@ def on_vote_published(sender, **kwargs):
     if vote.submission_form:
         parties = vote.submission_form.get_presenting_parties()
         parties.send_message(_('Publication of {vote}').format(vote=unicode(vote)), 'submissions/vote_publish.txt',
-            {'vote': vote, 'party': p}, submission=vote.submission_form.submission)
+            {'vote': vote}, submission=vote.submission_form.submission)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):
