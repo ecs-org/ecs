@@ -12,7 +12,7 @@ from ecs.core.forms.fields import DateField
 class NotificationAnswerForm(forms.ModelForm):
     class Meta:
         model = NotificationAnswer
-        fields = ('text', 'is_valid',)
+        fields = ('text', 'is_final_version',)
 
 
 class RejectableNotificationAnswerForm(NotificationAnswerForm):
@@ -20,7 +20,7 @@ class RejectableNotificationAnswerForm(NotificationAnswerForm):
 
     class Meta:
         model = NotificationAnswer
-        fields = ('is_rejected', 'text',)
+        fields = ('is_rejected', 'is_final_version', 'text',)
 
 
 def get_usable_submission_forms():

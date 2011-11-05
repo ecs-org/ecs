@@ -7,7 +7,7 @@ from ecs.utils import Args
 from ecs.bootstrap.utils import update_instance
 from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SafetyNotificationReview,
-    SignNotificationAnswer, AmendmentReview, is_susar, is_report, is_amendment, needs_further_review,
+    SignNotificationAnswer, AmendmentReview, SimpleNotificationReview, is_susar, is_report, is_amendment, needs_further_review,
     needs_executive_group_review, needs_insurance_group_review, needs_notification_group_review,
 )
 
@@ -86,14 +86,14 @@ def notification_workflow():
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
             # reports
-            'office_report_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Notification Review')),
+            'office_report_review': Args(SimpleNotificationReview, group=OFFICE_GROUP, name=_('Notification Review')),
             'executive_report_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
 
             # amendments
             'initial_amendment_review': Args(InitialAmendmentReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
             'notification_group_review': Args(AmendmentReview, group=NOTIFICATION_REVIEW_GROUP, name=_('Amendment Review')),
             'executive_amendment_review': Args(AmendmentReview, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
-            'insurance_group_review': Args(EditNotificationAnswer, group=INSURANCE_GROUP, name=_('Amendment Review')),
+            'insurance_group_review': Args(SimpleNotificationReview, group=INSURANCE_GROUP, name=_('Amendment Review')),
             'office_insurance_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Amendment Review')),
             'final_executive_office_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Amendment Review')),
             'final_notification_office_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Amendment Review')),
@@ -109,8 +109,8 @@ def notification_workflow():
             ('executive_report_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
 
             # amendments
-            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_executive_group_review),
-            ('initial_amendment_review', 'executive_amendment_review'): Args(guard=needs_notification_group_review),
+            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_notification_group_review),
+            ('initial_amendment_review', 'executive_amendment_review'): Args(guard=needs_executive_group_review),
             ('initial_amendment_review', 'insurance_group_review'): Args(guard=needs_insurance_group_review),
 
             ('notification_group_review', 'executive_amendment_review'): Args(guard=needs_executive_group_review), 

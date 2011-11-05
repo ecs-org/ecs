@@ -71,7 +71,7 @@ class DiffNotification(models.Model):
 class Notification(models.Model):
     type = models.ForeignKey(NotificationType, null=True, related_name='notifications')
     submission_forms = models.ManyToManyField('core.SubmissionForm', related_name='notifications')
-    documents = GenericRelation(Document)
+    documents = models.ManyToManyField('documents.Document', related_name='notifications')
     pdf_document = models.OneToOneField(Document, related_name='_notification', null=True)
 
     comments = models.TextField()
@@ -163,7 +163,8 @@ class SafetyNotification(Notification):
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     text = models.TextField()
-    is_valid = models.BooleanField(default=True) # if the notification has been accepted by the office
+    is_valid = models.BooleanField(default=True)
+    is_final_version = models.BooleanField(default=False)
     is_rejected = models.BooleanField(default=False)
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     

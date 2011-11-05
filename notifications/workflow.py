@@ -88,6 +88,11 @@ class EditNotificationAnswer(BaseNotificationReview):
         answer.save()
 
 
+class SimpleNotificationReview(BaseNotificationReview):
+    class Meta:
+        model = Notification
+
+
 class AmendmentReview(BaseNotificationReview):
     class Meta:
         model = Notification
