@@ -293,6 +293,7 @@ _queries = {
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
     'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
+    'local_ec':         lambda s,u: s.localec(),
 }
 
 _labels = {
@@ -312,6 +313,7 @@ _labels = {
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
+    'local_ec': _('Local EC'),
 }
 
 class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
@@ -357,7 +359,7 @@ class SubmissionFilterForm(forms.Form):
         return submissions
 
 FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
-FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'other')
+FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 
