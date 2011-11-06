@@ -1,0 +1,25 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}{% trans "Indisposition" %} - {{ profile_user }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans "Indisposition" %} - {{ profile_user }}{% endblock %}
+
+{% block content %}
+{% with profile_user.get_profile as profile %}
+    <form action="{{ request.path }}" method="POST">
+        {{ form.as_p }}
+        <input type="submit" value="{% trans 'Save' %}" />
+    </form>
+{% endwith %}
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.setupFormFieldHelpers();
+        });
+    </script>
+{% endblock %}
+
+{% block menuSelection %}administration{% endblock %}
