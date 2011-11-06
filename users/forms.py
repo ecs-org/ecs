@@ -8,8 +8,8 @@ from django.conf import settings
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
-from ecs.core.forms.fields import MultiselectWidget
-from ecs.utils.formutils import TranslatedModelForm
+from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
+from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
 
 class EmailLoginForm(forms.Form):
@@ -243,3 +243,20 @@ class InvitationForm(forms.Form):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
+
+class IndispositionForm(forms.ModelForm):
+    is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
+    communication_proxy = forms.ModelChoiceField(queryset=User.objects.all().select_related('ecs_profile'), required=False, label=_('communication_proxy'),
+        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})))
+
+    class Meta:
+        model = UserProfile
+        fields = ('is_indisposed', 'communication_proxy')
+
+    def clean(self):
+        cd = super(IndispositionForm, self).clean()
+
+        if cd.get('is_indisposed', False):
+            require_fields(self, ('communication_proxy',))
+
+        return cd

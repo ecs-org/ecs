@@ -15,6 +15,7 @@ class UserProfile(models.Model):
     is_phantom = models.BooleanField(default=False)
     is_approved_by_office = models.BooleanField(default=False)
     is_indisposed = models.BooleanField(default=False)
+    communication_proxy = models.ForeignKey(User, null=True)
     start_workflow = models.BooleanField(default=False)
 
     is_board_member = models.BooleanField(default=False)

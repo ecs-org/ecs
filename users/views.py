@@ -29,7 +29,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required
-from ecs.users.forms import EmailLoginForm
+from ecs.users.forms import EmailLoginForm, IndispositionForm
 from ecs.users.utils import get_user, create_user
 from ecs.communication.utils import send_system_message_template
 
@@ -214,18 +214,23 @@ def notify_return(request):
     return HttpResponseRedirect(reverse('ecs.users.views.profile'))
 
 
-@require_POST
+@readonly(methods=['GET'])
 @user_flag_required('is_internal')
-def toggle_indisposed(request, user_pk=None):
+def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    profile = user.get_profile()
-    if profile.is_indisposed:
-        profile.is_indisposed = False
-    else:
-        profile.is_indisposed = True
+    form = IndispositionForm(request.POST or None, instance=user.get_profile())
 
-    profile.save()
-    return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        profile = user.get_profile()
+        if profile.is_indisposed:
+            send_system_message_template(profile.communication_proxy, _('{user} indisposed').format(user=user), 'users/indisposed_proxy.txt', {'user': user})
+        return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+
+    return render(request, 'users/indisposition.html', {
+        'profile_user': user,
+        'form': form,
+    })
 
 
 @readonly(methods=['GET'])
