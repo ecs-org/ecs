@@ -135,4 +135,6 @@ def allows_amendments_by(sf, user):
 def allows_edits_by(sf, user):
     return sf.allows_edits(user)
 
-
+@register.filter
+def allows_export_by(sf, user):
+    return sf.allows_export(user)

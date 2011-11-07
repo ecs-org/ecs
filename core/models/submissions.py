@@ -545,6 +545,9 @@ class SubmissionForm(models.Model):
             return self.submission.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
+    def allows_export(self, user):
+        return user in (self.presenter, self.susar_presenter, self.submitter) or user.ecs_profile.is_internal
+
     @property
     def is_amg(self):
         return self.project_type_drug

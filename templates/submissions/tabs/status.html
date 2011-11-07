@@ -1,4 +1,4 @@
-{% load i18n userutils %}
+{% load i18n userutils core %}
 <table>
     <tr><th>Formulare:</th><td colspan="3">
         <table>
@@ -215,6 +215,6 @@
     {% endif %}
 </table>
 
-{% if user|has_flag:'is_internal' or user == submission_form.presenter %}
+{% if submission_form|allows_export_by:request.user %}
     <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}
