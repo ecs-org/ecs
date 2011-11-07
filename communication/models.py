@@ -101,6 +101,7 @@ class Thread(models.Model):
     receiver = models.ForeignKey(User, related_name='incoming_threads')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     last_message = models.OneToOneField('Message', null=True, related_name='head')
+    related_thread = models.ForeignKey('self', null=True)
     
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)

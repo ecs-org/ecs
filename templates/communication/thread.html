@@ -36,6 +36,13 @@
     </li>
 {% endfor %}
 </ul>
+<div class="related_thread">
+{% if thread.related_thread %}
+{% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
+    Den betreffenden Nachrichtenstrang finden sie <a href="{% url ecs.communication.views.read_thread thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
+{% endif %}
+{% endif %}
+</div>
 <div class="expand_collapse">
     <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
     | <a href="" class="expand_all">{% trans "Expand all" %}</a>

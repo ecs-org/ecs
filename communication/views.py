@@ -68,11 +68,12 @@ def read_thread(request, thread_pk=None):
         if delegate_to:
             thread.delegate(request.user, delegate_to)
             thread = Thread.objects.create(
-                subject=_(u'Anfrage bezüglich: {0}').format(thread.subject),
+                subject=_(u'Bzgl.: {0}').format(thread.subject),
                 sender=request.user,
                 receiver=delegate_to,
                 task=thread.task,
                 submission=thread.submission,
+                related_thread=thread,
             )
         msg = thread.add_message(request.user, text=form.cleaned_data['text'])
         form = ReplyDelegateForm(request.user, None)
