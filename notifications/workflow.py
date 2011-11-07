@@ -31,7 +31,7 @@ def is_susar(wf):
 
 @guard(model=Notification)
 def is_report(wf):
-    return wf.data.type.name == u"Zwischenbericht" or wf.data.type.name == u"Abschlussbericht"
+    return CompletionReportNotification.objects.filter(pk=wf.data.pk).exists() or ProgressReportNotification.objects.filter(pk=wf.data.pk).exists()
 
 @guard(model=Notification)
 def is_amendment(wf):

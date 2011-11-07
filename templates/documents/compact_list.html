@@ -21,7 +21,7 @@
                 {% endif %}
             {% endif %}
         {% endblock %}
-        <span class="doc_name">
+        <a class="doc_name" href="{% url pdf_show doc.pk %}" target="_blank">
             {% if doc.name %}
             {{ doc.name }}
             {% else %}
@@ -34,7 +34,7 @@
                 </span>
             {% endif %}
             {% if doc.original_file_name %}{% endif %}
-        </span><br />
+        </a><br />
         {% if annotations %}
             <ul>
             {% for annotation in annotations %}
