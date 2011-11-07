@@ -252,6 +252,14 @@ ul.errorlist {
               margin-bottom: 2px;
               font-weight: normal;
           }
+          select {
+              max-width: 400px;
+              option {
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+              }
+          }
         }
     }
 }
