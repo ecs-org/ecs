@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -27,6 +29,8 @@ def get_usable_submission_forms():
     return SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
+    comments = forms.CharField(widget=forms.Textarea(), initial=_(u'Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses?'))
+
     class Meta:
         model = Notification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document', 'review_lane')
