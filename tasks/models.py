@@ -52,7 +52,7 @@ class TaskQuerySet(models.query.QuerySet):
         return qs
 
     def for_widget(self, user):
-        not_for_widget = ['resubmission', 'external_review']
+        not_for_widget = ['resubmission', 'b2_resubmission', 'external_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
     def for_submission(self, submission, related=True):
@@ -152,7 +152,7 @@ class Task(models.Model):
 
     @property
     def managed_transparently(self):
-        return self.task_type.workflow_node.uid in ['resubmission', 'external_review']
+        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'external_review']
 
     @property
     def is_locked(self):

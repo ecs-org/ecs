@@ -23,7 +23,7 @@ def on_study_change(sender, **kwargs):
         involved_users = new_sf.get_involved_parties().get_users().difference([new_sf.presenter])
         for u in involved_users:
             send_submission_message(submission, u, _('Creation of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
-    else:
+    elif not submission.votes.exists():
         with sudo():
             try:
                 initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]
@@ -45,6 +45,10 @@ def on_study_submit(sender, **kwargs):
     resubmission_task = submission.resubmission_task_for(user)
     if resubmission_task:
         resubmission_task.done(user)
+
+    b2_resubmission_task = submission.b2_resubmission_task_for(user)
+    if b2_resubmission_task:
+        b2_resubmission_task.done(user)
 
 
 @connect(signals.on_presenter_change)

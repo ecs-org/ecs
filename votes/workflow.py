@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
 
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.users.utils import sudo
@@ -62,7 +64,7 @@ class VoteB2Review(Activity):
         model = Vote
 
     def get_url(self):
-        return reverse('ecs.votes.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
+        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
     def get_choices(self):
         return (
@@ -83,3 +85,24 @@ class VoteB2Review(Activity):
         if choice == '3b':
             sf.submission.schedule_to_meeting()
 
+
+class B2Resubmission(Activity):
+    class Meta:
+        model = Vote
+
+    def get_url(self):
+        s = self.workflow.data.submission_form.submission
+        return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': s.pk})
+
+    def get_final_urls(self):
+        s = self.workflow.data.submission_form.submission
+        return super(B2Resubmission, self).get_final_urls() + [
+            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf})
+            for sf in s.forms.values_list('pk', flat=True)
+        ]
+
+    def receive_token(self, *args, **kwargs):
+        sf = self.workflow.data.submission_form
+        token = super(B2Resubmission, self).receive_token(*args, **kwargs)
+        token.task.assign(sf.presenter)
+        return token

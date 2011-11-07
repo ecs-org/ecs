@@ -21,6 +21,7 @@
     {% else %}
     
         {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
+        {% if submission.b2_resubmission_task %}<span class="submission_b2_resubmission"></span>{% endif %}
         
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}

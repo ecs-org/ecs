@@ -664,10 +664,14 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 
     # get related tasks for every submission
     submission_ct = ContentType.objects.get_for_model(Submission)
+    vote_ct = ContentType.objects.get_for_model(Vote)
     resubmission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
         task_type__workflow_node__uid='resubmission')
     paper_submission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
         task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'])
+    b2_resubmission_tasks = tasks.filter(content_type=vote_ct,
+        data_id__in=Vote.objects.filter(submission_form__submission__pk__in=visible_submission_pks).values('pk').query,
+        task_type__workflow_node__uid='b2_resubmission')
     for s in submissions.object_list:
         if isinstance(s, DocStash):
             continue
@@ -677,6 +681,9 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         for task in paper_submission_tasks:
             if task.data == s:
                 s.paper_submission_review_task = task
+        for task in b2_resubmission_tasks:
+            if task.data.submission_form.submission == s:
+                s.b2_resubmission_task = task
 
     checklist_ct = ContentType.objects.get_for_model(Checklist)
     external_review_tasks = tasks.filter(content_type=checklist_ct,

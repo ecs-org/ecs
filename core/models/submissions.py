@@ -86,6 +86,12 @@ class Submission(models.Model):
         except IndexError:
             return None
 
+    def b2_resubmission_task_for(self, user):
+        try:
+            return Task.objects.for_user(user).for_submission(self).filter(task_type__workflow_node__uid='b2_resubmission', closed_at=None, deleted_at=None)[0]
+        except IndexError:
+            return None
+
     def paper_submission_review_task_for(self, user):
         try:
             return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at=None)[0]

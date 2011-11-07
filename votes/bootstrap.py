@@ -3,7 +3,7 @@
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.votes.models import Vote
-from ecs.votes.workflow import VoteFinalization, VoteReview, VoteSigning, VoteB2Review
+from ecs.votes.workflow import VoteFinalization, VoteReview, VoteSigning, VoteB2Review, B2Resubmission
 from ecs.votes.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade
 from ecs.integration.utils import setup_workflow_graph
 from ecs.workflow.patterns import Generic
@@ -25,6 +25,7 @@ def vote_workflow():
         nodes={
             'start': Args(Generic, start=True, name=_("Start")),
             'review': Args(Generic, name=_("Review Split")),
+            'b2_resubmission': Args(B2Resubmission, name=_('B2 Resubmission')),
             'b2_review': Args(VoteB2Review, name=_("B2 Review"), group=B2_REVIEW_GROUP),
             'executive_vote_finalization': Args(VoteReview, name=_("Executive Vote Finalization"), group=EXECUTIVE_GROUP),
             'executive_vote_review': Args(VoteReview, name=_("Executive Vote Review"), group=EXECUTIVE_GROUP),
@@ -52,7 +53,8 @@ def vote_workflow():
             ('executive_vote_review', 'vote_signing'): Args(guard=is_final),
             
             ('final_office_vote_review', 'executive_vote_review'): None,
-            ('vote_signing', 'b2_review'): Args(guard=is_b2),
+            ('vote_signing', 'b2_resubmission'): Args(guard=is_b2),
+            ('b2_resubmission', 'b2_review'): None,
         }
     )
 
