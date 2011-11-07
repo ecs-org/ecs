@@ -524,7 +524,7 @@ class SubmissionForm(models.Model):
         return self.submission.forms.filter(created_at__lte=self.created_at).count()
 
     def __unicode__(self):
-        return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
+        return "%s: %s" % (self.submission.get_ec_number_display(), self.german_project_title or self.project_title)
     
     def get_filename_slice(self):
         return self.submission.get_ec_number_display(separator='_')
