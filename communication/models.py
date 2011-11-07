@@ -130,6 +130,14 @@ class Thread(models.Model):
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s. Sender is %s" % (self.sender.email, self.receiver.email, user.email))
         
+        if receiver.get_profile().is_indisposed:
+            proxy = receiver.get_profile().communication_proxy
+            receiver = proxy
+            if origin == MESSAGE_ORIGIN_ALICE:
+                self.receiver = proxy
+            else:
+                self.sender = proxy
+
         # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
         smtp_delivery_state = "received" if is_received else "new"
         
@@ -147,10 +155,10 @@ class Thread(models.Model):
         )
         previous_message = self.last_message
         if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
-            if user.id == self.receiver_id:
-                self.sender = previous_message.reply_receiver
-            else:
+            if origin == MESSAGE_ORIGIN_ALICE:
                 self.receiver = previous_message.reply_receiver
+            else:
+                self.sender = previous_message.reply_receiver
         self.last_message = msg
         self.closed_by_sender = False
         self.closed_by_receiver = False
@@ -171,6 +179,13 @@ class Thread(models.Model):
 
     def message_list(self):
         return self.messages.order_by('timestamp')
+
+    def save(self, **kwargs):
+        if self.receiver:
+            receiver_profile = self.receiver.get_profile()
+            if receiver_profile.is_indisposed:
+                self.receiver = receiver_profile.communication_proxy
+        return super(Thread, self).save(**kwargs)
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
