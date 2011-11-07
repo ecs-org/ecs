@@ -32,6 +32,9 @@ class Party(object):
 class PartyList(list):
     def get_users(self):
         return set(p.user for p in self if p.user)
+        
+    def __contains__(self, u):
+        return any(p.user == u for p in self)
 
     def send_message(self, *args, **kwargs):
         exclude = kwargs.pop('exclude', [])

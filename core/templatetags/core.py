@@ -138,3 +138,7 @@ def allows_edits_by(sf, user):
 @register.filter
 def allows_export_by(sf, user):
     return sf.allows_export(user)
+
+@register.filter
+def is_presenting_party(user, sf):
+    return user in sf.get_presenting_parties()

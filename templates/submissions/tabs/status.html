@@ -208,10 +208,12 @@
         </td>
     </tr>
     {% else %}
-    <tr>
-        <th>Gutachten erforderlich:</th>
-        <td>{{ submission_form.submission.external_reviewers.exists|yesno }}</td>
-    </tr>
+        {% if not request.user|is_presenting_party:submission_form %}
+            <tr>
+                <th>Gutachten erforderlich:</th>
+                <td>{{ submission_form.submission.external_reviewers.exists|yesno }}</td>
+            </tr>
+        {% endif %}
     {% endif %}
 </table>
 
