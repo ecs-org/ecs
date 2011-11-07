@@ -1,5 +1,5 @@
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 from ecs.users.utils import sudo
 from ecs.communication.utils import send_system_message_template
@@ -35,7 +35,12 @@ class PartyList(list):
 
     def send_message(self, *args, **kwargs):
         exclude = kwargs.pop('exclude', [])
-        for u in self.get_users().difference(exclude):
+        users = self.get_users().difference(exclude)
+        cc_group = kwargs.pop('cc_group', None)
+        if cc_group:
+            group = Group.objects.get(name=cc_group)
+            users |= set(User.objects.filter(groups=group))
+        for u in users:
             send_system_message_template(u, *args, **kwargs)
 
 @sudo()

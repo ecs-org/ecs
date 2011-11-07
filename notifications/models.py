@@ -211,20 +211,18 @@ class NotificationAnswer(models.Model):
                 extend = True
             if self.notification.type.finishes_study:
                 finish = True
-        interested_parties = set()
-        
+
         for submission in Submission.objects.filter(forms__in=self.notification.submission_forms.values('pk').query):
-            for party in get_presenting_parties(submission.current_submission_form):
-                interested_parties.add(party)
             if extend:
                 for vote in submission.votes.positive().permanent():
                     vote.extend()
             if finish:
                 submission.finish()
             presenting_parties = submission.current_submission_form.get_presenting_parties()
+            cc_group = settings.ECS_AMENDMENT_RECEIVER_GROUP if self.notification.type.includes_diff else None
             _ = ugettext
             presenting_parties.send_message(_('New Notification Answer'), 'notifications/answers/new_message.txt', context={
                 'notification': self.notification,
                 'answer': self,
                 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
-            }, submission=submission)
+            }, submission=submission, cc_group=cc_group)

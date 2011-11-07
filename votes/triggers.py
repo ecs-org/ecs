@@ -1,4 +1,5 @@
 from django.utils.translation import ugettext as _
+from django.conf import settings
 from ecs.communication.utils import send_system_message_template
 from ecs.utils import connect
 from ecs.votes import signals
@@ -10,7 +11,7 @@ def on_vote_published(sender, **kwargs):
     if vote.submission_form:
         parties = vote.submission_form.get_presenting_parties()
         parties.send_message(_('Publication of {vote}').format(vote=unicode(vote)), 'submissions/vote_publish.txt',
-            {'vote': vote}, submission=vote.submission_form.submission)
+            {'vote': vote}, submission=vote.submission_form.submission, cc_group=settings.ECS_VOTE_RECEIVER_GROUP)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):

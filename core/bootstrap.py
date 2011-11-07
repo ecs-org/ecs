@@ -218,6 +218,10 @@ def auth_groups():
         u'sentryusers',
         u'External Review Review Group',
         u'EC-Vote Preparation Group',
+        u'Vote Receiver Group',
+        u'Amendment Receiver Group',
+        u'Protocol Receiver Group',
+        u'Resident Board Member Group'
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
