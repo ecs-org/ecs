@@ -39,10 +39,9 @@ class PartyList(list):
     def send_message(self, *args, **kwargs):
         exclude = kwargs.pop('exclude', [])
         users = self.get_users().difference(exclude)
-        cc_group = kwargs.pop('cc_group', None)
-        if cc_group:
-            group = Group.objects.get(name=cc_group)
-            users |= set(User.objects.filter(groups=group))
+        cc_groups = kwargs.pop('cc_groups', None)
+        if cc_groups:
+            users |= set(User.objects.filter(groups__name__in=cc_groups))
         for u in users:
             send_system_message_template(u, *args, **kwargs)
 

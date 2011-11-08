@@ -200,6 +200,7 @@ class NotificationFormTest(LoginTestCase):
                 'SAE_count': '0',
                 'SUSAR_count': '0',
                 'study_started': 'on',
+                'comments': 'foo',
             })
             self.assertEqual(response.status_code, 302)
             notification = self.client.get(response['Location']).context['notification']

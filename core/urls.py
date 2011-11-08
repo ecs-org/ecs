@@ -14,6 +14,8 @@ urlpatterns = patterns(
     url(r'^submission/(?P<submission_pk>\d+)/tasks/log/$', 'ecs.tasks.views.task_backlog'),
     url(r'^submission/(?P<submission_pk>\d+)/change_presenter/$', 'ecs.core.views.change_submission_presenter'),
     url(r'^submission/(?P<submission_pk>\d+)/change_susar_presenter/$', 'ecs.core.views.change_submission_susar_presenter'),
+    url(r'^submission/(?P<submission_pk>\d+)/temp-auth/grant/$', 'ecs.core.views.grant_temporary_access'),
+    url(r'^submission/(?P<submission_pk>\d+)/temp-auth/(?P<temp_auth_pk>\d+)/revoke/$', 'ecs.core.views.revoke_temporary_access'),
 
     url(r'^submission/(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', 'ecs.core.views.submissions.delete_task'),
 

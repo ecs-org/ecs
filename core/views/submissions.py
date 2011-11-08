@@ -14,11 +14,11 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render, redirect_to_next_url
-from ecs.core.models import Submission, SubmissionForm
+from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 
 from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
-    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, 
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
@@ -200,6 +200,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
+        'temporary_auth': submission.temp_auth.order_by('end'),
+        'temporary_auth_form': TemporaryAuthorizationForm(),
     }
 
     if request.user not in (submission_form.presenter, submission_form.susar_presenter, submission_form.submitter, submission_form.sponsor):
@@ -801,3 +803,22 @@ def catalog(request):
             'votes': votes,
         })
     return html
+
+
+@user_flag_required('is_executive_board_member')
+def grant_temporary_access(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    form = TemporaryAuthorizationForm(request.POST or None)
+    if form.is_valid():
+        temp_auth = form.save(commit=False)
+        temp_auth.submission = submission
+        temp_auth.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
+
+
+@user_flag_required('is_executive_board_member')
+def revoke_temporary_access(request, submission_pk=None, temp_auth_pk=None):
+    temp_auth = get_object_or_404(TemporaryAuthorization, pk=temp_auth_pk)
+    temp_auth.end = datetime.now()
+    temp_auth.save()
+    return HttpResponseRedirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')

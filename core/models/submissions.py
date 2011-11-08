@@ -817,3 +817,18 @@ class ForeignParticipatingCenter(models.Model):
     class Meta:
         app_label = 'core'
 
+
+class TemporaryAuthorization(models.Model):
+    submission = models.ForeignKey(Submission, related_name='temp_auth')
+    user = models.ForeignKey(User, related_name='temp_submission_auth')
+    start = models.DateTimeField(default=datetime.now)
+    end = models.DateTimeField(default=lambda: datetime.now() + timedelta(days=30))
+
+    class Meta:
+        app_label = 'core'
+        
+    @property
+    def is_active(self):
+        return self.start <= datetime.now() < self.end
+        
+

@@ -229,9 +229,10 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
-ECS_VOTE_RECEIVER_GROUP = u'Vote Receiver Group'
-ECS_AMENDMENT_RECEIVER_GROUP = u'Amendment Receiver Group'
-ECS_RESIDENT_BOARD_MEMBER_GROUP = u'Resident Board Member Group'
+ECS_VOTE_RECEIVER_GROUPS = (u'Vote Receiver Group',)
+ECS_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
+ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
+ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
 
 # authorization
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'

@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
+from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
-    EmailUserSelectWidget, SingleselectWidget
+    EmailUserSelectWidget, SingleselectWidget, DateTimeField
 from ecs.core.forms.utils import NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
@@ -393,3 +394,15 @@ class SubmissionImportForm(forms.Form):
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
         f.seek(0)
         return f
+
+class TemporaryAuthorizationForm(forms.ModelForm):
+    start = DateTimeField(initial=datetime.now)
+    end = DateTimeField(initial=lambda: datetime.now() + timedelta(days=30))
+
+    class Meta:
+        model = TemporaryAuthorization
+        exclude = ('submission',)
+        widgets = {
+            'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+        }
+        

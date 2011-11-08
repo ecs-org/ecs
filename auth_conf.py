@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
@@ -31,6 +31,10 @@ class SubmissionQFactory(authorization.QFactory):
             
         ### default policy: only avaiable for the (susar) presenter.
         q = self.make_q(forms__presenter=user) | self.make_q(forms__susar_presenter=user)
+        
+        ### explicit temporary permissions
+        now = datetime.now()
+        q |= self.make_q(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
 
         ### rules that apply until a final vote has been published.
         until_vote_q = self.make_q(external_reviewers=user)

@@ -32,6 +32,54 @@
     </tbody>
 </table>
 
+{% if temp_auth or user|has_flag:'is_executive_board_member' %}
+    <h3>{% trans 'Temporary Authorization' %}</h3>
+    <table>
+        <thead>
+            <th>{% trans 'Timeframe' %}</th>
+            <th>{% trans 'Name' %}</th>
+            <th>{% trans 'Organization' %}</th>
+            {% if user|has_flag:'is_internal' %}
+                <th>{% trans 'E-Mail' %}</th>
+            {% endif %}
+            <th></th>
+        </thead>
+        <tbody>
+            {% for ta in temporary_auth %}
+                <tr>
+                    <td>{{ ta.start|date:'d.m.Y, H:i' }} Uhr – {{ ta.end|date:'d.m.Y, H:i' }} Uhr</td>
+                    <td>{{ ta.user }}</td>
+                    <td>{{ ta.user.ecs_profile.organisation }}</td>
+                    {% if user|has_flag:'is_internal' %}
+                        <td>{{ user.email|default:'' }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=ta.user.pk %}" target="_blank">
+                            <span class="icon_send"></span>
+                            {% trans "Send Message" %}
+                        </a>
+                        {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
+                            | <a href="{% url ecs.core.views.revoke_temporary_access submission_pk=submission.pk temp_auth_pk=ta.pk %}">{% trans 'Revoke' %}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% if user|has_flag:'is_executive_board_member' %}
+    <div>
+        <form action="{% url ecs.core.views.grant_temporary_access submission_pk=submission.pk %}" method="post">
+            <ol>
+            {% for field in temporary_auth_form %}
+                {% include 'forms/field.html' %}
+            {% endfor %}
+            </ol>
+            <input type="submit" value="{% trans 'Authorize' %}"/>
+        </form>
+    </div>
+{% endif %}
+
 {% if befangene_review_form %}
     <h3>{% trans "Biased Parties" %}</h3>
     <div id="befangene_review" class="tab">

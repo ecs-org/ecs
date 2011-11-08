@@ -30,11 +30,12 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/comments/$', 'meeting_assistant_comments'),
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/retrospective_thesis_expedited/$', 'meeting_assistant_retrospective_thesis_expedited'),
 
-    url(r'^meeting/(?P<meeting_pk>\d+)/agenda_pdf/$', 'agenda_pdf'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/send_agenda_to_board/$', 'send_agenda_to_board'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/agenda/pdf/$', 'agenda_pdf'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/agenda/send/$', 'send_agenda_to_board'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable_pdf/$', 'timetable_pdf'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetablepart/$', 'timetable_htmlemailpart'),
-    url(r'^meeting/(?P<meeting_pk>\d+)/protocol_pdf/$', 'protocol_pdf'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/protocol/pdf/$', 'protocol_pdf'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/protocol/send/$', 'send_protocol'),
 
     url(r'^meeting/(?P<meeting_pk>\d+)/votes_signing/$', 'votes_signing'),
 )

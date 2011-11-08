@@ -102,6 +102,8 @@ class SubmissionQuerySet(models.query.QuerySet):
         submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).exclude(task_type__workflow_node__uid='resubmission').values('data_id').query)
         checklist_ct = ContentType.objects.get_for_model(Checklist)
         submissions |= self.filter(pk__in=Checklist.objects.filter(pk__in=Task.objects.filter(content_type=checklist_ct, assigned_to=user).values('data_id').query).values('submission__pk').query)
+        now = datetime.now()
+        submissions |= self.filter(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
         return submissions.distinct()
 
     def none(self):

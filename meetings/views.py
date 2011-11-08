@@ -426,6 +426,7 @@ def agenda_pdf(request, meeting_pk=None):
     pdf = meeting.get_agenda_pdf(request)
     return pdf_response(pdf, filename=filename)
 
+
 @readonly()
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
@@ -440,16 +441,31 @@ def send_agenda_to_board(request, meeting_pk=None):
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
         start, end = meeting._get_timeframe_for_user(user)
-        time = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
-        htmlmail = unicode(render_html(request, 'meetings/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
-        deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+        htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
+        deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+
+    for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
+        start, end = meeting.start, meeting.end
+        time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+        htmlmail = unicode(render_html(request, 'meetings/messages/resident_boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
+        deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False)
     for top in tops_with_primary_investigator:
-        send_system_message_template(top.submission.primary_investigator.user, _(u'Invitation to meeting'), 'meetings/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
-
+        send_system_message_template(top.submission.primary_investigator.user, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+    
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
+
+
+@readonly()
+@user_group_required('EC-Office')
+def send_protocol(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS):
+        pass
+    return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
+
 
 @readonly()
 @user_flag_required('is_internal')

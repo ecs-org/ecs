@@ -39,7 +39,12 @@
     </tr>
     <tr>
         <th>{% trans "Protocol" %}:</th>
-        <td><a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a></td>
+        <td>
+            <a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a>
+            {% if user|is_member_of:'EC-Office' %}
+                | <a href="{% url ecs.meetings.views.send_protocol meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
+            {% endif %}
+        </td>
     </tr>
 </table>
 
