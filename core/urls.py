@@ -55,5 +55,6 @@ urlpatterns = patterns(
     url(r'^developer/test_checklist_pdf/$', 'ecs.core.views.developer_test_checklist_pdf'),
     url(r'^developer/test_checklist_pdf_html/(?P<checklist_pk>\d+)/$', 'ecs.core.views.test_checklist_pdf_html'),
     url(r'^developer/test_render_checklist_pdf/(?P<checklist_pk>\d+)/$', 'ecs.core.views.test_render_checklist_pdf'),
+    url(r'^developer/translations/$', 'ecs.core.views.developer_translations'),
 )
 

@@ -61,3 +61,12 @@ def developer_test_checklist_pdf(request):
     with sudo():
         checklists = list(Checklist.objects.all().order_by('submission__ec_number', 'blueprint__name'))
     return render(request, 'developer/render_test_checklist_pdf.html', {'checklists': checklists})
+
+def developer_translations(request):
+    from django.contrib.auth.models import Group
+    from ecs.tasks.models import TaskType
+
+    return render(request, 'developer/translations.html', {
+        'groups': Group.objects.all(),
+        'task_types': TaskType.objects.all(),
+    })
