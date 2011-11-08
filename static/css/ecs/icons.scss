@@ -82,7 +82,10 @@
   background-position: -240px -208px;
 }
 .icon_done {
-  background-position: -0 -160px;
+  background-position: -16px -160px;
+}
+.icon_done:active {
+  background-position: 0 -160px;
 }
 .icon_sort {
   background-position: -240px -256px;
