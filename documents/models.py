@@ -44,9 +44,11 @@ class DocumentType(models.Model):
     identifier = models.CharField(max_length=30, db_index=True, blank=True, default= "")
     helptext = models.TextField(blank=True, default="")
     is_hidden = models.BooleanField(default=False)
+    is_downloadable = models.BooleanField(default=True)
 
     def __unicode__(self):
         return ugettext(self.name)
+
 
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
