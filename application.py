@@ -126,8 +126,8 @@ tomcat:req:apt:apt-get:tomcat6-user
 tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
 tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
-mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.6.war:custom:BKUOnline-1.3.6.war
 pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
+mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.6.war:custom:BKUOnline-1.3.6.war
 
 
 # ecs/mediaserver: file encryption, used for storage vault 
@@ -389,6 +389,14 @@ def custom_install_tomcat_other_user(pkgline, filename):
     else:
         return False
 
+def custom_check_pdfas(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+   
+def custom_install_pdfas(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    return pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+
 def custom_check_mocca(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
 
@@ -398,13 +406,6 @@ def custom_install_mocca(pkgline, filename):
     pkg_manager = get_pkg_manager()
     return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
-def custom_check_pdfas(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
-   
-def custom_install_pdfas(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
 
 
 # custom ruby user env example script
