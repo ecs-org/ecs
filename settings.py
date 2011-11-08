@@ -230,7 +230,7 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
 ECS_VOTE_RECEIVER_GROUPS = (u'Vote Receiver Group',)
-ECS_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
+ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
 ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
 ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
 
