@@ -10,6 +10,7 @@ from ecs.core import paper_forms
 from ecs.utils.viewutils import render, render_pdf_context, pdf_response
 from ecs.core import bootstrap
 from ecs.users.utils import sudo
+from ecs.notifications.models import Notification
 
 def test_pdf_html(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
@@ -61,6 +62,43 @@ def developer_test_checklist_pdf(request):
     with sudo():
         checklists = list(Checklist.objects.all().order_by('submission__ec_number', 'blueprint__name'))
     return render(request, 'developer/render_test_checklist_pdf.html', {'checklists': checklists})
+
+def test_notification_pdf_html(request, notification_pk=None):
+    with sudo():
+        notification = get_object_or_404(Notification, pk=notification_pk)
+    bootstrap.templates()
+    tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+    submission_forms = notification.submission_forms.select_related('submission').all()
+    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+    protocol_numbers.sort()
+    html = tpl.render(Context({
+        'notification': notification,
+        'protocol_numbers': protocol_numbers,
+        'submission_forms': submission_forms,
+        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+    }))
+    return HttpResponse(html)
+
+def test_render_notification_pdf(request, notification_pk=None):
+    with sudo():
+        notification = get_object_or_404(Notification, pk=notification_pk)
+    bootstrap.templates()
+    tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+    submission_forms = notification.submission_forms.select_related('submission').all()
+    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+    protocol_numbers.sort()
+    pdf = render_pdf_context(tpl, {
+        'notification': notification,
+        'protocol_numbers': protocol_numbers,
+        'submission_forms': submission_forms,
+        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+    })
+    return pdf_response(pdf, filename='test.pdf')
+
+def developer_test_notification_pdf(request):
+    with sudo():
+        notifications = list(Notification.objects.all())
+    return render(request, 'developer/render_test_notification_pdf.html', {'notifications': notifications})
 
 def developer_translations(request):
     from django.contrib.auth.models import Group
