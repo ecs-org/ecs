@@ -1,8 +1,13 @@
 # ecs main application environment config
 import platform
+import sys
+import os
+import shutil
 
-from deployment.utils import package_merge
+from deployment.utils import get_pythonenv
+from deployment.pkgmanager import get_pkg_manager, package_merge, packageline_split
 from ecs.target import SetupTarget
+
 
 # packages
 ##########
@@ -102,7 +107,6 @@ django-picklefield:inst:all:pypi:django-picklefield
 django-celery:inst:all:pypi:django-celery==2.3.3
 
 
-
 # mail: ecsmail, communication: lamson mail server
 chardet:inst:all:pypi:chardet
 jinja2:inst:all:pypi:jinja2
@@ -114,6 +118,16 @@ python-daemon:inst:all:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson
 beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
+
+
+# ecs/signature: mocca and pdf-as
+# for apt (ubuntu/debian) systems, tomcat 6 is used as a user installation
+tomcat:req:apt:apt-get:tomcat6-user
+tomcat_apt_user:static:apt:file:dummy:custom:None
+# for all others, a custom downloaded tomcat 6 is used
+tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
+mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.6.war:custom:BKUOnline-1.3.6.war
+pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
 
 
 # ecs/mediaserver: file encryption, used for storage vault 
@@ -202,7 +216,6 @@ libjpeg62-dev:req:apt:apt-get:libjpeg62-dev
 zlib1g-dev:req:apt:apt-get:zlib1g-dev
 libfreetype6-dev:req:apt:apt-get:libfreetype6-dev
 liblcms1-dev-devel:req:apt:apt-get:liblcms1-dev
-
 # PIL requirements for opensuse
 libjpeg62-devel:req:suse:zypper:libjpeg62-devel
 zlib-devel:req:suse:zypper:zlib
@@ -323,9 +336,6 @@ system_packages = """
 apache2:req:apt:apt-get:apache2-mpm-prefork
 modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 
-# tomcat 6 is used as a user installation for pdf-as and mocca
-tomcat:req:apt:apt-get:tomcat6-user
-
 # postgresql is used as primary database
 postgresql:req:apt:apt-get:postgresql
 
@@ -350,21 +360,66 @@ memcached:req:apt:apt-get:memcached
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 """
 
+def custom_check_tomcat_apt_user(pkgline, checkfilename):
+    print "custom_check_tomcat_apt_user"
+    return False
 
-# custom static example script
-def custom_sass_install(resource):
+def custom_install_tomcat_apt_user(pkgline, filename):
+    print "custom_install_tomcat_apt_user: not active"
+    return True
+
+def custom_check_tomcat_other_user(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
+    
+def custom_install_tomcat_other_user(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    temp_dest = os.path.join(get_pythonenv(), checkfilename)
+    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
+    
+    if os.path.exists(final_dest):
+        shutil.rmtree(final_dest)
+    if pkg_manager.static_install_tar(filename, get_pythonenv(), checkfilename, pkgline):
+        try:
+            os.rename(temp_dest, final_dest)
+        except IOError:
+            print("could not rename tomcat installation")
+            return False
+        return True
+    else:
+        return False
+
+def custom_check_mocca(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+
+def custom_install_mocca(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
+    pkg_manager = get_pkg_manager()
+    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
+
+def custom_check_pdfas(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+   
+def custom_install_pdfas(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    return pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+
+
+# custom ruby user env example script
+def custom_install_sass(pkgline, filename):
     if sys.platform == 'win32':
         gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems').replace("\\", "/")
         bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
         install = 'set GEM_HOME="{0}"; set GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
-            gem_home, bin_dir, resource)
+            gem_home, bin_dir, filename)
     else:
         gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems')
         bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
         install = 'export GEM_HOME="{0}"; export GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
-            gem_home, bin_dir, resource)
-  
-    return (install, 0) # returns commandline to run and expected returncode
+            gem_home, bin_dir, filename)
+    return False
  
 
 
