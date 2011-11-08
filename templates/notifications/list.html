@@ -28,8 +28,6 @@
     {% endif %}
 </div>
 
-{% endblock %}
-
 {% if stashed_notifications %}
 <div class="notification_list">
   <h4>Nicht eingereichte Meldungen</h4>
@@ -53,5 +51,7 @@
     </ol>
 </div>
 {% endif %}
+
+{% endblock %}
 
 {% block menuSelection %}notifications{% endblock %}

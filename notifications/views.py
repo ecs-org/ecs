@@ -117,7 +117,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
 
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
 def delete_docstash_entry(request):
-    for sf in request.docstash.get('submission_forms'):
+    for sf in request.docstash.get('submission_forms', []):
         if sf.is_notification_update:
             sf.delete()
     request.docstash.delete()
