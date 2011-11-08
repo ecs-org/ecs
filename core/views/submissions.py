@@ -13,6 +13,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 from ecs.documents.models import Document
+from ecs.documents.views import handle_download
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
@@ -587,12 +588,7 @@ def delete_docstash_entry(request):
 @readonly()
 def submission_pdf(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    url = submission_form.pdf_document.get_downloadurl()
-    print submission_form.pdf_document.uuid
-    if url:
-        return HttpResponseRedirect(url)
-    else:
-        return HttpResponseForbidden()
+    return handle_download(request, submission_form.pdf_document)
 
 
 @readonly()

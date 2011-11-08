@@ -38,15 +38,20 @@ def delete_document(request, document_pk):
     if document_pk in document_pks:
         document_pks.remove(document_pk)
     request.docstash['document_pks'] = list(document_pks)
+    
+
+def handle_download(request, doc):
+    url = doc.get_downloadurl()
+    if url and doc.doctype.is_downloadable or request.user.ecs_profile.is_internal:
+        return HttpResponseRedirect(url)
+    else:
+        return HttpResponseForbidden()
+
 
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
     doc = get_object_or_404(Document, pk=document_pk)
-    url = doc.get_downloadurl()
-    if url:
-        return HttpResponseRedirect(url)
-    else:
-        return HttpResponseForbidden()
+    return handle_download(request, doc)
         
 def document_search_json(request, document_pk=None):
     q = request.GET.get('q', '')

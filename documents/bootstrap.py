@@ -14,7 +14,7 @@ def document_types():
         Args(_(u"patient information"), u"patientinformation", 
             _(u"Patients / subjects / children / youths / parents / genetic information, information for non competent patients")),
         Args(_(u"insurancecertificate"), u"insurancecertificate", _(u" ")),
-        Args(_(u"study protocol"), u"protocol", _(u"study protocol")),
+        Args(_(u"study protocol"), u"protocol", _(u"study protocol"), is_downloadable=False),
         Args(_(u"Investigator's Brochure"), u"investigatorsbrochure", _(u" ")),
         Args(_(u"Amendment"), u"amendment", _(u"Protocol changes")),
         Args(_(u"Curriculum Vitae (CV)"), u"cv", _(u"CV")),
@@ -39,6 +39,7 @@ def document_types():
             'name': name,
             'helptext': helptext,
             'is_hidden': args.get('is_hidden', False),
+            'is_downloadable': args.get('is_downloadable', True),
         }
         d, created = DocumentType.objects.get_or_create(identifier=identifier, defaults=data)
         update_instance(d, data)

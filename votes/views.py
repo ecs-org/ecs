@@ -10,7 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
-from ecs.documents.views import download_document
+from ecs.documents.views import handle_download
 from ecs.signature.views import sign
 from ecs.users.utils import user_group_required, user_flag_required
 
@@ -85,7 +85,7 @@ def download_signed_vote(request, vote_pk=None):
         signed_vote_doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
     except Document.DoesNotExist:
         raise Http404('No signed document for vote %s available' % (vote_pk))
-    return download_document(request, signed_vote_doc.pk)
+    return handle_download(request, signed_vote_doc)
 
 
 @user_flag_required('is_internal')

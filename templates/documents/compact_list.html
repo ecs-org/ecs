@@ -1,5 +1,5 @@
 {# context: documents #}
-{% load core pdfviewer i18n %}
+{% load core pdfviewer i18n userutils %}
 
 <div class="document_container">
 {% block document_list %}
@@ -14,8 +14,10 @@
         {% get_annotations for doc as annotations %}
         {% block actions %}
             {% if doc.status == 'ready' %}
-                <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a>
-                | <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a> |
+                {% if doc.doctype.is_downloadable or user|has_flag:'is_internal' %}
+                    <a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a> | 
+                {% endif %}
+                <a href="{% url pdf_show doc.pk %}" target="_blank">{% trans "View" %}</a> |
                 {% if annotations %}
                     <a href="{% url ecs.pdfviewer.views.share_annotations doc.pk %}" class="open-in-popup">{% trans "Share Annotations" %}</a> |
                 {% endif %}
