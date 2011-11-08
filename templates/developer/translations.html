@@ -1,0 +1,25 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block content %}
+    <h2>Groups</h2>
+    <ul>
+    {% for group in groups %}
+        <li>{{ group.name }}</li>
+    {% endfor %}
+    </ul>
+
+    <h2>Task Types</h2>
+    <table>
+        <tr>
+            <th>Original</th>
+            <th>Translated</th>
+        </tr>
+        {% for task_type in task_types %}
+            <tr>
+                <td>{{ task_type.name }}</td>
+                <td>{{ task_type.trans_name }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
