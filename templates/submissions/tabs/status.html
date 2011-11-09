@@ -23,39 +23,41 @@
                 </tr>
             {% endif %}
             {% endwith %}
-            {% for sf in submission_forms %}
-            <tr class="version{% if not sf.is_acknowledged %} rejected{% endif %}">
-                <td>{{ sf.version }}</td>
-                <td>{{ sf.presenter }}</td>
-                <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
-                <td>
-                    {% if sf.previous_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sf != submission_form.submission.newest_submission_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a><br>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sf.is_notification_update %}
-                        {% with sf.new_for_notification.all.0 as notif %}
-                            {% if notif %}
-                            <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
-                            {% endif %}
-                        {% endwith %}
-                    {% else %}
-                        –
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sf == submission_form.submission.newest_submission_form %}
-                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+            {% with newest_submission_form as newest_form %}
+                {% for sf in submission_forms %}
+                <tr class="version{% if not sf.is_acknowledged %} rejected{% endif %}">
+                    <td>{{ sf.version }}</td>
+                    <td>{{ sf.presenter }}</td>
+                    <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
+                    <td>
+                        {% if sf.previous_form %}
+                            <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf != newest_form %}
+                            <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf.is_notification_update %}
+                            {% with sf.new_for_notification.all.0 as notif %}
+                                {% if notif %}
+                                <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            –
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf == submission_form.submission.newest_submission_form %}
+                            <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endwith %}
         </table>
     </td></tr>
     <tr>
