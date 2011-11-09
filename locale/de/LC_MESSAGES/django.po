@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 16:19+0100\n"
+"POT-Creation-Date: 2011-11-09 16:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2908,7 +2908,7 @@ msgstr "Tagesordnung PDF"
 
 #: templates/meetings/tabs/status.html:32
 msgid "Send agenda to board"
-msgstr ""
+msgstr "Agenda an die Sitzungsmitglieder versenden"
 
 #: templates/meetings/tabs/status.html:38
 msgid "Timetable PDF"
@@ -2923,9 +2923,8 @@ msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
 #: templates/meetings/tabs/status.html:45
-#, fuzzy
 msgid "Send protocol"
-msgstr "Protokoll"
+msgstr "Protokoll versenden"
 
 #: templates/meetings/tabs/status.html:51
 msgid "Statistics"
