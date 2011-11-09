@@ -3,6 +3,9 @@
 import os
 import tempfile
 
+from django.conf import settings
+
+
 def which(file, mode=os.F_OK | os.X_OK, path=None, extlist=[]):
     """
     Locate a file in the user's standard path, or a supplied path. The function
@@ -30,3 +33,10 @@ def tempfilecopy(filelike, tmp_dir=None, mkdir=False, **kwargs):
         outputfilename = outputfile.name
         outputfile.write(filelike.read())
     return outputfilename
+
+
+def which_path(setting, *args, **kwargs):
+    if hasattr(settings, setting):
+        return getattr(settings, setting)
+    else:
+        return which(*args, **kwargs).next()

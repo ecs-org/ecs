@@ -226,9 +226,14 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # ecs settings
 ##############
 
+# this is passed to pdfcop from origami and must be one of 'none', 'standard', 'strong', 'paranoid'
+# see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
+ECS_PDFCOP_POLICY = 'paranoid'
+
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
+# users in these groups receive messages even when they are not related to studies
 ECS_VOTE_RECEIVER_GROUPS = (u'Vote Receiver Group',)
 ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
 ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')

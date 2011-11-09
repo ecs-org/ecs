@@ -10,23 +10,27 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, tempfile, logging, copy, shutil
+import os, subprocess, tempfile, logging, copy, shutil, re
 from cStringIO import StringIO
 
 from django.conf import settings
 from django.template import Context, loader
+from django.utils.encoding import smart_str
 
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
-from ecs.utils.pathutils import which
+from ecs.utils.pathutils import which, which_path
 
-MONTAGE_PATH = which('montage').next()
-GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
-WKHTMLTOPDF_PATH =  settings.ECS_WKHTMLTOPDF if hasattr(settings,"ECS_WKHTMLTOPDF") else which('wkhtmltopdf', extlist=["-amd64", "-i386"]).next()
- 
+MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
+GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
+WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf')
+PDFDECRYPT_PATH = which_path('ECS_PDFDECRYPT', 'pdfdecrypt')
+PDFCOP_PATH = which_path('ECS_PDFCOP', 'pdfcop')
+
 PDF_MAGIC = r"%PDF-"
 
+pdfutils_logger = logging.getLogger(__name__)
 
 class Page(object):
     ''' Properties of a image of an page of an pageable media (id, tiles_x, tiles_y, width, pagenr)
@@ -42,35 +46,6 @@ class Page(object):
         return str("%s_%s_%sx%s_%s" % (self.id, self.width, self.tiles_x, self.tiles_y , self.pagenr))
 
         
-def pdf_isvalid(filelike):
-    ''' returns True if valid pdf, else False
-    
-    :param filelike: filelike object, seekable
-    '''
-    logger = logging.getLogger()
-    isvalid = False    
-    filelike.seek(0)  
-    
-    if filelike.read(len(PDF_MAGIC)) != PDF_MAGIC:
-        return False
-    else:
-        filelike.seek(0)
-    try:
-        parser = PDFParser(filelike)
-        doc = PDFDocument()
-        parser.set_document(doc)
-        doc.set_parser(parser)
-        doc.initialize('')
-        if doc.is_extractable:
-            isvalid = True
-    except PDFException as excobj:
-        logger.warning("pdf has valid header but, still not valid pdf, exception was %r" %(excobj))
-        isvalid = False
-            
-    filelike.seek(0)
-    return isvalid
-    
-    
 def pdf_page_count(filelike):
     ''' returns number of pages of an pdf document '''
     filelike.seek(0)
@@ -198,58 +173,43 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
         yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
 
-def pdf2pdfa(real_infile, real_outfile):
-    ''' converts a pdf file into a PDF/A 1b file
-    '''
-    workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
 
-    gs = [GHOSTSCRIPT_PATH,
-        '-q',
-        '-dPDFA',
-        '-dBATCH',
-        '-dNOPAUSE',
-        '-dNOOUTERSAVE',
-        '-dUseCIEColor',
-        '-dSAFER',
-        '-dNOPLATFONTS',
-        '-dEmbedAllFonts=true',
-        '-dSubsetFonts=false',
-        '-sProcessColorModel=DeviceCMYK',
-        '-sDEVICE=pdfwrite',
-        '-dPDFACompatibilityPolicy=1',
-        '-sOutputFile=%stdout',
-        'PDFA_def.ps',
-        '-',
-    ]
+class PDFValidationError(ValueError): pass
 
-    if not hasattr(real_infile, 'fileno'):
-        infile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
-        infile.write(real_infile.read())
-        infile.seek(0)
-    else:
-        infile = real_infile
+def _pdf_cop(filename, logger=pdfutils_logger):
+    popen = subprocess.Popen([PDFCOP_PATH, '-p', settings.ECS_PDFCOP_POLICY, filename], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    result = stdout.splitlines()[-1]
+    if 'accepted by policy' not in result:
+        return [m.group(1) for m in re.finditer(r'[^\d]:(\w+)', result)]
+    return []
 
-    if not hasattr(real_outfile, 'fileno'):
-        outfile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
-    else:
-        outfile = real_outfile
 
-    offset = real_outfile.tell()
-
-    try:
-        p = subprocess.Popen(gs, cwd=workdir, stdin=infile, stdout=outfile, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
-        if p.returncode != 0:
-            raise IOError('gs pipeline returned with errorcode %i , stderr: %s' % (p.returncode, stderr))
-    finally:
-        if not hasattr(real_infile, 'fileno'):
-            infile.close()
-        if not hasattr(real_outfile, 'fileno'):
-            outfile.seek(0)
-            real_outfile.write(outfile.read())
-            outfile.close()
-
-    return real_outfile.tell() - offset
+def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
+    with tempfile.NamedTemporaryFile(suffix='.pdf') as tmp:
+        shutil.copyfileobj(src, tmp)
+        tmp.seek(0)
+        violations = _pdf_cop(tmp.name)
+        if violations:
+            if 'allowEncryption' in violations and decrypt:
+                tmp.seek(0)
+                decrypted = tempfile.NamedTemporaryFile(suffix='.pdf')
+                logger.info("decrypting pdf document")
+                popen = subprocess.Popen([PDFDECRYPT_PATH, tmp.name, '-o', decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                popen.communicate()
+                if popen.returncode:
+                    logger.warn('pdfdecrypt error (returncode=%s):\n%s' % (popen.returncode, smart_str(stderr, errors='backslashreplace')))
+                    violations.append('decryptFailure')
+                else:
+                    decrypted.seek(0)
+                    violations = _pdf_cop(decrypted.name)
+                    if not violations:
+                        decrypted.seek(0)
+                        return decrypted
+                    violations.append('decryptSuccess')
+            raise PDFValidationError('violated policies: %s' % ', '.join(violations), violations)
+    src.seek(0)
+    return src
 
 
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
