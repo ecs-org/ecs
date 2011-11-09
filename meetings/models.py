@@ -179,7 +179,7 @@ class Meeting(models.Model):
 
     @property
     def retrospective_thesis_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.retrospective_thesis().values('pk').query)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
 
     @property
     def expedited_entries(self):

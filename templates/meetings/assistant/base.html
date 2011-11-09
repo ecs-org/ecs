@@ -11,8 +11,10 @@
                     <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
                 <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
-                {% if not meeting.ended and meeting.retrospective_thesis_entries.count or not meeting.ended and meeting.expedited_entries.count %}
+                {% if not meeting.ended %}
+                {% if meeting.retrospective_thesis_entries.exists or meeting.expedited_entries.exists or meeting.localec_entries.exists %}
                     <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}">{% trans 'Ret. Thesis/Expedited' %}</a></div>
+                {% endif %}
                 {% endif %}
             {% endif %}
             <ol class="info">
