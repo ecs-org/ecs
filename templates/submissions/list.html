@@ -132,7 +132,7 @@
         {% endif %}
         {% if matched_document.parent_object == submission or matched_document.parent_object.submission == submission %}
             <div class="matched_document">
-                {% trans 'Document' %}: <a href="{% url ecs.pdfviewer.views.show document_pk=matched_document.pk %}">{{ matched_document }}</a>
+                {% trans 'Document' %}: <a href="{% url ecs.pdfviewer.views.show document_pk=matched_document.pk %}" target="_blank">{{ matched_document }}</a>
             </div>
         {% endif %}
         {% endwith %}
