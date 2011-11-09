@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 12:39+0100\n"
+"POT-Creation-Date: 2011-11-09 15:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2406,6 +2406,11 @@ msgstr "Neuere Einträge"
 #: templates/audit/log.html:24
 msgid "Older Entries"
 msgstr "Ältere Einträge"
+
+#: templates/billing/external_review.html:26
+#: templates/billing/submissions.html:26
+msgid "submit data"
+msgstr "Daten absenden"
 
 #: templates/boilerplate/form.html:5 templates/boilerplate/form.html.py:6
 msgid "New Boilerplate"

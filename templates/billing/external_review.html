@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load core %}
+{% load core i18n %}
 
 {% block menuSelection %}administration{% endblock %}
 
@@ -23,7 +23,7 @@
             </li>
             {% endwith %}
         {% endfor %}
-        <li><input type="submit" /></li>
+        <li><input type="submit" value="{% trans 'submit data' %}"/></li>
     </ol>
     </form>
 {% endblock %}
