@@ -52,7 +52,7 @@ FormInfo(ReportNotification, fields=(
     FieldInfo('3.3', 'finished_subjects', _(u'Number of patients / subjects who completed the study')),
     FieldInfo('3.4', 'aborted_subjects', _(u'Number of study discontinuations')),
     FieldInfo('3.5', 'SAE_count', _(u'Number of SAEs')),
-    FieldInfo('3.5', 'SUSAR_count', _(u'Number of SASARs')),
+    FieldInfo('3.5', 'SUSAR_count', _(u'Number of SUSARs')),
 ))
 
 FormInfo(CompletionReportNotification, fields=(
