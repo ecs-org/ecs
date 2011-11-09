@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 16:07+0100\n"
+"POT-Creation-Date: 2011-11-09 16:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1645,9 +1645,8 @@ msgid "General information"
 msgstr "Allgemeine Angaben"
 
 #: core/forms/layout.py:163
-#: templates/notifications/view/AmendmentNotificationForm.html:7
-msgid "Changes"
-msgstr "Änderungen"
+msgid "Made Changes"
+msgstr "Vorgenommene Änderungen"
 
 #: core/forms/layout.py:168 core/forms/layout.py:188
 msgid "Study status"
@@ -3083,6 +3082,10 @@ msgstr "SAE Zahl"
 #: templates/notifications/answers/wkhtml2pdf/ReportNotificationForm.html:14
 msgid "SUSAR_count"
 msgstr "SUSAR Zahl"
+
+#: templates/notifications/view/AmendmentNotificationForm.html:7
+msgid "Changes"
+msgstr "Änderungen"
 
 #: templates/notifications/view/AmendmentNotificationForm.html:10
 msgid "Old Version"
