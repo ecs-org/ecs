@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 16:01+0100\n"
+"POT-Creation-Date: 2011-11-09 16:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3401,9 +3401,8 @@ msgid "Die Studie hat ein B2 Votum erhalten."
 msgstr ""
 
 #: templates/submissions/list.html:135
-#, fuzzy
 msgid "Document"
-msgstr "Unterlagen"
+msgstr "Unterlage"
 
 #: templates/submissions/list.html:143 templates/submissions/widget.html:55
 msgid "No Submissions."
