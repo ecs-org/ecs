@@ -390,11 +390,16 @@ def vote_preparation(request, submission_form_pk=None):
         vote = form.save(commit=False)
         vote.submission_form = submission_form
         vote.save()
-        
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={
+
+    response = readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': form,
         'vote_version': get_version_number(vote) if vote else 0,
     })
+    
+    if not form.is_valid():
+        response.has_errors = True
+        print "has errors"
+    return response
 
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')

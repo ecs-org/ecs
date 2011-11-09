@@ -61,6 +61,8 @@ class TaskManagementData(object):
         if form and self.method == 'POST' and self.submit and form.is_valid():
             action = form.cleaned_data['action']
             if action == 'complete':
+                if getattr(response, 'has_errors', False):
+                    return response
                 task.done(user=self.request.user, choice=form.get_choice())
             elif action == 'delegate':
                 task.assign(form.cleaned_data['assign_to'])
