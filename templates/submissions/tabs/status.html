@@ -23,7 +23,7 @@
                 </tr>
             {% endif %}
             {% endwith %}
-            {% with newest_submission_form as newest_form %}
+            {% with submission.newest_submission_form as newest_form %}
                 {% for sf in submission_forms %}
                 <tr class="version{% if not sf.is_acknowledged %} rejected{% endif %}">
                     <td>{{ sf.version }}</td>
