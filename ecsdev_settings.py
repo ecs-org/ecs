@@ -8,6 +8,9 @@ user = getpass.getuser()
 
 DBPWD_DICT = {}
 
+ECS_PDFCOP = '/var/lib/gems/1.8/bin/pdfcop'
+ECS_PDFDECRYPT = '/var/lib/gems/1.8/bin/pdfdecrypt'
+
 if user in DBPWD_DICT:
     # django database
     DATABASES= {}
