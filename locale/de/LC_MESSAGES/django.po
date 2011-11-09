@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-09 16:11+0100\n"
+"POT-Creation-Date: 2011-11-09 16:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2833,6 +2833,10 @@ msgid ""
 "im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
 "Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 msgstr ""
+
+#: templates/meetings/tabs/experts.html:34
+msgid "no board member required"
+msgstr "kein Sitzungsmitglied erforderlich"
 
 #: templates/meetings/tabs/open_tasks.html:8
 #: templates/submissions/tabs/involved_parties.html:6

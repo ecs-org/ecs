@@ -1,31 +1,35 @@
 {% load core i18n %}
 
-<form method="post">
-{{ expert_formset.management_form }}
-<ol>
-{% for form in expert_formset.forms %}
-    <li>
-        <span>
-            {{ form.instance.category }}
-            [Einreichungen:
-            {% for submission in form.submissions %}
-                 <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">
-                    {{ submission }}</a>{% if not forloop.last %}, {% endif %}
-            {% endfor %}]
-        </span>
-        <span>
-            {% if meeting.started %}
-                {{ form.instance.board_member }}
-            {% else %}
-                {{ form.id }}
-                {{ form.board_member }}
-            {% endif %}
-        </span>
-    </li>
-{% endfor %}
-</ol>
-{% if not meeting.started %}
-    <input type="hidden" name="submitted_form" value="expert_formset" />
-    <input type="submit" value="Speichern" />
+{% if expert_formset.total_form_count %}
+    <form method="post">
+    {{ expert_formset.management_form }}
+    <ol>
+    {% for form in expert_formset.forms %}
+        <li>
+            <span>
+                {{ form.instance.category }}
+                [Einreichungen:
+                {% for submission in form.submissions %}
+                     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}">
+                        {{ submission }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}]
+            </span>
+            <span>
+                {% if meeting.started %}
+                    {{ form.instance.board_member }}
+                {% else %}
+                    {{ form.id }}
+                    {{ form.board_member }}
+                {% endif %}
+            </span>
+        </li>
+    {% endfor %}
+    </ol>
+    {% if not meeting.started %}
+        <input type="hidden" name="submitted_form" value="expert_formset" />
+        <input type="submit" value="Speichern" />
+    {% endif %}
+    </form>
+{% else %}
+    <em>{% trans 'no board member required' %}</em>
 {% endif %}
-</form>
