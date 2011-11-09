@@ -15,6 +15,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, MedicalCategory
+from ecs.core.models.constants import SUBMISSION_LANE_BOARD
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
@@ -298,10 +299,14 @@ def meeting_assistant_stop(request, meeting_pk=None):
     for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
         tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
         for top in tops:
+            submission = top.submission
             with sudo():
-                Task.objects.for_data(top.submission).open().mark_deleted()
+                Task.objects.for_data(submission).open().mark_deleted()
             vote = Vote.objects.create(top=top, result='3a')
-            top.submission.schedule_to_meeting()
+            if submission.is_expedited:
+                submission.workflow_lane = SUBMISSION_LANE_BOARD
+                submission.save()
+            submission.schedule_to_meeting()
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 

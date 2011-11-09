@@ -380,8 +380,12 @@ def vote_review(request, submission_form_pk=None):
 def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
+    if submission_form.submission.is_expedited:
+        checklist = 'expedited_review'
+    else:
+        checklist = 'thesis_review'
     form = VotePreparationForm(request.POST or None, instance=vote, initial={
-        'text': get_checklist_comment(submission_form.submission, 'expedited_review', 1)
+        'text': get_checklist_comment(submission_form.submission, checklist, 1)
     })
     
     form.bound_to_task = request.task_management.task
