@@ -86,7 +86,7 @@ class SendMessageForm(BaseMessageForm):
     subject = Thread._meta.get_field('subject').formfield()
 
 class ReplyDelegateForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(), label=_('Text'))
+    text = forms.CharField(widget=forms.Textarea(), label=_('Answer'))
 
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
