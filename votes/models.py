@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.db.models.signals import post_save
@@ -62,7 +62,7 @@ class Vote(models.Model):
     
     def extend(self):
         d = self.valid_until
-        self.valid_until = d.replace(year=d.year + 1)
+        self.valid_until += timedelta(days=365)
         self.save()
         on_vote_extension.send(sender=Vote, vote=self)
     

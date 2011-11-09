@@ -205,7 +205,7 @@ class NotificationFormTest(LoginTestCase):
             self.assertEqual(response.status_code, 302)
             notification = self.client.get(response['Location']).context['notification']
         
-        def do_review(user):
+        def do_review(user, action='complete'):
             response = self.client.get(reverse('ecs.tasks.views.my_tasks', kwargs={'submission_pk': sf.submission.pk}))
             task = response.context['open_tasks'].get(
                 data_id=notification.pk, 
@@ -217,7 +217,7 @@ class NotificationFormTest(LoginTestCase):
             
             response = self.client.post(task.url, {
                 'task_management-submit': 'Abschicken',
-                'task_management-action': 'complete_0',
+                'task_management-action': action,
                 'task_management-post_data': 'text=Test.',
             })
             self.assertEqual(response.status_code, 302)
@@ -228,12 +228,12 @@ class NotificationFormTest(LoginTestCase):
         
         # executive review
         with self.login('text_executive'):
-            do_review(executive)
+            do_review(executive, 'complete_0')
         
         notification = ProgressReportNotification.objects.get(pk=notification.pk)
         old_valid_until = vote.valid_until
         vote = Vote.objects.get(pk=vote.pk)
-        self.assertEqual(vote.valid_until, old_valid_until.replace(year=old_valid_until.year + 1))
+        self.assertEqual(vote.valid_until, old_valid_until + datetime.timedelta(365))
         
         
         
