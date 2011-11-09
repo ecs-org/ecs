@@ -195,7 +195,7 @@
         </td>
     </tr>
     {% endif %}
-    {% if user|has_flag:'is_internal' and submission_form.submission.external_reviewers.exists %}
+    {% if user|has_flag:'is_internal' and external_review_checklists %}
     <tr>
         <th>Gutachten:</th>
         <td>

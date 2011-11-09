@@ -299,7 +299,10 @@ def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     checklist = get_object_or_404(Checklist, pk=checklist_pk, status__in=('new', 'review_fail'))
-
+    
+    if checklist.blueprint.slug == 'external_review':
+        submission_form.submission.external_reviewers.remove(checklist.user)
+    
     checklist.status = 'dropped'
     checklist.save()
     with sudo():
