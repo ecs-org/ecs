@@ -24,7 +24,7 @@ from ecs.utils.pathutils import which, which_path
 
 MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
 GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
-WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf')
+WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64", "-i386"])
 PDFDECRYPT_PATH = which_path('ECS_PDFDECRYPT', 'pdfdecrypt')
 PDFCOP_PATH = which_path('ECS_PDFCOP', 'pdfcop')
 
