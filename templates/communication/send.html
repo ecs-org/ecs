@@ -17,51 +17,45 @@
       <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
   {% endif %}
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
-      <ol>
           {% if submission %}
-          <li>
-              <label>Studie</label>
-              <strong>{{ submission|ec_number }} {{ submission.project_title_display|smart_truncate:50 }}</strong>
-          </li>
+              <h4>Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
           {% endif %}
 
           {% if task %}
-          <li>
+          <p>
               <label>Task</label>
               <span>{{ task }}</span>
-          </li>
+          </p>
           {% endif %}
 
           {% if form.subject %}
-          <li>
+          <p>
               <label for="{{ form.subject.auto_id }}">Betreff</label>
               {{ form.subject }}
               {% if form.subject.errors %}
                   <span class="errors">{{ form.subject.errors }}</span>
               {% endif %}
-          </li>
+          </p>
           {% endif %}
 
           {% if form.instance.thread %}
-            <li>
+            <p>
             <label for="id_participants">antworten an:</label><br />
-            </li>
+            </p>
             {% for user in thread.get_participants %}
-              <li>
+              <p>
               <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
               {% if user|has_flag:'is_internal' %}
                 <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
               {% else %}
                 <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
               {% endif %}
-              </li>
+              </p>
             {% endfor %}
           {% endif %}
           
           {% include 'communication/send_base.inc' %}
-
-      </ol>
-      <input type="submit" value="Abschicken" />
+      <input type="submit" value="Nachricht abschicken" />
   </form>
   <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
   {% if submission %}

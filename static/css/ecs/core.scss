@@ -221,7 +221,7 @@ input[disabled] {
 table.notif_meta th, 
 table.notification th {
   background-color: #ebe8d0;
-  border-bottom: 1px solid #eddfbf;
+  border-bottom: 1px solid $wheatbrown;
   border-collapse: collapse;
 }
 #status_tab td, 
@@ -232,7 +232,7 @@ table.notification th {
 .profile td, 
 table.notif_meta td, 
 table.notification td {
-  border-bottom: 1px solid #eddfbf;
+  border-bottom: 1px solid $wheatbrown;
 }
 .task_back_log {
   tr.closed td {
@@ -407,13 +407,12 @@ table.notif_meta {
 .notification_list li:nth-of-type(1) ,
 .dashboard_widget .messages li:nth-of-type(1) ,
 .messages li:nth-of-type(1) ,
-.message_display li:nth-of-type(1) ,
 .attachments li:nth-of-type(1) ,
 .dashboard_widget .messages li:nth-of-type(1) ,
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 .task_item:nth-of-type(1),
 .field_history .change:nth-of-type(1) {
-  border-top: 1px solid #eddfbf;
+  border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
 .submission_list li:nth-child(odd) ,
@@ -421,7 +420,6 @@ table.notif_meta {
 .notification_list li:nth-child(odd) ,
 .dashboard_widget .messages li:nth-child(odd) ,
 .messages li:nth-child(odd) ,
-.message_display li:nth-child(odd) ,
 .messages_overview tr:nth-child(odd) ,
 .attachments li:nth-child(odd) ,
 .dashboard_widget .messages li:nth-child(odd) ,
@@ -430,7 +428,7 @@ table.notif_meta {
 .task_item:nth-child(odd),
 .field_history .change:nth-child(odd) {
   background: $middle-light-brown-bg;
-  border-bottom: 1px solid #eddfbf;
+  border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(even) ,
 .submission_list li:nth-child(even) ,
@@ -438,7 +436,6 @@ table.notif_meta {
 .notification_list li:nth-child(even) ,
 .dashboard_widget .messages li:nth-child(even) ,
 .messages li:nth-child(even) ,
-.message_display li:nth-child(even) ,
 .messages_overview tr:nth-child(even) ,
 .attachments li:nth-child(even) ,
 .dashboard_widget .messages li:nth-child(even) ,
@@ -447,7 +444,7 @@ table.notif_meta {
 .task_item:nth-child(even),
 .field_history .change:nth-child(even) {
   background: $middle-dark-brown-bg;
-  border-bottom: 1px solid #eddfbf;
+  border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:hover,
 .submission_list li:hover,
