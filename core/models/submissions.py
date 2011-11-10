@@ -64,6 +64,10 @@ class Submission(models.Model):
     def is_expedited(self):
         return self.workflow_lane == SUBMISSION_LANE_EXPEDITED
 
+    @property
+    def is_regular(self):
+        return self.workflow_lane == SUBMISSION_LANE_BOARD
+
     def get_submission(self):
         return self
 

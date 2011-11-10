@@ -485,27 +485,9 @@ class TimetableEntry(models.Model):
             return MedicalCategory.objects.none()
         return MedicalCategory.objects.filter(submissions__timetable_entries=self)
 
-    @cached_property
-    def is_retrospective(self):
-        if not self.submission_id:
-            return False
-        return self.submission.current_submission_form.is_retrospective
-    
-    @cached_property
-    def is_thesis(self):
-        if not self.submission_id:
-            return False
-        return self.submission.current_submission_form.is_thesis
-        
-    @cached_property
-    def is_expedited(self):
-        if not self.submission_id:
-            return False
-        return self.submission.is_expedited
-    
     @property
     def is_batch_processed(self):
-        return bool(self.submission_id) and (self.is_thesis or self.is_expedited or self.is_retrospective)
+        return bool(self.submission_id) and not self.submission.is_regular
         
     @property
     def next(self):
