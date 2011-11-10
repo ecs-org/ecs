@@ -3,10 +3,15 @@ import platform
 import sys
 import os
 import shutil
+import tempfile
+import subprocess
+import distutils
 
-from deployment.utils import get_pythonenv
+from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_template,\
+    write_regex_replace
 from deployment.pkgmanager import get_pkg_manager, package_merge, packageline_split
 from ecs.target import SetupTarget
+import logging
 
 
 # packages
@@ -66,12 +71,12 @@ django_compressor:inst:all:pypi:django_compressor\>=1.1
 pyscss:inst:all:pypi:pyScss\>=1.0.8
 
 
-# we use pyscss now,  but ruby may get resurrected once we use the ruby pdf security scanner
-#ruby:req:apt:apt-get:ruby
-#rubygems:req:apt:apt-get:rubygems
-#ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
-#sass:static:win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:custom:sass.bat
-#sass:static:!win:http://rubyforge.org/frs/download.php/75409/sass-3.1.10.gem:custom:sass
+# pdf parsing/cleaning: origami
+ruby:req:apt:apt-get:ruby
+rubygems:req:apt:apt-get:rubygems
+ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
+#origami:static:all:http://rubygems.org/gems/origami-1.2.3.gem:custom:pdfcop
+
 
 # unit testing
 nose:inst:all:pypi:nose
@@ -120,7 +125,9 @@ beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 
 
-# ecs/signature: mocca and pdf-as
+# ecs/signature: tomcat, mocca and pdf-as
+# needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
+python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
 # for apt (ubuntu/debian) systems, tomcat 6 is used as a user installation
 tomcat:req:apt:apt-get:tomcat6-user
 tomcat_apt_user:static:apt:file:dummy:custom:None
@@ -360,6 +367,7 @@ memcached:req:apt:apt-get:memcached
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 """
 
+
 def custom_check_tomcat_apt_user(pkgline, checkfilename):
     print "custom_check_tomcat_apt_user"
     return False
@@ -374,28 +382,79 @@ def custom_check_tomcat_other_user(pkgline, checkfilename):
 def custom_install_tomcat_other_user(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
-    temp_dest = os.path.join(get_pythonenv(), checkfilename)
+    temp_dir = tempfile.mkdtemp()
+    temp_dest = os.path.join(temp_dir, checkfilename)
     final_dest = os.path.join(get_pythonenv(), "tomcat-6")
+    result = False
     
-    if os.path.exists(final_dest):
-        shutil.rmtree(final_dest)
-    if pkg_manager.static_install_tar(filename, get_pythonenv(), checkfilename, pkgline):
-        try:
-            os.rename(temp_dest, final_dest)
-        except IOError:
-            print("could not rename tomcat installation")
-            return False
-        return True
-    else:
-        return False
+    try:
+        if os.path.exists(final_dest):
+            shutil.rmtree(final_dest)
+        if pkg_manager.static_install_tar(filename, temp_dir, checkfilename, pkgline):
+            write_regex_replace(os.path.join(temp_dest, 'conf', 'server.xml'),
+                r'([ \t])+(<Connector port=)("[0-9]+")([ ]+protocol="HTTP/1.1")',
+                r'\1\2"4780"\4')
+            shutil.copytree(temp_dest, final_dest)
+            result = True
+    finally:    
+        shutil.rmtree(temp_dir)
+    
+    return result
 
 def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
    
+def _patch_pdfas_war(target):
+    patchlib = import_from(os.path.join(os.path.dirname(get_pythonexe()), 'python-patch.py'))
+    patchlib.logger.setLevel(logging.INFO)
+    old_cwd = os.getcwd()
+    temp_dir = tempfile.mkdtemp()
+    pkg_manager = get_pkg_manager()
+    success = False
+    
+    try:
+        if pkg_manager.static_install_unzip(target, temp_dir, None, None):
+            os.chdir(os.path.join(temp_dir, "jsp"))
+            p = patchlib.fromfile(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                'signature', 'pdf-as-3.2-jsp.patch'))
+            if p.apply():
+                os.remove(target)
+                zipball_create(target, temp_dir)
+                success = True
+            else:
+                print("Error: Failed patching:", target, temp_dir)
+    finally:
+        os.chdir(old_cwd)
+        shutil.rmtree(temp_dir)
+        
+    return success
+
 def custom_install_pdfas(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+    temp_dir = tempfile.mkdtemp()
+    temp_dest = os.path.join(temp_dir, "tomcat-6")
+    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
+    result = False
+    
+    try:
+        if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
+            if _patch_pdfas_war(os.path.join(temp_dest, "webapps", checkfilename)):
+                write_regex_replace(
+                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
+                    r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
+                    r'\1http://localhost:4780\3')
+                write_regex_replace(
+                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
+                    r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
+                    r'\2http://localhost:4780\4')
+                
+                distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
+                result = True
+    finally:    
+        shutil.rmtree(temp_dir)
+    
+    return result
 
 def custom_check_mocca(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
@@ -406,23 +465,42 @@ def custom_install_mocca(pkgline, filename):
     pkg_manager = get_pkg_manager()
     return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
+def custom_install_origami(pkgline, filename):
+    return custom_install_ruby_gem(pkgline, filename)
 
-
-# custom ruby user env example script
-def custom_install_sass(pkgline, filename):
+def custom_install_ruby_gem(pkgline, filename):
+    
+    gem_home = os.path.join(get_pythonenv(),'gems')
+    filename_dir = os.path.dirname(filename)
+    filename = os.path.basename(filename)
+    
+    if not os.path.exists(gem_home):
+        os.mkdir(gem_home)
+        
+    if not os.path.exists(os.path.join(filename_dir, filename)):
+        print "gem to install does not exist:", filename
+    
     if sys.platform == 'win32':
-        gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems').replace("\\", "/")
+        gem_home = gem_home.replace("\\", "/")
         bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
-        install = 'set GEM_HOME="{0}"; set GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
-            gem_home, bin_dir, filename)
+        install = 'cd {0}& set GEM_HOME="{1}"& set GEM_PATH="{1}"&\
+gem install --no-ri --no-rdoc --local --bindir="{2}" {3}'.format(
+            filename_dir, gem_home, bin_dir, filename)
     else:
-        gem_home = os.path.join(os.environ['VIRTUAL_ENV'],'gems')
         bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
-        install = 'export GEM_HOME="{0}"; export GEM_PATH=""; gem install --bindir="{1}" {2}'.format(
-            gem_home, bin_dir, filename)
-    return False
+        install = 'export GEM_HOME="{0}"; export GEM_PATH="{0}";\
+gem install --no-ri --no-rdoc --local --bindir="{1}" {2}'.format(
+            filename_dir, gem_home, bin_dir, filename)
+    
+    popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
+    stdout, stderr = popen.communicate() 
+    returncode = popen.returncode  
+    if returncode != 0:
+        print "Error:", returncode, stdout, stderr
+        return False
+    else:
+        return True
  
-
 
 # target bundles
 ################
@@ -443,6 +521,7 @@ package_bundles = {
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
     'guitestaddon': guitest_packages,
+    'developeraddon': developer_packages,
     'system': system_bundle,
 }
 
@@ -496,7 +575,6 @@ def system_setup(use_sudo=True, dry=False, hostname=None, ip=None):
     s.system_setup()
 
 def _wm_helper(browser, command, targettest, targethost, *args):
-    import sys
     from deployment.utils import fabdir
     # FIXME it seems without a PYTHON_PATH set we cant import from ecs...
     sys.path.append(fabdir())
