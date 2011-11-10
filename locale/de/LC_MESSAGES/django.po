@@ -1924,14 +1924,12 @@ msgid "no file"
 msgstr "keine Datei"
 
 #: documents/forms.py:41
-#, fuzzy
 msgid "This file is not a PDF document."
-msgstr "Die Datei ist kein gültiges PDF-Dokument."
+msgstr "Diese Datei ist kein PDF-Dokument."
 
 #: documents/forms.py:50
-#, fuzzy
 msgid "Your PDF document could not be processed."
-msgstr "Das Dokument steht noch nicht bereit."
+msgstr "Das PDF-Dokument konnte nicht verarbeitet werden."
 
 #: documents/models.py:109 templates/notifications/form.html:46
 #: templates/notifications/view/AmendmentNotificationForm.html:15
