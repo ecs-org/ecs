@@ -2,7 +2,7 @@
 
 .readonly {
     input[disabled], textarea[disabled], select[disabled] {
-        color: $dark-grey;
+        color: $grey-20;
         background: #e4e4e4;
         font-family: Arial, Helvetica, sans-serif;
     }
@@ -14,16 +14,16 @@
     .tab_header_groups li a {
         text-decoration: none;
         padding: 4px 7px;
-        color: #cfcfcf;
-        background: $grey;
+        color: $grey-80;
+        background: $grey-40;
         margin-right: 3px;
         border-radius: 5px 5px 0 0;
-        text-shadow: 0 1px 2px $dark-grey;
+        text-shadow: 0 1px 2px $grey-20;
         
         &.active {
           background: $readonly-mainnav-bg;
-          color: $dark-grey;
-          text-shadow: 0 1px 2px #fff;
+          color: $grey-20;
+          text-shadow: 0 1px 2px $white;
         }
         
         &.errors {
@@ -46,9 +46,9 @@
             text-decoration: none;
             padding: 3px 5px;
             background: $readonly-navitem-bg;
-            color: $dark-grey;
+            color: $grey-20;
             border-radius: 3px;
-            text-shadow: 0 0 0 #fff;
+            text-shadow: 0 0 0 $white;
         }
         
         li.active a {
@@ -91,14 +91,14 @@
             color: $red;
         }
         & > .unanswered{
-            color: $dark-grey;
+            color: $grey-20;
         }
     }
     
     .comment{
         margin-left: 10px;
-        color: #000000;
-        background-color: #ffffff;
+        color: $black;
+        background-color: $white;
         font-family: monospace;
         font-size: 110%;
     }
@@ -171,7 +171,7 @@
         }
         
         em {
-            color: $dark-grey;
+            color: $grey-20;
         }
     }
     

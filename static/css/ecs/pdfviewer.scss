@@ -1,6 +1,6 @@
 #pdfviewer_loading{
-    background-color: #444;
-    color: #fff;
+    background-color: $grey-30;
+    color: $white;
     height: 1150px;
     width: 100%;
 }
@@ -19,7 +19,7 @@
 
 body.pdfviewer{
     overflow: auto;
-    background-color: #000;
+    background-color: $black;
     overflow-x: hidden;
     height: 100%;
     padding: 0px;
@@ -51,12 +51,12 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .header{
-    color: #000;
+    color: $black;
     font-size: 15px;
     line-height: 17px;
     background-color: #ccd9e6;
     text-shadow: #fff 1px 1px 0px;
-    box-shadow: 0px 1px 3px #999;
+    box-shadow: 0px 1px 3px $grey-60;
     z-index: 200;
     position: absolute;
     top: 0px;
@@ -69,7 +69,7 @@ body.pdfviewer .hidden{
 
 #pdfviewer .header .details{
     font-size: 11px;
-    color: #666;
+    color: $grey-40;
     position: absolute;
     right: 10px;
     bottom: 10px;
@@ -83,9 +83,9 @@ body.pdfviewer .hidden{
 }
 
 #pdfviewer .body{
-    border-top: 1px solid #fff;
+    border-top: 1px solid $white;
     position: relative;
-    background-color: #444;
+    background-color: $grey-30;
     height: 1150px;
 }
 
@@ -100,7 +100,7 @@ body.pdfviewer .hidden{
     background-repeat: no-repeat;
     position: relative;
     overflow: visible;
-    background-color: #fff;
+    background-color: $white;
 }
 
 #pdfviewer .page.current{
@@ -191,7 +191,7 @@ body.pdfviewer .hidden{
     top: 0px;
     z-index: 100;
     overflow: hidden;
-    color: #ffffff;
+    color: $white;
     opacity: 0.2;
     font-size: 30px;
 }
@@ -228,7 +228,7 @@ body.touch #pdfviewer a.next:hover, #pdfviewer a.previous:hover{
 }
 
 body.pdfviewer #navigation{
-    background-color: #222222;
+    background-color: $grey-20;
     -moz-border-radius: 10px;
     position: fixed;
     top: 50%;
@@ -239,7 +239,7 @@ body.pdfviewer #navigation{
     height: 300px;
     padding: 20px;
     opacity: 0.9;
-    color: #ffffff;
+    color: $white;
     z-index: 10000;
     font-size: 90%;
 }
@@ -285,7 +285,7 @@ body.pdfviewer #navigation{
     width: 8px;
     height: 8px;
     border: 2px solid #88bbdd;
-    background-color: #fff;
+    background-color: $white;
     border-radius: 6px;
     opacity: 0.5;
     margin-left: -11px;
@@ -316,7 +316,7 @@ body.pdfviewer .popup > .background{
     margin: -20px;
     width: 100%;
     height: 100%;
-    background-color: #222;
+    background-color: $grey-20;
     opacity: 0.9;
     -moz-border-radius: 10px;
     z-index: 1;
@@ -342,8 +342,8 @@ body.pdfviewer .annotationDisplay.foreign textarea{
 body.pdfviewer .annotationDisplay .authorInfo{
     display: none;
     height: 18px;
-    background-color: #ffffff;
-    border: 1px solid #999999;
+    background-color: $white;
+    border: 1px solid $grey-60;
     border-bottom: none;
     padding-right: 10px;
     padding-left: 10px;
@@ -359,7 +359,7 @@ body.pdfviewer .annotationDisplay.foreign .authorInfo{
 
 body.pdfviewer .annotationDisplay a{
     color: #99ddff;
-    border: 1px solid #666666;
+    border: 1px solid $grey-40;
     display: inline-block;
     width: 76px;
     text-align: center;
@@ -392,7 +392,7 @@ body.pdfviewer .annotationDisplay a.previous{
     height: 40px;
     padding: 10px;
     font-size: 20px;
-    background-color: #222;
+    background-color: $grey-20;
     border: none;
     margin: 0px;
 }
@@ -400,8 +400,8 @@ body.pdfviewer .annotationDisplay a.previous{
 body.pdfviewer .annotationDisplay a.next:hover,
 body.pdfviewer .annotationDisplay a.previous:hover{
     text-decoration: none;
-    color: #fff;
-    background-color: #000;
+    color: $white;
+    background-color: $black;
 }
 
 body.pdfviewer .annotationDisplay a.next{
@@ -431,7 +431,7 @@ body.pdfviewer .popup > a.close{
     position: absolute;
     top: -10px;
     right: 0px;
-    color: #ffffff;
+    color: $white;
     z-index: 1000;
     border: none;
     font-size: 30px;
@@ -444,7 +444,7 @@ body.pdfviewer .popup > a.close:hover{
 }
 
 body.pdfviewer .popup span.label{
-    color: #ffffff;
+    color: $white;
 }
 
 /* search popup */
@@ -466,7 +466,7 @@ body.pdfviewer .searchPopup input{
     width: 590px;
 }
 body.pdfviewer .searchPopup .results{
-    color: #ccc;
+    color: $grey-80;
     margin: 3px;
     font-size: 13px;
     overflow: auto;
@@ -479,11 +479,11 @@ body.pdfviewer .searchPopup .results div{
     padding: 3px;
 }
 body.pdfviewer .searchPopup .results div:hover{
-    background-color: #000000;
+    background-color: $black;
 }
 
 body.pdfviewer .searchPopup .results .highlighted{
-    background-color: #000000;
+    background-color: $black;
     color: #99ddff;
 }
 
@@ -492,7 +492,7 @@ FIXME: unused?
 body.pdfviewer .slider{
     width: 200px;
     height: 8px;
-    background-color: #ffffff;
+    background-color: $white;
     opacity: 0.9;
 }
 
@@ -504,17 +504,17 @@ body.pdfviewer .slider .knob{
 */
 
 body.pdfviewer .popup input{
-    background-color: #444;
-    border: 1px solid #666666;
+    background-color: $grey-30;
+    border: 1px solid $grey-40;
     display: inline-block;
     -moz-box-shadow: none;
-    color: #fff;
+    color: $white;
     -moz-border-radius: 3px;
     letter-spacing: 1px;
 }
 
 body.pdfviewer .popup input:focus{
-    background-color: #000;
+    background-color: $black;
 }
 
 /* goto page popup */
@@ -557,8 +557,8 @@ body.pdfviewer .popup.menu a{
     background-color: #ccd9e6;
     text-align: center;
     border-radius: 3px;
-    color: #000;
-    text-shadow: 1px 1px 0px #fff;
+    color: $black;
+    text-shadow: 1px 1px 0px $white;
     border: none;
     margin: 2px;
 }
@@ -570,10 +570,10 @@ body.pdfviewer .popup.menu a:hover{
 
 /* annotation sharing popup */
 body.pdfviewer .popup.annotationSharing{
-    color: #fff;
+    color: $white;
 }
 body.pdfviewer .popup.annotationSharing #annotation_share{
-    color: #fff;
+    color: $white;
 }
 
 body.pdfviewer .touchStop{
@@ -581,7 +581,7 @@ body.pdfviewer .touchStop{
     height: 100%;
     z-index: 1000;
     opacity: 0.3;
-    background-color: #fff;
+    background-color: $white;
     position: absolute;
     top: 0px;
     left: 0px;

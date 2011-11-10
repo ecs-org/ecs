@@ -4,7 +4,7 @@
 
 input[disabled] {
   background-color: #d4d0c8;
-  color: #000000;
+  color: $black;
 }
 
 .tab_header_groups {
@@ -23,10 +23,10 @@ input[disabled] {
         font-weight: bolder;
         margin-right: 3px;
         border-radius: 5px 5px 0 0;
-        text-shadow: 0 1px 2px #fff;
+        text-shadow: 0 1px 2px $white;
         
           &.active {
-            background: $mainnav-bg;
+            background: $lightskyblue;
             color: $link-blue;
           }
       }
@@ -40,7 +40,7 @@ input[disabled] {
 
 .tab_header_groups a.active.errors, 
 .tab_headers .active.errors a {
-  color: #fff;
+  color: $white;
   background: $navitem-error-orange-bg;
   text-shadow: 0 1px 2px $navitem-error-orange-bg;
 }
@@ -49,7 +49,7 @@ input[disabled] {
   position: absolute;
   left: 0;
   line-height: 30px;
-  background: $mainnav-bg;
+  background: $lightskyblue;
   width: 84%;
   padding: 2px 5px;
   border-radius: 0 5px 5px 5px;
@@ -60,7 +60,7 @@ input[disabled] {
       color: $link-blue;
       font-weight: normal;
       border-radius: 3px;
-      text-shadow: 0 0 0 #fff;
+      text-shadow: 0 0 0 $white;
     }
     .active a {
       background: $link-blue;
@@ -71,8 +71,8 @@ input[disabled] {
       color: #fff !important;
     }
     .disabled a {
-      background-color: $cold-grey;
-      color: $light-grey;
+      background-color: $grey-80;
+      color: $grey-60;
     }
 } 
 
@@ -85,39 +85,40 @@ input[disabled] {
   width: 100px;
   text-align: center;
   border-radius: 5px;
+  
     a {
       padding: 2px 3px;
       margin-bottom: 3px;
       display: block;
       cursor: pointer;
       z-index: 100;
-      color: $dark-grey;
+      color: $grey-20;
       font-size: 12px;
-      background: #f4f4f4;
-      border: 1px solid #bbb;
+      background: $grey-95;
+      border: 1px solid $grey-70;
       border-radius: 3px;
     }
     a:active {
-      background: #eee;
-      color: $dark-grey;
-      box-shadow: 0 0 6px $cold-grey;
+      background: $grey-90;
+      color: $grey-20;
+      box-shadow: 0 0 6px $lightblue;
     }
     a:hover {
       text-decoration: none;
-      border: 1px solid $light-grey;
-      box-shadow: 0 0 6px $cold-grey;
+      border: 1px solid $grey-70;
+      box-shadow: 0 0 6px $lightblue;
     }
     .button_save {
-      background: #f4f4f4;
-      border: 1px solid #bbb;  
+      background: $grey-95;
+      border: 1px solid $lightskyblue;  
     }
     .button_save_change {
-      background: $light-grey;
-      border: 1px solid #bbb;  
+      background: $grey-60;
+      border: 1px solid $lightskyblue;  
     }
     .button_validate {
-      background: #f4f4f4;
-      border: 1px solid #bbb;
+      background: $grey-95;
+      border: 1px solid $lightskyblue;
     }
     .button_validate_valid_error {
       background: #f84205;
@@ -130,7 +131,7 @@ input[disabled] {
     .button_submit {
       background: #54aade;
       border: 1px solid #7bc4f0;
-      color: #fff;
+      color: $white;
       margin: 0px;
     }
     .button_submit_valid {
@@ -235,7 +236,7 @@ table.notification td {
 }
 .task_back_log {
   tr.closed td {
-    color: $light-grey;
+    color: $grey-60;
   }
   tr.deleted {
     text-decoration: line-through;
@@ -256,8 +257,8 @@ table.notification td {
 
 #upload_button {
   float: right;
-  background: $dark-grey;
-  color: #fff;
+  background: $grey-20;
+  color: $white;
   margin-top: 10px;
   cursor: pointer;
 }
@@ -284,7 +285,7 @@ table.notification td {
 
 .doclist {
   background: #eee;
-  border: 1px solid $cold-grey;
+  border: 1px solid $grey-80;
   padding: 10px;
   
     h4 {
@@ -294,7 +295,7 @@ table.notification td {
       font-size: 14px;
       padding-bottom: 1px;
       margin-bottom: 2px !important;
-      border-bottom: 1px solid $cold-grey;
+      border-bottom: 1px solid $grey-80;
     }
     .list_item {
       display: block;
@@ -358,7 +359,7 @@ iframe.upload {
       margin-left: 120px;
     }
     .item {
-      border-top: 1px solid $cold-grey;
+      border-top: 1px solid $grey-80;
       margin: 2px 0;
       padding: 2px 0;
     }
@@ -379,8 +380,8 @@ iframe.upload {
 
 .notification_answer {
   padding: 10px;
-  background: #fff;
-  border: 1px solid $light-grey;
+  background: $white;
+  border: 1px solid $grey-60;
   border-radius: 5px;
 }
 table.notif_meta {
@@ -476,10 +477,10 @@ table.notif_meta {
     h3 {
       text-align: center;
       margin-bottom: 10px;
-      color: $dark-grey;
+      color: $grey-20;
     }
     .modified_at {
-      color: $grey;
+      color: $grey-40;
       display: inline-block;
       margin: 3px;
       padding: 3px;

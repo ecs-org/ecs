@@ -3,7 +3,7 @@
 #help_top {
     display: block;
     height: 40px;
-    background: $light-blue;
+    background: $lightblue;
     border-bottom: 1px solid #B5CFDF;
 }
 #help_logo {
@@ -11,7 +11,7 @@
     display: block;
     width: 60px;
     height: 20px;
-    background: #fff;
+    background: $white;
     padding: 10px;
     border-right: 1px solid #B5CFDF;
 }
@@ -35,7 +35,7 @@
     .searchbox form {
         display: block;
         width: 290px;
-        background: #fff;
+        background: $white;
         height: 30px;
         padding: 10px 10px 0 0;
     }
@@ -71,7 +71,7 @@
     display: block;
     border-radius: 3px;
     background-color: $link-lightblue;
-    border: 1px solid $mainnav-bg;
+    border: 1px solid $lightskyblue;
     padding: 3px 7px;
     font-size: 14px;
 }
@@ -82,7 +82,7 @@
     display: block;
     border-radius: 3px;
     background-color: $link-lightblue;
-    border: 1px solid $mainnav-bg;
+    border: 1px solid $lightskyblue;
     padding: 3px 7px;
     font-size: 14px;
 }
@@ -90,7 +90,7 @@
 .help_overview a:hover, .help_search a:hover, .help_review_overview a:hover {
   text-decoration: none;
   background: $link-blue;
-  color: #fff;
+  color: $white;
 }
 .help_search a {
   position: absolute;
@@ -99,7 +99,7 @@
   display: block;
   border-radius: 3px
   background-color: $link-lightblue;
-  border: 1px solid $mainnav-bg;
+  border: 1px solid $lightskyblue;
   padding: 3px 7px;
   font-size: 14px;
 }
@@ -206,7 +206,7 @@
     }
     
     .location {
-        color: $grey;
+        color: $grey-40;
     }
     
     table {
@@ -239,7 +239,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background: #fff;
+  background: $white;
 }
 #help_iframe {
   width: 100%;
@@ -290,7 +290,7 @@
     overflow: auto;
     position: absolute;
     z-index: 100;
-    background-color: #ffffff;
+    background-color: $white;
 
     img {
         max-width: 600px;
@@ -300,8 +300,8 @@
 .restructuredtext {
     margin: 10px 0;
     padding: 10px 0;
-    border-top: 2px solid $cold-grey;
-    border-bottom: 2px solid $cold-grey;
+    border-top: 2px solid $grey-80;
+    border-bottom: 2px solid $grey-80;
     
     img{
         max-width: 600px;

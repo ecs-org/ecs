@@ -1,9 +1,6 @@
-/* general colors */
+// color names inspired by x11 and svg color schemes: http://www.graphviz.org/doc/info/colors.html
 
-$dark-grey: #333;
-$light-grey: #999;
-$grey: #666;
-$cold-grey: #ccc;
+/* general colors */
 
 $link-blue: #2B558E;
 
@@ -21,13 +18,19 @@ $grey-60: #9A9A9A;
 $grey-70: #B3B3B3;
 $grey-80: #CDCDCD;
 $grey-90: #E6E6E6;
+$grey-95: #F3F3F3;
+
+
 
 /* general background colors */
 
 $light-brown-bg: #F8F8EF;
 $middle-light-brown-bg: #EFEFDD; // used e.g. for zebra odd
 $middle-dark-brown-bg: #E8E8D8; // used e.g. for zebra even
-$light-blue: #D8E6EF; // used for header backgrounds
+
+
+$lightblue: #D8E6EF; // used for header backgrounds
+$lightskyblue: #B7D4E5;
 
 //$moritz : #38FA90;
 //$moritz-light : lighten(moritz, 20%)
@@ -52,7 +55,7 @@ $light-brown-border: #EBDFC3;
 
 /* navigation colors */
 
-$mainnav-bg: #B7D4E5;
+ 
 $link-lightblue: #E2EAF0;
 
 $navitem-error-red-bg: #FB6464;

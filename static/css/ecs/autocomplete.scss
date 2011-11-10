@@ -10,7 +10,7 @@
         top: 20px;
         height: auto;
         z-index: 1000;
-        color: #000;
+        color: $black;
         background: $middle-dark-brown-bg;
         border: 1px solid #B7B7B7;
         min-width: 300px;
@@ -19,12 +19,12 @@
         & > div {
             display: block;
             padding: 3px 5px;
-            color: $dark-grey;
+            color: $grey-20;
             border-bottom: 1px solid #B7B7B7;
             
             &:hover, &.highlight{
-                background: $dark-grey;
-                color: #fff;
+                background: $grey-20;
+                color: $white;
                 cursor: pointer;
             }
         }
@@ -75,11 +75,11 @@ li.textboxlist-bit-box {
   z-index: 100;
 }
 #content .textboxlist-autocomplete-result-focus {
-  background: $dark-grey;
-  color: #fff;
+  background: $grey-20;
+  color: $white;
 }
 #content .textboxlist-autocomplete-highlight {
-  color: $dark-grey;
+  color: $grey-20;
 }
 .textboxlist-autocomplete,
 #task_main .textboxlist-autocomplete {

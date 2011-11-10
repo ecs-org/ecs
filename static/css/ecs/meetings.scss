@@ -44,7 +44,7 @@
             padding: 2px;
             
             li {
-                border-top: 1px solid $cold-grey;
+                border-top: 1px solid $grey-80;
                 padding: 5px;
             }
         }
@@ -60,7 +60,7 @@
         }
         
         .info {
-            background-color: #fff;
+            background-color: $white;
             font-size: 0.8em;
             
             .constraints {
@@ -100,7 +100,7 @@
         margin-bottom: 3px;
         display: block;
         height: 80px;
-        background-color: #fff;
+        background-color: $white;
         position: relative;
 
         h4 {
@@ -137,7 +137,7 @@
             padding: 5px;
             margin-right: 5px;
             width: 50px;
-            background-color: $mainnav-bg;
+            background-color: $lightskyblue;
             height: 70px;
             border-radius: 3px 0 0 3px;
             -moz-border-radius: 3px 0 0 3px;
@@ -235,7 +235,7 @@
         .user_list > span {
             margin-right: 0.5em;
             padding: 2px;
-            border: 1px solid $cold-grey;
+            border: 1px solid $grey-80;
             background-color: #eeeeff;
         }
     }
@@ -341,7 +341,7 @@
         display: block;
         width: 100%;
         float: left;
-        border-top: 1px solid $cold-grey;
+        border-top: 1px solid $grey-80;
         padding: 5px 0;
         margin: 5px 0;
     }
@@ -372,7 +372,7 @@
         float: left;
         width: 71%;
         padding: 5px;
-        background: #fff;
+        background: $white;
         border: 1px solid #ddd;
         border-radius: 5px;
         
@@ -418,7 +418,7 @@
             min-width: 350px;
             max-width: 500px;
             padding-right: 5px;
-            border-right: 1px solid $cold-grey;
+            border-right: 1px solid $grey-80;
             
             .ecs-TextAreaToolbar {
                 margin-left: 20px;
@@ -459,15 +459,15 @@
         a {
             display: block;
             float: left;
-            background: $grey;
-            color: #fff;
+            background: $grey-40;
+            color: $white;
             margin: 0 0 5px;
             padding: 5px;
             border-radius: 3px;
             
             &:hover {
                 text-decoration: none;
-                background: $dark-grey;
+                background: $grey-20;
             }
             
             &.selected {
@@ -484,8 +484,8 @@
     
     .search {
         float: left;
-        border-top: 1px solid $cold-grey;
-        border-bottom: 1px solid $cold-grey;
+        border-top: 1px solid $grey-80;
+        border-bottom: 1px solid $grey-80;
         margin-top: 10px;
         padding: 10px 0;
         width: 100%;
@@ -496,8 +496,8 @@
         }
         
         input[type=submit] {
-            background: url("/static/images/icons.png?38c54595d43f") no-repeat scroll -324px -198px $cold-grey;
-            border: 1px solid $light-grey;
+            background: url("/static/images/icons.png?38c54595d43f") no-repeat scroll -324px -198px $grey-80;
+            border: 1px solid $grey-60;
             border-radius: 0;
             display: inline-block;
             float: right;
@@ -545,28 +545,28 @@
     display: block;
     padding: 3px;
     margin-bottom: 7px;
-    background: $grey;
+    background: $grey-40;
     text-align: center;
     font-size: 12px;
     clear: both;  
-    color: #fff;
+    color: $white;
     border-radius: 3px;
 
     &:hover{
         text-decoration: none;
-        background: $dark-grey;
+        background: $grey-20;
     }
 }
 
 #meeting_assistant .navigation a {
-    background: $cold-grey;
-    color: $dark-grey;
+    background: $grey-80;
+    color: $grey-20;
     font-size: 10px;
 
     &:hover {
         text-decoration: none;
-        background: $dark-grey;
-        color: #fff;
+        background: $grey-20;
+        color: $white;
     }
 }
 
@@ -597,7 +597,7 @@
         
             &.absent {
                 background: #ededed;
-                border: 1px solid $cold-grey;
+                border: 1px solid $grey-80;
             }
         
             &.positive {
@@ -626,8 +626,8 @@
         
             &.incomplete {
                 background: #ededed;
-                border: 1px solid $cold-grey;
-                color: #000;
+                border: 1px solid $grey-80;
+                color: $black;
             }
         }
     }

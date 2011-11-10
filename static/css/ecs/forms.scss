@@ -44,7 +44,7 @@ ul.errorlist {
     }
     
     .paperform_number{
-        color: $grey;
+        color: $grey-40;
         font-size: 10px;
         
         &:before{
@@ -80,6 +80,11 @@ ul.errorlist {
                 }
             }
             
+            &.required label:after {
+                content: " *";
+                color: $red;
+            }
+            
             &.max10 input { width: 60px;}
             &.max20 input { width: 100px;}
             &.max40 input { width: 200px;}
@@ -110,7 +115,7 @@ ul.errorlist {
             
             .notes {
                 font-size: 0.9em;
-                color: $grey;
+                color: $grey-40;
                 padding-left: 10px;
             }
             
@@ -118,7 +123,7 @@ ul.errorlist {
                 margin: 0 0 3px 230px;
                 display: block;
                 clear: both;
-                color: $grey;
+                color: $grey-40;
                 padding-left: 10px;
             }
             
@@ -148,7 +153,7 @@ ul.errorlist {
                     height: 15px;
                     display: block;
                     clear: both;
-                    color: $grey;
+                    color: $grey-40;
                 }
             }
         }
@@ -158,6 +163,7 @@ ul.errorlist {
       margin: 0 5px 0 3px;
       font-size: 14px;
       color: red;
+      display: none;
     }
     
     #id_start_1,
@@ -217,7 +223,7 @@ ul.errorlist {
           
             a {
               text-decoration: none !important;
-              color: $dark-grey !important;
+              color: $grey-20 !important;
             }
             &.active {
               background: $middle-light-brown-bg; 

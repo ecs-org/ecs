@@ -46,8 +46,8 @@ ul.diff {
     .item {
         margin: 5px 10px 0;
         padding: 5px;
-        background: #fff;
-        border: 1px dotted $cold-grey;
+        background: $white;
+        border: 1px dotted $grey-80;
         
         .title{
             display: inline-block;
@@ -78,16 +78,16 @@ ul.diff {
         display: inline-block;
         padding: 3px 8px;
         margin: 10px 5px 10px 0;
-        background: $grey;
+        background: $grey-40;
         text-align: center;
         font-size: 12px;
         clear: both;  
-        color: #fff;
+        color: $white;
         border-radius: 3px;
 
         &:hover{
             text-decoration: none;
-            background: $dark-grey;
+            background: $grey-20;
         }
     }
 }

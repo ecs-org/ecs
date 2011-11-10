@@ -78,8 +78,8 @@
         right: 0px;
         top: 0;
         padding: 10px;
-        border-left: 1px solid $cold-grey;
-        border-bottom: 1px solid $cold-grey;
+        border-left: 1px solid $grey-80;
+        border-bottom: 1px solid $grey-80;
         
         a {
             display: inline-block;
@@ -90,7 +90,7 @@
     pre {
         margin: 10px 0;
         padding: 10px;
-        background: #fff;
+        background: $white;
         border: 1px solid #C6C9CB;
         -moz-box-shadow: 1px 1px 0 #d8d8d8;
     }
@@ -128,7 +128,7 @@
         }
         
         input, textarea{
-            border: 1px solid $light-grey;
+            border: 1px solid $grey-60;
             padding: 2px;
         }
         
@@ -173,7 +173,7 @@
         clear: both;
         
         .threadstart {
-          border-top: 1px solid $cold-grey;
+          border-top: 1px solid $grey-80;
         }
     }
 }
