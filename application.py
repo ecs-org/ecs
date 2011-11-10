@@ -5,7 +5,7 @@ import os
 import shutil
 import tempfile
 import subprocess
-import distutils
+import distutils.dir_util
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_template,\
     write_regex_replace
