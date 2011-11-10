@@ -18,7 +18,7 @@ class NotificationAnswerForm(forms.ModelForm):
 
 
 class RejectableNotificationAnswerForm(NotificationAnswerForm):
-    is_rejected = forms.BooleanField(required=False)
+    is_rejected = NotificationAnswer._meta.get_field('is_rejected').formfield(required=False)
 
     class Meta:
         model = NotificationAnswer

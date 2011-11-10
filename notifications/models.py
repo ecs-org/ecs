@@ -164,8 +164,8 @@ class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     text = models.TextField()
     is_valid = models.BooleanField(default=True)
-    is_final_version = models.BooleanField(default=False)
-    is_rejected = models.BooleanField(default=False)
+    is_final_version = models.BooleanField(default=False, verbose_name=_('Proofread')) # informal
+    is_rejected = models.BooleanField(default=False, verbose_name=_('Reject'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     
     @property
