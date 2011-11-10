@@ -591,10 +591,10 @@ def meeting_details(request, meeting_pk=None, active=None):
 
     return render(request, 'meetings/details.html', {
         'cumulative_count': meeting.submissions.all().count(),
-        'amg_count': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query).count(),
-        'mpg_count': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query).count(),
-        'amg_mpg_count': meeting.submissions.amg_mpg().count(),
-        'retrospective_thesis_count': meeting.submissions.retrospective_thesis(),
+        'amg_submissions': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
+        'mpg_submissions': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
+        'amg_mpg_submissions': meeting.submissions.amg_mpg(),
+        'retrospective_thesis_submissions': meeting.submissions.retrospective_thesis(),
         'expedited_submissions': meeting.submissions.expedited(),
         'localec_submissions': meeting.submissions.localec(),
         'other_submissions': meeting.submissions.exclude(pk__in=meeting.submissions.amg().values('pk').query).exclude(pk__in=meeting.submissions.mpg().values('pk').query).exclude(pk__in=meeting.submissions.retrospective_thesis().values('pk').query).exclude(pk__in=meeting.submissions.expedited().values('pk').query).exclude(pk__in=meeting.submissions.localec().values('pk').query),
