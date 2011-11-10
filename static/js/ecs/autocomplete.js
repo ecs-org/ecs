@@ -69,8 +69,8 @@ ecs.autocomplete.Autocompleter = new Class({
         if(this.currentChoiceElement){
             this.currentChoiceElement.removeClass('selected');
         }
-        this.textInput.value = this.getChoiceText(c);
-        this.input.value = this.getChoiceValue(c);
+        this.textInput.value = c ? this.getChoiceText(c) : '';
+        this.input.value = c ? this.getChoiceValue(c) : '';
         this.currentChoice = c;
     },
     onChoiceBoxClick: function(e){
@@ -154,8 +154,12 @@ ecs.autocomplete.Autocompleter = new Class({
                 var choice = this.getChoiceForElement(this.filteredElements[this.highlightChoiceIndex]);
                 this.selectChoice(choice);
                 this.deactivate();
-                return false;
             }
+            else if(!this.textInput.value.trim()){
+                this.selectChoice(null);
+                this.deactivate();
+            }
+            return false;
         }
         this.activate();
     }
