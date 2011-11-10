@@ -26,7 +26,7 @@ body {
   top: 0;
   left: 0;
   z-index: 101;
-  background: $light-blue;
+  background: $lightblue;
   padding: 10px;
   display: block;
   border-bottom: 1px solid #B5CFDF;
@@ -37,14 +37,14 @@ body {
   width: 90%;
   display: block;
   margin-bottom: 5px;
-  text-shadow: 0 1px 2px #fff;
+  text-shadow: 0 1px 2px $white;
 }
 #headernav {
   position: relative;
   display: block;
   float: left;
   width: 100%;
-  background: $light-blue;
+  background: $lightblue;
   font-size: 14px;
 }
 .innerwrap {
@@ -63,7 +63,7 @@ body {
   width: 220px; /* Width of frame div */
   height: 100%;
   overflow: hidden; /* Disable scrollbars. Set to "scroll" to enable */
-  color: $dark-grey;
+  color: $grey-20;
   background: #f6f6e9;
   word-wrap: break-word;
     
@@ -95,7 +95,7 @@ a {
   bottom: 0px;
   left: 0px;
   display: block;
-  background: #fff;
+  background: $white;
   overflow-x: hidden;
   overflow-y: auto;
 
@@ -224,7 +224,7 @@ input:focus,
 input[type=file]:focus, 
 textarea:focus, 
 #content select:focus {
-  box-shadow: 0 0 6px $cold-grey;
+  box-shadow: 0 0 6px $grey-80;
 }
 
 input[type=submit], 
@@ -232,7 +232,7 @@ input[type=submit],
 a.button_submit,
 #content a.button_submit {
   display: inline-block;
-  color: $dark-grey !important;
+  color: $grey-20;
   background: #ddd url(/static/images/button_bg.png) repeat-x;
   cursor: pointer;
   margin: 10px 5px 0 0;
@@ -264,7 +264,7 @@ input[type=submit]:hover,
 a.button_submit:hover,
 #content a.button_submit:hover {
   text-decoration: none;
-  border: 1px solid $light-grey;
+  border: 1px solid $grey-60;
 }
 .form_main .cancel a {
   margin-left: 240px;
@@ -273,8 +273,8 @@ a.button_submit:hover,
 /* header */
 
 #header {
-  color: $dark-grey;
-  background: $light-blue;
+  color: $grey-20;
+  background: $lightblue;
     h1 {
       font-size: 14px;
       font-weight: bolder;
@@ -290,11 +290,11 @@ a.button_submit:hover,
 #usermenu {
   width: 200px;
   padding: 10px;
-  border-bottom: 1px solid $cold-grey;
+  border-bottom: 1px solid $grey-80;
 }
 #logo {
   height: 53px;
-  background: #fff;
+  background: $white;
 }
 #account {
   min-height: 80px;
@@ -359,14 +359,14 @@ a.button_submit:hover,
   left: 0px;
   width: 100%;
   height: 100%;
-  background-color: $cold-grey;
+  background-color: $grey-80;
   z-index: 1000001;
   
     textarea {
       width: 90%;
       height: 90%;
       margin: 20px;
-      background-color: #ffffff;
+      background-color: $white;
     }
     .ecs-TextAreaToolbar {
       margin: 20px 20px 0;

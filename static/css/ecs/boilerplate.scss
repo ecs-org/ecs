@@ -15,13 +15,13 @@
     width: 300px;
     height: auto;
     left: 140px;
-    background: #fff;
-    border: 3px solid $mainnav-bg;
+    background: $white;
+    border: 3px solid $lightskyblue;
     z-index: 1000;
     
     a {
         display: block;
-        color: #000;
+        color: $black;
         max-height: 30px;
         overflow: hidden;
         padding: 2px;
@@ -34,7 +34,7 @@
         
         &:hover {
             text-decoration: none;
-            background: $mainnav-bg;
+            background: $lightskyblue;
         }
     }
     
@@ -63,7 +63,7 @@
 
 .boilerplate_text {
   padding: 10px;
-  border: 1px solid $light-grey;
-  background: #fff;
+  border: 1px solid $grey-60;
+  background: $white;
   border-radius: 5px;
 }
