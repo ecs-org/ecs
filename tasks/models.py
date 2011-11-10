@@ -61,7 +61,7 @@ class TaskQuerySet(models.query.QuerySet):
         from ecs.votes.models import Vote
         from ecs.meetings.models import Meeting
         from ecs.checklists.models import Checklist
-        from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+        from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
 
         tasks = self.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
@@ -73,7 +73,7 @@ class TaskQuerySet(models.query.QuerySet):
             meeting_ct = ContentType.objects.get_for_model(Meeting)
             q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
 
-            for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+            for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification):
                 notification_ct = ContentType.objects.get_for_model(notification_model)
                 q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
             
