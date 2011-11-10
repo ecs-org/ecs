@@ -56,17 +56,6 @@ ecs.setupFormFieldHelpers = function(context){
         else{
             input = field.getFirst('input[type=text]');
         }
-        if(field.hasClass('required')){
-            var span = field.getElement('span');
-            var star = new Element('span', {html: '*', 'class': 'star'});
-            if(span){
-                star.inject(span, 'before');
-            }
-            else{
-                star.inject(field.getElement('label'));
-            }
-            //notes.push('required');
-        }
         if(input){
             var maxlength = input.getProperty('maxlength');
             if(maxlength && maxlength > 0){
