@@ -51,7 +51,7 @@
                     <td>{{ ta.user }}</td>
                     <td>{{ ta.user.ecs_profile.organisation }}</td>
                     {% if user|has_flag:'is_internal' %}
-                        <td>{{ user.email|default:'' }}</td>
+                        <td>{{ ta.user.email|default:'' }}</td>
                     {% endif %}
                     <td>
                         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=ta.user.pk %}" target="_blank">
