@@ -1,5 +1,15 @@
 @import "ecs/variables.scss";
 
+#content div.submission_list #submission_list_filter {
+  display: block;
+  border-bottom: 1px solid $wheatbrown;
+}
+#content div.submission_list ul.submission_list_choose {
+  display: inline;
+  line-height: 24px;
+  border-bottom: none;
+}
+
 /* submission widget */
 
 #submission_widget {

@@ -338,72 +338,12 @@ iframe.upload {
     }
 }
 
-/* notifications */
-
-.notification { 
-    label {
-      font-weight: bolder;
-      display: inline-block;
-      width: 120px;
-    }
-    input[type="submit"] {
-      margin-left: 120px;
-    }
-    textarea {
-      display: inline-block;
-    }
-    ul {
-      margin: 0 !important;
-    }
-    ul.errorlist li {
-      margin-left: 120px;
-    }
-    .item {
-      border-top: 1px solid $grey-80;
-      margin: 2px 0;
-      padding: 2px 0;
-    }
-}
-
-.notification_list {
-    ol {
-      list-style: none;
-    }
-    li {
-      padding: 5px;
-      margin-bottom: 10px;
-    }
-    .rejected > a{
-      color: #f00 !important;
-    }
-}
-
-.notification_answer {
-  padding: 10px;
-  background: $white;
-  border: 1px solid $grey-60;
-  border-radius: 5px;
-}
-table.notif_meta {
-  padding-top: 10px;
-}
-
-.submission_data {
-  margin-left: 240px;
-}
-
-.checklist_field { 
-  visibility: visible; 
-}
-.checklist_field_hidden { 
-  visibility: hidden; 
-}
-
 /* list cycles */
 
 #content ol.submission_list li:nth-of-type(1) ,
 .submission_list li:nth-of-type(1) ,
 .submission_item:nth-of-type(1) ,
+#involved_parties_tab tr:nth-of-type(1) ,
 .notification_list li:nth-of-type(1) ,
 .dashboard_widget .messages li:nth-of-type(1) ,
 .messages li:nth-of-type(1) ,
@@ -417,6 +357,7 @@ table.notif_meta {
 #content ol.submission_list li:nth-child(odd) ,
 .submission_list li:nth-child(odd) ,
 .submission_item:nth-child(odd) ,
+#involved_parties_tab tr:nth-child(odd) ,
 .notification_list li:nth-child(odd) ,
 .dashboard_widget .messages li:nth-child(odd) ,
 .messages li:nth-child(odd) ,
@@ -433,6 +374,7 @@ table.notif_meta {
 #content ol.submission_list li:nth-child(even) ,
 .submission_list li:nth-child(even) ,
 .submission_item:nth-child(even) ,
+#involved_parties_tab tr:nth-child(even) ,
 .notification_list li:nth-child(even) ,
 .dashboard_widget .messages li:nth-child(even) ,
 .messages li:nth-child(even) ,

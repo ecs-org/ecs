@@ -204,9 +204,13 @@ a {
 .form_main h3,
 .notification_list h3 {
   padding: 10px;
-  margin: -10px -10px 0;
   background: #f3f3db;
+  margin: 0 -10px;
   border-bottom: 1px solid $light-brown-border;
+}
+.form_main h3:first-child,
+.notification_list h3:first-child {
+  margin-top: -10px;
 }
 
 /* input fields and buttons */
