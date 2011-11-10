@@ -88,6 +88,9 @@ class FieldDocs(object):
         return get_field_info(self.model, self.field.name)
 
 
+class SkipInstance(Exception): pass
+
+
 class ModelSerializer(object):
     exclude = ('id',)
     groups = ()
@@ -158,7 +161,13 @@ class ModelSerializer(object):
             return val
         if hasattr(val, 'all') and hasattr(val, 'count'):
             try:
-                return [dump_model_instance(x, zf) for x in val.all()]
+                result = []
+                for x in val.all():
+                    try:
+                        result.append(dump_model_instance(x, zf))
+                    except SkipInstance:
+                        pass
+                return result
             except ValueError, e:
                 raise ValueError("cannot dump {0}.{1}: {2}".format(self.model.__name__, fieldname, e))
         
@@ -312,6 +321,11 @@ class DocumentTypeSerializer(object):
         return obj.name
 
 class DocumentSerializer(ModelSerializer):
+    def dump(self, obj, zf):
+        if not obj.doctype.is_downloadable:
+            raise SkipInstance
+        return super(DocumentSerializer, self).dump(obj, zf)
+        
     def dump_field(self, fieldname, val, zf, obj):
         field = self.model._meta.get_field(fieldname)
 
