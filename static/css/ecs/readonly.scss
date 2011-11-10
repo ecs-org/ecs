@@ -138,9 +138,12 @@
     }
     
     pre {
+        display: inline-block;
         background-color: $white;
         font-style: normal;
         line-height: 1.5;
+        border: 1px solid $grey-60;
+        padding: 3px 5px;
         
         table & {
             margin-left: 0;
@@ -161,9 +164,6 @@
         }
         
         &.multiline {
-          padding: 5px;
-          display: block;
-          float: left;
           white-space: pre-wrap;
           width: auto;
           max-width: 700px;
@@ -229,7 +229,7 @@
         
     textarea {
         clear: both;
-        display: inline-block;
+        display: block;
         margin-left: 0;
     }
     

@@ -218,7 +218,7 @@
 .task_delegate,
 .task_ask {
   @include icon_bg_16;
-  padding-left: 5px;
+  margin-right: 5px;
 }
 .task_complete {
   background-position: 0 -160px;

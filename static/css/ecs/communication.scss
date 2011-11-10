@@ -3,74 +3,73 @@
 .message_display {
     display: block;
     
-    form{
+    form {
         max-width: 700px;
-        padding: 10px 0;
+        margin: 20px 10px;
     }
-    
-    #id_subject{
-        width: 400px;
+    #id_subject {
+        display: block;
+        width: 500px;
     }
-    
     #id_text {
         display: block;
         width: 500px;
         min-height: 180px;
-        margin-left: 100px;
     }
-    
-    .form, .item{
+    .form, .item {
         position: relative;
     }
-    
-    h3 {
+    h4 {
         display: block;
         font-weight: lighter;
         margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid $wheatbrown;
     }
-    
-    ol{
+    ol {
         margin-top: 10px;
 
-        li{
+        li {
             list-style: none;
             padding: 3px 5px;
             margin-bottom: 2px;
             
-            li{
+            li {
                 display: block;
                 clear: both;
                 margin-bottom: 0;
             }
         }
     }
-    
-    label {
-        display: inline-block;
-        font-weight: bolder;
-        vertical-align: top;
-        min-width: 100px;
+    span {
+        display: block;
+        padding: 5px 0;
     }
-    
+    label {
+        font-weight: bolder;
+        vertical-align: middle;
+        margin-right: 5px;
+        padding-bottom: 5px;
+    }
+    p {
+      margin-bottom: 10px !important;
+    }
     .form ul {
         display: inline-block;
         margin: 0;
+        list-style: none;
     }
-    
     .form .input {
-        display: inline-block;
+        display: block;
         width: 400px;
+        margin: 0 0 20px 20px;
     }
-
     .input label {
-        vertical-align: top;
-        padding-top: 2px;
+        vertical-align: middle;
     }
-    
     ul li label {
         min-width: 130px;
     }
-    
     .actions {
         width: 20px;
         height: 70px;
@@ -86,17 +85,26 @@
             margin-bottom: 5px;
         }
     }
-    
     pre {
         margin: 10px 0;
         padding: 10px;
         background: $white;
         border: 1px solid #C6C9CB;
-        -moz-box-shadow: 1px 1px 0 #d8d8d8;
     }
-    
     .ecs-TextAreaToolbar {
         display: inline-block;
+        margin-left: 10px;
+        vertical-align: bottom;
+        
+          a {
+            margin: 0 10px 0 0;
+          }
+    }
+    .ecs-Autocomplete {
+        display: inline;
+    }
+    .boilerplate_selector {
+        left: 80px;
     }
 }
 
@@ -197,12 +205,12 @@ ul.thread {
     .message {
       border-radius: 5px;
       background: $white;
-      border: 1px solid #eddfbf;;
+      border: 1px solid $wheatbrown;;
       margin-bottom: 2px;
       
         .head {
           padding: 10px;
-          border-bottom: 1px solid #eddfbf;;
+          border-bottom: 1px solid $wheatbrown;;
           cursor: pointer;
           
             .preview {
@@ -214,6 +222,10 @@ ul.thread {
             .time {
               float: right;
               color: $grey-40;
+            }
+            
+            .sender {
+              font-weight: bold;
             }
             
             .message_done {
@@ -264,7 +276,7 @@ ul.thread {
 
 .communication_thread {
     form.send {
-      margin: 20px 0px;
+      margin: 20px 10px;
     }
     .related_thread {
       display: block;
@@ -280,7 +292,7 @@ ul.thread {
       display: inline-block;
     }
     label {
-      padding-bottom: 4px;
+      padding-bottom: 5px;
       font-weight: bold;
     }
     .ecs-TextAreaToolbar {
