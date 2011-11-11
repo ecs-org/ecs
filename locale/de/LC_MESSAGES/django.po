@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-11 18:40+0100\n"
+"POT-Creation-Date: 2011-11-11 18:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1410,10 +1410,13 @@ msgstr "Sitzungsteilnehmer"
 msgid "Meeting Participant (assigned for category)"
 msgstr "Sitzungsteilnehmer (ausgewählt für Kategorie)"
 
-#: core/triggers.py:25 core/triggers.py:34
-#, fuzzy
+#: core/triggers.py:25
 msgid "Creation of study EC-Nr. {ec_number}"
-msgstr "Erstellung der Studie EK-Nr. {0}"
+msgstr "Erstellung der Studie EK-Nr. {ec_number}"
+
+#: core/triggers.py:34
+msgid "Change of study EC-Nr. {ec_number}"
+msgstr "Änderung der Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:60 core/triggers.py:62 core/triggers.py:71
 #: core/triggers.py:73
@@ -1426,9 +1429,8 @@ msgid "Submission accepted"
 msgstr "Einreichung akzeptiert"
 
 #: core/triggers.py:85
-#, fuzzy
 msgid "Changes to study EC-Nr. {ec_number}"
-msgstr "Änderungen an Studie EK-Nr. {0}"
+msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:87
 msgid "Submission not accepted"

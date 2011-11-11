@@ -31,7 +31,7 @@ def on_study_change(sender, **kwargs):
                 pass
             else:
                 initial_review_task.reopen()
-                send_submission_message(submission, initial_review_task.assigned_to, _('Creation of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
+                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
 
 
 @connect(signals.on_study_submit)
