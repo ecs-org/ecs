@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-11 23:06+0100\n"
+"POT-Creation-Date: 2011-11-11 23:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,7 +162,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:126
+#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:415
 #: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
@@ -1420,9 +1420,8 @@ msgstr "Änderung der Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:60 core/triggers.py:62 core/triggers.py:71
 #: core/triggers.py:73
-#, fuzzy
 msgid "Studie {ec_number}"
-msgstr "Studien"
+msgstr "Studie {ec_number}"
 
 #: core/triggers.py:80
 msgid "Submission accepted"
@@ -1476,9 +1475,8 @@ msgid "Please enter a valid e-mail address"
 msgstr "Bitte geben Sie eine gültige E-mail Adresse an"
 
 #: core/forms/forms.py:238
-#, fuzzy
 msgid "SUSAR Presenter"
-msgstr "Einreicher"
+msgstr "Sicherheitsmeldungsersteller"
 
 #: core/forms/forms.py:247
 msgid "Susar presenter"
@@ -1571,6 +1569,14 @@ msgstr "Datei"
 #: core/forms/forms.py:399
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
+
+#: core/forms/forms.py:414 templates/users/administration.html:39
+msgid "User"
+msgstr "Benutzer"
+
+#: core/forms/forms.py:416 users/bootstrap.py:24
+msgid "End"
+msgstr "Ende"
 
 #: core/forms/layout.py:12
 msgid "Key data"
@@ -2039,11 +2045,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:594
+#: meetings/models.py:627
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:595
+#: meetings/models.py:628
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2084,7 +2090,7 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:443 meetings/views.py:520
+#: meetings/views.py:443 meetings/views.py:505
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2092,9 +2098,10 @@ msgstr "Zeitfenster"
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:480
-msgid "protocol"
-msgstr "Protokoll"
+#: meetings/views.py:476
+#, fuzzy
+msgid "Meeting Protocol"
+msgstr "Per Protocol"
 
 #: notifications/bootstrap.py:84
 #, fuzzy
@@ -2827,6 +2834,7 @@ msgid "examined"
 msgstr "behandelt"
 
 #: templates/meetings/messages/boardmember_invitation.html:6
+#: templates/meetings/messages/protocol.html:6
 #: templates/meetings/messages/resident_boardmember_invitation.html:6
 #, python-format
 msgid ""
@@ -2848,6 +2856,7 @@ msgid ""
 msgstr ""
 
 #: templates/meetings/messages/boardmember_invitation.html:24
+#: templates/meetings/messages/protocol.html:16
 #: templates/meetings/messages/resident_boardmember_invitation.html:21
 msgid ""
 "\n"
@@ -3280,7 +3289,7 @@ msgid "Additional Investigators"
 msgstr "Zusätzliche Zentren"
 
 #: templates/submissions/change_message.txt:2
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
@@ -3289,8 +3298,10 @@ msgid ""
 "    The Team of the Ethics Commission\n"
 msgstr ""
 "\n"
-"Ihre Studie \"%(project_title)s\" (%(ec_number)s) wurde abgelehnt. Sie "
-"können die Studie neu einreichen.\n"
+"Die Studie \"%(project_title)s\" (%(ec_number)s) wurde geändert.\n"
+"\n"
+"Mit freundlichen Grüßen,\n"
+"    Das Team der Ethik-Kommission\n"
 
 #: templates/submissions/change_presenter.html:4
 #: templates/submissions/change_presenter.html:5
@@ -3553,9 +3564,8 @@ msgid "Create a new notification"
 msgstr "Eine neue Meldung erstellen"
 
 #: templates/submissions/readonly_form.html:165
-#, fuzzy
 msgid "rejected"
-msgstr "Ablehnen"
+msgstr "abgelehnt"
 
 #: templates/submissions/readonly_form.html:170
 msgid "There are no answered notifications."
@@ -3645,21 +3655,19 @@ msgstr "Nachricht senden"
 
 #: templates/submissions/tabs/involved_parties.html:36
 msgid "Temporary Authorization"
-msgstr ""
+msgstr "Befristete Autorisierung"
 
 #: templates/submissions/tabs/involved_parties.html:39
-#, fuzzy
 msgid "Timeframe"
-msgstr "Zeitplanung"
+msgstr "Zeitraum"
 
 #: templates/submissions/tabs/involved_parties.html:62
 msgid "Revoke"
-msgstr ""
+msgstr "Widerrufen"
 
 #: templates/submissions/tabs/involved_parties.html:78
-#, fuzzy
 msgid "Authorize"
-msgstr "faktoriell"
+msgstr "Autorisieren"
 
 #: templates/submissions/tabs/involved_parties.html:84
 msgid "Biased Parties"
@@ -3815,10 +3823,6 @@ msgstr "Medizinische Kategorien"
 msgid "Name/Email"
 msgstr "Name/Email"
 
-#: templates/users/administration.html:39
-msgid "User"
-msgstr "Benutzer"
-
 #: templates/users/administration.html:40
 #, fuzzy
 msgid "E-mail"
@@ -3967,11 +3971,6 @@ msgstr "Passwort setzen"
 #: users/bootstrap.py:23
 msgid "User Approval"
 msgstr "Benutzer bestätigen"
-
-#: users/bootstrap.py:24
-#, fuzzy
-msgid "End"
-msgstr "Beendet"
 
 #: users/forms.py:17
 msgid "Email"
@@ -4329,6 +4328,9 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "protocol"
+#~ msgstr "Protokoll"
 
 #, fuzzy
 #~ msgid "Render Submission PDF"

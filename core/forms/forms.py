@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
-from ecs.utils.formutils import ModelFormPickleMixin, require_fields
+from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, SingleselectWidget, DateTimeField
 from ecs.core.forms.utils import NewReadonlyFormMixin, NewReadonlyFormSetMixin
@@ -400,7 +400,7 @@ class SubmissionImportForm(forms.Form):
         f.seek(0)
         return f
 
-class TemporaryAuthorizationForm(forms.ModelForm):
+class TemporaryAuthorizationForm(TranslatedModelForm):
     start = DateTimeField(initial=datetime.now)
     end = DateTimeField(initial=lambda: datetime.now() + timedelta(days=30))
 
@@ -410,4 +410,8 @@ class TemporaryAuthorizationForm(forms.ModelForm):
         widgets = {
             'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
         }
-        
+        labels = {
+            'user': _('User'),
+            'start': _('Start'),
+            'end': _('End'),
+        }
