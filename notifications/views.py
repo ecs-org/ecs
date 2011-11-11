@@ -203,12 +203,14 @@ def edit_notification_answer(request, notification_pk=None):
         answer.notification = notification
         answer.save()
 
-    return render(request, 'notifications/answers/form.html', {
+    response = render(request, 'notifications/answers/form.html', {
         'notification': notification,
         'answer': answer,
         'answer_version': get_version_number(answer) if answer else 0,
         'form': form,
     })
+    response.has_errors = not form.is_valid()
+    return response
 
 
 @readonly()

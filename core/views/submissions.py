@@ -258,7 +258,10 @@ def categorization_review(request, submission_form_pk=None):
 
     form.bound_to_task = task
 
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
+    response = readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
+    if request.method == 'POST' and not form.is_valid():
+        response.has_errors = True
+    return response
 
 
 @task_required()
@@ -373,10 +376,14 @@ def vote_review(request, submission_form_pk=None):
         vote_review_form.bound_to_task = task
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={
+
+    response = readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': vote_review_form,
         'vote_version': get_version_number(vote),
     })
+    if request.method == 'POST' and not vote_review_form.is_valid():
+        response.has_errors = True
+    return response
 
 
 @task_required()
@@ -402,10 +409,7 @@ def vote_preparation(request, submission_form_pk=None):
         'vote_review_form': form,
         'vote_version': get_version_number(vote) if vote else 0,
     })
-    
-    if not form.is_valid():
-        response.has_errors = True
-        print "has errors"
+    response.has_errors = not form.is_valid()
     return response
 
 
