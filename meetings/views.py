@@ -456,7 +456,7 @@ def send_agenda_to_board(request, meeting_pk=None):
         htmlmail = unicode(render_html(request, 'meetings/messages/resident_boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
         deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
-    tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False)
+    tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
         send_system_message_template(top.submission.primary_investigator.user, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
     
