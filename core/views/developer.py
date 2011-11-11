@@ -10,7 +10,7 @@ from ecs.core import paper_forms
 from ecs.utils.viewutils import render, render_pdf_context, pdf_response
 from ecs.core import bootstrap
 from ecs.users.utils import sudo
-from ecs.notifications.models import Notification
+from ecs.notifications.models import Notification, NotificationAnswer
 
 def test_pdf_html(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
@@ -99,6 +99,37 @@ def developer_test_notification_pdf(request):
     with sudo():
         notifications = list(Notification.objects.all())
     return render(request, 'developer/render_test_notification_pdf.html', {'notifications': notifications})
+
+def test_notification_answer_pdf_html(request, notification_answer_pk=None):
+    with sudo():
+        notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
+    notification = notification_answer.notification
+    bootstrap.templates()
+    tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+    html = tpl.render(Context({
+        'notification': notification,
+        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+        'answer': notification_answer
+    }))
+    return HttpResponse(html)
+
+def test_render_notification_answer_pdf(request, notification_answer_pk=None):
+    with sudo():
+        notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
+    notification = notification_answer.notification
+    bootstrap.templates()
+    tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+    pdf = render_pdf_context(tpl, {
+        'notification': notification,
+        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+        'answer': notification_answer
+    })
+    return pdf_response(pdf, filename='test.pdf')
+
+def developer_test_notification_answer_pdf(request):
+    with sudo():
+        notification_answers = list(NotificationAnswer.objects.all())
+    return render(request, 'developer/render_test_notification_answer_pdf.html', {'notification_answers': notification_answers})
 
 def developer_translations(request):
     from django.contrib.auth.models import Group

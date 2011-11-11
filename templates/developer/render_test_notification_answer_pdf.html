@@ -1,0 +1,15 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block content %}
+    <ul>
+    {% for notification_answer in notification_answers %}
+        <li>
+            {{ notification_answer.notification }}
+            <a href="{% url ecs.core.views.test_notification_answer_pdf_html notification_answer_pk=notification_answer.pk %}">HTML</a>
+            | <a href="{% url ecs.core.views.test_render_notification_answer_pdf notification_answer_pk=notification_answer.pk %}">PDF</a>
+            <div style="height:10px;"></div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

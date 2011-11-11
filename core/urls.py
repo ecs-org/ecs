@@ -58,6 +58,9 @@ urlpatterns = patterns(
     url(r'^developer/test_notification_pdf/$', 'ecs.core.views.developer_test_notification_pdf'),
     url(r'^developer/test_notification_pdf_html/(?P<notification_pk>\d+)/$', 'ecs.core.views.test_notification_pdf_html'),
     url(r'^developer/test_render_notification_pdf/(?P<notification_pk>\d+)/$', 'ecs.core.views.test_render_notification_pdf'),
+    url(r'^developer/test_notification_answer_pdf/$', 'ecs.core.views.developer_test_notification_answer_pdf'),
+    url(r'^developer/test_notification_answer_pdf_html/(?P<notification_answer_pk>\d+)/$', 'ecs.core.views.test_notification_answer_pdf_html'),
+    url(r'^developer/test_render_notification_answer_pdf/(?P<notification_answer_pk>\d+)/$', 'ecs.core.views.test_render_notification_answer_pdf'),
     url(r'^developer/translations/$', 'ecs.core.views.developer_translations'),
 )
 

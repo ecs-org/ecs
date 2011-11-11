@@ -14,5 +14,6 @@ from ecs.core.views.fieldhistory import field_history
 from ecs.core.views.developer import (developer_test_pdf, test_pdf_html, test_render_pdf,
     developer_test_checklist_pdf, test_checklist_pdf_html, test_render_checklist_pdf,
     developer_test_notification_pdf, test_notification_pdf_html, test_render_notification_pdf,
+    developer_test_notification_answer_pdf, test_notification_answer_pdf_html, test_render_notification_answer_pdf,
     developer_translations,
 )

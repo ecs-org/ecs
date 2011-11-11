@@ -96,9 +96,10 @@
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">
              <li><a href="/sentry">{% trans "Sentry ErrorLog" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_pdf %}">{% trans "Render Submission PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_checklist_pdf %}">{% trans "Render Checklist PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_notification_pdf %}">{% trans "Render Notification PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_pdf %}">{% trans "Submission PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_checklist_pdf %}">{% trans "Checklist PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_notification_pdf %}">{% trans "Notification PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_notification_answer_pdf %}">{% trans "Notification Answer PDF" %}</a></li>
              <li><a href="{% url ecs.core.views.developer_translations %}">{% trans "Translations" %}</a></li>
         </ul>
       </li>
