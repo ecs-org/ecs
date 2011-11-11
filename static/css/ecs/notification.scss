@@ -1,3 +1,5 @@
+@import "ecs/variables.scss";
+
 /* notifications */
 
 .notification { 
@@ -37,13 +39,15 @@
     }
 }
 
+.form_main.readonly .notification_list,
 .notification_list {
     ol {
       list-style: none;
     }
     li {
+      float: none;
       padding: 5px;
-      margin-bottom: 10px;
+      margin-bottom: 0;
     }
     .rejected > a{
       color: #f00 !important;

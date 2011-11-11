@@ -193,9 +193,16 @@
 
 /* Communication Thread */
 
-#communication_tab .messages li {
-  padding: 2px 5px;
+#communication_tab .messages {
+  margin-top: 10px;
+
+    li {
+      float: none;
+      padding: 5px;
+      margin-bottom: 0;
+    }  
 }
+
 ul.thread {
   list-style-type: none;
   margin: 20px 0px !important;

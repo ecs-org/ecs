@@ -139,14 +139,14 @@
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}
-            <ul class="notification_list">
+            <ol class="notification_list">
                 {% for notification in open_notifications %}
                     <li>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% else %}
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
@@ -157,7 +157,7 @@
     <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}</h3>
         {% if answered_notifications %}
-            <ul class="notification_list">
+            <ol class="notification_list">
                 {% for notification in answered_notifications %}
                     <li{% if notification.is_rejected %} class="rejected"{% endif %}>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
@@ -165,7 +165,7 @@
                         {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}

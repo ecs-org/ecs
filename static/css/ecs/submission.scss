@@ -2,12 +2,14 @@
 
 #content div.submission_list #submission_list_filter {
   display: block;
-  border-bottom: 1px solid $wheatbrown;
 }
 #content div.submission_list ul.submission_list_choose {
-  display: inline;
-  line-height: 24px;
+  display: inline-block;
   border-bottom: none;
+  margin: 0 5px 5px 0;
+  background: $middle-light-brown-bg;
+  border-radius: 3px;
+  padding: 3px 3px 0 8px;
 }
 
 /* submission widget */

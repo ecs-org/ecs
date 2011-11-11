@@ -134,9 +134,26 @@
 #task_list_filter {
     margin-bottom: 10px;
 }
+
+#task_main.task_full .task_list_choose {
+  display: inline-block;
+  border-bottom: none;
+  margin: 0 5px 5px 0;
+  background: $middle-light-brown-bg;
+  border-radius: 3px;
+  padding: 5px 3px 0 8px;
+  
+    &.task_select {
+      display: block;
+    }
+    .task_sorting {
+      padding: 4px 6px 2px 8px;
+    }
+}
+
 .task_list_choose {
     border-bottom: 1px solid $wheatbrown;
-
+    
     label {
         display: inline-block;
         margin: 0 5px 5px 0;

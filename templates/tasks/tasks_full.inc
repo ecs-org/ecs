@@ -22,7 +22,7 @@
         <li>{{ filterform.expedited }} <label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
         <li>{{ filterform.other }} <label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
-    <div class="task_list_choose">
+    <div class="task_list_choose task_select">
         <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
     </div>
     <div class="task_bookmark">
