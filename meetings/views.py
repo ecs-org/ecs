@@ -206,7 +206,7 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)
-    constraint_formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.all())
+    constraint_formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
     if constraint_formset.is_valid():
         for constraint in constraint_formset.save(commit=False):
             constraint.meeting = meeting
