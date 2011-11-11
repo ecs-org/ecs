@@ -4,7 +4,7 @@
     
     {% with notification.progressreportnotification as notification %}
         {{ block.super }}
-        <p>Votumsverlängerungsantrag <b>Ja</b></p>
-        <p>Die Studie läuft noch bis voraussichtlich <b>{{ notification.runs_till|date:'d.m.Y' }}</b></p>
+        <p>Votumsverlängerungsantrag: Ja</p>
+        <p>Die Studie läuft noch bis voraussichtlich: {{ notification.runs_till|date:'d.m.Y' }}</p>
     {% endwith %}
 {% endblock %}
