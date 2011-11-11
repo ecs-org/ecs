@@ -1,0 +1,23 @@
+{% load core i18n %}
+<html>
+<body>
+{% block content %}
+    <p>
+{% blocktrans with recipient as recipient %}
+Sehr geehrte/r {{ recipient }},
+{% endblocktrans %}
+    </p>
+
+    <p>
+        anbei senden wir Ihnen das Protokoll für die Sitzung vom {{ meeting.start|date:'d.m.Y' }}.
+    </p>
+
+    <p>
+{% blocktrans%}
+Mit freundlichen Grüßen,
+    Ethik-Kommission der MedUni Wien
+{% endblocktrans %}
+    </p>
+{% endblock %}
+</body>
+</html>
