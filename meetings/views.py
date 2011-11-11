@@ -467,8 +467,24 @@ def send_agenda_to_board(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def send_protocol(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    protocol_pdf = meeting.get_protocol_pdf(request)
+    protocol_filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
+    attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)
+    
+    def _send_to(user):
+        htmlmail = unicode(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
+        deliver(user.email, subject=_('Meeting Protocol'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+
+    for user in User.objects.filter(meeting_participations__entry__meeting=meeting).distinct():
+        _send_to(user)
+
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS):
-        pass
+        _send_to(user)
+
+    tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False)
+    for top in tops_with_primary_investigator:
+        _send_to(top.submission.primary_investigator.user)
+
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
 
@@ -476,41 +492,10 @@ def send_protocol(request, meeting_pk=None):
 @user_flag_required('is_internal')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-%s.pdf' % (
-        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('protocol'))
-    )
-    
-    timetable_entries = meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
-    tops = []
-    for top in timetable_entries:
-        try:
-            vote = Vote.objects.filter(top=top)[0]
-        except IndexError:
-            vote = None
-        tops.append((top, vote,))
-
-    b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
-    submission_forms = [x.submission_form for x in b2_votes]
-    b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
-
-    rts = list(meeting.retrospective_thesis_entries.all())
-    es = list(meeting.expedited_entries.all())
-    ls = list(meeting.localec_entries.all())
-    additional_tops = []
-    for i, top in enumerate(rts + es + ls, len(tops) + 1):
-        try:
-            vote = Vote.objects.filter(top=top)[0]
-        except IndexError:
-            vote = None
-        additional_tops.append((i, top, vote,))
-
-    pdf = render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
-        'meeting': meeting,
-        'tops': tops,
-        'b1ized': b1ized,
-        'additional_tops': additional_tops,
-    })
+    filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
+    pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
+
 
 @readonly()
 @user_flag_required('is_internal')
