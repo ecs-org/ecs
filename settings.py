@@ -333,6 +333,7 @@ MS_SERVER = {
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
@@ -497,7 +498,6 @@ DEVSERVER_MODULES = (
 if platform.node() == "ecsdev.ep3.at":
     from ecsdev_settings import *
 
-
 # use different settings if local_settings.py exists
 try: 
     from local_settings import *
@@ -555,9 +555,11 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
-    
+
+
 if any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
+    
     logging.basicConfig(
             level = logging.DEBUG,
             format = '%(asctime)s %(levelname)s %(message)s',

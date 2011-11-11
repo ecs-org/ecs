@@ -13,6 +13,7 @@ from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 from ecs.utils.viewutils import render_pdf
 from ecs.tasks.models import TaskType
+from ecs.votes.models import Vote
 
 
 class TimetableMetrics(object):
@@ -366,6 +367,38 @@ class Meeting(models.Model):
         return render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
             'meeting': self,
             'additional_tops': enumerate(rts + es + ls, len(self)+1),
+        })
+        
+    def get_protocol_pdf(self, request):
+        timetable_entries = self.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
+        tops = []
+        for top in timetable_entries:
+            try:
+                vote = Vote.objects.filter(top=top)[0]
+            except IndexError:
+                vote = None
+            tops.append((top, vote,))
+
+        b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
+        submission_forms = [x.submission_form for x in b2_votes]
+        b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
+
+        rts = list(self.retrospective_thesis_entries.all())
+        es = list(self.expedited_entries.all())
+        ls = list(self.localec_entries.all())
+        additional_tops = []
+        for i, top in enumerate(rts + es + ls, len(tops) + 1):
+            try:
+                vote = Vote.objects.filter(top=top)[0]
+            except IndexError:
+                vote = None
+            additional_tops.append((i, top, vote,))
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
+            'meeting': self,
+            'tops': tops,
+            'b1ized': b1ized,
+            'additional_tops': additional_tops,
         })
 
     def _get_timeframe_for_user(self, user):
