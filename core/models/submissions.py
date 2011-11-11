@@ -687,7 +687,6 @@ def _post_submission_form_save(**kwargs):
             submission.invite_primary_investigator_to_meeting = True
         if new_sf.is_thesis:
             submission.remission = True
-        if new_sf.project_type_retrospective and new_sf.is_thesis:
             submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         elif new_sf.is_categorized_multicentric_and_local:
             submission.workflow_lane = SUBMISSION_LANE_LOCALEC
