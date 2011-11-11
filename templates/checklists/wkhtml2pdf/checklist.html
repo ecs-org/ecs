@@ -16,33 +16,34 @@
             font-size: 110%;
         }
         .checklist .answer {
-            padding-left: 0.2cm;
+            padding-left: 0.1cm;
         }
         .checklist .comment {
             padding-top: 0.1cm;
             padding-left: 0.7cm;
             overflow: hidden;
             white-space: pre-wrap;
+            font-family: DejaSans;
         }
     </style>
 {% endblock %}
 
 {% block content %}
     {% include 'db/wkhtml2pdf/ec_head.inc' %}
-    <div class="center_bold">
+    <h1>
         {{ checklist.blueprint }} für {{ checklist.submission }}
         {% with checklist.submission as submission %}
         {% if submission %}
-            <br />für {{ submission|ec_number }} {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            <br>für {{ submission|ec_number }} {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% endif %}
         {% endwith %}
-    </div>
+    </h1>
 
     <ul class="checklist">
     {% for answer in checklist.answers.all %}
         <li class="entry">
             <span class="question"><span class="number">{{ answer.question.number }}.</span> {{ answer.question.text }}</span>
-            <span class="answer">{{ answer.answer|yes_no_unknown }}</span>
+            <span class="answer">- {{ answer.answer|yes_no_unknown }}</span>
             {% if answer.comment %}
                 <pre class="comment">{{ answer.comment }}</pre>
             {% endif %}

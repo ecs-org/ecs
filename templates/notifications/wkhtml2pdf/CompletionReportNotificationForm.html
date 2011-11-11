@@ -2,7 +2,7 @@
 {% block mainitem %}
     {% with notification.completionreportnotification as notification %}
         {{ block.super }}
-        <p>Die Studie wurde abgebrochen: <b>{{ notification.study_aborted|yesno:"Ja,Nein" }}</b></p>
-        <p>Datum der Beendigung: <b>{{ notification.completion_date|date:'d.m.Y' }}</b></p>
+        <p>Die Studie wurde abgebrochen: {{ notification.study_aborted|yesno:"Ja,Nein" }}</p>
+        <p>Datum der Beendigung: {{ notification.completion_date|date:'d.m.Y' }}</p>
     {% endwith %}
 {% endblock %}
