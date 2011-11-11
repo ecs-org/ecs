@@ -100,7 +100,7 @@ def open_tasks(request, meeting_pk=None):
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    next_tops = meeting.timetable_entries.filter(vote__isnull=True).order_by('timetable_index')[:3]
+    next_tops = meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index')[:3]
 
     tops_without_votes = {}
     for top in meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index'):
@@ -112,7 +112,7 @@ def tops(request, meeting_pk=None):
         else:
             tops_without_votes[bms] = [top]
 
-    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True).order_by('timetable_index')
+    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True, submission__isnull=False).order_by('timetable_index')
 
     return render(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,
