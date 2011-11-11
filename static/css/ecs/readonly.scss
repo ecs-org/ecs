@@ -179,13 +179,29 @@
         cursor: pointer;
     }
     
-    .version{
-        td{
+    .version {
+        td {
             vertical-align: middle;
         }
-        a{
+        a {
             vertical-align: top;
         }
+    }
+    .authorize {
+        input[type="submit"] {
+           margin-left: 10px; 
+        }
+        
+        ol {
+            margin: 0 0 0 10px;
+            
+            li label {
+                width: 60px;
+            }
+        }
+    }
+    .ecs-Autocomplete {
+        float: left;
     }
 }
 
