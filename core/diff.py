@@ -185,10 +185,17 @@ class ModelDiffer(object):
         self.node_map = node_map or {}
 
     def get_field_names(self):
-        names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
+        names = paper_forms.get_field_names_for_model(self.model)
+        for f in self.model._meta.fields:
+            if not f.name in names:
+                names.append(f.name)
         if self.fields:
-            names = names.intersection(self.fields)
-        return names.union(self.follow)
+            names = [n for n in names if n in self.fields]
+        if self.follow:
+            names += self.follow
+        if self.exclude:
+            names = [n for n in names if not n in self.exclude]
+        return names
 
     def diff_field(self, name, old, new, **kwargs):
         old_val = getattr(old, name, None)
