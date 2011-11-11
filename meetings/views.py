@@ -103,7 +103,7 @@ def tops(request, meeting_pk=None):
     next_tops = meeting.timetable_entries.filter(vote__isnull=True).order_by('timetable_index')[:3]
 
     tops_without_votes = {}
-    for top in meeting.timetable_entries.filter(vote__isnull=True).order_by('timetable_index'):
+    for top in meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index'):
         medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
             category__in=top.submission.medical_categories.values('pk').query)
         bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).distinct())
