@@ -15,5 +15,6 @@ from ecs.core.views.developer import (developer_test_pdf, test_pdf_html, test_re
     developer_test_checklist_pdf, test_checklist_pdf_html, test_render_checklist_pdf,
     developer_test_notification_pdf, test_notification_pdf_html, test_render_notification_pdf,
     developer_test_notification_answer_pdf, test_notification_answer_pdf_html, test_render_notification_answer_pdf,
+    developer_test_vote_pdf, test_vote_pdf_html, test_render_vote_pdf,
     developer_translations,
 )
