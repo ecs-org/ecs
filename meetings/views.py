@@ -550,11 +550,13 @@ def meeting_details(request, meeting_pk=None, active=None):
     for cat in required_categories:
         AssignedMedicalCategory.objects.get_or_create(meeting=meeting, category=cat)
     expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting))
+    experts_saved = False
 
     if request.method == 'POST' and expert_formset.is_valid():
         submitted_form = request.POST.get('submitted_form')
         if submitted_form == 'expert_formset' and expert_formset.is_valid():
             active = 'experts'
+            experts_saved = True
             for amc in expert_formset.save(commit=False):
                 previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
                 amc.save()
@@ -606,6 +608,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'b3_not_examined_submissions': meeting.submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
         'meeting': meeting,
         'expert_formset': expert_formset,
+        'experts_saved': experts_saved,
         'votes_list': votes_list,
         'active': active,
     })

@@ -83,6 +83,10 @@
             window.addEvent('resize', updateHeaderHeight);
             $('header').setStyle('height', 'auto');
             updateHeaderHeight();
+
+            {% if experts_saved %}
+                ecs.messages.alert('{% trans 'Experts assignment saved' %}', '{% trans 'The expert assignment has been saved.' %}');
+            {% endif %}
         });
     </script>
 {% endblock %}
