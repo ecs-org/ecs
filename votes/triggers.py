@@ -8,7 +8,7 @@ from ecs.votes import signals
 @connect(signals.on_vote_publication)
 def on_vote_published(sender, **kwargs):
     vote = kwargs['vote']
-    if vote.submission_form:
+    if vote.submission_form and not vote.submission_form.is_categorized_multicentric_and_local:
         parties = vote.submission_form.get_presenting_parties()
         parties.send_message(_('Publication of {vote}').format(vote=unicode(vote)), 'submissions/vote_publish.txt',
             {'vote': vote}, submission=vote.submission_form.submission, cc_groups=settings.ECS_VOTE_RECEIVER_GROUPS)
