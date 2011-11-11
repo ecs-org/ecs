@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-11 18:49+0100\n"
+"POT-Creation-Date: 2011-11-11 22:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2346,33 +2346,43 @@ msgstr "Sentry Fehlerprotokoll"
 
 #: templates/core.html:99
 #, fuzzy
-msgid "Render Submission PDF"
-msgstr "Sitzung verlegen"
+msgid "Submission PDF"
+msgstr "Einreichung"
 
 #: templates/core.html:100
 #, fuzzy
-msgid "Render Checklist PDF"
+msgid "Checklist PDF"
 msgstr "Formale Prüfung Diplomarbeit"
 
 #: templates/core.html:101
 #, fuzzy
-msgid "Render Notification PDF"
-msgstr "Offene Meldungen"
+msgid "Notification PDF"
+msgstr "Meldungen"
 
 #: templates/core.html:102
+#, fuzzy
+msgid "Notification Answer PDF"
+msgstr "Meldungsantwort"
+
+#: templates/core.html:103
+#, fuzzy
+msgid "Vote PDF"
+msgstr "Voten"
+
+#: templates/core.html:104
 #, fuzzy
 msgid "Translations"
 msgstr "Organisation"
 
-#: templates/core.html:108
+#: templates/core.html:110
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:129
+#: templates/core.html:131
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
 
-#: templates/core.html:137
+#: templates/core.html:139
 #, python-format
 msgid ""
 "\n"
@@ -2385,15 +2395,15 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:262
+#: templates/core.html:264
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:262
+#: templates/core.html:264
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:278
+#: templates/core.html:280
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -2519,14 +2529,10 @@ msgid "New Message"
 msgstr "Neue Nachricht"
 
 #: templates/communication/send.html:15 templates/communication/send.html:60
-#: templates/communication/thread.html:19
-#: templates/communication/thread.html:58
 msgid "Back to the communication overview"
 msgstr "Zurück zur Nachrichtenübersicht"
 
 #: templates/communication/send.html:17 templates/communication/send.html:62
-#: templates/communication/thread.html:21
-#: templates/communication/thread.html:60
 #: templates/submissions/diff/diff.html:18
 #: templates/submissions/diff/diff.html:33
 msgid "Back to the Study"
@@ -2552,6 +2558,16 @@ msgstr "sortieren"
 #: templates/communication/sort_options.inc:7
 msgid "Old/New"
 msgstr "Alt/Neu"
+
+#: templates/communication/thread.html:19
+#: templates/communication/thread.html:58
+msgid "To the communication overview"
+msgstr "Zur Nachrichtenübersicht"
+
+#: templates/communication/thread.html:21
+#: templates/communication/thread.html:60
+msgid "To the Study"
+msgstr "Zur Studie"
 
 #: templates/communication/thread.html:28
 #: templates/communication/widgets/overview.inc:11
@@ -4304,6 +4320,18 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Render Submission PDF"
+#~ msgstr "Sitzung verlegen"
+
+#, fuzzy
+#~ msgid "Render Checklist PDF"
+#~ msgstr "Formale Prüfung Diplomarbeit"
+
+#, fuzzy
+#~ msgid "Render Notification PDF"
+#~ msgstr "Offene Meldungen"
 
 #~ msgid "sponsor_required_for_next_meeting"
 #~ msgstr "Anwesenheit des Sponsors für die Sitzung erforderlich"
