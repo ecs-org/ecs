@@ -591,8 +591,8 @@ class Participation(models.Model):
     objects = AuthorizationManager()
 
 WEIGHT_CHOICES = (
-    (0.5, _('unfavorable')),
     (1.0, _('impossible')),
+    (0.5, _('unfavorable')),
 )
 
 class Constraint(models.Model):
