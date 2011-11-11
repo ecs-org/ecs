@@ -5,6 +5,7 @@ from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
@@ -219,6 +220,8 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         }
 
 class PresenterChangeForm(forms.ModelForm):
+    presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
+
     class Meta:
         model = SubmissionForm
         fields = ('presenter',)
@@ -232,6 +235,8 @@ class PresenterChangeForm(forms.ModelForm):
             self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class SusarPresenterChangeForm(forms.ModelForm):
+    susar_presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
+
     class Meta:
         model = SubmissionForm
         fields = ('susar_presenter',)
