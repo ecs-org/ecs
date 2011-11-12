@@ -4,7 +4,6 @@ from django.core.management import call_command
 from ecs import bootstrap
 from ecs import workflow
 
-
 @bootstrap.register()
 def workflow_sync():
     workflow.autodiscover()
@@ -16,3 +15,6 @@ def create_settings_dirs():
         if not os.path.isdir(workdir):
             os.makedirs(workdir)
 
+@bootstrap.register()
+def compilemessages():
+    call_command('compilemessages')

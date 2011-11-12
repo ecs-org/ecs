@@ -300,6 +300,8 @@ django-test-utils:inst:all:pypi:django-test-utils
 # packages needed or nice to have for development
 developer_packages=  """
 # windows needed for manage.py makemessages and compilemessages
+gettext_runtime:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-0.17.zip:custom:intl.dll
+gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-0.17.zip:custom:xgettext.exe
 #http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
 #http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
 
@@ -400,6 +402,24 @@ def custom_install_tomcat_other_user(pkgline, filename):
         shutil.rmtree(temp_dir)
     
     return result
+
+def custom_check_gettext_runtime(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
+    
+def custom_install_gettext_runtime(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+    return True
+
+def custom_check_gettext_tools(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
+    
+def custom_install_gettext_tools(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+    return True
 
 def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
