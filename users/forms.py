@@ -130,7 +130,7 @@ class ProfileForm(TranslatedModelForm):
 
 class AdministrationFilterForm(forms.Form):
     approval = forms.ChoiceField(required=False, choices=(
-        ('both', _(u'Both')),
+        ('both', _(u'Approved/Not Approved')),
         ('yes', _(u'Approved')),
         ('no', _(u'Not Approved')),
     ))

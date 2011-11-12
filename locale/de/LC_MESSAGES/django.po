@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-12 14:36+0100\n"
+"POT-Creation-Date: 2011-11-12 14:42+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4088,7 +4088,11 @@ msgstr "Sozialversicherungs-Nr."
 msgid "Forwarding of unread messages"
 msgstr "Weiterleitung von ungelesenen Nachrichten"
 
-#: users/forms.py:133 users/forms.py:138
+#: users/forms.py:133
+msgid "Approved/Not Approved"
+msgstr "Bestätigt/Nicht Bestätigt"
+
+#: users/forms.py:138
 msgid "Both"
 msgstr "Beide"
 
