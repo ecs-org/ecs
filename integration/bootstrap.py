@@ -17,4 +17,5 @@ def create_settings_dirs():
 
 @bootstrap.register()
 def compilemessages():
-    call_command('compilemessages')
+    #call_command('compilemessages')
+    pass # disabled for now, because the gettext install for windows is not right yet
