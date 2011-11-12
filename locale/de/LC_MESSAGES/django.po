@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-11 23:25+0100\n"
+"POT-Creation-Date: 2011-11-12 14:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -338,8 +338,8 @@ msgstr "Empfehlungsgutachten"
 msgid "Local EC Recommendation Review"
 msgstr "Empfehlungsgutachten"
 
-#: core/diff.py:151 core/diff.py:214 core/diff.py:215 core/diff.py:251
-#: core/diff.py:252
+#: core/diff.py:151 core/diff.py:221 core/diff.py:222 core/diff.py:258
+#: core/diff.py:259
 msgid "No Information"
 msgstr "Keine Angaben"
 
@@ -353,175 +353,175 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:289
+#: core/diff.py:296
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:290
+#: core/diff.py:297
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:291
+#: core/diff.py:298
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:293
+#: core/diff.py:300
 msgid ""
 "Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
 "Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:294
+#: core/diff.py:301
 msgid "Dokumente"
 msgstr ""
 
-#: core/diff.py:302
+#: core/diff.py:309
 msgid "Mitarbeiter"
 msgstr ""
 
-#: core/paper_forms.py:40
+#: core/paper_forms.py:41
 msgid "studies"
 msgstr "Studien"
 
-#: core/paper_forms.py:41
+#: core/paper_forms.py:42
 msgid "Statement/Conclusion/Notice"
 msgstr "Begründung/Stellungnahme/Mitteilung"
 
-#: core/paper_forms.py:45 notifications/models.py:159
+#: core/paper_forms.py:46 notifications/models.py:159
 #: templates/notifications/view/SafetyNotificationForm.html:5
 msgid "Type"
 msgstr "Typ"
 
-#: core/paper_forms.py:49
+#: core/paper_forms.py:50
 msgid "The study has been started"
 msgstr "Die Studie wurde begonnen"
 
-#: core/paper_forms.py:50
+#: core/paper_forms.py:51
 msgid "Why hasn't the study been started?"
 msgstr "Warum wurde die Studie nicht begonnen?"
 
-#: core/paper_forms.py:51
+#: core/paper_forms.py:52
 msgid "Number of recruited patients / subjects"
 msgstr "Zahl der rekrutierten Patient/inn/en / Proband/inn/en"
 
-#: core/paper_forms.py:52
+#: core/paper_forms.py:53
 msgid "Number of patients / subjects who completed the study"
 msgstr "Zahl der Patient/inn/en / Proband/inn/en, die die Studie beendet haben"
 
-#: core/paper_forms.py:53
+#: core/paper_forms.py:54
 msgid "Number of study discontinuations"
 msgstr "Zahl der Studienabbrüche"
 
-#: core/paper_forms.py:54
+#: core/paper_forms.py:55
 msgid "Number of SAEs"
 msgstr "Zahl der SAEs"
 
-#: core/paper_forms.py:55
+#: core/paper_forms.py:56
 msgid "Number of SUSARs"
 msgstr "Zahl der SUSARs"
 
-#: core/paper_forms.py:59
+#: core/paper_forms.py:60
 msgid "The study was aborted"
 msgstr "Die Studie wurde abgebrochen"
 
-#: core/paper_forms.py:60
+#: core/paper_forms.py:61
 msgid "Date of completion"
 msgstr "Datum der Beendigung"
 
-#: core/paper_forms.py:64
+#: core/paper_forms.py:65
 msgid "Estimated end date"
 msgstr "Voraussichtliches Enddatum"
 
-#: core/paper_forms.py:68
+#: core/paper_forms.py:69
 msgid "PDF-file"
 msgstr "PDF-Datei"
 
-#: core/paper_forms.py:69
+#: core/paper_forms.py:70
 msgid "file name"
 msgstr "Dateiname"
 
-#: core/paper_forms.py:70
+#: core/paper_forms.py:71
 msgid "version"
 msgstr "Version"
 
-#: core/paper_forms.py:71
+#: core/paper_forms.py:72
 msgid "date of document creation"
 msgstr "Datum der Dokumenterstellung"
 
-#: core/paper_forms.py:72 core/paper_forms.py:83
+#: core/paper_forms.py:73 core/paper_forms.py:84
 msgid "type"
 msgstr "Typ"
 
-#: core/paper_forms.py:73
+#: core/paper_forms.py:74
 msgid "replace document"
 msgstr "Ersetze Dokument"
 
-#: core/paper_forms.py:77
+#: core/paper_forms.py:78
 msgid "name"
 msgstr "Name"
 
-#: core/paper_forms.py:78
+#: core/paper_forms.py:79
 msgid "investigator"
 msgstr "Prüfarzt"
 
-#: core/paper_forms.py:82
+#: core/paper_forms.py:83
 msgid "study reference"
 msgstr "Studienbezug"
 
-#: core/paper_forms.py:84
+#: core/paper_forms.py:85
 msgid "number/dose"
 msgstr "Anzahl/Dosis"
 
-#: core/paper_forms.py:85 core/paper_forms.py:181
+#: core/paper_forms.py:86 core/paper_forms.py:181
 msgid "period"
 msgstr "Zeitraum"
 
-#: core/paper_forms.py:86
+#: core/paper_forms.py:87
 msgid "total"
 msgstr "Insgesamt"
 
-#: core/paper_forms.py:90
+#: core/paper_forms.py:91
 msgid "Generic Name"
 msgstr "Generic Name"
 
-#: core/paper_forms.py:91
+#: core/paper_forms.py:92
 msgid "dosage Form"
 msgstr "Darreichungsform"
 
-#: core/paper_forms.py:92
+#: core/paper_forms.py:93
 msgid "dosage"
 msgstr "Dosis"
 
-#: core/paper_forms.py:98
+#: core/paper_forms.py:99
 msgid "project title"
 msgstr "Projekttitel"
 
-#: core/paper_forms.py:98 core/tests/submission_diffs.py:36
+#: core/paper_forms.py:99 core/tests/submission_diffs.py:36
 #: core/tests/submission_diffs.py:37
 msgid "project title (english)"
 msgstr "Projekttitel (englisch)"
 
-#: core/paper_forms.py:99
+#: core/paper_forms.py:100
 msgid "protocol number/-name"
 msgstr "Protokollnummer/-bezeichnung"
 
-#: core/paper_forms.py:100
+#: core/paper_forms.py:101
 msgid "date of protocol"
 msgstr "Datum des Protokolls"
 
-#: core/paper_forms.py:101
+#: core/paper_forms.py:102
 msgid "EudraCT-Nr."
 msgstr "EudraCT-Nr."
 
-#: core/paper_forms.py:102
+#: core/paper_forms.py:103
 msgid "ISRCTN-Nr."
 msgstr "ISRCTN-Nr."
 
-#: core/paper_forms.py:103
+#: core/paper_forms.py:104
 msgid "external reviewer suggestions"
 msgstr "Vorschläge für Gutachter (Nicht aus dem AKH Wien)"
 
-#: core/paper_forms.py:103
+#: core/paper_forms.py:104
 msgid ""
 "for graduate work or retrospective or non-interventional studies specify "
 "\"not applicable\""
@@ -529,62 +529,58 @@ msgstr ""
 "Bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
 "\"nicht zutreffend\" angeben."
 
-#: core/paper_forms.py:105
+#: core/paper_forms.py:106
 msgid "sponsor name"
 msgstr "Firma/Organisation"
 
-#: core/paper_forms.py:106 core/paper_forms.py:118
+#: core/paper_forms.py:107 core/paper_forms.py:119
 msgid "sex of contact person"
 msgstr "Anrede der Kontaktperson"
 
-#: core/paper_forms.py:107 core/paper_forms.py:119
+#: core/paper_forms.py:108 core/paper_forms.py:120
 msgid "title of contact person"
 msgstr "Titel der Kontaktperson"
 
-#: core/paper_forms.py:108 core/paper_forms.py:120
+#: core/paper_forms.py:109 core/paper_forms.py:121
 msgid "first name of contact person"
 msgstr "Vorname der Kontaktperson"
 
-#: core/paper_forms.py:109 core/paper_forms.py:121
+#: core/paper_forms.py:110 core/paper_forms.py:122
 msgid "last name of contact person"
 msgstr "Nachname der Kontaktperson"
 
-#: core/paper_forms.py:110 core/paper_forms.py:122 core/paper_forms.py:199
+#: core/paper_forms.py:111 core/paper_forms.py:123 core/paper_forms.py:199
 msgid "address"
 msgstr "Adresse"
 
-#: core/paper_forms.py:111 core/paper_forms.py:123
+#: core/paper_forms.py:112 core/paper_forms.py:124
 msgid "postal code"
 msgstr "Postleitzahl"
 
-#: core/paper_forms.py:112 core/paper_forms.py:124
+#: core/paper_forms.py:113 core/paper_forms.py:125
 msgid "city"
 msgstr "Stadt"
 
-#: core/paper_forms.py:113 core/paper_forms.py:125
+#: core/paper_forms.py:114 core/paper_forms.py:126
 msgid "telephone"
 msgstr "Telefon"
 
-#: core/paper_forms.py:114 core/paper_forms.py:126
+#: core/paper_forms.py:115 core/paper_forms.py:127
 msgid "fax"
 msgstr "FAX"
 
-#: core/paper_forms.py:115 core/paper_forms.py:127 core/paper_forms.py:283
+#: core/paper_forms.py:116 core/paper_forms.py:128 core/paper_forms.py:283
 #: core/paper_forms.py:308
 msgid "e-mail"
 msgstr "E-Mail"
 
-#: core/paper_forms.py:116 core/paper_forms.py:129
-msgid "VAT Nr"
-msgstr "MWST Nr"
+#: core/paper_forms.py:117 core/paper_forms.py:129
+msgid "UID-Number"
+msgstr "UID-Nummer"
 
-#: core/paper_forms.py:117
+#: core/paper_forms.py:118
 msgid "invoice name"
 msgstr "Firma/Organisation"
-
-#: core/paper_forms.py:128
-msgid "UID-Nummer"
-msgstr "UID-Nummer"
 
 #: core/paper_forms.py:132
 msgid "Clinical trial of an unregistered drug"
@@ -4328,6 +4324,9 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "VAT Nr"
+#~ msgstr "MWST Nr"
 
 #~ msgid "protocol"
 #~ msgstr "Protokoll"

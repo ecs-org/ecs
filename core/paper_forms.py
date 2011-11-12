@@ -114,7 +114,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.4', 'sponsor_phone', _(u'telephone')),
     FieldInfo('1.5.5', 'sponsor_fax', _(u'fax')),
     FieldInfo('1.5.6', 'sponsor_email', _(u'e-mail')),
-    FieldInfo(None, 'sponsor_uid', None, short_label=_(u'VAT Nr')),
+    FieldInfo('1.5.7', 'sponsor_uid', _(u'UID-Number')),
     FieldInfo('1.5.1', 'invoice_name', _(u'invoice name')),
     FieldInfo('1.5.3', 'invoice_contact_gender', _(u'sex of contact person')),
     FieldInfo('1.5.3', 'invoice_contact_title', _(u'title of contact person')),
@@ -126,8 +126,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('1.5.4', 'invoice_phone', _(u'telephone')),
     FieldInfo('1.5.5', 'invoice_fax', _(u'fax')),
     FieldInfo('1.5.6', 'invoice_email', _(u'e-mail')),
-    FieldInfo('1.5.7', 'invoice_uid', _(u'UID-Nummer')),
-    FieldInfo(None, 'invoice_uid', None, short_label=_(u'VAT Nr')),
+    FieldInfo('1.5.7', 'invoice_uid', _(u'UID-Number')),
     # 2. Eckdaten der Studie
     # 2.1 Art des Projektes
     FieldInfo('2.1.1', 'project_type_non_reg_drug', _(u'Clinical trial of an unregistered drug')),
