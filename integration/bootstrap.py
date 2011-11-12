@@ -1,6 +1,9 @@
 import os
+import sys
+
 from django.conf import settings
 from django.core.management import call_command
+
 from ecs import bootstrap
 from ecs import workflow
 
@@ -17,5 +20,6 @@ def create_settings_dirs():
 
 @bootstrap.register()
 def compilemessages():
-    #call_command('compilemessages')
-    pass # disabled for now, because the gettext install for windows is not right yet
+    if sys.platform == 'win32': # path hack for gettext
+        os.environ['PATH'] = '{0}\\bin;{1}'.format(os.environ['VIRTUAL_ENV'], os.environ['PATH'])
+    call_command('compilemessages')
