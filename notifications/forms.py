@@ -26,7 +26,7 @@ class RejectableNotificationAnswerForm(NotificationAnswerForm):
 
 
 def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+    return SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(submission__presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
@@ -43,7 +43,7 @@ class SafetyNotificationForm(MultiNotificationForm):
 
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_vote(permanent=True, positive=True, published=True, valid=True).filter(submission__susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
         
     class Meta:
         model = SafetyNotification

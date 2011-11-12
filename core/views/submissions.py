@@ -83,7 +83,7 @@ def get_submission_formsets(data=None, instance=None, readonly=False):
 
 
 def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, presenter=request.user)
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, submission__presenter=request.user)
     if notification_type_pk:
         notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     else:
@@ -205,7 +205,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'temporary_auth_form': TemporaryAuthorizationForm(),
     }
 
-    if request.user not in (submission_form.presenter, submission_form.susar_presenter, submission_form.submitter, submission_form.sponsor):
+    if request.user not in (submission.presenter, submission.susar_presenter, submission_form.submitter, submission_form.sponsor):
         context['show_reviews'] = True
         context.update({
             'categorization_review_form': CategorizationReviewForm(instance=submission, readonly=True),
@@ -484,11 +484,6 @@ def create_submission_form(request):
             else:
                 submission = Submission.objects.create()
             submission_form.submission = submission
-            submission_form.presenter = request.user
-            if submission.current_submission_form:
-                submission_form.susar_presenter = submission.current_submission_form.susar_presenter
-            else:
-                submission_form.susar_presenter = request.user
             submission_form.is_notification_update = bool(notification_type)
             submission_form.is_transient = bool(notification_type)
             submission_form.save()
@@ -528,7 +523,7 @@ def create_submission_form(request):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
-        'submission': request.docstash.get('submission', None),
+        'submission': request.docstash.get('submin', None),
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
     }
@@ -540,20 +535,19 @@ def create_submission_form(request):
 def change_submission_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
     if profile.is_executive_board_member:
-        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
+        submission = get_object_or_404(Submission, pk=submission_pk)
     else:
-        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk, presenter=request.user)
+        submission = get_object_or_404(Submission, pk=submission_pk, presenter=request.user)
 
-    previous_presenter = submission_form.presenter
-    form = PresenterChangeForm(request.POST or None, instance=submission_form)
+    previous_presenter = submission.presenter
+    form = PresenterChangeForm(request.POST or None, instance=submission)
 
     if request.method == 'POST' and form.is_valid():
         new_presenter = form.cleaned_data['presenter']
-        submission_form.presenter = new_presenter
-        submission_form.save()
+        submission.presenter = new_presenter
+        submission.save()
         on_presenter_change.send(Submission, 
-            submission=submission_form.submission, 
-            form=submission_form, 
+            submission=submission, 
             old_presenter=previous_presenter, 
             new_presenter=new_presenter, 
             user=request.user,
@@ -561,28 +555,27 @@ def change_submission_presenter(request, submission_pk=None):
         if request.user == previous_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
-    return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission_form.submission})
+    return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission})
 
 
 def change_submission_susar_presenter(request, submission_pk=None):
     profile = request.user.get_profile()
     if profile.is_executive_board_member:
-        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk)
+        submission = get_object_or_404(Submission, pk=submission_pk)
     else:
-        submission_form = get_object_or_404(SubmissionForm, current_for_submission__pk=submission_pk, susar_presenter=request.user)
+        submission = get_object_or_404(Submission, pk=submission_pk, susar_presenter=request.user)
 
-    previous_susar_presenter = submission_form.susar_presenter
-    form = SusarPresenterChangeForm(request.POST or None, instance=submission_form)
+    previous_susar_presenter = submission.susar_presenter
+    form = SusarPresenterChangeForm(request.POST or None, instance=submission)
 
     if request.method == 'POST' and form.is_valid():
         new_susar_presenter = form.cleaned_data['susar_presenter']
-        submission_form.susar_presenter = new_susar_presenter
-        submission_form.save()
+        submission.susar_presenter = new_susar_presenter
+        submission.save()
         on_susar_presenter_change.send(Submission, 
-            submission=submission_form.submission, 
-            form=submission_form, 
+            submission=submission, 
             old_susar_presenter=previous_susar_presenter, 
             new_susar_presenter=new_susar_presenter, 
             user=request.user,
@@ -590,9 +583,9 @@ def change_submission_susar_presenter(request, submission_pk=None):
         if request.user == previous_susar_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
-    return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission_form.submission})
+    return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission})
 
 
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
@@ -610,12 +603,11 @@ def submission_pdf(request, submission_form_pk=None):
 @readonly()
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.current_submission_form
-    if not request.user.get_profile().is_internal and not request.user == submission_form.presenter:
+    if not request.user.get_profile().is_internal and not request.user == submission.presenter:
         raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
-        serializer.write(submission_form, tmpfile)
+        serializer.write(submission.current_submission_form, tmpfile)
         tmpfile.seek(0)
         response = HttpResponse(tmpfile.read(), mimetype='application/ecx')
     response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')

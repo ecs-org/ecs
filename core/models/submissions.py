@@ -50,6 +50,9 @@ class Submission(models.Model):
     is_transient = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
 
+    presenter = models.ForeignKey(User, related_name='presented_submissions')
+    susar_presenter = models.ForeignKey(User, related_name='susar_presented_submissions')
+
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions')
@@ -171,8 +174,12 @@ class Submission(models.Model):
             return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
         except IndexError:
             return None
-        
+
     def save(self, **kwargs):
+        if not self.presenter_id:
+            self.presenter = get_current_user()
+        if not self.susar_presenter_id:
+            self.susar_presenter = get_current_user()
         if not self.ec_number:
             with sudo():
                 year = datetime.now().year
@@ -258,7 +265,6 @@ class SubmissionForm(models.Model):
     external_reviewer_suggestions = models.TextField()
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
-    susar_presenter = models.ForeignKey(User, related_name='susar_presented_submission_forms')
     created_at = models.DateTimeField(auto_now_add=True)
     
     # denormalization
@@ -482,8 +488,6 @@ class SubmissionForm(models.Model):
     def save(self, **kwargs):
         if not self.presenter_id:
             self.presenter = get_current_user()
-        if not self.susar_presenter_id:
-            self.susar_presenter = get_current_user()
         for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name'), ('invoice', 'invoice_name')):
             email = getattr(self, '{0}_email'.format(x))
             if email:
@@ -542,15 +546,17 @@ class SubmissionForm(models.Model):
         self.submission.save()
         
     def allows_edits(self, user):
-        return self.presenter == user and self.is_current and not self.submission.has_permanent_vote and not self.submission.is_finished
+        s = self.submission
+        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished
         
     def allows_amendments(self, user):
-        if self.presenter == user and self.is_current and not self.submission.is_finished:
-            return self.submission.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
+        s = self.submission
+        if s.presenter == user and self.is_current and not s.is_finished:
+            return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
     def allows_export(self, user):
-        return user in (self.presenter, self.susar_presenter, self.submitter) or user.ecs_profile.is_internal
+        return user in (self.submitter, self.submission.presenter, self.submission.susar_presenter) or user.ecs_profile.is_internal
 
     @property
     def is_amg(self):

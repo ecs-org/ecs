@@ -6,8 +6,8 @@
 
 {% block headertitle %}
     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
-    {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
-    {% if submission_form.submission.is_finished %}
+    {{ submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    {% if submission.is_finished %}
         ({% trans 'finished' %})
     {% endif %}
 {% endblock %}
@@ -17,7 +17,7 @@
     {{ block.super }}
     <div class="header_actions">
         {% if submission_form|allows_edits_by:request.user %}
-            <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission_form.submission.pk %}">{% trans 'Edit' %}</a>
+            <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">{% trans 'Edit' %}</a>
         {% endif %}
         {% if submission_form|allows_amendments_by:request.user %}
             {% for notification_type in diff_notification_types %}
@@ -150,7 +150,7 @@
         {% else %}
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
-        {% if submission_form.presenter == request.user %}
+        {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
@@ -169,7 +169,7 @@
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
-        {% if submission_form.presenter == request.user %}
+        {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
@@ -237,22 +237,22 @@
     {% endfor %}
     
     <div id="communication_tab" class="tab">
-        <div class="widget" x-widget-url="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
+        <div class="widget" x-widget-url="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission.pk }}"></div>
+        <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission.pk }}"></div>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
     {% if user|has_flag:'is_internal' %}
         <div id="communication_overview_tab" class="tab">
-            <div class="widget" x-widget-url="{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.communication.views.communication_overview_widget submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
     {% if user.get_profile.has_explicit_workflow %}
         <div id="workflow_tab" class="tab">
-            <div class="widget" x-widget-url="{% url ecs.tasks.views.my_tasks submission_pk=submission_form.submission.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.tasks.views.my_tasks submission_pk=submission.pk %}"></div>
         </div>
         {% if user|has_flag:'is_internal' %}
             <div id="workflow_log" class="tab">
-                <div class="widget" x-widget-url="{% url ecs.tasks.views.task_backlog submission_pk=submission_form.submission.pk %}"></div>
+                <div class="widget" x-widget-url="{% url ecs.tasks.views.task_backlog submission_pk=submission.pk %}"></div>
             </div>
         {% endif %}
     {% endif %}

@@ -223,13 +223,13 @@ class PresenterChangeForm(forms.ModelForm):
     presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
 
     class Meta:
-        model = SubmissionForm
+        model = Submission
         fields = ('presenter',)
 
     def __init__(self, *args, **kwargs):
         super(PresenterChangeForm, self).__init__(*args, **kwargs)
         profile = get_current_user().get_profile()
-        if not profile.is_executive_board_member:
+        if not profile.is_internal:
             self.fields['presenter'].widget = EmailUserSelectWidget()
         else:
             self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
@@ -238,14 +238,14 @@ class SusarPresenterChangeForm(forms.ModelForm):
     susar_presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
 
     class Meta:
-        model = SubmissionForm
+        model = Submission
         fields = ('susar_presenter',)
 
     def __init__(self, *args, **kwargs):
         super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
         profile = get_current_user().get_profile()
         self.fields['susar_presenter'].label = _('Susar presenter')
-        if not profile.is_executive_board_member:
+        if not profile.is_internal:
             self.fields['susar_presenter'].widget = EmailUserSelectWidget()
         else:
             self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))

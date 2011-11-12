@@ -11,10 +11,10 @@
                 <th>{% trans 'Amendment' %}</th>
                 <th>{% trans 'Download PDF' %}</th>
             </tr>
-            {% with submission_form.submission.get_current_docstash as docstash %}
+            {% with submission.get_current_docstash as docstash %}
             {% if docstash %}
                 <tr class="version">
-                    <td>{{ submission_form.submission.forms.count|add:1 }}</td>
+                    <td>{{ submission.forms.count|add:1 }}</td>
                     <td colspan="2"><i>{% trans "This form has not been submitted yet." %}</i></td>
                     <td colspan="3"></td>
                     <td>
@@ -51,7 +51,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if sf == submission_form.submission.newest_submission_form %}
+                        {% if sf == submission.newest_submission_form %}
                             <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
                         {% endif %}
                     </td>
@@ -63,22 +63,22 @@
     <tr>
         <th>Eingereicht von:</th>
         <td colspan="3">
-            {% with submission_form.presenter.get_profile.organisation as organisation%}
-                {{ submission_form.presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% with submission.presenter.get_profile.organisation as organisation%}
+                {{ submission.presenter }}{% if organisation %} ({{organisation}}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'is_executive_board_member' or user == submission_form.presenter %}
-                | <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission_form.submission.pk %}">{% trans "change" %}</a>
+            {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
+                | <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
     </tr>
     <tr>
         <th>Sicherheitsmeldungsersteller:</th>
         <td colspan="3">
-            {% with submission_form.susar_presenter.get_profile.organisation as organisation%}
-                {{ submission_form.susar_presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% with submission.susar_presenter.get_profile.organisation as organisation%}
+                {{ submission.susar_presenter }}{% if organisation %} ({{organisation}}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'is_executive_board_member' or user == submission_form.susar_presenter %}
-                | <a href="{% url ecs.core.views.change_submission_susar_presenter submission_pk=submission_form.submission.pk %}">{% trans "change" %}</a>
+            {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}
+                | <a href="{% url ecs.core.views.change_submission_susar_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
     </tr>
@@ -143,7 +143,7 @@
     <tr>
         <th>Kategorien:</th>
         <td colspan="3">
-            {% for cat in submission_form.submission.medical_categories.all %}
+            {% for cat in submission.medical_categories.all %}
                 {{ cat }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
         </td>
@@ -156,8 +156,8 @@
     <tr>
         <th>Arbeitsablauf:</th>
         <td colspan="3">
-            {% if submission_form.submission.workflow_lane %}
-                {{ submission_form.submission.get_workflow_lane_display }}
+            {% if submission.workflow_lane %}
+                {{ submission.get_workflow_lane_display }}
             {% else %}
                 {% trans 'New/Undecided' %}
             {% endif %}
@@ -167,7 +167,7 @@
         <th>Sitzungen:</th>
         <td colspan="3">
             <ul>
-                {% for meeting in submission_form.submission.meetings.all %}
+                {% for meeting in submission.meetings.all %}
                     <li>
                         {% if user|has_flag:'is_internal' %}
                             <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
@@ -178,7 +178,7 @@
                 {% endfor %}
             </ul>
             {% if user|has_flag:'is_executive_board_member' %}
-                <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
+                <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
     </tr>
@@ -186,7 +186,7 @@
         <th>Voten:</th>
         <td colspan="3">
             <ul>
-                {% for vote in submission_form.submission.votes.all %}
+                {% for vote in submission.votes.all %}
                     {% if vote.result %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                     {% endif %}
@@ -213,12 +213,12 @@
         {% if not request.user|is_presenting_party:submission_form %}
             <tr>
                 <th>Gutachten erforderlich:</th>
-                <td>{{ submission_form.submission.external_reviewers.exists|yesno }}</td>
+                <td>{{ submission.external_reviewers.exists|yesno }}</td>
             </tr>
         {% endif %}
     {% endif %}
 </table>
 
 {% if submission_form|allows_export_by:request.user %}
-    <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
+    <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}

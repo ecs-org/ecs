@@ -159,7 +159,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, True, self.external_review_user, export_url)
         self._check_access(False, True, self.board_member_user, export_url)
         self._check_access(False, True, self.another_board_member_user, export_url)
-        self._check_access(True, True, self.sf.presenter, export_url)
+        self._check_access(True, True, self.sf.submission.presenter, export_url)
 
         #self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)

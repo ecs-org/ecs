@@ -20,7 +20,7 @@ def on_study_change(sender, **kwargs):
     old_sf, new_sf = kwargs['old_form'], kwargs['new_form']
     
     if not old_sf: # first version of the submission
-        involved_users = new_sf.get_involved_parties().get_users().difference([new_sf.presenter])
+        involved_users = new_sf.get_involved_parties().get_users().difference([submission.presenter])
         for u in involved_users:
             send_submission_message(submission, u, _('Creation of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
     elif not submission.votes.exists():
@@ -53,7 +53,7 @@ def on_study_submit(sender, **kwargs):
 
 @connect(signals.on_presenter_change)
 def on_presenter_change(sender, **kwargs):
-    submission, submission_form = kwargs['submission'], kwargs['form']
+    submission = kwargs['submission']
     user = kwargs['user']
     old_presenter, new_presenter = kwargs['old_presenter'], kwargs['new_presenter']
     
@@ -64,7 +64,7 @@ def on_presenter_change(sender, **kwargs):
 
 @connect(signals.on_susar_presenter_change)
 def on_susar_presenter_change(sender, **kwargs):
-    submission, submission_form = kwargs['submission'], kwargs['form']
+    submission = kwargs['submission']
     user = kwargs['user']
     old_susar_presenter, new_susar_presenter = kwargs['old_susar_presenter'], kwargs['new_susar_presenter']
 
@@ -77,14 +77,14 @@ def on_susar_presenter_change(sender, **kwargs):
 def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
     if submission_form.is_acknowledged:
-        send_submission_message(submission, submission_form.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt')
+        send_submission_message(submission, submission.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             submission_form.mark_current()
             involved_users = submission_form.get_involved_parties().get_users().difference([submission_form.presenter])
             for u in involved_users:
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
     else:
-        send_submission_message(submission, submission_form.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
+        send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
 
 
 @connect(signals.on_categorization_review)

@@ -102,7 +102,6 @@ class B2Resubmission(Activity):
         ]
 
     def receive_token(self, *args, **kwargs):
-        sf = self.workflow.data.submission_form
         token = super(B2Resubmission, self).receive_token(*args, **kwargs)
-        token.task.assign(sf.presenter)
+        token.task.assign(self.workflow.data.presenter)
         return token

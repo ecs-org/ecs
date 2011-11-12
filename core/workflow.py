@@ -115,7 +115,7 @@ class Resubmission(Activity):
 
     def receive_token(self, *args, **kwargs):
         token = super(Resubmission, self).receive_token(*args, **kwargs)
-        token.task.assign(self.workflow.data.current_submission_form.presenter)
+        token.task.assign(self.workflow.data.presenter)
         return token
 
 class CategorizationReview(Activity):

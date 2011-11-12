@@ -63,8 +63,8 @@ def get_presenting_parties(sf):
         user=sf.submitter,
         involvement=_("Submitter"),
     ))
-    parties.append(Party(user=sf.presenter, involvement=_("Presenter")))
-    parties.append(Party(user=sf.susar_presenter, involvement=_("Susar Presenter")))
+    parties.append(Party(user=sf.submission.presenter, involvement=_("Presenter")))
+    parties.append(Party(user=sf.submission.susar_presenter, involvement=_("Susar Presenter")))
 
     for i in sf.investigators.filter(main=True):
         parties.append(Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email, involvement=_("Primary Investigator")))

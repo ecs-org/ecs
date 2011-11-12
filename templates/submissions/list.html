@@ -77,7 +77,7 @@
             {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% endif %}
         <div class="actions">
-             {% if submission_form.presenter == user and not submission_form.submission.has_permanent_vote %}
+             {% if submission_form.submission.presenter == user and not submission_form.submission.has_permanent_vote %}
                 <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
              {% endif %}
              <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">{% trans "Download PDF" %}</a>
