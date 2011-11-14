@@ -169,10 +169,10 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
         (u'Status', [
             'study_started', 'reason_for_not_started', 'study_aborted', 'completion_date',
         ]),
-        (u'participants', [
+        (_(u'participants'), [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',
         ]),
-        (u'SAE / SUSAR', [
+        (_(u'SAE / SUSAR'), [
             'SAE_count', 'SUSAR_count',
         ])
     ]),
