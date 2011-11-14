@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 22:50+0100\n"
+"POT-Creation-Date: 2011-11-14 23:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -398,7 +398,9 @@ msgstr "Die Studie wurde begonnen"
 
 #: core/paper_forms.py:50
 msgid "please add additional details to the field \"comments\""
-msgstr "ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme?\""
+msgstr ""
+"Ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme/Mitteilung?"
+"\""
 
 #: core/paper_forms.py:51
 msgid "Why hasn't the study been started?"
