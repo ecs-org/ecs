@@ -152,7 +152,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         export_url = reverse('ecs.core.views.export_submission', kwargs={'submission_pk': self.sf.submission.pk})
         self._check_access(False, True, self.unapproved_user, export_url)
         self._check_access(False, True, self.anyone, export_url)
-        self._check_access(False, True, self.submitter_user, export_url)
+        self._check_access(True, True, self.submitter_user, export_url)
         self._check_access(False, True, self.sponsor_user, export_url)
         self._check_access(False, True, self.primary_investigator_user, export_url)
         self._check_access(True, True, self.internal_user, export_url)
