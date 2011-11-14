@@ -6,7 +6,7 @@ from copy import deepcopy
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
 
-
+LOCALE_PATHS = (os.path.join(PROJECT_DIR, "locale"),)
 
 # standard django settings
 ##########################
