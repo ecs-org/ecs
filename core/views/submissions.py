@@ -603,7 +603,7 @@ def submission_pdf(request, submission_form_pk=None):
 @readonly()
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    if not request.user.get_profile().is_internal and not request.user == submission.presenter:
+    if not submission.current_submission_form.allows_export(request.user):
         raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
