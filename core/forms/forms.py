@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.db import transaction, IntegrityError
+from django.db import transaction
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
@@ -407,11 +407,10 @@ class SubmissionImportForm(forms.Form):
         serializer = Serializer()
         try:
             self.submission_form = serializer.read(self.cleaned_data['file'])
-        except IntegrityError as e:
-            transaction.rollback()
         except Exception as e:
             import_error_logger.debug('invalid ecx file')
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
+            transaction.rollback()
         else:
             transaction.commit()
         f.seek(0)
