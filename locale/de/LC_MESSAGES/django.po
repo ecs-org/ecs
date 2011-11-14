@@ -1412,7 +1412,7 @@ msgstr "Erstellung der Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:34
 msgid "Change of study EC-Nr. {ec_number}"
-msgstr "Änderung der Studie EK-Nr. {ec_number}"
+msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:60 core/triggers.py:62 core/triggers.py:71
 #: core/triggers.py:73
