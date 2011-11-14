@@ -192,8 +192,11 @@
             <ul>
                 {% for vote in published_votes %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}
+                    {% if vote.valid_until %} {% trans 'valid until' %} {{ vote.valid_until|date:'d.m.Y' }}{% endif %}
                     <a href="{% url ecs.votes.views.download_signed_vote vote_pk=vote.pk %}" target="_blank">{% trans "Download" %}</a>
-                    {% if vote.valid_until %}({% trans 'valid until' %}: {{ vote.valid_until|date:'d.m.Y' }}){% endif %}
+                    {% if user|has_flag:'is_internal' %}
+                        | <a href="javascript:void(ecs.fieldhistory.show('{% url ecs.core.views.field_history model_name='vote' pk=vote.pk %}', 'text'))">{% trans 'History' %}</a>
+                    {% endif %}
                     </li>
                 {% endfor %}
             </ul>
