@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 22:40+0100\n"
+"POT-Creation-Date: 2011-11-14 22:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -344,12 +344,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:153 core/forms/fields.py:55
-#: templates/submissions/readonly_form.html:311
+#: templates/submissions/readonly_form.html:314
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:155 core/forms/fields.py:55
-#: templates/submissions/readonly_form.html:312
+#: templates/submissions/readonly_form.html:315
 msgid "No"
 msgstr "Nein"
 
@@ -395,6 +395,10 @@ msgstr "Typ"
 #: core/paper_forms.py:50
 msgid "The study has been started"
 msgstr "Die Studie wurde begonnen"
+
+#: core/paper_forms.py:50
+msgid "please add additional details to the field \"comments\""
+msgstr "ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme?\""
 
 #: core/paper_forms.py:51
 msgid "Why hasn't the study been started?"
@@ -2546,14 +2550,14 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:78 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:269
+#: templates/submissions/readonly_form.html:272
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
 #: templates/meetings/assistant/top.html:132
 #: templates/notifications/answers/form.html:29
-#: templates/submissions/readonly_form.html:272
+#: templates/submissions/readonly_form.html:275
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -2642,7 +2646,7 @@ msgstr ""
 "    "
 
 #: templates/documents/compact_list.html:18 templates/documents/iframe.html:20
-#: templates/submissions/readonly_form.html:195
+#: templates/submissions/readonly_form.html:196
 msgid "Download"
 msgstr "Download"
 
@@ -3095,13 +3099,14 @@ msgid "Distribute"
 msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:28
-#: templates/submissions/readonly_form.html:281
+#: templates/submissions/readonly_form.html:198
+#: templates/submissions/readonly_form.html:284
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:83
-#: templates/submissions/readonly_form.html:232
+#: templates/submissions/readonly_form.html:235
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:55
 msgid "Download PDF"
@@ -3581,28 +3586,28 @@ msgstr "abgelehnt"
 msgid "There are no answered notifications."
 msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 
-#: templates/submissions/readonly_form.html:196
+#: templates/submissions/readonly_form.html:195
 msgid "valid until"
 msgstr "gültig bis"
 
-#: templates/submissions/readonly_form.html:201
+#: templates/submissions/readonly_form.html:204
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:216
-#: templates/submissions/readonly_form.html:228
+#: templates/submissions/readonly_form.html:219
+#: templates/submissions/readonly_form.html:231
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:242
+#: templates/submissions/readonly_form.html:245
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:305
+#: templates/submissions/readonly_form.html:308
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:308
+#: templates/submissions/readonly_form.html:311
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
