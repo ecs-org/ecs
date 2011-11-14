@@ -28,12 +28,23 @@ class Party(object):
         if self._anonymous or not name:
             return u'- anonymous -'
         return unicode(name)
+        
+    def __eq__(self, other):
+        if not isinstance(other, Party):
+            return False
+        return all(getattr(self, attr) == getattr(other, attr) for attr in ('organization', '_name', '_email', 'user', 'involvement', '_anonymous'))
+        
+    def __repr__(self):
+        return unicode(self.email)
+
 
 class PartyList(list):
     def get_users(self):
         return set(p.user for p in self if p.user)
         
     def __contains__(self, u):
+        if isinstance(u, Party):
+            return super(PartyList, self).__contains__(u)
         return any(p.user == u for p in self)
 
     def send_message(self, *args, **kwargs):
@@ -84,38 +95,14 @@ def get_reviewing_parties(sf):
         if task.assigned_to.pk in external_reviewer_pks:
             parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
         else:
-            parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name))
-    return parties
-
-@sudo()
-def get_meeting_parties(sf):
-    from ecs.meetings.models import AssignedMedicalCategory
-    from ecs.users.middleware import current_user_store
-
-    parties = PartyList()
-    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().is_internal
-    
-    timetable_entries_q = sf.submission.timetable_entries.all().values('pk').query
-    meetings_q = sf.submission.meetings.filter(timetable_entries__in=timetable_entries_q).values('pk').query
-    meetings_q = sf.submission.meetings.all()
-    assigned_medical_categories_q = AssignedMedicalCategory.objects.filter(
-        meeting__in=sf.submission.meetings.all(),
-        category__in=sf.submission.medical_categories.all(),
-    ).values('pk').query
-
-    # assigned to the top
-    for user in User.objects.filter(meeting_participations__entry__in=timetable_entries_q).exclude(assigned_medical_categories__in=assigned_medical_categories_q):
-        parties.append(Party(user=user, involvement=_("Meeting Participant"), anonymous=anonymous))
-
-    # assigned for medical category
-    for user in User.objects.filter(assigned_medical_categories__in=assigned_medical_categories_q):
-        parties.append(Party(user=user, involvement=_("Meeting Participant (assigned for category)"), anonymous=anonymous))
-
+            party = Party(user=task.assigned_to, involvement=task.task_type.trans_name)
+            if party not in parties:
+                parties.append(party)
     return parties
 
 @sudo()
 def get_involved_parties(sf):
     parties = PartyList()
-    for f in (get_presenting_parties, get_reviewing_parties, get_meeting_parties):
+    for f in (get_presenting_parties, get_reviewing_parties):
         parties += f(sf)
     return parties

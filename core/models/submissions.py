@@ -15,7 +15,7 @@ from ecs.core.models.constants import (
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
-from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
+from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
@@ -653,9 +653,6 @@ class SubmissionForm(models.Model):
     def get_reviewing_parties(self):
         return get_reviewing_parties(self)
 
-    def get_meeting_parties(self):
-        return get_meeting_parties(self)
-    
     @property
     def additional_investigators(self):
         additional_investigators = self.investigators.all()
