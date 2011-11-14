@@ -100,25 +100,28 @@ def open_tasks(request, meeting_pk=None):
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    next_tops = meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index')[:3]
+    next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index')[:3]
 
-    tops_without_votes = {}
-    for top in meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index'):
-        medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
-            category__in=top.submission.medical_categories.values('pk').query)
-        bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).distinct())
-        if bms in tops_without_votes:
-            tops_without_votes[bms].append(top)
+    open_tops = {}
+    for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index'):
+        if top.submission:
+            medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+                category__in=top.submission.medical_categories.values('pk').query)
+            bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
         else:
-            tops_without_votes[bms] = [top]
+            bms = ()
+        if bms in open_tops:
+            open_tops[bms].append(top)
+        else:
+            open_tops[bms] = [top]
 
-    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True, submission__isnull=False).order_by('timetable_index')
+    closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index')
 
     return render(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,
         'next_tops': next_tops,
-        'tops_without_votes': tops_without_votes,
-        'tops_with_votes': tops_with_votes,
+        'open_tops': open_tops,
+        'closed_tops': closed_tops,
     })
 
 @user_flag_required('is_internal')

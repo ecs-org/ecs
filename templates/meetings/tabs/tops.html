@@ -13,10 +13,10 @@
 </ul>
 {% endif %}
 
-{% if tops_without_votes %}
+{% if open_tops %}
 <h2>{% trans "Open TOPs" %}</h2>
 <ul>
-{% for board_members, tops in tops_without_votes.iteritems %}
+{% for board_members, tops in open_tops.iteritems %}
     <li>
         {% if board_members %}
             {% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}
@@ -26,9 +26,14 @@
         <ul>
         {% for top in tops %}
             <li>
-                {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
-                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
-                | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+                {{ top }} - 
+                {% if top.submission %}
+                    {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+                    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
+                    | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+                {% else %}
+                    {{ top.title }}
+                {% endif %}
             </li>
         {% endfor %}
         </ul>
@@ -38,12 +43,17 @@
 {% endif %}
 
 
-{% if tops_with_votes %}
+{% if closed_tops %}
 <h2>{% trans "Finished TOPs" %}</h2>
 <ul>
-{% for top in tops_with_votes %}
+{% for top in closed_tops %}
     <li>
-        {{ top }} - {{ top.submission|ec_number }} ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
+        {{ top }} - 
+        {% if top.submission %}
+            {{ top.submission|ec_number }} ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
+        {% else %}
+            {{ top.title }}
+        {% endif %}
     </li>
 {% endfor %}
 </ul>
