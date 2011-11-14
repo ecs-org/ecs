@@ -5,7 +5,7 @@ from ecs.core.workflow import InitialReview
 from ecs.core import signals
 from ecs.core.models import Submission
 from ecs.tasks.utils import get_obj_tasks
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
 from ecs.checklists.utils import get_checklist_answer
 
@@ -76,12 +76,15 @@ def on_susar_presenter_change(sender, **kwargs):
 @connect(signals.on_initial_review)
 def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
+    review_user = get_current_user()
     if submission_form.is_acknowledged:
         send_submission_message(submission, submission.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             submission_form.mark_current()
             involved_users = submission_form.get_involved_parties().get_users().difference([submission_form.presenter])
             for u in involved_users:
+                if u == review_user:
+                    continue # don't send a message to the initial reviewer
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
