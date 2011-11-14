@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 18:10+0100\n"
+"POT-Creation-Date: 2011-11-14 18:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2733,12 +2733,16 @@ msgid "Sitzungsassistent"
 msgstr ""
 
 #: templates/meetings/details.html:88
-msgid "Experts assignment saved"
-msgstr "Spezialistenzuordnung wurde gespeichert"
+msgid "Expert assignment saved"
+msgstr "Spezialistenzuordnung gespeichert"
 
 #: templates/meetings/details.html:88
-msgid "The expert assignment has been saved."
-msgstr "Die Spezialistenzuordnung wurde gespeichert."
+msgid ""
+"The expert assignment has been saved. The experts will be invited to the "
+"meeting when you send the agenda to the board."
+msgstr "Die Spezialistenzuordnung wurde gespeichert. Die Spezialisten "
+"werden zu der Sitzung eingeladen, wenn Sie die Tagesordnung an die "
+"Sitzungsmitglieder versenden."
 
 #: templates/meetings/form.html:5 templates/meetings/form.html.py:6
 #: templates/meetings/timetable/view.html:7
@@ -4342,6 +4346,9 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "The expert assignment has been saved."
+#~ msgstr "Die Spezialistenzuordnung wurde gespeichert."
 
 #~ msgid "VAT Nr"
 #~ msgstr "MWST Nr"
