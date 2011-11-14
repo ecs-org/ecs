@@ -248,3 +248,12 @@ def _post_page_delete(sender, **kwargs):
 
 post_delete.connect(_post_page_delete, sender=Page)
 post_save.connect(_post_document_save, sender=Document)
+
+
+class DownloadHistory(models.Model):
+    document = models.ForeignKey(Document, db_index=True)
+    user = models.ForeignKey(User)
+    downloaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['downloaded_at']
