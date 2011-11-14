@@ -288,18 +288,23 @@ _queries = {
     'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
-    'thesis':           lambda s,u: s.retrospective_thesis(),
+
+    # lane filters
+    'board':            lambda s,u: s.for_board_lane(),
+    'thesis':           lambda s,u: s.for_thesis_lane(),
     'expedited':        lambda s,u: s.expedited(),
-    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.retrospective_thesis().values('pk').query).exclude(pk__in=s.expedited().values('pk').query),
+    'local_ec':         lambda s,u: s.localec(),
+
+    # vote filters
     'b2':               lambda s,u: s.b2(),
     'b3':               lambda s,u: s.b3(),
     'b4':               lambda s,u: s.b4(),
     'other_votes':      lambda s,u: s.b1() | s.b5(),
     'no_votes':         lambda s,u: s.exclude(pk__in=s.b1().values('pk').query).exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query).exclude(pk__in=s.b5().values('pk').query),
+
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
     'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
-    'local_ec':         lambda s,u: s.localec(),
 }
 
 _labels = {
@@ -308,9 +313,12 @@ _labels = {
     'other_meetings': _('Other Meetings'),
     'amg': _('AMG'),
     'mpg': _('MPG'),
+
+    'board': _('Board'),
     'thesis': _('Thesis'),
     'expedited': _('Expedited'),
-    'other': _('Other'),
+    'local_ec': _('Local EC'),
+
     'b2': _('B2 Votes'),
     'b3': _('B3 Votes'),
     'b4': _('B4 Votes'),
@@ -319,7 +327,6 @@ _labels = {
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
-    'local_ec': _('Local EC'),
 }
 
 class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
@@ -365,7 +372,8 @@ class SubmissionFilterForm(forms.Form):
         return submissions
 
 FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
-FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other')
+FILTER_TYPE = ('amg', 'mpg')
+FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 
@@ -373,16 +381,16 @@ class SubmissionMinimalFilterForm(SubmissionFilterForm):
     layout = ()
 
 class SubmissionWidgetFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE)
 
 class AssignedSubmissionsFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES)
 
 class MySubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_VOTES,)
 
 class AllSubmissionsFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
 
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))
