@@ -6,10 +6,15 @@ from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
+from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
-from ecs.core.models.submissions import SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+from ecs.utils.viewutils import render_pdf
+from ecs.tasks.models import TaskType
+from ecs.votes.models import Vote
+
 
 class TimetableMetrics(object):
     def __init__(self, permutation, users=None):
@@ -104,13 +109,15 @@ class AssignedMedicalCategory(models.Model):
     board_member = models.ForeignKey(User, null=True, blank=True, related_name='assigned_medical_categories')
     meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
+    objects = AuthorizationManager()
+
     class Meta:
         unique_together = (('category', 'meeting'),)
 
     def __unicode__(self):
         return '%s - %s' % (self.meeting.title, self.category.name)
 
-class MeetingManager(models.Manager):
+class MeetingManager(AuthorizationManager):
     def next(self):
         now = datetime.now()
         dday = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=1)
@@ -121,9 +128,7 @@ class MeetingManager(models.Manager):
 
     def next_schedulable_meeting(self, submission):
         sf = submission.current_submission_form
-        is_thesis = submission.thesis
-        if is_thesis is None:
-            is_thesis = sf.project_type_education_context is not None
+        is_thesis = submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
 
         meetings = self.filter(deadline__gt=sf.created_at)
         if is_thesis:
@@ -132,11 +137,24 @@ class MeetingManager(models.Manager):
         try:
             return meetings.filter(started=None).order_by('start')[0]
         except IndexError:
-            raise self.model.DoesNotExist()
+            last_meeting = meetings.all().order_by('-start')[0]
+            new_start = last_meeting.start
+            new_deadline = last_meeting.deadline
+            new_deadline_diplomathesis = last_meeting.deadline_diplomathesis
+            while True:
+                new_start += timedelta(days=30)
+                new_deadline += timedelta(days=30)
+                new_deadline_diplomathesis += timedelta(days=30)
+                if (not is_thesis and datetime.now() < new_deadline) or \
+                    (is_thesis and datetime.now() < new_deadline_diplomathesis):
+                    title = new_start.strftime('%B Meeting %Y')
+                    m = Meeting.objects.create(start=new_start, deadline=new_deadline,
+                        deadline_diplomathesis=new_deadline_diplomathesis, title=title)
+                    return m
 
 class Meeting(models.Model):
     start = models.DateTimeField()
-    title = models.CharField(max_length=200, blank=True)
+    title = models.CharField(max_length=200)
     optimization_task_id = models.TextField(null=True)
     submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
     started = models.DateTimeField(null=True)
@@ -150,27 +168,27 @@ class Meeting(models.Model):
 
     @property
     def retrospective_thesis_submissions(self):
-        return self.submissions.retrospective_thesis()
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
 
     @property
     def expedited_submissions(self):
-        return self.submissions.filter(expedited=True)
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
     @property
     def localec_submissions(self):
-        return self.submissions.filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
+        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_LOCALEC)
 
     @property
     def retrospective_thesis_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.retrospective_thesis().values('pk').query)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
 
     @property
     def expedited_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__pk__in=self.submissions.filter(expedited=True).values('pk').query)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
     @property
     def localec_entries(self):
-        return self.timetable_entries.filter(timetable_index__isnull=True, submission__current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC_LOCAL)
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
 
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
@@ -202,11 +220,9 @@ class Meeting(models.Model):
         del self.duration
         del self.timetable
         del self.users_with_constraints
+        del self.timetable_entries_which_violate_constraints
 
-    def create_boardmember_reviews(self, send_messages=True):
-        from ecs.tasks.models import TaskType
-        from ecs.communication.utils import send_system_message_template
-
+    def create_boardmember_reviews(self):
         task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
         for amc in self.medical_categories.all():
             if not amc.board_member:
@@ -218,13 +234,6 @@ class Meeting(models.Model):
                     # create board member review task
                     token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
                     token.task.accept(user=amc.board_member)
-                    if send_messages:
-                        subject = _('Submission {submission} added to Meeting on {date}').format(submission=entry.submission.get_ec_number_display(), date=self.start.strftime('%d.%m.%Y'))
-                        send_system_message_template(amc.board_member, subject, 'meetings/expert_notification_submission_added.txt', {
-                            'category': amc.category,
-                            'meeting': self,
-                            'submission': entry.submission,
-                        })
             
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
@@ -286,6 +295,23 @@ class Meeting(models.Model):
         return users
 
     @cached_property
+    def timetable_entries_which_violate_constraints(self):
+        start_date = self.start.date()
+        start_data = self.start.date()
+        entries_which_violate_constraints = []
+        for constraint in self.constraints.all():
+            constraint_start = datetime.combine(start_date, constraint.start_time)
+            constraint_end = datetime.combine(start_date, constraint.end_time)
+            for participation in Participation.objects.filter(user=constraint.user):
+                start = participation.entry.start
+                end = participation.entry.end
+                if (constraint_start >= start and constraint_start < end) or \
+                    (constraint_end >= start and constraint_end < end) or \
+                    (constraint_start < start and constraint_end >= end):
+                    entries_which_violate_constraints.append(participation.entry)
+        return entries_which_violate_constraints
+
+    @cached_property
     def timetable(self):
         duration = timedelta(seconds=0)
         users_by_entry_id = {}
@@ -333,6 +359,96 @@ class Meeting(models.Model):
     def __nonzero__(self):
         return True   # work around a django bug
 
+    def get_agenda_pdf(self, request):
+        rts = list(self.retrospective_thesis_entries.all())
+        es = list(self.expedited_entries.all())
+        ls = list(self.localec_entries.all())
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
+            'meeting': self,
+            'additional_tops': enumerate(rts + es + ls, len(self)+1),
+        })
+        
+    def get_protocol_pdf(self, request):
+        timetable_entries = self.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
+        tops = []
+        for top in timetable_entries:
+            try:
+                vote = Vote.objects.filter(top=top)[0]
+            except IndexError:
+                vote = None
+            tops.append((top, vote,))
+
+        b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
+        submission_forms = [x.submission_form for x in b2_votes]
+        b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
+
+        rts = list(self.retrospective_thesis_entries.all())
+        es = list(self.expedited_entries.all())
+        ls = list(self.localec_entries.all())
+        additional_tops = []
+        for i, top in enumerate(rts + es + ls, len(tops) + 1):
+            try:
+                vote = Vote.objects.filter(top=top)[0]
+            except IndexError:
+                vote = None
+            additional_tops.append((i, top, vote,))
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
+            'meeting': self,
+            'tops': tops,
+            'b1ized': b1ized,
+            'additional_tops': additional_tops,
+        })
+
+    def _get_timeframe_for_user(self, user):
+        entries = list(self.timetable_entries.filter(participations__user=user).order_by('timetable_index'))
+        start = entries[0].start
+        start -= timedelta(minutes=start.minute%10)
+        end = entries[-1].end
+        if end.minute % 10 > 0:
+            end += timedelta(minutes=10-end.minute%10)
+        return (start, end)
+
+    def get_timetable_pdf(self, request):
+        timetable = {}
+        for entry in self:
+            for user in entry.users:
+                if user in timetable:
+                    timetable[user].append(entry)
+                else:
+                    timetable[user] = [entry]
+
+        timetable = sorted([{
+            'user': key,
+            'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
+        } for key in timetable], key=lambda x:x['user'])
+
+        for row in timetable:
+            start, end = self._get_timeframe_for_user(row['user'])
+            row['time'] = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+
+        return render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
+            'meeting': self,
+            'timetable': timetable,
+        })
+        
+    def get_medical_categories(self):
+        return MedicalCategory.objects.filter(submissions__timetable_entries__meeting=self)
+        
+    def update_assigned_categories(self):
+        old_assignments = {}
+        for amc in AssignedMedicalCategory.objects.filter(meeting=self):
+            old_assignments[amc.category_id] = amc
+        new_assignments = {}
+        for cat in self.get_medical_categories():
+            if cat.pk in old_assignments:
+                del old_assignments[cat.pk]
+            else:
+                AssignedMedicalCategory.objects.get_or_create(meeting=self, category=cat)
+        AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.itervalues()]).delete()
+        Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=old_assignments.keys()).delete()
+
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -341,10 +457,11 @@ class TimetableEntry(models.Model):
     duration_in_seconds = models.PositiveIntegerField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
-    sponsor_invited = models.BooleanField(default=False)
     optimal_start = models.TimeField(null=True)
     is_open = models.BooleanField(default=True)
-    
+
+    objects = AuthorizationManager()
+
     def __unicode__(self):
         if self.index is not None:
             return u"TOP %s" % (self.index + 1)
@@ -417,38 +534,10 @@ class TimetableEntry(models.Model):
         if not self.submission:
             return MedicalCategory.objects.none()
         return MedicalCategory.objects.filter(submissions__timetable_entries=self)
-        
-    @cached_property
-    def users_by_medical_category(self):
-        users_by_category = {}
-        for cat in self.medical_categories:
-            users_by_category.setdefault(cat, [])
-        for p in self.participations.select_related('user', 'medical_category'):
-            users_by_category.setdefault(p.medical_category, []).append(p.user)
-            p.user.participation = p
-        return users_by_category
 
-    @cached_property
-    def is_retrospective(self):
-        if not self.submission_id:
-            return False
-        return self.submission.retrospective
-    
-    @cached_property
-    def is_thesis(self):
-        if not self.submission_id:
-            return False
-        return self.submission.thesis
-        
-    @cached_property
-    def is_expedited(self):
-        if not self.submission_id:
-            return False
-        return self.submission.expedited
-    
     @property
     def is_batch_processed(self):
-        return bool(self.submission_id) and (self.is_thesis or self.is_expedited or self.is_retrospective)
+        return bool(self.submission_id) and not self.submission.is_regular
         
     @property
     def next(self):
@@ -503,15 +592,43 @@ class TimetableEntry(models.Model):
         after = self._collect_users(padding_after, xrange(self.index + 1, len(self.meeting))).difference(waiting_users)
         return len(before), len(waiting_users), len(after)
 
+    def refresh(self, **kwargs):
+        visible = kwargs.pop('visible', True)
+        previous_index = self.timetable_index
+        to_visible = visible and previous_index is None
+        from_visible = not visible and not previous_index is None
+        if to_visible:
+            last_index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            if last_index is None:
+                kwargs['timetable_index'] = 0
+            else:
+                kwargs['timetable_index'] = last_index + 1
+        elif from_visible:
+            kwargs['timetable_index'] = None
+        duration = kwargs.pop('duration', None)
+        if duration is not None:
+            kwargs['duration_in_seconds'] = duration.seconds
+        for k, v in kwargs.iteritems():
+            setattr(self, k, v)
+        self.save()
+        if from_visible:
+            for i, entry in enumerate(self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index')):
+                entry.timetable_index = i
+                entry.save()
+        self.meeting._clear_caches()
+        self.meeting.create_boardmember_reviews()
+
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:
         entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+    entry.meeting.update_assigned_categories()
     if entry.submission:
         entry.submission.update_next_meeting()
 
 def _timetable_entry_post_save(sender, **kwargs):
     entry = kwargs['instance']
+    entry.meeting.update_assigned_categories()
     if entry.submission:
         entry.submission.update_next_meeting()
 
@@ -522,11 +639,12 @@ class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')
     user = models.ForeignKey(User, related_name='meeting_participations')
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
-    
+
+    objects = AuthorizationManager()
 
 WEIGHT_CHOICES = (
-    (0.5, _('unfavorable')),
     (1.0, _('impossible')),
+    (0.5, _('unfavorable')),
 )
 
 class Constraint(models.Model):
@@ -536,6 +654,8 @@ class Constraint(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     weight = models.FloatField(default=0.5, choices=WEIGHT_CHOICES)
 
+    objects = AuthorizationManager()
+
     @property
     def duration(self):
         d = datetime.now().date()
@@ -544,5 +664,3 @@ class Constraint(models.Model):
     @cached_property
     def duration_in_seconds(self):
         return timedelta_to_seconds(self.duration)
-   
-

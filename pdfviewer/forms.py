@@ -29,6 +29,5 @@ class AnnotationSharingForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(AnnotationSharingForm, self).__init__(*args, **kwargs)
-        if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['user'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+        self.fields['user'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 

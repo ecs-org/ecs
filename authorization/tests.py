@@ -1,11 +1,11 @@
 import datetime
 from contextlib import contextmanager
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.tests.submissions import create_submission_form
 from ecs.core.models import Submission
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
@@ -32,25 +32,24 @@ class SubmissionAuthTestCase(EcsTestCase):
     
     def setUp(self):
         super(SubmissionAuthTestCase, self).setUp()
-        self.additional_review_user = self._create_test_user('additional_review', approved_by_office=True)
-        self.anyone = self._create_test_user('anyone', approved_by_office=True)
-        self.board_member_user = self._create_test_user('board_member', approved_by_office=True, board_member=True)
-        self.expedited_review_user = self._create_test_user('expedited_review', approved_by_office=True, expedited_review=True)
-        self.external_review_user = self._create_test_user('external_review', approved_by_office=True, external_review=True)
-        self.insurance_review_user = self._create_test_user('insurance_review', approved_by_office=True, insurance_review=True)
-        self.internal_user = self._create_test_user('internal', approved_by_office=True, internal=True)
-        self.primary_investigator_user = self._create_test_user('primary_investigator', approved_by_office=True)
-        self.sponsor_user = self._create_test_user('sponsor', approved_by_office=True)
-        self.submitter_user = self._create_test_user('submitter', approved_by_office=True)
-        self.thesis_review_user = self._create_test_user('thesis_review', approved_by_office=True, thesis_review=True)
+        self.external_review_user = self._create_test_user('external_review', is_approved_by_office=True)
+        self.anyone = self._create_test_user('anyone', is_approved_by_office=True)
+        self.board_member_user = self._create_test_user('board_member', is_approved_by_office=True, is_board_member=True)
+        self.expedited_review_user = self._create_test_user('expedited_review', is_approved_by_office=True, is_expedited_reviewer=True)
+        self.insurance_review_user = self._create_test_user('insurance_review', is_approved_by_office=True, is_insurance_reviewer=True)
+        self.internal_user = self._create_test_user('internal', is_approved_by_office=True, is_internal=True)
+        self.primary_investigator_user = self._create_test_user('primary_investigator', is_approved_by_office=True)
+        self.sponsor_user = self._create_test_user('sponsor', is_approved_by_office=True)
+        self.submitter_user = self._create_test_user('submitter', is_approved_by_office=True)
+        self.thesis_review_user = self._create_test_user('thesis_review', is_approved_by_office=True, is_thesis_reviewer=True)
     
-        self.another_board_member_user = self._create_test_user('another_board_member', approved_by_office=True, board_member=True)
+        self.another_board_member_user = self._create_test_user('another_board_member', is_approved_by_office=True, is_board_member=True)
         self.unapproved_user = self._create_test_user('unapproved_user')
     
         sf = create_submission_form()
         sf.submitter = self.submitter_user
         sf.sponsor = self.sponsor_user
-        sf.additional_review_user = self.additional_review_user
+        sf.external_review_user = self.external_review_user
         sf.project_title = self.EC_NUMBER
         sf.save()
     
@@ -59,8 +58,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         investigator.save()
 
         sf.submission.ec_number = self.EC_NUMBER
-        sf.submission.additional_reviewers.add(self.additional_review_user)
-        sf.submission.external_reviewer_name = self.external_review_user
+        sf.submission.external_reviewers.add(self.external_review_user)
 
         meeting = Meeting.objects.create(start=datetime.datetime.now())
         entry = meeting.add_entry(submission=sf.submission, duration_in_seconds=60)
@@ -89,11 +87,9 @@ class SubmissionAuthTestCase(EcsTestCase):
             self.failUnlessEqual(Submission.objects.count(), 1)
         with sudo(self.primary_investigator_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
-        with sudo(self.additional_review_user):
+        with sudo(self.external_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
         with sudo(self.internal_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
-        with sudo(self.external_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
         with sudo(self.board_member_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
@@ -102,16 +98,16 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.thesis = True
+        self.sf.submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
 
         with sudo(self.expedited_review_user):
             self.failUnlessEqual(Submission.objects.count(), 0)
-        self.sf.submission.expedited = True
+        self.sf.submission.workflow_lane = SUBMISSION_LANE_EXPEDITED
         self.sf.submission.save()
-        with sudo(self.thesis_review_user):
+        with sudo(self.expedited_review_user):
             self.failUnlessEqual(Submission.objects.count(), 1)
     
     @contextmanager
@@ -138,9 +134,8 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(True, expect404, self.submitter_user, url)
         self._check_access(True, expect404, self.sponsor_user, url)
         self._check_access(True, expect404, self.primary_investigator_user, url)
-        self._check_access(True, expect404, self.additional_review_user, url)
-        self._check_access(True, expect404, self.internal_user, url)
         self._check_access(True, expect404, self.external_review_user, url)
+        self._check_access(True, expect404, self.internal_user, url)
         self._check_access(True, expect404, self.board_member_user, url)
         self._check_access(False, expect404, self.another_board_member_user, url)
 
@@ -160,12 +155,11 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, True, self.submitter_user, export_url)
         self._check_access(False, True, self.sponsor_user, export_url)
         self._check_access(False, True, self.primary_investigator_user, export_url)
-        self._check_access(False, True, self.additional_review_user, export_url)
         self._check_access(True, True, self.internal_user, export_url)
         self._check_access(False, True, self.external_review_user, export_url)
         self._check_access(False, True, self.board_member_user, export_url)
         self._check_access(False, True, self.another_board_member_user, export_url)
-        self._check_access(True, True, self.sf.presenter, export_url)
+        self._check_access(True, True, self.sf.submission.presenter, export_url)
 
         #self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)

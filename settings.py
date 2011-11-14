@@ -135,6 +135,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'ecs.utils.startup.StartupMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -144,13 +145,19 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.forceauth.ForceAuth',
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLoginMiddleware',  # deactivate previous users sessions on login
-    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
+    #'ecs.TestMiddleware',
+    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-)   
+    'ecs.utils.security.SecurityReviewMiddleware',
+)
+
+STARTUP_CALLS = (
+    'ecs.integration.startup.startup',
+)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -168,8 +175,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djcelery',
-    #'ghettoq', 
-
+    
     'ecs.utils.countries',
     'compressor',
     'dbtemplates',
@@ -185,6 +191,8 @@ INSTALLED_APPS = (
     'django_concurrent_test_server',
 
     'ecs.core',
+    'ecs.checklists',
+    'ecs.votes',
     'ecs.utils',
     'ecs.feedback',
     'ecs.docstash',
@@ -207,7 +215,6 @@ INSTALLED_APPS = (
     'ecs.notifications',
     'ecs.authorization',
     'ecs.integration',
-    'ecs.fastlane',
     'ecs.boilerplate',
     'ecs.scratchpad',
 )
@@ -219,8 +226,18 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # ecs settings
 ##############
 
+# this is passed to pdfcop from origami and must be one of 'none', 'standard', 'strong', 'paranoid'
+# see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
+ECS_PDFCOP_POLICY = 'paranoid'
+
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
+
+# users in these groups receive messages even when they are not related to studies
+ECS_VOTE_RECEIVER_GROUPS = (u'Vote Receiver Group',)
+ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
+ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
+ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
 
 # authorization
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
@@ -240,6 +257,11 @@ PDFAS_SERVICE = 'mock:'
 
 # directory where to store logfiles, used by every daemon and apache
 LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
+
+# directory where generated files are stored, either on bootstrap or on demand, eg. django_compressor
+GENFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-generated"))
+# url where in the url tree the files under this directory are served
+GENFILE_URL = MEDIA_URL+ 'generated/'
 
 # directory where to store temporary files, used mostly with external utilities
 TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
@@ -279,15 +301,15 @@ STORAGE_DECRYPT = {
 # Mediaserver Shared Settings
 MS_SHARED = {
     "url_expiration_sec": 6*60*60,
-    "tiles": [1, 3, 5],
-    "resolutions": [800, 768],
+    "tiles": [(1,1), (5,5)],
+    "resolutions": [800],
     "aspect_ratio": 1.41428,
     "dpi": 96,
     "depth": 8,
 }
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 MS_CLIENT = {
-    "server": "http://localhost:8000",
+    "server": "http://127.0.0.1:8000",
     "bucket": "/mediaserver/",
     # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
     "key_id": "b2SpFfUvfD44LUzHDu7w",
@@ -311,6 +333,7 @@ MS_SERVER = {
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
@@ -326,6 +349,9 @@ ECSMAIL_DEFAULT = {
     'authoritative_domain': 'localhost',
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
+
+# absolute URL prefix w/out trailing slash
+ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
 # default contact person if someone sends message to "EK"
 DEFAULT_CONTACT = 'office1@example.org'
@@ -368,7 +394,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 16',}
+BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 17',}
 
 # if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
 # set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
@@ -393,7 +419,6 @@ BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
-    'ecs.core.tasks',
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',
@@ -422,9 +447,17 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only us
 
 
 # ### django_compressor ### 
-COMPRESS = True
+COMPRESS_ENABLED = True
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 COMPRESS_JS_FILTERS = []
+#COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter']
+#COMPRESS_OUTPUT_DIR = "django_compressor"
+pyscss = 'pyscss.exe' if sys.platform == 'win32' else 'pyscss'
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', '{0} -I {1} {2}'.format(pyscss, os.path.join(MEDIA_ROOT, 'css'), "-o {outfile} {infile}")),
+)
 
+COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
 # ### django-sentry ###
 SENTRY_TESTING = True # log exceptions when DEBUG=True
@@ -440,7 +473,6 @@ DEVSERVER_MODULES = (
     #'devserver.modules.profile.MemoryUseModule',
     #'devserver.modules.cache.CacheSummaryModule',
 )
-
 
 # settings override 
 ###################
@@ -465,7 +497,6 @@ DEVSERVER_MODULES = (
 # use ecsdev settings if on node ecsdev.ep3.at
 if platform.node() == "ecsdev.ep3.at":
     from ecsdev_settings import *
-
 
 # use different settings if local_settings.py exists
 try: 
@@ -497,6 +528,14 @@ try:
 except ImportError:
     ECS_VERSION = 'unknown'
 
+# django_wsgiserver activation
+try:
+    import django_wsgiserver
+except ImportError:
+    pass
+else:
+    INSTALLED_APPS += ('django_wsgiserver',) # anywhere
+
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:
     INSTALLED_APPS +=('rosetta',) # anywhere
@@ -516,9 +555,11 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
-    
+
+
 if any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
+    
     logging.basicConfig(
             level = logging.DEBUG,
             format = '%(asctime)s %(levelname)s %(message)s',

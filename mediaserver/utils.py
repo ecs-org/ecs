@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
 
 import os, time, getpass, logging
-
+import subprocess
+import math
 from tempfile import NamedTemporaryFile
 from urllib import urlencode
 from urlparse import urlparse, parse_qs
 
 from django.conf import settings
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
 
 from ecs.utils.django_signed.signed import base64_hmac
-from ecs.utils.pathutils import tempfilecopy
-from ecs.utils.pdfutils import pdf2pngs, pdf_barcodestamp
+from ecs.utils.pathutils import tempfilecopy, which
+from ecs.utils.pdfutils import Page, pdf_barcodestamp
 
-from ecs.mediaserver.storagevault import getVault, VaultError
-from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError  
+from ecs.mediaserver.storagevault import getVault
+from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.tasks import do_rendering
+
+
+MONTAGE_PATH = which('montage').next()
+PDFDRAW_PATH = which('pdfdraw').next()
 
 
 class MediaProvider:
@@ -40,24 +44,57 @@ class MediaProvider:
     
         :note: used by tasks.do_render to render actual data
         '''
-        tiles = settings.MS_SHARED ["tiles"]
-        resolutions = settings.MS_SHARED ["resolutions"]
-        aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
+        tiles = settings.MS_SHARED["tiles"]
+        resolutions = settings.MS_SHARED["resolutions"]
+        aspect_ratio = settings.MS_SHARED["aspect_ratio"]
         dpi = settings.MS_SHARED ["dpi"]
-        depth = settings.MS_SHARED ["depth"]   
+        depth = settings.MS_SHARED["depth"]
         
         copied_file = False   
-        if hasattr(filelike,"name"):
+        if hasattr(filelike, "name"):
             tmp_sourcefilename = filelike.name
         elif hasattr(filelike, "read"):
             tmp_sourcefilename = tempfilecopy(filelike)
             copied_file = True
         
-        try:   
-            for t in tiles:
-                for w in resolutions:
-                    for page, data in pdf2pngs(identifier, tmp_sourcefilename, private_workdir, w, t, t, aspect_ratio, dpi, depth):
-                        yield page, data
+        def _run(cmd):
+            popen = subprocess.Popen(cmd, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
+            stdout, stderr = popen.communicate() 
+            returncode = popen.returncode  
+            if returncode != 0:
+                raise IOError('%s returned error code:%d %s' % (cmd[0], returncode, stdout))
+                
+        def workdir(path):
+            return os.path.join(private_workdir, path)
+        
+        # DIN tolerance: 0–150mm: 1.5mm, 150–600mm: 2.0mm, 600-...mm: 3.0mm
+        A4_TOLERANCE = 2.0
+        A4_WIDTH = 210.0
+        A4_HEIGH = 297.0
+        INCH = 25.4
+        try:
+            for width in resolutions:
+                height = width * aspect_ratio
+                for tx, ty in tiles:
+                    dpi = int(math.floor(width / ((A4_WIDTH + A4_TOLERANCE) / INCH) / tx)) # Assume DIN-A4 portrait format
+                    _run([PDFDRAW_PATH, '-o', workdir('%d.png'), '-r', str(dpi), tmp_sourcefilename])
+
+                    page_images = os.listdir(private_workdir)
+                    page_images.sort(key=lambda n: int(n.split('.', 1)[0]))
+
+                    num = 0
+                    n = tx * ty
+                    w = width / tx
+                    h = w * aspect_ratio
+                    for offset in xrange(0, len(page_images), n):
+                        num += 1
+                        sprite_images = map(workdir, page_images[offset:offset + n])
+                        sprite_path = workdir('p%s-%s.png' % (offset + 1, offset + n + 1))
+                        _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s>' % (w, h)] + [sprite_path])
+                        yield Page(identifier, tx, ty, width, num), open(sprite_path, 'rb')
+                    
+                    for f in os.listdir(private_workdir):
+                        os.remove(workdir(f))
         finally:
             if copied_file:
                 if os.path.exists(tmp_sourcefilename):
@@ -254,7 +291,7 @@ class AuthUrl:
     def parse(self, urlstring):
         parsedurl = urlparse(urlstring)
         query_dict = parse_qs(parsedurl.query)
-        tail, sep ,head = parsedurl.path.rpartition("/")
+        tail, sep, head = parsedurl.path.rpartition("/")
         bucket = tail + sep
         objectid = head
         keyId = query_dict["AWSAccessKeyId"].pop() if "AWSAccessKeyId" in query_dict else None

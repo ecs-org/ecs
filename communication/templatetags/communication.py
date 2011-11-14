@@ -2,7 +2,6 @@ import datetime
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
 from ecs.communication.models import Message
-from ecs.users.models import UserProfile
 
 register = Library()
 
@@ -37,9 +36,9 @@ def fetch_messages(parser, token):
 
 @register.filter
 def closed_by(thread, user):
-    if user == thread.sender:
+    if user.id == thread.sender_id:
         return thread.closed_by_sender
-    elif user == thread.receiver:
+    elif user.id == thread.receiver_id:
         return thread.closed_by_receiver
     else:
         return None

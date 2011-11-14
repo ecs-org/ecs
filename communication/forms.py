@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-from copy import deepcopy
 
 from django import forms
 from django.conf import settings
-from django.db.models import Q
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode
@@ -27,6 +25,7 @@ class BaseMessageForm(forms.ModelForm):
         fields = ('text',)
 
     def __init__(self, submission, user, *args, **kwargs):
+        self.to_user = kwargs.pop('to', None)
         super(BaseMessageForm, self).__init__(*args, **kwargs)
 
         self.submission = submission
@@ -42,12 +41,11 @@ class BaseMessageForm(forms.ModelForm):
                 ('involved', _('Involved Party')),
             ]
             receiver_type_initial = 'involved'
-            with sudo():
-                involved_parties = list(submission.current_submission_form.get_involved_parties())
+            involved_parties = list(submission.current_submission_form.get_involved_parties())
             involved_parties = User.objects.filter(pk__in=[p.user.pk for p in involved_parties if p.user])
             self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
 
-        if user.get_profile().internal:
+        if user.get_profile().is_internal:
             receiver_type_choices += [
                 ('person', _('Person'))
             ]
@@ -59,10 +57,17 @@ class BaseMessageForm(forms.ModelForm):
 
         self.fields['receiver_type'].choices = receiver_type_choices
         self.fields['receiver_type'].initial = receiver_type_initial
+        
+        if self.to_user:
+            self.fields['receiver_type'].required = False
 
     def clean_receiver(self):
         cd = self.cleaned_data
-
+        
+        if self.to_user:
+            cd['receiver'] = self.to_user
+            return self.to_user
+        
         receiver = None
         receiver_type = cd.get('receiver_type', None)
 
@@ -81,11 +86,11 @@ class SendMessageForm(BaseMessageForm):
     subject = Thread._meta.get_field('subject').formfield()
 
 class ReplyDelegateForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(), label=_('Text'))
+    text = forms.CharField(widget=forms.Textarea(), label=_('Answer'))
 
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
-        if user.get_profile().internal:
+        if user.get_profile().is_internal:
             self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False, label=_('Delegate to'))
             self.fields.keyOrder = ['to', 'text']
             if getattr(settings, 'USE_TEXTBOXLIST', False):

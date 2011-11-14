@@ -30,7 +30,7 @@ def images(document):
 @register.filter
 def annotations_for_user(document, user):
     annotations = list(document.annotations.filter(user=user).values(
-        'pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username'))
+        'pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username', 'author__email'))
     data = simplejson.dumps(annotations)
     return mark_safe(data)
 

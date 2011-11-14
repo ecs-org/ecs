@@ -13,7 +13,7 @@
       {% for meeting in meetings %}
           <li>
               <h3>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</h3>
-                  <a href="{% url ecs.meetings.views.status meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
+                  <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
           </li>
       {% endfor %}
   </ol>

@@ -5,7 +5,6 @@ import logging
 from datetime import timedelta
 
 from django.conf import settings
-from django.utils.encoding import smart_str
 from django.db.models import Q
 
 from celery.decorators import task, periodic_task
@@ -72,11 +71,11 @@ def do_prime_mediaserver(document_pk=None, **kwargs):
     doc.status = 'ready'
     doc.retries = 0
     try:
-        success, response = prime_mediaserver(doc.uuid_document, doc.mimetype)
+        success, response = prime_mediaserver(doc.uuid, doc.mimetype)
         if not success:
-            logger.warning("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid_document, response))    
+            logger.warning("Can't prime cache for document with uuid={0}. Response was {1}".format(doc.uuid, response))    
         else:
-            logger.info('prime cachen for document with uuid={0} was successful'.format(doc.uuid_document))
+            logger.info('prime cachen for document with uuid={0} was successful'.format(doc.uuid))
     finally:
         doc.save()
 
@@ -98,7 +97,7 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     doc = Document.objects.get(pk=document_pk)
     
     try:
-        add_to_storagevault(doc.uuid_document, doc.file)
+        add_to_storagevault(doc.uuid, doc.file)
     except Exception as e:
         if doc.retries < 5:
             doc.status = TO_BE_UPLOADED
@@ -107,7 +106,7 @@ def upload_to_storagevault(document_pk=None, **kwargs):
             doc.status = 'aborted'
         
         logger.error("Can't upload document with uuid={0}. Retries was {1}, exception was {2}".format(
-            doc.uuid_document, doc.retries, e))
+            doc.uuid, doc.retries, e))
     
     else:        
         doc.status = TO_BE_READY
@@ -144,8 +143,9 @@ def index_pdf(document_pk=None, **kwargs):
         try:
             doc.pages = pdf_page_count(doc.file) # calculate number of pages
     
-            for p in xrange(1, doc.pages + 1):
-                text = pdf2text(doc.file.path, p)
+            text_list = pdf2text(doc.file.path)
+            assert(len(text_list), doc.pages)
+            for p, text in enumerate(text_list, 1):
                 doc.page_set.create(num=p, text=text)
             
             index = site.get_index(Page)
@@ -158,7 +158,7 @@ def index_pdf(document_pk=None, **kwargs):
             else:
                 doc.status = 'aborted'
             
-            logger.error("Can't index uploaded document with uuid={0}. Retries was {1}, exception was {2}".format(doc.uuid_document, doc.retries, e))
+            logger.error("Can't index uploaded document with uuid={0}. Retries was {1}, exception was {2}".format(doc.uuid, doc.retries, e))
         
         else:        
             doc.status = TO_BE_UPLOADED

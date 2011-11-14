@@ -10,10 +10,11 @@ from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.utils.encoding import force_unicode
 from django.contrib.sites.models import Site
+from django.http import HttpRequest
 
-from ecs.users.middleware import current_user_store
+from ecs.users.middleware import current_user_store, current_user_store
 from ecs.users.models import Invitation
-from ecs.ecsmail.utils import deliver, deliver_to_recipient
+from ecs.ecsmail.utils import deliver_to_recipient
 from ecs.utils.viewutils import render_html
 
 # Do not import models here which depend on the AuthorizationManager, because
@@ -48,7 +49,11 @@ def create_user(email, start_workflow=True, **kwargs):
     return user
 
 def get_user(email, **kwargs):
-    return User.objects.get(username=hash_email(email), **kwargs)
+    try:
+        name = hash_email(email)
+    except UnicodeEncodeError:
+        raise User.DoesNotExist()
+    return User.objects.get(username=name, **kwargs)
 
 def get_current_user():
     if hasattr(current_user_store, 'user'):
@@ -57,7 +62,7 @@ def get_current_user():
         return None
 
 def get_full_name(user):
-    profile = user.get_profile()
+    profile = user.ecs_profile
     if user.first_name or user.last_name:
         nameparts = [user.first_name, user.last_name]
         if profile.title:
@@ -87,7 +92,6 @@ class sudo(object):
         self.user = user
 
     def __enter__(self):
-        from ecs.users.middleware import current_user_store
         self._previous_previous_user = getattr(current_user_store, '_previous_user', None)
         self._previous_user = getattr(current_user_store, 'user', None)
         user = self.user
@@ -97,7 +101,6 @@ class sudo(object):
         current_user_store.user = user
         
     def __exit__(self, *exc):
-        from ecs.users.middleware import current_user_store
         current_user_store._previous_user = self._previous_previous_user
         current_user_store.user = self._previous_user
         
@@ -120,7 +123,7 @@ def create_phantom_user(email, role=None):
     try:
         user = create_user(email)
         profile = user.get_profile()
-        profile.phantom = True
+        profile.is_phantom = True
         profile.save()
 
         invitation = Invitation.objects.create(user=user)
@@ -129,7 +132,6 @@ def create_phantom_user(email, role=None):
 
         subject = _(u'ECS account creation')
         link = 'http://{0}{1}'.format(domain, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-        from django.http import HttpRequest
         htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
             'link': link,
         }))

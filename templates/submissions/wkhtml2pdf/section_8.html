@@ -10,13 +10,13 @@
         <td>{{ submission_form.study_plan_open|checkbox }} 8.1.1 offen </td>
         <td>{{ submission_form.study_plan_randomized|checkbox }} 8.1.2 randomisiert </td>
         <td>{{ submission_form.study_plan_parallelgroups|checkbox }} 8.1.3 Parallelgruppen </td>
-        <td>{{ submission_form.multicentric|not|checkbox }} 8.1.4 monozentrisch </td>
+        <td>{{ submission_form.is_multicentric|not|checkbox }} 8.1.4 monozentrisch </td>
     </tr>
     <tr>
         <td>{{ submission_form.study_plan_single_blind|checkbox }} 8.1.5 blind </td>
         <td>{{ submission_form.study_plan_controlled|checkbox }} 8.1.6 kontrolliert </td>
         <td>{{ submission_form.study_plan_cross_over|checkbox }} 8.1.7 cross-over </td>
-        <td>{{ submission_form.multicentric|checkbox }} 8.1.8 multizentrisch </td>
+        <td>{{ submission_form.is_multicentric|checkbox }} 8.1.8 multizentrisch </td>
     </tr>
     <tr>
         <td>{{ submission_form.study_plan_double_blind|checkbox }} 8.1.9 doppelblind </td>

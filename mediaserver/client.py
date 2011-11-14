@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 from time import time
+import math
 from urllib2 import urlopen
-from urlparse import urlparse, parse_qs
-from urllib import urlencode
 
 from django.conf import settings
 
-from ecs.utils.django_signed.signed import base64_hmac
 from ecs.mediaserver.utils import AuthUrl, MediaProvider
 
 
@@ -33,7 +31,7 @@ def prime_mediaserver(uuid, mimetype='application/pdf', personalization=None, br
         objid_parts = ['prepare', uuid, mimetype]
         objid = '/'.join(objid_parts) + '/'
     
-        key_id = settings.MS_CLIENT ["key_id"]
+        key_id = settings.MS_CLIENT["key_id"]
         expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
     
         authurl = AuthUrl(key_id, settings.MS_CLIENT['key_secret'])
@@ -73,7 +71,7 @@ def generate_media_url(uuid, filename, mimetype='application/pdf', personalizati
 
     objid = '/'.join(objid_parts) + '/'
 
-    key_id = settings.MS_CLIENT ["key_id"]
+    key_id = settings.MS_CLIENT["key_id"]
     expires = int(time()) + settings.MS_SHARED['url_expiration_sec']
 
     authurl = AuthUrl(key_id, settings.MS_CLIENT['key_secret'])
@@ -85,32 +83,32 @@ def generate_pages_urllist(uuid, pages):
     
     for every supported rendersize options for every page of the document with uuid
     '''
-    tiles = settings.MS_SHARED ["tiles"]
-    width = settings.MS_SHARED ["resolutions"]
-    aspect_ratio = settings.MS_SHARED ["aspect_ratio"]
-    expiration_sec = settings.MS_SHARED ["url_expiration_sec"]
+    tiles = settings.MS_SHARED["tiles"]
+    width = settings.MS_SHARED["resolutions"]
+    aspect_ratio = settings.MS_SHARED["aspect_ratio"]
+    expiration_sec = settings.MS_SHARED["url_expiration_sec"]
     
-    baseurl = settings.MS_CLIENT ["server"]
-    bucket = settings.MS_CLIENT ["bucket"]
-    key_id = settings.MS_CLIENT ["key_id"]
-    key_secret = settings.MS_CLIENT ["key_secret"]
+    baseurl = settings.MS_CLIENT["server"]
+    bucket = settings.MS_CLIENT["bucket"]
+    key_id = settings.MS_CLIENT["key_id"]
+    key_secret = settings.MS_CLIENT["key_secret"]
     docshotData = [];
     
-    for t in tiles:
+    for tx, ty in tiles:
+        n = tx * ty
         for w in width:
-            tilepages = pages / (t*t)
-            if pages % (t*t) > 0: tilepages += 1
-             
+            tilepages = int(math.ceil(pages / float(n)))
+            
             for pagenum in range(1, tilepages+1):
-                objectid = "%s/%dx%d/%d/%d/" % (uuid, t, t, w, pagenum)
+                objectid = "%s/%dx%d/%d/%d/" % (uuid, tx, ty, w, pagenum)
                 expires = int(time()) + expiration_sec
                 h =  w * aspect_ratio
                 docshotData.append({
-                    'description': "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, t, t, w),
+                    'description': "Page: %d, Tiles: %dx%d, Width: %dpx" % (pagenum, tx, ty, w),
                     'url': AuthUrl(key_id, key_secret).grant(baseurl, bucket, objectid, key_id, expires), 
                     'page': pagenum, 
-                    'tx': t,
-                    'ty': t,
+                    'tx': tx,
+                    'ty': ty,
                     'width': w, 
                     'height': h,
                 })

@@ -8,6 +8,9 @@ user = getpass.getuser()
 
 DBPWD_DICT = {}
 
+ECS_PDFCOP = '/var/lib/gems/1.8/bin/pdfcop'
+ECS_PDFDECRYPT = '/var/lib/gems/1.8/bin/pdfdecrypt'
+
 if user in DBPWD_DICT:
     # django database
     DATABASES= {}
@@ -53,6 +56,8 @@ if user in conf_dict.keys():
     
     if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver', 'testmaker'])):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+    ABSOLUTE_URL_PREFIX = "http://{0}".format(domain)
 
 if user == 'testecs':
     # FIXME: Disabled, will use mock interface default

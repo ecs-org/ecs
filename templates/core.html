@@ -21,15 +21,6 @@
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
-  {% if user.get_profile.has_explicit_workflow %}
-    {% with request.related_tasks as related_tasks %}
-        {% if related_tasks %}
-            <a href="{% url ecs.tasks.views.manage_task task_pk=related_tasks.0.pk %}" id="workflow_button" class="open-in-popup icon_workflow">workflow</a>
-        {% else %}
-            <span class="icon_workflow_gray" title="{% trans "There is no active task." %}">foo</span>
-        {% endif %}
-    {% endwith %}
-  {% endif %}
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   <a href="" id="feedback_button" class="feedback_trigger icon_feedback" title="{% trans "Compliments, comments or complaints?" %}">feedback</a>
   {% get_scratchpad as scratchpad %}
@@ -46,7 +37,7 @@
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
-          {% if user|has_flag:"internal" or user|is_member_of:"EC-Thesis Review Group" %}
+          {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
               <li><a href="{% url ecs.core.views.all_submissions %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|assigned_submissions_count %}
@@ -56,7 +47,7 @@
               <li><a href="{% url ecs.core.views.my_submissions %}">{% trans "My Studies" %}</a></li>
           {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>
-          {% if user|has_flag:"approved_by_office" %}
+          {% if user|has_flag:"is_approved_by_office" %}
               <li><a href="{% url ecs.core.views.import_submission_form %}">{% trans "Import" %}</a></li>
           {% endif %}
       </ul>
@@ -69,12 +60,12 @@
           <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans 'New Notification' %}</a></li>
       </ul>
     </li>
-    {% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
                 <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
-                {% if user|has_flag:"internal" %}
+                {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
                     <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
                     {% if user|is_member_of:"EC-Office" %}
@@ -84,17 +75,17 @@
           </ul>
         </li>
     {% endif %}
-    {% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_executive_board_member" %}
         <li>
           <span class="togglers">{% trans "Administration" %}</span>
           <ul class="elements">
-                {% if user|has_flag:"internal" %}
+                {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
                     <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
                 <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
-                {% if user|has_flag:"executive_board_member" %}
+                {% if user|has_flag:"is_executive_board_member" %}
                     <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
                 {% endif %}
           </ul>
@@ -105,7 +96,12 @@
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">
              <li><a href="/sentry">{% trans "Sentry ErrorLog" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_pdf %}">{% trans "Render Test PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_pdf %}">{% trans "Submission PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_checklist_pdf %}">{% trans "Checklist PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_notification_pdf %}">{% trans "Notification PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_notification_answer_pdf %}">{% trans "Notification Answer PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_test_vote_pdf %}">{% trans "Vote PDF" %}</a></li>
+             <li><a href="{% url ecs.core.views.developer_translations %}">{% trans "Translations" %}</a></li>
         </ul>
       </li>
     {% endif %} 
@@ -124,8 +120,20 @@
   </ul>
 {% endblock %}
 
+{% block header %}
+    {{ block.super }}
+    {% if request.task_management.form %}
+        <div id="headerworkflow">
+        {% with request.task_management.form as form %}
+            {% include 'tasks/manage_task.html' %}
+        {% endwith %}
+        </div>
+        <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
+    {% endif %}
+{% endblock %}
+
 {% block headernav %}
-    {% if user.get_profile.indisposed %}
+    {% if user.get_profile.is_indisposed %}
     <div>
       {% url ecs.users.views.profile as profile_url %}
       {% blocktrans with profile_url as profile_url %}
@@ -162,10 +170,10 @@
     var accordion_choices = [
         'submissions',
         'notifications',
-{% if user|has_flag:"internal" or user|has_flag:"board_member" %}
+{% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
         'meetings',
 {% endif %}
-{% if user|has_flag:"internal" or user|has_flag:"executive_board_member" %}
+{% if user|has_flag:"is_internal" or user|has_flag:"is_executive_board_member" %}
         'administration',
 {% endif %}
         'demo'
@@ -212,6 +220,18 @@
     }
 
     window.addEvent('domready', function(){
+      {% if request.task_management.form %}
+          var headerworkflow = $('headerworkflow');
+          var w = new ecs.widgets.TaskWidget(headerworkflow, {});
+          var toggle_headerworkflow = $('toggle_headerworkflow');
+          toggle_headerworkflow.addEvent('click', function(){
+            var visible = headerworkflow.isVisible();
+            headerworkflow.toggle();
+            toggle_headerworkflow.toggleClass('collapsed', !visible);
+            toggle_headerworkflow.innerHTML = visible ? '&gt;' : '&lt;';
+            w.updateContentHeight();
+          });
+      {% endif %}
 
       $$('textarea.maxlength').each(function(el) {
         el.addEvent('keypress', maxlength);
@@ -290,13 +310,14 @@
           'url': '/bugshot/',
           'title': 'BugShot',
           'form': '<div><input type="text" name="summary" value="" /></div>'+
+          '<dic>Type: <input type="text" name="ticket_type" value="bug" /></div>'+
           '<dic>Component: <input type="text" name="component" value="" /></div>'+
           '<div>Owner: <input type="text" name="owner" value="" /></div>'+
           '<div>Priority: <input type="text" name="priority" value="" /></div>'+
           '<div><textarea name="description"></textarea></div>',
           onShow: function(self){
               self.overlay.getElement('textarea').value = "URL: " + window.location.href + "\n\n== Reproduction == \n\n== Expected == \n\n== Screenshot ==\n[[Image(screenshot." + self.options.format + ", 400px)]]\n";
-              self.overlay.getElement('input[type=text]').value = "[bugshot] ";
+              self.overlay.getElement('input[type=text]').value = "";
           },
           keyTrigger: function(e){
               return (e.meta || e.control) && e.key == ':';

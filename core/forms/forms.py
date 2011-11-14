@@ -1,87 +1,28 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.db.models import F
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
-from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
-from ecs.utils.formutils import require_fields
-from ecs.core.forms.fields import DateField, StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput
-from ecs.core.forms.utils import ReadonlyFormSetMixin, NewReadonlyFormMixin, NewReadonlyFormSetMixin
+from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
+from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
+    EmailUserSelectWidget, SingleselectWidget, DateTimeField
+from ecs.core.forms.utils import NewReadonlyFormMixin, NewReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
-from ecs.core.models.voting import FINAL_VOTE_RESULTS
+
 
 def _unpickle(f, args, kwargs):
     return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
     
-class ModelFormPickleMixin(object):
-    def __reduce__(self):
-        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
-        
 class ModelFormSetPickleMixin(object):
     def __reduce__(self):
         return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
 
-## notifications ##
-
-class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
-    class Meta:
-        model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp')
-
-class MultiNotificationForm(NotificationForm):
-    def __init__(self, *args, **kwargs):
-        super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
-
-class SingleStudyNotificationForm(NotificationForm):
-    submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
-    
-    def __init__(self, *args, **kwargs):
-        super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_form'].queryset = SubmissionForm.objects.filter(submission__current_submission_form__id=F('id'), presenter=get_current_user(), votes__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number')
-
-    class Meta:
-        model = Notification
-        exclude = NotificationForm._meta.exclude + ('submission_forms',)
-        
-    def get_submission_form(self):
-        return self.cleaned_data['submission_form']
-    
-    def save(self, commit=True):
-        obj = super(SingleStudyNotificationForm, self).save(commit=commit)
-        if commit:
-            obj.submission_forms = [self.get_submission_form()]
-        else:
-            old_save_m2m = self.save_m2m
-            def _save_m2m():
-                old_save_m2m()
-                obj.submission_forms = [self.get_submission_form()]
-            self.save_m2m = _save_m2m
-        return obj
-
-class ProgressReportNotificationForm(SingleStudyNotificationForm):
-    runs_till = DateField(required=True)
-
-    class Meta:
-        model = ProgressReportNotification
-        exclude = SingleStudyNotificationForm._meta.exclude
-
-class CompletionReportNotificationForm(SingleStudyNotificationForm):
-    completion_date = DateField(required=True)
-
-    class Meta:
-        model = CompletionReportNotification
-        exclude = SingleStudyNotificationForm._meta.exclude
-
-class AmendmentNotificationForm(NotificationForm):
-    class Meta:
-        model = AmendmentNotification
-        exclude = NotificationForm._meta.exclude + ('submission_forms', 'old_submission_form', 'new_submission_form', 'diff')
 
 ## submissions ##
 
@@ -278,6 +219,37 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
             'email': StrippedTextInput(),
         }
 
+class PresenterChangeForm(forms.ModelForm):
+    presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
+
+    class Meta:
+        model = Submission
+        fields = ('presenter',)
+
+    def __init__(self, *args, **kwargs):
+        super(PresenterChangeForm, self).__init__(*args, **kwargs)
+        profile = get_current_user().get_profile()
+        if not profile.is_internal:
+            self.fields['presenter'].widget = EmailUserSelectWidget()
+        else:
+            self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+
+class SusarPresenterChangeForm(forms.ModelForm):
+    susar_presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
+
+    class Meta:
+        model = Submission
+        fields = ('susar_presenter',)
+
+    def __init__(self, *args, **kwargs):
+        super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
+        profile = get_current_user().get_profile()
+        self.fields['susar_presenter'].label = _('Susar presenter')
+        if not profile.is_internal:
+            self.fields['susar_presenter'].widget = EmailUserSelectWidget()
+        else:
+            self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+
 class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
@@ -317,15 +289,17 @@ _queries = {
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
     'thesis':           lambda s,u: s.retrospective_thesis(),
-    'expedited':        lambda s,u: s.filter(expedited=True),
-    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.retrospective_thesis().values('pk').query).exclude(expedited=True),
+    'expedited':        lambda s,u: s.expedited(),
+    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.retrospective_thesis().values('pk').query).exclude(pk__in=s.expedited().values('pk').query),
     'b2':               lambda s,u: s.b2(),
     'b3':               lambda s,u: s.b3(),
     'b4':               lambda s,u: s.b4(),
-    'other_votes':      lambda s,u: s.exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query),
+    'other_votes':      lambda s,u: s.b1() | s.b5(),
+    'no_votes':         lambda s,u: s.exclude(pk__in=s.b1().values('pk').query).exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query).exclude(pk__in=s.b5().values('pk').query),
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
     'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
+    'local_ec':         lambda s,u: s.localec(),
 }
 
 _labels = {
@@ -341,9 +315,11 @@ _labels = {
     'b3': _('B3 Votes'),
     'b4': _('B4 Votes'),
     'other_votes': _('Other Votes'),
+    'no_votes': _('No Votes'),
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
+    'local_ec': _('Local EC'),
 }
 
 class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
@@ -388,29 +364,25 @@ class SubmissionFilterForm(forms.Form):
 
         return submissions
 
+FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
+FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other')
+FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
+FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
+
 class SubmissionMinimalFilterForm(SubmissionFilterForm):
     layout = ()
 
 class SubmissionWidgetFilterForm(SubmissionFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-    )
+    layout = (FILTER_MEETINGS, FILTER_TYPE)
 
-class SubmissionListFilterForm(SubmissionWidgetFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-        ('b2', 'b3', 'b4', 'other_votes'),
-    )
+class AssignedSubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES)
 
-class SubmissionListFullFilterForm(SubmissionListFilterForm):
-    layout = (
-        ('new', 'next_meeting', 'other_meetings'),
-        ('amg', 'mpg', 'thesis', 'expedited', 'other'),
-        ('b2', 'b3', 'b4', 'other_votes'),
-        ('mine', 'assigned', 'other_studies'),
-    )
+class MySubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_VOTES,)
+
+class AllSubmissionsFilterForm(SubmissionFilterForm):
+    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
 
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))
@@ -428,3 +400,18 @@ class SubmissionImportForm(forms.Form):
         f.seek(0)
         return f
 
+class TemporaryAuthorizationForm(TranslatedModelForm):
+    start = DateTimeField(initial=datetime.now)
+    end = DateTimeField(initial=lambda: datetime.now() + timedelta(days=30))
+
+    class Meta:
+        model = TemporaryAuthorization
+        exclude = ('submission',)
+        widgets = {
+            'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+        }
+        labels = {
+            'user': _('User'),
+            'start': _('Start'),
+            'end': _('End'),
+        }

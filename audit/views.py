@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
-import time
-
 from django.http import Http404
 
-from ecs.utils.viewutils import render, render_html
+from ecs.utils.viewutils import render
 from ecs.audit.models import AuditTrail
 from ecs.users.utils import user_flag_required
 
 
-@user_flag_required('executive_board_member')
+@user_flag_required('is_executive_board_member')
 def log(request, format, limit=50, until=None, since=None):
     if format == 'html':
         template = 'audit/log.html'

@@ -22,7 +22,7 @@ class ViewTestCase(EcsTestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
-        self.user = self.create_user('unittest-internal', profile_extra={'internal': True})
+        self.user = self.create_user('unittest-internal', profile_extra={'is_internal': True})
         self.client.login(email='unittest-internal@example.com', password='password')
 
     def tearDown(self):
@@ -41,7 +41,7 @@ class ViewTestCase(EcsTestCase):
         response = self.client.get(create_meeting_url)
         self.failUnlessEqual(response.status_code, 200)
 
-        data = {}
+        data = {'title': 'Testmeeting'}
         data.update(_get_datetime_inputs('start', self.start))
         data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + datetime.timedelta(days=30)))
         data.update(_get_datetime_inputs('deadline', self.start + datetime.timedelta(days=14)))

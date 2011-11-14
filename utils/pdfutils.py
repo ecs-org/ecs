@@ -10,7 +10,7 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, tempfile, binascii, logging, copy, shutil
+import os, subprocess, tempfile, logging, copy, shutil, re
 from cStringIO import StringIO
 
 from django.conf import settings
@@ -20,15 +20,17 @@ from django.utils.encoding import smart_str
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
-from ecs.utils import killableprocess
-from ecs.utils.pathutils import which
+from ecs.utils.pathutils import which, which_path
 
-MONTAGE_PATH = which('montage').next()
-GHOSTSCRIPT_PATH =  settings.ECS_GHOSTSCRIPT if hasattr(settings,"ECS_GHOSTSCRIPT") else which('gs').next()
-WKHTMLTOPDF_PATH =  settings.ECS_WKHTMLTOPDF if hasattr(settings,"ECS_WKHTMLTOPDF") else which('wkhtmltopdf', extlist=["-amd64", "-i386"]).next()
- 
+MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
+GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
+WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64", "-i386"])
+PDFDECRYPT_PATH = which_path('ECS_PDFDECRYPT', 'pdfdecrypt')
+PDFCOP_PATH = which_path('ECS_PDFCOP', 'pdfcop')
+
 PDF_MAGIC = r"%PDF-"
 
+pdfutils_logger = logging.getLogger(__name__)
 
 class Page(object):
     ''' Properties of a image of an page of an pageable media (id, tiles_x, tiles_y, width, pagenr)
@@ -44,35 +46,6 @@ class Page(object):
         return str("%s_%s_%sx%s_%s" % (self.id, self.width, self.tiles_x, self.tiles_y , self.pagenr))
 
         
-def pdf_isvalid(filelike):
-    ''' returns True if valid pdf, else False
-    
-    :param filelike: filelike object, seekable
-    '''
-    logger = logging.getLogger()
-    isvalid = False    
-    filelike.seek(0)  
-    
-    if filelike.read(len(PDF_MAGIC)) != PDF_MAGIC:
-        return False
-    else:
-        filelike.seek(0)
-    try:
-        parser = PDFParser(filelike)
-        doc = PDFDocument()
-        parser.set_document(doc)
-        doc.set_parser(parser)
-        doc.initialize('')
-        if doc.is_extractable:
-            isvalid = True
-    except PDFException as excobj:
-        logger.warning("pdf has valid header but, still not valid pdf, exception was %r" %(excobj))
-        isvalid = False
-            
-    filelike.seek(0)
-    return isvalid
-    
-    
 def pdf_page_count(filelike):
     ''' returns number of pages of an pdf document '''
     filelike.seek(0)
@@ -151,15 +124,20 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
     Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
     if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
     '''
-    cmd = ["pdftotext", "-raw", "-nopgbrk", "-enc", "UTF-8", "-eol", "unix", "-q"]
+    cmd = ["pdftotext", "-raw", "-enc", "UTF-8", "-eol", "unix", "-q"]
     if pagenr:
-        cmd += ["-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
+        cmd += ["-nopgbrk", "-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
     cmd += [pdffilename, "-"]
     popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = popen.communicate()
     if popen.returncode != 0:
         raise IOError('pdftotext pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-    return stdout
+    if pagenr:
+        return stdout
+    else:
+        # pdftotext inserts form feeds between pages,
+        # but there is an extra form feed at the end of the stream
+        return stdout.split('\f')[:-1]
 
 
 def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):
@@ -195,102 +173,48 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
         yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
 
-def pdf2pdfa(real_infile, real_outfile):
-    ''' converts a pdf file into a PDF/A 1b file
-    '''
-    workdir = os.path.join(settings.PROJECT_DIR, 'utils', 'pdfa')
 
-    gs = [GHOSTSCRIPT_PATH,
-        '-q',
-        '-dPDFA',
-        '-dBATCH',
-        '-dNOPAUSE',
-        '-dNOOUTERSAVE',
-        '-dUseCIEColor',
-        '-dSAFER',
-        '-dNOPLATFONTS',
-        '-dEmbedAllFonts=true',
-        '-dSubsetFonts=false',
-        '-sProcessColorModel=DeviceCMYK',
-        '-sDEVICE=pdfwrite',
-        '-dPDFACompatibilityPolicy=1',
-        '-sOutputFile=%stdout',
-        'PDFA_def.ps',
-        '-',
-    ]
+class PDFValidationError(ValueError): pass
 
-    if not hasattr(real_infile, 'fileno'):
-        infile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
-        infile.write(real_infile.read())
-        infile.seek(0)
-    else:
-        infile = real_infile
-
-    if not hasattr(real_outfile, 'fileno'):
-        outfile = tempfile.TemporaryFile(dir=settings.TEMPFILE_DIR)
-    else:
-        outfile = real_outfile
-
-    offset = real_outfile.tell()
-
-    try:
-        p = subprocess.Popen(gs, cwd=workdir, stdin=infile, stdout=outfile, stderr=subprocess.PIPE)
-        stdout, stderr = p.communicate()
-        if p.returncode != 0:
-            raise IOError('gs pipeline returned with errorcode %i , stderr: %s' % (p.returncode, stderr))
-    finally:
-        if not hasattr(real_infile, 'fileno'):
-            infile.close()
-        if not hasattr(real_outfile, 'fileno'):
-            outfile.seek(0)
-            real_outfile.write(outfile.read())
-            outfile.close()
-
-    return real_outfile.tell() - offset
+def _pdf_cop(filename, logger=pdfutils_logger):
+    popen = subprocess.Popen([PDFCOP_PATH, '-p', settings.ECS_PDFCOP_POLICY, filename], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    result = stdout.splitlines()[-1]
+    if 'accepted by policy' not in result:
+        return [m.group(1) for m in re.finditer(r'[^\d]:(\w+)', result)]
+    return []
 
 
-def xhtml2pdf(html, timeoutseconds=30):
-    ''' Takes custom (pisa style) xhtml and makes an pdf document out of it
-    
-    takes fonts from ecs.utils.xhtml2pdf directory via callback fetch_resources
-    
-    :returns: pdf data or makes error pdf data if something went wrong
-    '''
-    def fetch_resources(uri, rel):
-        """
-        Callback to allow pisa/reportlab to retrieve Images,Stylesheets, etc.
-        `uri` is the href attribute from the html link element.
-        `rel` gives a relative path, but it's not used here.
-        """
-        import string
-        valid_chars = "-_.()%s%s" % (string.ascii_letters, string.digits)
-        uri = ''.join(c for c in uri if c in valid_chars)
-        path = os.path.join(settings.PROJECT_DIR, 'utils', 'pdf', uri)
-        # print "uri, rel, path", uri, rel, path
-        return path
-
-    import ho.pisa as pisa
-
-    pdf = StringIO()
-    pdfa = StringIO()
-    ret = "" 
-
-    try:
-        pisa.CreatePDF(html, pdf, show_error_as_pdf = True, link_callback=fetch_resources)
-        pdf.seek(0)
-        #pdf2pdfa(pdf, pdfa)
-        #pdfa.seek(0)
-        ret = pdf.getvalue() # FIXME: we do NOT use pdf2pdfa after xhtml2pdf because it shredders output (pdfa.getvalue()) 
-    finally:
-        pdf.close()
-        pdfa.close()
-    return ret
+def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
+    with tempfile.NamedTemporaryFile(suffix='.pdf') as tmp:
+        shutil.copyfileobj(src, tmp)
+        tmp.seek(0)
+        violations = _pdf_cop(tmp.name)
+        if violations:
+            if 'allowEncryption' in violations and decrypt:
+                tmp.seek(0)
+                decrypted = tempfile.NamedTemporaryFile(suffix='.pdf')
+                logger.info("decrypting pdf document")
+                popen = subprocess.Popen([PDFDECRYPT_PATH, tmp.name, '-o', decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+                popen.communicate()
+                if popen.returncode:
+                    logger.warn('pdfdecrypt error (returncode=%s):\n%s' % (popen.returncode, smart_str(stderr, errors='backslashreplace')))
+                    violations.append('decryptFailure')
+                else:
+                    decrypted.seek(0)
+                    violations = _pdf_cop(decrypted.name)
+                    if not violations:
+                        decrypted.seek(0)
+                        return decrypted
+                    violations.append('decryptSuccess')
+            raise PDFValidationError('violated policies: %s' % ', '.join(violations), violations)
+    src.seek(0)
+    return src
 
 
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
-    
     if isinstance(html, unicode): 
         html = html.encode('utf-8') 
     if isinstance(header_html, unicode):
@@ -306,7 +230,6 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         '--page-size', 'A4',
         '--zoom', '1',
     ]
-
     tmp_dir = tempfile.mkdtemp(dir=settings.TEMPFILE_DIR)
     shutil.copytree(os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'), os.path.join(tmp_dir, 'media'))
 
@@ -315,7 +238,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         header_html_file.write(header_html)
         header_html_file.close()
         cmd += ['--header-html', header_html_file.name]
-    if footer_html:
+    if footer_html and not getattr(settings, 'DISABLE_WKHTML2PDF_FOOTERS', False):
         footer_html_file = tempfile.NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
         footer_html_file.write(footer_html)
         footer_html_file.close()
@@ -332,51 +255,25 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     pdf_file = tempfile.NamedTemporaryFile(suffix='.pdf', dir=tmp_dir, delete=False)
     pdf_file.close()
     cmd += [pdf_file.name]
-
+    
     try:
         popen = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = popen.communicate() 
         if popen.returncode != 0: 
-            raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))             
+            raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
 
+        '''
         pdfa = StringIO() 
         with open(pdf_file.name, 'rb') as pdf:
             pdf2pdfa(pdf, pdfa)
         pdfa.seek(0)
         ret = pdfa.getvalue()
         pdfa.close()
+        '''
+        with open(pdf_file.name, 'rb') as pdf:
+            ret = pdf.read()
 
     finally:
         shutil.rmtree(tmp_dir)
 
     return ret
-
-
-"""
-DO NOT DELETE, THIS MAYBE GET RESURECTED
-def pdf2png(inputfile, outputnaming, pixelwidth=None, first_page=None, last_page=None):
-    takes inputfile and renders it to a set of png files, optional specify pixelwidth, first_page, last_page
-    raises IOError(descriptive text, returncode, stderr) in case of failure
-    outputnameing follows ghostscript conventions. The general form supported is:
-    "%[flags][width][.precision][l]type", flags is one of: "#+-", type is one of: "diuoxX"
-    For more information, please refer to documentation on the C printf format specifications.
-
-    cmd = [ GHOSTSCRIPT_PATH, '-dQUIET', '-dSAFER', '-dBATCH', '-dNOPAUSE',
-        '-sDEVICE=png16m', '-dGraphicsAlphaBits=4', '-dTextAlphaBits=4', '-dPDFFitPage',  '-sPAPERSIZE=a4']
-    cm_per_inch = 2.54; din_a4_x = 21.0; din_a4_y = 29.7
-    
-    if pixelwidth:
-        dpix = pixelwidth / (din_a4_x / cm_per_inch)
-        cmd += ['-r%.5f' % (dpix)]
-    if first_page:
-        cmd += ['-dFirstPage=%s' % first_page]
-    if last_page:
-        cmd += ['-dLastPage=%s' % last_page]
-    cmd += ['-sOutputFile='+ namingtemplate, sourcefile]
-
-    popen = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = popen.communicate()
-    if popen.returncode != 0:
-        raise IOError('pdf2png processing using ghostscript returned error code %i , stderr: %s' % (popen.returncode, stderr))        
-"""
-

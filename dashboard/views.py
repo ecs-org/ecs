@@ -1,7 +1,10 @@
 from ecs.utils.viewutils import render
 from ecs.tasks.models import Task
 from django.core.urlresolvers import reverse
+from ecs.utils.security import readonly
 
+
+@readonly()
 def view_dashboard(request):
     widgets = [
         reverse('ecs.communication.views.outgoing_message_widget'),

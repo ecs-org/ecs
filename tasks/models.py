@@ -10,9 +10,6 @@ from django.utils.translation import ugettext as _
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
 from ecs.workflow.signals import token_received, token_consumed
-from ecs.core.models import Submission, Vote
-from ecs.meetings.models import Meeting
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -35,9 +32,15 @@ class TaskQuerySet(models.query.QuerySet):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
         return self.filter(content_type=ct, data_id=data.pk)
+        
+    def open(self):
+        return self.filter(deleted_at__isnull=True, closed_at=None)
+        
+    def mark_deleted(self):
+        return self.update(deleted_at=datetime.now())
 
     def acceptable_for_user(self, user):
-        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__indisposed=True)).exclude(deleted_at__isnull=False)
+        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
 
     def for_user(self, user, activity=None, data=None):
         qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)
@@ -49,21 +52,34 @@ class TaskQuerySet(models.query.QuerySet):
         return qs
 
     def for_widget(self, user):
-        not_for_widget = ['resubmission', 'additional_review', 'external_review']
+        not_for_widget = ['resubmission', 'b2_resubmission', 'external_review', 'paper_submission_review', 'thesis_paper_submission_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
     def for_submission(self, submission, related=True):
-        tasks = Task.objects.all()
+        # local import to prevent circular import
+        from ecs.core.models import Submission
+        from ecs.votes.models import Vote
+        from ecs.meetings.models import Meeting
+        from ecs.checklists.models import Checklist
+        from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
+
+        tasks = self.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
         q = models.Q(content_type=submission_ct, data_id=submission.pk)
         if related:
             vote_ct = ContentType.objects.get_for_model(Vote)
             q |= models.Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
+
             meeting_ct = ContentType.objects.get_for_model(Meeting)
             q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
-            for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+
+            for notification_model in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification):
                 notification_ct = ContentType.objects.get_for_model(notification_model)
                 q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
+            
+            checklist_ct = ContentType.objects.get_for_model(Checklist)
+            q |= models.Q(content_type=checklist_ct, data_id__in=Checklist.objects.filter(submission=submission).values('pk').query)
+            
         return self.filter(q).distinct()
 
 class TaskManager(AuthorizationManager):
@@ -84,6 +100,9 @@ class TaskManager(AuthorizationManager):
 
     def for_submission(self, submission, related=True):
         return self.all().for_submission(submission, related=related)
+        
+    def open(self):
+        return self.all().open()
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')
@@ -114,6 +133,13 @@ class Task(models.Model):
         return rval
 
     def get_preview_url(self):
+        from ecs.core.models import Submission
+        from ecs.votes.models import Vote
+        from ecs.notifications.models import Notification
+
+        if isinstance(self.data, Notification):
+            return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.data.pk})
+
         submission_form = None
         if self.content_type == ContentType.objects.get_for_model(Submission):
             submission_form = self.data.current_submission_form
@@ -125,7 +151,11 @@ class Task(models.Model):
             return None
 
     @property
-    def locked(self):
+    def managed_transparently(self):
+        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'external_review']
+
+    @property
+    def is_locked(self):
         if not self.workflow_token_id:
             return False
         return self.workflow_token.locked
@@ -183,7 +213,11 @@ class Task(models.Model):
         if user and check_authorization:
             groups = self.task_type.groups.all()
             if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
-                raise ValueError("Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (self, user, ", ".join(map(unicode, self.task_type.groups.all()))))
+                raise ValueError((u"Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (
+                    self, 
+                    user, 
+                    ", ".join(unicode(x) for x in self.task_type.groups.all()),
+                )).encode('ascii', 'ignore'))
         self.assigned_to = user
         self.accepted = False
         if user:

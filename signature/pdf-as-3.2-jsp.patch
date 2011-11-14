@@ -1,0 +1,18 @@
+--- null_request_page.jsp	2010-12-07 14:29:34.000000000 +0100
++++ null_request_page.jsp.patched	2011-11-10 02:16:47.317838853 +0100
+@@ -23,6 +23,7 @@
+ 	  isExternalInvocation = vsi.exappinf != null;
+ 	  isServerBKU = Constants.SIGNATURE_DEVICE_MOC.equals(vsi.connector); 
+   }
++  String deco_page_url = request.getParameter("invoke-preview-url") + "?pdf-id=" + request.getParameter("pdf-id");
+ %>
+ 
+ <html>
+@@ -50,6 +51,7 @@
+ 	</head>
+ 
+ 	<body>
++		<iframe src="<%=deco_page_url%>" width="90%" height="400"></iframe>
+ 		<% if (!isExternalInvocation) { %>
+ 			<h1><fmt:message key="common.title"/></h1>
+ 			<h2><fmt:message key="nullrequestpage.heading2"/></h2>

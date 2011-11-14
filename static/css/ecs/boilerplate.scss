@@ -1,0 +1,69 @@
+@import "ecs/variables.scss";
+
+#boilerplate {
+    textarea {
+        width: 400px;
+    }
+    input[type=submit] {
+        margin-left: 50px;
+    }
+}
+
+.boilerplate_selector {
+    display: none;
+    position: absolute;
+    width: 300px;
+    height: auto;
+    left: 140px;
+    background: $white;
+    border: 3px solid $lightskyblue;
+    z-index: 1000;
+    
+    a {
+        display: block;
+        color: $black;
+        max-height: 30px;
+        overflow: hidden;
+        padding: 2px;
+        
+        &:nth-child(2n) {
+            background: #eee;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        &:hover {
+            text-decoration: none;
+            background: $lightskyblue;
+        }
+    }
+    
+    .resultlist {
+        max-height: 200px;
+        overflow: auto;
+    }
+    
+    input[type=text] {
+        width: 290px;
+        height: 20px;
+        padding: 5px;
+        display: block;
+    }
+}
+
+
+#content div.boilerplate {
+  margin: 20px 0;
+  
+  h4 {
+      display: inline-block;
+      font-size: 16px;
+  }
+}
+
+.boilerplate_text {
+  padding: 10px;
+  border: 1px solid $grey-60;
+  background: $white;
+  border-radius: 5px;
+}

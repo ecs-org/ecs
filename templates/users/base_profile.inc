@@ -19,12 +19,12 @@
     <tr><th>Status:</th><td>
         <div>
             EC-Office Bestätigung: 
-            {% block office_approval %}{{ profile.approved_by_office|yesno:'ja,nein' }}{% endblock %}
+            {% block office_approval %}{{ profile.is_approved_by_office|yesno:'ja,nein' }}{% endblock %}
         </div>
         <div>
             {% trans "Indisposed" %}: 
-            {{ profile.indisposed|yesno:'ja,nein' }}
-            {% if user == profile_user and profile.indisposed %}
+            {{ profile.is_indisposed|yesno:'ja,nein' }}
+            {% if user == profile_user and profile.is_indisposed %}
                 <a href="{% url ecs.users.views.notify_return %}">{% trans 'Reset' %}</a>
             {% endif %}
         </div>

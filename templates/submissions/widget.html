@@ -1,5 +1,7 @@
 {% load i18n core userutils %}
 
+<h3>{% trans 'Studies' %}</h3>
+
 <div id="submission_widget">
 
 {% include "submissions/filterform.inc" %}
@@ -17,6 +19,10 @@
         <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
         {% endwith %}
     {% else %}
+    
+        {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
+        {% if submission.b2_resubmission_task %}<span class="submission_b2_resubmission"></span>{% endif %}
+        
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}
             <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}"> <span class="submission_inprogress"></span> </a>
@@ -24,35 +30,24 @@
         {% endwith %}
 
         {% with submission.current_submission_form as submission_form %}
-        {% with submission|external_review:user as external_review_task %}
+        {% with submission.external_review_task as external_review_task %}
             {% if external_review_task %}
-                <span class="submission_review"></span>
-                <a href="{{ external_review_task.url }}">{{ submission|ec_number }}</a>
+                <a href="{{ external_review_task.url }}"><span class="submission_review"></span>{{ submission|ec_number }}</a>
             {% else %}
-                {% with submission|additional_review:user as additional_review_task %}
-                {% if additional_review_task %}
-                    <span class="submission_review"></span>
-                    <a href="{{ additional_review_task.url }}">{{ submission|ec_number }}</a>
-                {% else %}
-                    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
-                {% endif %}
-                {% endwith %}
+                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
             {% endif %}
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% with submission.medical_categories.all as categories %}
-            {% if categories and user|has_flag:'internal' %}
+            {% if categories and user|has_flag:'is_internal' %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.expedited_review_categories.all as er_categories %}
-            {% if categories and user|has_flag:'internal' %}
+            {% if categories and user|has_flag:'is_internal' %}
                 <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
-        <div class="actions">
-            {% if submission|resubmission:user %}<span class="submission_resubmission"></span>{% endif %}
-        </div>
         {% endwith %}
     {% endif %}
     </li>
@@ -62,12 +57,6 @@
 </ol>
 
 <div class="paginator">
-    {% if user|has_flag:"internal" %}
-        <a href="{% url ecs.core.views.all_submissions %}">{% trans "More" %}</a>
-    {% else %}
-        <a href="{% url ecs.core.views.my_submissions %}">{% trans "More" %}</a>
-    {% endif %}
-
     {% if not submissions.number == 1 %}
         <a href="#" class="first_page open-in-widget">first</a>
     {% endif %}

@@ -5,7 +5,7 @@
     <ul class="submission_list_choose">
         {% for name in row %}
             {% with filterform|get_field:name as field %}
-                {{ field }} <li><label for="id_{{ name }}"><span class="submission_{{ name }}"></span>{{ field.label }}</label></li>
+                <li>{{ field }} <label for="id_{{ name }}"><span class="submission_{{ name }}"></span>{{ field.label }}</label></li>
             {% endwith %}
         {% endfor %}
     </ul>

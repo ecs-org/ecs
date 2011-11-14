@@ -7,6 +7,8 @@ from ecs.ecsmail.testcases import MailTestCase
 from ecs.workflow.tests import WorkflowTestCase
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_user, create_user
+from ecs.core.bootstrap import auth_groups
+from ecs.users.bootstrap import user_workflow
 
 
 class RegistrationTest(MailTestCase, WorkflowTestCase):
@@ -20,10 +22,6 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         following the link in the registration mail message,
         setting a password and comparing the provided user data afterwards.
         '''
-        
-        from ecs.core.bootstrap import auth_groups
-        from ecs.users.bootstrap import user_workflow
-
         # create user workflow
         auth_groups()
         user_workflow()

@@ -2,13 +2,12 @@
 from datetime import datetime
 
 from django import forms
-from django.forms.models import BaseModelFormSet, inlineformset_factory, modelformset_factory
+from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
-from ecs.core.models import Submission
 
 from ecs.utils.formutils import TranslatedModelForm
 
@@ -19,13 +18,12 @@ class MeetingForm(TranslatedModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'comments')
         labels = {
             'start': _(u'date and time'),
             'title': _(u'title'),
             'deadline': _(u'deadline'),
             'deadline_diplomathesis': _(u'deadline thesis'),
-            'comments': _('comments'),
         }
 
 class TimetableEntryForm(forms.Form):
@@ -72,33 +70,20 @@ class SubmissionReschedulingForm(forms.Form):
         current_meetings = submission.meetings.filter(started=None).order_by('start')
         self.fields['from_meeting'].queryset = current_meetings
         self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings])
-    
+
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        self.meeting = kwargs.pop('meeting')
-        self.category = kwargs.pop('category')
-        self.submissions = self.meeting.submissions.filter(medical_categories=self.category)
-        try:
-            kwargs['instance'] = AssignedMedicalCategory.objects.get(category=self.category, meeting=self.meeting)
-        except AssignedMedicalCategory.DoesNotExist:
-            pass
-        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(medical_categories=self.category, groups__name=u'EC-Board Member').order_by('email')
-
     class Meta:
         model = AssignedMedicalCategory
         fields = ('board_member',)
-        
-    def save(self, **kwargs):
-        commit = kwargs.get('commit', True)
-        kwargs['commit'] = False
-        obj = super(AssignedMedicalCategoryForm, self).save(**kwargs)
-        obj.meeting = self.meeting
-        obj.category = self.category
-        if commit:
-            obj.save()
-        return obj
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs['instance']
+        self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category)
+        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
+        self.fields['board_member'].queryset = User.objects.filter(medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
+
+AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory, extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
 
 class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
@@ -114,8 +99,8 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
     localec_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
 
     def __init__(self, *args, **kwargs):
-        from ecs.core.models import Vote
-        from ecs.core.models.voting import FINAL_VOTE_RESULTS
+        from ecs.votes.models import Vote
+        from ecs.votes.constants import FINAL_VOTE_RESULTS
         from django.db.models import Q
         meeting = kwargs.pop('meeting')
         super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
@@ -127,17 +112,19 @@ class RetrospectiveThesisExpeditedVoteForm(forms.Form):
             self.fields[k].initial = [x.pk for x in q.all()]
 
     def save(self):
-        from ecs.core.models.voting import Vote, PERMANENT_VOTE_RESULTS
+        from ecs.votes.models import Vote
         from ecs.users.utils import sudo
         from ecs.tasks.models import Task
         cd = self.cleaned_data
         votes = []
         for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])) + list(cd.get('localec_entries', [])):
-            vote = Vote.objects.create(top=entry, result='1')
+            submission_form = entry.submission.current_submission_form
+            vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'top': entry})
+            if not created:
+                vote.top = entry
+                vote.is_draft = False
+                vote.save()
             with sudo():
-                open_tasks = Task.objects.for_data(vote.submission_form.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
+                Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
             votes.append(vote)
         return votes

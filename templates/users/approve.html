@@ -12,8 +12,8 @@
 
     <form action="" method="post">
         <input type="submit" 
-            name="{{ profile.approved_by_office|yesno:'retract,approve'}}" 
-            value="{{ profile.approved_by_office|yesno:'Bestätigung zurückziehen,Bestätigen'}}"
+            name="{{ profile.is_approved_by_office|yesno:'retract,approve'}}" 
+            value="{{ profile.is_approved_by_office|yesno:'Bestätigung zurückziehen,Bestätigen'}}"
         />
     </form>
 </div>

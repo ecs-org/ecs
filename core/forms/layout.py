@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.utils.translation import ugettext as _
 
-from ecs.core.forms.forms import NotificationForm, ProgressReportNotificationForm, CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm
+from ecs.notifications.forms import (NotificationForm, ProgressReportNotificationForm,
+    CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm, SafetyNotificationForm)
 
 # ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
 #  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
@@ -135,6 +136,15 @@ NOTIFICATION_FORM_TABS[NotificationForm] = [
     (_(u'documents'), []),
 ]
 
+NOTIFICATION_FORM_TABS[SafetyNotificationForm] = [
+    (_(u'General information'), [
+        (_(u'General information'), [
+            'safety_type', 'submission_forms', 'comments',
+        ]),
+    ]),
+    (_(u'documents'), []),
+]
+
 NOTIFICATION_FORM_TABS[SingleStudyNotificationForm] = [
     (_(u'General information'), [
         (_(u'General information'), [
@@ -150,16 +160,16 @@ NOTIFICATION_FORM_TABS[AmendmentNotificationForm] = [
             'comments',
         ]),
     ]),
-    (_(u'Changes'), [])
+    (_(u'Made Changes'), [])
 ]
 
 
 NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[SingleStudyNotificationForm][:1] + [
     (_(u'Study status'), [
-        (u'status', [
-            'reason_for_not_started', 'study_aborted', 'completion_date',
+        (u'Status', [
+            'study_started', 'reason_for_not_started', 'study_aborted', 'completion_date',
         ]),
-        (u'participant', [
+        (u'participants', [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',
         ]),
         (u'SAE / SUSAR', [
@@ -172,12 +182,12 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
 NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
     (_(u'General information'), [
         (_(u'General information'), [
-            'submission_form', 'extension_of_vote_requested', 'comments',
+            'submission_form', 'comments',
         ]),
     ]),
     (_(u'Study status'), [
         (_(u'Status'), [
-            'reason_for_not_started', 'runs_till',
+            'study_started', 'reason_for_not_started', 'runs_till',
         ]),
         (_(u'participants'), [
             'recruited_subjects', 'finished_subjects', 'aborted_subjects',

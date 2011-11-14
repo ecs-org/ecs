@@ -1,4 +1,4 @@
-{% load humanize core communication %}
+{% load humanize core communication i18n %}
 
 {% for thread in threads %}
 <div class="communication_thread">
@@ -8,11 +8,11 @@
     {% for message in thread.message_list %}
         <li class="message">
             <div class="head">
-                <span class="sender">{{ message.sender }}</span>
+                <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
                 <span class="preview"></span><span class="preview_text">{{ message|preview:80 }}</span>
-                <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
+                <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
             </div>
-            <pre class="body">{{ message.text|safe }}<pre>
+            <pre class="body">{{ message.text|urlize }}</pre>
         </li>
     {% endfor %}
     </ul>

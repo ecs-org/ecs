@@ -73,38 +73,39 @@
            src: "./media/DejaVuSansMono-Bold.ttf";
            font-weight: bold;
         }
-        *{
-          line-height: 10pt;
+        * {
+          line-height: 14pt;
         }
         body, #content {
             font-family: DejaSans;
-            font-size: 7pt;
+            font-size: 10pt;
         }
         p {
             padding: 2pt 0;
         }
         h1 {
-          font-size: 14pt;
+          font-size: 16pt;
+          line-height: 18pt;
           text-align: center;
-          margin: 0cm;
+          margin: 0 0 0.5cm 0;
           padding: 0.1cm;
         }
         h2 {
-          font-size: 12pt;
-          line-height: 14pt;
+          font-size: 14pt;
+          line-height: 16pt;
           margin-bottom: 0.4cm;
         }
         h3 {
           display: block;
-          font-size: 9pt;
-          line-height: 12pt;
+          font-size: 12pt;
+          line-height: 14pt;
           font-weight: bold;
           margin: 0.2cm 0;
           padding: 0.2cm 0;
           border-top: 1px solid #000;
         }
         h4 {
-          font-size: 8pt;
+          font-size: 10pt;
           font-weight: normal;
           margin-bottom: 0.2cm;
           margin-top: 0.2cm;
@@ -144,14 +145,17 @@
           font-style: italic;
         }
         .small {
-          font-size: 6pt !important;
+          font-size: 8pt !important;
         }
         .big {
-          font-size: 8pt;
-          line-height: 12pt;
+          font-size: 12pt;
+          line-height: 14pt;
         }
         .bold {
           font-weight: 900;
+        }
+        .center {
+          text-align: center;
         }
         .center_bold {
           text-align: center;
@@ -166,13 +170,14 @@
         }
         .checkbox {
           font-family: DejaSans;
+          font-size: 10pt;
           border: 1pt solid #000;
           font-weight: 900;
           width: 0.25cm;
-          height: 0.22cm;
+          height: 0.24cm;
+          line-height: 0.25cm;
           display: inline-block;
           text-align: center;
-          padding: 0 0 0.08cm;
         }
         .nopadding th,
         .nopadding td {
@@ -198,8 +203,16 @@
         }
         table.withrowborders,
         table.withrowborders tr {
-          border-bottom: 1pt solid #000000;
           border-top: 1pt solid #000000;
+        }
+        table.withrowborders tr td {
+          padding: 4pt 0;
+        }
+        .list {
+          margin-bottom: 0.5cm;
+        }
+        .list li {
+          list-style: disc inside;
         }
         .withrowborders td:first-child {
           width: 1cm;
@@ -234,21 +247,24 @@
           padding: 2pt;
         }
         .two_columns {
-          display: table;
+          display: block;
+          float: left;
           width: 100%;
           margin-bottom: 1cm;
         }
         .column_left,
         .column_right {
           display: block;
-          float: left;
-          width: 46%;
+          width: 48%;
           height: 4cm;
           border: 1pt solid #000;
           padding: 0.5%;
         }
         .column_left {
-          margin-right: 2%;
+          float: left;
+        }
+        .column_right {
+          float: right;
         }
         .two_columns span {
           font-size: 7pt;
@@ -256,7 +272,7 @@
         
         .signature_date {
           display: block;
-          padding: 2cm 0 1cm 0.2cm;
+          padding: 2cm 0.2cm 1cm;
           vertical-align: bottom;
         }
         .signature_date .line {
@@ -264,10 +280,19 @@
           float: left;
           border-top: 1pt solid #000;
           padding-top: 0.2cm;
-          width: 7cm;
+          width: 8cm;
         }
-        .signature_date .line:first-child {
-          margin-right: 1.5cm;
+        .signature_date .line:last-child {
+          float: right;
+        }
+        .diff span{
+            display: block;
+        }
+        .diff span.inserted{
+            color: #006600;
+        }
+        .diff span.deleted{
+            color: #660000;
         }
     </style>
     {% endblock %}

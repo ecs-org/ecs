@@ -68,6 +68,7 @@
   padding: 5px;
   font-size: 14px;
   width: 286px;
+  clear: both;
 }
 .innerwrap input[type=submit] {
 	display: inline-block;
@@ -109,31 +110,41 @@
   border-right: 1px solid #C9DBE5;
   margin-right: 10px;
 }
-.login_error {
+.login_error .errorlist {
   display: inline-block;
   margin-top: 20px;
   color: red;
 }
-.login_error p{
-  margin: 0 6px;
-}
-#content .login_error ul {
+.login_error ul,
+.register_error ul {
   display: inline-block;
-  margin: 10px 0;
+  margin: 0 !important;
 }
-#content .login_error ul ul {
+.login_error ul ul,
+.register_error ul ul {
   margin: 0;
 }
-#content .login_error ul li {
-  background: #F7E3E3;
-  padding: 5px;
-  margin-bottom: 5px;
-  max-width: 286px;
+.login_error ul li,
+.register_error ul li {
+  margin: 0 0 5px 5px;
+  border: none;
+  max-width: none;
+  padding: 0;
+  background: none;
 }
-#content .login_error ul ul li {
+.login_error ul ul li {
   border: none;
   padding: 8px 0;
   margin-left: 6px;
+}
+.login_error_msg {
+  display: block;
+  margin: 20px 5px 5px;
+  color: red;
+  padding: 5px;
+  background: #FAE5E3;
+  border: 1px solid #F4CECB;
+  border-radius: 3px;
 }
 
 /* catalogue list */

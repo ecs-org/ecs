@@ -4,11 +4,10 @@ import logging
 import re
 import hashlib
 import traceback
-import os
 
 from socket import gethostbyname
 
-from lamson.routing import route, route_like, stateless
+from lamson.routing import route, stateless
 from lamson.bounce import bounce_to
 from lamson.server import SMTPError
 

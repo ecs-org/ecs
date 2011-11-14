@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class UserSwitcherForm(forms.Form):
     user = forms.ModelChoiceField(
-        User.objects.filter(groups__name='userswitcher_target').order_by('email'), 
+        User.objects.filter(groups__name='userswitcher_target').select_related('ecs_profile').order_by('email'),
         required=False, 
         label=_(u'user'), 
         widget=forms.Select(attrs={'id': 'userswitcher_input'})

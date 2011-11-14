@@ -6,8 +6,8 @@
         <li>
             <a href="#" class="active">{% trans "Administration" %}</a>
             <ul class="tab_headers">
-                <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
-                <li><a href="{% url ecs.users.views.invite %}">{% trans "Invite User" %}</a></li>
+                <li{% if active == 'user_administration' %} class="active"{% endif %}><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
+                <li{% if active == 'user_invite' %} class="active"{% endif %}><a href="{% url ecs.users.views.invite %}">{% trans "Invite User" %}</a></li>
             </ul>
         </li>
     </ul>

@@ -104,18 +104,6 @@ def is_docstash(obj):
     return isinstance(obj, DocStash)
 
 @register.filter
-def resubmission(submission, user):
-    return submission.resubmission_task_for(user)
-
-@register.filter
-def external_review(submission, user):
-    return submission.external_review_task_for(user)
-
-@register.filter
-def additional_review(submission, user):
-    return submission.additional_review_task_for(user)
-
-@register.filter
 def paper_submission_review(submission, user):
     return submission.paper_submission_review_task_for(user)
 
@@ -131,3 +119,26 @@ def yes_no_unknown(v):
         return _('no')
     else:
         return _('Unknown')
+
+@register.filter
+def last_recessed_vote(top):
+    if top.submission:
+        return top.submission.get_last_recessed_vote(top)
+    return None
+
+
+@register.filter
+def allows_amendments_by(sf, user):
+    return sf.allows_amendments(user)
+    
+@register.filter
+def allows_edits_by(sf, user):
+    return sf.allows_edits(user)
+
+@register.filter
+def allows_export_by(sf, user):
+    return sf.allows_export(user)
+
+@register.filter
+def is_presenting_party(user, sf):
+    return user in sf.get_presenting_parties()

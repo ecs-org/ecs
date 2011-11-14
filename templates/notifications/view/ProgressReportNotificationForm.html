@@ -1,9 +1,9 @@
 {% extends 'notifications/view/ReportNotificationForm.html' %}
-
+{% load i18n %}
 {% block table_rows %}
-    {{ block.super }}
     {% with notification.progressreportnotification as notification %}
-        <tr><th>Votumsverlängerungsantrag</th><td>{{ notification.extension_of_vote_requested|yesno:"Ja,Nein" }}</td></tr>
-        <tr><th>Die Studie läuft noch bis voraussichtlich</th><td>{{ notification.runs_till|date:'d.m.Y' }}</td></tr>
+        {{ block.super }}
+        <tr><th>Votumsverlängerungsantrag: </th><td>Ja</td></tr>
+        <tr><th>Die Studie läuft noch bis voraussichtlich: </th><td>{{ notification.runs_till|date:'d.m.Y' }}</td></tr>
     {% endwith %}
 {% endblock %}

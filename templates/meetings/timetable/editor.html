@@ -1,16 +1,14 @@
-{% extends 'meetings/detail.html' %}
 {% load core i18n %}
 
-{% block meeting_detail %}
 {% if running_optimization %}
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}
 <div id="meeting_editor">
-    <h2>{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title }}</h2>
-    {% if not running_optimization %}
+    {% if not readonly %}
         <ol class="options">
-            <li><a href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
-            <li><a href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable_long meeting_pk=meeting.pk,algorithm='ga' %}">Lange optimieren</a></li>
         </ol>
     {% endif %}
     <div class="waiting_time">
@@ -24,20 +22,24 @@
     <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}">
-            <span class="dragHandle">#{{ entry }} {% if not running_optimization %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
-            <h3>
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}">
+            <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
+            <h4>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
                 {% if entry.submission %}
                     {{ entry.submission|ec_number }} {{ entry.submission.project_title_display|smart_truncate:40 }}
                 {% endif %}
-            </h3>
-            {% if not running_optimization %}
-                <a class="remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}">remove</a>
-                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post">
-                    <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration"/>
-                    <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start"/>
+            </h4>
+            {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
+            {% if not readonly %}
+                {% if not entry.submission %}
+                    <a class="open-in-widget remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}"></a>
+                {% endif %}
+                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post" class="open-in-widget">
+                    {% csrf_token %}
+                    <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration">
+                    <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start">
                 </form>
             {% endif %}
             {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
@@ -54,7 +56,7 @@
     {% endfor %}
     </ol>
     <div id="userlist">
-        <h5>Teilnehmer ({{ meeting.users_with_constraints|length }})</h5>
+        <h4>Teilnehmer ({{ meeting.users_with_constraints|length }})</h4>
         <ul>
             {% for user in meeting.users_with_constraints %}
                 <li><span class="user">{{ user }}</span>
@@ -71,17 +73,16 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                    <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                    {% if not readonly %}
+                        <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                    {% endif %}
                     </div>
                 </li>
             {% endfor %}
         </ul>
     </div>
 </div>
-{% endblock %}
 
-{% block jsbottom %}
-{{ block.super }}
 <script type="text/javascript">
 window.addEvent('domready', function(){
 {% if running_optimization %}
@@ -109,6 +110,7 @@ window.addEvent('domready', function(){
             }
         });
     });
+    {% if not readonly %}
     new Sortables('timetable', {
         clone: true,
         opacity: 0.5,
@@ -123,11 +125,12 @@ window.addEvent('domready', function(){
             var fromIndex = dndInfo.startIndex;
             dndInfo.startIndex = null;
             if(fromIndex != toIndex && fromIndex !== null){
-                window.location.href = '{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex;
+                var widget = $('timetable_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
+                widget.load('{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
             }
         }
+        {% endif %}
     });
 {% endif %}
 });
 </script>
-{% endblock %}

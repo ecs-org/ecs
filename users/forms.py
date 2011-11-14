@@ -8,8 +8,8 @@ from django.conf import settings
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
-from ecs.core.forms.fields import MultiselectWidget
-from ecs.utils.formutils import TranslatedModelForm
+from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
+from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
 
 class EmailLoginForm(forms.Form):
@@ -130,7 +130,7 @@ class ProfileForm(TranslatedModelForm):
 
 class AdministrationFilterForm(forms.Form):
     approval = forms.ChoiceField(required=False, choices=(
-        ('both', _(u'Both')),
+        ('both', _(u'Approved/Not Approved')),
         ('yes', _(u'Approved')),
         ('no', _(u'Not Approved')),
     ))
@@ -140,25 +140,27 @@ class AdministrationFilterForm(forms.Form):
         ('inactive', _(u'inactive')),
     ))
     groups = forms.ModelMultipleChoiceField(required=False, queryset=Group.objects.all())
+    medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
     keyword = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
         super(AdministrationFilterForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
 
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
     medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
-    internal = forms.BooleanField(required=False, label=_('Internal'))
-    help_writer = forms.BooleanField(required=False, label=_('Help writer'))
+    is_internal = forms.BooleanField(required=False, label=_('Internal'))
+    is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
     class Meta:
         model = User
-        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'internal', 'help_writer')
+        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'is_internal', 'is_help_writer')
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
@@ -166,13 +168,13 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['gender'].initial = profile.gender
         self.fields['title'].initial = profile.title
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
             self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
             self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
         self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
-        self.fields['internal'].initial = profile.internal
-        self.fields['help_writer'].initial = profile.help_writer
+        self.fields['is_internal'].initial = profile.is_internal
+        self.fields['is_help_writer'].initial = profile.is_help_writer
 
     def save(self, *args, **kwargs):
         user = super(UserDetailsForm, self).save(*args, **kwargs)
@@ -183,12 +185,12 @@ class UserDetailsForm(forms.ModelForm):
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
         profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
-        profile.board_member = user.groups.filter(name=u'EC-Board Member').exists()
-        profile.executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
-        profile.thesis_review = user.groups.filter(name=u'EC-Thesis Review Group').exists()
-        profile.insurance_review = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
-        profile.expedited_review = user.groups.filter(name=u'Expedited Review Group').exists()
-        for k in ('internal', 'help_writer'):
+        profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
+        profile.is_executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
+        profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
+        profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
+        profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
+        for k in ('is_internal', 'is_help_writer'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
@@ -202,14 +204,14 @@ class InvitationForm(forms.Form):
     groups = forms.ModelMultipleChoiceField(required=False, queryset=Group.objects.all(), label=_('Groups'))
     medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
-    internal = forms.BooleanField(required=False, label=_('Internal'))
-    help_writer = forms.BooleanField(required=False, label=_('Help writer'))
+    is_internal = forms.BooleanField(required=False, label=_('Internal'))
+    is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
     invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))
 
     def __init__(self, *args, **kwargs):
         super(InvitationForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
             self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
             self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
 
@@ -229,16 +231,32 @@ class InvitationForm(forms.Form):
         user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
         user.save()
         profile = user.get_profile()
-        profile.approved_by_office = True
+        profile.is_approved_by_office = True
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
-        profile.board_member = user.groups.filter(name=u'EC-Board Member').exists()
-        profile.executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
-        profile.thesis_review = user.groups.filter(name=u'EC-Thesis Review Group').exists()
-        profile.insurance_review = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
-        profile.expedited_review = user.groups.filter(name=u'Expedited Review Group').exists()
-        for k in ('internal', 'help_writer'):
+        profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
+        profile.is_executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
+        profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
+        profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
+        profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
+        for k in ('is_internal', 'is_help_writer'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
+
+class IndispositionForm(forms.ModelForm):
+    is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
+    communication_proxy = forms.ModelChoiceField(queryset=User.objects.all().select_related('ecs_profile'), required=False, label=_('communication_proxy'),
+        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})))
+
+    class Meta:
+        model = UserProfile
+        fields = ('is_indisposed', 'communication_proxy')
+
+    def clean(self):
+        cd = super(IndispositionForm, self).clean()
+
+        if cd.get('is_indisposed', False):
+            require_fields(self, ('communication_proxy',))
+
+        return cd

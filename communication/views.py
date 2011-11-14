@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
-import traceback
-import datetime
-import os
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -14,12 +10,16 @@ from django.utils.translation import ugettext as _
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
-from ecs.communication.models import Message, Thread
+from ecs.communication.models import Thread
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
+from ecs.utils.security import readonly
+from ecs.users.utils import user_flag_required
 
+
+@readonly(methods=['GET'])
 def new_thread(request, submission_pk=None, to_user_pk=None):
     submission, task, reply_to, to_user = None, None, None, None
 
@@ -34,7 +34,7 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
         task = get_object_or_404(Task, pk=task_pk)
         submission = task.data.get_submission() or submission
 
-    form = SendMessageForm(submission, request.user, request.POST or None)
+    form = SendMessageForm(submission, request.user, request.POST or None, to=to_user)
     thread = None
 
     if request.method == 'POST' and form.is_valid():
@@ -49,6 +49,8 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
         'thread': thread,
     })
 
+
+@readonly(methods=['GET'])
 def read_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     msg = thread.last_message 
@@ -56,14 +58,7 @@ def read_thread(request, thread_pk=None):
         msg.unread = False
         msg.save()
 
-    def _get_reply_text(msg):
-        if msg.sender == request.user:  # bump
-            return u'\n>' + u'\n>'.join(msg.text.splitlines())
-        else:
-            reply_text = _(u'{sender} schrieb:').format(sender=msg.sender)
-            return reply_text + u'\n>' + u'\n>'.join(msg.text.splitlines())
-
-    form = ReplyDelegateForm(request.user, request.POST or None, initial={'text': _get_reply_text(msg)})
+    form = ReplyDelegateForm(request.user, request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
         delegate_to = form.cleaned_data.get('to')
@@ -73,25 +68,29 @@ def read_thread(request, thread_pk=None):
         if delegate_to:
             thread.delegate(request.user, delegate_to)
             thread = Thread.objects.create(
-                subject=_(u'Anfrage bezüglich: {0}').format(thread.subject),
+                subject=_(u'Bzgl.: {0}').format(thread.subject),
                 sender=request.user,
                 receiver=delegate_to,
                 task=thread.task,
                 submission=thread.submission,
+                related_thread=thread,
             )
         msg = thread.add_message(request.user, text=form.cleaned_data['text'])
-        form = ReplyDelegateForm(request.user, None, initial={'text': _get_reply_text(msg)})
+        form = ReplyDelegateForm(request.user, None)
 
     return render(request, 'communication/thread.html', {
         'thread': thread,
         'form': form,
     })
 
+
 def close_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.mark_closed_for_user(request.user)
     return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
-    
+
+
+@readonly()
 @tracking_hint(exclude=True)
 def incoming_message_widget(request):
     qs = Thread.objects.incoming(request.user).open(request.user)
@@ -108,10 +107,13 @@ def incoming_message_widget(request):
         page_size=4,
         submission=submission,
         extra_context={
-            'incoming': True
+            'incoming': True,
+            'widget': True,
         }
     )
 
+
+@readonly()
 @tracking_hint(exclude=True)
 def outgoing_message_widget(request):
     qs = Thread.objects.outgoing(request.user).open(request.user)
@@ -128,31 +130,36 @@ def outgoing_message_widget(request):
         page_size=4,
         submission=submission,
         extra_context={
-            'incoming': False
+            'incoming': False,
+            'widget': True,
         }
     )
 
+
+@readonly()
 @tracking_hint(exclude=True)
+@user_flag_required('is_internal')
 def communication_overview_widget(request, submission_pk=None):
     return render(request, 'communication/widgets/overview.inc', {
         'threads': Thread.objects.filter(submission__pk=submission_pk),
     })
 
-def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
-    queryset = queryset.select_related('thread')
 
+@readonly()
+def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
     sort_session_key = '%s:sort' % session_prefix
-    sort = request.GET.get('sort', request.session.get(sort_session_key, '-timestamp'))
+    raw_sort = request.GET.get('sort', request.session.get(sort_session_key, '-last_message__timestamp'))
     
+    sort_options = ('last_message__timestamp', 'user', 'submission')
+    sort = raw_sort
     if sort:
-        if not sort in ('timestamp', '-timestamp', 'user', '-user', 'thread__submission', '-thread__submission'):
+        field = sort if sort[0] != '-' else sort[1:]
+        if field not in sort_options:
             sort = None
-        if sort and sort.endswith('user'):
-            if user_sort:
-                queryset = queryset.order_by(sort.replace('user', user_sort))
-            else:
-                sort = None
-    
+        elif field == 'user':
+            sort = sort.replace('user', user_sort) if user_sort else None
+    if sort:
+        queryset = queryset.order_by(sort)
     request.session[sort_session_key] = sort
 
     page_session_key = 'dashboard:%s:page' % session_prefix
@@ -160,6 +167,9 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
         page_num = int(request.GET.get('p', request.session.get(page_session_key, 1)))
     except ValueError:
         page_num = 1
+
+    queryset = queryset.select_related('last_message', 'last_message__sender', 'last_message__receiver',
+        'last_message__sender__ecs_profile', 'last_message__receiver__ecs_profile', 'submission')
     paginator = Paginator(queryset, page_size)
     try:
         page = paginator.page(page_num)
@@ -170,13 +180,15 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
 
     context = {
         'page': page,
-        'sort': sort,
+        'sort': raw_sort,
         'submission': submission,
     }
     if extra_context:
         context.update(extra_context)
     return render(request, template, context)
 
+
+@readonly()
 def list_threads(request):
     usersettings = request.user.ecs_settings
 
@@ -207,10 +219,10 @@ def list_threads(request):
 
     return message_widget(request, 
         template='communication/threads.html',
-        queryset=queryset_stage2.order_by('-last_message__timestamp'),
+        queryset=queryset_stage2,
         session_prefix='messages:unified',
         user_sort='receiver__username',
-        page_size=10,
+        page_size=15,
         extra_context={'filterform': filterform},
     )
 

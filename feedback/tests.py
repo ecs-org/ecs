@@ -8,7 +8,6 @@ Replace these with more appropriate tests for your application.
 from django.core.urlresolvers import reverse
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.feedback.models import Feedback
 from ecs.users.utils import create_user
 
 

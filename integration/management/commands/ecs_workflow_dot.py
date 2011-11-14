@@ -4,7 +4,8 @@ from django.core.management.base import BaseCommand, CommandError
 
 from ecs.workflow.models import Graph
 from ecs.workflow.utils import make_dot
-from ecs.core.models import Submission, Vote
+from ecs.core.models import Submission
+from ecs.votes.models import Vote
 from ecs.meetings.models import Meeting
 from ecs.notifications.models import Notification
 from ecs.users.models import UserProfile

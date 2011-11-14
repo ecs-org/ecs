@@ -5,6 +5,7 @@ import os
 import tempfile
 import datetime
 import mimetypes
+import logging
 from uuid import uuid4
 
 from django.db import models
@@ -25,14 +26,19 @@ from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
 from ecs.mediaserver.client import generate_media_url, generate_pages_urllist, download_from_mediaserver
 
-from ecs.utils.pdfutils import pdf_isvalid
+from ecs.utils.pdfutils import sanitize_pdf, PDFValidationError
+
+
+logger = logging.getLogger(__name__)
 
 
 class DocumentPersonalization(models.Model):
     id = models.SlugField(max_length=36, primary_key=True, default=lambda: uuid4().get_hex())
     document = models.ForeignKey('Document', db_index=True)
     user = models.ForeignKey(User, db_index=True)
-    
+
+    objects = AuthorizationManager()
+
     def __unicode__(self):
         return "%s - %s - %s - %s" % (self.id, str(self.document), self.document.get_filename(), self.user.get_full_name())
 
@@ -41,15 +47,17 @@ class DocumentType(models.Model):
     name = models.CharField(max_length=100)
     identifier = models.CharField(max_length=30, db_index=True, blank=True, default= "")
     helptext = models.TextField(blank=True, default="")
-    hidden = models.BooleanField(default=False)
+    is_hidden = models.BooleanField(default=False)
+    is_downloadable = models.BooleanField(default=True)
 
     def __unicode__(self):
         return ugettext(self.name)
 
+
 def incoming_document_to(instance=None, filename=None):
     instance.original_file_name = os.path.basename(os.path.normpath(filename)) # save original_file_name
     _, file_ext = os.path.splitext(filename)
-    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid_document + file_ext[:5]))
+    target_name = os.path.normpath(os.path.join(settings.INCOMING_FILESTORE, instance.uuid + file_ext[:5]))
     return target_name
     
 class DocumentFileStorage(FileSystemStorage):
@@ -81,6 +89,9 @@ class DocumentManager(AuthorizationManager):
         tmp.write(buf)
         tmp.flush()
         tmp.seek(0)
+        
+        if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
+            kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
 
         kwargs.setdefault('date', datetime.datetime.now())
         doc = self.create(file=File(open(tmpname,'rb')), **kwargs)
@@ -107,7 +118,7 @@ C_STATUS_CHOICES = (
 )
 
 class Document(models.Model):
-    uuid_document = models.SlugField(max_length=36, unique=True)
+    uuid = models.SlugField(max_length=36, unique=True)
     hash = models.SlugField(max_length=32)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
@@ -132,6 +143,12 @@ class Document(models.Model):
     
     objects = DocumentManager()
     
+    @property
+    def doctype_name(self):
+        if self.doctype_id:
+            return _(self.doctype.name)
+        return u"Sonstige Unterlagen"
+    
     def __unicode__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
@@ -155,21 +172,21 @@ class Document(models.Model):
             brand = False
         else:
             personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-            brand = self.branding == 'p' or self.branding == 'b'
+            brand = self.branding in ('p', 'b')
 
-        return generate_media_url(self.uuid_document, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
+        return generate_media_url(self.uuid, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
         ''' load actual data from mediaserver including optional branding ; you rarely use this. '''
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-        brand = self.branding == 'p' or self.branding == 'b'
-        return download_from_mediaserver(self.uuid_document, self.get_filename(), personalization=personalization, brand=brand)
+        brand = self.branding in ('p', 'b')
+        return download_from_mediaserver(self.uuid, self.get_filename(), personalization=personalization, brand=brand)
 
     def get_pages_list(self): 
         ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height') pictures
         for every supported rendersize options for every page of the document
         '''
-        return generate_pages_urllist(self.uuid_document, self.pages)
+        return generate_pages_urllist(self.uuid, self.pages)
                
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
@@ -180,18 +197,20 @@ class Document(models.Model):
         return False
 
     def save(self, **kwargs):
-        print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid_document, self.mimetype, self.status, self.retries))
+        print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid, self.mimetype, self.status, self.retries))
 
-        if not self.uuid_document: 
-            self.uuid_document = uuid4().get_hex() # generate a new random uuid
+        if not self.uuid: 
+            self.uuid = uuid4().get_hex() # generate a new random uuid
             content_type = None
             if self.file.name or self.original_file_name:
                 filename_to_check = self.file.name if self.file.name else self.original_file_name
                 content_type, encoding = mimetypes.guess_type(filename_to_check) # look what kind of mimetype we would guess
 
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
-                if not pdf_isvalid(self.file):
-                    raise ValidationError('no valid pdf')
+                try:
+                    sanitize_pdf(self.file, decrypt=False)
+                except PDFValidationError as e:
+                    logger.error('not a valid pdf document, but mimetype was application/pdf')
 
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
@@ -213,14 +232,16 @@ class Document(models.Model):
 def _post_document_save(sender, **kwargs):
     # hack for situations where there is no celerybeat
     if settings.CELERY_ALWAYS_EAGER:
-        from documents.tasks import document_tamer
+        from ecs.documents.tasks import document_tamer
         document_tamer.delay().get()
     
 class Page(models.Model):
     doc = models.ForeignKey(Document)
     num = models.PositiveIntegerField()
     text = models.TextField()        
-        
+
+    objects = AuthorizationManager()
+
 def _post_page_delete(sender, **kwargs):
     from haystack import site
     site.get_index(Page).remove_object(kwargs['instance'])

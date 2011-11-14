@@ -14,17 +14,21 @@
 
 {% block content %}
 
-    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+    {% if diff %}
+        <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
 
-    <div class="diff_toggles">
-        <a href="#" id="diff_show_old">{% trans "old" %}</a>
-        <a href="#" id="diff_show_new">{% trans "new" %}</a>
-        <a href="#" id="diff_show_all">{% trans "all" %}</a>
-    </div>
-    
-    <div class="diff">
-        {{ diff.html|safe }}
-    </div>
+        <div class="diff_toggles">
+            <a href="#" id="diff_show_old">{% trans "old" %}</a>
+            <a href="#" id="diff_show_new">{% trans "new" %}</a>
+            <a href="#" id="diff_show_all">{% trans "all" %}</a>
+        </div>
+        
+        <div class="diff">
+            {{ diff.html|safe }}
+        </div>
+    {% else %}
+        <div class="diff"><em>{% trans 'No changes.' %}</em></div>
+    {% endif %}
 
     <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
     

@@ -69,9 +69,9 @@
   {{ block.super }}
   <script type="text/javascript">
     window.addEvent('domready', function() {
-        var sidebar = $$('#sidebar')[0];
-        var header = $$('#header')[0];
-        var content = $$('#content')[0];
+        var sidebar = $('sidebar');
+        var header = $('header');
+        var content = $('content');
         sidebar.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
         header.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
         content.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});

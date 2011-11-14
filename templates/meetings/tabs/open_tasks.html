@@ -1,0 +1,27 @@
+{% load core i18n userutils %}
+
+{% for top, tasks in open_tasks.iteritems %}
+<h3>{{ top }}: <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">{{ top.submission|ec_number }}</a> {{ top.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}</h3>
+<div class="task_back_log">
+    <table>
+        <tr>
+            <th>{% trans "Name" %}</th>
+            <th>{% trans "Groups" %}</th>
+            <th>{% trans "Accepted?" %}</th>
+            <th>{% trans "Created At" %}</th>
+            <th>{% trans "Assigend At" %}</th>
+            <th>{% trans "Assigend To" %}</th>
+        </tr>
+    {% for task in tasks %}
+        <tr class="task{% if task.closed_at %} closed{% endif %}{% if task.deleted_at %} deleted{% endif %}">
+            <td>{{ task.task_type }}</td>
+            <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            <td>{{ task.accepted|yesno }}</td>
+            <td>{{ task.created_at|date:'d.m.Y H:i' }}</td>
+            <td>{% if task.assigned_at %}{{ task.assigned_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
+            <td>{% if task.assigned_to %}{{ task.assigned_to }}{% else %}-{% endif %}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</div>
+{% endfor %}

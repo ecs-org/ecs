@@ -19,12 +19,14 @@
 
     {{ block.super }}
     
-    <pdf:nextpage />
+    <div class="pb_after"></div>
     
     <h2>Liste der Änderungen</h2>
     
     {% with notification.amendmentnotification as notification %}
-        {{ notification.diff|safe }}
+        <div class="diff">
+            {{ notification.diff|safe }}
+        </div>
     {% endwith %}
 
 

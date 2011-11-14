@@ -1,9 +1,10 @@
-{% extends 'db/notifications/wkhtml2pdf/base.html' %}
-
+{% extends 'db/notifications/wkhtml2pdf/ReportNotificationForm.html' %}
+{% load i18n %}
 {% block mainitem %}
-    {{ block.super }}
+    
     {% with notification.progressreportnotification as notification %}
-        <p>Votumsverlängerungsantrag <b>{{ notification.extension_of_vote_requested|yesno:"Ja,Nein" }}</b></p>
-        <p>Die Studie läuft noch bis voraussichtlich <b>{{ notification.runs_till|date:'d.m.Y' }}</b></p>
+        {{ block.super }}
+        <p>Votumsverlängerungsantrag: Ja</p>
+        <p>Die Studie läuft noch bis voraussichtlich: {{ notification.runs_till|date:'d.m.Y' }}</p>
     {% endwith %}
 {% endblock %}

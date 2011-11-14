@@ -6,7 +6,7 @@ HTML_TITLE_RE = re.compile('<title>([^<]*)</title>', re.IGNORECASE)
 HTML_TITLE_MAX_OFFSET = 1000
 
 class TrackingMiddleware(object):
-    def process_request(self, request):
+    def process_view(self, request, view, args, kwargs):
         if request.user.is_anonymous() or request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
             request.tracking_data = None
         else:

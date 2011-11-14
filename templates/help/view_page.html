@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block nav_left %}
-    {% if user|has_flag:"help_writer" %}
+    {% if user|has_flag:"is_help_writer" %}
         <span class="help_edit">
             <a href="{% url ecs.help.views.edit_help_page page_pk=page.pk %}">edit</a> 
         </span>
@@ -30,6 +30,27 @@
         | <span class="help_diff">
             <a href="{% url ecs.help.views.difference_help_pages page_pk=page.pk %}">Version: {{ versions }} ({% trans "last edited" %} {{ current.revision.date_created|timesince }} {% trans "ago by" %} {{ current.revision.user }})</a>
         </span>
+        <span class="help_review_status {{ page.review_status }}">
+            | Status: {{ page.get_review_status_display }}
+        </span>
+        {% if page.review_status == 'new' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.ready_for_review page_pk=page.pk %}">ready for review</a>
+            </span>
+        {% endif %}
+        {% if page.review_status == 'ready_for_review' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.review_ok page_pk=page.pk %}">review ok</a> 
+            </span>
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.review_fail page_pk=page.pk %}">review fail</a> 
+            </span>
+        {% endif %}
+        {% if page.review_status == 'review_ok' or page.review_status == 'review_fail' %}
+            | <span class="help_review_status">
+                <a href="{% url ecs.help.views.ready_for_review page_pk=page.pk %}">review again</a> 
+            </span>
+        {% endif %}
     {% endif %}
 {% endblock %}
       

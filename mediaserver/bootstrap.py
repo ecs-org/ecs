@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import os.path
+import os
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured

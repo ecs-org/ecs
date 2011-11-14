@@ -59,6 +59,9 @@ ecs.textarea = {
     },
     installToolbar: function(el, items, target){
         return $(el).retrieve('ecs.textarea.TextArea').installToolbar(items, target);
+    },
+    installToolbarItem: function(el, item, target){
+        return $(el).retrieve('ecs.textarea.TextArea').installToolbarItem(item, target);
     }
 };
 
@@ -97,17 +100,22 @@ ecs.textarea.TextArea = new Class({
         }
         this.updateHeight();
     },
+    installToolbarItem: function(item, ta){
+        ta = ta || this.textarea;
+        this.toolbar.push(item);
+        this.toolbarElement.grab(item(ta));
+    },
     installToolbar: function(items, ta){
         ta = ta || this.textarea;
         items = items || this.toolbar;
         if(!items){
             return null;
         }
-        this.toolbar = items;
-        var toolbar = new Element('div', {'class': 'ecs-TextAreaToolbar'});
+        this.toolbar = [];
+        var toolbar = this.toolbarElement = new Element('div', {'class': 'ecs-TextAreaToolbar'});
         items.each(function(item){
-            toolbar.grab(item(ta));
-        });
+            this.installToolbarItem(item, ta);
+        }, this);
         toolbar.inject(ta, 'before');
         return toolbar;
     }

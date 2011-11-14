@@ -2,15 +2,12 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
-from django.views.generic.simple import direct_to_template, redirect_to
+from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
-from ecs import workflow
 
 # stuff that needs called at the beginning, but not in settings.py
-admin.autodiscover()    # discover admin view enabled models
-workflow.autodiscover() # discover workflow items
-
+admin.autodiscover()
 
 # configure logging
 import logging
@@ -64,6 +61,8 @@ urlpatterns = patterns('',
 
     url(r'^audit/', include('ecs.audit.urls')),
     url(r'^core/', include('ecs.core.urls')),
+    url(r'^checklists/', include('ecs.checklists.urls')),
+    url(r'^votes/', include('ecs.votes.urls')),
     url(r'^dashboard/', include('ecs.dashboard.urls')),
 
     url(r'^feedback/', include('ecs.feedback.urls')),
@@ -85,6 +84,7 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
 
+    #url(r'^static/generated/(<?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.GENFILE_DIR}),
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -92,8 +92,18 @@ urlpatterns = patterns('',
     
     #url(r'^test/', direct_to_template, {'template': 'test.html'}),
     #url(r'^tests/killableprocess/$', 'ecs.utils.tests.killableprocess.timeout_view'),
-    url(r'^trigger500/$', lambda request: 1/0), 
+    
 )
+
+if settings.DEBUG:
+    from django.http import HttpResponse
+    def __trigger_log(request):
+        logger.warn('foo')
+        return HttpResponse()
+    urlpatterns += patterns('', 
+        url(r'^trigger500/$', lambda request: 1/0), 
+        url(r'^trigger-warning-log/$', __trigger_log)
+    )
 
 if 'sentry' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',

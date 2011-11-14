@@ -18,18 +18,21 @@
     <div id="help_title">
       {{ page.title }}
     </div>
+    {% if user|has_flag:"is_help_writer" %}
+        <span class="help_review_overview"><a href="{% url ecs.help.views.review_overview %}">Review Übersicht</a></span>
+    {% endif %}
     <span class="help_overview"><a href="{% url ecs.help.views.index %}">Inhaltsverzeichnis</a></span>
     <span class="help_search"><a href="{% url ecs.help.views.search %}">Suche</a></span>
   </div>
 
-  <div id="help_nav{% if not user|has_flag:"help_writer" %} disabled{% endif %}">
+  <div id="help_nav{% if not user|has_flag:"is_help_writer" %} disabled{% endif %}">
     <div class="nav_left">
         {% block nav_left %}
         {% endblock %}
     </div>
 
     <div class="nav_right">
-        {% if user|has_flag:"help_writer" %}
+        {% if user|has_flag:"is_help_writer" %}
             <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
             | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
             | <a href="{% url ecs.help.views.export %}">Export</a>

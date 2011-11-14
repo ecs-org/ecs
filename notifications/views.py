@@ -6,39 +6,30 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
-from django.conf import settings
 
-from ecs.utils.viewutils import render, redirect_to_next_url, render_html
+from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.diff import diff_submission_forms
-from ecs.core.models import SubmissionForm, Investigator, Submission
-from ecs.core.parties import get_presenting_parties
+from ecs.core.models import SubmissionForm, Submission
 from ecs.documents.models import Document
-from ecs.ecsmail.utils import deliver, whitewash
+from ecs.documents.views import handle_download
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
-from ecs.notifications.forms import NotificationAnswerForm
+from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
+from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
+from ecs.audit.utils import get_version_number
+from ecs.users.utils import user_flag_required
+from ecs.tasks.utils import task_required
 
 
 def _get_notification_template(notification, pattern):
     template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
     return loader.select_template(template_names)
-
-def _get_notification_download_name(notification, suffix=''):
-    ec_num = '_'.join(str(s['ec_number']) for s in Submission.objects.filter(forms__notifications=notification).order_by('ec_number').values('ec_number'))
-    return slugify("%s-%s" % (ec_num, notification.type.name)) + suffix
-
-def _notification_pdf_response(notification, tpl_pattern, suffix='.pdf', context=None):
-    tpl = _get_notification_template(notification, tpl_pattern)
-    html = tpl.render(Context(context or {}))
-    pdf = wkhtml2pdf(html)
-    response = HttpResponse(pdf, content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment;filename=%s' % _get_notification_download_name(notification, suffix)
-    return response
 
 
 def _get_notifications(**lookups):
@@ -62,12 +53,18 @@ def _notification_list(request, answered=None, stashed=False):
         context['stashed_notifications'] = DocStash.objects.filter(group='ecs.notifications.views.create_notification')
     return render(request, 'notifications/list.html', context)
 
+
+@readonly()
 def open_notifications(request):
     return _notification_list(request, answered=False, stashed=True)
 
+
+@readonly()
 def answered_notifications(request):
     return _notification_list(request, answered=True)
 
+
+@readonly()
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
@@ -77,6 +74,7 @@ def view_notification(request, notification_pk=None):
     })
 
 
+@readonly()
 def submission_data_for_notification(request):
     pks = [pk for pk in request.GET.getlist('submission_form') if pk]
     submission_forms = list(SubmissionForm.objects.filter(pk__in=pks))
@@ -85,11 +83,13 @@ def submission_data_for_notification(request):
     })
 
 
+@readonly()
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
-        'notification_types': NotificationType.objects.exclude(diff=True).order_by('name')
+        'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('position')
     })
-    
+
+
 def create_diff_notification(request, submission_form_pk=None, notification_type_pk=None):
     new_submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, is_notification_update=True)
     old_submission_form = new_submission_form.submission.current_submission_form
@@ -117,7 +117,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
 
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
 def delete_docstash_entry(request):
-    for sf in request.docstash.get('submission_forms'):
+    for sf in request.docstash.get('submission_forms', []):
         if sf.is_notification_update:
             sf.delete()
     request.docstash.delete()
@@ -137,7 +137,7 @@ def delete_document_from_notification(request):
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     request.docstash['type_id'] = notification_type_pk
-
+    
     form = request.docstash.get('form')
     if request.method == 'POST' or form is None:
         form = notification_type.form_cls(request.POST or None)
@@ -166,9 +166,12 @@ def create_notification(request, notification_type_pk=None):
             form.save_m2m()
             notification.documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
             notification.save() # send another post_save signal (required to properly start the workflow)
-
             request.docstash.delete()
+            
+            on_notification_submit.send(type(notification), notification=notification)
+
             return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
+            
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
@@ -177,6 +180,7 @@ def create_notification(request, notification_type_pk=None):
     })
 
 
+@task_required()
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     kwargs = {}
@@ -185,19 +189,31 @@ def edit_notification_answer(request, notification_pk=None):
     except NotificationAnswer.DoesNotExist:
         answer = None
         kwargs['initial'] = {'text': notification.type.default_response}
-        
-    form = NotificationAnswerForm(request.POST or None, instance=answer, **kwargs)
+    
+    form_cls = NotificationAnswerForm
+    if notification.type.is_rejectable:
+        form_cls = RejectableNotificationAnswerForm
+    
+    form = form_cls(request.POST or None, instance=answer, **kwargs)
+    task = request.task_management.task
+    if task:
+        form.bound_to_task = task
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification
         answer.save()
-        return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': notification.pk}))
-    return render(request, 'notifications/answers/form.html', {
+
+    response = render(request, 'notifications/answers/form.html', {
         'notification': notification,
+        'answer': answer,
+        'answer_version': get_version_number(answer) if answer else 0,
         'form': form,
     })
+    response.has_errors = not form.is_valid()
+    return response
 
 
+@readonly()
 def view_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
     return render(request, 'notifications/answers/view.html', {
@@ -206,45 +222,13 @@ def view_notification_answer(request, notification_pk=None):
     })
     
 
-def distribute_notification_answer(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
-    if request.method == 'POST':
-        for submission in Submission.objects.filter(forms__in=notification.submission_forms.values('pk').query):
-            for party in get_presenting_parties(submission.current_submission_form):
-                if party.email:
-                    htmlmail = unicode(render_html(request, 'notifications/answers/email.html', {
-                        'notification': notification,
-                        'answer': notification.answer,
-                        'recipient': party,
-                    }))
-                    plainmail = whitewash(htmlmail)
-
-                    deliver(party.email,
-                        subject=_('New Notification Answer'), 
-                        message=plainmail,
-                        message_html=htmlmail,
-                        from_email=settings.DEFAULT_FROM_EMAIL,
-                    )
-
-    return render(request, 'notifications/answers/distribute.html', {
-        'notification': notification,
-        'answer': notification.answer,
-    })
-
-
+@readonly()
 def notification_pdf(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk)
-    return _notification_pdf_response(notification, 'db/notifications/wkhtml2pdf/%s.html', suffix='.pdf', context={
-        'notification': notification,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'url': request.build_absolute_uri(),
-    })
+    notification = get_object_or_404(Notification, pk=notification_pk, pdf_document__isnull=False)
+    return handle_download(request, notification.pdf_document)
 
 
+@readonly()
 def notification_answer_pdf(request, notification_pk=None):
-    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
-    return _notification_pdf_response(answer.notification, 'db/notifications/answers/wkhtml2pdf/%s.html', suffix='-answer.pdf', context={
-        'notification': answer.notification,
-        'documents': answer.notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'answer': answer,
-    })
+    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk, pdf_document__isnull=False)
+    return handle_download(request, answer.pdf_document)

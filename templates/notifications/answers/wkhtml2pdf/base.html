@@ -6,14 +6,13 @@
 {% block content %}
     {% include 'db/wkhtml2pdf/ec_head.inc' %}
     <div class="header">
-        <h1 style="text-align:center">{% trans 'Notification Answer' %}</h1>
+        <h1>{% trans 'Notification Answer' %}</h1>
     </div>
-    <center>
-    <table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
-    <col width="215"><col width="84"><col width="84"><col width="195">
+    
+    <table class="full_width withborders">
     <tr>
         <th width="215" height="24">Ethik-Kommission</th>
-        <th width="84">EK-Nummer</th>
+        <th width="50">EK-Nummer</th>
         <th width="84">Protokoll-Nr.</th>
         <th width="84">EudraCT-Nr.</th>
         <th width="84">Datum des Votums</th>
@@ -22,7 +21,7 @@
     {% for submission_form in notification.submission_forms.all %}
     <tr>
         <td>{{ submission_form.submission.main_ethics_commission }}</td>
-        <td>{{ submission_form.submission }} {{ submission_form.submission.project_title_display }}</td>
+        <td>{{ submission_form.submission.get_ec_number_display }}</td>
         <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
         <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
         <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
@@ -30,7 +29,6 @@
     </tr>
     {% endfor %}
     </table>
-    </center>
 
     {% block headitem %}
         <h1>{{ notification.type.name }} vom {{ notification.timestamp|date:'d.m.Y' }}</h1>
@@ -39,14 +37,20 @@
     <h2>Angaben zum Forschungsprojekt</h2>
 
     {% block mainitem %}
-        <p style="margin-left: 1cm; text-indent: -1cm">
+        <p >
+            <b>Studientitel:</b>
+            {% for submission_form in notification.submission_forms.all %}
+                {{ submission_form.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p>
         <b>Begründung/Stellungnahme/Mitteilung</b><br>
         <b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
     {% endblock %}
 
     {% block documents %}
         {% if documents %}
-        <h2>Anlagen</h2>
+        <h4>Anlagen</h4>
 
         <ol>
             {% block doclist %}

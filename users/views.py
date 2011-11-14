@@ -4,7 +4,7 @@ from datetime import datetime
 import random
 from uuid import uuid4
 
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
@@ -16,20 +16,21 @@ from django import forms
 from django.contrib import auth
 from django.contrib.auth import views as auth_views
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render, render_html
 from ecs.utils.ratelimitcache import ratelimit_post
+from ecs.utils.security import readonly
 from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required
-from ecs.users.forms import EmailLoginForm
+from ecs.users.forms import EmailLoginForm, IndispositionForm
 from ecs.users.utils import get_user, create_user
-from ecs.workflow.models import Graph
 from ecs.communication.utils import send_system_message_template
 
 
@@ -54,14 +55,20 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='username')
 def login(request, *args, **kwargs):
+    if request.is_ajax():
+        return HttpResponse('<script type="text/javascript">window.location.href="%s";</script>' % reverse('ecs.users.views.login'))
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
     return auth_views.login(request, *args, **kwargs)
 
+
+@readonly()
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
     return auth_views.logout(request, *args, **kwargs)
 
+
+@readonly(methods=['GET'])
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
@@ -75,6 +82,7 @@ def change_password(request):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
+@readonly(methods=['GET'])
 def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
@@ -94,6 +102,7 @@ def register(request):
 
 
 @forceauth.exempt
+@readonly(methods=['GET'])
 def activate(request, token=None):
     try:
         data, timestamp = _registration_token_factory.parse_token(token)
@@ -131,6 +140,7 @@ def activate(request, token=None):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
+@readonly(methods=['GET'])
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
@@ -150,6 +160,7 @@ def request_password_reset(request):
 
 
 @forceauth.exempt
+@readonly(methods=['GET'])
 def do_password_reset(request, token=None):
     try:
         email, timestamp = _password_reset_token_factory.parse_token(token)
@@ -171,12 +182,15 @@ def do_password_reset(request, token=None):
         'user': user,
         'form': form,
     })
-    
+
+
+@readonly()
 def profile(request):
     return render(request, 'users/profile.html', {
         'profile_user': request.user,
     })
-    
+
+@readonly(methods=['GET'])
 def edit_profile(request):
     form = ProfileForm(request.POST or None, instance=request.user.get_profile())
     
@@ -195,35 +209,46 @@ def edit_profile(request):
 
 def notify_return(request):
     profile = request.user.get_profile()
-    profile.indisposed = False
+    profile.is_indisposed = False
     profile.save()
     return HttpResponseRedirect(reverse('ecs.users.views.profile'))
 
-@user_flag_required('internal')
-def toggle_indisposed(request, user_pk=None):
+
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
+def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    profile = user.get_profile()
-    if profile.indisposed:
-        profile.indisposed = False
-    else:
-        profile.indisposed = True
+    form = IndispositionForm(request.POST or None, instance=user.get_profile())
 
-    profile.save()
-    return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        profile = user.get_profile()
+        if profile.is_indisposed:
+            send_system_message_template(profile.communication_proxy, _('{user} indisposed').format(user=user), 'users/indisposed_proxy.txt', {'user': user})
+        return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_flag_required('internal')
+    return render(request, 'users/indisposition.html', {
+        'profile_user': user,
+        'form': form,
+    })
+
+
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
 def approve(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if request.method == 'POST':
         approved = request.POST.get('approve', False)
-        UserProfile.objects.filter(user=user).update(approved_by_office=approved)
+        UserProfile.objects.filter(user=user).update(is_approved_by_office=approved)
         if approved:
             attach_to_submissions(user)
     return render(request, 'users/approve.html', {
         'profile_user': user,
     })
 
-@user_flag_required('internal')
+
+@require_POST
+@user_flag_required('is_internal')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -234,7 +259,9 @@ def toggle_active(request, user_pk=None):
     user.save()
     return HttpResponseRedirect(reverse('ecs.users.views.administration'))
 
-@user_flag_required('internal')
+
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
@@ -250,15 +277,14 @@ def details(request, user_pk=None):
         'form': form,
     })
 
-@user_flag_required('internal')
+@user_flag_required('is_internal')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
-
-    print usersettings.useradministration_filter
 
     filter_defaults = {
         'page': '1',
         'groups': '',
+        'medical_categories': '',
         'approval': 'both',
         'activity': 'active',
         'keyword': '',
@@ -270,8 +296,8 @@ def administration(request, limit=20):
 
     approval_lookup = {
         'both': User.objects.all(),
-        'yes': User.objects.filter(ecs_profile__approved_by_office=True),
-        'no': User.objects.filter(ecs_profile__approved_by_office=False),
+        'yes': User.objects.filter(ecs_profile__is_approved_by_office=True),
+        'no': User.objects.filter(ecs_profile__is_approved_by_office=False),
     }
 
     users = approval_lookup[filterform.cleaned_data['approval']]
@@ -283,6 +309,9 @@ def administration(request, limit=20):
 
     if filterform.cleaned_data['groups']:
         users = users.filter(groups__in=filterform.cleaned_data['groups'])
+
+    if filterform.cleaned_data['medical_categories']:
+        users = users.filter(medical_categories__in=filterform.cleaned_data['medical_categories'])
 
     keyword = filterform.cleaned_data['keyword']
     if keyword:
@@ -296,8 +325,9 @@ def administration(request, limit=20):
             keyword_q |= Q(last_name__icontains=keyword)
         users = users.filter(keyword_q)
 
+    users = users.select_related('ecs_profile').order_by('last_name', 'first_name', 'email')
 
-    paginator = Paginator(users.order_by('last_name', 'first_name', 'email'), limit, allow_empty_first_page=True)
+    paginator = Paginator(users, limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
     except EmptyPage, InvalidPage:
@@ -308,6 +338,7 @@ def administration(request, limit=20):
 
     userfilter = filterform.cleaned_data
     userfilter['groups'] = ','.join([str(g.pk) for g in userfilter['groups']]) if userfilter['groups'] else ''
+    userfilter['medical_categories'] = ','.join([str(g.pk) for g in userfilter['medical_categories']]) if userfilter['medical_categories'] else ''
     usersettings.useradministration_filter = userfilter
     usersettings.save()
 
@@ -315,9 +346,12 @@ def administration(request, limit=20):
         'users': users,
         'filterform': filterform,
         'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
+        'active': 'user_administration',
     })
 
-@user_flag_required('internal')
+
+@readonly(methods=['GET'])
+@user_flag_required('is_internal')
 def invite(request):
     form = InvitationForm(request.POST or None)
     comment = None
@@ -354,6 +388,7 @@ def invite(request):
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,
         'comment': comment,
+        'active': 'user_invite',
     })
 
 
@@ -369,9 +404,9 @@ def accept_invitation(request, invitation_uuid=None):
         user = form.save()
         profile = user.get_profile()
         profile.last_password_change = datetime.now()
-        profile.phantom = False
+        profile.is_phantom = False
         profile.save()
-        invitation.accepted = True
+        invitation.is_accepted = True
         invitation.save()
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)

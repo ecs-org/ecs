@@ -9,6 +9,7 @@ from ecs.integration import bootstrap as integration_bootstrap
 from ecs.core import bootstrap as core_bootstrap
 from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
+from ecs.checklists import bootstrap as checklists_bootstrap
 from ecs.users.utils import get_user, get_or_create_user
 
 
@@ -30,7 +31,7 @@ class EcsTestCase(TestCase):
 
         integration_bootstrap.workflow_sync()
         core_bootstrap.auth_groups()
-        core_bootstrap.checklist_blueprints()
+        checklists_bootstrap.checklist_blueprints()
         core_bootstrap.submission_workflow()
         
     @classmethod
@@ -42,7 +43,7 @@ class EcsTestCase(TestCase):
 
         settings.ENABLE_AUDIT_TRAIL = True
         
-        self.create_user('alice', profile_extra={'internal': True})
+        self.create_user('alice', profile_extra={'is_internal': True})
         for name in ('bob', 'unittest',):
             self.create_user(name)
         
@@ -59,15 +60,18 @@ class EcsTestCase(TestCase):
         profile = user.get_profile()
         for k, v in profile_extra.iteritems():
             setattr(profile, k, v)
-        profile.approved_by_office = True
+        profile.is_approved_by_office = True
         profile.save()
+        return user
     
     def tearDown(self):
         settings.ENABLE_AUDIT_TRAIL = False
         User.objects.all().delete()
         
     @contextmanager
-    def login(self, email, password):
+    def login(self, email, password='password'):
+        if '@' not in email:
+            email = '{0}@example.com'.format(email)
         self.client.login(email=email, password=password)
         yield
         self.client.logout()

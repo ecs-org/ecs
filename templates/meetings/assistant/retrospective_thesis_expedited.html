@@ -2,7 +2,7 @@
 {% load core i18n %}
 
 {% block meeting_assistant_body %}
-    <form action="" method="post">
+    <form action="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         {% if retrospective_thesis_entries %}
           <div class="inline_element odd">
@@ -61,6 +61,6 @@
         </div>
 
         <input type="submit" value="{% trans "Approve" %}" />
-        <a href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>
+        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>
     </form>
 {% endblock %}

@@ -10,7 +10,7 @@ register(UserProfile, autostart_if=lambda p, created: p.start_workflow and not p
 
 @guard(model=UserProfile)
 def is_approved(wf):
-    return wf.data.approved_by_office
+    return wf.data.is_approved_by_office
 
 class UserApproval(Activity):
     class Meta:

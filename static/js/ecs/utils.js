@@ -1,39 +1,3 @@
-ecs.setupRichTextEditor = function(textArea, readonly){
-    var display = new Element('div', {'class': 'rte_display', html: textArea.value});
-    textArea.hide();
-    display.inject(textArea, 'after');
-    if(readonly){
-        return;
-    }
-    display.addEvent('click', function(e){
-        if(textArea.disabled){
-            return;
-        }
-        textArea.show();
-        var editable = textArea.retrieve('MooEditable');
-        if(editable){
-            editable.attach();
-        }
-        else{
-            editable = new MooEditable(textArea, {
-                actions: 'bold italic underline strikethrough | indent outdent | undo redo',
-                extraCSS: '*{font-size: 9pt;}'
-            });
-        }
-        display.hide();
-        editable.focus();
-        e.stop();
-    });
-    document.body.addEvent('click', function(e){
-        var editable = textArea.retrieve('MooEditable');
-        if(editable && !editable.container.hasChild(e.target)){
-            editable.detach();
-            textArea.hide();
-            display.innerHTML = textArea.value;
-            display.show();
-        }
-    });
-};
 
 ecs.clearFormFields = function(context){
     context = $(context || document.body);
@@ -51,7 +15,7 @@ ecs.clearFormFields = function(context){
 ecs.disabledFormFields = function(context, disable){
     context = $(context || document.body);
     context.getElements('input, select, textarea').each(function(field){
-        if(!$defined(disable) || disable){
+        if(typeof(disable) === 'undefined' || disable){
             field.setProperty('disabled', 'disabled');
         }
         else{
@@ -92,17 +56,6 @@ ecs.setupFormFieldHelpers = function(context){
         else{
             input = field.getFirst('input[type=text]');
         }
-        if(field.hasClass('required')){
-            var span = field.getElement('span');
-            var star = new Element('span', {html: '*', 'class': 'star'});
-            if(span){
-                star.inject(span, 'before');
-            }
-            else{
-                star.inject(field.getElement('label'));
-            }
-            //notes.push('required');
-        }
         if(input){
             var maxlength = input.getProperty('maxlength');
             if(maxlength && maxlength > 0){
@@ -141,6 +94,10 @@ ecs.setupAutocomplete = function(context){
 
     var setup_autocomplete = function(elm){
         var type = elm.getProperty('x-autocomplete-type');
+        if(type == 'single'){
+            return new ecs.autocomplete.Autocompleter(elm, {});
+        }
+        // FIXME: cleanup the following code (we don't need single select support anymore)
         if (type == 'single') {
             var currentValues = [elm.value];
             var max = 1;
@@ -716,6 +673,16 @@ ecs.setupMessagePopup = function(container, prefix) {
             show_selected_receiver();
         });
     }, this);
+};
+
+ecs.setupSubmitLinks = function(selector){
+    function submitParentForm(e){
+        $(e.target).getParent('form').submit();
+        return false;
+    }
+    $$(selector).each(function(el){
+        el.addEvent('click', submitParentForm);
+    });
 };
 
 /* windmill helper stuff*/

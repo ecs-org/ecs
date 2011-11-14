@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load i18n core userutils communication %}
+{% load i18n core userutils communication humanize %}
 
 {% block menuSelection %}communication{% endblock %}
 
@@ -16,42 +16,48 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 <ul class="thread">
 {% for message in thread.message_list %}
     <li class="message">
         <div class="head">
-            <span class="sender">{{ message.sender }}</span>
+            <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
             <span class="preview">{{ message|preview:80 }}</span>
-            <span class="time">{{ message.timestamp|date:'d.m.Y H:i' }} Uhr</span>
+            {% if not thread|closed_by:user %}
+                <span class="message_done">als erledigt markieren: <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a></span>
+            {% endif %}
+            <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
         </div>
-        <pre class="body">{{ message.text|safe }}</pre>
+        <pre class="body">{{ message.text|urlize }}</pre>
     </li>
 {% endfor %}
 </ul>
+<div class="related_thread">
+{% if thread.related_thread %}
+{% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
+    Den betreffenden Nachrichtenstrang finden sie <a href="{% url ecs.communication.views.read_thread thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
+{% endif %}
+{% endif %}
+</div>
 <div class="expand_collapse">
     <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
     | <a href="" class="expand_all">{% trans "Expand all" %}</a>
 </div>
 
-{% if not thread|closed_by:user %}
-    als erledigt markieren: <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
-{% endif %}
-
 <form class="send" method="post">
     <table>
-        {{ form.as_table }}
+        {{ form.as_p }}
     </table>
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
+<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 </div>
@@ -74,7 +80,7 @@
             messageToolbarItems.push(ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ thread.submission.current_submission_form.pk }}'));
         {% endif %}
 
-        {% if user|has_flag:'internal' %}
+        {% if user|has_flag:'is_internal' %}
             messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
         {% endif %}
 
@@ -82,6 +88,9 @@
         new ecs.textarea.TextArea(textarea);
         ecs.textarea.installToolbar(textarea, messageToolbarItems);
         ecs.setupAutocomplete();
+
+        textarea.focus();
+        textarea.selectRange(0, 0);
       });
     </script>
 {% endblock %}

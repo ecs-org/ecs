@@ -1,11 +1,16 @@
 {% extends 'db/notifications/wkhtml2pdf/base.html' %}
-
+{% load i18n %}
 {% block mainitem %}
     {{ block.super }}
-    <p>Grund warum noch nicht begonnen <b>{{ notification.reason_for_not_started }}</b></p>
-    <p>Angeworbene Versuchspersonen <b>{{ notification.recruited_subjects }}</b></p>
-    <p>Beendete Versuchspersonen <b>{{ notification.finished_subjects }}</b></p>
-    <p>Abgebrochene Versuchspersonen <b>{{ notification.aborted_subjects }}</b></p>
-    <p>SAE Zahl <b>{{ notification.SAE_count }}</b></p>
-    <p>SUSAR Zahl <b>{{ notification.SUSAR_count }}</b></p> 
+    <ul class="list">
+      <li>{% trans 'Has the study been started?' %}: {{ notification.study_started|yesno:'Ja,Nein' }}</li>
+      {% if not notification.study_started %}
+          <li>{% trans 'Reason for not started' %}: {{ notification.reason_for_not_started }}</li>
+      {% endif %}
+      <li>{% trans 'Recruited subjects' %}: {{ notification.recruited_subjects }}</li>
+      <li>{% trans 'Finished subjects' %}: {{ notification.finished_subjects }}</li>
+      <li>{% trans 'Aborted subjects' %}: {{ notification.aborted_subjects }}</li>
+      <li>{% trans 'SAE count' %}: {{ notification.SAE_count }}</li>
+      <li>{% trans 'SUSAR count' %}: {{ notification.SUSAR_count }}</li>
+    </ul> 
 {% endblock %}

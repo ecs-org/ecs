@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
-import datetime
 
 from django.db.models import Q
-from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
-from ecs.core.views.submissions import diff
-from ecs.notifications.models import Notification, NotificationType, ProgressReportNotification, CompletionReportNotification
 from ecs.documents.models import Document, DocumentType
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
-from ecs.users.utils import get_user, create_user, get_or_create_user
+from ecs.users.utils import get_or_create_user, create_user
 
 def create_submission_form(ec_number=None, presenter=None):
-    sub = Submission(ec_number=ec_number)
+    presenter = presenter or get_or_create_user('test_presenter@example.com')[0]
+    sub = Submission(ec_number=ec_number, presenter=presenter, susar_presenter=presenter)
     sub.save()
     sform = SubmissionForm(
         submission = sub,
@@ -159,7 +156,7 @@ def create_submission_form(ec_number=None, presenter=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
-        presenter=presenter or get_or_create_user('test_presenter@example.com')[0],
+        presenter=presenter,
         )
     sform.save()
     sform.substance_registered_in_countries = []
@@ -188,7 +185,8 @@ class SubmissionFormTest(EcsTestCase):
         If a pdf of the submission form can be rendered is tested aswell.
         '''
         
-        sub = Submission()
+        presenter=get_or_create_user('test_presenter@example.com')[0]
+        sub = Submission(presenter=presenter, susar_presenter=presenter)
         sub.save()
         sform = SubmissionForm(
             submission = sub,
@@ -333,7 +331,7 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
-            presenter=get_or_create_user('test_presenter@example.com')[0],
+            presenter=presenter,
             )
         sform.save()
         sform.substance_registered_in_countries = []

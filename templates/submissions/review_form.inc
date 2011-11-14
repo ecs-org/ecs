@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if not review_form.readonly %}
-    <form action="" method="post" class="review">
+    <form action="" method="post" class="review{% if review_form.bound_to_task %} bound_to_task{% endif %}">
 {% endif %}
 
 <ol>
@@ -16,8 +16,10 @@
 {% endfor %}
 </ol>
 {% if not review_form.readonly %}
-    <input type="submit" name="save" value="{% trans "save" %}" />
-    <input style="display:none;" type="submit" name="complete_task" value="complete_task" />
-    <input style="display:none;" type="submit" name="really_complete_task" value="really_complete_task" />
+    {% if not review_form.bound_to_task %}
+        <input type="submit" name="save" value="{% trans "save" %}" />
+        <input style="display:none;" type="submit" name="complete_task" value="complete_task" />
+        <input style="display:none;" type="submit" name="really_complete_task" value="really_complete_task" />
+    {% endif %}
     </form>
 {% endif %}

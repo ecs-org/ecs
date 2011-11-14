@@ -52,7 +52,11 @@
     Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluß ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt. <br/>
 {% endif %}
 
-{% if vote.result == '3' %}
+{% if vote.result == '3a' %}
+    Der TOP wird bis zur nächsten Sitzung vertagt.
+{% endif %}
+
+{% if vote.result == '3b' %}
     Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form. Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden. Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. <br/>
 {% endif %}
 
@@ -60,8 +64,8 @@
     Der Antrag wird von der Ethik-Kommission abgelehnt.
 {% endif %}
 
-{% if vote.result == '5' or vote.result == '5a' or vote.result == '5b' %}
-    Der TOP wird bis zur nächsten Sitzung vertagt (Begründung siehe unten)
+{% if vote.result == '5' %}
+    Der Antrag wurde vom Antragsteller zurückgezogen.
 {% endif %}
 
 {% if submission.current_submission_form.current_published_vote %}
@@ -75,14 +79,18 @@
 {% endif %}
 
 
-{% if submission.is_amg %}
+{% if submission.current_submission_form.is_amg %}
 <span class="bold">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
 </span><br />
 {% endif %}
 
-{% if submission.is_amg or submission.is_mpg %}
+{% if submission.current_submission_form.is_amg or submission.current_submission_form.is_mpg %}
 <span class="bold">
-    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.is_amg %}AMG{% endif %}{% if submission.is_amg and submission.is_mpg %}/{% endif %}{% if submission.is_mpg %}MPG{% endif %} handelt.
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.current_submission_form.is_amg %}AMG{% endif %}{% if submission.current_submission_form.is_amg and submission.current_submission_form.is_mpg %}/{% endif %}{% if submission.current_submission_form.is_mpg %}MPG{% endif %} handelt.
+</span><br />
+{% else %}
+<span>
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich <span class="bold">nicht</span> um eine klinische Prüfung gemäß AMG/MPG handelt.
 </span><br />
 {% endif %}
 

@@ -1,6 +1,4 @@
 import zipfile
-import tempfile
-from uuid import uuid4
 
 from django.utils import simplejson
 from django.core.files.base import ContentFile
@@ -31,11 +29,10 @@ class Serializer(object):
     def load(self, zf, data, extra=None):
         kwargs = {}
         for f in self.fields:
-            v = data[f]
             try:
                 func = getattr(self, 'load_{0}'.format(f))
             except AttributeError:
-                kwargs[f] = v
+                kwargs[f] = data[f]
             else:
                 kwargs[f] = func(zf, data, extra=extra)
 
@@ -49,7 +46,7 @@ class Serializer(object):
         return instance
 
 class PageSerializer(Serializer):
-    fields = ['view', 'anchor', 'slug', 'title', 'text']
+    fields = ['view', 'anchor', 'slug', 'title', 'text', 'review_status']
     unique = ['slug']
     model = Page
 
@@ -60,7 +57,7 @@ class PageSerializer(Serializer):
         return View.objects.get_or_create(path=data['view'])[0] if data['view'] else None
 
 class AttachmentSerializer(Serializer):
-    fields = ['file', 'mimetype', 'screenshot', 'slug', 'view', 'page']
+    fields = ['file', 'mimetype', 'is_screenshot', 'slug', 'view', 'page']
     unique = ['slug']
     model = Attachment
 
@@ -99,6 +96,13 @@ class AttachmentSerializer(Serializer):
         old_pk = str(old_pk)
         new_pk = int(page_pks[old_pk])
         return Page.objects.get(pk=new_pk)
+
+    def load_is_screenshot(self, zf, data, extra=None):
+        ''' XXX: quirks for renamed model field '''
+        try:
+            return data['is_screenshot']
+        except KeyError:
+            return data['screenshot']
 
 def export(file_like):
     zf = zipfile.ZipFile(file_like, 'w', zipfile.ZIP_DEFLATED)

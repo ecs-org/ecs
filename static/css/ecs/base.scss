@@ -1,0 +1,379 @@
+@import "ecs/variables.scss";
+
+/* margin and padding to zero, because of ecaxt aligning tags */
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+	vertical-align: baseline;
+}
+
+/* structure */
+
+body {
+  background: white;
+  overflow: auto;
+}
+#container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+#header {
+  position: absolute;
+  right: 220px;
+  top: 0;
+  left: 0;
+  z-index: 101;
+  background: $lightblue;
+  padding: 10px;
+  display: block;
+  border-bottom: 1px solid #B5CFDF;
+  overflow: hidden;
+}
+#headertitle {
+  float: left;
+  width: 90%;
+  display: block;
+  margin-bottom: 5px;
+  text-shadow: 0 1px 2px $white;
+}
+#headernav {
+  position: relative;
+  display: block;
+  float: left;
+  width: 100%;
+  background: $lightblue;
+  font-size: 14px;
+}
+.innerwrap {
+  display: block;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid $light-brown-border;
+  background: $light-brown-bg;
+  min-width: 700px;
+}
+#sidebar {
+  position: absolute;
+  top: 0;
+  bottom: 0; 
+  right: 0;
+  width: 220px; /* Width of frame div */
+  height: 100%;
+  overflow: hidden; /* Disable scrollbars. Set to "scroll" to enable */
+  color: $grey-20;
+  background: #f6f6e9;
+  word-wrap: break-word;
+    
+    .user_logout a {
+    color: #800000;
+    font-size: 13px;
+  }
+}
+
+/* general content-specific */
+
+h1, h2, h3, h4, h5 {
+  font-weight: normal;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+a {
+  outline: 0;
+  cursor: pointer;
+  color: $link-blue;
+  text-decoration: none;
+}
+#content {
+  position: absolute;
+  top: 41px;
+  right: 220px;
+  bottom: 0px;
+  left: 0px;
+  display: block;
+  background: $white;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+    h1, h4, h5 {
+        display: block;
+    }
+
+    h1 {
+        font-size: 20px;
+        letter-spacing: 1px;
+        margin-bottom: 20px;
+    }
+    
+    h4 {
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    h5 {
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    
+    a {
+        text-decoration: none;
+        color: $link-blue;
+        
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+
+    p {
+        margin-bottom: 20px;
+    }
+    
+    ul {
+        margin: 0 0 12px 20px;
+    }
+    
+    table {
+      margin: 0 0 10px 0;
+    }
+    table, th, td {
+      text-align: left;
+    }
+    th, td {
+      padding: 2px 3px;
+      vertical-align: top;
+    }
+
+    .inline_formset td {
+      padding: 0;
+    }
+    
+    #status_tab table table {
+      margin: -3px 0 3px;
+    }
+    #status_tab tr.version.rejected {
+      color: $red;
+    }
+    
+    ol {
+      @include field-list;
+    }
+
+    ol.submission_list {
+      list-style: none;
+      margin-bottom: 20px;
+    
+        h3 {
+          margin-bottom: 5px;
+          font-weight: normal;
+          padding: 0;
+          border-bottom: none;
+        }
+        h3 .ecnr {
+          float: left;
+          display: inline-block;
+          width: 80px;
+          font-weight: bold;
+          margin-left: -80px;
+        }
+        li {
+          padding: 10px;
+        }
+        li .actions {
+          margin-bottom: 5px;
+        }
+    }   
+}
+
+#content h2, #task_main h2 {
+  display: block;
+  font-size: 18px;
+  letter-spacing: 1px;  
+  margin-bottom: 15px;
+}
+#content h3, #task_main h3 {
+  position: relative;
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.form_main h3,
+.notification_list h3 {
+  padding: 10px;
+  background: #f3f3db;
+  margin: 0 -10px;
+  border-bottom: 1px solid $light-brown-border;
+}
+.form_main h3:first-child,
+.notification_list h3:first-child {
+  margin-top: -10px;
+}
+
+/* input fields and buttons */
+ 
+input, 
+input[type=file], 
+textarea, 
+#content select {
+  border: 1px solid #b7b7b7;
+  padding: 2px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+}
+input:focus, 
+input[type=file]:focus, 
+textarea:focus, 
+#content select:focus {
+  box-shadow: 0 0 6px $grey-80;
+}
+
+input[type=submit], 
+.cancel a,
+a.button_submit,
+#content a.button_submit {
+  display: inline-block;
+  color: $grey-20;
+  background: #ddd url(/static/images/button_bg.png) repeat-x;
+  cursor: pointer;
+  margin: 10px 5px 0 0;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}
+input[type=submit] {
+	height: 26px;
+	padding: 3px 5px 5px;
+}
+#content .cancel a,
+a.button_submit,
+#content a.button_submit {
+  min-height: 16px;
+  padding: 4px 7px 2px;
+}
+input[type=submit]:active,
+#content .cancel a:active,
+a.button_submit:active,
+#content a.button_submit:active {
+  background: #ddd url(/static/images/button_active_bg.png) repeat-x;
+}
+.cancel {
+  display: block;
+}
+
+input[type=submit]:hover,
+#content .cancel a:hover,
+a.button_submit:hover,
+#content a.button_submit:hover {
+  text-decoration: none;
+  border: 1px solid $grey-60;
+}
+.form_main .cancel a {
+  margin-left: 240px;
+}
+
+/* header */
+
+#header {
+  color: $grey-20;
+  background: $lightblue;
+    h1 {
+      font-size: 14px;
+      font-weight: bolder;
+      letter-spacing: 1px;
+    }
+}
+
+/* sidebar */
+
+#logo,
+#account,
+#usertoolbar,
+#usermenu {
+  width: 200px;
+  padding: 10px;
+  border-bottom: 1px solid $grey-80;
+}
+#logo {
+  height: 53px;
+  background: $white;
+}
+#account {
+  min-height: 80px;
+}
+#usertoolbar {
+  min-height: 10px;
+  background: #ededdc;
+}
+#usermenu {
+  min-height: 300px;
+  border-bottom: none;
+}
+#usermenu .elements {
+  display: none;
+}
+#sidebar {
+    ul {
+      list-style-type: none;
+        li {
+          font-size: 14px;
+          line-height: 22px;
+        }
+        li li {
+          margin-left: 10px;
+          font-size: 10pt;
+          border-left: 1px solid #e3e3bf;
+        }
+    }
+    
+    img {
+      border: none;
+    }
+    p {
+      margin: 0 0 10px;
+    }
+    a, .togglers  {
+      text-decoration: none;
+      color: $link-blue;
+    }
+    a, a img {
+      text-decoration: none;
+      border: none !important;
+    }
+}
+
+/* general links */ 
+
+.profile_data td, .profile_data th {
+  vertical-align: top;
+}
+
+/* fullscreen editor */
+
+.ecs-DragDropFrameOverlay {
+  background-color: $red;
+  opacity: 0.5;
+  position: absolute;
+}
+.ecs-FullscreenEditor {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: $grey-80;
+  z-index: 1000001;
+  
+    textarea {
+      width: 90%;
+      height: 90%;
+      margin: 20px;
+      background-color: $white;
+    }
+    .ecs-TextAreaToolbar {
+      margin: 20px 20px 0;
+    }
+
+}

@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-
 import datetime, uuid
-import logging
-import os
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+from ecs.authorization import AuthorizationManager
 
 MESSAGE_ORIGIN_ALICE = 1
 MESSAGE_ORIGIN_BOB = 2
@@ -42,7 +40,7 @@ class ThreadQuerySet(models.query.QuerySet):
         return self.filter(models.Q(closed_by_receiver=False, receiver=user) | models.Q(closed_by_sender=False, sender=user))
 
 
-class ThreadManager(models.Manager):
+class ThreadManager(AuthorizationManager):
     def get_query_set(self):
         return ThreadQuerySet(self.model)
 
@@ -80,7 +78,7 @@ class MessageQuerySet(models.query.QuerySet):
         return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
   
 
-class MessageManager(models.Manager):
+class MessageManager(AuthorizationManager):
     def get_query_set(self):
         return MessageQuerySet(self.model)
 
@@ -103,6 +101,7 @@ class Thread(models.Model):
     receiver = models.ForeignKey(User, related_name='incoming_threads')
     timestamp = models.DateTimeField(default=datetime.datetime.now)
     last_message = models.OneToOneField('Message', null=True, related_name='head')
+    related_thread = models.ForeignKey('self', null=True)
     
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
@@ -117,11 +116,11 @@ class Thread(models.Model):
         if user.id == self.sender_id:
             self.closed_by_sender = True
             self.save()
-        elif user.id == self.receiver_id:
+        if user.id == self.receiver_id:
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None):
+    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None, reply_receiver=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -131,6 +130,14 @@ class Thread(models.Model):
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s. Sender is %s" % (self.sender.email, self.receiver.email, user.email))
         
+        if receiver.get_profile().is_indisposed:
+            proxy = receiver.get_profile().communication_proxy
+            receiver = proxy
+            if origin == MESSAGE_ORIGIN_ALICE:
+                self.receiver = proxy
+            else:
+                self.sender = proxy
+
         # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
         smtp_delivery_state = "received" if is_received else "new"
         
@@ -143,8 +150,15 @@ class Thread(models.Model):
             smtp_delivery_state= smtp_delivery_state,
             rawmsg= rawmsg,
             rawmsg_msgid= rawmsg_msgid,
-            rawmsg_digest_hex= rawmsg_digest_hex
+            rawmsg_digest_hex= rawmsg_digest_hex,
+            reply_receiver=reply_receiver
         )
+        previous_message = self.last_message
+        if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
+            if origin == MESSAGE_ORIGIN_ALICE:
+                self.receiver = previous_message.reply_receiver
+            else:
+                self.sender = previous_message.reply_receiver
         self.last_message = msg
         self.closed_by_sender = False
         self.closed_by_receiver = False
@@ -165,6 +179,13 @@ class Thread(models.Model):
 
     def message_list(self):
         return self.messages.order_by('timestamp')
+
+    def save(self, **kwargs):
+        if self.receiver:
+            receiver_profile = self.receiver.get_profile()
+            if receiver_profile.is_indisposed:
+                self.receiver = receiver_profile.communication_proxy
+        return super(Thread, self).save(**kwargs)
 
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
@@ -187,6 +208,8 @@ class Message(models.Model):
                             db_index=True)
     
     uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().get_hex(), db_index=True)
+    
+    reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
     
     objects = MessageManager()
     

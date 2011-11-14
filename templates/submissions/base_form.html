@@ -40,7 +40,7 @@
                             {% endwith %}
                         </div>
                         <div class="field">
-                            <h3>Routinemäßig durchzuführende Therapie und Diagnostik <span class="paperform_number">6.2</span></h3>
+                            <h3>Invasive/strahlenbelastende Maßnahmen im Rahmen der Routineversorgung während der Studiendauer <span class="paperform_number">6.2</span></h3>
                             {% with routinemeasure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
@@ -72,16 +72,15 @@
                     {% ifequal tab "Zentren" %}
                         {% if investigator_formset.non_form_errors %}
                             <div class="errors">
-                            <ul class="errorlist">
-                            {% for error in investigator_formset.non_form_errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                            </ul>
+                                <ul class="errorlist">
+                                    {% for error in investigator_formset.non_form_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         {% endif %}
 
                         <ul class="investigator_list"></ul>
-                        <div class="investigator_list_clear"></div>
 
                         {{ investigator_formset.management_form }}
                         {{ investigatoremployee_formset.management_form }}

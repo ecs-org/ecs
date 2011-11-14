@@ -21,6 +21,13 @@
 {% block document_list %}
     {{ block.super }}
     <div class="form form_main document_upload">
+        {% if form.pdf_error %}
+        <div class="pdf_warning">
+            <span class="icon_warning"></span>
+            Ihre Datei konnte nicht verarbeitet werden.
+            Bitte beachten Sie, daß das ECS System nur unverschlüsselte PDF Dateien annehmen kann <a href="http://de.wikipedia.org/wiki/PDF/A" target="_blank">die sich für die Langzeitarchivierung eignen</a>.
+        </div>
+        {% endif %}
         <form action="" method="post" enctype="multipart/form-data">
             <ol>
                 {% for hidden in form.hidden_fields %}
@@ -36,7 +43,7 @@
                     <a href="" class="new_document">{% trans "New Document" %}</a>
                 </li>
             </ol>
-            <input type="submit" name="upload" value="Upload" />
+            <input type="submit" name="upload" value="{% trans 'Upload' %}" />
             <div class="warning">
                 <span class="icon_warning"></span>{% trans "Please be patient, the file is being uploaded and processed" %}
             </div>

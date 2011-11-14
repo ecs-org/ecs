@@ -1,0 +1,15 @@
+{% extends "core.html" %}
+{% load core %}
+
+{% block content %}
+    <ul>
+    {% for checklist in checklists %}
+        <li>
+            {{ checklist.submission|ec_number }}: {{ checklist }}
+            <a href="{% url ecs.core.views.test_checklist_pdf_html checklist_pk=checklist.pk %}">HTML</a>
+            | <a href="{% url ecs.core.views.test_render_checklist_pdf checklist_pk=checklist.pk %}">PDF</a>
+            <div style="height:10px;"></div>
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,0 +1,355 @@
+@import "ecs/variables.scss";
+
+@mixin icon_bg {
+  display: inline-block;
+  background-image: url(/static/images/icons.png);
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+}
+@mixin icon_bg_16 {
+  display: inline-block;
+  background-image: url(/static/images/icons.png);
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  width: 16px;
+  height: 16px;
+}
+@mixin icon_bg_32 {
+  display: inline-block;
+  background-image: url(/static/images/icons.png);
+  background-repeat: no-repeat;
+  text-indent: -9999px;
+  width: 32px;
+  height: 32px;
+}
+@mixin icon_32 {
+  width: 32px;
+  height: 32px;
+}
+@mixin icon_16 {
+  width: 16px;
+  height: 16px;
+}
+
+.icon_help,
+.icon_feedback,
+.icon_workflow,
+.icon_workflow_gray,
+.user_icon,
+#scratchpad_button,
+#scratchpad_button.empty {
+  @include icon_32;
+  @include icon_bg;
+  margin-right: 3px;
+}
+.icon_help {
+  background-position: -320px -160px
+}
+.icon_feedback {
+  background-position: -320px -32px;
+  margin-left: 3px;
+}
+.icon_workflow {
+  background-position: -320px -64px;
+}
+.icon_workflow_gray {
+  background-position: -320px -96px;
+}
+.user_icon {
+  background-position: -320px 0;
+}
+#scratchpad_button {
+  background-position: -320px -288px;
+}
+#scratchpad_button.empty {
+  background-position: -320px -256px;
+}
+
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send, .icon_in, .icon_out, .icon_pending, .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+  @include icon_bg_16;
+  margin-right: 3px;
+}
+.icon_read {
+  background-position: -160px -128px;
+}
+.icon_bump {
+  background-position: -240px -128px;
+}
+.icon_answer {
+  background-position: -160px -64px;
+}
+.icon_delegate {
+  background-position: -240px -208px;
+}
+.icon_done {
+  background-position: -16px -160px;
+}
+.icon_done:active {
+  background-position: 0 -160px;
+}
+.icon_sort {
+  background-position: -240px -256px;
+}
+.icon_send {
+  background-position: -160px -48px;
+}
+.icon_in {
+  background-position: -240px -288px;
+}
+.icon_out {
+  background-position: -240px -272px;
+}
+.icon_pending {
+  background-position: 0 -672px;
+}
+
+.task_mine {
+  background-position: 0 -16px;
+}
+.task_assigned {
+  background-position: -80px -320px;
+}
+.task_open {
+  background-position: 0 0;
+}
+.task_proxy {
+  background-position: 0 -48px;
+}
+.task_amg {
+  background-position: 0 -496px;
+}
+.task_mpg {
+  background-position: 0 -512px;
+}
+.task_thesis {
+  background-position: 0 -480px;
+}
+.task_other {
+  background-position: 0 -64px;
+}
+
+.submission_new {
+  background-position: -80px -256px;
+}
+.submission_next_meeting {
+  background-position: -80px -80px;
+}
+.submission_b2 {
+  background-position: -240px -192px;
+}
+.submission_amg {
+  background-position: 0 -496px;
+}
+.submission_mpg {
+  background-position: 0 -512px;
+}
+.submission_thesis {
+  background-position: 0 -480px;
+}
+.submission_other {
+  background-position: 0 -64px;
+}
+.submission_inprogress {
+  background-position: 0 -688px;
+}
+.submission_resubmission,
+.submission_b2_resubmission {
+  background-position: 0 -112px;
+}
+.submission_review {
+  background-position: 0 -672px;
+}
+
+.icon_diff, .icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .form_main ol li .datepicker_toggler, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview  {
+  @include icon_bg_16;
+}
+
+.icon_diff, .icon_comment {
+  padding: 0px;
+}
+.icon_diff {
+  padding-right: 5px;
+  background-position: -80px -240px;
+}
+.icon_comment {
+  background-position: 0 -80px;
+  vertical-align: text-bottom;
+  margin-right: 5px;
+}
+.preview_icon {
+  background-position: 0 -1056px;
+}
+.first_page {
+  background-position: -240px -80px;
+}
+.prev_page {
+  background-position: -240px -48px;
+}
+.next_page {
+  background-position: -240px -32px;
+}
+.last_page {
+  background-position: -240px -64px;
+}
+.form_main ol li .datepicker_toggler {
+  background-position: -80px 0;
+  margin-left: 5px;
+  display: inline-block;
+}
+.document_upload .icon_warning {
+  padding-left: 20px;
+  padding-bottom: 1px;
+  background-position:  0 -112px;
+}
+.tab_headers li a.delete_row {
+  border: none;
+  background-position: 0 -128px;
+  padding: 0px;
+  position: relative;
+  top: 3px;
+  overflow: hidden;
+}
+.task_list .preview {
+  background-position: 0 -1056px;
+}
+
+.task_complete, 
+.task_reject,
+.task_delegate,
+.task_ask {
+  @include icon_bg_16;
+  margin-right: 5px;
+}
+.task_complete {
+  background-position: 0 -160px;
+}
+.task_reject {
+  background-position: -240px -160px;
+}
+.task_delegate {
+  background-position: -240px -208px;
+}
+.task_ask {
+  background-position: 0 -224px;
+}
+
+
+.ecs-TextAreaToolbar {
+    a.annotations {
+      @include icon_bg_16;
+      background-position: 0 -1088px;
+    }
+    a.boilerplate {
+      @include icon_bg_16;
+      background-position: 0 -1072px;
+    }
+    a.versions {
+      @include icon_bg_16;
+      background-position: -80px -48px;
+    }
+}
+
+.ecs-Popup .head .close {
+    @include icon_bg_16;
+    background-position: 0 -192px;
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.searchbox input[type=submit] {
+  @include icon_bg;
+  float: right;
+  width: 26px;
+  height: 22px;
+  margin: 0;
+  background-color: $grey-80;
+  background-position: -324px -198px;
+  border: 1px solid $grey-60;
+  border-radius: 0;
+}
+
+#toggle_sidebar_button {
+  position: absolute;
+  top: 223px;
+  right: 20px;
+  z-index: 200;
+  
+    a.toggle_sidebar {
+      @include icon_bg;
+      width: 24px;
+      height: 22px;
+      display: block;
+      background-position: -324px -135px;
+    }
+}
+
+.form_main {
+    .investigator_list a.add_centre,
+    .investigator_header a.delete_row {
+      @include icon_bg;
+      overflow: visible;
+      width: auto;
+      height: 16px;
+      text-indent: 0px;
+      margin-left: 0;
+      padding-left: 20px;
+      padding-right: 10px;
+      cursor: pointer;
+      line-height: 14px;
+    }
+    .investigator_list a.add_centre {
+      background-position: -240px -320px;
+    }
+    .investigator_header a.delete_row {
+      background-position: -240px -336px;
+      position: absolute;
+      top: 13px;
+      left: 150px;
+      padding: 0 5px 0 20px;
+    }
+}
+.form_main .investigator .field a.delete_row,
+.inline_formset .form a.delete_row {
+  @include icon_bg;
+  background-position: -240px -336px;
+  height: 16px;
+  width: 20px;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+  text-indent: -9999px;
+  margin-left: -2px;
+}
+
+div.inline_formset .form a.delete_row {
+  display: block;
+  height: 20px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.form_main a.add_row, 
+#meeting_constraint_editor a.add_row {
+  @include icon_bg;
+  background-position: -240px -320px;
+  width: auto;
+  height: 16px;
+  /*display: inline-block;*/
+  overflow: visible;
+  cursor: pointer;
+  text-indent: -9999px;
+  padding-left: 20px;
+}
+
+.dashboard_widget .unread {
+  @include icon_bg_16;
+  background-position: -160px -32px;
+  margin-left: -20px;
+}
+
+.icon_pdf {
+  @include icon_bg_32;
+  border: none;
+  background-position: -320px -352px ;
+  overflow: hidden;
+}

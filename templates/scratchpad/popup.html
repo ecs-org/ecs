@@ -15,30 +15,39 @@
 
     <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
     {# do not remove classes from buttons or anywhere else! #}
-    <a href="#" class="save_close button_submit">{% trans "Save and close" %}</a>
-    <a href="#" class="save button_submit">{% trans "Save" %}</a>
+    <div class="buttons">
+        <a href="#" class="save_close button_submit">{% trans "Save and close" %}</a>
+    </div>
 </div>
 
 <script type="text/javascript">
-    function save_scratchpad(success_callback) {
-        var form = $('scratchpad_form');
-        var request = new Request({
-            url: form.getAttribute('action'),
-            data: form.toQueryString().parseQueryString(),
-            onSuccess: success_callback
-        });
-        request.send();
-    }
+    window.addEvent('domready', function(){
+        function save_scratchpad(success_callback) {
+            var form = $('scratchpad_form');
+            var request = new Request({
+                url: form.getAttribute('action'),
+                data: form.toQueryString().parseQueryString(),
+                onSuccess: success_callback
+            });
+            request.send();
+        }
 
-    var scratchpad = $('scratchpad');
-    scratchpad.getElement('.save').addEvent('click', function(){
-        save_scratchpad(null);
-        return false;
-    });
-    scratchpad.getElement('.save_close').addEvent('click', function(){
-        save_scratchpad((function(){
-            scratchpad.getParent('.ecs-Popup').retrieve('ecs.widgets.Popup').close();
-        }).bind(this));
-        return false;
+        var scratchpad = $('scratchpad');
+        scratchpad.getElement('.save_close').addEvent('click', function(){
+            save_scratchpad((function(){
+                scratchpad.getParent('.ecs-Popup').retrieve('ecs.widgets.Popup').close();
+            }).bind(this));
+            return false;
+        });
+        var popup = scratchpad.getParent('.ecs-Popup').retrieve('ecs.widgets.Popup');
+        popup.addPreCloseHandler(save_scratchpad);
+
+        var textarea = scratchpad.getElement('textarea[name="text"]');
+        var pos = textarea.value.length;
+        /* does not work w/out setTimeout */
+        setTimeout(function(){
+            textarea.focus();
+            textarea.selectRange(pos, pos);
+        }, 0);
     });
 </script>

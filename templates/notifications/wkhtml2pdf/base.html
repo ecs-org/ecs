@@ -5,98 +5,106 @@
 
 {% block content %}
     <div class="header">
-        <h1 style="text-align:center">Meldung</h1>
-        Formular für die Meldung von Amendments, SUSARs und für sonstige Mitteilungen an Österreichische Ethik-Kommissionen.
-        Version 5.1 vom 25.08.2006
+        <h1>Meldung</h1>
+        <p class="center">Formular für die Meldung von Amendments, SUSARs und für sonstige Mitteilungen an Österreichische Ethik-Kommissionen.
+        Version 5.1 vom 25.08.2006</p>
     </div>
-    <h1 style="text-align:center">MITTEILUNG</h1>
-    <p style="margin-top: 0.14cm; margin-bottom: 0.28cm"> an folgende Österreichische Ethik-Kommissionen:</p>
+    <h1>MITTEILUNG</h1>
+    <p>an folgende Österreichische Ethik-Kommissionen:</p>
 
-    <table border=1>
-      <tr>
-        <td align=left valign=top><span style="font-size:small">Adresse der Ethikkommission (optional)</span><br/>An die<br/>Ethikkommission<br/>der Medizinischen Universität Wien<br/>Borschkegasse 8b<br/>1090 Wien<br/></td>
-        <td align=left valign=top><span style="font-size:small">Raum für Eingangsstempel, EK-Nummer, etc.</span></td>
-      </tr>
-    </table>
-    <center>
-    <table width="624" border="1" bordercolor="#000000" cellpadding="5" cellspacing="1">
-    <col width="215"><col width="84"><col width="84"><col width="195">
-    <tr>
-        <th width="215" height="24">Ethik-Kommission</th>
-        <th width="84">EK-Nummer</th>
-        <th width="84">Protokoll-Nr.</th>
-        <th width="84">EudraCT-Nr.</th>
-        <th width="84">Datum des Votums</th>
-        <th width="195">Prüfer</th>
-    </tr>
-    {% for submission_form in notification.submission_forms.all %}
-    <tr>
-        <td>{{ submission_form.submission.main_ethics_commission }}</td>
-        <td>{{ submission_form.submission }}</a></td>
-        <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
-        <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
-        <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
-        <td>{{ submission_form.submission.primary_investigator.contact }}</td>
-    </tr>
-    {% endfor %}
-    </table>
-    </center>
-
-    {% block headitem %}
-    <p><b>{{ notification.type.name }}</b> vom {{ notification.timestamp|date:'d.m.Y' }}</p>
-    {% endblock %}
+<div class="two_columns">
+  
+    <div class="column_left">
+      <span class="small">Adresse der Ethikkommission (optional)</span><br>
+      An die<br/>
+      Ethikkommission<br/>
+      der Medizinischen Universität Wien<br/>
+      Borschkegasse 8b<br/>
+      1090 Wien<br/>
+    </div>
     
-    <div class="type-options">{% block typeoptions %}{% endblock %}</div>
+    <div class="column_right">
+       <span class="small">Raum für Eingangsstempel, EK-Nummer, etc.</span>
+    </div>
+  
+</div>
 
-    <h2>2. Angaben zum Forschungsprojekt</h2>
+<table class="full_width withborders">
+<tr>
+    <th width="215" height="24">Ethik-Kommission</th>
+    <th width="50">EK-Nummer</th>
+    <th width="84">Protokoll-Nr.</th>
+    <th width="84">EudraCT-Nr.</th>
+    <th width="84">Datum des Votums</th>
+    <th width="195">Prüfer</th>
+</tr>
+{% for submission_form in notification.submission_forms.all %}
+<tr>
+    <td>{{ submission_form.submission.main_ethics_commission }}</td>
+    <td>{{ submission_form.submission }}</a></td>
+    <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
+    <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
+    <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
+    <td>{{ submission_form.submission.primary_investigator.contact }}</td>
+</tr>
+{% endfor %}
+</table>
 
-    <p style="margin-left: 2cm; text-indent: -2cm">
-    2.1. Projekttitel (Kurzbezeichnung):<br>
-    <b>{% for submission in notification.submission_forms.all %}
-    {{ submission.project_title_display }}{% if not forloop.last %}, {% endif %}
-    {% endfor %}</b>
-    </p>
-    <p style="margin-left: 2cm; text-indent: -2cm">
-    2.2. Protokollnummer (falls vorhanden):<br>
-    <b>
-        {% for submission in notification.submission_forms.all %}
-            {% if submission.protocol_number %}
-                {{ submission.protocol_number }}{% if not forloop.last %}, {% endif %}
-            {% endif %}
-        {% endfor %}</b>
-    </p>
+{% block headitem %}
+<p>{{ notification.type.name }} vom {{ notification.timestamp|date:'d.m.Y' }}</p>
+{% endblock %}
 
-    {% block mainitem %}
-    <p style="margin-left: 1cm; text-indent: -1cm">
-    <b>3. Begründung/Stellungnahme/Mitteilung</b><br>
-    <b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
-    {% endblock %}
+<div class="type-options">{% block typeoptions %}{% endblock %}</div>
 
-    {% block documents %}
-        {% if documents %}
-        <p style="margin-top: 0.2cm; margin-bottom: 0.2cm">
-        <b>4. Anlagen</b></p>
+<h3>2. Angaben zum Forschungsprojekt</h3>
 
-        <ol>
-            {% block doclist %}
-            {% for doc in documents %}
-                <li>
-                    {{ doc.doctype.name|default:"Sonstige Unterlagen" }}: Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                    {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
-                </li>
-            {% endfor %}
-            {% endblock %}
-        </ol>
-        {% endif %}
-    {% endblock %}
+<h4>2.1. Projekttitel (Kurzbezeichnung):</h4>
+  <p>
+    {% for sf in submission_forms %}
+    {{ sf.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+  
+<h4>2.2. Protokollnummer (falls vorhanden):</h4>
+  <p>
+      {% for protocol_number in protocol_numbers %}
+          {{ protocol_number }}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+          –
+      {% endfor %}
+  </p>
 
+{% block mainitem %}
+<h3>3. Begründung/Stellungnahme/Mitteilung</h3>
+  <p>
+    {{ notification.comments|default:"nicht vorhanden" }}
+  </p>
+{% endblock %}
 
-    <p style="margin-top: 1cm; margin-bottom: 2cm">
-    <b>{% if notification.documents.all %} 5. {% else %} 4. {% endif %} Unterschrift</b></p>
+{% block documents %}
+    {% if documents %}
+    <h3>4. Anlagen</h3>
 
-    <table><tr><td align=left width=200>Unterschrift (Prüfer/in bzw. Antragsteller/in)</td><td align=center>Datum</td></tr></table>
+    <ol>
+        {% block doclist %}
+        {% for doc in documents %}
+            <li>
+                {{ doc.doctype.name|default:"Sonstige Unterlagen" }}: Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
+                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
+            </li>
+        {% endfor %}
+        {% endblock %}
+    </ol>
+    {% endif %}
+{% endblock %}
+
+<h3>{% if notification.documents.all %} 5. {% else %} 4. {% endif %} Unterschrift</h3>
+
+<div class="signature_date">
+  <span class="line">Unterschrift (Prüfer/in bzw. Antragsteller/in)</span>
+  <span class="line">Datum</span>
+</div>
+
 {% endblock %}
 
 {% block footer %}Meldungsformular{% endblock %}
-
-

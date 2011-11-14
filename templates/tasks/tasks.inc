@@ -1,8 +1,8 @@
 {% load i18n %}
 
 <div id="task_main">
-{% if submission %}
-    <h1>{{ submission }}</h1>
+{% if not submission %}
+    <h3>{% trans 'Tasks' %}</h3>
 {% endif %}
 
 {# this form needs an explicit action, because it is used in widgets #}
@@ -11,17 +11,17 @@
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
     </div>
     <ul class="task_list_choose">
-        {{ filterform.mine }} <li><label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
-        {{ filterform.assigned }} <li><label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
-        {{ filterform.open }} <li><label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
-        {{ filterform.proxy }} <li><label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
+        <li>{{ filterform.mine }} <label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
+        <li>{{ filterform.assigned }} <label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
+        <li>{{ filterform.open }} <label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
+        <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
     </ul>
     <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        {{ filterform.amg }} <li><label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
-        {{ filterform.mpg }} <li><label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
-        {{ filterform.thesis }} <li><label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
-        {{ filterform.expedited }} <li><label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
-        {{ filterform.other }} <li><label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
+        <li>{{ filterform.amg }} <label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
+        <li>{{ filterform.mpg }} <label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
+        <li>{{ filterform.thesis }} <label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
+        <li>{{ filterform.expedited }} <label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
+        <li>{{ filterform.other }} <label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
 </form>
 
@@ -33,8 +33,7 @@
             <div class="task_item toggle_collapse">
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
-                    {% url ecs.tasks.views.manage_task task_pk=task.pk as manage_url %}
-                    <a href="{{ task.url|default:manage_url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>
+                    <a href="{{ task.url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -50,13 +49,18 @@
             <div class="task_item toggle_collapse">
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
-                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">{{ task.data }}</a>
+                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                        <a class="submit-in-widget" href="">{{ task.data }}</a>
+                    </form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
                         {% endif %}
                     {% endwith %}
-                    | <a class="open-in-widget" href="{% url ecs.tasks.views.decline_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">{% trans "Decline" %}</a>
+                    | 
+                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.decline_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                        <a class="submit-in-widget" href="">{% trans "Decline" %}</a>
+                    </form>
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -72,7 +76,9 @@
             <div class="task_item toggle_collapse">
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
-                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">{{ task.data }}</a>
+                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                        <a class="submit-in-widget" href="">{{ task.data }}</a>
+                    </form>
                     {% spaceless %}
                         {% with task.get_preview_url as preview_url %}
                             {% if preview_url %}
@@ -95,7 +101,9 @@
             <div class="task_item toggle_collapse">
                 <h3><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h3>
                 <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
-                    <a class="open-in-widget" href="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">{{ task.data }}</a>
+                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                        <a class="submit-in-widget" href="">{{ task.data }}</a>
+                    </form>
                     {% spaceless %}
                         {% with task.get_preview_url as preview_url %}
                             {% if preview_url %}

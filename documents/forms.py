@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import tempfile
 from cStringIO import StringIO
 import os
+import logging
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -9,17 +9,20 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import UploadedFile
 from django.conf import settings
 
-from ecs.core.forms.forms import ModelFormPickleMixin
+from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.pdfutils import pdf_isvalid, pdf2pdfa
+from ecs.utils.pdfutils import sanitize_pdf, PDFValidationError
 from ecs.utils.formutils import require_fields
 from ecs.utils.pathutils import tempfilecopy
 
+PDF_MAGIC = '%PDF'
+
+logger = logging.getLogger(__name__)
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     date = DateField(required=True)
-    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(hidden=True), required=False)
+    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(is_hidden=True), required=False)
 
     def clean_file(self):
         pdf = self.cleaned_data['file']
@@ -29,29 +32,29 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         # make a copy for introspection on user errors (or system errors)
         tmp_dir = os.path.join(settings.TEMPFILE_DIR, 'incoming-copy')
         tempfilecopy(pdf, tmp_dir=tmp_dir, mkdir=True, suffix='.pdf')
-
-        if not pdf_isvalid(pdf):
-            pdf.seek(0)
-            raise ValidationError(_(u'This Document is not a valid PDF document.'))
-
         pdf.seek(0)
-        # TODO: fix ghostscript (pdf2pdfa breaks some documents)
-        """
-        pdfa = StringIO()       # TODO: use temporary file to save memory
-        size = pdf2pdfa(pdf, pdfa)
-        pdf.close()
-        pdfa.seek(0)
-        """
+        
+        self.pdf_error = False
 
-        while pdf.read(1024):
+        # pdf magic check
+        if pdf.read(4) != PDF_MAGIC:
+            raise ValidationError(_(u'This file is not a PDF document.'))
+        pdf.seek(0)
+        
+        # sanitization
+        try:
+            f = sanitize_pdf(pdf)
+        except PDFValidationError as e:
+            logger.error('unreadable pdf document: %s' % e)
+            self.pdf_error = True
+            raise ValidationError(_(u'Your PDF document could not be processed.'))
+
+        while f.read(1024):
             pass
-        size = pdf.tell()
-        pdf.seek(0)
-        pdfa = pdf
+        size = f.tell()
+        f.seek(0)
 
-        self.cleaned_data['file'] = pdfa        # XXX: do we need this?
-
-        return UploadedFile(pdfa, pdf.name, pdf.content_type, size, pdf.charset)
+        return UploadedFile(f, pdf.name, 'application/pdf', size, pdf.charset)
 
     def clean(self):
         cd = super(DocumentForm, self).clean()

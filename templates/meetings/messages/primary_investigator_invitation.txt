@@ -1,0 +1,7 @@
+{% load i18n core %}
+{% blocktrans with top.meeting.start|date:'d.m.Y' as date and top.start|date:'H:i' as start and top.end|date:'H:i' as end%}
+Ihre Anwesenheit zur Sitzung am {{ date }} ist von {{ start }} bis {{ end }} Uhr erforderlich.
+
+Mit freundlichen Grüßen,
+    Ethik-Kommission der MedUni Wien
+{% endblocktrans %}

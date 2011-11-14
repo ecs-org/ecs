@@ -2,6 +2,7 @@
 {% load core i18n userutils %} 
 
 {% block htmltitle %}
+    … |
     {% if notification_type %}
       {{ notification_type.name }} für {{ submission|ec_number }}
     {% else %}
@@ -98,7 +99,7 @@
                 return false;
             });
             
-            {% if valid and user|has_flag:'approved_by_office' %}
+            {% if valid and user|has_flag:'is_approved_by_office' %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     ecs.mainForm.submit('submit');
                 }, null, {
@@ -106,7 +107,7 @@
                     cancelText: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}'
                 });
             {% endif %}
-            {% if valid and not user|has_flag:'approved_by_office' %}
+            {% if valid and not user|has_flag:'is_approved_by_office' %}
                 new MooDialog.Error('{% trans "Your study is filled out correctly but you cannot submit studies yet. Please wait until the office has approved your account." %}');
             {% endif %}
         });

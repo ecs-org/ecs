@@ -2,34 +2,41 @@
 {% load core i18n userutils %} 
 
 
-{% block htmltitle %}{{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
+{% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
+
 {% block headertitle %}
-  <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> {{ submission_form.submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
+    {{ submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    {% if submission.is_finished %}
+        ({% trans 'finished' %})
+    {% endif %}
 {% endblock %}
 
 
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-    {% if submission_form.presenter == request.user and submission_form.submission.current_submission_form == submission_form %}
-        {% if not submission_form.submission.has_permanent_vote %}
-            <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk %}">{% trans 'Edit' %}</a>
-        {% else %}
+        {% if submission_form|allows_edits_by:request.user %}
+            <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">{% trans 'Edit' %}</a>
+        {% endif %}
+        {% if submission_form|allows_amendments_by:request.user %}
             {% for notification_type in diff_notification_types %}
                 <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
             {% endfor %}
         {% endif %}
-    {% endif %}
-    {% for checklist, checklist_review_form in checklist_reviews %}
-        {% if not checklist_review_form.readonly %}
-            {% if checklist_review_form.related_task %}
-                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
-                <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
-            {% else %}
-                <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
-            {% endif %}
+        
+        {% if not request.task_management.form %}
+            {% for checklist, checklist_review_form in checklist_reviews %}
+                {% if not checklist_review_form.readonly %}
+                    {% if checklist_review_form.related_task %}
+                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
+                        <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
+                    {% else %}
+                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
         {% endif %}
-    {% endfor %}
     </div>
 {% endblock %}
 
@@ -48,7 +55,7 @@
                     <li>
                         <a href="#workflow_tab">{% trans 'Workflow' %}</a>
                     </li>
-                    {% if user|has_flag:'internal' %}
+                    {% if user|has_flag:'is_internal' %}
                         <li>
                             <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
                         </li>
@@ -62,20 +69,22 @@
 
         {{ block.super }}
 
-        {% if show_reviews or user|has_flag:'internal' %}
+        {% if show_reviews or user|has_flag:'is_internal' %}
         <li>
             <a href="#">{% trans "Evaluations" %}</a>
             <ul class="tab_headers">
-                {% if user|has_flag:'internal' %}
+                {% if user|has_flag:'is_internal' %}
                     <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                 {% endif %}
-                {% if categorization_review_form and user|has_flag:'internal' %}
+                {% if categorization_review_form %}
+                {% if user|has_flag:'is_internal' or user|is_member_of:'EC-Thesis Executive Group' %}
                     <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
                 {% endif %}
+                {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
-                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}>
+                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>
                         <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
                     </li>
                 {% endfor %}
@@ -85,7 +94,7 @@
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                {% if user|has_flag:'internal' and show_reviews and vote_review_form %}
+                {% if user|has_flag:'is_internal' and show_reviews and vote_review_form %}
                     <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#vote_review_tab">Votum</a>
                     </li>
@@ -104,7 +113,7 @@
             <a href="#">{% trans "Communication" %}</a>
             <ul class="tab_headers">
                 <li><a href="#communication_tab">{% trans "My Communication" %}</a></li>
-                {% if user|has_flag:'internal' %}
+                {% if user|has_flag:'is_internal' %}
                     <li><a href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>
                 {% endif %}
             </ul>
@@ -130,44 +139,45 @@
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}
-            <ul>
+            <ol class="notification_list">
                 {% for notification in open_notifications %}
                     <li>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% else %}
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
-        {% if submission_form.presenter == request.user %}
+        {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab">
         <h3>{% trans "Answered Notifications" %}</h3>
         {% if answered_notifications %}
-            <ul>
+            <ol class="notification_list">
                 {% for notification in answered_notifications %}
-                    <li>
+                    <li{% if notification.is_rejected %} class="rejected"{% endif %}>
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
+                        {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
-        {% if submission_form.presenter == request.user %}
+        {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    {% if user|has_flag:'internal' and vote_review_form %}
+    {% if user|has_flag:'is_internal' and vote_review_form %}
         <div id="vote_review_tab" class="tab">
             {% block vote_review_tab_content %}
-                <h3>Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
-                <form action="" method="post">
+                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>
+                <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
                     {% with vote_review_form as review_form %}
                         {% include 'submissions/review_form.inc' %}
                     {% endwith %}
@@ -181,8 +191,10 @@
         {% if published_votes %}
             <ul>
                 {% for vote in published_votes %}
-                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
-                    <a href="{% url ecs.core.views.download_signed_vote vote_pk=vote.pk %}" target="_blank">{% trans "Download" %}</a>
+                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}
+                    <a href="{% url ecs.votes.views.download_signed_vote vote_pk=vote.pk %}" target="_blank">{% trans "Download" %}</a>
+                    {% if vote.valid_until %}({% trans 'valid until' %}: {{ vote.valid_until|date:'d.m.Y' }}){% endif %}
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
@@ -190,13 +202,14 @@
         {% endif %}
     </div>
 
-    {% if user|has_flag:'internal' %}
+    {% if user|has_flag:'is_internal' %}
         <div id="checklist_summary_tab" class="tab">
             {% include 'submissions/checklist_summary.inc' %}
         </div>
     {% endif %}
 
-    {% if categorization_review_form and user|has_flag:'internal' %}
+    {% if categorization_review_form %}
+    {% if user|has_flag:'is_internal' or user|is_member_of:'EC-Thesis Executive Group' %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
                 {% if categorization_task and categorization_review_form.readonly %}
@@ -208,34 +221,38 @@
             {% endblock %}
         </div>
     {% endif %}
+    {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
         {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
             <p><a href="{% url ecs.tasks.views.reopen_task task_pk=checklist_review_form.reopen_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
         {% endif %}
         {% with checklist_review_form as review_form %}
-            {% include 'submissions/review_form.inc' %}
+            {% if review_form.readonly and checklist.status == 'review_ok' %}
+                <p><a class="button_submit" href="{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}">{% trans "Download PDF" %}</a></p>
+            {% endif %}
+            {% include 'submissions/checklist_review_form.inc' %}
         {% endwith %}
     </div>
     {% endfor %}
     
     <div id="communication_tab" class="tab">
-        <div class="widget" x-widget-url="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission_form.submission.pk }}"></div>
-        <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
+        <div class="widget" x-widget-url="{% url ecs.communication.views.incoming_message_widget %}?submission={{ submission.pk }}"></div>
+        <div class="widget" x-widget-url="{% url ecs.communication.views.outgoing_message_widget %}?submission={{ submission.pk }}"></div>
+        <a href="{% url ecs.communication.views.new_thread submission_pk=submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
-    {% if user|has_flag:'internal' %}
+    {% if user|has_flag:'is_internal' %}
         <div id="communication_overview_tab" class="tab">
-            <div class="widget" x-widget-url="{% url ecs.communication.views.communication_overview_widget submission_pk=submission_form.submission.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.communication.views.communication_overview_widget submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
     {% if user.get_profile.has_explicit_workflow %}
         <div id="workflow_tab" class="tab">
-            <div class="widget" x-widget-url="{% url ecs.tasks.views.my_tasks submission_pk=submission_form.submission.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.tasks.views.my_tasks submission_pk=submission.pk %}"></div>
         </div>
-        {% if user|has_flag:'internal' %}
+        {% if user|has_flag:'is_internal' %}
             <div id="workflow_log" class="tab">
-                <div class="widget" x-widget-url="{% url ecs.tasks.views.task_backlog submission_pk=submission_form.submission.pk %}"></div>
+                <div class="widget" x-widget-url="{% url ecs.tasks.views.task_backlog submission_pk=submission.pk %}"></div>
             </div>
         {% endif %}
     {% endif %}
@@ -248,34 +265,23 @@
         window.addEvent('domready', function(){
             ecs.setupWidgets();
 
-            new ecs.FormFieldController(['id_external_reviewer'], {
-                sources: ['id_thesis', 'id_expedited'], 
-                auto: function(values){
-                    var no_external_reviewer = values.some(function(val){ return val == 2;});
-                    this.setDisabled(no_external_reviewer);
-                    if(no_external_reviewer) {
-                        this.setValues([3, ""]);
-                    }
-                }
-            });
-
-            new ecs.FormFieldController(['id_external_reviewer_name'], {
-                sources: ['id_external_reviewer'],
-                auto: function(values){
-                    this.setDisabled(values[0] == 3); /* no external reviewer required */
-                }
-            });
-            
             var reviewToolbarItems = [
                 ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}')
             ];
-            {% if user|has_flag:'internal' %}
+            {% if user|has_flag:'is_internal' %}
                 reviewToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
             {% endif %}
-            
+
             $$('form.review .CharField textarea').each(function(textarea){
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
             });
+            
+            {% if user|has_flag:'is_internal' and vote_review_form and vote %}
+                $$('form.review.vote .CharField textarea').each(function(textarea){
+                    ecs.textarea.installToolbarItem(textarea, ecs.textarea.toolbarItems.versionHistory("{% trans 'History' %} ({{ vote_version }})", "{% url ecs.core.views.field_history model_name='vote' pk=vote.pk %}"));
+                });
+            {% endif %}
+
 
             var review_save_buttons = $$('.header_actions')[0].getElements('a.review[id^=save_]');
             review_save_buttons.each(function(el){

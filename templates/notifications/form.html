@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="form_main">
+<div class="form_main notifications">
 <form action="" method="post" enctype="multipart/form-data">
     <div id="tabs">
         {% for tab, fieldsets in tabs %}
@@ -38,9 +38,20 @@
                     </div>
                 {% endifequal %}
                 
-                {% ifequal tab "Änderungen" %}
+                {% ifequal tab "Vorgenommene Änderungen" %}
                     <div class="field">
-                        {{ request.docstash.extra.diff|safe }}
+                        {% if request.docstash.extra.diff %}
+                            <div class="diff_toggles">
+                                <a href="#" id="diff_show_old">{% trans "old" %}</a>
+                                <a href="#" id="diff_show_new">{% trans "new" %}</a>
+                                <a href="#" id="diff_show_all">{% trans "all" %}</a>
+                            </div>
+                            <div class="diff">
+                                {{ request.docstash.extra.diff|safe }}
+                            </div>
+                        {% else %}
+                            <em>{% trans 'No changes.' %}</em>
+                        {% endif %}
                     </div>
                 {% endifequal %}
                 
@@ -73,6 +84,22 @@
     <script type="text/javascript">
         window.addEvent('domready', function(){
             ecs.setupForms();
+            
+            if($('diff_show_old')){
+                $('diff_show_old').addEvent('click', function() {
+                  $$('.diff .deleted').show();
+                  $$('.diff .inserted').hide();
+                });
+                $('diff_show_new').addEvent('click', function() {
+                  $$('.diff .deleted').hide();
+                  $$('.diff .inserted').show();
+                });
+                $('diff_show_all').addEvent('click', function() {
+                  $$('.diff .deleted').show();
+                  $$('.diff .inserted').show();
+                });
+            }
+
 
             $('save-button').addEvent('click', function(){
                 ecs.mainForm.save(true);
@@ -116,6 +143,16 @@
             }
 
             ecs.setupDocumentUploadIframe();
+
+            if ($('id_study_started')) {
+                new ecs.FormFieldController(['id_reason_for_not_started'], {
+                    sources: ['id_study_started'],
+                    auto: function(values, initial){
+                        this.requireField($('id_reason_for_not_started'), !values[0]);
+                        this.setDisabled(values[0]);
+                    }
+                });
+            }
         });
     </script>
 {% endblock %}

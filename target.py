@@ -5,7 +5,7 @@ import subprocess
 from uuid import uuid4
 from fabric.api import local, env
 from deployment.utils import install_upstart, apache_setup, write_template
-from deployment.targetsupport import SetupTargetObject
+from deployment.appsupport import SetupTargetObject
 
 
 class SetupTarget(SetupTargetObject):

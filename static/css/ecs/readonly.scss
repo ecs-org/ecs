@@ -1,0 +1,259 @@
+@import "ecs/variables.scss";
+
+.readonly {
+    input[disabled], textarea[disabled], select[disabled] {
+        color: $grey-20;
+        background: #e4e4e4;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    
+    textarea {
+        margin-left: 240px;
+    }
+    
+    .tab_header_groups li a {
+        text-decoration: none;
+        padding: 4px 7px;
+        color: $grey-80;
+        background: $grey-40;
+        margin-right: 3px;
+        border-radius: 5px 5px 0 0;
+        text-shadow: 0 1px 2px $grey-20;
+        
+        &.active {
+          background: $readonly-mainnav-bg;
+          color: $grey-20;
+          text-shadow: 0 1px 2px $white;
+        }
+        
+        &.errors {
+          background: $navitem-error-red-bg;
+          color: #fff !important;
+          text-shadow: 0 1px 2px $navitem-error-red-bg;
+        }
+    }
+    
+    .tab_headers {
+        position: absolute;
+        left: 0;
+        line-height: 30px;
+        background: $readonly-mainnav-bg;
+        width: 86%;
+        padding: 2px 5px;
+        border-radius: 0 5px 5px 5px;
+        
+        li a {
+            text-decoration: none;
+            padding: 3px 5px;
+            background: $readonly-navitem-bg;
+            color: $grey-20;
+            border-radius: 3px;
+            text-shadow: 0 0 0 $white;
+        }
+        
+        li.active a {
+            background: $readonly-navitem-sub-active;
+        }
+        
+        li.readonly_review a {
+            background: $link-lightblue;
+            color: $link-blue;
+        }
+        
+        li.errors a {
+          background: $navitem-error-red-bg;
+          color: #fff !important;
+          text-shadow: 0 1px 2px $navitem-error-red-bg;
+        }
+    }
+}
+
+
+#checklist_summary_tab {
+    .checklist {
+        font-size: 120%;
+        margin-bottom: 5px;
+    }
+
+    ol > li > ol {
+        margin-left: 10px;
+    }
+    
+    & > ol > li {
+        padding-bottom: 15px;
+    }
+    
+    .answer{
+        & > .positive{
+            color: #00ff00;
+        }
+        & > .negative{
+            color: $red;
+        }
+        & > .unanswered{
+            color: $grey-20;
+        }
+    }
+    
+    .comment{
+        margin-left: 10px;
+        color: $black;
+        background-color: $white;
+        font-family: monospace;
+        font-size: 110%;
+    }
+}
+
+
+/*  Readonly Forms  */
+
+.form_main.readonly {
+    ol li {
+        display: block;
+        float: left;
+        margin-bottom: 10px;
+
+        label {
+            padding: 0;
+            padding-left: 0;
+        }
+    }
+
+    ol li label,
+    .field li label{
+        text-align: left;
+        vertical-align: baseline;
+        width: 260px;
+        float: left;
+        clear: none;
+    }
+    
+    .review ol li label,
+    .checklist_review_tab ol li label{
+        width: 240px;
+    }
+    
+    ol li.BooleanField {
+        padding-left: 0;
+    }
+    
+    pre {
+        display: inline-block;
+        background-color: $white;
+        font-style: normal;
+        line-height: 1.5;
+        border: 1px solid $grey-60;
+        padding: 3px 5px;
+        
+        table & {
+            margin-left: 0;
+        }
+        
+        &.empty {
+          background-color: #dddddd;
+        }
+        
+        li &.oneline, td &{
+            float: left;
+            padding: 4px;
+            display: block;
+            margin-bottom: 4px;
+            position: relative;
+            top: -4px;
+            white-space: pre-wrap;
+        }
+        
+        &.multiline {
+          white-space: pre-wrap;
+          width: auto;
+          max-width: 700px;
+          margin: 0 0 20px 0;
+        }
+        
+        em {
+            color: $grey-20;
+        }
+    }
+    
+    .icon_comment {
+        cursor: pointer;
+    }
+    
+    .version {
+        td {
+            vertical-align: middle;
+        }
+        a {
+            vertical-align: top;
+        }
+    }
+    .authorize {
+        input[type="submit"] {
+           margin-left: 10px; 
+        }
+        
+        ol {
+            margin: 0 0 0 10px;
+            
+            li label {
+                width: 60px;
+            }
+        }
+    }
+    .ecs-Autocomplete {
+        float: left;
+    }
+}
+
+
+/* Readonly Checklist Review Forms */
+
+.form_main.readonly .checklist_review_tab {
+    ol li label {
+        width: auto;
+        clear: both;
+        padding: 0;
+        text-indent: -20px;
+        margin-left: 20px;
+    }
+
+    ol li select {
+        clear: both;
+    }
+    
+    span.NullBooleanField, span.CharField {
+        float: left;
+    }
+    
+    span.NullBooleanField {
+        clear: left;
+        margin: 0 10px 0 20px;
+    }
+    
+    span.CharField label {
+        margin-right: 5px;
+    }
+
+    span.CharField.required label:after {
+        content: " *";
+        color: $red;
+    }
+    
+    ul.errorlist li {
+        margin-left: 0;  
+    }
+        
+    textarea {
+        clear: both;
+        display: block;
+        margin-left: 0;
+    }
+    
+    input {
+        display: none;
+    }
+    
+    span.required textarea {
+        border: 1px solid $red;
+    }
+}

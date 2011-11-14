@@ -1,0 +1,10 @@
+.field_history .change {
+  padding: 5px;
+  
+  .diff{
+      .inserted, .deleted{
+          display: inline;
+      }
+  }
+}
+

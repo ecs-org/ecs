@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import datetime
 import types
+import traceback
 from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.db import models
+from django.db.models import Manager
 from django.http import HttpRequest
 from django.contrib.auth.models import User
 
@@ -16,6 +18,7 @@ from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
 from ecs.utils.countries.models import Country
+from ecs.users.utils import get_full_name
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -87,7 +90,6 @@ class ModelDiffNode(DiffNode):
                 result = '<span class="title">%s</span>\n%s' % (self.identity, result)
             return result
         except Exception, e:
-            import traceback
             traceback.print_exc()
 
 
@@ -126,6 +128,24 @@ class ListDiffNode(DiffNode):
         return "\n".join(result)
 
 
+class DocumentListDiffNode(ListDiffNode):
+    def _prepare(self):
+        self.diffs = []
+        old_docs = {}
+        for doc in self.old:
+            old_docs[doc.uuid] = doc
+        added_docs = []
+        for doc in self.new:
+            if doc.uuid in old_docs:
+                del old_docs[doc.uuid]
+            else:
+                self.diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
+        for doc in old_docs.values():
+            self.diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
+
+    def html(self):
+        return "\n".join(d.html() for op, d in self.diffs)
+
 def _render_value(val):
     if val is None:
         return _('No Information')
@@ -149,7 +169,7 @@ class ModelDiffer(object):
     identify = None
     label_map = {}
 
-    def __init__(self, model=None, exclude=None, fields=None, follow=None, identify=None, label_map=None):
+    def __init__(self, model=None, exclude=None, fields=None, follow=None, identify=None, label_map=None, node_map=None):
         if model:
             self.model = model
         if exclude:
@@ -162,16 +182,22 @@ class ModelDiffer(object):
             self.identify = identify
         if label_map:
             self.label_map = label_map
+        self.node_map = node_map or {}
 
     def get_field_names(self):
-        names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
+        names = paper_forms.get_field_names_for_model(self.model)
+        for f in self.model._meta.fields:
+            if not f.name in names:
+                names.append(f.name)
         if self.fields:
-            names = names.intersection(self.fields)
-        return names.union(self.follow)
+            names = [n for n in names if n in self.fields]
+        if self.follow:
+            names += self.follow
+        if self.exclude:
+            names = [n for n in names if not n in self.exclude]
+        return names
 
     def diff_field(self, name, old, new, **kwargs):
-        from django.db.models import Manager
-
         old_val = getattr(old, name, None)
         new_val = getattr(new, name, None)
         
@@ -190,7 +216,7 @@ class ModelDiffer(object):
             new_val = list(new_val.all().order_by('pk')) if new else []
             if not old_val and not new_val:
                 return None
-            return ListDiffNode(old_val, new_val, **kwargs)
+            return self.node_map.get(name, ListDiffNode)(old_val, new_val, **kwargs)
         elif field.choices:
             old_val = unicode(dict(field.choices)[old_val]) if old_val else _('No Information')
             new_val = unicode(dict(field.choices)[new_val]) if new_val else _('No Information')
@@ -252,18 +278,20 @@ class UserDiffer(AtomicModelDiffer):
     model = User
 
     def format(self, user):
-        from ecs.users.utils import get_full_name
         return u'{0} <{1}>'.format(get_full_name(user), user.email)
 
 
 _differs = {
     SubmissionForm: ModelDiffer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
-            'pdf_document', 'current_pending_vote', 'current_published_vote', 'acknowledged',
-            'created_at', 'presenter', 'sponsor', 'invoice', 'submitter', 'transient',
-            'is_notification_update', 'submission_type'),
+            'pdf_document', 'current_pending_vote', 'current_published_vote', 'is_acknowledged',
+            'created_at', 'presenter', 'sponsor', 'invoice', 'submitter', 'is_transient',
+            'is_notification_update',),
         follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set',
             'documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
+        node_map={
+            'documents': DocumentListDiffNode,
+        },
         label_map=dict([
             ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
             ('investigators', _(u'Zentren')),

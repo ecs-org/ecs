@@ -1,0 +1,319 @@
+@import "ecs/variables.scss";
+
+.message_display {
+    display: block;
+    
+    form {
+        max-width: 700px;
+        margin: 20px 10px;
+    }
+    #id_subject {
+        display: block;
+        width: 500px;
+    }
+    #id_text {
+        display: block;
+        width: 500px;
+        min-height: 180px;
+    }
+    .form, .item {
+        position: relative;
+    }
+    h4 {
+        display: block;
+        font-weight: lighter;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid $wheatbrown;
+    }
+    ol {
+        margin-top: 10px;
+
+        li {
+            list-style: none;
+            padding: 3px 5px;
+            margin-bottom: 2px;
+            
+            li {
+                display: block;
+                clear: both;
+                margin-bottom: 0;
+            }
+        }
+    }
+    span {
+        display: block;
+        padding: 5px 0;
+    }
+    label {
+        font-weight: bolder;
+        vertical-align: middle;
+        margin-right: 5px;
+        padding-bottom: 5px;
+    }
+    p {
+      margin-bottom: 10px !important;
+    }
+    .form ul {
+        display: inline-block;
+        margin: 0;
+        list-style: none;
+    }
+    .form .input {
+        display: block;
+        width: 400px;
+        margin: 0 0 20px 20px;
+    }
+    .input label {
+        vertical-align: middle;
+    }
+    ul li label {
+        min-width: 130px;
+    }
+    .actions {
+        width: 20px;
+        height: 70px;
+        position: absolute;
+        right: 0px;
+        top: 0;
+        padding: 10px;
+        border-left: 1px solid $grey-80;
+        border-bottom: 1px solid $grey-80;
+        
+        a {
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+    }
+    pre {
+        margin: 10px 0;
+        padding: 10px;
+        background: $white;
+        border: 1px solid #C6C9CB;
+    }
+    .ecs-TextAreaToolbar {
+        display: inline-block;
+        margin-left: 10px;
+        vertical-align: bottom;
+        
+          a {
+            margin: 0 10px 0 0;
+          }
+    }
+    .ecs-Autocomplete {
+        display: inline;
+    }
+    .boilerplate_selector {
+        left: 80px;
+    }
+}
+
+.communication_thread #id_text {
+  display: block;
+  width: 500px;
+  min-height: 180px;
+}
+
+.message_display img, 
+.messages_overview img {
+  vertical-align: middle;
+}
+
+.form_main .message {
+    ol li {
+        display: block;
+        clear: both;
+        list-style-type: none;
+        margin-bottom: 10px;
+        font-size: 12px;
+        
+        label {
+            display: block;
+            width: 100px;
+            margin: 0 10px 10px 0;
+            text-align: right;
+            float: left;
+        }
+        
+        input, textarea{
+            border: 1px solid $grey-60;
+            padding: 2px;
+        }
+        
+        textarea {
+            height: 16em;
+            display: block;
+            width: 30em;
+        }
+        
+    }
+}
+
+#thread_list_filter,
+.thread_list_choose,
+.messages_header .sort_options {
+  display: inline;
+}
+.thread_list_choose,
+.messages_header .sort_options {
+  margin-right: 10px;
+  background: $middle-light-brown-bg;
+  border-radius: 3px;
+}
+.thread_list_choose {
+  padding: 7px 3px 5px 8px;
+}
+.messages_header .sort_options {
+  padding: 7px 8px 5px;
+}
+.thread_list_choose label {
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.messages_overview{
+    .messages_header {
+         margin-bottom: 15px;
+    }
+    table.messages {
+        display: block;
+        clear: both;
+        
+        .threadstart {
+          border-top: 1px solid $grey-80;
+        }
+    }
+}
+
+#content .messages th, #content .messages td {
+  padding: 5px;
+}
+
+
+/* Communication Thread */
+
+#communication_tab .messages {
+  margin-top: 10px;
+
+    li {
+      float: none;
+      padding: 5px;
+      margin-bottom: 0;
+    }  
+}
+
+ul.thread {
+  list-style-type: none;
+  margin: 20px 0px !important;
+}
+
+.thread { 
+    .message {
+      border-radius: 5px;
+      background: $white;
+      border: 1px solid $wheatbrown;;
+      margin-bottom: 2px;
+      
+        .head {
+          padding: 10px;
+          border-bottom: 1px solid $wheatbrown;;
+          cursor: pointer;
+          
+            .preview {
+              margin-left: 5px;
+              color: $grey-40;
+              display: none;
+            }
+            
+            .time {
+              float: right;
+              color: $grey-40;
+            }
+            
+            .sender {
+              font-weight: bold;
+            }
+            
+            .message_done {
+              float: right;
+              margin-left: 5px;
+            }
+            .message_done:before {
+              content: " | ";
+            }
+        }
+        
+        .body {
+          white-space: pre-wrap;
+          overflow: hidden;
+        }
+    }
+    
+    li.message:nth-child(odd) {
+      background: $middle-light-brown-bg;
+    }
+    li.message:nth-child(even) {
+      background: $middle-dark-brown-bg;
+    }
+    pre {
+      padding: 10px;
+      border-radius: 0 0 5px 5px;
+      background: $white;
+    }
+    
+    .message.collapsed {
+      border-radius-bottom-left: 0px;
+      border-radius-bottom-right: 0px;
+      margin-bottom: -5px;
+      
+        .head {
+          border: none;
+        }
+        
+        .preview {
+          display: inline;
+        }
+        
+        .body {
+          display: none;
+        }
+    }
+}
+
+.communication_thread {
+    form.send {
+      margin: 20px 10px;
+    }
+    .related_thread {
+      display: block;
+      text-align: left;
+      margin: -15px 10px 0 0;
+    }
+    .expand_collapse {
+      display: block;
+      text-align: right;
+      margin: -15px 10px 0 0;
+    }
+    label, .ecs-Autocomplete, .ecs-TextAreaToolbar {
+      display: inline-block;
+    }
+    label {
+      padding-bottom: 5px;
+      font-weight: bold;
+    }
+    .ecs-TextAreaToolbar {
+      margin-left: 10px;
+      vertical-align: bottom;
+    }
+    .ecs-Autocomplete {
+      display: block;
+      
+        input[type="text"] {
+          width: 300px;
+        }
+    }
+    .boilerplate_selector {
+      left: 80px; 
+    }
+}

@@ -1,147 +1,58 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
-from django.db.models import Q
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.core.models.names import NameField
+from ecs.core.models.constants import (
+    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
+    SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
+)
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
+from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
-from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document, DocumentType
-from ecs.users.utils import get_user, create_phantom_user
+from ecs.users.utils import get_user, create_phantom_user, sudo
+from ecs.authorization import AuthorizationManager
+from ecs.core.signals import on_study_finish, on_study_change
+from ecs.votes.models import Vote
+from ecs.notifications.models import Notification
+from ecs.users.utils import get_current_user
+from ecs.docstash.models import DocStash
+from ecs.meetings.models import Meeting
+from ecs.votes.models import Vote
+from ecs.utils.viewutils import render_pdf_context
+from ecs.tasks.models import Task
 
-MIN_EC_NUMBER = 1000
-
-class SubmissionQuerySet(models.query.QuerySet):
-    def amg(self):
-        return self.filter(Q(is_amg=True) | (
-            Q(is_amg=None) & (
-                Q(current_submission_form__project_type_non_reg_drug=True)
-                | Q(current_submission_form__project_type_reg_drug=True)
-            )
-        ))
-    
-    def mpg(self):
-        return self.filter(Q(is_mpg=True) | (
-            Q(is_mpg=None) & Q(current_submission_form__project_type_medical_device=True)
-        ))
-
-    def b2(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
-
-    def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='3'), current_submission_form__isnull=False)
-
-    def b4(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
-
-    def new(self):
-        return self.filter(meetings__isnull=True)
-
-    def thesis(self):
-        return self.filter(Q(thesis=True)|(Q(thesis=None) & ~Q(current_submission_form__project_type_education_context=None)))
-
-    def retrospective(self):
-        return self.filter(Q(retrospective=True)|Q(retrospective=None, current_submission_form__project_type_retrospective=True))
-
-    def retrospective_thesis(self):
-        return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
-
-    def next_meeting(self):
-        return self.filter(meetings__start__gt=datetime.now())
-
-    def mine(self, user):
-        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(current_submission_form__presenter=user))
-
-    def reviewed_by_user(self, user):
-        q = models.Q(additional_reviewers=user)
-        for a in user.assigned_medical_categories.all():
-            q |= models.Q(pk__in=a.meeting.submissions.filter(medical_categories=a.category))
-
-        from ecs.tasks.models import Task
-        submission_ct = ContentType.objects.get_for_model(Submission)
-        q |= models.Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).values('data_id').query)
-
-        return self.filter(q).distinct()
-
-    def none(self):
-        """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
-        return self.extra(where=['1=0']) 
-        
-class SubmissionManager(AuthorizationManager):
-    def get_base_query_set(self):
-        return SubmissionQuerySet(self.model).distinct()
-        
-    def amg(self):
-        return self.all().amg()
-        
-    def mpg(self):
-        return self.all().mpg()
-
-    def new(self):
-        return self.all().new()
-
-    def b2(self):
-        return self.all().b2()
-
-    def b3(self):
-        return self.all().b3()
-
-    def b4(self):
-        return self.all().b4()
-
-    def thesis(self):
-        return self.all().thesis()
-
-    def retrospective(self):
-        return self.all().retrospective()
-
-    def retrospective_thesis(self):
-        return self.all().retrospective_thesis()
-
-    def next_meeting(self):
-        return self.all().next_meeting()
-
-    def mine(self, user):
-        return self.all().mine(user)
-
-    def reviewed_by_user(self, user):
-        return self.all().reviewed_by_user(user)
-
-    def none(self):
-        return self.all().none()
 
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
-    keywords = models.TextField(blank=True, null=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
-    thesis = models.NullBooleanField()
-    retrospective = models.NullBooleanField()
-    expedited = models.NullBooleanField()
+    workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES)
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
-    external_reviewer = models.NullBooleanField()
-    external_reviewer_name = models.ForeignKey('auth.user', null=True, blank=True, related_name='reviewed_submissions')
-    external_reviewer_billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    remission = models.NullBooleanField()
-    additional_reviewers = models.ManyToManyField(User, blank=True, related_name='additional_review_submission_set')
-    sponsor_required_for_next_meeting = models.BooleanField(default=False)
+    remission = models.NullBooleanField(default=False)
+    external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    transient = models.BooleanField(default=False)
     valid_until = models.DateField(null=True, blank=True)
-    insurance_review_required = models.NullBooleanField()
-    gcp_review_required = models.NullBooleanField(default=False)
-    legal_and_patient_review_required = models.NullBooleanField(default=True)
-    statistical_review_required = models.NullBooleanField(default=True)
 
-    
-    is_amg = models.NullBooleanField()   # Arzneimittelgesetz
-    is_mpg = models.NullBooleanField()   # Medizinproduktegesetz
-    
+    legal_and_patient_review_required = models.NullBooleanField(default=False)
+    statistical_review_required = models.NullBooleanField(default=False)
+    insurance_review_required = models.NullBooleanField(default=False)
+    gcp_review_required = models.NullBooleanField(default=False)
+    invite_primary_investigator_to_meeting = models.BooleanField(default=False)
+
+    is_transient = models.BooleanField(default=False)
+    is_finished = models.BooleanField(default=False)
+
+    presenter = models.ForeignKey(User, related_name='presented_submissions')
+    susar_presenter = models.ForeignKey(User, related_name='susar_presented_submissions')
+
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
     next_meeting = models.ForeignKey('meetings.Meeting', null=True, related_name='_current_for_submissions')
@@ -151,6 +62,14 @@ class Submission(models.Model):
     @property
     def newest_submission_form(self):
         return self.forms.all().order_by('-pk')[0]
+
+    @property
+    def is_expedited(self):
+        return self.workflow_lane == SUBMISSION_LANE_EXPEDITED
+
+    @property
+    def is_regular(self):
+        return self.workflow_lane == SUBMISSION_LANE_BOARD
 
     def get_submission(self):
         return self
@@ -169,41 +88,29 @@ class Submission(models.Model):
         return list(User.objects.filter(email__in=emails))
 
     def resubmission_task_for(self, user):
-        from ecs.tasks.models import Task
         try:
-            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission', closed_at=None)[0]
+            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission', closed_at=None, deleted_at=None)[0]
         except IndexError:
             return None
-    
-    def external_review_task_for(self, user):
-        from ecs.tasks.models import Task
+
+    def b2_resubmission_task_for(self, user):
         try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='external_review', closed_at=None, deleted_at__isnull=True)[0]
+            return Task.objects.for_user(user).for_submission(self).filter(task_type__workflow_node__uid='b2_resubmission', closed_at=None, deleted_at=None)[0]
         except IndexError:
             return None
-    
-    def additional_review_task_for(self, user):
-        from ecs.tasks.models import Task
-        try:
-            return Task.objects.for_data(self).filter(assigned_to=user, task_type__workflow_node__uid='additional_review', closed_at=None, deleted_at__isnull=True)[0]
-        except IndexError:
-            return None
-    
+
     def paper_submission_review_task_for(self, user):
-        from ecs.tasks.models import Task
         try:
-            return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at__isnull=True)[0]
+            return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at=None)[0]
         except IndexError:
             return None
 
     @property
     def notifications(self):
-        from ecs.notifications.models import Notification
         return Notification.objects.filter(submission_forms__submission=self)
    
     @property
     def votes(self):
-        from ecs.core.models import Vote
         return Vote.objects.filter(submission_form__submission=self)
 
     @property
@@ -227,18 +134,24 @@ class Submission(models.Model):
             return None
         
     @property
-    def multicentric(self):
+    def is_multicentric(self):
         if not self.current_submission_form:
             return None
-        return self.current_submission_form.multicentric
+        return self.current_submission_form.is_multicentric
         
     @property
     def is_active(self):
-        submission_form = self.current_submission_form
-        if submission_form:
-            if submission_form.current_published_vote:
-                return submission_form.current_published_vote.activates
-        return False
+        return self.forms.with_vote(published=True, valid=True, permanent=True, positive=True).exists()
+        
+    @property
+    def lifecycle_phase(self):
+        if self.is_finished:
+            return _('Finished')
+        elif self.is_active:
+            return _('Active')
+        elif self.current_submission_form.is_acknowledged:
+            return _('Acknowledged')
+        return _('New')
         
     @property
     def main_ethics_commission(self):
@@ -251,16 +164,23 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.primary_investigator
-
+    
+    @property
     def has_permanent_vote(self):
-        from ecs.core.models import Vote
-        from ecs.core.models.voting import PERMANENT_VOTE_RESULTS
-        #print Vote.objects.filter(submission_form__submission=self)
-        return Vote.objects.filter(submission_form__submission=self, result__in=PERMANENT_VOTE_RESULTS).count() > 0
-        
+        return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
+
+    def get_last_recessed_vote(self, top):
+        try:
+            return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
+        except IndexError:
+            return None
+
     def save(self, **kwargs):
+        if not self.presenter_id:
+            self.presenter = get_current_user()
+        if not self.susar_presenter_id:
+            self.susar_presenter = get_current_user()
         if not self.ec_number:
-            from ecs.users.utils import sudo
             with sudo():
                 year = datetime.now().year
                 max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
@@ -276,6 +196,11 @@ class Submission(models.Model):
     def __unicode__(self):
         return self.get_ec_number_display()
         
+    def finish(self, expired=False):
+        self.is_finished = True
+        self.save()
+        on_study_finish.send(sender=Submission, submission=self, expired=expired)
+        
     def update_next_meeting(self):
         next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
         if next:
@@ -287,41 +212,53 @@ class Submission(models.Model):
             self.save()
 
     def get_current_docstash(self):
-        from ecs.users.utils import get_current_user
-        from ecs.docstash.models import DocStash
         return DocStash.objects.get(
             group='ecs.core.views.submissions.create_submission_form',
             owner=get_current_user,
             content_type=ContentType.objects.get_for_model(self.__class__),
             object_id=self.pk,
         )
-        
+
+    def schedule_to_meeting(self):
+        visible = self.workflow_lane == SUBMISSION_LANE_BOARD
+        duration = timedelta(minutes=7.5 if visible else 0)
+
+        def _schedule():
+            meeting = Meeting.objects.next_schedulable_meeting(self)
+            meeting.add_entry(submission=self, duration=duration, visible=visible)
+            return meeting
+
+        try:
+            current_top = self.timetable_entries.order_by('-meeting__start')[0]
+        except IndexError:
+            current_top = None
+
+        if current_top is None:
+            return _schedule()
+        elif current_top.meeting.started is None:
+            current_top.refresh(duration=duration, visible=visible)
+        else:
+            try:
+                last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')[0]
+            except IndexError:
+                pass
+            else:
+                if last_vote.is_recessed:
+                    return _schedule()
+        return current_top.meeting
+
     class Meta:
         app_label = 'core'
 
-SUBMISSION_TYPE_MONOCENTRIC = 1
-SUBMISSION_TYPE_MULTICENTRIC = 2
-SUBMISSION_TYPE_MULTICENTRIC_LOCAL = 6
-
-SUBMISSION_TYPE_CHOICES = (
-    (SUBMISSION_TYPE_MONOCENTRIC, ugettext_lazy('monocentric')), 
-    (SUBMISSION_TYPE_MULTICENTRIC, ugettext_lazy('multicentric, main ethics commission')),
-    (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, ugettext_lazy('multicentric, local ethics commission')),
-)
-
-SUBMISSION_INFORMATION_PRIVACY_CHOICES = (
-    ('personal', ugettext_lazy('individual-related')), 
-    ('non-personal', ugettext_lazy('implicit individual-related')),
-)
 
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
-    acknowledged = models.BooleanField(default=False)
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.OneToOneField(Document, related_name="submission_form", null=True)
     documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
     is_notification_update = models.BooleanField(default=False)
-    transient = models.BooleanField(default=False)
+    is_transient = models.BooleanField(default=False)
+    is_acknowledged = models.BooleanField(default=False)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -333,13 +270,13 @@ class SubmissionForm(models.Model):
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
-    current_published_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_published_for')
-    current_pending_vote = models.OneToOneField('core.Vote', null=True, related_name='_currently_pending_for')
+    current_published_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_published_for')
+    current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     class Meta:
         app_label = 'core'
         
-    objects = AuthorizationManager()
+    objects = SubmissionFormManager()
     
     # 1.4 (via self.documents)
 
@@ -551,10 +488,7 @@ class SubmissionForm(models.Model):
 
     def save(self, **kwargs):
         if not self.presenter_id:
-            from ecs.users.utils import get_current_user
-            user = get_current_user()
-            if user:
-                self.presenter = user
+            self.presenter = get_current_user()
         for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name'), ('invoice', 'invoice_name')):
             email = getattr(self, '{0}_email'.format(x))
             if email:
@@ -576,9 +510,7 @@ class SubmissionForm(models.Model):
         return super(SubmissionForm, self).save(**kwargs)
 
     def render_pdf(self):
-        from ecs.utils.viewutils import render_pdf_context
         from ecs.core import paper_forms
-
         doctype = DocumentType.objects.get(identifier='submissionform')
         name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
         filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
@@ -601,37 +533,62 @@ class SubmissionForm(models.Model):
         return self.submission.forms.filter(created_at__lte=self.created_at).count()
 
     def __unicode__(self):
-        return "%s: %s" % (self.submission.get_ec_number_display(), self.project_title)
+        return "%s: %s" % (self.submission.get_ec_number_display(), self.german_project_title or self.project_title)
     
     def get_filename_slice(self):
         return self.submission.get_ec_number_display(separator='_')
-    
+        
     @property
-    def amg(self):
-        if self.submission.is_amg is not None:
-            return self.submission.is_amg
+    def is_current(self):
+        return self.submission.current_submission_form_id == self.id
+        
+    def mark_current(self):
+        self.submission.current_submission_form = self
+        self.submission.save()
+        
+    def allows_edits(self, user):
+        s = self.submission
+        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished
+        
+    def allows_amendments(self, user):
+        s = self.submission
+        if s.presenter == user and self.is_current and not s.is_finished:
+            return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
+        return False
+
+    def allows_export(self, user):
+        return user in (self.submitter, self.submission.presenter, self.submission.susar_presenter) or user.ecs_profile.is_internal
+
+    @property
+    def is_amg(self):
         return self.project_type_drug
 
     @property
-    def mpg(self):
-        if self.submission.is_mpg is not None:
-            return self.submission.is_mpg
+    def is_mpg(self):
         return self.project_type_medical_device
 
     @property
-    def thesis(self):
-        if self.submission.thesis is not None:
-            return self.submission.thesis
+    def is_thesis(self):
         return self.project_type_education_context is not None
 
     @property
-    def multicentric(self):
+    def is_multicentric(self):
         return self.investigators.count() > 1
         
     @property
-    def monocentric(self):
+    def is_monocentric(self):
         return self.investigators.count() == 1
         
+    @property
+    def is_categorized_multicentric_and_local(self):
+        return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+    
+    @property
+    def includes_minors(self):
+        if self.subject_minage is None:
+            return None
+        return 0 <= self.subject_minage < 18
+    
     @property
     def study_plan_open(self):
         return self.study_plan_blind == 0
@@ -718,44 +675,31 @@ def attach_to_submissions(user):
         inv.user = user
         inv.save()
 
-def _post_submission_form_save(**kwargs):
-    from ecs.meetings.models import Meeting, AssignedMedicalCategory
-    from ecs.communication.utils import send_system_message_template
 
+def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
-    
-    if not kwargs['created'] or new_sf.transient:
+
+    if not kwargs['created'] or new_sf.is_transient:
         return
 
     submission = new_sf.submission
-    initial = not submission.current_submission_form
-
     old_sf = submission.current_submission_form
-    submission.current_submission_form = new_sf
+    
+    if not old_sf:
+        submission.current_submission_form = new_sf
+        if new_sf.is_amg:
+            submission.legal_and_patient_review_required = True
+            submission.statistical_review_required = True
+            submission.insurance_review_required = True
+            submission.invite_primary_investigator_to_meeting = True
+        if new_sf.is_thesis:
+            submission.remission = True
+            submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
+        elif new_sf.is_categorized_multicentric_and_local:
+            submission.workflow_lane = SUBMISSION_LANE_LOCALEC
+        submission.save()
 
-    defaults = {
-        'is_amg': new_sf.project_type_drug,
-        'is_mpg': new_sf.project_type_medical_device_or_method,
-        'insurance_review_required': bool(new_sf.insurance_name),
-        'thesis': new_sf.project_type_education_context is not None,
-        'retrospective': new_sf.project_type_retrospective,
-    }
-
-    # set defaults
-    for k, v in defaults.iteritems():
-        if getattr(submission, k) is None:
-            setattr(submission, k, v)
-    submission.save(force_update=True)
-
-    involved_users = set([p.user for p in new_sf.get_involved_parties() if p.user and not p.user == new_sf.presenter])
-    if old_sf == None:   # first version of the submission
-        for u in involved_users:
-            send_system_message_template(u, _('Creation of study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/creation_message.txt', None, submission=submission)
-    else:
-        for u in involved_users:
-            send_system_message_template(u, _('Changes to study EC-Nr. {0}').format(submission.get_ec_number_display()),
-                'submissions/change_message.txt', None, submission=submission)
+    on_study_change.send(Submission, submission=submission, old_form=old_sf, new_form=new_sf)
 
 post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
@@ -782,6 +726,23 @@ class Investigator(models.Model):
     class Meta:
         app_label = 'core'
 
+    def save(self, **kwargs):
+        if self.email:
+            try:
+                user = get_user(self.email)
+            except User.DoesNotExist:
+                user = create_phantom_user(self.email, role='investigator')
+                user.first_name = self.contact_first_name
+                user.last_name = self.contact_last_name
+                user.save()
+                profile = user.get_profile()
+                profile.title = self.contact_title
+                profile.gender = self.contact_gender
+                profile.organisation = self.organisation
+                profile.save()
+            self.user = user
+
+        return super(Investigator, self).save(**kwargs)
 
 def _post_investigator_save(sender, **kwargs):
     investigator = kwargs['instance']
@@ -865,4 +826,19 @@ class ForeignParticipatingCenter(models.Model):
     
     class Meta:
         app_label = 'core'
+
+
+class TemporaryAuthorization(models.Model):
+    submission = models.ForeignKey(Submission, related_name='temp_auth')
+    user = models.ForeignKey(User, related_name='temp_submission_auth')
+    start = models.DateTimeField(default=datetime.now)
+    end = models.DateTimeField(default=lambda: datetime.now() + timedelta(days=30))
+
+    class Meta:
+        app_label = 'core'
+        
+    @property
+    def is_active(self):
+        return self.start <= datetime.now() < self.end
+        
 

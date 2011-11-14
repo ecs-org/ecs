@@ -14,7 +14,6 @@ class DeclineTaskForm(forms.Form):
     
 
 TASK_MANAGEMENT_CHOICES = [('delegate', _('delegate')),('message', _('message'))]
-TASK_QUESTION_TYPE = [('callback', _('callback')), ('somebody', _('somebody')), ('related', _('related') )]
 
 class TaskChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, task):
@@ -22,19 +21,21 @@ class TaskChoiceField(forms.ModelChoiceField):
 
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=TASK_MANAGEMENT_CHOICES)
-    assign_to = forms.ModelChoiceField(queryset=User.objects.all(), required=False, empty_label=_('<group>'))
+    assign_to = forms.ModelChoiceField(queryset=User.objects.all().order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
+    post_data = forms.CharField(widget=forms.HiddenInput(), required=False)
     
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
         self.task = task
         super(ManageTaskForm, self).__init__(*args, **kwargs)
-        self.fields['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
-        self.fields['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
-        self.fields['assign_to'].queryset = User.objects.filter(groups__task_types=task.task_type)
+        fs = self.fields
+        fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
+        fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
+        fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type)
         if task.choices:
-            self.fields['action'].choices += [('complete_%s' % i, choice[i]) for i, choice in enumerate(task.choices)]
+            fs['action'].choices += [('complete_%s' % i, choice[0]) for i, choice in enumerate(task.choices)]
         else:
-            self.fields['action'].choices += [('complete', _('complete'))]
+            fs['action'].choices += [('complete', _('complete'))]
         
     def get_choice(self):
         if not hasattr(self, 'choice_index'):
@@ -57,7 +58,8 @@ class ManageTaskForm(forms.Form):
         if action == 'delegate':
             if 'assign_to' not in cd:
                 self._errors['assign_to'] = self.error_class([_(u'You must select a user.')])
-
+        elif action == 'complete' and self.task and self.task.is_locked:
+            self._errors['locked'] = self.error_class([_(u'Fill out the form completely to complete the task.')])
         return cd
 
 class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):

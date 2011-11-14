@@ -1,0 +1,327 @@
+@import "ecs/variables.scss";
+
+@mixin field-list{
+    display: inline-block;
+    margin-bottom: 10px;
+    list-style: none;
+    width: 100%;
+}
+
+ul.errorlist {
+  clear: both;
+  list-style-type: none;
+  margin: 0 !important;
+}
+.errorlist li {
+  color: red;
+  padding: 5px;
+  background: #FAE5E3;
+  border: 1px solid #F4CECB;
+  border-radius: 3px;
+  max-width: 500px;
+}
+
+.form_main {
+    #tabs {
+        clear: both;
+    }
+
+    .field {
+        margin-bottom: 30px;
+        
+        input.subchoice {
+            margin-left: 30px;
+        }
+    }
+    
+    .field h2, .field h3, .tab h2, .tab h3{
+        letter-spacing: 1px;
+        line-break: normal;
+    }
+    
+    table, ol, select, option, input, textarea{
+        font-size: 12px;
+    }
+    
+    .paperform_number{
+        color: $grey-40;
+        font-size: 10px;
+        
+        &:before{
+            content: "[";
+        }
+        
+        &:after{
+            content: "]";
+        }
+    }
+    
+    .wide { width: 300px;}
+    .narrow { width: 200px;}
+    .small { width: 120px;}
+    
+    tr.version:nth-of-type(2) td {
+        background: #eee;
+    }
+    
+    ol {
+        @include field-list;
+        li {
+            display: block;
+            clear: both;
+            
+            &.focus {
+                background-color: #eeeeff;
+            }
+            
+            &.required.errors {
+                textarea, input[type=text], select {
+                    border: 1px solid red;
+                }
+            }
+            
+            &.required label:after {
+                content: " *";
+                color: $red;
+            }
+            
+            &.max10 input { width: 60px;}
+            &.max20 input { width: 100px;}
+            &.max40 input { width: 200px;}
+            &.max60 input { width: 340px;}
+
+            label, input[type=text], input[type=file], textarea, select {
+                display: inline-block;
+                vertical-align: top;
+                margin-bottom: 10px;
+            }
+            
+            textarea {
+                height: 40px;
+            }
+
+            label {
+                width: 220px;
+                padding: 0 10px;
+            }
+            
+            th.label {
+                text-align: left;
+            }
+            
+            div.input {
+                float: left;
+            }
+            
+            .notes {
+                font-size: 0.9em;
+                color: $grey-40;
+                padding-left: 10px;
+            }
+            
+            .help_text {
+                margin: 0 0 3px 230px;
+                display: block;
+                clear: both;
+                color: $grey-40;
+                padding-left: 10px;
+            }
+            
+            &.BooleanField {
+                padding-left: 240px;
+                
+                input{
+                    display: inline-block;
+                    float: left;
+                }
+                
+                label{
+                    width: 400px;
+                    display: inline-block;
+                    float: none;
+                    padding-left: 1em;
+                    text-align: left;
+                    
+                    &:after {
+                      content: none;
+                    }
+                }
+
+                .help_text {
+                    clear: both;
+                    margin: 10px 0 0 20px;
+                    height: 15px;
+                    display: block;
+                    clear: both;
+                    color: $grey-40;
+                }
+            }
+        }
+    }
+    
+    .star {
+      margin: 0 5px 0 3px;
+      font-size: 14px;
+      color: red;
+      display: none;
+    }
+    
+    #id_start_1,
+    #id_deadline_1,
+    #id_deadline_diplomathesis_1,
+    #id_end_1 {
+      margin-left: 20px;
+    }
+    
+    textarea {
+    /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
+      width: 400px;
+    }
+    textarea#id_project_title, textarea#id_german_summary {
+      height: 90px;
+    }
+    
+    input#id_title {
+      width: 350px;
+    }
+    input[type=submit] {
+      margin: 10px 10px 10px 240px;
+      display: block;
+    }
+    input[type=submit].hidden {
+      display: none;
+    }
+    
+    table td li {
+        margin: 0px;
+        float: none;
+    }
+    th.label .notes {
+      display: block;
+    }
+    
+    ul.errorlist li {
+      margin-left: 220px;
+      margin-bottom: 5px;
+      color: red;
+    }
+
+    .investigator_header {
+      position: relative;
+    }
+    
+    ul.investigator_list {
+      margin: 0 0 20px -5px !important;
+      
+        li {
+          display: inline-block;
+          margin: 2px;
+          line-height: 20px;
+          padding: 0px 5px;
+          border-radius: 3px;
+          border: 1px solid #bbb;
+          background-color: $readonly-navitem-bg;
+          
+            a {
+              text-decoration: none !important;
+              color: $grey-20 !important;
+            }
+            &.active {
+              background: $middle-light-brown-bg; 
+            }
+            &.errors {
+              border: 1px solid $red;
+              background-color: $navitem-error-red-bg;
+            }
+            &.errors a {
+              color: #fff !important;
+            }
+            &.errors.active {
+              background-color: $navitem-error-orange-bg;
+            }
+        }        
+    }
+    
+    table.inline_formset td ul.errorlist {
+      margin-left: 0px !important;
+      width: 100%;
+      
+        li {
+          margin-left: 0px;
+        }
+    }
+    
+    &.notifications {
+        #tabs-1 {
+          ol li label {
+              padding: 0;
+              width: 100%;
+              margin-bottom: 2px;
+              font-weight: normal;
+          }
+          .submission_data {
+              margin-left: 0;
+          }
+          select {
+              max-width: 500px;
+              option {
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+              }
+          }
+        }
+    }
+}
+
+li.ModelChoiceField select {
+  width: 35em;
+}
+td.TypedChoiceField select {
+  width: 6em;
+}
+li.TypedChoiceField select {
+  min-width: 10em;
+  max-width: 22em;
+}
+li.NullBooleanField select {
+  width: 8em;
+}
+li.TypedChoiceField ul{
+  float: left;
+  
+    li label {
+      float: none;
+      margin-left: none;
+    }
+}
+
+.inline_formset .form {
+  position: relative;
+  margin-top: 20px;
+}
+
+table.inline_formset td {
+  vertical-align: top;
+}
+
+.form {
+    ol {
+      margin-bottom: 10px;
+      list-style-type: none;
+    }
+    .form .notes {
+      margin: 0 5px;
+    }
+}
+tr.form td {
+  vertical-align: top;
+}
+
+.change_presenter #id_presenter {
+  width: 300px;
+}
+
+fieldset.disabled {
+  display: none;
+}

@@ -22,7 +22,7 @@ Usage
 __all__ = ['BucketError', 'BucketKeyError', 'BucketIOError', 'DiskBuckets', 
            'satisfied_on_less_then', 'satisfied_on_newer_then', 'ignore_all', 'ignore_none', 'onerror_log']
 
-import os, datetime, time, logging
+import os, datetime, logging
 from operator import itemgetter
 
 

@@ -2,15 +2,19 @@
 from functools import wraps
 
 from django.template import RequestContext, Context, loader, Template
+from django.conf import settings
 
 from ecs.communication.models import Thread
-from ecs.tasks.models import Task
-from ecs.core.models import Submission
 from ecs.users.utils import get_user
+
 
 def msg_fun(func):
     @wraps(func)
     def _inner(sender, receiver, *args, **kwargs):
+        # import here to prevent circular imports
+        from ecs.tasks.models import Task
+        from ecs.core.models import Submission
+
         submission = kwargs.get('submission', None)
         task = kwargs.get('task', None)
         if isinstance(sender, basestring):
@@ -26,7 +30,7 @@ def msg_fun(func):
     return _inner
 
 @msg_fun
-def send_message(sender, receiver, subject, text, submission=None, task=None):
+def send_message(sender, receiver, subject, text, submission=None, task=None, reply_receiver=None):
     thread = Thread.objects.create(
         subject=subject,
         sender=sender, 
@@ -34,7 +38,7 @@ def send_message(sender, receiver, subject, text, submission=None, task=None):
         submission=submission,
         task=task,
     )
-    message = thread.add_message(sender, text=text)
+    message = thread.add_message(sender, text=text, reply_receiver=reply_receiver)
     return thread
 
 def send_system_message(*args, **kwargs):
@@ -50,6 +54,7 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
     context.setdefault('receiver', receiver)
     context.setdefault('submission', kwargs.get('submission'))
     context.setdefault('task', kwargs.get('task'))
+    context.setdefault('ABSOLUTE_URL_PREFIX', settings.ABSOLUTE_URL_PREFIX)
 
     if isinstance(template, (tuple, list)):
         template = loader.select_template(template)

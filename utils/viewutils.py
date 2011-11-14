@@ -2,7 +2,7 @@ from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
 from piston.handler import BaseHandler
 
-from ecs.utils.pdfutils import xhtml2pdf, wkhtml2pdf
+from ecs.utils.pdfutils import wkhtml2pdf
 
 def render_html(request, template, context):
     if isinstance(template, (tuple, list)):
@@ -39,7 +39,8 @@ def render_pdf(request, template, context):
     return wkhtml2pdf(html, footer_html=footer_html)
 
 def render_pdf_context(template, context):
-    template = loader.get_template(template)
+    if not isinstance(template, Template):
+        template = loader.get_template(template)
     html = template.render(Context(context))
     footer_template = loader.get_template('wkhtml2pdf/footer.html')
     footer_html = footer_template.render(Context(context))

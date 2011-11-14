@@ -4,6 +4,9 @@ from ecs import bootstrap
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
+from ecs.users.models import UserProfile
+from ecs.users.workflow import UserApproval
+from ecs.users.workflow import is_approved
 
 
 # for marking the task names translatable
@@ -11,10 +14,6 @@ _ = lambda s: s
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def user_workflow():
-    from ecs.users.models import UserProfile
-    from ecs.users.workflow import UserApproval
-    from ecs.users.workflow import is_approved
-
     OFFICE_GROUP = 'EC-Office'
 
     setup_workflow_graph(UserProfile,

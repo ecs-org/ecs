@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from uuid import uuid4
 from datetime import datetime
 import hmac
 import hashlib
@@ -8,10 +6,12 @@ import hashlib
 from django.db import models
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
-from django.conf import settings
 from django.db.models import Q
 
-class AuditTrailManager(models.Manager):
+from ecs.authorization import AuthorizationManager
+
+
+class AuditTrailManager(AuthorizationManager):
     def get_last_change(self):
         try:
             return self.order_by('-created_at')[0]
@@ -37,7 +37,7 @@ class AuditTrail(models.Model):
     user = models.ForeignKey('auth.User', null=False, blank=False)
     data = models.TextField(null=False, blank=False)
     hash = models.CharField(max_length=64, null=False, blank=False)
-    object_created = models.BooleanField(default=False)
+    is_instance_created = models.BooleanField(default=False)
 
     objects = AuditTrailManager()
 

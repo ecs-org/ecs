@@ -1,0 +1,28 @@
+{% load core i18n %}
+<html>
+<body>
+{% block content %}
+    <p>
+{% blocktrans with recipient as recipient %}
+Sehr geehrte/r {{ recipient }},
+{% endblocktrans %}
+    </p>
+
+    <p>
+{% blocktrans with meeting.start|date:'d.m.Y, H:i' as meeting_start and time as time %}
+Sie sind eingeladen für die Sitzung der Ethik-Kommission
+am {{ meeting_start }} Uhr, sine tempore
+im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.
+Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.
+{% endblocktrans %}
+    </p>
+
+    <p>
+{% blocktrans%}
+Mit freundlichen Grüßen,
+    Ethik-Kommission der MedUni Wien
+{% endblocktrans %}
+    </p>
+{% endblock %}
+</body>
+</html>

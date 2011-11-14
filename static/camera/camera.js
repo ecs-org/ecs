@@ -34,7 +34,7 @@ camera.Camera = new Class({
         keyTrigger: function(e){
             return false;
         },
-        onShow: $empty
+        onShow: function(){}
     },
     initialize: function(options){
         this.setOptions(options);

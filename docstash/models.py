@@ -149,6 +149,8 @@ class DocStashData(models.Model):
     modtime = models.DateTimeField(default=datetime.datetime.now)
     name = models.TextField(blank=True)
     
+    objects = AuthorizationManager()
+    
     class Meta:
         unique_together = ('version', 'stash')
         
@@ -207,5 +209,3 @@ try:
             ], ["^django_extensions\.db\.fields\.json\.JSONField"])
 except ImportError:
     pass
-
-

@@ -1,0 +1,20 @@
+name: "Custom-Event"
+
+exports: "custom-event.js"
+
+web: "[cpojer.net](http://cpojer.net)"
+demo: http://cpojer.net/MooTools/custom-event/Demos/
+
+description: "Allows to create custom events based on other custom events."
+
+license: "[MIT License](http://mootools.net/license.txt)"
+
+copyright: "&copy; [Christoph Pojer](http://cpojer.net/)"
+
+author: "cpojer"
+authors: "[Christoph Pojer](http://cpojer.net)"
+category: Utilities
+tags: [custom-events, event, element, element.event]
+
+sources:
+    - "Source/Element.defineCustomEvent.js"

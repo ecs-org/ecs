@@ -34,19 +34,24 @@ ecs.widgets.Widget = new Class({
         }
     },
     load: function(url, form, callback){
+        var target_url = url;
+        if(this.url && url && url.indexOf('$CURRENT_URL$') >= 0){
+            url = url.replace(/\$CURRENT_URL\$/, encodeURIComponent(this.url.replace(/^https?:\/\/[^/]+/, '')));
+            target_url = null; // CURRENT_URL is mainly used for redirects: do not update this.url
+        }
         var request = new Request.HTML({
             url: url || (form ? form.getProperty('action') : this.url),
             method: form ? form.method : 'get',
             update: this.element,
             data: form ? form.toQueryString() : ''
         });
-        if(url){
-            this.url = url;
+        if(target_url){
+            this.url = target_url;
         }
         request.addEvent('success', (function(){
             if(callback){
                 var stop = callback();
-                if($defined(stop) && !stop){
+                if(typeof(stop) !== 'undefined' && !stop){
                     return;
                 }
             }
@@ -72,6 +77,14 @@ ecs.widgets.Widget = new Class({
                 self.load(link.href);
                 return false;
             });
+        });
+        function submitInWidget(e){
+            console.log(e);
+            $(e.target).getParent('form.open-in-widget').submit();
+            return false;
+        }
+        this.element.getElements('a.submit-in-widget').each(function(link){
+            link.addEvent('click', submitInWidget);
         });
         this.fireEvent('load', this);
     },
@@ -103,6 +116,7 @@ ecs.widgets.Popup = new Class({
         this.popup.grab(this.headElement);
         this.popup.grab(this.element);
 
+        this.preCloseHandlers = [];
         var closeButton = new Element('a', {'class': 'close', html: 'close'});
         closeButton.addEvent('click', (function(){
             this.close();
@@ -168,12 +182,18 @@ ecs.widgets.Popup = new Class({
         $(window).removeEvent('keyup', this.keypress);
         $(window).removeEvent('resize', this.resize);
     },
+    addPreCloseHandler: function(handler){
+        this.preCloseHandlers.push(handler);
+    },
     close: function(){
+        this.preCloseHandlers.each(function(handler){
+            handler();
+        }, true);
         this.dispose();
     },
     keyHandler: function(evt){
         if(evt.key == 'esc'){
-            this.dispose();
+            this.close();
         }
     },
     dispose: function(){

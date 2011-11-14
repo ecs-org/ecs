@@ -6,7 +6,6 @@ import re
 from django.core.serializers import serialize
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 
 from ecs.audit.models import AuditTrail
 from ecs.users.utils import get_current_user, get_user
@@ -47,6 +46,5 @@ def post_save_handler(**kwargs):
     a.instance = instance
     a.content_type = ContentType.objects.get_for_model(sender)
     a.data = serialize('json', sender.objects.filter(pk=instance.pk))
-    a.object_created = kwargs['created']
+    a.is_instance_created = kwargs['created']
     a.save()
-

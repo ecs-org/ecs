@@ -30,10 +30,10 @@
 
 <p>
     2.6 Nehmen andere Zentren an der Studie teil: 
-    {{ submission_form.multicentric|checkbox }} ja {{ submission_form.multicentric|not|checkbox }} nein. Wenn <strong>ja:</strong>
+    {{ submission_form.is_multicentric|checkbox }} ja {{ submission_form.is_multicentric|not|checkbox }} nein. Wenn <strong>ja:</strong>
 </p>
 
-<p><span class="indented">{{ submission_form.multicentric|checkbox }} 2.6.1 im Inland {{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</span></p>
+<p><span class="indented">{{ submission_form.is_multicentric|checkbox }} 2.6.1 im Inland {{ submission_form.foreignparticipatingcenter_set.count|checkbox }} 2.6.2 im Ausland</span></p>
 
 <p class="border_bottom">
     2.7 Liste der Zentren: <br/>

@@ -2,6 +2,7 @@
 
 from django.forms.models import ModelForm, ModelFormMetaclass, ModelFormOptions
 from django.core.validators import EMPTY_VALUES
+from django.utils.importlib import import_module
 
 def require_fields(form, fields):
     for f in fields:
@@ -34,3 +35,13 @@ class TranslatedModelFormMetaclass(ModelFormMetaclass):
 
 class TranslatedModelForm(ModelForm):
     __metaclass__ = TranslatedModelFormMetaclass
+
+
+def _unpickle(module, cls_name, args, kwargs):
+    form_cls = getattr(import_module(module), cls_name)
+    return form_cls(*args, **kwargs)
+
+class ModelFormPickleMixin(object):
+    def __reduce__(self):
+        kwargs = {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}
+        return (_unpickle, (self.__class__.__module__, self.__class__.__name__, (), kwargs))

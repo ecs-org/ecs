@@ -27,21 +27,23 @@
         <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome</a>,
         <a href="http://www.microsoft.com/austria/windows/ie9/">Explorer 9</a> oder
         <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.
+        <a href="javascript:$('login_button').show()">Ich möchte es trotzdem versuchen versuchen.</a>
     </div>
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
     </div>
     <div class="form_public">
-      <form method="post" action="">
+      <form method="post" action="" class="login_error">
         {% csrf_token %}
-        <p>{{ form.username.label_tag }}{{ form.username }}</p>
-        <p>{{ form.password.label_tag }}{{ form.password }}</p>
+        <p>{{ form.username.label_tag }}{{ form.username }}
+            {% if form.username.errors %}{{ form.username.errors}}{% endif %}</p>
+        <p>{{ form.password.label_tag }}{{ form.password }}
+            {% if form.password.errors %}{{ form.password.errors}}{% endif %}</p>
         <p><input type="submit" value="login" id="login_button"/></p>
         <input type="hidden" name="next" value="{{ next }}" />
           {% if form.errors %}
-          <div class="login_error">
-            <p>{% trans 'Your username and password did not match. Please try again.' %}</p>
-            {{ form.errors }}
+          <div class="login_error_msg">
+            {% trans 'Your username and password did not match. Please try again.' %}
           </div>
           {% endif %}
       </form>

@@ -11,6 +11,7 @@
         <li><label for="id_approval">{% trans "Approval" %}:</label> {{ filterform.approval }}</li>
         <li><label for="id_approval">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
         <li><label for="id_groups">{% trans "Groups" %}:</label> {{ filterform.groups }}</li>
+        <li><label for="id_groups">{% trans "Medical Categories" %}:</label> {{ filterform.medical_categories }}</li>
         <li><label for="id_keyword">{% trans "Name/Email" %}:</label> {{ filterform.keyword }}</li>
         <li><input type="submit" value="suchen" title="suchen" /></li>
     </ul>
@@ -36,40 +37,38 @@
 <table class="user_list">
     <tr>
         <th>{% trans "User" %}</th>
+        <th>{% trans "E-mail" %}</th>
         <th title="{% trans "Unapproved users may not be able to sumit studies" %}">{% trans "Approval" %}</th>
         <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
         <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
     </tr>
-    {% for profile_user in users.object_list %}
+    {% for profile in users.object_list %}
         <tr>
             <td>
-                <a href="{% url ecs.users.views.details user_pk=profile_user.pk %}">
-                    {{ profile_user|formal_name }}
-                    {% if profile_user.get_profile.phantom %}
+                <a href="{% url ecs.users.views.details user_pk=profile.pk %}">
+                    {{ profile|formal_name }}
+                    {% if profile.ecs_profile.is_phantom %}
                         ({% trans "phantom" %})
                     {% endif %}
                 </a>
             </td>
+            <td>{{ profile.email }}</td>
             <td>
-                {% if profile_user|has_flag:"approved_by_office" %}
-                    <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Revoke Approval" %}</a>
+                {% if profile|has_flag:"is_approved_by_office" %}
+                    <a href="{% url ecs.users.views.approve user_pk=profile.pk %}">{% trans "Revoke Approval" %}</a>
                 {% else %}
-                    <a href="{% url ecs.users.views.approve user_pk=profile_user.pk %}">{% trans "Approve" %}</a>
+                    <a href="{% url ecs.users.views.approve user_pk=profile.pk %}">{% trans "Approve" %}</a>
                 {% endif %}
             </td>
             <td>
-                {% if profile_user|has_flag:"indisposed" %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Unmark Indisposed" %}</a>
-                {% else %}
-                    <a href="{% url ecs.users.views.toggle_indisposed user_pk=profile_user.pk %}">{% trans "Mark Indisposed" %}</a>
-                {% endif %}
+                <a href="{% url ecs.users.views.indisposition user_pk=profile.pk %}">
+                    {% if profile|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
+                </a>
             </td>
             <td>
-                {% if profile_user.is_active %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Deactivate" %}</a>
-                {% else %}
-                    <a href="{% url ecs.users.views.toggle_active user_pk=profile_user.pk %}">{% trans "Activate" %}</a>
-                {% endif %}
+                <form action="{% url ecs.users.views.toggle_active user_pk=profile.pk %}" method="post">
+                    <a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>
+                </form>
             </td>
         </tr>
     {% empty %}
@@ -102,6 +101,7 @@
             var page_input = form.getElement('input[name="page"]');
 
             ecs.setupAutocomplete(form);
+            ecs.setupSubmitLinks('a.submit_parent');
 
             form.getElements('input').each(function(input){
                 input.addEvent('change', function(){

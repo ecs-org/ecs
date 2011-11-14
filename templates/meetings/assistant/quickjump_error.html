@@ -7,7 +7,7 @@
         <ul>
             {% for top in tops %}
                 <li>
-                    <a href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.pk %}">{{ top }} {% if top.submission %} ({{ top.submission|ec_number }}){% endif %}</a>
+                    <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.pk %}">{{ top }} {% if top.submission %} ({{ top.submission|ec_number }}){% endif %}</a>
                 </li>
             {% endfor %}
         </ul>

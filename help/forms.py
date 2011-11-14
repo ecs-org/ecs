@@ -4,7 +4,8 @@ from ecs.help.models import Page, Attachment
 class HelpPageForm(forms.ModelForm):
     class Meta:
         model = Page
-        
+        exclude = ('review_status',)
+
 class AttachmentUploadForm(forms.ModelForm):
     slug = forms.CharField(required=False)
 

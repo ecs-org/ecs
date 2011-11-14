@@ -1,0 +1,6 @@
+{% extends 'notifications/view/base.html' %}
+{% load i18n %}
+
+{% block notification_header %}
+    {% trans 'Type' %}: {{ notification.safetynotification.get_safety_type_display }}</h3>
+{% endblock %}

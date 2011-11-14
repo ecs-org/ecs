@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
 from tempfile import NamedTemporaryFile
 import urllib
@@ -58,7 +57,7 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
         # session-id=9085B85B364BEC31E7D38047FE54577D, not used
         'locale': 'de',
     }
-    data = urllib.urlencode(values)
+    data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
     redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
     
     if PDFAS_SERVICE != 'mock:':
@@ -178,7 +177,7 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         # create document in ecs.documents
         parent_obj = get_object_or_raise_nice_exception(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
         doctype = get_object_or_raise_nice_exception(DocumentType, identifier=sign_dict['document_type'])
-        document = Document.objects.create(uuid_document=sign_dict["document_uuid"],
+    document = Document.objects.create(uuid=sign_dict["document_uuid"],
             parent_object=parent_obj, branding='n', doctype=doctype, file=f,
             original_file_name=sign_dict["document_filename"], date=datetime.now())
 

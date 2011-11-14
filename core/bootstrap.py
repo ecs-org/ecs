@@ -1,32 +1,56 @@
 # -*- coding: utf-8 -*-
 import os
 from datetime import datetime
-from copy import deepcopy
+from dbtemplates.models import Template
 
-from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 
 from ecs import bootstrap
-from ecs.core.models import ExpeditedReviewCategory, MedicalCategory, EthicsCommission, ChecklistBlueprint, ChecklistQuestion
+from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission
+from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
+from ecs.bootstrap.utils import update_instance
+from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
+    ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview)
+from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
+    needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
+    has_expedited_recommendation, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
 
 
 # We use this helper function for marking task names as translatable, they are
 # getting translated later.
 _ = lambda s: s
 
-def _update_instance(instance, d):
-    changed = False
-    for k,v in d.iteritems():
-        if not getattr(instance, k) == v:
-            setattr(instance, k, v)
-            changed = True
-    if changed:
-        instance.save()
+
+# caching lookup function to spare db queries
+def _get_group(name, cache={}):
+    try:
+        g = cache[name]
+    except KeyError:
+        g = Group.objects.get(name=name)
+        cache[name] = g
+    return g
+
+def _get_medical_category(abbrev, cache={}):
+    try:
+        mc = cache[abbrev]
+    except KeyError:
+        mc = MedicalCategory.objects.get(abbrev=abbrev)
+        cache[abbrev] = mc
+    return mc
+
+def _get_expedited_category(abbrev, cache={}):
+    try:
+        ec = cache[abbrev]
+    except KeyError:
+        ec = ExpeditedReviewCategory.objects.get(abbrev=abbrev)
+        cache[abbrev] = ec
+    return ec
+
 
 @bootstrap.register()
 def sites():
@@ -40,15 +64,17 @@ def sites():
     # FIXME: On virtual image creation this somehow must be editable for bootstrapping with the right hostname of the target machine
     for pk, name, domain in sites_list:
         site, created = Site.objects.get_or_create(pk=pk)
-        site.name = name
-        site.domain = domain
-        site.save()
-
+        update_instance(site, {
+            'name': name,
+            'domain': domain,
+        })
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
-    from dbtemplates.models import Template
     basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
+
+    sites = list(Site.objects.all())
+
     for dirpath, dirnames, filenames in os.walk(basedir):
         if 'wkhtml2pdf' not in dirpath:
             continue
@@ -59,26 +85,18 @@ def templates():
             if ext in ('.html', '.inc'):
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
-                content = open(path, 'r').read()
-                tpl, created = Template.objects.get_or_create(name=name, defaults={'content': content})
-                if not created and tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                tpl, created = Template.objects.get_or_create(name=name)
+                if created or tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                    # only read the file if we really have to
+                    with open(path, 'r') as f:
+                        content = f.read()
                     tpl.content = content
-                    tpl.save()
-                tpl.sites = Site.objects.all()
+                tpl.sites = sites
                 tpl.save()
 
 
-@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.core.bootstrap.checklist_blueprints'))
+@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def submission_workflow():
-    from ecs.core.models import Submission
-    from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, AdditionalReviewSplit,
-        AdditionalChecklistReview, ChecklistReview, NonRepeatableChecklistReview, ExternalChecklistReview, ThesisRecommendationReview,
-        ThesisCategorizationReview, ExpeditedRecommendation, ExpeditedRecommendationReview, LocalEcRecommendationReview, BoardMemberReview)
-    from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
-        needs_external_review, needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review,
-        has_expedited_recommendation, is_thesis, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_localec,
-        is_acknowledged_and_not_localec)
-    
     thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
     localec_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='localec_review')
@@ -86,8 +104,6 @@ def submission_workflow():
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
-    external_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='external_review')
-    additional_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='additional_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
     
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
@@ -97,11 +113,12 @@ def submission_workflow():
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
-    EXTERNAL_REVIEW_GROUP = 'External Reviewer'
     INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
     STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
     GCP_REVIEW_GROUP = 'GCP Review Group'
+    PAPER_GROUP = u'EC-Paper Submission Review Group'
+    VOTE_PREPARATION_GROUP = u'EC-Vote Preparation Group'
     
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -110,47 +127,50 @@ def submission_workflow():
             'generic_review': Args(Generic, name=_("Review Split")),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
+            'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
-            'additional_review_split': Args(AdditionalReviewSplit, name=_("Additional Review Split")),
-            'additional_review': Args(AdditionalChecklistReview, data=additional_review_checklist_blueprint, name=_("Additional Checklist Review")),
-            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
+            'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP),
             'board_member_review': Args(BoardMemberReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP),
-            'external_review': Args(ExternalChecklistReview, data=external_review_checklist_blueprint, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
 
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
-            'thesis_categorization_review': Args(ThesisCategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=THESIS_REVIEW_GROUP, name=_("Thesis Paper Submission Review")),
+            'thesis_categorization_review': Args(CategorizationReview, name=_("Thesis Categorization Review"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Thesis Paper Submission Review")),
             'thesis_recommendation': Args(NonRepeatableChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
-            'thesis_recommendation_review': Args(ThesisRecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
+            'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
+            'thesis_vote_preparation': Args(VotePreparation, name=_("Thesis Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
-            'expedited_recommendation_review': Args(ExpeditedRecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'expedited_recommendation_review': Args(RecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'expedited_vote_preparation': Args(VotePreparation, name=_("Expedited Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # local ec lane
+            'localec_categorization_review': Args(CategorizationReview, name=_("Local EC Categorization Review"), group=LOCALEC_REVIEW_GROUP),
             'localec_recommendation': Args(NonRepeatableChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
-            'localec_recommendation_review': Args(LocalEcRecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'localec_recommendation_review': Args(RecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_thesis, negated=True),
+            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_not_localec),
-            ('resubmission', 'start'): None,
+            ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
+            ('initial_review_barrier', 'categorization_review'): Args(guard=is_localec, negated=True),
+            ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
 
             # retrospective thesis lane
-            ('start', 'initial_thesis_review'): Args(guard=is_thesis),
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged),
+            ('initial_thesis_review', 'thesis_categorization_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('thesis_categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'thesis_paper_submission_review'): Args(guard=is_retrospective_thesis),
             ('thesis_categorization_review', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
             ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
+            ('thesis_recommendation_review', 'thesis_vote_preparation'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
             ('categorization_review', 'thesis_categorization_review'): Args(guard=is_retrospective_thesis),
 
@@ -159,73 +179,19 @@ def submission_workflow():
             ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
             ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
             ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
+            ('expedited_recommendation_review', 'expedited_vote_preparation'): Args(guard=has_expedited_recommendation),
 
             # local ec lane
-            ('initial_review', 'localec_recommendation'): Args(guard=is_acknowledged_and_localec),
+            ('initial_review_barrier', 'localec_categorization_review'): Args(guard=is_localec),
+            ('localec_categorization_review', 'localec_recommendation'): Args(guard=is_localec),
+            ('localec_categorization_review', 'categorization_review'): Args(guard=is_localec, negated=True),
             ('localec_recommendation', 'localec_recommendation_review'): None,
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
-            ('categorization_review', 'external_review'): Args(guard=needs_external_review),
-            ('categorization_review', 'additional_review_split'): None,
-
-            ('additional_review_split', 'additional_review'): None,
-
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
             ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
             ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
             ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
-            ('generic_review', 'paper_submission_review'): None,
-        }
-    )
-
-
-@bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
-def vote_workflow():
-    from ecs.core.models import Vote
-    from ecs.core.workflow import VoteFinalization, VoteReview, VoteSigning, VotePublication, VoteB2Review
-    from ecs.core.workflow import is_executive_vote_review_required, is_final, is_b2, is_b2upgrade
-    
-    EXECUTIVE_GROUP = 'EC-Executive Board Group'
-    OFFICE_GROUP = 'EC-Office'
-    INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
-    SIGNING_GROUP = 'EC-Signing Group'
-    B2_REVIEW_GROUP = 'EC-B2 Review Group'
-
-    setup_workflow_graph(Vote, 
-        auto_start=True, 
-        nodes={
-            'start': Args(Generic, start=True, name=_("Start")),
-            'review': Args(Generic, name=_("Review Split")),
-            'b2_review': Args(VoteB2Review, name=_("B2 Review"), group=B2_REVIEW_GROUP),
-            'executive_vote_finalization': Args(VoteReview, name=_("Executive Vote Finalization"), group=EXECUTIVE_GROUP),
-            'executive_vote_review': Args(VoteReview, name=_("Executive Vote Review"), group=EXECUTIVE_GROUP),
-            'internal_vote_review': Args(VoteReview, name=_("Internal Vote Review"), group=INTERNAL_REVIEW_GROUP),
-            'office_vote_finalization': Args(VoteReview, name=_("Office Vote Finalization"), group=OFFICE_GROUP),
-            'office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
-            'final_office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
-            'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
-            'vote_publication': Args(VotePublication, group=OFFICE_GROUP, name=_("Vote Publication")),
-        }, 
-        edges={
-            ('start', 'review'): Args(guard=is_b2upgrade, negated=True),
-            ('start', 'office_vote_finalization'): Args(guard=is_b2upgrade),
-            ('review', 'executive_vote_finalization'): Args(guard=is_executive_vote_review_required),
-            ('review', 'office_vote_finalization'): Args(guard=is_executive_vote_review_required, negated=True),
-            ('executive_vote_finalization', 'office_vote_review'): None,
-            ('office_vote_finalization', 'internal_vote_review'): None,
-
-            ('office_vote_review', 'executive_vote_review'): Args(guard=is_final, negated=True),
-            ('office_vote_review', 'vote_signing'): Args(guard=is_final),
-
-            ('internal_vote_review', 'office_vote_finalization'): Args(guard=is_final, negated=True),
-            ('internal_vote_review', 'executive_vote_review'): Args(guard=is_final),
-
-            ('executive_vote_review', 'final_office_vote_review'): Args(guard=is_final, negated=True),
-            ('executive_vote_review', 'vote_signing'): Args(guard=is_final),
-            
-            ('final_office_vote_review', 'executive_vote_review'): None,
-            ('vote_signing', 'vote_publication'): None,
-            ('vote_publication', 'b2_review'): Args(guard=is_b2),
         }
     )
 
@@ -243,14 +209,21 @@ def auth_groups():
         u'EC-Thesis Review Group',
         u'EC-Thesis Executive Group',
         u'EC-B2 Review Group',
+        u'EC-Paper Submission Review Group',
+        u'EC-Safety Report Review Group',
         u'Expedited Review Group',
         u'Local-EC Review Group',
         u'EC-Board Member',
-        u'External Reviewer',
         u'GCP Review Group',
         u'userswitcher_target',
         u'translators',
         u'sentryusers',
+        u'External Review Review Group',
+        u'EC-Vote Preparation Group',
+        u'Vote Receiver Group',
+        u'Amendment Receiver Group',
+        u'Meeting Protocol Receiver Group',
+        u'Resident Board Member Group'
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -311,34 +284,32 @@ def medcategories():
         (u'Recht', u'Juristen'),
         (u'Apotheke', u'Pharmazie'),
         (u'Patient', u'Patientenvertretung'), 
-        (u'BehinOrg', u'Benhindertenorganisation'), 
+        (u'BehinOrg', u'Behindertenorganisation'), 
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technische Sicherheitsbeauftragte'),
 
-        (u'Psychol', u'Psychologie'),        
+        (u'Psychol', u'Psychologie'),
         (u'Virologie', u'Virologie'),
         (u'Tropen', u'Tropen'),
         (u'Ernährung', u'Ernährung'),
         (u'Hygiene', u'Hygiene'),
         (u'MedPhy', u'Medizinische Physik'),
         (u'Unfall', u'Unfallchirurgie'),
-        
     )
     return categories
 
 @bootstrap.register()
 def expedited_review_categories():
     for abbrev, name in medcategories():
-        ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, name=name)
+        erc, created = ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
+        update_instance(erc, {'name': name})
 
 
 @bootstrap.register()
 def medical_categories():
-    for shortname, longname in medcategories():
-        medcat, created = MedicalCategory.objects.get_or_create(abbrev=shortname)
-        if not medcat.name == longname:
-            medcat.name = longname
-            medcat.save()
+    for abbrev, name in medcategories():
+        medcat, created = MedicalCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
+        update_instance(medcat, {'name': name})
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
@@ -349,7 +320,10 @@ def auth_user_developers():
     except ImportError:
         # first, Last, email, password, gender (sic!)
         developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', 'f'),)
-        
+
+    translators_group = _get_group('translators')
+    sentry_group = _get_group('sentryusers')
+
     for first, last, email, password, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
         user.first_name = first
@@ -357,30 +331,31 @@ def auth_user_developers():
         user.set_password(password)
         user.is_staff = False
         user.is_superuser = False
-        user.groups.add(Group.objects.get(name="translators"))
-        user.groups.add(Group.objects.get(name="sentryusers"))
+        user.groups.add(translators_group)
+        user.groups.add(sentry_group)
         user.save()
         profile = user.get_profile()
-        profile.approved_by_office = True
-        profile.help_writer = True
-        profile.forward_messages_after_minutes = 360
-        profile.gender = gender
-        profile.start_workflow = True
-        profile.save()
-
+        update_instance(profile, {
+            'is_approved_by_office': True,
+            'is_help_writer': True,
+            'forward_messages_after_minutes': 360,
+            'gender': gender,
+            'start_workflow': True,
+        })
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_sentryuser():
         user, created = get_or_create_user('sentry@example.org', start_workflow=False)
-        user.groups.add(Group.objects.get(name="userswitcher_target"))
+        user.groups.add(_get_group('userswitcher_target'))
         user.is_staff = True
         user.is_superuser = True
         user.save()
         profile = user.get_profile()
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
+        update_instance(profile, {                        
+            "is_approved_by_office" : True,
+            "start_workflow" : True,
+        })
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
@@ -391,30 +366,36 @@ def auth_user_testusers():
         ('presenter', None, {}),
         ('sponsor', None, {}),
         ('investigator', None, {}),
-        ('office', u'EC-Office', {'internal': True,}),
-        ('internal.rev', u'EC-Internal Review Group', {'internal': True,}),
-        ('executive', u'EC-Executive Board Group', {'internal': True, 'executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group', {'internal': False, 'executive_board_member': False),
-        ('signing', u'EC-Signing Group', {'internal': True, }),
-        ('statistic.rev', u'EC-Statistic Group', {'internal': False}),
-        ('notification.rev', u'EC-Notification Review Group', {'internal': True, }),
-        ('insurance.rev', u'EC-Insurance Reviewer', {'internal': False, 'insurance_review': True}),
-        ('thesis.rev', u'EC-Thesis Review Group', {'internal': False, 'thesis_review': True),
-        ('external.reviewer', u'External Reviewer', {'external_review': True, }),
-        ('gcp.reviewer', u'GCP Review Group', {'internal': False}),
-        ('localec.rev', u'Local-EC Review Group', {'internal': True}),
-        ('b2.rev', u'EC-B2 Review Group', {'internal': True}),
+        ('office', u'EC-Office', {'is_internal': True,}),
+        ('internal.rev', u'EC-Internal Review Group', {'is_internal': True,}),
+        ('executive', u'EC-Executive Board Group', {'is_internal': True, 'is_executive_board_member': True),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False),
+        ('signing', u'EC-Signing Group', {'is_internal': True, }),
+        ('statistic.rev', u'EC-Statistic Group', {'is_internal': False}),
+        ('notification.rev', u'EC-Notification Review Group', {'is_internal': True, }),
+        ('insurance.rev', u'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
+        ('thesis.rev', u'EC-Thesis Review Group', {'is_internal': False, 'is_thesis_reviewer': True),
+        ('external.reviewer', None, {}),
+        ('gcp.reviewer', u'GCP Review Group', {'is_internal': False}),
+        ('localec.rev', u'Local-EC Review Group', {'is_internal': True}),
+        ('b2.rev', u'EC-B2 Review Group', {'is_internal': True}),
+        ('ext.rev.rev', u'External Review Review Group', {'is_internal': True}),
+        ('paper.rev', u'EC-Paper Submission Review Group', {'is_internal': True}),
+        ('safety.rev', u'EC-Safety Report Review Group', {'is_internal': True}),
+        ('vote.prep', u'EC-Vote Preparation Group', {'is_internal': True}),
     )
 
     boardtestusers = (
          ('b.member1.klph', ('KlPh',)),
-         ('b.member2.klph.onko', ('KlPh','Onko')),
-         ('b.member3.onko', ('Onko',)),
-         ('b.member4.infektio', ('Infektio',)),
-         ('b.member5.kardio', ('Kardio',)),
-         ('b.member6.paed', ('Päd',)), 
-    )
-
+         ('b.member2.radio.klph', ('Radio', 'KlPh', )),
+         ('b.member3.anästh', ('Anästh',)),
+         ('b.member4.chir', ('Chir',)),
+         ('b.member5.nephro', ('Nephro',)),
+         ('b.member6.psychol', ('Psychol',)), 
+         ('b.member7.gastro', ('Gastro',)),
+         ('b.member8.neuro', ('Neuro',)),
+         ('b.member9.angio', ('Angio',)),
+    )      
     expeditedtestusers = (
          ('expedited.klph', ('KlPh',)),
          ('expedited.stats', ('Stats',)),
@@ -422,42 +403,42 @@ def auth_user_testusers():
          ('expedited.recht', ('Recht',)),
     )
     
-    userswitcher_group = Group.objects.get(name="userswitcher_target")
-    boardmember_group = Group.objects.get(name='EC-Board Member')
-    expedited_review_group = Group.objects.get(name='Expedited Review Group')
+    userswitcher_group = _get_group('userswitcher_target')
+    boardmember_group = _get_group('EC-Board Member')
+    expedited_review_group = _get_group('Expedited Review Group')
 
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
             if testgroup:
-                user.groups.add(Group.objects.get(name=testgroup))
+                user.groups.add(_get_group(testgroup))
             user.groups.add(userswitcher_group)
 
             profile = user.get_profile()
-            for flagname, flagvalue in flags.items():
-                setattr(profile, flagname, flagvalue)
-            profile.approved_by_office = True
+            flags = flags.copy()
+            flags.update({
+                'is_approved_by_office': True,
+                'start_workflow': True,
+            })
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
-                profile.help_writer = True
+                flags['is_help_writer'] = True
+            update_instance(profile, flags)
 
-            profile.start_workflow = True
-            profile.save()
-
-    
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
         user.groups.add(boardmember_group)
         user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
-        profile.board_member = True
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
-
+        update_instance(profile, {
+            'is_board_member': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+        })
+    
         for medcategory in medcategories:
-            m= MedicalCategory.objects.get(abbrev=medcategory)
+            m = _get_medical_category(medcategory)
             m.users.add(user)
 
     for testuser, expcategories in expeditedtestusers:
@@ -466,13 +447,14 @@ def auth_user_testusers():
         user.groups.add(userswitcher_group)
 
         profile = user.get_profile()
-        profile.expedited_review = True
-        profile.approved_by_office = True
-        profile.start_workflow = True
-        profile.save()
-
+        update_instance(profile, {
+            'is_expedited_reviewer': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+        })
+        
         for expcategory in expcategories:
-            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
+            e = _get_expedited_category(expcategory)
             e.users.add(user)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
@@ -480,26 +462,139 @@ def auth_ec_staff_users():
     try:
         from ecs.core.bootstrap_settings import staff_users
     except ImportError:
-        staff_users = ()
-    
-    for blueprint in blueprints:
-        b, created = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
-        _update_instance(b, blueprint)
+        staff_users = ((u'Staff', u'User', u'staff@example.org', 'changeme', ('EC-Office',), {},'f'),)
 
+    for first, last, email, password, groups, flags, gender in staff_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        user.first_name = first
+        user.last_name = last
+        user.set_password(password)
+        user.is_staff = True
+        user.save()
+        for group in groups:
+            user.groups.add(_get_group(group))
+
+        profile = user.get_profile()
+        flags = flags.copy()
+        flags.update({
+            'is_internal': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'forward_messages_after_minutes': 360,
+            'gender': gender,
+        })
+        update_instance(profile, flags)
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_external_review_users():
     try:
-        from ecs.core.bootstrap_settings import checklist_questions
+        from ecs.core.bootstrap_settings import external_review_users
     except ImportError:
-        question = [(u'1. Everything fine and positive', u'this is important'),]        
-        checklist_questions = {}
-        for blueprint in blueprints:
-            checklist_questions [blueprint['slug']] = deepcopy(question)
+        other_users = ((u'External', u'Reviewer', u'otherexternal@example.org', 'changeme','f'),)
 
-    for slug in checklist_questions.keys():
-        blueprint = ChecklistBlueprint.objects.get(slug=slug)
-        for question in checklist_questions[slug]:
-            number, text = question
-            cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number)
-            cq.text = text
-            cq.description = question.pop('description', u'')
-            cq.inverted = question.pop('inverted', False)
-            cq.save()
+    for first, last, email, password, gender in external_review_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+
+        profile = user.get_profile()
+        update_instance(profile, {
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+        })
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_ec_other_users():
+    try:
+        from ecs.core.bootstrap_settings import other_users
+    except ImportError:
+        other_users = ((u'Other', u'User', u'other@example.org', 'changeme', ('EC-Statistic Group',),'f'),)
+
+    for first, last, email, password, groups, gender in other_users:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+        for group in groups:
+            user.groups.add(_get_group(group))
+
+        profile = user.get_profile()
+        update_instance(profile, {
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+            #'forward_messages_after_minutes': 360,
+        })
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+def auth_ec_boardmember_users():
+    try:
+        from ecs.core.bootstrap_settings import board_members
+    except ImportError:
+        board_members = ((u'Board', u'Member', u'boardmember@example.org', 'changeme', ('Pharma',),'f'),)
+
+    board_member_group = _get_group('EC-Board Member')
+    for first, last, email, password, medcategories, gender in board_members:
+        user, created = get_or_create_user(email, start_workflow=False)
+        if created:
+            user.first_name = first
+            user.last_name = last
+            user.set_password(password)
+            user.save()
+        user.groups.add(board_member_group)
+
+        profile = user.get_profile()
+
+        profile_data = {
+            'is_board_member': True,
+            'is_approved_by_office': True,
+            'start_workflow': True,
+            'gender': gender,
+            #'forward_messages_after_minutes': 360,
+        }
+
+        for medcategory in medcategories:
+            m = _get_medical_category(medcategory)
+            m.users.add(user)
+            try:
+                e = _get_expedited_category(medcategory)
+                e.users.add(user)
+                profile_data['is_expedited_reviewer'] = True
+            except ExpeditedReviewCategory.DoesNotExist:
+                pass
+
+        update_instance(profile, profile_data)
+
+@bootstrap.register()
+def ethics_commissions():
+    try:
+        from ecs.core.bootstrap_settings import commissions
+    except ImportError:
+        commissions = [{
+            'uuid': u'12345678909876543212345678909876',
+            'city': u'Neverland',
+            'fax': None,
+            'chairperson': None,
+            'name': u'Ethikkommission von Neverland',
+            'url': None,
+            'email': None,
+            'phone': None,
+            'address_1': u'Mainstreet 1',
+            'contactname': None,
+            'address_2': u'',
+            'zip_code': u'4223',
+        }]
+
+    for comm in commissions:
+        comm = comm.copy()
+        ec, created = EthicsCommission.objects.get_or_create(uuid=comm.pop('uuid'), defaults=comm)
+        update_instance(ec, comm)

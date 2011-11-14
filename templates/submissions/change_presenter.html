@@ -1,0 +1,25 @@
+{% extends 'core.html' %}
+{% load i18n core userutils %}
+
+{% block htmltitle %}{{ submission|ec_number }} - {% trans 'Change Presenter' %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{{ submission|ec_number }} - {% trans 'Change Presenter' %}{% endblock %}
+
+{% block content %}
+<div class="change_presenter">
+    <form action="{{ request.path }}" method="POST">
+        {{ form.as_p }}
+        <input type="submit" value="{% trans 'Change Presenter' %}" />
+    </form>
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.setupFormFieldHelpers();
+        });
+    </script>
+{% endblock %}
+
+{% block menuSelection %}submissions{% endblock %}

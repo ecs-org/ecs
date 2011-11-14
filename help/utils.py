@@ -2,8 +2,6 @@ import re
 from django.core.urlresolvers import reverse
 
 from docutils.core import publish_parts as docutils_publish_parts
-from docutils.parsers.rst import roles
-from docutils import nodes
 
 DEFAULT_DOCUTILS_SETTINGS = {
     'file_insertion_enabled': 0,

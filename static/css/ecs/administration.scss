@@ -1,0 +1,51 @@
+@import "ecs/variables.scss";
+
+/* user administration */
+
+.administration_detail {
+    ul {
+        margin: 0 0 20px;
+        padding: 5px;
+    }
+    
+    .useradministration_choose {
+        li {
+            list-style: none;
+            margin-bottom: 5px;
+        }
+        
+        label {
+            font-weight: bolder;
+            display: inline-block;
+            width: 100px;
+        }
+        
+        input[type=submit] {
+            margin-left: 102px;
+        }
+    }
+    
+    .user_list {
+        margin: 30px 0px;
+        
+        th {
+            background: #ebe8d0;
+            border-bottom: 1px solid $wheatbrown;
+        }
+        
+        td {
+            border-bottom: 1px solid $wheatbrown;
+        }
+        
+        tr td {
+            padding: 0px 10px;
+        }
+    }
+}
+/*
+.administration_detail .useradministration_choose .textboxlist {
+  clear: none;
+  display: inline-block;
+  vertical-align: top;
+}
+*/

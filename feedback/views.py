@@ -1,13 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import datetime
-import random
-import types
-
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.conf import settings
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import render
 from ecs.feedback.models import Feedback
 from ecs.utils import tracrpc
 

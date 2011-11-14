@@ -1,78 +1,102 @@
-{% load i18n userutils %}
+{% load i18n userutils core %}
 <table>
     <tr><th>Formulare:</th><td colspan="3">
         <table>
             <tr>
                 <th>Version</th>
-                <th>Eingereicht von</th>
-                <th>Eingereicht am</th>
-                <th colspan="2">Versionen</th>
-                <th></th>
+                <th>von</th>
+                <th>am</th>
+                <th>zur Vorversion</th>
+                <th>zur Neuesten</th>
+                <th>{% trans 'Amendment' %}</th>
+                <th>{% trans 'Download PDF' %}</th>
             </tr>
-            {% with submission_form.submission.get_current_docstash as docstash %}
+            {% with submission.get_current_docstash as docstash %}
             {% if docstash %}
                 <tr class="version">
-                    <td>{{ submission_form.submission.forms.count|add:1 }}</td>
+                    <td>{{ submission.forms.count|add:1 }}</td>
                     <td colspan="2"><i>{% trans "This form has not been submitted yet." %}</i></td>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                     <td>
                         <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
                     </td>
                 </tr>
             {% endif %}
             {% endwith %}
-            {% for sf in submission_forms %}
-            <tr class="version">
-                <td>{{ sf.version }}</td>
-                <td>{{ sf.presenter }}</td>
-                <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
-                <td>
-                    {% if sf.previous_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">aktuelle Änderungen</a>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sf != submission_form.submission.newest_submission_form %}
-                        <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=submission_form.pk %}">Unterschiede zur neuesten Version</a><br>
-                    {% endif %}
-                    {% if sf.is_notification_update %}
-                        {% with sf.new_for_notification.all.0 as notif %}
-                            {% if notif %}
-                            <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
-                            {% endif %}
-                        {% endwith %}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if sf == submission_form.submission.newest_submission_form %}
-                        <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="button_submit">{% trans "Download PDF" %}</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
+            {% with submission.newest_submission_form as newest_form %}
+                {% for sf in submission_forms %}
+                <tr class="version{% if not sf.is_acknowledged %} rejected{% endif %}">
+                    <td>{{ sf.version }}</td>
+                    <td>{{ sf.presenter }}</td>
+                    <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
+                    <td>
+                        {% if sf.previous_form %}
+                            <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.previous_form.pk,new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf != newest_form %}
+                            <span class="icon_diff"></span><a href="{% url ecs.core.views.diff old_submission_form_pk=sf.pk,new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf.is_notification_update %}
+                            {% with sf.new_for_notification.all.0 as notif %}
+                                {% if notif %}
+                                <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
+                                {% endif %}
+                            {% endwith %}
+                        {% else %}
+                            –
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sf == submission.newest_submission_form %}
+                            <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endwith %}
         </table>
     </td></tr>
     <tr>
         <th>Eingereicht von:</th>
-        {% with submission_form.presenter.get_profile.organisation as organisation%}
-            <td colspan="3">{{ submission_form.presenter }}{% if organisation %} ({{organisation}}){% endif %}</td>
-        {% endwith %}
+        <td colspan="3">
+            {% with submission.presenter.get_profile.organisation as organisation%}
+                {{ submission.presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% endwith %}
+            {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
+                | <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Sicherheitsmeldungsersteller:</th>
+        <td colspan="3">
+            {% with submission.susar_presenter.get_profile.organisation as organisation%}
+                {{ submission.susar_presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% endwith %}
+            {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}
+                | <a href="{% url ecs.core.views.change_submission_susar_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
+            {% endif %}
+        </td>
     </tr>
     <tr>
         <th>Antragsteller:</th>
-        {% with submission_form.submitter.get_profile.organisation as organisation%}
+        {% with submission_form.submitter_organisation as organisation%}
             <td colspan="3">{{ submission_form.submitter }}{% if organisation %} ({{organisation}}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
         <th>Sponsor:</th>
-        {% with submission_form.sponsor.get_profile.organisation as organisation%}
+        {% with submission_form.sponsor_name as organisation%}
             <td colspan="3">{{ submission_form.sponsor }}{% if organisation %} ({{organisation}}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
         <th>Rechnungsempfänger:</th>
-        {% with submission_form.invoice.get_profile.organisation as organisation%}
+        {% with submission_form.invoice_name as organisation%}
             <td colspan="3">
             {% if submission_form.invoice %}
                 {{ submission_form.invoice }}{% if organisation %} ({{organisation}}){% endif %}
@@ -84,10 +108,10 @@
     </tr>
     <tr>
         <th>Hauptprüfer:</th>
-        {% with submission_form.primary_investigator.get_profile.organisation as organisation%}
+        {% with submission_form.primary_investigator.organisation as organisation%}
             <td colspan="3">
             {% if submission_form.primary_investigator %}
-                {{ submission_form.primary_investigator.contact.full_name }}{% if organisation %} ({ organisation }}){% endif %}
+                {{ submission_form.primary_investigator.contact.full_name }}{% if organisation %} ({{ organisation }}){% endif %}
             {% else %}
                 <em>{% trans "No Primary Investigator" %}</em>
             {% endif %}
@@ -97,21 +121,13 @@
     <tr>
         <th>Phase:</th>
         <td colspan="3">
-            {% if submission_form.submission.is_active %}
-                {% trans "Aktiv" %}
-            {% else %}
-                {% if submission_form.acknowledged %}
-                    {% trans "Akzeptiert" %}
-                {% else %}
-                    {% trans "Neu" %}
-                {% endif %}
-            {% endif %}
+            {{ submission.lifecycle_phase }}
         </td>
     </tr>
     <tr>
         <th>Typ:</th>
         <td colspan="3">
-            {% if submission_form.amg %}
+            {% if submission_form.is_amg %}
                 {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
                 {% if submission_form.submission_type %}
                     {{ submission_form.get_submission_type_display }}
@@ -119,40 +135,58 @@
                     {% trans "Other" %}
                 {% endif %}
             {% endif %}
-            {% if submission_form.mpg %}{% trans "MPG" %}{% endif %}
-            {% if submission_form.thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
-            {% if submission_form.subject_minage > 0 and submission_form.subject_minage < 18 %}{% trans "minors" %}{% endif %}
+            {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
+            {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+            {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>Kategorien:</th>
+        <td colspan="3">
+            {% for cat in submission.medical_categories.all %}
+                {{ cat }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
         </td>
     </tr>
     <tr>
         <th>Ethikkommission:</th>
         <td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
     </tr>
+    {% if user|has_flag:'is_internal' %}
+    <tr>
+        <th>Arbeitsablauf:</th>
+        <td colspan="3">
+            {% if submission.workflow_lane %}
+                {{ submission.get_workflow_lane_display }}
+            {% else %}
+                {% trans 'New/Undecided' %}
+            {% endif %}
+        </td>
+    </tr>
     <tr>
         <th>Sitzungen:</th>
         <td colspan="3">
             <ul>
-                {% for meeting in submission_form.submission.meetings.all %}
+                {% for meeting in submission.meetings.all %}
                     <li>
-                        {% if user|has_flag:'internal' %}
-                            <a href="{% url ecs.meetings.views.timetable_editor meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
+                        {% if user|has_flag:'is_internal' %}
+                            <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                         {% else %}
                             {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
                         {% endif %}
                     </li>
                 {% endfor %}
             </ul>
-            {% if user|has_flag:'executive_board_member' %}
-                <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission_form.submission.pk %}">{% trans 'Reschedule' %}</a>
+            {% if user|has_flag:'is_executive_board_member' %}
+                <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
     </tr>
-    {% if user|has_flag:'internal' %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
             <ul>
-                {% for vote in submission_form.submission.votes.all %}
+                {% for vote in submission.votes.all %}
                     {% if vote.result %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
                     {% endif %}
@@ -161,60 +195,30 @@
         </td>
     </tr>
     {% endif %}
+    {% if user|has_flag:'is_internal' and external_review_checklists %}
     <tr>
-        <th>Kategorien:</th>
-        <td colspan="3">
-            {% for cat in submission_form.submission.medical_categories.all %}
-                {{ cat }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </td>
-    </tr>
-    <tr>
-        <th>Expedited Review:</th>
-        <td colspan="3">{{ submission_form.submission.expedited|yesno }}</td>
-    </tr>
-    <tr>
-        <th>Externes Gutachten:</th>
-        <td colspan="3">
-        {% if submission_form.submission.external_reviewer %}
-            {% if user|has_flag:'internal' %}
-                {% with external_review_task as task %}
-                {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
-                {% if not task.closed_at %}
-                    | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
-                {% else %}
-                    [{% trans "Abgeschlossen" %}]
-                {% endif %}
-                {% endwith %}
-            {% else %}
-                <em>erforderlich</em>
-            {% endif %}
-        {% else %}
-            <em>Nicht erforderlich.</em>
-        {% endif %}
-        </td>
-    </tr>
-    {% if user|has_flag:'internal' and submission_form.submission.additional_reviewers.exists %}
-    <tr>
-        <th>Zusätzliche Gutachten:</th>
+        <th>Gutachten:</th>
         <td>
             <ul>
-            {% for task in additional_review_tasks %}
-                <li>
-                    {% blocktrans with task.assigned_to as assigned_to and task.assigned_at|date:'d.m.Y' as assigned_at %}{{ assigned_to }} invited at {{ assigned_at }}{% endblocktrans %}
-                    {% if not task.closed_at %}
-                        | <a href="{% url ecs.core.views.delete_task submission_form_pk=submission_form.pk task_pk=task.pk %}">{% trans "delete" %}</a>
-                    {% else %}
-                        [{% trans "Abgeschlossen" %}]
-                    {% endif %}
-                </li>
+            {% for checklist in external_review_checklists %}
+                <li>{{ checklist }} [{{ checklist.get_status_display }}]
+                {% if checklist.status == 'new' or checklist.status == 'review_fail' %}
+                    | <a href="{% url ecs.core.views.drop_checklist_review submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "drop" %}</a>
+                {% endif %}</li>
             {% endfor %}
             </ul>
         </td>
     </tr>
+    {% else %}
+        {% if not request.user|is_presenting_party:submission_form %}
+            <tr>
+                <th>Gutachten erforderlich:</th>
+                <td>{{ submission.external_reviewers.exists|yesno }}</td>
+            </tr>
+        {% endif %}
     {% endif %}
 </table>
 
-{% if user|has_flag:'internal' or user == submission_form.presenter %}
-    <a href="{% url ecs.core.views.export_submission submission_pk=submission_form.submission.pk %}" class="button_submit">{% trans "Export" %}</a>
+{% if submission_form|allows_export_by:request.user %}
+    <a href="{% url ecs.core.views.export_submission submission_pk=submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}

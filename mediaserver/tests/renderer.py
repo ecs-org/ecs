@@ -2,6 +2,7 @@ import os
 import binascii
 import tempfile
 import shutil
+import math
 
 from django.conf import settings
 from uuid import uuid4
@@ -36,16 +37,17 @@ class RendererTest(EcsTestCase):
         when rendering a pdf document.
         '''
         
-        tiles = settings.MS_SHARED ["tiles"]
-        resolutions = settings.MS_SHARED ["resolutions"]
+        tiles = settings.MS_SHARED["tiles"]
+        resolutions = settings.MS_SHARED["resolutions"]
         
         pages_expected = []
-        for t in tiles:
+        for tx, ty in tiles:
             for w in resolutions:
-                tilepages = self.pages / (t*t)
-                if self.pages % (t*t) > 0: tilepages += 1
-                for p in range(1, tilepages+1):
-                    pages_expected += [Page(self.uuid, t, t, w, p)]
+                n = tx * ty
+                tilepages = int(math.ceil(self.pages / float(n)))
+                print tilepages
+                for p in range(1, tilepages + 1):
+                    pages_expected += [Page(self.uuid, tx, ty, w, p)]
 
         pages_real = []
         
@@ -57,7 +59,7 @@ class RendererTest(EcsTestCase):
             self.assertTrue(current_magic == self.png_magic)
             if hasattr(data, "close"):
                 data.close()
-            pages_real += [page]
+            pages_real.append(page)
         
         self.assertEqual(len(pages_expected), len(pages_real))
     

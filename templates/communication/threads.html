@@ -6,19 +6,18 @@
   <div class="messages_header">
     <form id="thread_list_filter" action="" method="post">
         <div class="thread_list_choose">
-            {{ filterform.incoming }} <label class="thread_incoming">{% trans "Incoming" %}</label>
-            {{ filterform.outgoing }} <label class="thread_outgoing">{% trans "Outgoing" %}</label>
+            {{ filterform.incoming }} <label for="id_incoming" class="thread_incoming"><span class="icon_in"></span>{% trans "Incoming" %}</label>
+            {{ filterform.outgoing }} <label for="id_outgoing" class="thread_outgoing"><span class="icon_out"></span>{% trans "Outgoing" %}</label>
         </div>
         <div class="thread_list_choose">
-            {{ filterform.pending }} <label class="thread_outgoing">{% trans "Pending" %}</label>
-            {{ filterform.closed }} <label class="thread_outgoing">{% trans "Closed" %}</label>
+            {{ filterform.pending }} <label for="id_pending" class="thread_outgoing"><span class="icon_pending"></span>{% trans "Pending" %}</label>
+            {{ filterform.closed }} <label for="id_closed" class="thread_outgoing"><span class="icon_done"></span>{% trans "Closed" %}</label>
         </div>
     </form>
-
-    <span class="icon_sort">{% trans "sort" %}</span>
-    <a href="{{ request.path }}?sort={% ifequal sort 'user' %}-{% endifequal %}user">{% trans "Person" %}</a> 
-    | <a href="{{ request.path }}?sort={% ifequal sort 'timestamp' %}-{% endifequal %}timestamp">{% trans "Old/New" %}</a>
-  </div>
+    <div class="sort_options">
+        {% include 'communication/sort_options.inc' %}
+    </div>
+</div>
 {{ block.super }}
 </div>
 {% endblock %}
