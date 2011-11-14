@@ -296,11 +296,11 @@ _queries = {
     'local_ec':         lambda s,u: s.localec(),
 
     # vote filters
-    'b2':               lambda s,u: s.b2(),
-    'b3':               lambda s,u: s.b3(),
-    'b4':               lambda s,u: s.b4(),
-    'other_votes':      lambda s,u: s.b1() | s.b5(),
-    'no_votes':         lambda s,u: s.exclude(pk__in=s.b1().values('pk').query).exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query).exclude(pk__in=s.b5().values('pk').query),
+    'b2':               lambda s,u: s.b2(include_pending=u.ecs_profile.is_internal),
+    'b3':               lambda s,u: s.b3(include_pending=u.ecs_profile.is_internal),
+    'b4':               lambda s,u: s.b4(include_pending=u.ecs_profile.is_internal),
+    'other_votes':      lambda s,u: s.b1(include_pending=u.ecs_profile.is_internal) | s.b5(include_pending=u.ecs_profile.is_internal),
+    'no_votes':         lambda s,u: s.without_vote(include_pending=u.ecs_profile.is_internal),
 
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),

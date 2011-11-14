@@ -45,20 +45,32 @@ class SubmissionQuerySet(models.query.QuerySet):
     def with_vote(self, *args, **kwargs):
         return self.filter(get_vote_filter_q('forms', *args, **kwargs))
 
-    def b1(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='1')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='1'), current_submission_form__isnull=False)
+    def _with_explicit_vote(self, *results, **kwargs):
+        q = Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=results)
+        if kwargs.get('include_pending', True):
+            q |= Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=results)
+        return self.filter(q, current_submission_form__isnull=False)
 
-    def b2(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
+    def b1(self, include_pending=True):
+        return self._with_explicit_vote('1', include_pending=include_pending)
 
-    def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=['3a', '3b'])|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=['3a', '3b']), current_submission_form__isnull=False)
+    def b2(self, include_pending=True):
+        return self._with_explicit_vote('2', include_pending=include_pending)
 
-    def b4(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='4')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
+    def b3(self, include_pending=True):
+        return self._with_explicit_vote('3a', '3b', include_pending=include_pending)
 
-    def b5(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='5')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='5'), current_submission_form__isnull=False)
+    def b4(self, include_pending=True):
+        return self._with_explicit_vote('4', include_pending=include_pending)
+
+    def b5(self, include_pending=True):
+        return self._with_explicit_vote('5', include_pending=include_pending)
+        
+    def without_vote(self, include_pending=True):
+        q = Q(forms__current_published_vote__isnull=True)
+        if include_pending:
+            q &= Q(forms__current_pending_vote__isnull=True)
+        return self.filter(q, current_submission_form__isnull=False)
 
     def new(self):
         return self.filter(meetings__isnull=True)
