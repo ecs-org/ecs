@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-12 14:42+0100\n"
+"POT-Creation-Date: 2011-11-14 18:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:84 core/models/submissions.py:80
+#: billing/views.py:84 core/models/submissions.py:83
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -162,7 +162,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:415
+#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:423
 #: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
@@ -175,8 +175,8 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:42 core/forms/forms.py:306
-#: core/models/submissions.py:151 help/models.py:18
+#: checklists/models.py:42 core/forms/forms.py:311
+#: core/models/submissions.py:154 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -201,7 +201,7 @@ msgstr "Fallengelassen"
 msgid "External Review Invitation"
 msgstr "Einladung Gutachten"
 
-#: checklists/workflow.py:73
+#: checklists/workflow.py:73 notifications/workflow.py:125
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -1070,7 +1070,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:231 core/models/submissions.py:421
+#: core/paper_forms.py:231 core/models/submissions.py:428
 msgid "open"
 msgstr "offen"
 
@@ -1086,7 +1086,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:421
+#: core/paper_forms.py:235 core/models/submissions.py:428
 msgid "blind"
 msgstr "blind"
 
@@ -1102,7 +1102,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:239 core/models/submissions.py:421
+#: core/paper_forms.py:239 core/models/submissions.py:428
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1419,15 +1419,15 @@ msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:80
+#: core/triggers.py:81
 msgid "Submission accepted"
 msgstr "Einreichung akzeptiert"
 
-#: core/triggers.py:85
+#: core/triggers.py:88
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:87
+#: core/triggers.py:90
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1482,95 +1482,94 @@ msgstr "Sicherheitsmeldungsersteller"
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:307 templates/core.html:67
+#: core/forms/forms.py:312 templates/core.html:67
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:308
+#: core/forms/forms.py:313
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:309 core/forms/layout.py:66 core/forms/layout.py:68
+#: core/forms/forms.py:314 core/forms/layout.py:66 core/forms/layout.py:68
 #: templates/meetings/tabs/status.html:57
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:310 core/forms/layout.py:75 core/forms/layout.py:77
+#: core/forms/forms.py:315 core/forms/layout.py:75 core/forms/layout.py:77
 #: templates/meetings/tabs/status.html:62
 #: templates/submissions/tabs/status.html:138 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:311
+#: core/forms/forms.py:317
+#, fuzzy
+msgid "Board"
+msgstr "Gremium"
+
+#: core/forms/forms.py:318
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:312 templates/meetings/tabs/status.html:77
+#: core/forms/forms.py:319 templates/meetings/tabs/status.html:77
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:313 templates/meetings/tabs/status.html:87
-#: templates/submissions/tabs/status.html:135 templates/tasks/tasks.inc:24
-#: templates/tasks/tasks_full.inc:23
-msgid "Other"
-msgstr "Andere"
-
-#: core/forms/forms.py:314
-msgid "B2 Votes"
-msgstr "B2 Voten"
-
-#: core/forms/forms.py:315
-msgid "B3 Votes"
-msgstr "B3 Voten"
-
-#: core/forms/forms.py:316
-msgid "B4 Votes"
-msgstr "B4 Voten"
-
-#: core/forms/forms.py:317
-msgid "Other Votes"
-msgstr "Andere Voten"
-
-#: core/forms/forms.py:318
-msgid "No Votes"
-msgstr "Keine Voten"
-
-#: core/forms/forms.py:319 templates/tasks/tasks.inc:14
-#: templates/tasks/tasks_full.inc:13
-msgid "Mine"
-msgstr "Meine"
-
-#: core/forms/forms.py:320 templates/tasks/tasks.inc:15
-#: templates/tasks/tasks_full.inc:14
-msgid "Assigned"
-msgstr "Übernommen"
-
-#: core/forms/forms.py:321
-msgid "Other Studies"
-msgstr "Andere Studien"
-
-#: core/forms/forms.py:322 core/models/constants.py:29
+#: core/forms/forms.py:320 core/models/constants.py:29
 #: templates/meetings/tabs/status.html:82
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/forms/forms.py:388
+#: core/forms/forms.py:322
+msgid "B2 Votes"
+msgstr "B2 Voten"
+
+#: core/forms/forms.py:323
+msgid "B3 Votes"
+msgstr "B3 Voten"
+
+#: core/forms/forms.py:324
+msgid "B4 Votes"
+msgstr "B4 Voten"
+
+#: core/forms/forms.py:325
+msgid "Other Votes"
+msgstr "Andere Voten"
+
+#: core/forms/forms.py:326
+msgid "No Votes"
+msgstr "Keine Voten"
+
+#: core/forms/forms.py:327 templates/tasks/tasks.inc:14
+#: templates/tasks/tasks_full.inc:13
+msgid "Mine"
+msgstr "Meine"
+
+#: core/forms/forms.py:328 templates/tasks/tasks.inc:15
+#: templates/tasks/tasks_full.inc:14
+msgid "Assigned"
+msgstr "Übernommen"
+
+#: core/forms/forms.py:329
+msgid "Other Studies"
+msgstr "Andere Studien"
+
+#: core/forms/forms.py:396
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:399
+#: core/forms/forms.py:407
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:414 templates/users/administration.html:39
+#: core/forms/forms.py:422 templates/users/administration.html:39
 msgid "User"
 msgstr "Benutzer"
 
-#: core/forms/forms.py:416 users/bootstrap.py:24
+#: core/forms/forms.py:424 users/bootstrap.py:24
 msgid "End"
 msgstr "Ende"
 
@@ -1750,35 +1749,35 @@ msgstr "Expedited"
 msgid "board"
 msgstr "Gremium"
 
-#: core/models/names.py:37 core/models/submissions.py:752 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:759 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:752 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:759 users/forms.py:54
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:146
+#: core/models/submissions.py:149
 #, fuzzy
 msgid "Finished"
 msgstr "Abgeschlossene TOPs"
 
-#: core/models/submissions.py:148 templates/users/administration.html:43
+#: core/models/submissions.py:151 templates/users/administration.html:43
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:150
+#: core/models/submissions.py:153
 #, fuzzy
 msgid "Acknowledged"
 msgstr "Bestätigen"
 
-#: core/models/submissions.py:786
+#: core/models/submissions.py:793
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:786
+#: core/models/submissions.py:793
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1794,27 +1793,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:652
+#: core/views/submissions.py:644
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:758 templates/core.html:41
+#: core/views/submissions.py:750 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:760
+#: core/views/submissions.py:752
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:773
+#: core/views/submissions.py:765
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:796 templates/core.html:44
+#: core/views/submissions.py:788 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:806 templates/core.html:47
+#: core/views/submissions.py:798 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2041,11 +2040,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:627
+#: meetings/models.py:646
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:628
+#: meetings/models.py:647
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2082,19 +2081,19 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:429 meetings/views.py:441
+#: meetings/views.py:432 meetings/views.py:444
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:443 meetings/views.py:505
+#: meetings/views.py:446 meetings/views.py:508
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:451 meetings/views.py:457 meetings/views.py:461
+#: meetings/views.py:454 meetings/views.py:460 meetings/views.py:464
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:476
+#: meetings/views.py:479
 #, fuzzy
 msgid "Meeting Protocol"
 msgstr "Per Protocol"
@@ -2191,7 +2190,7 @@ msgstr "speichern erflogreich"
 msgid "Ready"
 msgstr "Gelesen"
 
-#: notifications/workflow.py:82
+#: notifications/workflow.py:82 notifications/workflow.py:126
 #, fuzzy
 msgid "Needs further review"
 msgstr "Gutachten Statistik"
@@ -2459,6 +2458,7 @@ msgstr "Bearbeiten"
 
 #: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
 #: templates/notifications/list.html:47 templates/submissions/list.html:50
+#: templates/submissions/list.html:216
 msgid "Delete"
 msgstr "Löschen"
 
@@ -2990,6 +2990,12 @@ msgstr ""
 msgid "Retrospective Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
+#: templates/meetings/tabs/status.html:87
+#: templates/submissions/tabs/status.html:135 templates/tasks/tasks.inc:24
+#: templates/tasks/tasks_full.inc:23
+msgid "Other"
+msgstr "Andere"
+
 #: templates/meetings/tabs/status.html:94
 #, fuzzy
 msgid "Dissertation"
@@ -3458,6 +3464,14 @@ msgstr "Unterlage"
 #: templates/submissions/list.html:143 templates/submissions/widget.html:55
 msgid "No Submissions."
 msgstr "Keine Einreichung."
+
+#: templates/submissions/list.html:216
+msgid "Do you want to delete the submission draft?"
+msgstr "Wollen Sie den Einreichungsentwurf löschen?"
+
+#: templates/submissions/list.html:216
+msgid "Don't Delete"
+msgstr "Nicht Löschen"
 
 #: templates/submissions/new_version_message.txt:2
 #, python-format

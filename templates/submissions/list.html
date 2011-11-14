@@ -47,7 +47,7 @@
         {{ docstash.current_name|default:"<i>Unbenannt</i>" }}
         <div class="actions">
             <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}">{% trans 'Edit' %}</a>
-            | <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
+            | <a class="delete_docstash" href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
         </div>
         <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr</div>
         {% endwith %}
@@ -115,7 +115,7 @@
         {% if docstash %}
             <div class="info">
                 Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ submission.forms.count|add:1 }})
-                <a href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
+                <a class="delete_docstash" href="{% url ecs.core.views.delete_docstash_entry docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
             </div>
         {% endif %}
         {% if submission.resubmission_task %}
@@ -209,6 +209,14 @@
               });
           }, this);
     {% endif %}
+
+        $$('a.delete_docstash').each(function(a){
+            a.addEvent('click', function(){
+                var href = a.getAttribute('href');
+                new MooDialog.Confirm('{% trans 'Do you want to delete the submission draft?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Delete")|escapejs }}', cancelText: '{{ _("Don't Delete")|escapejs }}'});
+                return false;
+            });
+        }, this);
       });
     </script>
 {% endblock %}
