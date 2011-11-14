@@ -432,6 +432,23 @@ class Meeting(models.Model):
             'meeting': self,
             'timetable': timetable,
         })
+        
+    def get_medical_categories(self):
+        return MedicalCategory.objects.filter(submissions__timetable_entries__meeting=self)
+        
+    def update_assigned_categories(self):
+        old_assignments = {}
+        for amc in AssignedMedicalCategory.objects.filter(meeting=self):
+            old_assignments[amc.category_id] = amc
+        new_assignments = {}
+        for cat in self.get_medical_categories():
+            if cat.pk in old_assignments:
+                del old_assignments[cat.pk]
+            else:
+                AssignedMedicalCategory.objects.get_or_create(meeting=self, category=cat)
+        AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.itervalues()]).delete()
+        Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=old_assignments.keys()).delete()
+
 
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
@@ -605,11 +622,13 @@ def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:
         entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+    entry.meeting.update_assigned_categories()
     if entry.submission:
         entry.submission.update_next_meeting()
 
 def _timetable_entry_post_save(sender, **kwargs):
     entry = kwargs['instance']
+    entry.meeting.update_assigned_categories()
     if entry.submission:
         entry.submission.update_next_meeting()
 

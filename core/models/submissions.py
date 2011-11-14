@@ -226,6 +226,7 @@ class Submission(models.Model):
         def _schedule():
             meeting = Meeting.objects.next_schedulable_meeting(self)
             meeting.add_entry(submission=self, duration=duration, visible=visible)
+            return meeting
 
         try:
             current_top = self.timetable_entries.order_by('-meeting__start')[0]
@@ -233,18 +234,18 @@ class Submission(models.Model):
             current_top = None
 
         if current_top is None:
-            _schedule()
+            return _schedule()
+        elif current_top.meeting.started is None:
+            current_top.refresh(duration=duration, visible=visible)
         else:
-            if current_top.meeting.started is None:
-                current_top.refresh(duration=duration, visible=visible)
+            try:
+                last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')[0]
+            except IndexError:
+                pass
             else:
-                try:
-                    last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')[0]
-                except IndexError:
-                    pass
-                else:
-                    if last_vote.is_recessed:
-                        _schedule()
+                if last_vote.is_recessed:
+                    return _schedule()
+        return current_top.meeting
 
     class Meta:
         app_label = 'core'

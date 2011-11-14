@@ -93,4 +93,5 @@ def on_categorization_review(sender, **kwargs):
 
     is_acknowledged = submission.newest_submission_form.is_acknowledged
     if is_acknowledged:
-        submission.schedule_to_meeting()
+        meeting = submission.schedule_to_meeting()
+        meeting.update_assigned_categories()

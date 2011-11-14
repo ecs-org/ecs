@@ -531,9 +531,6 @@ def next(request):
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    required_categories = MedicalCategory.objects.filter(submissions__timetable_entries__meeting=meeting).order_by('abbrev')
-    for cat in required_categories:
-        AssignedMedicalCategory.objects.get_or_create(meeting=meeting, category=cat)
     expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting))
     experts_saved = False
 
