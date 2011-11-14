@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 from datetime import datetime, timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
@@ -6,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.db import transaction, IntegrityError
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
@@ -392,19 +394,26 @@ class MySubmissionsFilterForm(SubmissionFilterForm):
 class AllSubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
 
+
+import_error_logger = logging.getLogger('ecx-import')
+
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))
-
+    
+    @transaction.commit_manually()
     def clean_file(self):
         f = self.cleaned_data['file']
         from ecs.core.serializer import Serializer
         serializer = Serializer()
         try:
             self.submission_form = serializer.read(self.cleaned_data['file'])
+        except IntegrityError as e:
+            transaction.rollback()
         except Exception as e:
-            import traceback
-            traceback.print_exc(e)
+            import_error_logger.debug('invalid ecx file')
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
+        else:
+            transaction.commit()
         f.seek(0)
         return f
 
