@@ -394,11 +394,14 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
 
     checklist_review_states = SortedDict()
     blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
     if top.submission:
         for blueprint in ChecklistBlueprint.objects.order_by('name'):
             with sudo():
-                tasks = list(Task.objects.for_submission(top.submission).filter(deleted_at=None,
-                    task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id))
+                tasks = Task.objects.for_submission(top.submission).filter(deleted_at=None)
+                tasks = tasks.filter(task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id
+                    ) | tasks.filter(content_type=checklist_ct, data_id__in=Checklist.objects.filter(blueprint=blueprint)).exclude(workflow_token__node__uid='external_review_review')
+                tasks = list(tasks)
             checklists = []
             for task in tasks:
                 lookup_kwargs = {'blueprint': blueprint}
