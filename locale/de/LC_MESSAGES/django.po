@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 20:56+0100\n"
+"POT-Creation-Date: 2011-11-14 22:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1757,18 +1757,16 @@ msgid "Mr"
 msgstr "Herr"
 
 #: core/models/submissions.py:149
-#, fuzzy
 msgid "Finished"
-msgstr "Abgeschlossene TOPs"
+msgstr "Abgeschlossen"
 
 #: core/models/submissions.py:151 templates/users/administration.html:43
 msgid "Active"
 msgstr "Aktiv"
 
 #: core/models/submissions.py:153
-#, fuzzy
 msgid "Acknowledged"
-msgstr "Bestätigen"
+msgstr "Bestätigt"
 
 #: core/models/submissions.py:790
 msgid "only study-related"
