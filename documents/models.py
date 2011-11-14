@@ -210,6 +210,7 @@ class Document(models.Model):
                 try:
                     sanitize_pdf(self.file, decrypt=False)
                 except PDFValidationError as e:
+                    raise # FIXME
                     logger.error('not a valid pdf document, but mimetype was application/pdf')
 
         if not self.hash:
