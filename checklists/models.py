@@ -54,15 +54,17 @@ class Checklist(models.Model):
     pdf_document = models.OneToOneField(Document, related_name="checklist", null=True)
 
     objects = AuthorizationManager()
+    
+    @property
+    def short_name(self):
+        if self.blueprint.multiple:
+            return "%s (%s)" % (self.blueprint, self.user)
+        return unicode(self.blueprint)
 
     def __unicode__(self):
-        if self.blueprint.multiple:
-            u = "%s (%s)" % (self.blueprint, self.user)
-        else:
-            u = unicode(self.blueprint)
-        if self.submission:
-            u += u' für %s' % unicode(self.submission)
-        return u
+        if not self.submission:
+            return self.short_name
+        return u'%s für %s' % (self.short_name, unicode(self.submission))
         
     @property
     def is_complete(self):
