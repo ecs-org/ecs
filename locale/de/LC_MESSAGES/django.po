@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-15 16:01+0100\n"
+"POT-Creation-Date: 2011-11-15 18:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -400,7 +400,7 @@ msgstr "Die Studie wurde begonnen"
 msgid "please add additional details to the field \"comments\""
 msgstr ""
 "Ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme/"
-"Mitteilung?\""
+"Mitteilung\""
 
 #: core/paper_forms.py:51
 msgid "Why hasn't the study been started?"
@@ -1429,11 +1429,11 @@ msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:92
+#: core/workflow.py:93
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:93 notifications/models.py:168
+#: core/workflow.py:94 notifications/models.py:168
 msgid "Reject"
 msgstr "Ablehnen"
 
