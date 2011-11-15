@@ -1,7 +1,7 @@
 {% extends 'db/wkhtml2pdf/skeleton.html' %}
 {% load core i18n %}
 
-{% block title %}Meeting Agenda{% endblock %}
+{% block title %}{{ checklist.blueprint }} für {{ checklist.submission }}{% endblock %}
 
 {% block inline_css %}
     {{ block.super }}
