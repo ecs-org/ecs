@@ -18,7 +18,7 @@
 {% endif %}
 <span class="bold">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
 <span class="bold">Einreichende Institution:</span> {{ form.submitter_organisation }}  <br/>
-<span class="bold">Projekttitel:</span> {{ form.project_title_display }} <br/>
+<span class="bold">Projekttitel:</span> {{ form.german_project_title|default:form.project_title }} <br/>
 
 
 <pdf:spacer height="0.5cm" />
