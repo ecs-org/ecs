@@ -141,7 +141,7 @@ def outgoing_message_widget(request):
 @user_flag_required('is_internal')
 def communication_overview_widget(request, submission_pk=None):
     return render(request, 'communication/widgets/overview.inc', {
-        'threads': Thread.objects.filter(submission__pk=submission_pk),
+        'threads': Thread.objects.filter(submission__pk=submission_pk).order_by('-last_message__timestamp'),
     })
 
 
