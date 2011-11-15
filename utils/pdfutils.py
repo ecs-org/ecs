@@ -228,8 +228,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         '--margin-right', '2cm',
         '--margin-bottom', '2cm',
         '--page-size', 'A4',
-        '--zoom', '1',
-    ]
+    ] + getattr(settings, 'WKHTMLTOPDF_OPTIONS', [])
     tmp_dir = tempfile.mkdtemp(dir=settings.TEMPFILE_DIR)
     shutil.copytree(os.path.join(settings.PROJECT_DIR, 'utils', 'pdf'), os.path.join(tmp_dir, 'media'))
 
