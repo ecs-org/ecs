@@ -77,7 +77,7 @@
 {% block mainitem %}
 <h3>3. Begründung/Stellungnahme/Mitteilung</h3>
   <p>
-    {{ notification.comments|default:"nicht vorhanden" }}
+    {{ notification.comments|linebreaksbr|default:"nicht vorhanden" }}
   </p>
 {% endblock %}
 
