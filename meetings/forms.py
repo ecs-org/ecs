@@ -5,11 +5,16 @@ from django import forms
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Q
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
+from ecs.votes.models import Vote
+from ecs.votes.constants import FINAL_VOTE_RESULTS
+from ecs.tasks.models import Task
 
 from ecs.utils.formutils import TranslatedModelForm
+from ecs.users.utils import sudo
 
 class MeetingForm(TranslatedModelForm):
     start = DateTimeField(initial=datetime.now)
@@ -93,38 +98,29 @@ class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
         s = obj.submission
         return u'{0} {1}'.format(s.get_ec_number_display(), s.project_title_display())
 
-class RetrospectiveThesisExpeditedVoteForm(forms.Form):
-    retrospective_thesis_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
-    expedited_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
-    localec_entries = _EntryMultipleChoiceField(widget=forms.CheckboxSelectMultiple, required=False)
 
+class ExpeditedVoteForm(forms.ModelForm):
+    accept_prepared_vote = forms.BooleanField(required=False)
+
+    class Meta:
+        model = TimetableEntry
+        fields = ('accept_prepared_vote',)
+
+    def save(self, commit=True):
+        submission_form = self.instance.submission.current_submission_form
+        vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'is_draft': True})
+        vote.top = self.instance
+        vote.is_draft = False
+        vote.save()
+        with sudo():
+            Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
+        return vote
+
+class BaseExpeditedVoteFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
-        from ecs.votes.models import Vote
-        from ecs.votes.constants import FINAL_VOTE_RESULTS
-        from django.db.models import Q
-        meeting = kwargs.pop('meeting')
-        super(RetrospectiveThesisExpeditedVoteForm, self).__init__(*args, **kwargs)
+        queryset = kwargs.get('queryset', TimetableEntry.objects.all())
+        queryset = queryset.filter(Q(vote__isnull=True) | ~Q(vote__result__in=FINAL_VOTE_RESULTS)).order_by('submission__ec_number')
+        kwargs['queryset'] = queryset
+        super(BaseExpeditedVoteFormSet, self).__init__(*args, **kwargs)
 
-        for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
-            tops = getattr(meeting, k)
-            q = tops.filter(Q(vote__isnull=True) | ~Q(vote__result__in=FINAL_VOTE_RESULTS)).order_by('submission__ec_number')
-            self.fields[k].queryset = q
-            self.fields[k].initial = [x.pk for x in q.all()]
-
-    def save(self):
-        from ecs.votes.models import Vote
-        from ecs.users.utils import sudo
-        from ecs.tasks.models import Task
-        cd = self.cleaned_data
-        votes = []
-        for entry in list(cd.get('retrospective_thesis_entries', [])) + list(cd.get('expedited_entries', [])) + list(cd.get('localec_entries', [])):
-            submission_form = entry.submission.current_submission_form
-            vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'top': entry})
-            if not created:
-                vote.top = entry
-                vote.is_draft = False
-                vote.save()
-            with sudo():
-                Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
-            votes.append(vote)
-        return votes
+ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
