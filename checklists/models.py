@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from uuid import uuid4
 
 from django.db import models
 from django.db.models import Q
@@ -16,6 +17,7 @@ class ChecklistBlueprint(models.Model):
     slug = models.CharField(max_length=50, db_index=True, unique=True)
     multiple = models.BooleanField(default=False)
     billing_required = models.BooleanField(default=False)
+    reviewer_is_anonymous = models.BooleanField(default=False)
 
     def __unicode__(self):
         return _(self.name)
@@ -98,8 +100,15 @@ class Checklist(models.Model):
 
     def render_pdf(self):
         doctype = DocumentType.objects.get(identifier='checklist')
-        name = slugify(unicode(self))
-        filename = '{0}.pdf'.format(name)
+        if self.blueprint.reviewer_is_anonymous:
+            if self.submission:
+                name = u'{0} für {1}'.format(self.blueprint, self.submission)
+            else:
+                name = unicode(self.blueprint)
+            name = '{0}-{1}'.format(name, uuid4().get_hex()[:5])
+        else:
+            name = unicode(self)
+        filename = u'{0}.pdf'.format(slugify(name))
 
         pdfdata = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
             'checklist': self,
