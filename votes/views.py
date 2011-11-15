@@ -39,7 +39,7 @@ def vote_context(vote):
     meeting = None
     if top:
         submission = top.submission
-        vote_data = top.meeting.start.strftime('%d.%m.%Y')
+        vote_date = top.meeting.start.strftime('%d.%m.%Y')
         meeting = top.meeting
     if submission and submission.forms.count() > 0:
         form = submission.forms.all()[0]

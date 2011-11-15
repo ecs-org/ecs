@@ -85,7 +85,7 @@ def open_tasks(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
     open_tasks = {}
-    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index'):
+    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number'):
         with sudo():
             ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
         if len(ts):
@@ -100,10 +100,10 @@ def open_tasks(request, meeting_pk=None):
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index')[:3]
+    next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number')[:3]
 
     open_tops = {}
-    for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index'):
+    for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number'):
         if top.submission:
             medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
                 category__in=top.submission.medical_categories.values('pk').query)
@@ -115,7 +115,7 @@ def tops(request, meeting_pk=None):
         else:
             open_tops[bms] = [top]
 
-    closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index')
+    closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index', 'submission__ec_number')
 
     return render(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,

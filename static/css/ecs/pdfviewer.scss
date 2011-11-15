@@ -536,6 +536,9 @@ body.pdfviewer .popup.gotoPage input::-moz-selection{
 
 /* menu popup */
 body.pdfviewer .popup.menu{
+    width: 312px;
+    height: 312px;
+
     & > .content{
         width: 312px;
         height: 312px;
