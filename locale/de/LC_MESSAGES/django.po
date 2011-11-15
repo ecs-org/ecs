@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-14 23:39+0100\n"
+"POT-Creation-Date: 2011-11-15 16:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,7 +162,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:423
+#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:431
 #: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
 msgid "Start"
 msgstr "Start"
@@ -175,7 +175,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:42 core/forms/forms.py:311
+#: checklists/models.py:42 core/forms/forms.py:313
 #: core/models/submissions.py:154 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
@@ -399,8 +399,8 @@ msgstr "Die Studie wurde begonnen"
 #: core/paper_forms.py:50
 msgid "please add additional details to the field \"comments\""
 msgstr ""
-"Ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme/Mitteilung?"
-"\""
+"Ergänzende Angaben beschreiben Sie bitte im Feld \"Begründung/Stellungnahme/"
+"Mitteilung?\""
 
 #: core/paper_forms.py:51
 msgid "Why hasn't the study been started?"
@@ -1258,8 +1258,8 @@ msgstr "Wie erfolgt die Anonymisierung?"
 msgid "salutation"
 msgstr "Anrede"
 
-#: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:24
-#: meetings/forms.py:39 users/forms.py:155 users/forms.py:201
+#: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:29
+#: meetings/forms.py:44 users/forms.py:155 users/forms.py:201
 msgid "title"
 msgstr "Titel"
 
@@ -1391,7 +1391,7 @@ msgstr "Rechnung"
 msgid "Submitter"
 msgstr "Antragsteller"
 
-#: core/parties.py:77 core/forms/forms.py:223
+#: core/parties.py:77 core/forms/forms.py:225
 msgid "Presenter"
 msgstr "Einreicher"
 
@@ -1460,114 +1460,114 @@ msgstr ""
 msgid "No information given"
 msgstr "Keine Angaben"
 
-#: core/forms/forms.py:65
+#: core/forms/forms.py:67
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
 
-#: core/forms/forms.py:223 core/forms/forms.py:238
+#: core/forms/forms.py:225 core/forms/forms.py:240
 msgid "Please enter a valid e-mail address"
 msgstr "Bitte geben Sie eine gültige E-mail Adresse an"
 
-#: core/forms/forms.py:238
+#: core/forms/forms.py:240
 msgid "SUSAR Presenter"
 msgstr "Sicherheitsmeldungsersteller"
 
-#: core/forms/forms.py:247
+#: core/forms/forms.py:249
 msgid "Susar presenter"
 msgstr "Sicherheitsmeldungsersteller"
 
-#: core/forms/forms.py:261
+#: core/forms/forms.py:263
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:312 templates/core.html:67
+#: core/forms/forms.py:314 templates/core.html:67
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:313
+#: core/forms/forms.py:315
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:314 core/forms/layout.py:66 core/forms/layout.py:68
+#: core/forms/forms.py:316 core/forms/layout.py:66 core/forms/layout.py:68
 #: templates/meetings/tabs/status.html:57
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:315 core/forms/layout.py:75 core/forms/layout.py:77
+#: core/forms/forms.py:317 core/forms/layout.py:75 core/forms/layout.py:77
 #: templates/meetings/tabs/status.html:62
 #: templates/submissions/tabs/status.html:138 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:317
+#: core/forms/forms.py:319
 #, fuzzy
 msgid "Board"
 msgstr "Gremium"
 
-#: core/forms/forms.py:318
+#: core/forms/forms.py:320
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:319 templates/meetings/tabs/status.html:77
+#: core/forms/forms.py:321 templates/meetings/tabs/status.html:77
 #, fuzzy
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:320 core/models/constants.py:29
+#: core/forms/forms.py:322 core/models/constants.py:29
 #: templates/meetings/tabs/status.html:82
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/forms/forms.py:322
+#: core/forms/forms.py:324
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:323
+#: core/forms/forms.py:325
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:324
+#: core/forms/forms.py:326
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:325
+#: core/forms/forms.py:327
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:326
+#: core/forms/forms.py:328
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:327 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:329 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:328 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:330 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:329
+#: core/forms/forms.py:331
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:396
+#: core/forms/forms.py:401
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:407
+#: core/forms/forms.py:412
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:422 templates/users/administration.html:39
+#: core/forms/forms.py:430 templates/users/administration.html:39
 msgid "User"
 msgstr "Benutzer"
 
-#: core/forms/forms.py:424 users/bootstrap.py:24
+#: core/forms/forms.py:432 users/bootstrap.py:24
 msgid "End"
 msgstr "Ende"
 
@@ -1997,47 +1997,47 @@ msgstr "Gutachten Statistik"
 msgid "Invalid expiring url"
 msgstr ""
 
-#: meetings/forms.py:23
+#: meetings/forms.py:28
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
 
-#: meetings/forms.py:25
+#: meetings/forms.py:30
 msgid "deadline"
 msgstr "Letzter Einreichtermin"
 
-#: meetings/forms.py:26
+#: meetings/forms.py:31
 msgid "deadline thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: meetings/forms.py:40
+#: meetings/forms.py:45
 msgid "duration"
 msgstr "Dauer"
 
-#: meetings/forms.py:41
+#: meetings/forms.py:46
 msgid "break"
 msgstr "Pause"
 
-#: meetings/forms.py:42
+#: meetings/forms.py:47
 msgid "ideal start time (time)"
 msgstr "Ideale Startzeit (Uhrzeit)"
 
-#: meetings/forms.py:51
+#: meetings/forms.py:56
 msgid "from (time)"
 msgstr "Von (Uhrzeit)"
 
-#: meetings/forms.py:52
+#: meetings/forms.py:57
 msgid "to (time)"
 msgstr "Bis (Uhrzeit)"
 
-#: meetings/forms.py:53
+#: meetings/forms.py:58
 msgid "weighting"
 msgstr "Gewichtung"
 
-#: meetings/forms.py:64
+#: meetings/forms.py:69
 msgid "From meeting"
 msgstr "Von Sitzung"
 
-#: meetings/forms.py:65
+#: meetings/forms.py:70
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
@@ -2082,19 +2082,19 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:435 meetings/views.py:447
+#: meetings/views.py:445 meetings/views.py:457
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:449 meetings/views.py:511
+#: meetings/views.py:459 meetings/views.py:521
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:457 meetings/views.py:463 meetings/views.py:467
+#: meetings/views.py:467 meetings/views.py:473 meetings/views.py:477
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:482
+#: meetings/views.py:492
 #, fuzzy
 msgid "Meeting Protocol"
 msgstr "Per Protocol"
@@ -2776,41 +2776,45 @@ msgstr "Kommentare"
 msgid "Ret. Thesis/Expedited"
 msgstr "Expedited"
 
+#: templates/meetings/assistant/expedited_vote_formset.inc:12
+msgid "Prepared Vote"
+msgstr "Vorbereitetes Votum"
+
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:6
 #, fuzzy
 msgid "Retrospective Thesis Submissions"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:9
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:28
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:47
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:30
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:51
 #: users/forms.py:134
 msgid "Approved"
 msgstr "Bestätigt"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:21
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:40
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:59
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:42
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:63
 #: users/forms.py:135
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:25
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:27
 #, fuzzy
 msgid "Expedited Submissions"
 msgstr "Einreichungen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:44
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:48
 #, fuzzy
 msgid "Local-EC Submissions"
 msgstr "Keine Einreichung."
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:63
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:69
 #: templates/users/administration.html:60
 msgid "Approve"
 msgstr "Bestätigen"
 
-#: templates/meetings/assistant/retrospective_thesis_expedited.html:64
+#: templates/meetings/assistant/retrospective_thesis_expedited.html:70
 msgid "Go Back"
 msgstr ""
 
@@ -4772,9 +4776,6 @@ msgstr ""
 #~ "\n"
 #~ "            Studien für die Sitzung am %(start)s (%(title)s)\n"
 #~ "        "
-
-#~ msgid "Pending Votes"
-#~ msgstr "Ausstehende Voten"
 
 #~ msgid "There are no pending votes."
 #~ msgstr "Es existieren derzeit keine ausstehenden Voten."
