@@ -82,6 +82,7 @@
         }
         p {
             padding: 2pt 0;
+            margin-bottom: 0.2cm;
         }
         h1 {
           font-size: 16pt;
@@ -112,6 +113,7 @@
         }
         table {
           border: none;
+          margin-bottom: 0.2cm;
         }
         th, td {
           text-align: left;
@@ -286,13 +288,36 @@
           float: right;
         }
         .diff span{
-            display: block;
+          display: block;
         }
         .diff span.inserted{
-            color: #006600;
+          color: #006600;
         }
         .diff span.deleted{
-            color: #660000;
+          color: #660000;
+        }
+        #footer {
+          display: block;
+          width: 100%;
+          margin-top: 2cm;
+        }
+        .footer_left {
+          float: left;
+          width: 33%;
+          display: inline-block;
+        }
+        .footer_middle {
+          display: inline-block;
+          position: relative;
+          margin: 0 auto;
+          text-align: center;
+          width: 33%;
+        }
+        .footer_right {
+          float: right;
+          width: 33%;
+          display: inline-block;
+          text-align: right;
         }
     </style>
     {% endblock %}
