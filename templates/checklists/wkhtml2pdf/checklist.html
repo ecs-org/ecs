@@ -34,7 +34,7 @@
         {{ checklist.blueprint }} für {{ checklist.submission }}
         {% with checklist.submission as submission %}
         {% if submission %}
-            <br>für {{ submission|ec_number }} {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            <br>{{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% endif %}
         {% endwith %}
     </h1>
