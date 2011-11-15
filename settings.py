@@ -230,6 +230,8 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
 ECS_PDFCOP_POLICY = 'paranoid'
 
+WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
+
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
