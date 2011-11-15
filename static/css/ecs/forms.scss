@@ -1,10 +1,10 @@
 @import "ecs/variables.scss";
 
 @mixin field-list{
-  display: inline-block;
-  margin-bottom: 10px;
-  list-style: none;
-  width: 100%;
+    display: inline-block;
+    margin-bottom: 10px;
+    list-style: none;
+    width: 100%;
 }
 
 ul.errorlist {
@@ -13,7 +13,6 @@ ul.errorlist {
   margin: 0 !important;
 }
 .errorlist li {
-  display: inline-block;
   color: red;
   padding: 5px;
   background: #FAE5E3;
@@ -44,7 +43,7 @@ ul.errorlist {
         font-size: 12px;
     }
     
-    .paperform_number {
+    .paperform_number{
         color: $grey-40;
         font-size: 10px;
         
@@ -96,26 +95,14 @@ ul.errorlist {
                 vertical-align: top;
                 margin-bottom: 10px;
             }
-            /*
-            input[type=file] {
-                position: relative;
-                -moz-opacity:0;
-                filter:alpha(opacity: 0);
-                opacity: 0;
-                z-index: 2;
-            }
-            */
-            .FileField label:after {
-                content: "hier";
-            }
             
             textarea {
                 height: 40px;
             }
 
             label {
-                width: 230px;
-                padding: 0 5px;
+                width: 220px;
+                padding: 0 10px;
             }
             
             th.label {
@@ -141,7 +128,7 @@ ul.errorlist {
             }
             
             &.BooleanField {
-                margin-left: 245px;
+                padding-left: 240px;
                 
                 input{
                     display: inline-block;
@@ -152,7 +139,7 @@ ul.errorlist {
                     width: 400px;
                     display: inline-block;
                     float: none;
-                    padding-left: 10px;
+                    padding-left: 1em;
                     text-align: left;
                     
                     &:after {
@@ -168,10 +155,6 @@ ul.errorlist {
                     clear: both;
                     color: $grey-40;
                 }
-            }
-            
-            &.EmailField input {
-                width: 340px;
             }
         }
     }
@@ -218,7 +201,7 @@ ul.errorlist {
     }
     
     ul.errorlist li {
-      margin-left: 240px;
+      margin-left: 220px;
       margin-bottom: 5px;
       color: red;
     }
