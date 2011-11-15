@@ -10,9 +10,10 @@ from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
 from ecs.core.signals import on_initial_review, on_categorization_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
-from ecs.checklists.utils import get_checklist_answer
+from ecs.checklists.utils import get_checklist_answer, get_checklist_comment
 from ecs.tasks.models import Task
 from ecs.tasks.utils import block_if_task_exists
+from ecs.votes.models import Vote
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -238,12 +239,21 @@ def unlock_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(RecommendationReview)
 post_save.connect(unlock_recommendation_review, sender=Checklist)
 
+class LocalEcRecommendationReview(RecommendationReview):
+    def pre_perform(self, choice):
+        super(LocalEcRecommendationReview, self).pre_perform(choice)
+        submission = self.workflow.data
+        Vote.objects.create(result='1', text=get_checklist_comment(submission, 'localec_review', 1),
+            submission_form=submission.current_submission_form, is_draft=True)
+
+def unlock_localec_recommendation_review(sender, **kwargs):
+    kwargs['instance'].submission.workflow.unlock(LocalEcRecommendationReview)
+post_save.connect(unlock_localec_recommendation_review, sender=Checklist)
+
 
 class VotePreparation(Activity):
     class Meta:
         model = Submission
-        
+
     def get_url(self):
         return reverse('ecs.core.views.vote_preparation', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
-
-

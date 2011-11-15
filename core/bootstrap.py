@@ -15,7 +15,7 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
 from ecs.bootstrap.utils import update_instance
 from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
-    ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview)
+    ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, LocalEcRecommendationReview, ExpeditedRecommendation, BoardMemberReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
     has_expedited_recommendation, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
@@ -152,7 +152,7 @@ def submission_workflow():
             # local ec lane
             'localec_categorization_review': Args(CategorizationReview, name=_("Local EC Categorization Review"), group=LOCALEC_REVIEW_GROUP),
             'localec_recommendation': Args(NonRepeatableChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
-            'localec_recommendation_review': Args(RecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'localec_recommendation_review': Args(LocalEcRecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),

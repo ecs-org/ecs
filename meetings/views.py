@@ -26,7 +26,7 @@ from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
+    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet)
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
 
@@ -330,19 +330,29 @@ def meeting_assistant_comments(request, meeting_pk=None):
 @user_flag_required('is_internal')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
-    form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
-    if form.is_valid():
-        form.save()
-        form = RetrospectiveThesisExpeditedVoteForm(None, meeting=meeting)
-    else:
-        print form.errors
+    thesis_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.retrospective_thesis_entries, prefix='thesis')
+    expedited_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.expedited_entries, prefix='expedited')
+    localec_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.localec_entries, prefix='localec')
+
+    if request.method == 'POST':
+        if thesis_vote_formset.is_valid():
+            thesis_vote_formset.save()
+            thesis_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.retrospective_thesis_entries, prefix='thesis')
+        if expedited_vote_formset.is_valid():
+            expedited_vote_formset.save()
+            expedited_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.expedited_entries, prefix='expedited')
+        if localec_vote_formset.is_valid():
+            localec_vote_formset.save()
+            localec_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.localec_entries, prefix='localec')
 
     return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
         'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'expedited_entries': meeting.expedited_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'localec_entries': meeting.localec_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'meeting': meeting,
-        'form': form,
+        'thesis_vote_formset': thesis_vote_formset,
+        'expedited_vote_formset': expedited_vote_formset,
+        'localec_vote_formset': localec_vote_formset,
     })
 
 @readonly(methods=['GET'])
