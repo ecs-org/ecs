@@ -215,22 +215,20 @@ a {
 
 /* input fields and buttons */
  
-input, 
-input[type=file], 
+input,
 textarea, 
-#content select {
+select,
+#id_document-file {
   border: 1px solid #b7b7b7;
   padding: 2px;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 12px;
 }
-input:focus, 
-input[type=file]:focus, 
+input:focus,
 textarea:focus, 
-#content select:focus {
+select:focus {
   box-shadow: 0 0 6px $grey-80;
 }
-
 input[type=submit], 
 .cancel a,
 a.button_submit,
