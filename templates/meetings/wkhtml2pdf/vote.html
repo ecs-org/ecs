@@ -4,10 +4,7 @@
 
 {% block content %}
   {% include 'db/wkhtml2pdf/ec_head.inc' %}
-  <h1>
-    Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:
-    <br>
-  </h1>
+  <h1>Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:</h1>
 
 <p><b>EK Nr: {{ ec_number }}</b></p>
 <p>
@@ -21,7 +18,6 @@
   <b>Einreichende Institution:</b> {{ form.submitter_organisation }}  <br>
   <b>Projekttitel:</b> {{ form.german_project_title|default:form.project_title }} <br>
 </p>
-
 
 <p>Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:</p>
 
@@ -95,8 +91,8 @@
 {% endif %}
 
 {% if vote.text %}
+  <h4>Kommentar:</h4>
   <p>
-    <b>Kommentar:</b><br>
     {{ vote.text|linebreaksbr }}
   </p>
 {% endif %}
