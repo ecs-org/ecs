@@ -3058,15 +3058,15 @@ msgstr "Es gibt nocht kein Votum!"
 
 #: templates/meetings/timetable/editor.html:52
 msgid "before"
-msgstr ""
+msgstr "Vorher Anwesende"
 
 #: templates/meetings/timetable/editor.html:52
 msgid "waiting"
-msgstr ""
+msgstr "Wartende"
 
 #: templates/meetings/timetable/editor.html:52
 msgid "after"
-msgstr ""
+msgstr "Anschließend Anwesende"
 
 #: templates/notifications/form.html:25 templates/submissions/form.html:33
 #: templates/submissions/form.html:106
