@@ -182,6 +182,14 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
     notifications = submission.notifications.order_by('-timestamp')
     votes = submission.votes
+    
+    stashed_notifications = []
+    for d in DocStash.objects.filter(group='ecs.notifications.views.create_notification'):
+        try:
+            if str(submission_form.pk) in d.current_value['form'].data['submission_forms']:
+                stashed_notifications.append(d)
+        except KeyError:
+            pass
 
     context = {
         'form': form,
@@ -197,6 +205,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'show_reviews': any(checklist_reviews),
         'open_notifications': notifications.unanswered(),
         'answered_notifications': notifications.answered(),
+        'stashed_notifications': stashed_notifications,
         'pending_votes': votes.filter(published_at__isnull=True),
         'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),

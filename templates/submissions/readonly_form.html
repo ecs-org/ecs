@@ -150,6 +150,10 @@
         {% else %}
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
+        {% if stashed_notifications %}
+            <h3>Nicht eingereichte Meldungen</h3>
+            {% include 'notifications/stashed_notification_list.html' %}
+        {% endif %}
         {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
