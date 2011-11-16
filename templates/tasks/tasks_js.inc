@@ -4,11 +4,13 @@
   window.addEvent('domready', function(){
       $$('#{{ form_id }} input').each(function(input){
           input.addEvent('change', function(){
+              ecs.stopPageLoad();
               $('{{ form_id }}').submit();
           });
       });
       $$('#{{ form_id }} select').each(function(input){
           input.addEvent('change', function(){
+              ecs.stopPageLoad();
               $('{{ form_id }}').submit();
           });
       });

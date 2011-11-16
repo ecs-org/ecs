@@ -693,6 +693,14 @@ ecs.setupSubmitLinks = function(selector){
     });
 };
 
+ecs.stopPageLoad = function() {
+    if ($defined(window.stop)) {
+        window.stop();
+    } else {
+        try { document.execCommand('Stop'); } catch(e){};
+    }
+};
+
 /* windmill helper stuff*/
 ecs.windmill_upload = function(filename) {
     var element = document.createElement('UploadAssistantDataElement');
