@@ -177,11 +177,14 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
 class PDFValidationError(ValueError): pass
 
 def _pdf_cop(filename, logger=pdfutils_logger):
-    popen = subprocess.Popen([PDFCOP_PATH, '-p', settings.ECS_PDFCOP_POLICY, filename], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-    stdout, stderr = popen.communicate()
+    popen = subprocess.Popen([PDFCOP_PATH, '--no-color', '--policy', settings.ECS_PDFCOP_POLICY, filename], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    stdout, stderr = popen.communicate("\n") # send a newline in case origami asks for a password on stdin
     result = stdout.splitlines()[-1]
     if 'accepted by policy' not in result:
-        return [m.group(1) for m in re.finditer(r'[^\d]:(\w+)', result)]
+        violations = [m.group(1) for m in re.finditer(r'[^\d]:(\w+)', result)]
+        if 'Analysis failure' in result:
+            violations.append('analysisFailure')
+        return violations
     return []
 
 
@@ -195,8 +198,8 @@ def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
                 tmp.seek(0)
                 decrypted = tempfile.NamedTemporaryFile(suffix='.pdf')
                 logger.info("decrypting pdf document")
-                popen = subprocess.Popen([PDFDECRYPT_PATH, tmp.name, '-o', decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-                popen.communicate()
+                popen = subprocess.Popen([PDFDECRYPT_PATH, tmp.name, '--output', decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+                popen.communicate("\n") # send a newline in case origami asks for a password on stdin
                 if popen.returncode:
                     logger.warn('pdfdecrypt error (returncode=%s):\n%s' % (popen.returncode, smart_str(stderr, errors='backslashreplace')))
                     violations.append('decryptFailure')
