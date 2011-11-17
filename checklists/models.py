@@ -105,7 +105,7 @@ class Checklist(models.Model):
                 name = u'{0} für {1}'.format(self.blueprint, self.submission)
             else:
                 name = unicode(self.blueprint)
-            name = '{0}-{1}'.format(name, uuid4().get_hex()[:5])
+            name = u'{0}-{1}'.format(name, uuid4().get_hex()[:5])
         else:
             name = unicode(self)
         filename = u'{0}.pdf'.format(slugify(name))
