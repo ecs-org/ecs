@@ -32,7 +32,7 @@
     </tbody>
 </table>
 
-{% if temp_auth or user|has_flag:'is_executive_board_member' %}
+{% if temporary_auth or user|has_flag:'is_executive_board_member' %}
     <h3>{% trans 'Temporary Authorization' %}</h3>
     <table>
         <thead>
