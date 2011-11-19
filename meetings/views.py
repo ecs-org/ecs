@@ -596,14 +596,19 @@ def meeting_details(request, meeting_pk=None, active=None):
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
 
     return render(request, 'meetings/details.html', {
-        'cumulative_count': meeting.submissions.all().count(),
-        'amg_submissions': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
-        'mpg_submissions': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
-        'amg_mpg_submissions': meeting.submissions.amg_mpg(),
-        'retrospective_thesis_submissions': meeting.submissions.retrospective_thesis(),
+        'cumulative_count': meeting.submissions.distinct().count(),
+
+        'board_submissions': meeting.submissions.for_board_lane(),
+        'amg_submissions': meeting.submissions.for_board_lane().amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
+        'mpg_submissions': meeting.submissions.for_board_lane().mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
+        'amg_mpg_submissions': meeting.submissions.for_board_lane().amg_mpg(),
+        'not_amg_and_not_mpg_submissions': meeting.submissions.for_board_lane().not_amg_and_not_mpg(),
+
+        'retrospective_thesis_submissions': meeting.submissions.for_thesis_lane(),
         'expedited_submissions': meeting.submissions.expedited(),
         'localec_submissions': meeting.submissions.localec(),
-        'other_submissions': meeting.submissions.exclude(pk__in=meeting.submissions.amg().values('pk').query).exclude(pk__in=meeting.submissions.mpg().values('pk').query).exclude(pk__in=meeting.submissions.retrospective_thesis().values('pk').query).exclude(pk__in=meeting.submissions.expedited().values('pk').query).exclude(pk__in=meeting.submissions.localec().values('pk').query),
+        'other_submissions': meeting.submissions.filter(workflow_lane=None),
+
         'dissertation_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=1),
         'diploma_thesis_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=2),
         'amg_multi_main_submissions': meeting.submissions.localec(),

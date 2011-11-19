@@ -146,6 +146,9 @@ class SubmissionManager(AuthorizationManager):
 
     def amg_mpg(self):
         return self.all().amg_mpg()
+        
+    def not_amg_and_not_mpg(self):
+        return self.all().not_amg_and_not_mpg()
 
     def new(self):
         return self.all().new()
@@ -194,6 +197,12 @@ class SubmissionManager(AuthorizationManager):
 
     def none(self):
         return self.all().none()
+        
+    def for_thesis_lane(self):
+        return self.all().for_thesis_lane()
+        
+    def for_board_lane(self):
+        return self.all().for_board_lane()
 
 
 class SubmissionFormQuerySet(models.query.QuerySet):
