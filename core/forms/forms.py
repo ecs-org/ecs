@@ -290,6 +290,7 @@ _queries = {
     'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
+    'other':            lambda s,u: s.not_amg_and_not_mpg(),
 
     # lane filters
     'board':            lambda s,u: s.for_board_lane(),
@@ -315,6 +316,7 @@ _labels = {
     'other_meetings': _('Other Meetings'),
     'amg': _('AMG'),
     'mpg': _('MPG'),
+    'other': _('Other'),
 
     'board': _('Board'),
     'thesis': _('Thesis'),
@@ -374,7 +376,7 @@ class SubmissionFilterForm(forms.Form):
         return submissions
 
 FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
-FILTER_TYPE = ('amg', 'mpg')
+FILTER_TYPE = ('amg', 'mpg', 'other')
 FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')

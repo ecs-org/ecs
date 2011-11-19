@@ -38,6 +38,9 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def mpg(self):
         return self.filter(current_submission_form__project_type_medical_device=True)
+        
+    def not_amg_and_not_mpg(self):
+        return self.exclude(current_submission_form__project_type_medical_device=True) & self.exclude(Q(current_submission_form__project_type_non_reg_drug=True)|Q(current_submission_form__project_type_reg_drug=True))
 
     def amg_mpg(self):
         return self.amg() & self.mpg()
