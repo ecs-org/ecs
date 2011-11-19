@@ -5,9 +5,14 @@
 <ul>
 {% for top in next_tops %}
     <li>
-        {{ top }} - {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
-        <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
-        | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+        {{ top }} - 
+        {% if top.submission %}
+            {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+            <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=top.submission.current_submission_form.pk %}" target="_blank">Ansehen</a>
+            | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+        {% else %}
+            {{ top.title }}
+        {% endif %}
     </li>
 {% endfor %}
 </ul>
