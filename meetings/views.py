@@ -84,13 +84,19 @@ def reschedule_submission(request, submission_pk=None):
 def open_tasks(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    open_tasks = {}
+    open_tasks = SortedDict()
+    no_index_tasks = []
     for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number'):
         with sudo():
             ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
         if len(ts):
-            open_tasks[top] = ts
-
+            if top.timetable_index is None:
+                no_index_tasks.append((top, ts))
+            else:
+                open_tasks[top] = ts
+    for top, ts in no_index_tasks:
+        open_tasks[top] = ts
+    
     return render(request, 'meetings/tabs/open_tasks.html', {
         'meeting': meeting,
         'open_tasks': open_tasks,
