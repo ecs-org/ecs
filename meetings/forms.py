@@ -100,7 +100,7 @@ class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
 
 
 class ExpeditedVoteForm(forms.ModelForm):
-    accept_prepared_vote = forms.BooleanField(required=False)
+    accept_prepared_vote = forms.BooleanField(required=False, initial=True)
 
     class Meta:
         model = TimetableEntry
