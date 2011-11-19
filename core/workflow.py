@@ -142,6 +142,7 @@ class CategorizationReview(Activity):
         with sudo():
             expedited_recommendation_tasks = Task.objects.for_data(s).filter(
                 deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
+            #expedited_recommendation_tasks.filter(assigned_to__isnull=False).mark_deleted()
             for task in expedited_recommendation_tasks:
                 task.expedited_review_categories = s.expedited_review_categories.all()
 
