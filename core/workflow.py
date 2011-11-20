@@ -11,7 +11,7 @@ from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBM
 from ecs.core.signals import on_initial_review, on_categorization_review
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer, get_checklist_comment
-from ecs.tasks.models import Task
+from ecs.tasks.models import Task, TaskType
 from ecs.tasks.utils import block_if_task_exists
 from ecs.votes.models import Vote
 
@@ -140,13 +140,19 @@ class CategorizationReview(Activity):
                     ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
         with sudo():
+            excats = list(s.expedited_review_categories.all())
             expedited_recommendation_tasks = Task.objects.for_data(s).filter(
                 deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
-            #expedited_recommendation_tasks.filter(assigned_to__isnull=False).mark_deleted()
+            expedited_recommendation_tasks.filter(assigned_to__isnull=False).exclude(expedited_review_categories__in=excats).mark_deleted()
+            if not expedited_recommendation_tasks:
+                task_type = TaskType.objects.get(workflow_node__uid='expedited_recommendation', workflow_node__graph__auto_start=True)
+                token = task_type.workflow_node.bind(self.workflow).receive_token(None)
+                expedited_recommendation_tasks = [token.task]
             for task in expedited_recommendation_tasks:
-                task.expedited_review_categories = s.expedited_review_categories.all()
+                task.expedited_review_categories = excats
 
         on_categorization_review.send(Submission, submission=self.workflow.data)
+
 
 class PaperSubmissionReview(Activity):
     class Meta:
@@ -221,6 +227,9 @@ post_save.connect(unlock_boardmember_review, sender=Checklist)
 
 
 class ExpeditedRecommendation(NonRepeatableChecklistReview):
+    def is_reentrant(self):
+        return True
+
     def receive_token(self, *args, **kwargs):
         token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
         s = self.workflow.data
