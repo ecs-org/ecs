@@ -105,16 +105,22 @@ class ExpeditedVoteForm(forms.ModelForm):
     class Meta:
         model = TimetableEntry
         fields = ('accept_prepared_vote',)
+        
+    def has_changed(self):
+        # FIXME: this should not be a model form: if no data has_changed(), save() won't be called (#3457)
+        return True
 
     def save(self, commit=True):
-        submission_form = self.instance.submission.current_submission_form
-        vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'is_draft': True})
-        vote.top = self.instance
-        vote.is_draft = False
-        vote.save()
-        with sudo():
-            Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
-        return vote
+        if self.cleaned_data.get('accept_prepared_vote', False):
+            submission_form = self.instance.submission.current_submission_form
+            vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'is_draft': True})
+            vote.top = self.instance
+            vote.is_draft = False
+            vote.save()
+            with sudo():
+                Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
+            return vote
+        return None
 
 class BaseExpeditedVoteFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
@@ -122,5 +128,5 @@ class BaseExpeditedVoteFormSet(BaseModelFormSet):
         queryset = queryset.filter(Q(vote__isnull=True) | ~Q(vote__result__in=FINAL_VOTE_RESULTS)).order_by('submission__ec_number')
         kwargs['queryset'] = queryset
         super(BaseExpeditedVoteFormSet, self).__init__(*args, **kwargs)
-
+    
 ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
