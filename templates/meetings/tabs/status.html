@@ -78,7 +78,7 @@
         <td>{% for submission in not_amg_and_not_mpg_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
     </tr>
     <tr>
-        <th>{% trans "Retrospective Thesis" %}</th>
+        <th>{% trans "Retro. Thesis" %}</th>
         <td>{{ retrospective_thesis_submissions|length }}</td>
         <td>{% for submission in retrospective_thesis_submissions %}<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">{{ submission|ec_number }}</a> {% if not forloop.last %}, {% endif %}{% endfor %}</td>
     </tr>
