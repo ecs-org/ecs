@@ -6,8 +6,6 @@ from copy import deepcopy
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
 
-LOCALE_PATHS = (os.path.join(PROJECT_DIR, "locale"),)
-
 # standard django settings
 ##########################
 
@@ -56,6 +54,9 @@ USE_I18N = True
 # workaround: we can not use the django gettext function in the settings
 # because it depends on the settings.
 gettext = lambda s: s
+
+# path where django searches for *.mo files
+LOCALE_PATHS = (os.path.join(PROJECT_DIR, "locale"),)
 
 # declare supported languages for i18n. English is the internal project language.
 # We do not want to expose our internal denglish to the end-user, so disable english
@@ -396,7 +397,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 17',}
+BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 18',}
 
 # if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
 # set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
