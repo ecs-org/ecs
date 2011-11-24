@@ -136,21 +136,23 @@ def developer_test_notification_answer_pdf(request):
 def test_vote_pdf_html(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
-    bootstrap.templates()
-    template = loader.get_template('db/meetings/wkhtml2pdf/vote.html')
-    html = template.render(Context(vote_context(vote)))
+    with sudo(vote.submission_form.submission.presenter):
+        bootstrap.templates()
+        template = loader.get_template('db/meetings/wkhtml2pdf/vote.html')
+        html = template.render(Context(vote_context(vote)))
     return HttpResponse(html)
 
 def test_render_vote_pdf(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
-    bootstrap.templates()
-    pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote_context(vote))
+    with sudo(vote.submission_form.submission.presenter):
+        bootstrap.templates()
+        pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote_context(vote))
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_vote_pdf(request):
     with sudo():
-        votes = list(Vote.objects.all())
+        votes = list(Vote.objects.filter(published_at__isnull=False))
     return render(request, 'developer/render_test_vote_pdf.html', {'votes': votes})
 
 def developer_translations(request):
