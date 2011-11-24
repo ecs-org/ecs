@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-24 10:20+0100\n"
+"POT-Creation-Date: 2011-11-24 10:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2153,7 +2153,7 @@ msgstr "Andere Sicherheitsmeldung"
 #: notifications/forms.py:42
 msgid ""
 "Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des "
-"Nutzen/Risikoverhältnisses?"
+"Nutzen/Risikoverhältnisses"
 msgstr ""
 
 #: notifications/forms.py:53
