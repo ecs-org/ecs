@@ -49,6 +49,10 @@ class TimedeltaField(forms.CharField):
         except ValueError:
             raise ValidationError(self.error_messages['invalid'])
 
+class BooleanWidget(forms.widgets.Select):
+    def __init__(self, attrs=None):
+        choices = ((True, _(u'Yes')), (False, _(u'No')))
+        super(BooleanWidget, self).__init__(attrs, choices)
 
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import MultiselectWidget, NullBooleanWidget
+from ecs.core.forms.fields import MultiselectWidget, BooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 
 class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):
@@ -18,11 +18,11 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
             'legal_and_patient_review_required', 'statistical_review_required', 'insurance_review_required',
             'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers')
         widgets = {
-            'remission': NullBooleanWidget,
-            'legal_and_patient_review_required': NullBooleanWidget,
-            'statistical_review_required': NullBooleanWidget,
-            'insurance_review_required': NullBooleanWidget,
-            'gcp_review_required': NullBooleanWidget,
+            'remission': BooleanWidget,
+            'legal_and_patient_review_required': BooleanWidget,
+            'statistical_review_required': BooleanWidget,
+            'insurance_review_required': BooleanWidget,
+            'gcp_review_required': BooleanWidget,
         }
         labels = {
             'workflow_lane': _('workflow lane'),
