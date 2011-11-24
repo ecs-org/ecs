@@ -144,7 +144,7 @@ class CategorizationReview(Activity):
             expedited_recommendation_tasks = Task.objects.for_data(s).filter(
                 deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
             expedited_recommendation_tasks.filter(assigned_to__isnull=False).exclude(expedited_review_categories__in=excats).mark_deleted()
-            if not expedited_recommendation_tasks:
+            if not expedited_recommendation_tasks and s.workflow_lane == SUBMISSION_LANE_EXPEDITED:
                 task_type = TaskType.objects.get(workflow_node__uid='expedited_recommendation', workflow_node__graph__auto_start=True)
                 token = task_type.workflow_node.bind(self.workflow).receive_token(None)
                 expedited_recommendation_tasks = [token.task]
