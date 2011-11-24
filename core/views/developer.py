@@ -44,20 +44,22 @@ def developer_test_pdf(request):
 def test_checklist_pdf_html(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
-    bootstrap.templates()
-    template = loader.get_template('db/checklists/wkhtml2pdf/checklist.html')
-    html = template.render(Context({
-        'checklist': checklist,
-    }))
+    with sudo(checklist.user):
+        bootstrap.templates()
+        template = loader.get_template('db/checklists/wkhtml2pdf/checklist.html')
+        html = template.render(Context({
+            'checklist': checklist,
+        }))
     return HttpResponse(html)
 
 def test_render_checklist_pdf(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
-    bootstrap.templates()
-    pdf = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
-        'checklist': checklist,
-    })
+    with sudo(checklist.user):
+        bootstrap.templates()
+        pdf = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
+            'checklist': checklist,
+        })
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_checklist_pdf(request):
