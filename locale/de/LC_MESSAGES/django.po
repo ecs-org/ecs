@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-24 10:29+0100\n"
+"POT-Creation-Date: 2011-11-24 10:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -289,54 +289,44 @@ msgid "Thesis Categorization Review"
 msgstr "Einstufung und Zuteilung Diplomarbeit"
 
 #: core/bootstrap.py:142
-#, fuzzy
 msgid "Thesis Paper Submission Review"
-msgstr "Formale Prüfung Unterschrift"
+msgstr "Thesis Paper Submission Review"
 
 #: core/bootstrap.py:143
-#, fuzzy
 msgid "Thesis Recommendation"
-msgstr "Empfehlungsgutachten"
+msgstr "Thesis Recommendation"
 
 #: core/bootstrap.py:144
-#, fuzzy
 msgid "Thesis Recommendation Review"
-msgstr "Empfehlungsgutachten"
+msgstr "Thesis Recommendation Review"
 
 #: core/bootstrap.py:145
-#, fuzzy
 msgid "Thesis Vote Preparation"
-msgstr "Votum Bekanntmachung"
+msgstr "Thesis Vote Preparation"
 
 #: core/bootstrap.py:148
-#, fuzzy
 msgid "Expedited Recommendation"
-msgstr "Empfehlungsgutachten"
+msgstr "Expedited Empfehlung"
 
 #: core/bootstrap.py:149
-#, fuzzy
 msgid "Expedited Recommendation Review"
-msgstr "Empfehlungsgutachten"
+msgstr "Expedited Empfehlung Review"
 
 #: core/bootstrap.py:150
-#, fuzzy
 msgid "Expedited Vote Preparation"
-msgstr "Votum Bekanntmachung"
+msgstr "Expedited Votum Vorbereitung"
 
 #: core/bootstrap.py:153
-#, fuzzy
 msgid "Local EC Categorization Review"
-msgstr "Einstufung und Zuteilung"
+msgstr "begleitende EK Einstufung Review"
 
 #: core/bootstrap.py:154
-#, fuzzy
 msgid "Local EC Recommendation"
-msgstr "Empfehlungsgutachten"
+msgstr "begleitende EK Empfehlung"
 
 #: core/bootstrap.py:155
-#, fuzzy
 msgid "Local EC Recommendation Review"
-msgstr "Empfehlungsgutachten"
+msgstr "begleitende EK Empfehlung Review"
 
 #: core/diff.py:151 core/diff.py:221 core/diff.py:222 core/diff.py:258
 #: core/diff.py:259
@@ -2105,23 +2095,20 @@ msgid "Meeting Protocol"
 msgstr "Per Protocol"
 
 #: notifications/bootstrap.py:84
-#, fuzzy
 msgid "Safety Review"
-msgstr "Gutachten Statistik"
+msgstr "Safety Review"
 
 #: notifications/bootstrap.py:85
-#, fuzzy
 msgid "Notification Answer Signing"
-msgstr "Meldungsantwort"
+msgstr "Notification Answer Signing"
 
 #: notifications/bootstrap.py:86
 msgid "Distribute Notification Answer"
 msgstr "Meldungsantwort Verteilen"
 
 #: notifications/bootstrap.py:89 notifications/bootstrap.py:90
-#, fuzzy
 msgid "Notification Review"
-msgstr "Meldungen"
+msgstr "Notification Review"
 
 #: notifications/bootstrap.py:93
 msgid "Initial Amendment Review"
@@ -2130,9 +2117,8 @@ msgstr "Formale Prüfung Amendment"
 #: notifications/bootstrap.py:94 notifications/bootstrap.py:95
 #: notifications/bootstrap.py:96 notifications/bootstrap.py:97
 #: notifications/bootstrap.py:98 notifications/bootstrap.py:99
-#, fuzzy
 msgid "Amendment Review"
-msgstr "Formale Prüfung Amendment"
+msgstr "Amendment Review"
 
 #: notifications/constants.py:5
 msgid "SUSAR"
@@ -4252,14 +4238,12 @@ msgid "US States"
 msgstr ""
 
 #: votes/bootstrap.py:28
-#, fuzzy
 msgid "B2 Resubmission"
-msgstr "Neueinreichung"
+msgstr "B2 Resubmission"
 
 #: votes/bootstrap.py:29
-#, fuzzy
 msgid "B2 Review"
-msgstr "B2 Voten"
+msgstr "B2 Review"
 
 #: votes/bootstrap.py:30
 msgid "Executive Vote Finalization"
@@ -4279,11 +4263,11 @@ msgstr "Votum bearbeiten Office"
 
 #: votes/bootstrap.py:34 votes/bootstrap.py:35
 msgid "Office Vote Review"
-msgstr ""
+msgstr "Office Vote Review"
 
 #: votes/bootstrap.py:36
 msgid "Vote Signing"
-msgstr ""
+msgstr "Vote Signing"
 
 #: votes/constants.py:4
 msgid "1 positive"
