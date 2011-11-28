@@ -39,7 +39,7 @@ class MultiNotificationForm(NotificationForm):
         self.fields['submission_forms'].queryset = get_usable_submission_forms()
 
 class SafetyNotificationForm(MultiNotificationForm):
-    comments = forms.CharField(widget=forms.Textarea(), initial=_(u'Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses'))
+    comments = forms.CharField(widget=forms.Textarea(), initial=_(u'Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses.'))
 
     def __init__(self, *args, **kwargs):
         super(MultiNotificationForm, self).__init__(*args, **kwargs)

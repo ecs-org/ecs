@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-24 10:38+0100\n"
+"POT-Creation-Date: 2011-11-29 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:84 core/models/submissions.py:83
+#: billing/views.py:84 core/models/submissions.py:87
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -176,7 +176,7 @@ msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
 #: checklists/models.py:44 core/forms/forms.py:314
-#: core/models/submissions.py:154 help/models.py:18
+#: core/models/submissions.py:158 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -285,61 +285,51 @@ msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
 #: core/bootstrap.py:141
-msgid "Thesis Categorization Review"
-msgstr "Einstufung und Zuteilung Diplomarbeit"
+#, fuzzy
+msgid "Initial Thesis Review Split"
+msgstr "Formale Prüfung Diplomarbeit"
 
 #: core/bootstrap.py:142
-msgid "Thesis Paper Submission Review"
-msgstr "Thesis Paper Submission Review"
-
-#: core/bootstrap.py:143
 msgid "Thesis Recommendation"
 msgstr "Thesis Recommendation"
 
-#: core/bootstrap.py:144
+#: core/bootstrap.py:143
 msgid "Thesis Recommendation Review"
 msgstr "Thesis Recommendation Review"
 
-#: core/bootstrap.py:145
+#: core/bootstrap.py:144
 msgid "Thesis Vote Preparation"
 msgstr "Thesis Vote Preparation"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:147
 msgid "Expedited Recommendation"
 msgstr "Expedited Empfehlung"
 
-#: core/bootstrap.py:149
-msgid "Expedited Recommendation Review"
-msgstr "Expedited Empfehlung Review"
-
-#: core/bootstrap.py:150
+#: core/bootstrap.py:148
 msgid "Expedited Vote Preparation"
 msgstr "Expedited Votum Vorbereitung"
 
-#: core/bootstrap.py:153
-msgid "Local EC Categorization Review"
-msgstr "begleitende EK Einstufung Review"
-
-#: core/bootstrap.py:154
+#: core/bootstrap.py:151
 msgid "Local EC Recommendation"
 msgstr "begleitende EK Empfehlung"
 
-#: core/bootstrap.py:155
-msgid "Local EC Recommendation Review"
-msgstr "begleitende EK Empfehlung Review"
+#: core/bootstrap.py:152
+#, fuzzy
+msgid "Local EC Vote Preparation"
+msgstr "Thesis Vote Preparation"
 
 #: core/diff.py:151 core/diff.py:221 core/diff.py:222 core/diff.py:258
 #: core/diff.py:259
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:153 core/forms/fields.py:55
-#: templates/submissions/readonly_form.html:318
+#: core/diff.py:153 core/forms/fields.py:54 core/forms/fields.py:59
+#: templates/submissions/readonly_form.html:327
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:155 core/forms/fields.py:55
-#: templates/submissions/readonly_form.html:319
+#: core/diff.py:155 core/forms/fields.py:54 core/forms/fields.py:59
+#: templates/submissions/readonly_form.html:328
 msgid "No"
 msgstr "Nein"
 
@@ -1066,7 +1056,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:231 core/models/submissions.py:428
+#: core/paper_forms.py:231 core/models/submissions.py:432
 msgid "open"
 msgstr "offen"
 
@@ -1082,7 +1072,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:428
+#: core/paper_forms.py:235 core/models/submissions.py:432
 msgid "blind"
 msgstr "blind"
 
@@ -1098,7 +1088,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:239 core/models/submissions.py:428
+#: core/paper_forms.py:239 core/models/submissions.py:432
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1419,11 +1409,11 @@ msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:93
+#: core/workflow.py:112
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:94 notifications/models.py:172
+#: core/workflow.py:113 notifications/models.py:172
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1446,7 +1436,7 @@ msgid "Please enter a valid time period. E.g. \"10min\" or \"1h 30min\""
 msgstr ""
 "Bitte geben Sie eine gültige Zeitspanne an. Z.b. \"10min\" oder \"1h 30min\""
 
-#: core/forms/fields.py:129
+#: core/forms/fields.py:133
 msgid "No information given"
 msgstr "Keine Angaben"
 
@@ -1480,6 +1470,7 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:317 core/forms/layout.py:66 core/forms/layout.py:68
 #: templates/meetings/tabs/status.html:61
+#: templates/submissions/readonly_form.html:228
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
@@ -1487,14 +1478,14 @@ msgstr "AMG"
 
 #: core/forms/forms.py:318 core/forms/layout.py:75 core/forms/layout.py:77
 #: templates/meetings/tabs/status.html:66
-#: templates/submissions/tabs/status.html:138 templates/tasks/tasks.inc:21
+#: templates/submissions/readonly_form.html:230
+#: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
 #: core/forms/forms.py:319 templates/meetings/tabs/status.html:96
-#: templates/submissions/tabs/status.html:135 templates/tasks/tasks.inc:24
-#: templates/tasks/tasks_full.inc:23
+#: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
@@ -1735,8 +1726,8 @@ msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
 #: core/models/constants.py:26
-msgid "retrospective thesis"
-msgstr "Retrospektive Diplomarbeiten/Dissertationen"
+msgid "board"
+msgstr "Normal"
 
 #: core/models/constants.py:27 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
@@ -1744,36 +1735,36 @@ msgid "expedited"
 msgstr "Expedited"
 
 #: core/models/constants.py:28
-msgid "board"
-msgstr "Normal"
+msgid "retrospective thesis"
+msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:756 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:760 users/forms.py:54
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:756 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:760 users/forms.py:54
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:149
+#: core/models/submissions.py:153
 msgid "Finished"
 msgstr "Abgeschlossen"
 
-#: core/models/submissions.py:151 templates/users/administration.html:43
+#: core/models/submissions.py:155 templates/users/administration.html:43
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:153
+#: core/models/submissions.py:157
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:790
+#: core/models/submissions.py:794
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:790
+#: core/models/submissions.py:794
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1789,27 +1780,27 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:653
+#: core/views/submissions.py:655
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:759 templates/core.html:41
+#: core/views/submissions.py:761 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:761
+#: core/views/submissions.py:763
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:774
+#: core/views/submissions.py:776
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:797 templates/core.html:44
+#: core/views/submissions.py:799 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:807 templates/core.html:47
+#: core/views/submissions.py:809 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2139,7 +2130,7 @@ msgstr "Andere Sicherheitsmeldung"
 #: notifications/forms.py:42
 msgid ""
 "Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des "
-"Nutzen/Risikoverhältnisses"
+"Nutzen/Risikoverhältnisses."
 msgstr ""
 
 #: notifications/forms.py:53
@@ -2543,14 +2534,14 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:78 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:276
+#: templates/submissions/readonly_form.html:285
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
 #: templates/meetings/assistant/top.html:132
 #: templates/notifications/answers/form.html:28
-#: templates/submissions/readonly_form.html:279
+#: templates/submissions/readonly_form.html:288
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -3100,13 +3091,13 @@ msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:27
 #: templates/submissions/readonly_form.html:202
-#: templates/submissions/readonly_form.html:288
+#: templates/submissions/readonly_form.html:297
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:83
-#: templates/submissions/readonly_form.html:239
+#: templates/submissions/readonly_form.html:248
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:55
 msgid "Download PDF"
@@ -3595,19 +3586,24 @@ msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
 #: templates/submissions/readonly_form.html:223
-#: templates/submissions/readonly_form.html:235
+#: templates/submissions/readonly_form.html:244
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:249
+#: templates/submissions/readonly_form.html:232
+#: templates/submissions/tabs/status.html:135
+msgid "minors"
+msgstr "Minderjährige"
+
+#: templates/submissions/readonly_form.html:258
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:312
+#: templates/submissions/readonly_form.html:321
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:315
+#: templates/submissions/readonly_form.html:324
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
@@ -3705,23 +3701,19 @@ msgstr "wie Sponsor"
 msgid "No Primary Investigator"
 msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 
-#: templates/submissions/tabs/status.html:140
-msgid "minors"
-msgstr "Minderjährige"
-
-#: templates/submissions/tabs/status.html:162
+#: templates/submissions/tabs/status.html:157
 msgid "New/Undecided"
 msgstr "Neu/Unentschieden"
 
-#: templates/submissions/tabs/status.html:181
+#: templates/submissions/tabs/status.html:176
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:206
+#: templates/submissions/tabs/status.html:201
 msgid "drop"
 msgstr "fallen lassen"
 
-#: templates/submissions/tabs/status.html:223
+#: templates/submissions/tabs/status.html:218
 #, fuzzy
 msgid "Export"
 msgstr "Import"
@@ -4345,6 +4337,21 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "Thesis Categorization Review"
+#~ msgstr "Einstufung und Zuteilung Diplomarbeit"
+
+#~ msgid "Thesis Paper Submission Review"
+#~ msgstr "Thesis Paper Submission Review"
+
+#~ msgid "Expedited Recommendation Review"
+#~ msgstr "Expedited Empfehlung Review"
+
+#~ msgid "Local EC Categorization Review"
+#~ msgstr "begleitende EK Einstufung Review"
+
+#~ msgid "Local EC Recommendation Review"
+#~ msgstr "begleitende EK Empfehlung Review"
 
 #~ msgid "Meeting Participant"
 #~ msgstr "Sitzungsteilnehmer"
