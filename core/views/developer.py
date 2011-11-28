@@ -31,7 +31,7 @@ def test_pdf_html(request, submission_pk=None):
 def test_render_pdf(request, submission_pk=None):
     with sudo():
         submission = get_object_or_404(Submission, pk=submission_pk)
-    with sudo(submission.presenter)
+    with sudo(submission.presenter):
         submission_form = submission.current_submission_form
         bootstrap.templates()
         pdf = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
@@ -114,7 +114,7 @@ def developer_test_notification_pdf(request):
 def test_notification_answer_pdf_html(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
-    with sudo(notification_answer.notification.user:
+    with sudo(notification_answer.notification.user):
         notification = notification_answer.notification
         bootstrap.templates()
         tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
@@ -128,7 +128,7 @@ def test_notification_answer_pdf_html(request, notification_answer_pk=None):
 def test_render_notification_answer_pdf(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
-    with sudo(notification_answer.notification.user:
+    with sudo(notification_answer.notification.user):
         notification = notification_answer.notification
         bootstrap.templates()
         tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
