@@ -15,30 +15,35 @@ from ecs.votes.models import Vote
 from ecs.votes.views import vote_context
 
 def test_pdf_html(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.current_submission_form
-    bootstrap.templates()
-    template = loader.get_template('db/submissions/wkhtml2pdf/view.html')
-    html = template.render(Context({
-        'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
-        'submission_form': submission_form,
-        'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
-    }))
+    with sudo():
+        submission = get_object_or_404(Submission, pk=submission_pk)
+    with sudo(submission.presenter):
+        submission_form = submission.current_submission_form
+        bootstrap.templates()
+        template = loader.get_template('db/submissions/wkhtml2pdf/view.html')
+        html = template.render(Context({
+            'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
+            'submission_form': submission_form,
+            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+        }))
     return HttpResponse(html)
 
 def test_render_pdf(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.current_submission_form
-    bootstrap.templates()
-    pdf = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
-        'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
-        'submission_form': submission_form,
-        'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
-    })
+    with sudo():
+        submission = get_object_or_404(Submission, pk=submission_pk)
+    with sudo(submission.presenter)
+        submission_form = submission.current_submission_form
+        bootstrap.templates()
+        pdf = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
+            'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
+            'submission_form': submission_form,
+            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+        })
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_pdf(request):
-    submissions = Submission.objects.all().order_by('ec_number')
+    with sudo():
+        submissions = list(Submission.objects.all().order_by('ec_number'))
     return render(request, 'developer/render_test_pdf.html', {'submissions': submissions})
 
 def test_checklist_pdf_html(request, checklist_pk=None):
@@ -70,33 +75,35 @@ def developer_test_checklist_pdf(request):
 def test_notification_pdf_html(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
-    bootstrap.templates()
-    tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
-    submission_forms = notification.submission_forms.select_related('submission').all()
-    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-    protocol_numbers.sort()
-    html = tpl.render(Context({
-        'notification': notification,
-        'protocol_numbers': protocol_numbers,
-        'submission_forms': submission_forms,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-    }))
+    with sudo(notification.user):
+        bootstrap.templates()
+        tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+        submission_forms = notification.submission_forms.select_related('submission').all()
+        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+        protocol_numbers.sort()
+        html = tpl.render(Context({
+            'notification': notification,
+            'protocol_numbers': protocol_numbers,
+            'submission_forms': submission_forms,
+            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+        }))
     return HttpResponse(html)
 
 def test_render_notification_pdf(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
-    bootstrap.templates()
-    tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
-    submission_forms = notification.submission_forms.select_related('submission').all()
-    protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-    protocol_numbers.sort()
-    pdf = render_pdf_context(tpl, {
-        'notification': notification,
-        'protocol_numbers': protocol_numbers,
-        'submission_forms': submission_forms,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-    })
+    with sudo(notification.user):
+        bootstrap.templates()
+        tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+        submission_forms = notification.submission_forms.select_related('submission').all()
+        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
+        protocol_numbers.sort()
+        pdf = render_pdf_context(tpl, {
+            'notification': notification,
+            'protocol_numbers': protocol_numbers,
+            'submission_forms': submission_forms,
+            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+        })
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_notification_pdf(request):
@@ -107,27 +114,29 @@ def developer_test_notification_pdf(request):
 def test_notification_answer_pdf_html(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
-    notification = notification_answer.notification
-    bootstrap.templates()
-    tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
-    html = tpl.render(Context({
-        'notification': notification,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'answer': notification_answer
-    }))
+    with sudo(notification_answer.notification.user:
+        notification = notification_answer.notification
+        bootstrap.templates()
+        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        html = tpl.render(Context({
+            'notification': notification,
+            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'answer': notification_answer
+        }))
     return HttpResponse(html)
 
 def test_render_notification_answer_pdf(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
-    notification = notification_answer.notification
-    bootstrap.templates()
-    tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
-    pdf = render_pdf_context(tpl, {
-        'notification': notification,
-        'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        'answer': notification_answer
-    })
+    with sudo(notification_answer.notification.user:
+        notification = notification_answer.notification
+        bootstrap.templates()
+        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        pdf = render_pdf_context(tpl, {
+            'notification': notification,
+            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'answer': notification_answer
+        })
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_notification_answer_pdf(request):
