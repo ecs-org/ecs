@@ -222,6 +222,15 @@
                 {% if categorization_task and categorization_review_form.readonly %}
                     <p><a href="{% url ecs.tasks.views.reopen_task task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
                 {% endif %}
+                <p>
+                    Typ:
+                    {% if submission_form.is_amg %}
+                        {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
+                    {% endif %}
+                    {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
+                    {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+                    {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
+                </p>
                 {% with categorization_review_form as review_form %}
                     {% include 'submissions/review_form.inc' %}
                 {% endwith %}

@@ -71,6 +71,10 @@ class Submission(models.Model):
     def is_regular(self):
         return self.workflow_lane == SUBMISSION_LANE_BOARD
 
+    @property
+    def is_localec(self):
+        return self.workflow_lane == SUBMISSION_LANE_LOCALEC
+
     def get_submission(self):
         return self
 

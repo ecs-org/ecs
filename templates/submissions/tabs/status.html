@@ -129,11 +129,6 @@
         <td colspan="3">
             {% if submission_form.is_amg %}
                 {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
-                {% if submission_form.submission_type %}
-                    {{ submission_form.get_submission_type_display }}
-                {% else %}
-                    {% trans "Other" %}
-                {% endif %}
             {% endif %}
             {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
             {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}

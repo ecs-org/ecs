@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
-from ecs.core.workflow import InitialReview
+from ecs.core.workflow import InitialReview, InitialThesisReview
 from ecs.core import signals
 from ecs.core.models import Submission
 from ecs.tasks.utils import get_obj_tasks
@@ -26,7 +26,7 @@ def on_study_change(sender, **kwargs):
     elif not submission.votes.exists():
         with sudo():
             try:
-                initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]
+                initial_review_task = get_obj_tasks((InitialReview, InitialThesisReview), submission).exclude(closed_at__isnull=True)[0]
             except IndexError:
                 pass
             else:
@@ -88,6 +88,15 @@ def on_initial_review(sender, **kwargs):
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
+
+
+@connect(signals.on_initial_thesis_review)
+def on_initial_thesis_review(sender, **kwargs):
+    submission, submission_form = kwargs['submission'], kwargs['form']
+    if submission_form.is_acknowledged:
+        with sudo():
+            meeting = submission.schedule_to_meeting()
+            meeting.update_assigned_categories()
 
 
 @connect(signals.on_categorization_review)

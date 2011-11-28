@@ -401,6 +401,8 @@ def vote_preparation(request, submission_form_pk=None):
     vote = submission_form.current_vote
     if submission_form.submission.is_expedited:
         checklist = 'expedited_review'
+    elif submission_form.submission.is_localec:
+        checklist = 'localec_review'
     else:
         checklist = 'thesis_review'
     form = VotePreparationForm(request.POST or None, instance=vote, initial={

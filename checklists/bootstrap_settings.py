@@ -78,6 +78,6 @@ checklist_questions = {
         Args('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
     ],
     u'localec_review': [
-        Args('1', u'Die Ethik-Kommission bestätigt als lokale Ethik-Kommission im Sinne des §41b (5) die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),
+        Args('1', u'Die Ethik-Kommission bestätigt als lokale Ethik-Kommission im Sinne des §41b (5) die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),     # XXX: dont change this number
     ],
 }

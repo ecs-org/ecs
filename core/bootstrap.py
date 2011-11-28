@@ -14,9 +14,9 @@ from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user
 from ecs.bootstrap.utils import update_instance
-from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
-    ChecklistReview, NonRepeatableChecklistReview, RecommendationReview, LocalEcRecommendationReview, ExpeditedRecommendation, BoardMemberReview)
-from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation,
+from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
+    ChecklistReview, RecommendationReview, LocalEcRecommendation, ExpeditedRecommendation, BoardMemberReview)
+from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
     has_expedited_recommendation, is_expedited_or_retrospective_thesis, is_localec, is_acknowledged_and_initial_submission)
 
@@ -137,7 +137,7 @@ def submission_workflow():
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
 
             # retrospective thesis lane
-            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
+            'initial_thesis_review': Args(InitialThesisReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
             'initial_thesis_review_barrier': Args(Generic, name=_('Initial Thesis Review Split')),
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
@@ -145,12 +145,11 @@ def submission_workflow():
 
             # expedited_lane
             'expedited_recommendation': Args(ExpeditedRecommendation, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
-            'expedited_recommendation_review': Args(RecommendationReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
             'expedited_vote_preparation': Args(VotePreparation, name=_("Expedited Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # local ec lane
-            'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
-            'localec_recommendation_review': Args(LocalEcRecommendationReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation Review"), group=INTERNAL_REVIEW_GROUP),
+            'localec_recommendation': Args(LocalEcRecommendation, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
+            'localec_vote_preparation': Args(VotePreparation, name=_("Local EC Vote Preparation"), group=VOTE_PREPARATION_GROUP),
         },
         edges={
             ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
@@ -174,14 +173,13 @@ def submission_workflow():
 
             # expedited lane
             ('categorization_review', 'expedited_recommendation'): Args(guard=is_expedited),
-            ('expedited_recommendation', 'expedited_recommendation_review'): Args(guard=has_expedited_recommendation),
+            ('expedited_recommendation', 'expedited_vote_preparation'): Args(guard=has_expedited_recommendation),
             ('expedited_recommendation', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
-            ('expedited_recommendation_review', 'categorization_review'): Args(guard=has_expedited_recommendation, negated=True),
-            ('expedited_recommendation_review', 'expedited_vote_preparation'): Args(guard=has_expedited_recommendation),
 
             # local ec lane
             ('categorization_review', 'localec_recommendation'): Args(guard=is_localec),
-            ('localec_recommendation', 'localec_recommendation_review'): None,
+            ('localec_recommendation', 'localec_vote_preparation'): Args(guard=has_localec_recommendation),
+            ('localec_recommendation', 'categorization_review'): Args(guard=has_localec_recommendation, negated=True),
 
             ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
             ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
