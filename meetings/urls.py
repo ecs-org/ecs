@@ -21,6 +21,7 @@ urlpatterns = patterns('ecs.meetings.views',
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/move/$', 'move_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/delete/$', 'remove_timetable_entry'),
     url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/update/$', 'update_timetable_entry'),
+    url(r'^meeting/(?P<meeting_pk>\d+)/timetable/entry/(?P<entry_pk>\d+)/users/(?P<user_pk>\d+)/toggle/$', 'toggle_participation'),
 
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/$', 'meeting_assistant'),
     url(r'^meeting/(?P<meeting_pk>\d+)/assistant/start/$', 'meeting_assistant_start'),
