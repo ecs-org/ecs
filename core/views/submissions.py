@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
@@ -828,6 +829,42 @@ def catalog(request, year=None):
             'votes': votes,
         })
     return html
+
+
+@readonly()
+@forceauth.exempt
+def catalog_json(request):
+    data = []
+    with sudo():
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = votes.select_related('submission_form').order_by('published_at')
+        for vote in votes:
+            sf = vote.submission_form
+            item = {
+                'title_de': sf.german_project_title,
+                'title_en': sf.project_title,
+                'ec_number': sf.submission.get_ec_number_display(),
+                'sponsor': sf.sponsor_name,
+                'date_of_vote': vote.published_at.strftime('%Y-%m-%d'),
+                'date_of_first_meeting': sf.submission.get_first_meeting().start.strftime('%Y-%m-%d'),
+                'project_type': 'Studie',
+            }
+            if sf.project_type_education_context:
+                item.update({
+                    'project_type': sf.get_project_type_education_context_display(),
+                    'submitter': unicode(sf.submitter_contact),
+                })
+            investigators = []
+            for i in sf.investigators.all():
+                investigators.append({
+                    'organisation': i.organisation,
+                    'name': unicode(i.contact),
+                    'ethics_commission': unicode(i.ethics_commission),
+                })
+            item['investigators'] = investigators
+            data.append(item)
+            
+    return HttpResponse(simplejson.dumps(data, indent=4), content_type='application/json')
 
 
 @user_flag_required('is_executive_board_member')
