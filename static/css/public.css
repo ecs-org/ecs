@@ -164,7 +164,47 @@
   min-width: 700px;
   float: left;
 }
-.catalogue_list li {
-  margin-bottom: 3px;
-  font-size: 14px;
+
+.catalogue_list{
+    font-size: 14px;
+}
+
+.catalogue_list > .votes > div{
+    margin-bottom: 20px;
+}
+
+#content .catalogue_list > .votes > div > h3{
+    margin: 0px;
+    padding: 0px;
+}
+
+#content .catalogue_list > .votes > div .english_title{
+    font-size: 80%;
+    color: #666;
+}
+
+.catalogue_list > .votes > div span{
+    display: block;
+}
+.catalogue_list > .votes > div span.type{
+    font-style: italic;
+}
+.catalogue_list > .votes > div span > b{
+    font-weight: normal;
+}
+
+.catalogue_list > .votes > div .investigator{
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #999;
+}
+
+.catalogue_list > .years{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#content .catalogue_list > .years a.selected{
+    color: #000;
+    font-weight: bold;
 }

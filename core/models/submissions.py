@@ -178,6 +178,9 @@ class Submission(models.Model):
             return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
         except IndexError:
             return None
+            
+    def get_first_meeting(self):
+        return self.meetings.order_by('start')[:1][0]
 
     def save(self, **kwargs):
         if not self.presenter_id:

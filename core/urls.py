@@ -46,7 +46,7 @@ urlpatterns = patterns(
     url(r'^submissions/mine/$', 'ecs.core.views.my_submissions'),
 
     # public
-    url(r'^catalog/$', 'ecs.core.views.submissions.catalog'),
+    url(r'^catalog/(?:(?P<year>\d+)/)?$', 'ecs.core.views.submissions.catalog'),
 
     #developer
     url(r'^developer/test_pdf/$', 'ecs.core.views.developer_test_pdf'),

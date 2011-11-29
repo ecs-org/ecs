@@ -811,10 +811,20 @@ def my_submissions(request):
 
 @readonly()
 @forceauth.exempt
-def catalog(request):
+def catalog(request, year=None):
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = votes.select_related('submission_form').order_by('published_at')
+        years = votes.dates('published_at', 'year')
+        if year is None:
+            year = list(years)[-1].year
+            return HttpResponseRedirect(reverse('ecs.core.views.submissions.catalog', kwargs={'year': year}))
+        else:
+            year = int(year)
+        votes = votes.filter(published_at__year=int(year))
         html = render(request, 'submissions/catalog.html', {
+            'year': year,
+            'years': years,
             'votes': votes,
         })
     return html

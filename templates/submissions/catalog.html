@@ -18,37 +18,47 @@
 </div>
 
 <div class="catalogue_list">
-	
-	<h2>{% trans "Catalog of Approved Studies" %}</h2>
-	
-	{% regroup votes by top.meeting as meetings %}
-	
-	{% for meeting in meetings %}
-	    <h3>{% trans "Meeting from" %} {{ meeting.grouper.start|date:'d.m.Y' }}</h3>
-	    <ul>
-	    {% for vote in meeting.list %}
-	        {% with vote.submission_form  as submission_form %}
-	        <li>
-	        	{{ submission_form.submission.get_ec_number_display }} {{ submission_form.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}<br />
-	        	{% trans "Submitted at" %}: {{ submission_form.created_at|date:"d.m.Y" }}<br />
-	        	{% trans "Submitter" %}: {{ submission_form.submitter_contact }} ({% trans "Organisation" %}: {{ submission_form.submitter_organisation }})
-	        	{% if submission_form.primary_investigator %}
-	        		<br />{% trans "Medical center" %}: {{ submission_form.primary_investigator.organisation }}
-	        	{% endif %}
-	        	<br />{% trans "Sponsor" %}: {{ submission_form.sponsor_name }}
-	        	{% if submission_form.additional_investigators.count %}
-	        	<br />{% trans "Additional Investigators" %}:
-	        	{% for investigator in submission_form.additional_investigators.all %}
-        			{{ investigator.organisation }}{% if not forloop.last %},{% endif %}
-	        	{% endfor %}
-	        	{% endif %}
-	        </li>
-	        {% endwith %}
-	    {% endfor %}
-	    </ul>
-	
-	{% endfor %}
-  
+    
+    <h2>{% trans "Catalog of Approved Studies" %}</h2>
+    
+    <div class="years">
+    {% for date in years %}
+        <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+    {% endfor %}
+    </div>
+    
+    <div class="votes">
+    {% for vote in votes %}
+        {% with vote.submission_form as sf %}
+        <div>
+            <h3>{{ sf.german_project_title }}</h3>
+            <span class="english_title">{{ sf.project_title }}</span>
+            {% if sf.project_type_education_context %}
+                <span class="type">{{ sf.get_project_type_education_context_display }} ({{ sf.submitter_contact }})</span>
+            {% endif %}
+            <span><b>Sponsor:</b> {{ sf.sponsor_name }}</span>
+            <span><b>EK-Nr:</b> {{ sf.submission.get_ec_number_display }}</span>
+            <span><b>Datum der ersten Sitzung:</b> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}</span>
+            <span><b>Datum des Votums:</b> {{ vote.published_at|date:'d.m.Y' }}</span>
+            {% for investigator in sf.investigators.all %}
+            <div class="investigator">
+                <span><b>Verantwortlicher Prüfarzt:</b> {{ investigator.contact }}</span>
+                <span><b>Prüfzentrum:</b> {{ investigator.organisation }}</span>
+                <span><b>Ethikkomission:</b> {{ investigator.ethics_commission }}</span>
+            </div>
+            {% endfor %}
+
+        </div>
+        {% endwith %}
+    {% endfor %}
+    </div>
+
+    <div class="years">
+    {% for date in years %}
+        <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+    {% endfor %}
+    </div>
+
 </div>
 {% endblock %}
 
