@@ -44,7 +44,17 @@
             <div class="investigator">
                 <span><b>Verantwortlicher Prüfarzt:</b> {{ investigator.contact }}</span>
                 <span><b>Prüfzentrum:</b> {{ investigator.organisation }}</span>
-                <span><b>Ethikkomission:</b> {{ investigator.ethics_commission }}</span>
+                <span><b>Ethikkomission:</b> {{ investigator.ethics_commission }}
+                    {% if investigator.ethics_commission.system and sf.is_amg %}
+                        {% if sf.is_categorized_multicentric_and_local %}
+                            (Lokal)
+                        {% else %}
+                            {% if sf.is_categorized_multicentric_and_main %}
+                                (Leitethikkomission)
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                </span>
             </div>
             {% endfor %}
 
