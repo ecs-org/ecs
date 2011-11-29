@@ -10,8 +10,8 @@ from ecs.utils import connect
 from ecs.checklists.utils import get_checklist_answer
 
 
-def send_submission_message(submission, user, subject, template):
-    send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission)
+def send_submission_message(submission, user, subject, template, **kwargs):
+    send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
 
 
 @connect(signals.on_study_change)
@@ -31,7 +31,7 @@ def on_study_change(sender, **kwargs):
                 pass
             else:
                 initial_review_task.reopen()
-                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
+                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
 
 
 @connect(signals.on_study_submit)
@@ -85,7 +85,7 @@ def on_initial_review(sender, **kwargs):
             for u in involved_users:
                 if u == review_user:
                     continue # don't send a message to the initial reviewer
-                send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
+                send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
 
