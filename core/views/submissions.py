@@ -534,7 +534,7 @@ def create_submission_form(request):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
-        'submission': request.docstash.get('submin', None),
+        'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
     }
