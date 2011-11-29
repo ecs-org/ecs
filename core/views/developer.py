@@ -3,6 +3,7 @@
 from django.shortcuts import get_object_or_404
 from django.template import Context, loader
 from django.http import HttpResponse
+from django.utils.translation import ugettext as _
 
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
@@ -170,7 +171,11 @@ def developer_translations(request):
     from django.contrib.auth.models import Group
     from ecs.tasks.models import TaskType
 
+    task_types = []
+    for name in sorted(list(set(TaskType.objects.all().values_list('name', flat=True)))):
+        task_types.append((name, _(name)))
+
     return render(request, 'developer/translations.html', {
-        'groups': Group.objects.all(),
-        'task_types': TaskType.objects.all(),
+        'groups': Group.objects.all().order_by('name'),
+        'task_types': task_types,
     })
