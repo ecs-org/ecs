@@ -234,6 +234,9 @@ ECS_PDFCOP_POLICY = 'ecs'
 
 WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
 
+# whether ecs.tracking should store requests
+ECS_TRACKING_ENABLED = False
+
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 

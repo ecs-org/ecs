@@ -20,7 +20,7 @@ class TrackingMiddleware(object):
             )
         
     def process_response(self, request, response):
-        if not getattr(request, 'tracking_data', None):
+        if not getattr(settings, 'ECS_TRACKING_ENABLED', False) or not getattr(request, 'tracking_data', None):
             return response
         
         ct = response['Content-Type']
