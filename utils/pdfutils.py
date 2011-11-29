@@ -177,7 +177,8 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
 class PDFValidationError(ValueError): pass
 
 def _pdf_cop(filename, logger=pdfutils_logger):
-    popen = subprocess.Popen([PDFCOP_PATH, '--no-color', '--policy', settings.ECS_PDFCOP_POLICY, filename], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
+    cmd = [PDFCOP_PATH, '--no-color', '--config', settings.ECS_PDFCOP_CONFIG_FILE, '--policy', settings.ECS_PDFCOP_POLICY, filename]
+    popen = subprocess.Popen(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     stdout, stderr = popen.communicate("\n") # send a newline in case origami asks for a password on stdin
     result = stdout.splitlines()[-1]
     if 'accepted by policy' not in result:
