@@ -174,6 +174,14 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+@user_flag_required('is_internal')
+def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    p = get_object_or_404(Participation, user=user_pk, entry=entry_pk)
+    p.ignored_for_optimization = not p.ignored_for_optimization
+    p.save()
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
 def move_timetable_entry(request, meeting_pk=None):
