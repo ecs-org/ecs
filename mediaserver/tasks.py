@@ -12,31 +12,6 @@ from ecs.mediaserver.diskbuckets import ignore_all, ignore_none, onerror_log, sa
 
 
 LOCK_EXPIRE = 60 * 10 # rendering lock expires in 10 minutes
-"""
-from celery.signals import task_failure  
-from sentry.client.handlers import SentryHandler 
- 
-logger = logging.getLogger('celery') 
-logger.addHandler(SentryHandler())  
-def process_failure_signal(exception, traceback, sender, task_id,  
-                           signal, args, kwargs, einfo, **kw):  
-    exc_info = (type(exception), exception, traceback)  
-    logger.error(  
-        'Celery job exception: %s(%s)' % (exception.__class__.__name__, exception),  
-        exc_info=exc_info,  
-        extra={  
-            'data': {  
-                'task_id': task_id,  
-                'sender': sender,  
-                'args': args,  
-                'kwargs': kwargs,  
-            }  
-        }  
-    )
-  
-task_failure.connect(process_failure_signal)  
-
-"""
 
 
 @task(track_started=True)
