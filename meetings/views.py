@@ -488,7 +488,9 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
-        send_system_message_template(top.submission.primary_investigator.user, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+        sf = top.submission.current_submission_form
+        for u in (sf.primary_investigator.user, sf.submitter, sf.sponsor):
+            send_system_message_template(u, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
     
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
