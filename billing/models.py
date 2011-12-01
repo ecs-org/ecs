@@ -2,6 +2,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_unicode as fu
+from django.contrib.auth.models import User
 
 from ecs.authorization import AuthorizationManager
 
@@ -64,3 +65,12 @@ class Invoice(models.Model):
     def stats(self):
         from ecs.billing.stats import collect_submission_billing_stats
         return collect_submission_billing_stats(self.submissions.all())
+
+class ChecklistPayment(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    checklists = models.ManyToManyField('checklists.Checklist')
+    document = models.OneToOneField('documents.Document', related_name="checklist_payment", null=True)
+
+    @property
+    def reviewers(self):
+        return User.objects.filter(pk__in=[c.user.pk for c in self.checklists.all()]).distinct()

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-01 19:49+0100\n"
+"POT-Creation-Date: 2011-12-01 21:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,51 +71,47 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:49
+#: billing/views.py:50
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:84 billing/views.py:153
+#: billing/views.py:80 billing/views.py:147
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:84 core/models/submissions.py:88
+#: billing/views.py:80 core/models/submissions.py:88
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:84
+#: billing/views.py:80
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:84
+#: billing/views.py:80
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:84 core/forms/layout.py:59 core/forms/layout.py:60
+#: billing/views.py:80 core/forms/layout.py:59 core/forms/layout.py:60
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:84
+#: billing/views.py:80
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:84 billing/views.py:153
+#: billing/views.py:80 billing/views.py:147
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:112
-msgid "Billing request"
-msgstr ""
-
-#: billing/views.py:153
+#: billing/views.py:147
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:153
+#: billing/views.py:147
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:186
+#: billing/views.py:180
 msgid "Payment request"
 msgstr ""
 
@@ -1825,7 +1821,7 @@ msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
 
 #: documents/bootstrap.py:16 documents/bootstrap.py:18
-#: documents/bootstrap.py:22 documents/bootstrap.py:34
+#: documents/bootstrap.py:22
 msgid " "
 msgstr ""
 
@@ -2423,6 +2419,16 @@ msgstr "Ältere Einträge"
 #: templates/billing/submissions.html:26
 msgid "submit data"
 msgstr "Daten absenden"
+
+#: templates/billing/invoice_list.html:13
+#: templates/billing/submissions.html:29
+msgid "Old Invoices"
+msgstr "Alte Rechnungen"
+
+#: templates/billing/invoice_list.html:17
+#, python-format
+msgid "Invoice of %(date)s"
+msgstr "Rechnung vom %(date)s"
 
 #: templates/boilerplate/form.html:5 templates/boilerplate/form.html.py:6
 msgid "New Boilerplate"

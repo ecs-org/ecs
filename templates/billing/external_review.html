@@ -26,4 +26,6 @@
         <li><input type="submit" value="{% trans 'submit data' %}"/></li>
     </ol>
     </form>
+
+    <a href="{% url ecs.billing.views.checklist_payment_list %}">{% trans 'Old Payments' %}</a>
 {% endblock %}
