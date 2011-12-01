@@ -135,7 +135,7 @@ def tops(request, meeting_pk=None):
 @user_flag_required('is_internal', 'is_resident_member')
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.timetable_entries.select_related('submission').order_by('timetable_index', 'submission__ec_number')
+    tops = meeting.timetable_entries.select_related('submission', 'submission__current_submission_form').order_by('timetable_index', 'submission__ec_number')
     return render(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,
