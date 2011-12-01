@@ -59,10 +59,11 @@
 
     .lockInfo {
         display: inline-block;
-        background-color: #ffff00;
+        background-color: $yellow-dark;
         padding: 3px 5px;
         border-radius: 3px;
-        margin-bottom: 5px;
+        border: 1px solid $yellow-extra-dark;
+        margin: 5px 0;
     }
     label, input[type=radio], textarea, select {
         float: left;
@@ -147,7 +148,7 @@
       display: block;
     }
     .task_sorting {
-      padding: 4px 6px 2px 8px;
+      padding: 4px 6px 2px 0;
     }
 }
 
