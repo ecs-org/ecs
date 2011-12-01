@@ -254,6 +254,9 @@ class Submission(models.Model):
                 if last_vote.is_recessed:
                     return _schedule()
         return current_top.meeting
+    
+    def get_filename_slice(self):
+        return self.get_ec_number_display(separator='_')
 
     class Meta:
         app_label = 'core'
@@ -544,7 +547,7 @@ class SubmissionForm(models.Model):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.german_project_title or self.project_title)
     
     def get_filename_slice(self):
-        return self.submission.get_ec_number_display(separator='_')
+        return self.submission.get_filename_slice()
         
     @property
     def is_current(self):

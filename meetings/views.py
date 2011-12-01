@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
+import tempfile, zipfile
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -42,7 +43,7 @@ def create_meeting(request):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def meeting_list(request, meetings, title=None):
     if not title:
         title = _('Meetings')
@@ -52,12 +53,12 @@ def meeting_list(request, meetings, title=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()), title=_('Upcoming Meetings'))
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()), title=_('Past Meetings'))
 
@@ -102,7 +103,7 @@ def open_tasks(request, meeting_pk=None):
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
@@ -129,6 +130,53 @@ def tops(request, meeting_pk=None):
         'open_tops': open_tops,
         'closed_tops': closed_tops,
     })
+
+
+@user_flag_required('is_internal', 'is_resident_member')
+def submission_list(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    tops = meeting.timetable_entries.select_related('submission').order_by('timetable_index', 'submission__ec_number')
+    return render(request, 'meetings/tabs/submissions.html', {
+        'meeting': meeting,
+        'tops': tops,
+    })
+
+
+@user_flag_required('is_internal', 'is_resident_member')
+def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    
+    doctypes = ('patientinformation', 'checklist')
+    files = set()
+    
+    filename_bits = [slugify(meeting.title)]
+
+    def _add(submission):
+        sf = submission.current_submission_form
+        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted')
+        for doc in docs:
+            files.add((submission, doc))
+        files.add((submission, sf.pdf_document))
+
+    with sudo():
+        if submission_pk:
+            submission = get_object_or_404(meeting.submissions, pk=submission_pk)
+            _add(submission)
+            filename_bits.append(submission.get_filename_slice())
+        else:
+            for submission in meeting.submissions.all():
+                _add(submission)
+
+    tmp = tempfile.NamedTemporaryFile(suffix='.zip')
+    with zipfile.ZipFile(tmp, 'w') as zf:
+        for submission, doc in files:
+            with doc.as_temporary_file() as docfile:
+                zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+    tmp.seek(0)
+    response = HttpResponse(tmp, content_type='application/zip')
+    response['Content-Disposition'] = 'attachment;filename=%s.zip' % '.'.join(filename_bits)
+    return response
+
 
 @user_flag_required('is_internal')
 def add_free_timetable_entry(request, meeting_pk=None):
@@ -452,7 +500,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -521,7 +569,7 @@ def send_protocol(request, meeting_pk=None):
 
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
@@ -558,15 +606,16 @@ def next(request):
     else:
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
+
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
     expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting).distinct())
     experts_saved = False
 
-    if request.method == 'POST' and expert_formset.is_valid():
+    if request.method == 'POST' and expert_formset.is_valid() and request.user.ecs_profile.is_internal:
         submitted_form = request.POST.get('submitted_form')
         if submitted_form == 'expert_formset' and expert_formset.is_valid():
             active = 'experts'
@@ -599,7 +648,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         votes = Vote.objects.filter(top=top)
         c = votes.count()
         assert(c < 2)
-        if c is 0:
+        if not c:
             vote = None
         else:
             vote = votes[0]

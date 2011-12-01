@@ -148,7 +148,7 @@ authorization.register(DocumentAnnotation, factory=DocumentAnnotationQFactory)
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        if profile.is_internal or user.groups.filter(name='EC-Thesis Executive Group').exists():
+        if profile.is_internal or profile.is_resident_member or user.groups.filter(name='EC-Thesis Executive Group').exists():
             return self.make_q()
         else:
             return self.make_deny_q()

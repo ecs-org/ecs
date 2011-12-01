@@ -60,12 +60,12 @@
           <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans 'New Notification' %}</a></li>
       </ul>
     </li>
-    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" or user|has_flag:"is_resident_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
                 <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
-                {% if user|has_flag:"is_internal" %}
+                {% if user|has_flag:"is_internal" or user|has_flag:"is_resident_member" %}
                     <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
                     <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
                     {% if user|is_member_of:"EC-Office" %}

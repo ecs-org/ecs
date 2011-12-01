@@ -113,10 +113,14 @@ class sudo(object):
 
 
 def user_flag_required(*flags):
-    return user_passes_test(lambda u: any(getattr(u.get_profile(), f, False) for f in flags))
+    def check(user):
+        return any(getattr(user.get_profile(), f, False) for f in flags)
+    return user_passes_test(check)
+
 
 def user_group_required(*groups):
-    return user_passes_test(lambda u: bool(u.groups.filter(name__in=groups).count()))
+    return user_passes_test(lambda u: u.groups.filter(name__in=groups).exists())
+
 
 def create_phantom_user(email, role=None):
     sid = transaction.savepoint()

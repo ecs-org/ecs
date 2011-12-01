@@ -7,6 +7,8 @@ import datetime
 import mimetypes
 import logging
 from uuid import uuid4
+from contextlib import contextmanager
+from shutil import copyfileobj
 
 from django.db import models
 from django.db.models.signals import post_save, post_delete
@@ -181,6 +183,13 @@ class Document(models.Model):
         personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
         brand = self.branding in ('p', 'b')
         return download_from_mediaserver(self.uuid, self.get_filename(), personalization=personalization, brand=brand)
+    
+    @contextmanager
+    def as_temporary_file(self):
+        with tempfile.NamedTemporaryFile() as tmp:
+            copyfileobj(self.get_from_mediaserver(), tmp)
+            tmp.seek(0)
+            yield tmp
 
     def get_pages_list(self): 
         ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height') pictures

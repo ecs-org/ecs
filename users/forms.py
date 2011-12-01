@@ -156,11 +156,12 @@ class UserDetailsForm(forms.ModelForm):
     medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
+    is_resident_member = forms.BooleanField(required=False, label=_('Resident Member'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
     class Meta:
         model = User
-        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'is_internal', 'is_help_writer')
+        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'is_internal', 'is_resident_member', 'is_help_writer')
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
@@ -174,6 +175,7 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
         self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
         self.fields['is_internal'].initial = profile.is_internal
+        self.fields['is_resident_member'].initial = profile.is_resident_member
         self.fields['is_help_writer'].initial = profile.is_help_writer
 
     def save(self, *args, **kwargs):
@@ -190,7 +192,7 @@ class UserDetailsForm(forms.ModelForm):
         profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
         profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
         profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
-        for k in ('is_internal', 'is_help_writer'):
+        for k in ('is_internal', 'is_help_writer', 'is_resident_member'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
