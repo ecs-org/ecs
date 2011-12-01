@@ -203,6 +203,12 @@
     .ecs-Autocomplete {
         float: left;
     }
+    
+    #involved_parties_tab {
+        table {
+            width: 100%;
+        }
+    }
 }
 
 
@@ -239,6 +245,12 @@
         color: $red;
     }
     
+    span.required.errors {
+        textarea {
+            border: 1px solid $red;
+        }
+    }
+    
     ul.errorlist li {
         margin-left: 0;  
     }
@@ -253,7 +265,4 @@
         display: none;
     }
     
-    span.required textarea {
-        border: 1px solid $red;
-    }
 }
