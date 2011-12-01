@@ -4,7 +4,7 @@
 {% block meeting_assistant_body %}
   <div class="column_main">
     <form id="meeting_assistant_form" action="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk top_pk=top.pk %}" method="post" class="open-in-widget">
-        <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission.current_submission_form.pk %}" target="_blank">preview</a>{% endif %}</h3>
+        <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url view_submission submission_pk=submission.pk %}" target="_blank">preview</a>{% endif %}</h3>
         {% if not top.is_break %}
             {{ submission.project_title_display|default:top.title }}<br />
             {% trans "Submitter" %}: {{ submission.current_submission_form.submitter }} ({{ submission.current_submission_form.submitter_organisation }})

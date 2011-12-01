@@ -158,6 +158,7 @@ MIDDLEWARE_CLASSES = (
 
 STARTUP_CALLS = (
     'ecs.integration.startup.startup',
+    'ecs.users.startup.startup',
 )
 
 INSTALLED_APPS = (

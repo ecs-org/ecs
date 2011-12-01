@@ -146,7 +146,7 @@ class Task(models.Model):
         elif self.content_type == ContentType.objects.get_for_model(Vote):
             submission_form = self.data.submission_form
         if submission_form:
-            return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
+            return reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
         else:
             return None
 

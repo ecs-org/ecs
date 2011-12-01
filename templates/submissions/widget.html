@@ -34,7 +34,7 @@
             {% if external_review_task %}
                 <a href="{{ external_review_task.url }}"><span class="submission_review"></span>{{ submission|ec_number }}</a>
             {% else %}
-                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}">{{ submission|ec_number }}</a>
+                <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }}</a>
             {% endif %}
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}

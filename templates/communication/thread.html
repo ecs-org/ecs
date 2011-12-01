@@ -18,7 +18,7 @@
 
 <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 <ul class="thread">
@@ -57,7 +57,7 @@
 
 <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 </div>

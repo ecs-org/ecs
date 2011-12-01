@@ -26,7 +26,7 @@ def send_vote_expired(vote):
 
     recipients = User.objects.filter(recipients_q)
 
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s ist abgelaufen.\n') % {
         'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),
@@ -43,7 +43,7 @@ def send_vote_reminder_submitter(vote):
     if vote.submission_form.submitter_email:
         recipients |= User.objects.filter(email=vote.submission_form.submitter_email)
 
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s läuft in drei Wochen ab.\n') % {
         'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),
@@ -56,7 +56,7 @@ def send_vote_reminder_submitter(vote):
 def send_vote_reminder_office(vote):
     recipients = User.objects.filter(email=settings.ECSMAIL['postmaster'])
 
-    url = reverse('ecs.core.views.readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
+    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(meeting_date)s läuft in einer Woche ab.\n') % {
         'url': url,
         'ec_number': vote.submission_form.submission.get_ec_number_display(),

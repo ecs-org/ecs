@@ -134,7 +134,7 @@ def copy_latest_submission_form(request, submission_pk=None):
 @readonly()
 def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
 CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview,
     ExpeditedRecommendation, BoardMemberReview)
@@ -241,7 +241,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
         task = get_object_or_404(Task, pk=task_pk)
     task.deleted_at = datetime.now()
     task.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group', 'Local-EC Review Group')
@@ -322,7 +322,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
         for task in Task.objects.for_data(checklist).exclude(closed_at__isnull=False):
             task.deleted_at = datetime.now()
             task.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
 @task_required()
@@ -366,7 +366,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 checklist.status = 'completed'
                 checklist.save()
                 related_task.done(request.user)
-                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+                return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
             elif complete_task and checklist.is_complete:
                 extra_context['review_complete'] = checklist.pk
 
@@ -529,7 +529,7 @@ def create_submission_form(request):
                     'notification_type_pk': notification_type.pk,
                 }))
 
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     context = {
         'form': form,
@@ -567,7 +567,7 @@ def change_submission_presenter(request, submission_pk=None):
         if request.user == previous_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission})
 
@@ -595,7 +595,7 @@ def change_submission_susar_presenter(request, submission_pk=None):
         if request.user == previous_susar_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission})
 

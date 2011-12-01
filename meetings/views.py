@@ -75,7 +75,7 @@ def reschedule_submission(request, submission_pk=None):
             entry.submission = None
             entry.save()
             entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
-        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+        return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,
         'form': form,

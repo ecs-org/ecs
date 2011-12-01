@@ -102,7 +102,7 @@ def vote_sign_finished(request, document_pk=None):
     vote.save()
 
     return HttpResponseRedirect(reverse(
-        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+        'readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 
 @user_flag_required('is_internal')

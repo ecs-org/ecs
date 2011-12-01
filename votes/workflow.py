@@ -64,7 +64,7 @@ class VoteB2Review(Activity):
         model = Vote
 
     def get_url(self):
-        return reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
+        return reverse('readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
     def get_choices(self):
         return (
@@ -97,7 +97,7 @@ class B2Resubmission(Activity):
     def get_final_urls(self):
         s = self.workflow.data.submission_form.submission
         return super(B2Resubmission, self).get_final_urls() + [
-            reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': sf})
+            reverse('readonly_submission_form', kwargs={'submission_form_pk': sf})
             for sf in s.forms.values_list('pk', flat=True)
         ]
 

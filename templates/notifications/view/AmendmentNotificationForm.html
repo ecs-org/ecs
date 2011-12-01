@@ -7,8 +7,8 @@
         <th>{% trans 'Changes' %}</th>
         <td>
             {% with notification.amendmentnotification as notification %}
-                <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=notification.old_submission_form.pk %}">{% trans 'Old Version' %}</a>
-                | <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=notification.new_submission_form.pk %}">{% trans 'New Version' %}</a>
+                <a href="{% url readonly_submission_form submission_form_pk=notification.old_submission_form.pk %}">{% trans 'Old Version' %}</a>
+                | <a href="{% url readonly_submission_form submission_form_pk=notification.new_submission_form.pk %}">{% trans 'New Version' %}</a>
                 {% if notification.diff %}
                     <div class="diff_toggles">
                         <a href="#" id="diff_show_old">{% trans "old" %}</a>
