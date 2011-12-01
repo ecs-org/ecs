@@ -103,6 +103,9 @@ def notification_workflow():
             ('start', 'office_report_review'): Args(guard=is_report),
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),
 
+            # safety reports
+            ('safety_review', 'distribute_notification_answer'): None,
+
             # reports
             ('office_report_review', 'executive_report_review'): None,
             ('executive_report_review', 'office_report_review'): Args(guard=needs_further_review),
