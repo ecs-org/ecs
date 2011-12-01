@@ -1,0 +1,18 @@
+{% load core i18n userutils %}
+
+<h2>{% trans 'Submissions' %}</h2>
+
+<div>
+    <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk %}">{% trans 'Download all documents for this meeting (zip)' %}</a>
+    {% for top in tops %}
+        <div>
+            <span class="top">{{ top }}</span>
+            {% if top.submission %}
+                - {{ top.submission }}
+                <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk submission_pk=top.submission.pk %}">{% trans 'Download documents (zip)' %}</a>
+            {% else %}
+                - {{ top.title }}
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>

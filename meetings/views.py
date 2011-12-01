@@ -103,7 +103,7 @@ def open_tasks(request, meeting_pk=None):
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
@@ -142,7 +142,7 @@ def submission_list(request, meeting_pk=None):
     })
 
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     
@@ -500,7 +500,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -569,22 +569,24 @@ def send_protocol(request, meeting_pk=None):
 
 
 @readonly()
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
-    pdf = meeting.get_protocol_pdf(request)
+    with sudo():
+        pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
 
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
         slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
     )
-    pdf = meeting.get_timetable_pdf(request)
+    with sudo():
+        pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
 
 @readonly()
@@ -597,7 +599,7 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     return response
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def next(request):
     try:
         meeting = Meeting.objects.next()
@@ -608,7 +610,7 @@ def next(request):
 
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
@@ -653,27 +655,30 @@ def meeting_details(request, meeting_pk=None, active=None):
         else:
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
+    
+    with sudo():
+        submissions = meeting.submissions.all()
 
     return render(request, 'meetings/details.html', {
-        'cumulative_count': meeting.submissions.distinct().count(),
+        'cumulative_count': submissions.distinct().count(),
 
-        'board_submissions': meeting.submissions.for_board_lane(),
-        'amg_submissions': meeting.submissions.for_board_lane().amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
-        'mpg_submissions': meeting.submissions.for_board_lane().mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
-        'amg_mpg_submissions': meeting.submissions.for_board_lane().amg_mpg(),
-        'not_amg_and_not_mpg_submissions': meeting.submissions.for_board_lane().not_amg_and_not_mpg(),
+        'board_submissions': submissions.for_board_lane(),
+        'amg_submissions': submissions.for_board_lane().amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
+        'mpg_submissions': submissions.for_board_lane().mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
+        'amg_mpg_submissions': submissions.for_board_lane().amg_mpg(),
+        'not_amg_and_not_mpg_submissions': submissions.for_board_lane().not_amg_and_not_mpg(),
 
-        'retrospective_thesis_submissions': meeting.submissions.for_thesis_lane(),
-        'expedited_submissions': meeting.submissions.expedited(),
-        'localec_submissions': meeting.submissions.localec(),
-        'other_submissions': meeting.submissions.filter(workflow_lane=None),
+        'retrospective_thesis_submissions': submissions.for_thesis_lane(),
+        'expedited_submissions': submissions.expedited(),
+        'localec_submissions': submissions.localec(),
+        'other_submissions': submissions.filter(workflow_lane=None),
 
-        'dissertation_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=1),
-        'diploma_thesis_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=2),
-        'amg_multi_main_submissions': meeting.submissions.localec(),
-        'remission_submissions': meeting.submissions.filter(remission=True),
-        'b3_examined_submissions': meeting.submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
-        'b3_not_examined_submissions': meeting.submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
+        'dissertation_submissions': submissions.filter(current_submission_form__project_type_education_context=1),
+        'diploma_thesis_submissions': submissions.filter(current_submission_form__project_type_education_context=2),
+        'amg_multi_main_submissions': submissions.localec(),
+        'remission_submissions': submissions.filter(remission=True),
+        'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
+        'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
         'meeting': meeting,
         'expert_formset': expert_formset,
         'experts_saved': experts_saved,
