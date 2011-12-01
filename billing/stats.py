@@ -62,9 +62,10 @@ def collect_submission_billing_stats(submission_list):
         else:
             key = 'other'
         summary[key]['count'] += 1
-        total += submission.price.price
+        price = Price.objects.get_for_submission(submission)
+        total += price.price
 
     for val in summary.values():
         val['price'] = Price.objects.get(category=val['price'])
 
-    return summary, total
+    return {'summary': summary, 'total': total}

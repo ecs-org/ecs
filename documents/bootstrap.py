@@ -31,6 +31,7 @@ def document_types():
         Args(_(u"vote"), u"votes", _(u"Vote"), is_hidden=True),
         Args(_(u"Notification"), u"notification", _(u"Notification"), is_hidden=True),
         Args(_(u"Notification Answer"), u"notification_answer", _(u"Notification Answer"), is_hidden=True),
+        Args(_(u"Invoice"), u"invoice", _(u"Invoice"), is_hidden=True),
     )
 
     for args in names:

@@ -54,3 +54,13 @@ class ChecklistBillingState(models.Model):
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
 
     objects = AuthorizationManager()
+
+class Invoice(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    submissions = models.ManyToManyField('core.Submission')
+    document = models.OneToOneField('documents.Document', related_name="invoice", null=True)
+
+    @property
+    def stats(self):
+        from ecs.billing.stats import collect_submission_billing_stats
+        return collect_submission_billing_stats(self.submissions.all())

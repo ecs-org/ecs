@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-01 14:50+0100\n"
+"POT-Creation-Date: 2011-12-01 19:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1052,7 +1052,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:231 core/models/submissions.py:436
+#: core/paper_forms.py:231 core/models/submissions.py:439
 msgid "open"
 msgstr "offen"
 
@@ -1068,7 +1068,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:436
+#: core/paper_forms.py:235 core/models/submissions.py:439
 msgid "blind"
 msgstr "blind"
 
@@ -1084,7 +1084,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:239 core/models/submissions.py:436
+#: core/paper_forms.py:239 core/models/submissions.py:439
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1235,7 +1235,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:29
-#: meetings/forms.py:44 users/forms.py:155 users/forms.py:201
+#: meetings/forms.py:44 users/forms.py:155 users/forms.py:203
 msgid "title"
 msgstr "Titel"
 
@@ -1358,7 +1358,7 @@ msgstr "Gebührenbefreiung"
 msgid "Sponsor"
 msgstr ""
 
-#: core/parties.py:69
+#: core/parties.py:69 documents/bootstrap.py:34
 msgid "Invoice"
 msgstr "Rechnung"
 
@@ -1733,13 +1733,13 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:768 users/forms.py:54
-#: users/models.py:32
+#: core/models/names.py:37 core/models/submissions.py:771 users/forms.py:54
+#: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:768 users/forms.py:54
-#: users/models.py:32
+#: core/models/names.py:37 core/models/submissions.py:771 users/forms.py:54
+#: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
 
@@ -1755,11 +1755,11 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:802
+#: core/models/submissions.py:805
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:802
+#: core/models/submissions.py:805
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1775,7 +1775,8 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:656
+#: core/views/submissions.py:656 templates/meetings/details.html:15
+#: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
@@ -1824,7 +1825,7 @@ msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
 
 #: documents/bootstrap.py:16 documents/bootstrap.py:18
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:22 documents/bootstrap.py:34
 msgid " "
 msgstr ""
 
@@ -1931,41 +1932,41 @@ msgstr "Diese Datei ist kein PDF-Dokument."
 msgid "Your PDF document could not be processed."
 msgstr "Das PDF-Dokument konnte nicht verarbeitet werden."
 
-#: documents/models.py:109 templates/notifications/form.html:46
+#: documents/models.py:111 templates/notifications/form.html:46
 #: templates/notifications/view/AmendmentNotificationForm.html:15
 #: templates/submissions/diff/diff.html:22
 msgid "new"
 msgstr "neu"
 
-#: documents/models.py:110
+#: documents/models.py:112
 msgid "uploading"
 msgstr "wird hochgeladen"
 
-#: documents/models.py:111
+#: documents/models.py:113
 msgid "uploaded"
 msgstr "hochgeladen"
 
-#: documents/models.py:112
+#: documents/models.py:114
 msgid "indexing"
 msgstr "wird indiziert"
 
-#: documents/models.py:113
+#: documents/models.py:115
 msgid "indexed"
 msgstr "indiziert"
 
-#: documents/models.py:114
+#: documents/models.py:116
 msgid "prime"
 msgstr ""
 
-#: documents/models.py:115
+#: documents/models.py:117
 msgid "ready"
 msgstr "bereit"
 
-#: documents/models.py:116
+#: documents/models.py:118
 msgid "aborted"
 msgstr "abgebrochen"
 
-#: documents/models.py:117
+#: documents/models.py:119
 msgid "deleted"
 msgstr "gelöscht"
 
@@ -2030,52 +2031,52 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:48 templates/core.html:65
+#: meetings/views.py:49 templates/core.html:65
 #: templates/submissions/list.html:112
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:57 templates/core.html:69
+#: meetings/views.py:58 templates/core.html:69
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:62 templates/core.html:70
+#: meetings/views.py:63 templates/core.html:70
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:163
+#: meetings/views.py:211
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:281
+#: meetings/views.py:329
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:290
+#: meetings/views.py:338
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:296
+#: meetings/views.py:344
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:310
+#: meetings/views.py:358
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:459 meetings/views.py:471
+#: meetings/views.py:507 meetings/views.py:519
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:473 meetings/views.py:537
+#: meetings/views.py:521 meetings/views.py:586
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:481 meetings/views.py:487 meetings/views.py:493
+#: meetings/views.py:529 meetings/views.py:535 meetings/views.py:541
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:508
+#: meetings/views.py:556
 #, fuzzy
 msgid "Meeting Protocol"
 msgstr "Per Protocol"
@@ -2315,6 +2316,10 @@ msgstr "Verwaltung"
 #: templates/users/details.html:4
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
+
+#: templates/core.html:84
+msgid "Accounting of fees"
+msgstr "Gebührenabrechnung"
 
 #: templates/core.html:87 templates/boilerplate/list.html:5
 #: templates/boilerplate/list.html.py:6
@@ -2681,40 +2686,40 @@ msgstr ""
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:10 templates/tasks/tasks.inc:73
+#: templates/meetings/details.html:11 templates/tasks/tasks.inc:73
 #: templates/tasks/tasks_full.inc:75
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
-#: templates/meetings/details.html:11
+#: templates/meetings/details.html:12
 msgid "TOPs"
 msgstr ""
 
-#: templates/meetings/details.html:13
+#: templates/meetings/details.html:18
 msgid "Signatur der Voten"
 msgstr ""
 
-#: templates/meetings/details.html:19
+#: templates/meetings/details.html:24
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/meetings/details.html:21
+#: templates/meetings/details.html:26
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:22 templates/meetings/tabs/status.html:37
+#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:37
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/details.html:23
+#: templates/meetings/details.html:28
 msgid "Sitzungsassistent"
 msgstr ""
 
-#: templates/meetings/details.html:88
+#: templates/meetings/details.html:100
 msgid "Expert assignment saved"
 msgstr "Spezialistenzuordnung gespeichert"
 
-#: templates/meetings/details.html:88
+#: templates/meetings/details.html:100
 msgid ""
 "The expert assignment has been saved. The experts will be invited to the "
 "meeting when you send the agenda to the board."
@@ -2879,7 +2884,7 @@ msgid "Name"
 msgstr "Name"
 
 #: templates/meetings/tabs/open_tasks.html:9
-#: templates/users/administration.html:13 users/forms.py:204
+#: templates/users/administration.html:13 users/forms.py:206
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -3010,6 +3015,15 @@ msgstr "B3 (behandelt)"
 #: templates/meetings/tabs/status.html:128
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
+
+#: templates/meetings/tabs/submissions.html:6
+msgid "Download all documents for this meeting (zip)"
+msgstr ""
+
+#: templates/meetings/tabs/submissions.html:14
+#, fuzzy
+msgid "Download documents (zip)"
+msgstr "Optionale Unterlagen"
 
 #: templates/meetings/tabs/tops.html:4
 msgid "Next TOPs"
@@ -3978,19 +3992,19 @@ msgid ""
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:54 users/forms.py:154 users/forms.py:200
+#: users/forms.py:54 users/forms.py:154 users/forms.py:202
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:55 users/forms.py:202
+#: users/forms.py:55 users/forms.py:204
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:56 users/forms.py:203
+#: users/forms.py:56 users/forms.py:205
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:57 users/forms.py:199
+#: users/forms.py:57 users/forms.py:201
 msgid "email"
 msgstr "E-Mail"
 
@@ -4094,35 +4108,39 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:156 users/forms.py:205
+#: users/forms.py:156 users/forms.py:207
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:157 users/forms.py:206
+#: users/forms.py:157 users/forms.py:208
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:158 users/forms.py:207
+#: users/forms.py:158 users/forms.py:209
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:159 users/forms.py:208
+#: users/forms.py:159
+msgid "Resident Member"
+msgstr ""
+
+#: users/forms.py:160 users/forms.py:210
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:209
+#: users/forms.py:211
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:222
+#: users/forms.py:224
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
-#: users/forms.py:248
+#: users/forms.py:250
 msgid "is_indisposed"
 msgstr "Verhindert"
 
-#: users/forms.py:249
+#: users/forms.py:251
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
 
@@ -4134,7 +4152,7 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:133 users/views.py:367
+#: users/utils.py:137 users/views.py:367
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
@@ -4754,9 +4772,6 @@ msgstr ""
 
 #~ msgid "Edit Notification Answer"
 #~ msgstr "Meldungsantwort bearbeiten"
-
-#~ msgid "optional documents"
-#~ msgstr "Optionale Unterlagen"
 
 #~ msgid "Unsubmitted Studies"
 #~ msgstr "Studien in Bearbeitung (nicht Eingereicht)"

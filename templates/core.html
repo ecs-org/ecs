@@ -81,7 +81,7 @@
           <ul class="elements">
                 {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
-                    <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
+                    <li><a href="{% url ecs.billing.views.submission_billing %}">{% trans "Accounting of fees" %}</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
                 <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>

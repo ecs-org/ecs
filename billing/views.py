@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from ecs.utils.decorators import developer
 from ecs.users.utils import user_flag_required
@@ -19,7 +20,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.utils import deliver, whitewash
 
-from ecs.billing.models import Price, ChecklistBillingState
+from ecs.billing.models import Price, ChecklistBillingState, Invoice
 from ecs.billing.stats import collect_submission_billing_stats
 
 
@@ -62,15 +63,10 @@ class SimpleXLS(object):
     def save(self, f):
         self.xls.save(f)
 
-@developer
-def reset_submissions(request):
-    Submission.objects.update(billed_at=None)
-    return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
-
 @readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def submission_billing(request):
-    unbilled_submissions = list(Submission.objects.filter(billed_at=None, current_submission_form__is_acknowledged=True))
+    unbilled_submissions = list(Submission.objects.filter(invoice__isnull=True, current_submission_form__is_acknowledged=True).order_by('ec_number'))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 
@@ -100,35 +96,26 @@ def submission_billing(request):
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
-        doctype = DocumentType.objects.get(identifier='other')
+        doctype = DocumentType.objects.get(identifier='invoice')
         doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
 
-        Submission.objects.filter(pk__in=[s.pk for s in selected_for_billing]).update(billed_at=now)
-
-        htmlmail = unicode(render_html(request, 'billing/email/submissions.html', {}))
-        plainmail = whitewash(htmlmail)
-
-        deliver(settings.BILLING_RECIPIENT_LIST,
-            subject=_(u'Billing request'), 
-            message=plainmail,
-            message_html=htmlmail,
-            attachments=[('billing-%s.xls' % now.strftime('%Y%m%d-%H%I%S'), xls_buf.getvalue(), 'application/vnd.ms-excel'),],
-            from_email=settings.DEFAULT_FROM_EMAIL,
-        )
-
-        summary, total = collect_submission_billing_stats(selected_for_billing)
+        invoice = Invoice.objects.create(document=doc)
+        invoice.submissions = selected_for_billing
         
-        return render(request, 'billing/submission_summary.html', {
-            'summary': summary,
-            'xls_doc': doc,
-            'total': total,
-        })
-        return HttpResponseRedirect(reverse('ecs.billing.views.submission_billing'))
+        return HttpResponseRedirect(reverse('ecs.billing.views.view_invoice', kwargs={'invoice_pk': invoice.pk}))
 
     return render(request, 'billing/submissions.html', {
         'submissions': unbilled_submissions,
     })
 
+@readonly()
+@user_flag_required('is_internal')
+def view_invoice(request, invoice_pk=None):
+    invoice = get_object_or_404(Invoice, pk=invoice_pk)
+    print invoice.stats
+    return render(request, 'billing/submission_summary.html', {
+        'invoice': invoice,
+    })
 
 @developer
 def reset_external_review_payment(request):
