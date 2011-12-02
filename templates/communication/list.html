@@ -37,7 +37,7 @@
           <td>
               {% block message_actions %}
                   {% if not thread|closed_by:user %}
-                  <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a>
+                  <a class="open-in-widget icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}">done</a>
                   {% endif %}
               {% endblock %}
           </td>

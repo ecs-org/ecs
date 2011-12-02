@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-01 21:02+0100\n"
+"POT-Creation-Date: 2011-12-02 11:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,24 +22,24 @@ msgstr ""
 msgid "German"
 msgstr "Deutsch"
 
-#: billing/models.py:15
+#: billing/models.py:16
 msgid "All studies except multicentre drug studies"
 msgstr "Alle Studien außer multizentrische Arzneimittelstudien"
 
-#: billing/models.py:16
+#: billing/models.py:17
 msgid "Multicentre drug trials for controlling ethics committees"
 msgstr "Multizentrische Arzneimittelstudien für Leit-Ethikkommissionen"
 
-#: billing/models.py:17
+#: billing/models.py:18
 msgid "Multicentre drug trials for locally responsible ethics committees"
 msgstr ""
 "Multizentrische Arzneimittelstudien für lokal zuständige Ethikkommissionen"
 
-#: billing/models.py:18
+#: billing/models.py:19
 msgid "fee exemption"
 msgstr "Gebührenbefreiung"
 
-#: billing/models.py:19
+#: billing/models.py:20
 msgid "External Reviewer"
 msgstr "Gutachter"
 
@@ -71,49 +71,45 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:50
+#: billing/views.py:51
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:80 billing/views.py:147
+#: billing/views.py:81 billing/views.py:153
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:80 core/models/submissions.py:88
+#: billing/views.py:81 core/models/submissions.py:88
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:80
+#: billing/views.py:81
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:80
+#: billing/views.py:81
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:80 core/forms/layout.py:59 core/forms/layout.py:60
+#: billing/views.py:81 core/forms/layout.py:59 core/forms/layout.py:60
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:80
+#: billing/views.py:81
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:80 billing/views.py:147
+#: billing/views.py:81 billing/views.py:153
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:147
+#: billing/views.py:153
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:147
+#: billing/views.py:153
 msgid "EC-Nr."
 msgstr "EK-Nr"
-
-#: billing/views.py:180
-msgid "Payment request"
-msgstr ""
 
 #: boilerplate/forms.py:8
 msgid "Shorthand Symbol"
@@ -1916,6 +1912,11 @@ msgstr "Meldungen"
 msgid "Notification Answer"
 msgstr "Meldungsantwort"
 
+#: documents/bootstrap.py:35
+#, fuzzy
+msgid "Checklist Payment"
+msgstr "Es gibt noch keine Checkliste."
+
 #: documents/forms.py:30
 msgid "no file"
 msgstr "keine Datei"
@@ -2415,6 +2416,37 @@ msgstr "Neuere Einträge"
 msgid "Older Entries"
 msgstr "Ältere Einträge"
 
+#: templates/billing/checklist_payment_list.html:13
+#: templates/billing/external_review.html:30
+msgid "Old Payments"
+msgstr ""
+
+#: templates/billing/checklist_payment_list.html:17
+#, fuzzy, python-format
+msgid "Payment of %(date)s"
+msgstr "Rechnung vom %(date)s"
+
+#: templates/billing/checklist_payment_list.html:20
+#, fuzzy
+msgid "No payment yet."
+msgstr "Es gibt noch keine Checkliste."
+
+#: templates/billing/checklist_payment_list.html:27
+#: templates/billing/invoice_list.html:27 templates/submissions/list.html:22
+#: templates/submissions/list.html:155 templates/submissions/widget.html:66
+#: templates/users/administration.html:28
+#: templates/users/administration.html:86 templates/wkhtml2pdf/footer.html:28
+msgid "Page"
+msgstr "Seite"
+
+#: templates/billing/checklist_payment_list.html:27
+#: templates/billing/invoice_list.html:27 templates/submissions/list.html:22
+#: templates/submissions/list.html:155 templates/submissions/widget.html:66
+#: templates/users/administration.html:28
+#: templates/users/administration.html:86
+msgid "of"
+msgstr "von"
+
 #: templates/billing/external_review.html:26
 #: templates/billing/submissions.html:26
 msgid "submit data"
@@ -2429,6 +2461,11 @@ msgstr "Alte Rechnungen"
 #, python-format
 msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
+
+#: templates/billing/invoice_list.html:20
+#, fuzzy
+msgid "No invoice yet."
+msgstr "Firma/Organisation"
 
 #: templates/boilerplate/form.html:5 templates/boilerplate/form.html.py:6
 msgid "New Boilerplate"
@@ -2524,6 +2561,11 @@ msgstr "Gelesen"
 #: templates/communication/list.html:15 templates/tasks/manage_task.html:5
 msgid "Task"
 msgstr "Aufgabe"
+
+#: templates/communication/list.html:40 templates/communication/thread.html:31
+#: templates/communication/widgets/messages.inc:21
+msgid "mark as done"
+msgstr "als erledigt markieren"
 
 #: templates/communication/send.html:10
 msgid "New Message"
@@ -3401,18 +3443,6 @@ msgid ""
 msgstr ""
 "Ihre Einreichung ist korrekt ausgefüllt, Sie können jedoch noch keine "
 "Studien abschicken, da ihr Account noch nicht bestätigt wurde."
-
-#: templates/submissions/list.html:22 templates/submissions/list.html:155
-#: templates/submissions/widget.html:66 templates/users/administration.html:28
-#: templates/users/administration.html:86 templates/wkhtml2pdf/footer.html:28
-msgid "Page"
-msgstr "Seite"
-
-#: templates/submissions/list.html:22 templates/submissions/list.html:155
-#: templates/submissions/widget.html:66 templates/users/administration.html:28
-#: templates/users/administration.html:86
-msgid "of"
-msgstr "von"
 
 #: templates/submissions/list.html:49 templates/submissions/list.html.py:81
 #: templates/submissions/readonly_form.html:20
