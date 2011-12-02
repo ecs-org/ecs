@@ -150,7 +150,7 @@ def external_review_payment(request):
         reviewers = User.objects.filter(pk__in=[c.user.pk for c in selected_for_payment]).distinct()
 
         xls = SimpleXLS()
-        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum')))
+        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum'), _(u'IBAN'), _('SWIFT-BIC'), _('Social Security Number')))
         for i, reviewer in enumerate(reviewers):
             checklists = reviewer.checklist_set.filter(pk__in=[c.pk for c in selected_for_payment])
             xls.write_row(i + 1, [
@@ -158,6 +158,9 @@ def external_review_payment(request):
                 unicode(reviewer),
                 ", ".join(c.submission.get_ec_number_display() for c in checklists),
                 len(checklists) * price.price,
+                reviewer.ecs_profile.iban,
+                reviewer.ecs_profile.swift_bic,
+                reviewer.ecs_profile.social_security_number,
             ])
         r = len(reviewers) + 1
         xls.write_row(r, [
