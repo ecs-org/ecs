@@ -76,8 +76,9 @@ class ProfileForm(TranslatedModelForm):
     forward_messages_after_minutes = forms.ChoiceField(choices=(
         (0, _(u'Never')),
         (5, _(u'after 5 minutes')),
-        (10, _(u'after 10 minutes')),
-        (360, _(u'after 6 hours')),
+        (360, _(u'after {0} hours').format(6)),
+        (1440, _(u'after {0} hours').format(24)),
+        (4320, _(u'after {0} hours').format(72)),
     ), initial=0)
 
     def __init__(self, *args, **kwargs):

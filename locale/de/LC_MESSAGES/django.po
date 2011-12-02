@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-02 11:52+0100\n"
+"POT-Creation-Date: 2011-12-02 12:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1227,7 +1227,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:29
-#: meetings/forms.py:44 users/forms.py:155 users/forms.py:203
+#: meetings/forms.py:44 users/forms.py:156 users/forms.py:204
 msgid "title"
 msgstr "Titel"
 
@@ -2818,14 +2818,14 @@ msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:9
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:30
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:51
-#: users/forms.py:134
+#: users/forms.py:135
 msgid "Approved"
 msgstr "Bestätigt"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:21
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:42
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:63
-#: users/forms.py:135
+#: users/forms.py:136
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
@@ -2932,7 +2932,7 @@ msgid "Name"
 msgstr "Name"
 
 #: templates/meetings/tabs/open_tasks.html:9
-#: templates/users/administration.html:13 users/forms.py:206
+#: templates/users/administration.html:13 users/forms.py:207
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -2953,7 +2953,7 @@ msgstr "Zugeteilt"
 msgid "Assigend To"
 msgstr "Person"
 
-#: templates/meetings/tabs/status.html:4 users/forms.py:114
+#: templates/meetings/tabs/status.html:4 users/forms.py:115
 msgid "Title"
 msgstr "Titel"
 
@@ -4028,19 +4028,19 @@ msgid ""
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:54 users/forms.py:154 users/forms.py:202
+#: users/forms.py:54 users/forms.py:155 users/forms.py:203
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:55 users/forms.py:204
+#: users/forms.py:55 users/forms.py:205
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:56 users/forms.py:205
+#: users/forms.py:56 users/forms.py:206
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:57 users/forms.py:201
+#: users/forms.py:57 users/forms.py:202
 msgid "email"
 msgstr "E-Mail"
 
@@ -4060,123 +4060,119 @@ msgstr "nie"
 msgid "after 5 minutes"
 msgstr "nach fünf Minuten"
 
-#: users/forms.py:79
-msgid "after 10 minutes"
-msgstr "nach zehn Minuten"
+#: users/forms.py:79 users/forms.py:80 users/forms.py:81
+msgid "after {0} hours"
+msgstr "nach {0} Stunden"
 
-#: users/forms.py:80
-msgid "after 6 hours"
-msgstr "nach sechs Stunden"
-
-#: users/forms.py:113
+#: users/forms.py:114
 msgid "Gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:115
+#: users/forms.py:116
 msgid "First Name"
 msgstr "Vorname"
 
-#: users/forms.py:116
+#: users/forms.py:117
 msgid "Last Name"
 msgstr "Nachname"
 
-#: users/forms.py:117
+#: users/forms.py:118
 msgid "Organisation"
 msgstr "Organisation"
 
-#: users/forms.py:118
+#: users/forms.py:119
 msgid "Job Title"
 msgstr "Berufsbezeichnung"
 
-#: users/forms.py:119
+#: users/forms.py:120
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: users/forms.py:120
+#: users/forms.py:121
 msgid "IBAN"
 msgstr "IBAN"
 
-#: users/forms.py:121
+#: users/forms.py:122
 msgid "Address"
 msgstr "Adresse"
 
-#: users/forms.py:122
+#: users/forms.py:123
 msgid "Additional Address Information"
 msgstr "Zusätzliche Adressinformationen"
 
-#: users/forms.py:123
+#: users/forms.py:124
 msgid "ZIP-Code"
 msgstr "Postleitzahl"
 
-#: users/forms.py:124
+#: users/forms.py:125
 msgid "City"
 msgstr "Ort"
 
-#: users/forms.py:125
+#: users/forms.py:126
 msgid "Phone"
 msgstr "Telefon"
 
-#: users/forms.py:126
+#: users/forms.py:127
 msgid "Fax"
 msgstr "Fax"
 
-#: users/forms.py:127
+#: users/forms.py:128
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
-#: users/forms.py:128
+#: users/forms.py:129
 msgid "Forwarding of unread messages"
 msgstr "Weiterleitung von ungelesenen Nachrichten"
 
-#: users/forms.py:133
+#: users/forms.py:134
 msgid "Approved/Not Approved"
 msgstr "Bestätigt/Nicht Bestätigt"
 
-#: users/forms.py:138
+#: users/forms.py:139
 msgid "Both"
 msgstr "Beide"
 
-#: users/forms.py:139
+#: users/forms.py:140
 msgid "active"
 msgstr "aktiv"
 
-#: users/forms.py:140
+#: users/forms.py:141
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:156 users/forms.py:207
+#: users/forms.py:157 users/forms.py:208
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:157 users/forms.py:208
+#: users/forms.py:158 users/forms.py:209
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:158 users/forms.py:209
+#: users/forms.py:159 users/forms.py:210
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:159
+#: users/forms.py:160
 msgid "Resident Member"
 msgstr ""
 
-#: users/forms.py:160 users/forms.py:210
+#: users/forms.py:161 users/forms.py:211
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:211
+#: users/forms.py:212
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:224
+#: users/forms.py:225
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
-#: users/forms.py:250
+#: users/forms.py:251
 msgid "is_indisposed"
 msgstr "Verhindert"
 
-#: users/forms.py:251
+#: users/forms.py:252
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
 
@@ -4370,6 +4366,9 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "after 10 minutes"
+#~ msgstr "nach zehn Minuten"
 
 #~ msgid "New ECS-Mail: from {sender} to {receiver}."
 #~ msgstr "Neue ECS-Mail: von {sender} an {receiver}."
