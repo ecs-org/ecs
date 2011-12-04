@@ -390,7 +390,7 @@ upstart_targets = {
     'celeryd': (None, './manage.py celeryd -l warning -L ../../ecs-log/celeryd.log'),    
     'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -L ../../ecs-log/celerybeat.log'),
     'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'), 
-    'signing': ('upstart-tomcat.conf', ''),
+    'signature': ('upstart-tomcat.conf', ''),
 }
 
 test_flavors = {
