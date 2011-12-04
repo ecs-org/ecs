@@ -5,7 +5,7 @@ from deployment.pkgmanager import package_merge
 # packages
 ##########
 
-# packages needed for the application
+# main packages needed for the application
 main_packages = """
 
 # postgresql database bindings
@@ -73,6 +73,7 @@ django-nose:inst:all:pypi:django-nose
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 """
+
 
 # importlib is a dependency of celery, but importlib is included in
 # Python 2.7 and newer for 2.x

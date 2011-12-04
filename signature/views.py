@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-from tempfile import NamedTemporaryFile
 import urllib
 import urllib2
+
+from datetime import datetime
+from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.shortcuts import get_object_or_404
@@ -11,10 +12,12 @@ from django.core.urlresolvers import reverse, get_callable
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 
+from ecs.utils import forceauth
+
 from ecs.users.utils import user_group_required
 from ecs.documents.models import Document, DocumentType
-from ecs.utils import forceauth
 from ecs.utils.pdfutils import pdf_barcodestamp
+
 from ecs.signature.utils import SigningDepot
 
 
@@ -61,7 +64,7 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
     redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
     
     if PDFAS_SERVICE != 'mock:':
-        #print 'sign: redirect to [%s]' % redirect
+        print('sign: redirect to [%s]' % redirect)
         return HttpResponseRedirect(redirect)
 
     # we mock calling the applet by just copying intput to output (pdf stays the same beside barcode),
@@ -88,10 +91,9 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
 @csrf_exempt
 @forceauth.exempt
 def sign_send(request, jsessionid=None, always_mock=False):
-    '''
-    to be directly accessed by pdf-as so it can retrieve the pdf to sign
-     * needs @csrf_exempt to ignore missing csrf token.
-     * needs @forceauth.exempt because pdf-as can't authenticate.
+    ''' to be directly accessed by pdf-as so it can retrieve the pdf to sign
+     
+     * needs @forceauth.exempt because pdf-as can't authenticate. * needs @csrf_exempt to ignore missing csrf token.
     '''
     sign_dict = SigningDepot().get(request.REQUEST['pdf-id'])
     if sign_dict is None:
@@ -107,10 +109,9 @@ def sign_send(request, jsessionid=None, always_mock=False):
 @csrf_exempt
 @forceauth.exempt
 def sign_preview(request, jsessionid=None):
-    '''
-    to be directly accessed by pdf-as so it can show a preview of the to be signed pdf on the applet page.
-     * needs @csrf_exempt to ignore missing csrf token.
-     * needs @forceauth.exempt because pdf-as can't authenticate.
+    ''' to be directly accessed by pdf-as so it can show a preview of the to be signed pdf on the applet page.
+     
+     * needs @csrf_exempt to ignore missing csrf token and @forceauth.exempt because pdf-as can't authenticate.
     '''
     sign_dict = SigningDepot().get(request.REQUEST['pdf-id'])
     if sign_dict is None:
@@ -122,19 +123,19 @@ def sign_preview(request, jsessionid=None):
 @csrf_exempt
 @forceauth.exempt
 def sign_receive_landing(request, jsessionid=None):
-    '''
-    to be directly accessed by pdf-as so it can bump ecs to download the signed pdf.
+    ''' to be directly accessed by pdf-as so it can bump ecs to download the signed pdf.
+    
     current version of pdf-as has some bug, to include jsessionid as part of the url,
     working around with landing page
-     * needs @csrf_exempt to ignore missing csrf token.
-     * needs @forceauth.exempt because pdf-as can't authenticate.
+    
+     * needs @csrf_exempt to ignore missing csrf token and @forceauth.exempt because pdf-as can't authenticate.
     '''
     return sign_receive(request, jsessionid)
 
 
 def sign_receive(request, jsessionid=None, always_mock=False):
-    '''
-    to be accessed by pdf-as so it can bump ecs to download the signed pdf.
+    ''' to be accessed by pdf-as so it can bump ecs to download the signed pdf.
+    
     called by the sign_receive_landing view, to workaround some pdf-as issues
     '''
 
@@ -198,10 +199,9 @@ def sign_receive(request, jsessionid=None, always_mock=False):
 @csrf_exempt
 @forceauth.exempt
 def sign_error(request):
-    '''
-    to be directly accessed by pdf-as so it can report errors. 
-     * needs @csrf_exempt to ignore missing csrf token.
-     * needs @forceauth.exempt because pdf-as can't authenticate.
+    ''' to be directly accessed by pdf-as so it can report errors. 
+     
+     * needs @csrf_exempt to ignore missing csrf token and @forceauth.exempt because pdf-as can't authenticate.
     '''
     sign_dict = None
     if request.REQUEST.has_key('pdf-id'):
