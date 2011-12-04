@@ -15,10 +15,10 @@
             <th>Original</th>
             <th>Translated</th>
         </tr>
-        {% for task_type in task_types %}
+        {% for name, trans_name in task_types %}
             <tr>
-                <td>{{ task_type.name }}</td>
-                <td>{{ task_type.trans_name }}</td>
+                <td>{{ name }}</td>
+                <td>{{ trans_name }}</td>
             </tr>
         {% endfor %}
     </table>

@@ -1,0 +1,10 @@
+{% load userutils core %}
+{% if user|has_flag:'is_internal' %}
+    {% for submission in submissions %}
+        <a href="{% url view_submission submission_pk=submission.pk %}" target="_blank">{{ submission|ec_number }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+{% else %}
+    {% for submission in submissions %}
+        {{ submission|ec_number }}</a>{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+{% endif %}

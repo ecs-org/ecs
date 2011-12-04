@@ -308,7 +308,11 @@ ecs.setupDocumentUploadIframe = function(){
         if (typeof(upload_iframe.contentWindow.document.body.getElement) === 'undefined') return;
         if (!upload_iframe.isVisible()) return;
 
-        var container_size = upload_iframe.contentWindow.document.body.getElement('.document_container').getScrollSize();
+        var container = upload_iframe.contentWindow.document.body.getElement('.document_container');
+        if(!container){ /* this happens on redirect to login */
+            return;
+        }
+        var container_size = container.getScrollSize();
         var height = container_size.y + 20;
         var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
         if (datepicker && datepicker.isVisible()) {
@@ -355,8 +359,12 @@ ecs.setupDocumentUploadForms = function(){
             xhr.addEventListener('load', function(evt){
                 upload_button.setClass('loaded');
                 /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
-                var body_html = RegExp.$1;;
-                document.getElement('body').innerHTML = body_html;
+                var body_html = RegExp.$1;
+                var body = document.getElement('body');
+                body.innerHTML = body_html;
+                if($('login_form')){
+                    top.location.href = '/';
+                }
                 ecs.setupDocumentUploadForms();
             }, false);
             xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
@@ -683,6 +691,14 @@ ecs.setupSubmitLinks = function(selector){
     $$(selector).each(function(el){
         el.addEvent('click', submitParentForm);
     });
+};
+
+ecs.stopPageLoad = function() {
+    if ($defined(window.stop)) {
+        window.stop();
+    } else {
+        try { document.execCommand('Stop'); } catch(e){};
+    }
 };
 
 /* windmill helper stuff*/

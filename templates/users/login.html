@@ -16,9 +16,14 @@
 {% block sidebar %}
 {% endblock %}
 
+{% block htmlbody_class %}login{% endblock %}
 
-{% block content %} <!-- usertoolbar -->
-
+{% block content %}
+    <script type="text/javascript">
+    if(top != self){
+        top.location.href = '{% url ecs.users.views.login %}';
+    }
+    </script>
     <img src="/static/images/logo.png" />
     <div id="browser_warning" style="display:none">
         <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser;<br>
@@ -33,7 +38,7 @@
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
     </div>
     <div class="form_public">
-      <form method="post" action="" class="login_error">
+      <form method="post" action="" class="login_error" id="login_form">
         {% csrf_token %}
         <p>{{ form.username.label_tag }}{{ form.username }}
             {% if form.username.errors %}{{ form.username.errors}}{% endif %}</p>

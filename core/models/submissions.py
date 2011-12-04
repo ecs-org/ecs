@@ -12,10 +12,11 @@ from ecs.core.models.constants import (
     MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
     SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
     SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
+    SUBMISSION_TYPE_MULTICENTRIC,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
-from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties, get_meeting_parties
+from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
@@ -70,6 +71,10 @@ class Submission(models.Model):
     @property
     def is_regular(self):
         return self.workflow_lane == SUBMISSION_LANE_BOARD
+
+    @property
+    def is_localec(self):
+        return self.workflow_lane == SUBMISSION_LANE_LOCALEC
 
     def get_submission(self):
         return self
@@ -174,6 +179,9 @@ class Submission(models.Model):
             return self.votes.filter(result__in=RECESSED_VOTE_RESULTS, top__pk__lt=top.pk).order_by('-pk')[0]
         except IndexError:
             return None
+            
+    def get_first_meeting(self):
+        return self.meetings.order_by('start')[:1][0]
 
     def save(self, **kwargs):
         if not self.presenter_id:
@@ -246,6 +254,9 @@ class Submission(models.Model):
                 if last_vote.is_recessed:
                     return _schedule()
         return current_top.meeting
+    
+    def get_filename_slice(self):
+        return self.get_ec_number_display(separator='_')
 
     class Meta:
         app_label = 'core'
@@ -536,7 +547,7 @@ class SubmissionForm(models.Model):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.german_project_title or self.project_title)
     
     def get_filename_slice(self):
-        return self.submission.get_ec_number_display(separator='_')
+        return self.submission.get_filename_slice()
         
     @property
     def is_current(self):
@@ -548,7 +559,9 @@ class SubmissionForm(models.Model):
         
     def allows_edits(self, user):
         s = self.submission
-        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished
+        with sudo():
+            in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
+        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not self.current_pending_vote
         
     def allows_amendments(self, user):
         s = self.submission
@@ -582,6 +595,10 @@ class SubmissionForm(models.Model):
     @property
     def is_categorized_multicentric_and_local(self):
         return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC_LOCAL
+        
+    @property
+    def is_categorized_multicentric_and_main(self):
+        return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC
     
     @property
     def includes_minors(self):
@@ -653,9 +670,6 @@ class SubmissionForm(models.Model):
     def get_reviewing_parties(self):
         return get_reviewing_parties(self)
 
-    def get_meeting_parties(self):
-        return get_meeting_parties(self)
-    
     @property
     def additional_investigators(self):
         additional_investigators = self.investigators.all()

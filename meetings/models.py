@@ -38,7 +38,9 @@ class TimetableMetrics(object):
             user._waiting_time_offset = None
         for entry in permutation:
             next_offset = offset + entry.duration_in_seconds
-            for user in entry.users:
+            for user, ignored in entry.users:
+                if ignored:
+                    continue
                 if user._waiting_time_offset is not None:
                     wt = offset - user._waiting_time_offset
                     user._waiting_time += wt
@@ -302,12 +304,12 @@ class Meeting(models.Model):
         for constraint in self.constraints.all():
             constraint_start = datetime.combine(start_date, constraint.start_time)
             constraint_end = datetime.combine(start_date, constraint.end_time)
-            for participation in Participation.objects.filter(user=constraint.user):
+            for participation in Participation.objects.filter(user=constraint.user, ignored_for_optimization=False):
                 start = participation.entry.start
                 end = participation.entry.end
                 if (constraint_start >= start and constraint_start < end) or \
-                    (constraint_end >= start and constraint_end < end) or \
-                    (constraint_start < start and constraint_end >= end):
+                    (constraint_end > start and constraint_end < end) or \
+                    (constraint_start <= start and constraint_end >= end):
                     entries_which_violate_constraints.append(participation.entry)
         return entries_which_violate_constraints
 
@@ -320,9 +322,10 @@ class Meeting(models.Model):
             users_by_id[user.id] = user
         entries = list()
         for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
-            users_by_entry_id.setdefault(participation.entry_id, set()).add(users_by_id.get(participation.user_id))
+            users_by_entry_id.setdefault(participation.entry_id, set()).add((users_by_id.get(participation.user_id), participation.ignored_for_optimization))
         for entry in self.timetable_entries.filter(timetable_index__isnull=False).select_related('submission').order_by('timetable_index'):
             entry.users = users_by_entry_id.get(entry.id, set())
+            entry.has_ignored_participations = any(ignored for user, ignored in entry.users)
             entry.start = self.start + duration
             duration += entry.duration
             entry.end = self.start + duration
@@ -413,7 +416,7 @@ class Meeting(models.Model):
     def get_timetable_pdf(self, request):
         timetable = {}
         for entry in self:
-            for user in entry.users:
+            for user, ignored in entry.users:
                 if user in timetable:
                     timetable[user].append(entry)
                 else:
@@ -639,6 +642,7 @@ class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')
     user = models.ForeignKey(User, related_name='meeting_participations')
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
+    ignored_for_optimization = models.BooleanField(default=False)
 
     objects = AuthorizationManager()
 

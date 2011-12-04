@@ -5,7 +5,7 @@
 {% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
-    <a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
+    <a href="{% url readonly_submission_form submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
     {{ submission.project_title_display|default:'<em>Ohne Titel</em>' }}
     {% if submission.is_finished %}
         ({% trans 'finished' %})
@@ -85,7 +85,7 @@
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>
-                        <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist }}</a>
+                        <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist.short_name }}</a>
                     </li>
                 {% endfor %}
             </ul>
@@ -150,6 +150,10 @@
         {% else %}
             <p>{% trans "There are no open notifications." %}</p>
         {% endif %}
+        {% if stashed_notifications %}
+            <h3>Nicht eingereichte Meldungen</h3>
+            {% include 'notifications/stashed_notification_list.html' %}
+        {% endif %}
         {% if submission.presenter == request.user %}
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
@@ -192,8 +196,11 @@
             <ul>
                 {% for vote in published_votes %}
                     <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}
-                    <a href="{% url ecs.votes.views.download_signed_vote vote_pk=vote.pk %}" target="_blank">{% trans "Download" %}</a>
-                    {% if vote.valid_until %}({% trans 'valid until' %}: {{ vote.valid_until|date:'d.m.Y' }}){% endif %}
+                    {% if vote.valid_until %} {% trans 'valid until' %} {{ vote.valid_until|date:'d.m.Y' }}{% endif %}
+                    <a href="{% url ecs.votes.views.download_signed_vote vote_pk=vote.pk %}">{% trans "Download" %}</a>
+                    {% if user|has_flag:'is_internal' %}
+                        | <a href="javascript:void(ecs.fieldhistory.show('{% url ecs.core.views.field_history model_name='vote' pk=vote.pk %}', 'text'))">{% trans 'History' %}</a>
+                    {% endif %}
                     </li>
                 {% endfor %}
             </ul>
@@ -215,6 +222,15 @@
                 {% if categorization_task and categorization_review_form.readonly %}
                     <p><a href="{% url ecs.tasks.views.reopen_task task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
                 {% endif %}
+                <p>
+                    Typ:
+                    {% if submission_form.is_amg %}
+                        {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
+                    {% endif %}
+                    {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
+                    {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+                    {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
+                </p>
                 {% with categorization_review_form as review_form %}
                     {% include 'submissions/review_form.inc' %}
                 {% endwith %}

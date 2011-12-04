@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
@@ -133,7 +134,7 @@ def copy_latest_submission_form(request, submission_pk=None):
 @readonly()
 def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
 CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview,
     ExpeditedRecommendation, BoardMemberReview)
@@ -182,6 +183,14 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
     notifications = submission.notifications.order_by('-timestamp')
     votes = submission.votes
+    
+    stashed_notifications = []
+    for d in DocStash.objects.filter(group='ecs.notifications.views.create_notification'):
+        try:
+            if str(submission_form.pk) in d.current_value['form'].data['submission_forms']:
+                stashed_notifications.append(d)
+        except KeyError:
+            pass
 
     context = {
         'form': form,
@@ -197,6 +206,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'show_reviews': any(checklist_reviews),
         'open_notifications': notifications.unanswered(),
         'answered_notifications': notifications.answered(),
+        'stashed_notifications': stashed_notifications,
         'pending_votes': votes.filter(published_at__isnull=True),
         'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
@@ -231,7 +241,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
         task = get_object_or_404(Task, pk=task_pk)
     task.deleted_at = datetime.now()
     task.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
 @user_group_required('EC-Executive Board Group', 'EC-Thesis Executive Group', 'Local-EC Review Group')
@@ -312,7 +322,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
         for task in Task.objects.for_data(checklist).exclude(closed_at__isnull=False):
             task.deleted_at = datetime.now()
             task.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
 @task_required()
@@ -356,7 +366,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 checklist.status = 'completed'
                 checklist.save()
                 related_task.done(request.user)
-                return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+                return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
             elif complete_task and checklist.is_complete:
                 extra_context['review_complete'] = checklist.pk
 
@@ -392,6 +402,8 @@ def vote_preparation(request, submission_form_pk=None):
     vote = submission_form.current_vote
     if submission_form.submission.is_expedited:
         checklist = 'expedited_review'
+    elif submission_form.submission.is_localec:
+        checklist = 'localec_review'
     else:
         checklist = 'thesis_review'
     form = VotePreparationForm(request.POST or None, instance=vote, initial={
@@ -517,13 +529,13 @@ def create_submission_form(request):
                     'notification_type_pk': notification_type.pk,
                 }))
 
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
 
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
-        'submission': request.docstash.get('submin', None),
+        'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
     }
@@ -555,7 +567,7 @@ def change_submission_presenter(request, submission_pk=None):
         if request.user == previous_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission})
 
@@ -583,7 +595,7 @@ def change_submission_susar_presenter(request, submission_pk=None):
         if request.user == previous_susar_presenter:
             return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
         else:
-            return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission})
 
@@ -603,7 +615,7 @@ def submission_pdf(request, submission_form_pk=None):
 @readonly()
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    if not request.user.get_profile().is_internal and not request.user == submission.presenter:
+    if not submission.current_submission_form.allows_export(request.user):
         raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
@@ -800,13 +812,59 @@ def my_submissions(request):
 
 @readonly()
 @forceauth.exempt
-def catalog(request):
+def catalog(request, year=None):
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now()).order_by('-top__meeting__start', '-published_at')
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = votes.select_related('submission_form').order_by('published_at')
+        years = votes.dates('published_at', 'year')
+        if year is None:
+            year = list(years)[-1].year
+            return HttpResponseRedirect(reverse('ecs.core.views.submissions.catalog', kwargs={'year': year}))
+        else:
+            year = int(year)
+        votes = votes.filter(published_at__year=int(year))
         html = render(request, 'submissions/catalog.html', {
+            'year': year,
+            'years': years,
             'votes': votes,
         })
     return html
+
+
+@readonly()
+@forceauth.exempt
+def catalog_json(request):
+    data = []
+    with sudo():
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = votes.select_related('submission_form').order_by('published_at')
+        for vote in votes:
+            sf = vote.submission_form
+            item = {
+                'title_de': sf.german_project_title,
+                'title_en': sf.project_title,
+                'ec_number': sf.submission.get_ec_number_display(),
+                'sponsor': sf.sponsor_name,
+                'date_of_vote': vote.published_at.strftime('%Y-%m-%d'),
+                'date_of_first_meeting': sf.submission.get_first_meeting().start.strftime('%Y-%m-%d'),
+                'project_type': 'Studie',
+            }
+            if sf.project_type_education_context:
+                item.update({
+                    'project_type': sf.get_project_type_education_context_display(),
+                    'submitter': unicode(sf.submitter_contact),
+                })
+            investigators = []
+            for i in sf.investigators.all():
+                investigators.append({
+                    'organisation': i.organisation,
+                    'name': unicode(i.contact),
+                    'ethics_commission': unicode(i.ethics_commission),
+                })
+            item['investigators'] = investigators
+            data.append(item)
+            
+    return HttpResponse(simplejson.dumps(data, indent=4), content_type='application/json')
 
 
 @user_flag_required('is_executive_board_member')

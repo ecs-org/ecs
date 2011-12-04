@@ -40,7 +40,7 @@ def vote_context(vote):
     meeting = None
     if top:
         submission = top.submission
-        vote_data = top.meeting.start.strftime('%d.%m.%Y')
+        vote_date = top.meeting.start.strftime('%d.%m.%Y')
         meeting = top.meeting
     if submission and submission.forms.count() > 0:
         form = submission.forms.all()[0]
@@ -94,11 +94,16 @@ def download_signed_vote(request, vote_pk=None):
 def vote_sign_finished(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     vote = document.parent_object
-    vote.signed_at = datetime.now()
+    now = datetime.now()
+    document.name = vote.submission_form.submission.get_ec_number_display(separator='-')
+    document.version = 'signed-at'
+    document.date = now
+    document.save()
+    vote.signed_at = now
     vote.save()
 
     return HttpResponseRedirect(reverse(
-        'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+        'readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 
 @user_flag_required('is_internal')

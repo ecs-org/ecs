@@ -2,6 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import SetPasswordForm as DjangoSetPasswordForm
+from django.contrib.auth.forms import PasswordChangeForm as DjangoPasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -59,7 +61,7 @@ class RegistrationForm(forms.Form):
 
 class ActivationForm(forms.Form):
     password = forms.CharField(label=_('Password'), widget=forms.PasswordInput, min_length=8)
-    password_again = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput)
+    password_again = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput, min_length=8)
     
     def clean_password_again(self):
         password = self.cleaned_data.get("password", "")
@@ -76,8 +78,9 @@ class ProfileForm(TranslatedModelForm):
     forward_messages_after_minutes = forms.ChoiceField(choices=(
         (0, _(u'Never')),
         (5, _(u'after 5 minutes')),
-        (10, _(u'after 10 minutes')),
-        (360, _(u'after 6 hours')),
+        (360, _(u'after {0} hours').format(6)),
+        (1440, _(u'after {0} hours').format(24)),
+        (4320, _(u'after {0} hours').format(72)),
     ), initial=0)
 
     def __init__(self, *args, **kwargs):
@@ -156,11 +159,12 @@ class UserDetailsForm(forms.ModelForm):
     medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all(), label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(required=False, queryset=ExpeditedReviewCategory.objects.all(), label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
+    is_resident_member = forms.BooleanField(required=False, label=_('Resident Member'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
     class Meta:
         model = User
-        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'is_internal', 'is_help_writer')
+        fields = ('gender', 'title', 'first_name', 'last_name', 'groups', 'medical_categories', 'expedited_review_categories', 'is_internal', 'is_resident_member', 'is_help_writer')
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
@@ -174,6 +178,7 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
         self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
         self.fields['is_internal'].initial = profile.is_internal
+        self.fields['is_resident_member'].initial = profile.is_resident_member
         self.fields['is_help_writer'].initial = profile.is_help_writer
 
     def save(self, *args, **kwargs):
@@ -190,7 +195,7 @@ class UserDetailsForm(forms.ModelForm):
         profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
         profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
         profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
-        for k in ('is_internal', 'is_help_writer'):
+        for k in ('is_internal', 'is_help_writer', 'is_resident_member'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
@@ -260,3 +265,11 @@ class IndispositionForm(forms.ModelForm):
             require_fields(self, ('communication_proxy',))
 
         return cd
+
+class SetPasswordForm(DjangoSetPasswordForm):
+    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput, min_length=8)
+    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput, min_length=8)
+
+class PasswordChangeForm(DjangoPasswordChangeForm):
+    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput, min_length=8)
+    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput, min_length=8)

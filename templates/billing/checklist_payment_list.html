@@ -1,0 +1,32 @@
+{% extends "core.html" %}
+{% load core i18n %}
+
+{% block menuSelection %}administration{% endblock %}
+
+{% block htmltitle %}Rechnungsstellung - External Review | {{ block.super }}{% endblock %}
+
+{% block headertitle %}
+    Rechnungsstellung - External Review
+{% endblock %}
+
+{% block content %}
+    <h2>{% trans 'Old Payments' %}</h2>
+    <ul>
+    {% for payment in payments.object_list %}
+        <li><a href="{% url ecs.billing.views.view_checklist_payment payment_pk=payment.pk %}">
+            {% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}
+        </a></li>
+    {% empty %}
+        <li><em>{% trans 'No payment yet.' %}</em></li>
+    {% endfor %}
+    </ul>
+    <div class="paginator">
+        {% if payments.has_previous %}
+            <a href="?page={{ payments.previous_page_number }}" class="prev_page">next</a>
+        {% endif %}
+        {% trans "Page" %} {{ payments.number }} {% trans "of" %} {{ payments.paginator.num_pages }}
+        {% if payments.has_next %}
+            <a href="?page={{ payments.next_page_number }}" class="next_page">next</a>
+        {% endif %}
+    </div>
+{% endblock %}

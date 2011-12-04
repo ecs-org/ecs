@@ -49,6 +49,7 @@
       window.addEvent('domready', function(){
           $$('#thread_list_filter input').each(function(input){
               input.addEvent('change', function(){
+                  ecs.stopPageLoad();
                   $('thread_list_filter').submit();
               });
           });

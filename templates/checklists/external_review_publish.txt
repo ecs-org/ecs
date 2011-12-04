@@ -1,11 +1,10 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core %}
-{% blocktrans with submission|ec_number as ec_number %}
-There is an new external review for the study {{ ec_number }} available.
-Please click the following link to download the review as PDF file:
-{% endblocktrans %}
-{{ ABSOLUTE_URL_PREFIX }}{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}
 
-{% blocktrans %}
-Sincerly yours,
-    The Team of the Ethics Commission
-{% endblocktrans %}
+{% block content %}
+    {% blocktrans with submission|ec_number as ec_number %}
+        There is an new external review for the study {{ ec_number }} available.
+        Please click the following link to download the review as PDF file:
+    {% endblocktrans %}
+    {{ ABSOLUTE_URL_PREFIX }}{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}
+{% endblock %}

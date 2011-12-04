@@ -1,4 +1,8 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core %}
-{% blocktrans with submission|ec_number as ec_number %}
-Sie sind nun nicht mehr Einreicher der Studie {{ ec_number }}.
-{% endblocktrans %}
+
+{% block content %}
+    {% blocktrans with submission|ec_number as ec_number %}
+        Sie sind nun nicht mehr Einreicher der Studie {{ ec_number }}.
+    {% endblocktrans %}
+{% endblock %}

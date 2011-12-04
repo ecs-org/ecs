@@ -1,7 +1,8 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core %}
-{% blocktrans with top.meeting.start|date:'d.m.Y' as date and top.start|date:'H:i' as start and top.end|date:'H:i' as end%}
-Ihre Anwesenheit zur Sitzung am {{ date }} ist von {{ start }} bis {{ end }} Uhr erforderlich.
 
-Mit freundlichen Grüßen,
-    Ethik-Kommission der MedUni Wien
-{% endblocktrans %}
+{% block content %}
+    {% blocktrans with top.meeting.start|date:'d.m.Y' as date and top.start|date:'H:i' as start and top.end|date:'H:i' as end and submission|ec_number as ec_number and submission.project_title_display as project_title %}
+        Ihre Anwesenheit bezüglich Einreichung {{ ec_number }} ({{ project_title }}), zur Sitzung am {{ date }} ist von {{ start }} bis {{ end }} Uhr erforderlich.
+    {% endblocktrans %}
+{% endblock %}

@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     is_insurance_reviewer = models.BooleanField(default=False)
     is_expedited_reviewer = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
+    is_resident_member = models.BooleanField(default=False)
     is_help_writer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)

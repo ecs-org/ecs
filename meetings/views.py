@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
+import tempfile, zipfile
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -26,7 +27,7 @@ from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, RetrospectiveThesisExpeditedVoteForm)
+    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet)
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
 
@@ -42,7 +43,7 @@ def create_meeting(request):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def meeting_list(request, meetings, title=None):
     if not title:
         title = _('Meetings')
@@ -52,12 +53,12 @@ def meeting_list(request, meetings, title=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()), title=_('Upcoming Meetings'))
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()), title=_('Past Meetings'))
 
@@ -74,7 +75,7 @@ def reschedule_submission(request, submission_pk=None):
             entry.submission = None
             entry.save()
             entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
-        return HttpResponseRedirect(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+        return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,
         'form': form,
@@ -84,42 +85,98 @@ def reschedule_submission(request, submission_pk=None):
 def open_tasks(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    open_tasks = {}
-    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index'):
+    open_tasks = SortedDict()
+    no_index_tasks = []
+    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number'):
         with sudo():
             ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
         if len(ts):
-            open_tasks[top] = ts
-
+            if top.timetable_index is None:
+                no_index_tasks.append((top, ts))
+            else:
+                open_tasks[top] = ts
+    for top, ts in no_index_tasks:
+        open_tasks[top] = ts
+    
     return render(request, 'meetings/tabs/open_tasks.html', {
         'meeting': meeting,
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    next_tops = meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index')[:3]
+    next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number')[:3]
 
-    tops_without_votes = {}
-    for top in meeting.timetable_entries.filter(vote__isnull=True, submission__isnull=False).order_by('timetable_index'):
-        medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
-            category__in=top.submission.medical_categories.values('pk').query)
-        bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).distinct())
-        if bms in tops_without_votes:
-            tops_without_votes[bms].append(top)
+    open_tops = {}
+    for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number'):
+        if top.submission:
+            medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+                category__in=top.submission.medical_categories.values('pk').query)
+            bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
         else:
-            tops_without_votes[bms] = [top]
+            bms = ()
+        if bms in open_tops:
+            open_tops[bms].append(top)
+        else:
+            open_tops[bms] = [top]
 
-    tops_with_votes = meeting.timetable_entries.exclude(vote__isnull=True, submission__isnull=False).order_by('timetable_index')
+    closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index', 'submission__ec_number')
 
     return render(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,
         'next_tops': next_tops,
-        'tops_without_votes': tops_without_votes,
-        'tops_with_votes': tops_with_votes,
+        'open_tops': open_tops,
+        'closed_tops': closed_tops,
     })
+
+
+@user_flag_required('is_internal', 'is_resident_member')
+def submission_list(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    tops = meeting.timetable_entries.select_related('submission', 'submission__current_submission_form').order_by('timetable_index', 'submission__ec_number')
+    return render(request, 'meetings/tabs/submissions.html', {
+        'meeting': meeting,
+        'tops': tops,
+    })
+
+
+@user_flag_required('is_internal')
+def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    
+    doctypes = ('patientinformation', 'checklist')
+    files = set()
+    
+    filename_bits = [slugify(meeting.title)]
+
+    def _add(submission):
+        sf = submission.current_submission_form
+        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted')
+        for doc in docs:
+            files.add((submission, doc))
+        files.add((submission, sf.pdf_document))
+
+    with sudo():
+        if submission_pk:
+            submission = get_object_or_404(meeting.submissions, pk=submission_pk)
+            _add(submission)
+            filename_bits.append(submission.get_filename_slice())
+        else:
+            for submission in meeting.submissions.all():
+                _add(submission)
+
+    tmp = tempfile.NamedTemporaryFile(suffix='.zip')
+    with zipfile.ZipFile(tmp, 'w') as zf:
+        for submission, doc in files:
+            with doc.as_temporary_file() as docfile:
+                zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+    tmp.seek(0)
+    response = HttpResponse(tmp, content_type='application/zip')
+    response['Content-Disposition'] = 'attachment;filename=%s.zip' % '.'.join(filename_bits)
+    return response
+
 
 @user_flag_required('is_internal')
 def add_free_timetable_entry(request, meeting_pk=None):
@@ -165,6 +222,14 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
+    
+@user_flag_required('is_internal')
+def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    p = get_object_or_404(Participation, user=user_pk, entry=entry_pk)
+    p.ignored_for_optimization = not p.ignored_for_optimization
+    p.save()
+    return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
 def move_timetable_entry(request, meeting_pk=None):
@@ -206,17 +271,20 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)
-    constraint_formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
-    if constraint_formset.is_valid():
-        for constraint in constraint_formset.save(commit=False):
+    formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
+    saved = False
+    if formset.is_valid():
+        for constraint in formset.save(commit=False):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
-        return HttpResponseRedirect(reverse('ecs.meetings.views.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
+        formset = UserConstraintFormSet(None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
+        saved = True
     return render(request, 'meetings/constraints/user_form.html', {
         'meeting': meeting,
         'participant': user,
-        'constraint_formset': constraint_formset,
+        'formset': formset,
+        'saved': saved,
     })
 
 @readonly(methods=['GET'])
@@ -327,19 +395,29 @@ def meeting_assistant_comments(request, meeting_pk=None):
 @user_flag_required('is_internal')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
-    form = RetrospectiveThesisExpeditedVoteForm(request.POST or None, meeting=meeting)
-    if form.is_valid():
-        form.save()
-        form = RetrospectiveThesisExpeditedVoteForm(None, meeting=meeting)
-    else:
-        print form.errors
+    thesis_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.retrospective_thesis_entries, prefix='thesis')
+    expedited_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.expedited_entries, prefix='expedited')
+    localec_vote_formset = ExpeditedVoteFormSet(request.POST or None, queryset=meeting.localec_entries, prefix='localec')
+
+    if request.method == 'POST':
+        if thesis_vote_formset.is_valid():
+            thesis_vote_formset.save()
+            thesis_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.retrospective_thesis_entries, prefix='thesis')
+        if expedited_vote_formset.is_valid():
+            expedited_vote_formset.save()
+            expedited_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.expedited_entries, prefix='expedited')
+        if localec_vote_formset.is_valid():
+            localec_vote_formset.save()
+            localec_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.localec_entries, prefix='localec')
 
     return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
         'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'expedited_entries': meeting.expedited_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'localec_entries': meeting.localec_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
         'meeting': meeting,
-        'form': form,
+        'thesis_vote_formset': thesis_vote_formset,
+        'expedited_vote_formset': expedited_vote_formset,
+        'localec_vote_formset': localec_vote_formset,
     })
 
 @readonly(methods=['GET'])
@@ -394,11 +472,14 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
 
     checklist_review_states = SortedDict()
     blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
     if top.submission:
         for blueprint in ChecklistBlueprint.objects.order_by('name'):
             with sudo():
-                tasks = list(Task.objects.for_submission(top.submission).filter(deleted_at=None,
-                    task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id))
+                tasks = Task.objects.for_submission(top.submission).filter(deleted_at=None)
+                tasks = tasks.filter(task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id
+                    ) | tasks.filter(content_type=checklist_ct, data_id__in=Checklist.objects.filter(blueprint=blueprint)).exclude(workflow_token__node__uid='external_review_review')
+                tasks = list(tasks)
             checklists = []
             for task in tasks:
                 lookup_kwargs = {'blueprint': blueprint}
@@ -422,7 +503,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -458,7 +539,9 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
-        send_system_message_template(top.submission.primary_investigator.user, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+        sf = top.submission.current_submission_form
+        for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
+            send_system_message_template(u, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
     
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
@@ -489,22 +572,24 @@ def send_protocol(request, meeting_pk=None):
 
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
-    pdf = meeting.get_protocol_pdf(request)
+    with sudo():
+        pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
 
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
         slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
     )
-    pdf = meeting.get_timetable_pdf(request)
+    with sudo():
+        pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
 
 @readonly()
@@ -517,7 +602,7 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     return response
 
 @readonly()
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def next(request):
     try:
         meeting = Meeting.objects.next()
@@ -526,15 +611,16 @@ def next(request):
     else:
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
+
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting))
+    expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting).distinct())
     experts_saved = False
 
-    if request.method == 'POST' and expert_formset.is_valid():
+    if request.method == 'POST' and expert_formset.is_valid() and request.user.ecs_profile.is_internal:
         submitted_form = request.POST.get('submitted_form')
         if submitted_form == 'expert_formset' and expert_formset.is_valid():
             active = 'experts'
@@ -567,27 +653,35 @@ def meeting_details(request, meeting_pk=None, active=None):
         votes = Vote.objects.filter(top=top)
         c = votes.count()
         assert(c < 2)
-        if c is 0:
+        if not c:
             vote = None
         else:
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
+    
+    with sudo():
+        submissions = meeting.submissions.all()
 
     return render(request, 'meetings/details.html', {
-        'cumulative_count': meeting.submissions.all().count(),
-        'amg_submissions': meeting.submissions.amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
-        'mpg_submissions': meeting.submissions.mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
-        'amg_mpg_submissions': meeting.submissions.amg_mpg(),
-        'retrospective_thesis_submissions': meeting.submissions.retrospective_thesis(),
-        'expedited_submissions': meeting.submissions.expedited(),
-        'localec_submissions': meeting.submissions.localec(),
-        'other_submissions': meeting.submissions.exclude(pk__in=meeting.submissions.amg().values('pk').query).exclude(pk__in=meeting.submissions.mpg().values('pk').query).exclude(pk__in=meeting.submissions.retrospective_thesis().values('pk').query).exclude(pk__in=meeting.submissions.expedited().values('pk').query).exclude(pk__in=meeting.submissions.localec().values('pk').query),
-        'dissertation_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=1),
-        'diploma_thesis_submissions': meeting.submissions.filter(current_submission_form__project_type_education_context=2),
-        'amg_multi_main_submissions': meeting.submissions.localec(),
-        'remission_submissions': meeting.submissions.filter(remission=True),
-        'b3_examined_submissions': meeting.submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
-        'b3_not_examined_submissions': meeting.submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
+        'cumulative_count': submissions.distinct().count(),
+
+        'board_submissions': submissions.for_board_lane(),
+        'amg_submissions': submissions.for_board_lane().amg().exclude(pk__in=meeting.submissions.mpg().values('pk').query),
+        'mpg_submissions': submissions.for_board_lane().mpg().exclude(pk__in=meeting.submissions.amg().values('pk').query),
+        'amg_mpg_submissions': submissions.for_board_lane().amg_mpg(),
+        'not_amg_and_not_mpg_submissions': submissions.for_board_lane().not_amg_and_not_mpg(),
+
+        'retrospective_thesis_submissions': submissions.for_thesis_lane(),
+        'expedited_submissions': submissions.expedited(),
+        'localec_submissions': submissions.localec(),
+        'other_submissions': submissions.filter(workflow_lane=None),
+
+        'dissertation_submissions': submissions.filter(current_submission_form__project_type_education_context=1),
+        'diploma_thesis_submissions': submissions.filter(current_submission_form__project_type_education_context=2),
+        'amg_multi_main_submissions': submissions.localec(),
+        'remission_submissions': submissions.filter(remission=True),
+        'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
+        'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
         'meeting': meeting,
         'expert_formset': expert_formset,
         'experts_saved': experts_saved,

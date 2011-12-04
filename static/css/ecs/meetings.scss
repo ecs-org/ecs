@@ -117,7 +117,11 @@
         }
 
         &.violates_constraint {
-            background-color: #ff0000;
+            background-color: #ff0000 * 0.4 + 0.6 * #fff;
+        }
+        
+        &.has_ignored_participations{
+            background-color: #ff00ff * 0.4 + 0.6 * #fff;
         }
 
         a.remove {
@@ -150,6 +154,10 @@
         
         input.optimal_start {
             width: 50px;
+        }
+        
+        a.ignored{
+            text-decoration: line-through;
         }
     }
     

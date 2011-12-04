@@ -18,7 +18,7 @@
 
 <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 <ul class="thread">
@@ -28,7 +28,7 @@
             <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
             <span class="preview">{{ message|preview:80 }}</span>
             {% if not thread|closed_by:user %}
-                <span class="message_done">als erledigt markieren: <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="Erledigt">done</a></span>
+                <span class="message_done">{% trans 'mark as done' %}: <a class="icon_done" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}">done</a></span>
             {% endif %}
             <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
         </div>
@@ -57,7 +57,7 @@
 
 <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url ecs.core.views.readonly_submission_form submission_form_pk=thread.submission.current_submission_form.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 </div>

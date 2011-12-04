@@ -85,6 +85,10 @@ class Notification(models.Model):
     
     def __unicode__(self):
         return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
+    
+    @property
+    def short_name(self):
+        return unicode(self.type)
         
     @property
     def is_rejected(self):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 from datetime import datetime, timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
@@ -6,6 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.db import transaction
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
 
@@ -288,18 +290,24 @@ _queries = {
     'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
-    'thesis':           lambda s,u: s.retrospective_thesis(),
+    'other':            lambda s,u: s.not_amg_and_not_mpg(),
+
+    # lane filters
+    'board':            lambda s,u: s.for_board_lane(),
+    'thesis':           lambda s,u: s.for_thesis_lane(),
     'expedited':        lambda s,u: s.expedited(),
-    'other':            lambda s,u: s.exclude(pk__in=s.amg().values('pk').query).exclude(pk__in=s.mpg().values('pk').query).exclude(pk__in=s.retrospective_thesis().values('pk').query).exclude(pk__in=s.expedited().values('pk').query),
-    'b2':               lambda s,u: s.b2(),
-    'b3':               lambda s,u: s.b3(),
-    'b4':               lambda s,u: s.b4(),
-    'other_votes':      lambda s,u: s.b1() | s.b5(),
-    'no_votes':         lambda s,u: s.exclude(pk__in=s.b1().values('pk').query).exclude(pk__in=s.b2().values('pk').query).exclude(pk__in=s.b3().values('pk').query).exclude(pk__in=s.b4().values('pk').query).exclude(pk__in=s.b5().values('pk').query),
+    'local_ec':         lambda s,u: s.localec(),
+
+    # vote filters
+    'b2':               lambda s,u: s.b2(include_pending=u.ecs_profile.is_internal),
+    'b3':               lambda s,u: s.b3(include_pending=u.ecs_profile.is_internal),
+    'b4':               lambda s,u: s.b4(include_pending=u.ecs_profile.is_internal),
+    'other_votes':      lambda s,u: s.b1(include_pending=u.ecs_profile.is_internal) | s.b5(include_pending=u.ecs_profile.is_internal),
+    'no_votes':         lambda s,u: s.without_vote(include_pending=u.ecs_profile.is_internal),
+
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
     'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
-    'local_ec':         lambda s,u: s.localec(),
 }
 
 _labels = {
@@ -308,9 +316,13 @@ _labels = {
     'other_meetings': _('Other Meetings'),
     'amg': _('AMG'),
     'mpg': _('MPG'),
+    'other': _('Other'),
+
+    'board': _('Board'),
     'thesis': _('Thesis'),
     'expedited': _('Expedited'),
-    'other': _('Other'),
+    'local_ec': _('Local EC'),
+
     'b2': _('B2 Votes'),
     'b3': _('B3 Votes'),
     'b4': _('B4 Votes'),
@@ -319,7 +331,6 @@ _labels = {
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
-    'local_ec': _('Local EC'),
 }
 
 class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
@@ -365,7 +376,8 @@ class SubmissionFilterForm(forms.Form):
         return submissions
 
 FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
-FILTER_TYPE = ('amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other')
+FILTER_TYPE = ('amg', 'mpg', 'other')
+FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 
@@ -373,20 +385,24 @@ class SubmissionMinimalFilterForm(SubmissionFilterForm):
     layout = ()
 
 class SubmissionWidgetFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE)
 
 class AssignedSubmissionsFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES)
 
 class MySubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_VOTES,)
 
 class AllSubmissionsFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
+    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
+
+
+import_error_logger = logging.getLogger('ecx-import')
 
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))
-
+    
+    @transaction.commit_manually()
     def clean_file(self):
         f = self.cleaned_data['file']
         from ecs.core.serializer import Serializer
@@ -394,9 +410,11 @@ class SubmissionImportForm(forms.Form):
         try:
             self.submission_form = serializer.read(self.cleaned_data['file'])
         except Exception as e:
-            import traceback
-            traceback.print_exc(e)
+            import_error_logger.debug('invalid ecx file')
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
+            transaction.rollback()
+        else:
+            transaction.commit()
         f.seek(0)
         return f
 

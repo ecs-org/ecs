@@ -336,6 +336,14 @@ iframe.upload {
     .warning {
       display: none;
     }
+    .pdf_warning {
+      display: inline-block;
+      background-color: $yellow-dark;
+      padding: 3px 5px;
+      border-radius: 3px;
+      border: 1px solid $yellow-extra-dark;
+      margin: 5px 0;
+    }
 }
 
 /* list cycles */

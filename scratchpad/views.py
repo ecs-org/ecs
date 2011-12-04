@@ -6,7 +6,7 @@ from ecs.scratchpad.forms import ScratchPadForm
 from ecs.scratchpad.models import ScratchPad
 from ecs.core.models.submissions import Submission
 
-@readonly(methods=['GET'])
+
 def popup(request, scratchpad_pk=None):
     submission = None
     submission_pk = request.GET.get('submission')

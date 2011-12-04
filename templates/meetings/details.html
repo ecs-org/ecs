@@ -7,8 +7,13 @@
             <a href="#">{% trans "Overview" %}</a>
             <ul class="tab_headers">
                 <li><a href="#status_tab">{% trans "Status" %}</a></li>
-                <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
-                <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
+                {% if user|has_flag:'is_internal' %}
+                    <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
+                    <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
+                {% endif %}
+                {% if user|has_flag:'is_internal' or user|has_flag:'is_resident_member' %}
+                    <li><a href="#submissions_tab">{% trans "Submissions" %}</a></li>
+                {% endif %}
                 {% if user|is_member_of:"EC-Signing Group" %}
                     <li{% if active == 'signing' %} class="active"{% endif %}><a href="#signing_tab">{% trans "Signatur der Voten" %}</a></li>
                 {% endif %}
@@ -36,12 +41,19 @@
     <div id="status_tab">
         {% include 'meetings/tabs/status.html' %}
     </div>
+    {% if user|has_flag:'is_internal' %}
     <div id="open_tasks_tab">
         <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
     </div>
     <div id="tops_tab">
         <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
     </div>
+    {% endif %}
+    {% if user|has_flag:'is_internal' or user|has_flag:'is_resident_member' %}
+    <div id="submissions_tab">
+        <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"></div>
+    </div>
+    {% endif %}
     {% if user|is_member_of:"EC-Signing Group" %}
     <div id="signing_tab">
         {% include 'meetings/tabs/signing.html' %}
@@ -85,7 +97,7 @@
             updateHeaderHeight();
 
             {% if experts_saved %}
-                ecs.messages.alert('{% trans 'Experts assignment saved' %}', '{% trans 'The expert assignment has been saved.' %}');
+                ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.' %}');
             {% endif %}
         });
     </script>

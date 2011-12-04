@@ -34,6 +34,9 @@ ecs.widgets.Widget = new Class({
         }
     },
     load: function(url, form, callback){
+        if ($defined(this.request) && this.request.running) {
+            this.request.cancel();
+        }
         var target_url = url;
         if(this.url && url && url.indexOf('$CURRENT_URL$') >= 0){
             url = url.replace(/\$CURRENT_URL\$/, encodeURIComponent(this.url.replace(/^https?:\/\/[^/]+/, '')));
@@ -58,6 +61,7 @@ ecs.widgets.Widget = new Class({
             this.onSuccess();
         }).bind(this));
         request.send();
+        this.request = request;
     },
     onSuccess: function(){
         var self = this;

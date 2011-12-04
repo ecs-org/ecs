@@ -2,8 +2,6 @@
 
 /* general colors */
 
-$link-blue: #2B558E;
-
 $red: #ff0000;
 
 $black: #000000;
@@ -29,7 +27,13 @@ $middle-dark-brown-bg: #E8E8D8; // used e.g. for zebra even
 $lightblue: #D8E6EF; // used for header backgrounds
 $lightskyblue: #B7D4E5;
 
+$link-blue: #2B558E;
+
 $wheatbrown: #EDDFBF;
+
+$yellow: #ffff00;
+$yellow-dark: #F9F77A;
+$yellow-extra-dark: adjust-color(#F9F77A, $lightness: -25%);
 
 //$moritz : #38FA90;
 //$moritz-light : lighten(moritz, 20%)

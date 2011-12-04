@@ -6,8 +6,6 @@ from copy import deepcopy
 # root dir of project
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
 
-
-
 # standard django settings
 ##########################
 
@@ -57,6 +55,9 @@ USE_I18N = True
 # because it depends on the settings.
 gettext = lambda s: s
 
+# path where django searches for *.mo files
+LOCALE_PATHS = (os.path.join(PROJECT_DIR, "locale"),)
+
 # declare supported languages for i18n. English is the internal project language.
 # We do not want to expose our internal denglish to the end-user, so disable english
 # in the settings
@@ -102,7 +103,7 @@ AUTH_PROFILE_MODULE = 'users.UserProfile'
 MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Session Settings
-SESSION_COOKIE_AGE = 2700                # logout after 45 minutes of inactivity
+SESSION_COOKIE_AGE = 3600                # logout after 60 minutes of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of browser
 
@@ -157,6 +158,7 @@ MIDDLEWARE_CLASSES = (
 
 STARTUP_CALLS = (
     'ecs.integration.startup.startup',
+    'ecs.users.startup.startup',
 )
 
 INSTALLED_APPS = (
@@ -226,9 +228,15 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # ecs settings
 ##############
 
-# this is passed to pdfcop from origami and must be one of 'none', 'standard', 'strong', 'paranoid'
+# These settings are passed to pdfcop from origami via the `--config` and `--policy` options.
 # see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
-ECS_PDFCOP_POLICY = 'paranoid'
+ECS_PDFCOP_CONFIG_FILE = os.path.join(PROJECT_DIR, '..', 'pdfcop.conf.yml')
+ECS_PDFCOP_POLICY = 'ecs'
+
+WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
+
+# whether ecs.tracking should store requests
+ECS_TRACKING_ENABLED = False
 
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
@@ -394,7 +402,7 @@ AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
 # ecs.feedback tracrpc settings
 FEEDBACK_CONFIG = {}
 # ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 17',}
+BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 18',}
 
 # if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
 # set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  

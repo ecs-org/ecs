@@ -10,11 +10,12 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.documents.views.download_document document_pk=xls_doc.pk %}">Detailierte Auflistung</a>
+    <a href="{% url ecs.documents.views.download_document document_pk=invoice.document.pk %}">Detailierte Auflistung</a>
 
     <h2>Zusammenfassung</h2>
+    {% with invoice.stats as stats %}
     <table class="billing_summary">
-        {% for item in summary.values %}
+        {% for item in stats.summary.values %}
             <tr>
                 <td>{{ item.label }}</td>
                 <td>{{ item.count }}</td>
@@ -28,8 +29,9 @@
             <td></td>
             <td></td>
             <td></td>
-            <td>{{ total|euro }}</td>
+            <td>{{ stats.total|euro }}</td>
         </tr>
     </table>
+    {% endwith %}
 {% endblock %}
 

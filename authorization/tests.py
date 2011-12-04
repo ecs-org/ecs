@@ -145,14 +145,14 @@ class SubmissionAuthTestCase(EcsTestCase):
         '''
         
         self._check_view(False, 'ecs.core.views.all_submissions')
-        self._check_view(False, 'ecs.core.views.readonly_submission_form', submission_form_pk=self.sf.pk)
+        self._check_view(False, 'readonly_submission_form', submission_form_pk=self.sf.pk)
         self._check_view(True, 'ecs.core.views.submission_pdf', submission_form_pk=self.sf.pk)
         self._check_view(False, 'ecs.core.views.diff', self.sf.pk, self.sf.pk)
 
         export_url = reverse('ecs.core.views.export_submission', kwargs={'submission_pk': self.sf.submission.pk})
         self._check_access(False, True, self.unapproved_user, export_url)
         self._check_access(False, True, self.anyone, export_url)
-        self._check_access(False, True, self.submitter_user, export_url)
+        self._check_access(True, True, self.submitter_user, export_url)
         self._check_access(False, True, self.sponsor_user, export_url)
         self._check_access(False, True, self.primary_investigator_user, export_url)
         self._check_access(True, True, self.internal_user, export_url)

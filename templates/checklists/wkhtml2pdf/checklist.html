@@ -1,7 +1,7 @@
 {% extends 'db/wkhtml2pdf/skeleton.html' %}
 {% load core i18n %}
 
-{% block title %}Meeting Agenda{% endblock %}
+{% block title %}{{ checklist.blueprint }} für {{ checklist.submission }}{% endblock %}
 
 {% block inline_css %}
     {{ block.super }}
@@ -34,7 +34,7 @@
         {{ checklist.blueprint }} für {{ checklist.submission }}
         {% with checklist.submission as submission %}
         {% if submission %}
-            <br>für {{ submission|ec_number }} {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+            <br>{{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% endif %}
         {% endwith %}
     </h1>

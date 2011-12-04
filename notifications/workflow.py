@@ -115,6 +115,18 @@ class AmendmentReview(BaseNotificationReview):
             n.review_lane = choice
             n.save()
 
+
+class FinalAmendmentReview(EditNotificationAnswer):
+    class Meta:
+        model = Notification
+    
+    def get_choices(self):
+        return (
+            (True, _('Publish')),
+            (False, _('Needs further review')),
+        )
+        
+
 class SafetyNotificationReview(Activity):
     class Meta:
         model = Notification

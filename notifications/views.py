@@ -149,7 +149,7 @@ def create_notification(request, notification_type_pk=None):
         
         request.docstash.update({
             'form': form,
-            'submission_forms': getattr(form, 'cleaned_data', {}).get('submission_forms', []),
+            'submission_forms': list(SubmissionForm.objects.filter(pk__in=form.data.getlist('submission_forms'))), # we cannot use cleaned_data as the form may not validate
         })
         request.docstash.name = "%s" % notification_type.name
         

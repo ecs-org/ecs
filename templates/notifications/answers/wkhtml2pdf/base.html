@@ -37,15 +37,14 @@
     <h2>Angaben zum Forschungsprojekt</h2>
 
     {% block mainitem %}
-        <p >
-            <b>Studientitel:</b>
+        <h4>Studientitel:</h4>
             {% for submission_form in notification.submission_forms.all %}
+            <p>
                 {{ submission_form.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
+            </p>
             {% endfor %}
-        </p>
-        <p>
-        <b>Begründung/Stellungnahme/Mitteilung</b><br>
-        <b>{{ notification.comments|default:"nicht vorhanden" }}</b></p>
+          <p><b>Begründung/Stellungnahme/Mitteilung:</b></p>
+          <p>{{ notification.comments|linebreaksbr|default:"nicht vorhanden" }}</p>
     {% endblock %}
 
     {% block documents %}
@@ -65,7 +64,7 @@
         {% endif %}
     {% endblock %}
     
-    <div>{{ answer.text }}</div>
+    <p>{{ answer.text|linebreaksbr }}</p>
 
 {% endblock %}
 

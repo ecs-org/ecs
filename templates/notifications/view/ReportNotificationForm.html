@@ -6,9 +6,9 @@
     {% if not notification.study_started %}
         <tr><th>{% trans 'Reason for not started' %}:</th><td>{{ notification.reason_for_not_started }}</td></tr>
     {% endif %}
-    <tr><th>{% trans 'Recruited subjects' %}: </th><td>{{ notification.recruited_subjects }}</td></tr>
-    <tr><th>{% trans 'Finished subjects' %}: </th><td>{{ notification.finished_subjects }}</td></tr>
-    <tr><th>{% trans 'Aborted subjects' %}: </th><td>{{ notification.aborted_subjects }}</td></tr>
+    <tr><th>{% trans 'Recruited subjects' %}: </th><td>{{ notification.recruited_subjects|default_if_none:"<em>keine Angabe</em>" }}</td></tr>
+    <tr><th>{% trans 'Finished subjects' %}: </th><td>{{ notification.finished_subjects|default_if_none:"<em>keine Angabe</em>" }}</td></tr>
+    <tr><th>{% trans 'Aborted subjects' %}: </th><td>{{ notification.aborted_subjects|default_if_none:"<em>keine Angabe</em>" }}</td></tr>
     <tr><th>{% trans 'SAE count' %}: </th><td>{{ notification.SAE_count }}</td></tr>
     <tr><th>{% trans 'SUSAR count' %}: </th><td>{{ notification.SUSAR_count }}</td></tr> 
 {% endblock %}

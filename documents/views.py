@@ -10,6 +10,7 @@ from haystack.utils import Highlighter
 
 from ecs.documents.models import Page, Document
 from ecs.documents.forms import DocumentForm
+from ecs.documents.signals import on_document_download
 
 
 HIGHLIGHT_PREFIX_WORD_COUNT = 3
@@ -43,6 +44,7 @@ def delete_document(request, document_pk):
 def handle_download(request, doc):
     url = doc.get_downloadurl()
     if url and doc.doctype.is_downloadable or request.user.ecs_profile.is_internal:
+        on_document_download.send(Document, document=doc, user=request.user)
         return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()

@@ -60,12 +60,12 @@
           <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans 'New Notification' %}</a></li>
       </ul>
     </li>
-    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" or user|has_flag:"is_resident_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
                 <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
-                {% if user|has_flag:"is_internal" %}
+                {% if user|has_flag:"is_internal" or user|has_flag:"is_resident_member" %}
                     <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
                     <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
                     {% if user|is_member_of:"EC-Office" %}
@@ -81,7 +81,7 @@
           <ul class="elements">
                 {% if user|has_flag:"is_internal" %}
                     <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
-                    <li><a href="{% url ecs.billing.views.submission_billing %}">Gebühren</a></li>
+                    <li><a href="{% url ecs.billing.views.submission_billing %}">{% trans "Accounting of fees" %}</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
                 {% endif %}
                 <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
@@ -292,6 +292,7 @@
       
       $('help_button').addEvent('click', function(e){
           var link = $(e.target);
+          {% if request.tracking_data.view %}
           var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
           if(e.shift){
               url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
@@ -299,6 +300,9 @@
           if(window.location.hash){
               url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
           }
+          {% else %}
+          var url = '{% url ecs.help.views.index %}';
+          {% endif %}
           var win = window.open(url, 'ecshelp');
           win.focus();
           return false;

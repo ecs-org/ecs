@@ -22,7 +22,7 @@
     <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}">
+        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
             <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
             <h4>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
@@ -44,8 +44,10 @@
             {% endif %}
             {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
             {% if not entry.is_break %}
-            <span>Teilnehmer: 
-                {% for user in entry.users %}{{ user }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            <span class="users">Teilnehmer: 
+                {% for user, ignored in entry.users %}
+                    <a href="{% url ecs.meetings.views.toggle_participation meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
             </span>
             {% else %}
             <span>

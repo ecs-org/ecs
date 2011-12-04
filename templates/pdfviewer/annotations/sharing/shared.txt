@@ -1,0 +1,8 @@
+{% extends 'msg_core.txt' %}
+{% load i18n %}
+
+{% block content %}
+    {% blocktrans with url as url %}
+        See {{ url }}.
+    {% endblocktrans %}
+{% endblock %}

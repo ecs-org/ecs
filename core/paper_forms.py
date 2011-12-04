@@ -47,7 +47,7 @@ FormInfo(SafetyNotification, fields=(
 ))
 
 FormInfo(ReportNotification, fields=(
-    FieldInfo('3.1', 'study_started', _(u'The study has been started')),
+    FieldInfo('3.1', 'study_started', _(u'The study has been started'), help_text=_(u'please add additional details to the field "comments"')),
     FieldInfo(None, 'reason_for_not_started', _(u'Why hasn\'t the study been started?')),
     FieldInfo('3.2', 'recruited_subjects', _(u'Number of recruited patients / subjects')),
     FieldInfo('3.3', 'finished_subjects', _(u'Number of patients / subjects who completed the study')),

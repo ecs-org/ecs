@@ -1,18 +1,6 @@
 # ecs main application environment config
 import platform
-import sys
-import os
-import shutil
-import tempfile
-import subprocess
-import distutils.dir_util
-
-from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_template,\
-    write_regex_replace
-from deployment.pkgmanager import get_pkg_manager, package_merge, packageline_split
-from ecs.target import SetupTarget
-import logging
-
+from deployment.pkgmanager import package_merge
 
 # packages
 ##########
@@ -41,6 +29,7 @@ pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-p
 
 # timezone handling
 pytz:inst:all:pypi:pytz
+
 # python docutils, needed by django, ecs, and others
 roman:inst:all:pypi:roman
 docutils:inst:all:pypi:docutils\>=0.7
@@ -134,7 +123,7 @@ tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
 tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
 pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
-mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.6.war:custom:BKUOnline-1.3.6.war
+mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.6.war:custom:bkuonline.war
 
 
 # ecs/mediaserver: file encryption, used for storage vault 
@@ -263,6 +252,12 @@ django-reversion:inst:all:pypi:django-reversion
 # diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
+# windows needed for manage.py makemessages and compilemessages which are now part of bootstrap
+gettext_runtime:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-0.17.zip:custom:intl.dll
+gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-0.17.zip:custom:xgettext.exe
+#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
+#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
+
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main requirements for now
 django-rosetta:inst:all:pypi:django-rosetta
 """
@@ -299,11 +294,6 @@ django-test-utils:inst:all:pypi:django-test-utils
 
 # packages needed or nice to have for development
 developer_packages=  """
-# windows needed for manage.py makemessages and compilemessages
-gettext_runtime:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-0.17.zip:custom:intl.dll
-gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-0.17.zip:custom:xgettext.exe
-#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
-#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
 
 # debugging toolbar, switched back to robhudson original tree
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
@@ -348,8 +338,8 @@ modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 # postgresql is used as primary database
 postgresql:req:apt:apt-get:postgresql
 
-# exim is used as incoming smtp firewall and as smartmx for outgoing mails
-exim:req:apt:apt-get:exim4
+# postfix is used as incoming smtp firewall and as smartmx for outgoing mails
+postfix:req:apt:apt-get:postfix
 
 # solr is used for fulltext indexing
 solr-jetty:req:apt:apt-get:solr-jetty
@@ -369,161 +359,12 @@ memcached:req:apt:apt-get:memcached
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 """
 
-
-def custom_check_tomcat_apt_user(pkgline, checkfilename):
-    print "custom_check_tomcat_apt_user"
-    return False
-
-def custom_install_tomcat_apt_user(pkgline, filename):
-    print "custom_install_tomcat_apt_user: not active"
-    return True
-
-def custom_check_tomcat_other_user(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
-    
-def custom_install_tomcat_other_user(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    temp_dir = tempfile.mkdtemp()
-    temp_dest = os.path.join(temp_dir, checkfilename)
-    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
-    result = False
-    
-    try:
-        if os.path.exists(final_dest):
-            shutil.rmtree(final_dest)
-        if pkg_manager.static_install_tar(filename, temp_dir, checkfilename, pkgline):
-            write_regex_replace(os.path.join(temp_dest, 'conf', 'server.xml'),
-                r'([ \t])+(<Connector port=)("[0-9]+")([ ]+protocol="HTTP/1.1")',
-                r'\1\2"4780"\4')
-            shutil.copytree(temp_dest, final_dest)
-            result = True
-    finally:    
-        shutil.rmtree(temp_dir)
-    
-    return result
-
-def custom_check_gettext_runtime(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
-    
-def custom_install_gettext_runtime(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
-    return True
-
-def custom_check_gettext_tools(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
-    
-def custom_install_gettext_tools(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
-    return True
-
-def custom_check_pdfas(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
-   
-def _patch_pdfas_war(target):
-    patchlib = import_from(os.path.join(os.path.dirname(get_pythonexe()), 'python-patch.py'))
-    patchlib.logger.setLevel(logging.INFO)
-    old_cwd = os.getcwd()
-    temp_dir = tempfile.mkdtemp()
-    pkg_manager = get_pkg_manager()
-    success = False
-    
-    try:
-        if pkg_manager.static_install_unzip(target, temp_dir, None, None):
-            os.chdir(os.path.join(temp_dir, "jsp"))
-            p = patchlib.fromfile(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                'signature', 'pdf-as-3.2-jsp.patch'))
-            if p.apply():
-                os.remove(target)
-                zipball_create(target, temp_dir)
-                success = True
-            else:
-                print("Error: Failed patching:", target, temp_dir)
-    finally:
-        os.chdir(old_cwd)
-        shutil.rmtree(temp_dir)
-        
-    return success
-
-def custom_install_pdfas(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    temp_dir = tempfile.mkdtemp()
-    temp_dest = os.path.join(temp_dir, "tomcat-6")
-    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
-    result = False
-    
-    try:
-        if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
-            if _patch_pdfas_war(os.path.join(temp_dest, "webapps", checkfilename)):
-                write_regex_replace(
-                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
-                    r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
-                    r'\1http://localhost:4780\3')
-                write_regex_replace(
-                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
-                    r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
-                    r'\2http://localhost:4780\4')
-                
-                distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
-                result = True
-    finally:    
-        shutil.rmtree(temp_dir)
-    
-    return result
-
-def custom_check_mocca(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
-
-def custom_install_mocca(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
-    pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
-
-def custom_install_origami(pkgline, filename):
-    return custom_install_ruby_gem(pkgline, filename)
-
-def custom_install_ruby_gem(pkgline, filename):
-    
-    gem_home = os.path.join(get_pythonenv(),'gems')
-    filename_dir = os.path.dirname(filename)
-    filename = os.path.basename(filename)
-    
-    if not os.path.exists(gem_home):
-        os.mkdir(gem_home)
-        
-    if not os.path.exists(os.path.join(filename_dir, filename)):
-        print "gem to install does not exist:", filename
-    
-    if sys.platform == 'win32':
-        gem_home = gem_home.replace("\\", "/")
-        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
-        install = 'cd {0}& set GEM_HOME="{1}"& set GEM_PATH="{1}"&\
-gem install --no-ri --no-rdoc --local --bindir="{2}" {3}'.format(
-            filename_dir, gem_home, bin_dir, filename)
-    else:
-        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
-        install = 'export GEM_HOME="{0}"; export GEM_PATH="{0}";\
-gem install --no-ri --no-rdoc --local --bindir="{1}" {2}'.format(
-            filename_dir, gem_home, bin_dir, filename)
-    
-    popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
-    stdout, stderr = popen.communicate() 
-    returncode = popen.returncode  
-    if returncode != 0:
-        print "Error:", returncode, stdout, stderr
-        return False
-    else:
-        return True
  
 
 # target bundles
 ################
+
+import ecs.target as target
 
 testing_bundle = main_packages
 default_bundle = main_packages
@@ -565,50 +406,3 @@ test_flavors = {
 }
 
 
-# app commands
-##############
-
-def help():
-    print ''' ecs-main application
-Usage: fab app:ecs,command[,options]
-
-commands:
-         
-  * wmrun(browser, targettest, *args, **kwargs):
-    run windmill tests; Usage: fab app:ecs,wmrun,<browser>,targettest[,*args,[targethost=<url>]]
-  
-  * wmshell(browser="firefox", *args, **kwargs):    
-    run windmill shell; Usage: fab app:ecs,wmshell,[<browser=firefox>[,*args,[targethost=<url>]]] 
-
-target support:
-
-  * update(*args, **kwargs):
-    calls SetupTarget.update(*arg,**kwargs), defaults to sane Methodlist
-    Example: fab target:ecs,update,daemonsstop,source_update
-    
-    Use: "fab target:ecs,help" for usage
-
-    '''
-
-def system_setup(use_sudo=True, dry=False, hostname=None, ip=None):
-    s = SetupTarget(use_sudo= use_sudo, dry= dry, hostname= hostname, ip= ip)
-    s.system_setup()
-
-def _wm_helper(browser, command, targettest, targethost, *args):
-    from deployment.utils import fabdir
-    # FIXME it seems without a PYTHON_PATH set we cant import from ecs...
-    sys.path.append(fabdir())
-    from ecs.integration.windmillsupport import windmill_run
-    return windmill_run(browser, command, targettest, targethost, *args)
-    
-def wmrun(browser, targettest, *args, **kwargs):
-    """ run windmill tests; Usage: fab app:ecs,wmrun,<browser>,targettest[,*args,[targethost=<url>]] """
-    print "args", args
-    print "kwargs", kwargs
-    targethost = kwargs["targethost"] if "targethost" in kwargs else "http://localhost:8000" 
-    _wm_helper(browser, "run", targettest, targethost, *args)
-    
-def wmshell(browser="firefox", *args, **kwargs):    
-    """ run windmill shell; Usage: fab app:ecs,wmshell,[<browser=firefox>[,*args,[targethost=<url>]]] """ 
-    targethost = kwargs["targethost"] if "targethost" in kwargs else "http://localhost:8000"
-    _wm_helper(browser, "shell", None, targethost, *args)

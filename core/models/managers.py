@@ -3,7 +3,9 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
 from ecs.authorization import AuthorizationManager
-from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
+from ecs.core.models.constants import (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, 
+    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
+)
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 
 def get_vote_filter_q(prefix, *args, **kwargs):
@@ -36,6 +38,9 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def mpg(self):
         return self.filter(current_submission_form__project_type_medical_device=True)
+        
+    def not_amg_and_not_mpg(self):
+        return self.exclude(current_submission_form__project_type_medical_device=True) & self.exclude(Q(current_submission_form__project_type_non_reg_drug=True)|Q(current_submission_form__project_type_reg_drug=True))
 
     def amg_mpg(self):
         return self.amg() & self.mpg()
@@ -43,20 +48,32 @@ class SubmissionQuerySet(models.query.QuerySet):
     def with_vote(self, *args, **kwargs):
         return self.filter(get_vote_filter_q('forms', *args, **kwargs))
 
-    def b1(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='1')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='1'), current_submission_form__isnull=False)
+    def _with_explicit_vote(self, *results, **kwargs):
+        q = Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=results)
+        if kwargs.get('include_pending', True):
+            q |= Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=results)
+        return self.filter(q, current_submission_form__isnull=False)
 
-    def b2(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='2')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='2'), current_submission_form__isnull=False)
+    def b1(self, include_pending=True):
+        return self._with_explicit_vote('1', include_pending=include_pending)
 
-    def b3(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=['3a', '3b'])|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=['3a', '3b']), current_submission_form__isnull=False)
+    def b2(self, include_pending=True):
+        return self._with_explicit_vote('2', include_pending=include_pending)
 
-    def b4(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='4')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='4'), current_submission_form__isnull=False)
+    def b3(self, include_pending=True):
+        return self._with_explicit_vote('3a', '3b', include_pending=include_pending)
 
-    def b5(self):
-        return self.filter(Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result='5')|Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result='5'), current_submission_form__isnull=False)
+    def b4(self, include_pending=True):
+        return self._with_explicit_vote('4', include_pending=include_pending)
+
+    def b5(self, include_pending=True):
+        return self._with_explicit_vote('5', include_pending=include_pending)
+        
+    def without_vote(self, include_pending=True):
+        q = Q(forms__current_published_vote__isnull=True)
+        if include_pending:
+            q &= Q(forms__current_pending_vote__isnull=True)
+        return self.filter(q, current_submission_form__isnull=False)
 
     def new(self):
         return self.filter(meetings__isnull=True)
@@ -75,7 +92,13 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def localec(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_LOCALEC)
-
+        
+    def for_thesis_lane(self):
+        return self.filter(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+        
+    def for_board_lane(self):
+        return self.filter(workflow_lane=SUBMISSION_LANE_BOARD)
+    
     def next_meeting(self):
         from ecs.meetings.models import Meeting
         try:
@@ -123,6 +146,9 @@ class SubmissionManager(AuthorizationManager):
 
     def amg_mpg(self):
         return self.all().amg_mpg()
+        
+    def not_amg_and_not_mpg(self):
+        return self.all().not_amg_and_not_mpg()
 
     def new(self):
         return self.all().new()
@@ -171,6 +197,12 @@ class SubmissionManager(AuthorizationManager):
 
     def none(self):
         return self.all().none()
+        
+    def for_thesis_lane(self):
+        return self.all().for_thesis_lane()
+        
+    def for_board_lane(self):
+        return self.all().for_board_lane()
 
 
 class SubmissionFormQuerySet(models.query.QuerySet):

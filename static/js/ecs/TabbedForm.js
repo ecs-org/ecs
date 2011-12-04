@@ -32,13 +32,15 @@ ecs.TabbedForm = new Class({
             setInterval(this.autosave.bind(this), this.options.autosaveInterval * 1000);
             $(window).addEvent('unload', this.autosave.bind(this));
         }
+        else{
+            this.lastSave = {};
+        }
     },
     _save: function(callback, extraParameter){
         var currentData = this.form.toQueryString();
 
         this.lastSave.timestamp = new Date();
         this.lastSave.data = currentData;
-
 
         if(!callback){
             callback = function(){ecs.messages.alert('_save', 'Das Formular wurde gespeichert');};

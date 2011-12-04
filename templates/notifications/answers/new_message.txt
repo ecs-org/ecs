@@ -4,6 +4,6 @@ Antwort auf {{ notification }} ({{ ABSOLUTE_URL_PREFIX }}{% url ecs.notification
 {% endfor %}
 vom {{ notification.timestamp|date:'d.m.Y' }}.
 
-User: {{ notification.user }}
+Eingereicht von: {{ notification.user }}
 
 {{ answer.text }}

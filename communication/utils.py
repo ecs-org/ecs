@@ -5,7 +5,7 @@ from django.template import RequestContext, Context, loader, Template
 from django.conf import settings
 
 from ecs.communication.models import Thread
-from ecs.users.utils import get_user
+from ecs.users.utils import get_user, get_current_user
 
 
 def msg_fun(func):
@@ -42,6 +42,7 @@ def send_message(sender, receiver, subject, text, submission=None, task=None, re
     return thread
 
 def send_system_message(*args, **kwargs):
+    kwargs.setdefault('reply_receiver', get_current_user())
     return send_message(get_user('root@example.org'), *args, **kwargs)
 
 @msg_fun
@@ -69,5 +70,5 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
     return send_message(sender, receiver, subject, text, *args, **kwargs)
 
 def send_system_message_template(*args, **kwargs):
+    kwargs.setdefault('reply_receiver', get_current_user())
     return send_message_template(get_user('root@example.org'), *args, **kwargs)
-

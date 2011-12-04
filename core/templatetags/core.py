@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
-from django.template import Library
+from textwrap import dedent
+from django import template
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 
@@ -8,7 +9,7 @@ from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash
 
-register = Library()
+register = template.Library()
 
 def getitem(obj, name):
     try:
@@ -142,3 +143,29 @@ def allows_export_by(sf, user):
 @register.filter
 def is_presenting_party(user, sf):
     return user in sf.get_presenting_parties()
+
+@register.tag(name='strip')
+def do_strip(parser, token):
+    nodelist = parser.parse(('endstrip',))
+    parser.delete_first_token()
+    return StripNode(nodelist)
+
+class StripNode(template.Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        return self.nodelist.render(context).strip()
+
+@register.tag(name='dedent')
+def do_dedent(parser, token):
+    nodelist = parser.parse(('enddedent',))
+    parser.delete_first_token()
+    return DedentNode(nodelist)
+
+class DedentNode(template.Node):
+    def __init__(self, nodelist):
+        self.nodelist = nodelist
+
+    def render(self, context):
+        return dedent(self.nodelist.render(context))

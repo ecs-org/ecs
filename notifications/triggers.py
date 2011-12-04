@@ -20,9 +20,6 @@ def on_safety_notification_review(sender, **kwargs):
     notification = notification.safetynotification
     notification.is_acknowledged = True
     notification.save()
-    presenters = User.objects.filter(pk__in=notification.submission_forms.all().values('submission__presenter__pk').query).distinct()
-    for presenter in presenters:
-        send_system_message_template(presenter, _(u'Sicherheitsmeldungseingangsbestätigung'), 'notifications/messages/safety_notification_acknowledgement.txt', {
-            'notification': notification,
-            'submission_forms': notification.submission_forms.order_by('submission__ec_number'),
-        })
+
+    # automatically create notification answer
+    answer = NotificationAnswer.objects.create(notification=notification, is_final_version=True, text=_(u'Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung.'))

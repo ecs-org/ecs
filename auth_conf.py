@@ -107,7 +107,7 @@ authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query) | self.make_q(created_by=user) | self.make_q(assigned_to=user)
+        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query, assigned_to__isnull=True) | self.make_q(created_by=user) | self.make_q(assigned_to=user) | self.make_q(assigned_to__ecs_profile__is_indisposed=True)
         q &= ~(self.make_q(expedited_review_categories__gt=0) & ~self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user)))
         return q
 
@@ -148,7 +148,7 @@ authorization.register(DocumentAnnotation, factory=DocumentAnnotationQFactory)
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-        if profile.is_internal or user.groups.filter(name='EC-Thesis Executive Group').exists():
+        if profile.is_internal or profile.is_resident_member or profile.is_board_member or user.groups.filter(name='EC-Thesis Executive Group').exists():
             return self.make_q()
         else:
             return self.make_deny_q()

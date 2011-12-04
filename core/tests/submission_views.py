@@ -172,7 +172,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         '''
         
         submission_form = create_submission_form()
-        response = self.client.get(reverse('ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+        response = self.client.get(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
     def test_submission_pdf(self):

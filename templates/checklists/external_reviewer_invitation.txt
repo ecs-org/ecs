@@ -1,4 +1,8 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core %}
-{% blocktrans with submission|ec_number as ec_number %}
-You have been invited to make an external review for the study {{ ec_number }}.
-{% endblocktrans %}
+
+{% block content %}
+    {% blocktrans with submission|ec_number as ec_number %}
+        You have been invited to make an external review for the study {{ ec_number }}.
+    {% endblocktrans %}
+{% endblock %}

@@ -44,10 +44,14 @@ def forward_messages(**kwargs):
         try:
             msg.rawmsg_msgid = make_msgid()
             msg.save()
+            submission = msg.thread.submission
+            ec_number = u''
+            if submission:
+                ec_number = u' ' + submission.get_ec_number_display()
             mail_list = deliver_to_recipient(
                 msg.receiver.email,
-                subject=_(u'New ECS-Mail: from {sender} to {receiver}.').format(sender=get_full_name(msg.sender), receiver=get_full_name(msg.receiver)),
-                message=_(u'Subject: {subject}{linesep}{text}').format(subject=msg.thread.subject, text=msg.text, linesep=os.linesep),
+                subject=_(u'[ECS{ec_number}] {subject}.').format(ec_number=ec_number, subject=msg.thread.subject),
+                message=msg.text,
                 from_email=u'{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
                 callback=subtask(update_smtp_delivery),
                 msgid=msg.rawmsg_msgid,

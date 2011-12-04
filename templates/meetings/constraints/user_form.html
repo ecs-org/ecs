@@ -13,9 +13,7 @@
         <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}#timetable_tab">Zurück zur Zeitplanung für dieses Meeting</a>
     </div>
     <form action="" method="post" enctype="multipart/form-data">
-        {% with constraint_formset as formset %}
-            {% include "forms/tables/inline_formset.html" %}
-        {% endwith %}
+        {% include "forms/tables/inline_formset.html" %}
         <span class="button"><input type="submit" value="{% trans "Save" %}" name="submit"/></span>
     </form>
 </div>
@@ -27,9 +25,12 @@
 window.addEvent('domready', function(){
     ecs.setupForms();
     new ecs.InlineFormSet($('constraint_formset'), {
-        prefix: '{{ constraint_formset.prefix }}',
+        prefix: '{{ formset.prefix }}',
         canDelete: true
     });
+    {% if saved %}
+        ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The constraints have been saved. The constraints will be taken into account when optimizing the timetable.' %}');
+    {% endif %}
 });
 </script>
 {% endblock %}

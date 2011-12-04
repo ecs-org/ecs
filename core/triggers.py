@@ -1,17 +1,17 @@
 from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
-from ecs.core.workflow import InitialReview
+from ecs.core.workflow import InitialReview, InitialThesisReview
 from ecs.core import signals
 from ecs.core.models import Submission
 from ecs.tasks.utils import get_obj_tasks
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
 from ecs.checklists.utils import get_checklist_answer
 
 
-def send_submission_message(submission, user, subject, template):
-    send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission)
+def send_submission_message(submission, user, subject, template, **kwargs):
+    send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
 
 
 @connect(signals.on_study_change)
@@ -26,12 +26,12 @@ def on_study_change(sender, **kwargs):
     elif not submission.votes.exists():
         with sudo():
             try:
-                initial_review_task = get_obj_tasks((InitialReview,), submission).exclude(closed_at__isnull=True)[0]
+                initial_review_task = get_obj_tasks((InitialReview, InitialThesisReview), submission).exclude(closed_at__isnull=True)[0]
             except IndexError:
                 pass
             else:
                 initial_review_task.reopen()
-                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
+                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
 
 
 @connect(signals.on_study_submit)
@@ -76,15 +76,27 @@ def on_susar_presenter_change(sender, **kwargs):
 @connect(signals.on_initial_review)
 def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
+    review_user = get_current_user()
     if submission_form.is_acknowledged:
         send_submission_message(submission, submission.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             submission_form.mark_current()
             involved_users = submission_form.get_involved_parties().get_users().difference([submission_form.presenter])
             for u in involved_users:
-                send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt')
+                if u == review_user:
+                    continue # don't send a message to the initial reviewer
+                send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
+
+
+@connect(signals.on_initial_thesis_review)
+def on_initial_thesis_review(sender, **kwargs):
+    submission, submission_form = kwargs['submission'], kwargs['form']
+    if submission_form.is_acknowledged:
+        with sudo():
+            meeting = submission.schedule_to_meeting()
+            meeting.update_assigned_categories()
 
 
 @connect(signals.on_categorization_review)

@@ -14,8 +14,8 @@ def document_types():
         Args(_(u"patient information"), u"patientinformation", 
             _(u"Patients / subjects / children / youths / parents / genetic information, information for non competent patients")),
         Args(_(u"insurancecertificate"), u"insurancecertificate", _(u" ")),
-        Args(_(u"study protocol"), u"protocol", _(u"study protocol"), is_downloadable=False),
-        Args(_(u"Investigator's Brochure"), u"investigatorsbrochure", _(u" ")),
+        Args(_(u"study protocol"), u"protocol", _(u"study protocol")),
+        Args(_(u"Investigator's Brochure"), u"investigatorsbrochure", _(u" "), is_downloadable=False),
         Args(_(u"Amendment"), u"amendment", _(u"Protocol changes")),
         Args(_(u"Curriculum Vitae (CV)"), u"cv", _(u"CV")),
         Args(_(u"Conflict of Interest"), u"conflictofinterest",_(u"can also be a Financial Disclosure Form")),
@@ -31,6 +31,8 @@ def document_types():
         Args(_(u"vote"), u"votes", _(u"Vote"), is_hidden=True),
         Args(_(u"Notification"), u"notification", _(u"Notification"), is_hidden=True),
         Args(_(u"Notification Answer"), u"notification_answer", _(u"Notification Answer"), is_hidden=True),
+        Args(_(u"Invoice"), u"invoice", _(u"Invoice"), is_hidden=True),
+        Args(_(u"Checklist Payment"), u"checklist_payment", _(u"Checklist Payment"), is_hidden=True),
     )
 
     for args in names:

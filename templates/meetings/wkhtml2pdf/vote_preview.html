@@ -3,31 +3,27 @@
 {% block title %}Votum{% endblock %}
 
 {% block content %}
-  <div class="center_bold">
-    Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:
-    <br />
-  </div>
+  <h1>Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:</h1>
 
-<p><span class="bold">EK Nr: {{ ec_number }}</span></p>
-<p><span class="bold">Antragsteller:</span></p>
+<p><b>EK Nr: {{ ec_number }}</b></p>
+<p><b>Antragsteller:</b>
 {% if form.submitter %}
     {{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
 {% else %}
     {{ form.submitter_contact }} <br/>
 {% endif %}
-<span class="bold">Sponsor/CRO:</span> {{ form.sponsor_name }} <br/>
-<span class="bold">Einreichende Institution:</span> {{ form.submitter_organisation }}<br/>
-<span class="bold">Projekttitel:</span> {{ form.project_title_display }} <br/>
-
+<b>Sponsor/CRO:</b> {{ form.sponsor_name }} <br/>
+<b>Einreichende Institution:</b> {{ form.submitter_organisation }}<br/>
+<b>Projekttitel:</b> {{ form.german_project_title|default:form.project_title }}
+</p>
 
 <p>Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:</p>
 
-
-<table class="withborders">
+<table class="full_width withborders">
 <tr>
-  <td><span class="bold">Dokument</span></td>
-  <td><span class="bold">Version/Nr</span></td>
-  <td><span class="bold">Datiert</span></td>
+  <td><b>Dokument</b></td>
+  <td><b>Version/Nr</b></td>
+  <td><b>Datiert</b></td>
 </tr>
 {% for document in documents %}
 <tr>
@@ -42,7 +38,7 @@
 {% endfor %}
 </table>
 
-<div class="bold">Die Kommission fasst folgenden Beschluss:</div>
+<h4>Die Kommission fasst folgenden Beschluss:</h4>
 
 {% if vote.result == '1' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
@@ -69,40 +65,48 @@
 {% endif %}
 
 {% if submission.current_submission_form.current_published_vote %}
-    <span class="bold">Letzte:</span><br />
+    <b>Letzte:</b><br />
     {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
 {% endif %}
 
 {% if vote.text %}
-    <span class="bold">Kommentar:</span><br />
-    {{ vote.text|linebreaksbr}}
+    <h4>Kommentar:</h4>
+    <p>
+      {{ vote.text|linebreaksbr}}
+    </p>
 {% endif %}
 
 
 {% if submission.current_submission_form.is_amg %}
-<span class="bold">"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
-</span><br />
+<p>"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
+</p>
 {% endif %}
 
 {% if submission.current_submission_form.is_amg or submission.current_submission_form.is_mpg %}
-<span class="bold">
+<p>
     Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.current_submission_form.is_amg %}AMG{% endif %}{% if submission.current_submission_form.is_amg and submission.current_submission_form.is_mpg %}/{% endif %}{% if submission.current_submission_form.is_mpg %}MPG{% endif %} handelt.
-</span><br />
+</p>
 {% else %}
-<span>
-    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich <span class="bold">nicht</span> um eine klinische Prüfung gemäß AMG/MPG handelt.
-</span><br />
+<p>
+    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich <b>nicht</b> um eine klinische Prüfung gemäß AMG/MPG handelt.
+</p>
 {% endif %}
 
-<span>
+<p>
     Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben:  
     {% for bef in submission.get_befangene %}    
         {{ bef.first_name }} {{ bef.last_name }}<br/>
     {% empty %}
         <b>keine</b>    
     {% endfor %}
-</span><br />
+</p>
     
 {% endblock %}
 
-{% block footer %}EK Nr: {{ ec_number }}, {{vote_date }}{% endblock %}
+{% block footer %}
+<div id="footer">
+  <span class="footer_left">EK Nr: {{ ec_number }}</span>
+  <span class="footer_middle">Seite x von y </span>
+  <span class="footer_right">Datum der Signierung</span>
+</div>
+{% endblock %}

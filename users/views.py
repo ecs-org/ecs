@@ -7,7 +7,6 @@ from uuid import uuid4
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -29,7 +28,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required
-from ecs.users.forms import EmailLoginForm, IndispositionForm
+from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user
 from ecs.communication.utils import send_system_message_template
 
@@ -266,8 +265,10 @@ def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
+    saved = False
     if request.method == 'POST' and form.is_valid():
         user = form.save()
+        saved = True
         is_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
         if is_signing_user and not was_signing_user:
             for u in User.objects.filter(groups__name=u'EC-Signing Group'):
@@ -275,6 +276,7 @@ def details(request, user_pk=None):
 
     return render(request, 'users/details.html', {
         'form': form,
+        'saved': saved,
     })
 
 @user_flag_required('is_internal')

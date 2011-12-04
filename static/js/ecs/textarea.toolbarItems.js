@@ -107,9 +107,7 @@ ecs.textarea.toolbarItems.versionHistory = function(label, url){
     return function(textarea){
         var button = new Element('a', {title: label, 'class': 'versions'});
         button.addEvent('click', function(){
-            var popup = new ecs.widgets.Popup({
-                url: url + '?field=' + textarea.name
-            });
+            ecs.fieldhistory.show(url, textarea.name);
         });
         return button;
     };
