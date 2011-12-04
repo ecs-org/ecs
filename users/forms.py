@@ -2,6 +2,8 @@
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
+from django.contrib.auth.forms import SetPasswordForm as DjangoSetPasswordForm
+from django.contrib.auth.forms import PasswordChangeForm as DjangoPasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -59,7 +61,7 @@ class RegistrationForm(forms.Form):
 
 class ActivationForm(forms.Form):
     password = forms.CharField(label=_('Password'), widget=forms.PasswordInput, min_length=8)
-    password_again = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput)
+    password_again = forms.CharField(label=_('Password (again)'), widget=forms.PasswordInput, min_length=8)
     
     def clean_password_again(self):
         password = self.cleaned_data.get("password", "")
@@ -263,3 +265,11 @@ class IndispositionForm(forms.ModelForm):
             require_fields(self, ('communication_proxy',))
 
         return cd
+
+class SetPasswordForm(DjangoSetPasswordForm):
+    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput, min_length=8)
+    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput, min_length=8)
+
+class PasswordChangeForm(DjangoPasswordChangeForm):
+    new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput, min_length=8)
+    new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput, min_length=8)

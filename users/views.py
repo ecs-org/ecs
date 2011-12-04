@@ -7,7 +7,6 @@ from uuid import uuid4
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
-from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -29,7 +28,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required
-from ecs.users.forms import EmailLoginForm, IndispositionForm
+from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user
 from ecs.communication.utils import send_system_message_template
 
