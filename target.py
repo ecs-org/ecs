@@ -1,17 +1,25 @@
 # ecs main application environment setup
 import os
 import subprocess
+import sys
+import shutil
+import tempfile
+import logging
+import distutils.dir_util
 
 from uuid import uuid4
 from fabric.api import local, env
-from deployment.utils import install_upstart, apache_setup, write_template
+
+from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
+from deployment.utils import install_upstart, apache_setup, write_template, which
+from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
+
 
 
 class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
-        # FIXME: some of SetupApplication methods dont honor dry=True
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.appname = 'ecs'
         self.dirname = os.path.dirname(__file__)
@@ -97,30 +105,21 @@ TEMPLATE_DEBUG = False
             os.path.join(self.dirname, "service.wsgi"), 
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
             )
-        
-    def signing_config(self):
-        TOMCAT_DIR = os.path.join(self.dirname, '..', '..', 'ecs-signing')
-        local('tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(TOMCAT_DIR))
-        #patch pdf-as.war
-        #mkdir patch_pdfas
-        #cd patch_pdfas
-        #unzip ../pdf-as.war.original
-        #patch -p0 < ../pdf-as.patch
-        #zip -r ../pdf-as.war *
-        #cd ..
-        #rm -r patch_pdfas
-        local('cp \'{0}\' \'{1}\' \'{2}\''.format(
-            os.path.join(self.dirname, 'signature', 'pdf-as.war'),
-            os.path.join(self.dirname, 'signature', 'bkuonline.war'),
-            os.path.join(TOMCAT_DIR, 'webapps')
-        ))
-        local('cp -a \'{0}\' \'{1}\''.format(os.path.join(self.dirname, 'pdf-as'), os.path.join(TOMCAT_DIR, 'conf')))
-        write_template(
-            os.path.join(self.dirname, 'templates', 'pdf-as_config.properties'),
-            os.path.join(TOMCAT_DIR, 'conf', 'pdf-as', 'cfg', 'config.properties'),
-            {'hostname': self.hostname}
-        )
 
+    def catalina_cmd(self):
+        TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
+        if sys.platform == 'win32':
+            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as.work-dir={0}\\conf\\pdf-as&cd {0}&bin\\catalina.bat".format(TOMCAT_DIR)
+        else:
+            cmd = "CATALINA_BASE={0};CATALINA_OPTS=-Dpdf-as.work-dir={0}/conf/pdf-as;cd {0};bin/catalina.sh".format(TOMCAT_DIR)
+        return cmd
+    
+    def start_dev_signing(self):
+        local(self.catalina_cmd()+ " start")
+        
+    def stop_dev_signing(self):
+        local(self.catalina_cmd()+ " stop")
+    
     def apache_restart(self):
         pass
     
@@ -177,5 +176,168 @@ JETTY_PORT=8983
 
     def search_update(self):
         pass
-    def massimport(self):
-        pass
+  
+  
+
+
+def custom_check_gettext_runtime(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
+    
+def custom_install_gettext_runtime(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+    return True
+
+def custom_check_gettext_tools(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
+    
+def custom_install_gettext_tools(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
+    return True
+
+  
+def custom_check_tomcat_apt_user(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
+    
+def custom_install_tomcat_apt_user(pkgline, filename):
+    install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(os.path.join(get_pythonenv(), "tomcat-6"))
+    popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
+    stdout, stderr = popen.communicate() 
+    returncode = popen.returncode  
+    if returncode != 0:
+        print "Error:", returncode, stdout, stderr
+        return False
+    else:
+        return True
+
+def custom_check_tomcat_other_user(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
+    
+def custom_install_tomcat_other_user(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    temp_dir = tempfile.mkdtemp()
+    temp_dest = os.path.join(temp_dir, checkfilename)
+    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
+    result = False
+    
+    try:
+        if os.path.exists(final_dest):
+            shutil.rmtree(final_dest)
+        if pkg_manager.static_install_tar(filename, temp_dir, checkfilename, pkgline):
+            write_regex_replace(os.path.join(temp_dest, 'conf', 'server.xml'),
+                r'([ \t])+(<Connector port=)("[0-9]+")([ ]+protocol="HTTP/1.1")',
+                r'\1\2"4780"\4')
+            shutil.copytree(temp_dest, final_dest)
+            result = True
+    finally:    
+        shutil.rmtree(temp_dir)
+    
+    return result
+
+
+def custom_check_pdfas(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+   
+def custom_install_pdfas(pkgline, filename):
+    
+    def _patch_pdfas_war(target):
+        patchlib = import_from(os.path.join(os.path.dirname(get_pythonexe()), 'python-patch.py'))
+        patchlib.logger.setLevel(logging.INFO)
+        old_cwd = os.getcwd()
+        temp_dir = tempfile.mkdtemp()
+        pkg_manager = get_pkg_manager()
+        success = False
+        
+        try:
+            if pkg_manager.static_install_unzip(target, temp_dir, None, None):
+                os.chdir(os.path.join(temp_dir, "jsp"))
+                p = patchlib.fromfile(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                    'signature', 'pdf-as-3.2-jsp.patch'))
+                if p.apply():
+                    os.remove(target)
+                    zipball_create(target, temp_dir)
+                    success = True
+                else:
+                    print("Error: Failed patching:", target, temp_dir)
+        finally:
+            os.chdir(old_cwd)
+            shutil.rmtree(temp_dir)
+            
+        return success
+    
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    temp_dir = tempfile.mkdtemp()
+    temp_dest = os.path.join(temp_dir, "tomcat-6")
+    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
+    result = False
+    
+    try:
+        if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
+            if _patch_pdfas_war(os.path.join(temp_dest, "webapps", checkfilename)):
+                write_regex_replace(
+                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
+                    r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
+                    r'\1http://localhost:4780\3')
+                write_regex_replace(
+                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
+                    r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
+                    r'\2http://localhost:4780\4')
+                
+                distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
+                result = True
+    finally:    
+        shutil.rmtree(temp_dir)
+    
+    return result
+
+
+def custom_check_mocca(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+
+def custom_install_mocca(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
+    pkg_manager = get_pkg_manager()
+    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
+
+
+def custom_install_origami(pkgline, filename):
+    return custom_install_ruby_gem(pkgline, filename)
+
+def custom_install_ruby_gem(pkgline, filename):
+    
+    gem_home = os.path.join(get_pythonenv(),'gems')
+    filename_dir = os.path.dirname(filename)
+    filename = os.path.basename(filename)
+    
+    if not os.path.exists(gem_home):
+        os.mkdir(gem_home)
+        
+    if not os.path.exists(os.path.join(filename_dir, filename)):
+        print "gem to install does not exist:", filename
+    
+    if sys.platform == 'win32':
+        gem_home = gem_home.replace("\\", "/")
+        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
+        install = 'cd {0}& set GEM_HOME="{1}"& set GEM_PATH="{1}"&\
+gem install --no-ri --no-rdoc --local --bindir="{2}" {3}'.format(
+            filename_dir, gem_home, bin_dir, filename)
+    else:
+        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
+        install = 'export GEM_HOME="{0}"; export GEM_PATH="{0}";\
+gem install --no-ri --no-rdoc --local --bindir="{1}" {2}'.format(
+            filename_dir, gem_home, bin_dir, filename)
+    
+    popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
+    stdout, stderr = popen.communicate() 
+    returncode = popen.returncode  
+    if returncode != 0:
+        print "Error:", returncode, stdout, stderr
+        return False
+    else:
+        return True
