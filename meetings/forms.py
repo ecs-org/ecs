@@ -74,7 +74,7 @@ class SubmissionReschedulingForm(forms.Form):
         super(SubmissionReschedulingForm, self).__init__(*args, **kwargs)
         current_meetings = submission.meetings.filter(started=None).order_by('start')
         self.fields['from_meeting'].queryset = current_meetings
-        self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings])
+        self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings]).order_by('start')
 
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
