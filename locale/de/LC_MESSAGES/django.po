@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-04 17:24+0100\n"
+"POT-Creation-Date: 2011-12-04 17:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2763,6 +2763,7 @@ msgstr ""
 
 #: templates/meetings/details.html:100
 #: templates/meetings/constraints/user_form.html:32
+#: templates/users/details.html:32
 msgid "form saved"
 msgstr "Formular gespeichert"
 
@@ -3925,6 +3926,10 @@ msgstr "Zurück zur Benutzer-Liste"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
+#: templates/users/details.html:32
+msgid "The change of the user has been saved."
+msgstr "Die Änderungen an dem Benutzer wurden gespeichert."
+
 #: templates/users/indisposed_proxy.txt:5
 #, python-format
 msgid ""
@@ -4184,7 +4189,7 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:137 users/views.py:367
+#: users/utils.py:137 users/views.py:370
 #, fuzzy
 msgid "ECS account creation"
 msgstr "ECS Verwaltung"
@@ -4201,11 +4206,11 @@ msgstr "ECS - Passwort vergessen"
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: users/views.py:274 users/views.py:385
+#: users/views.py:276 users/views.py:388
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:377
+#: users/views.py:380
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
@@ -4678,9 +4683,6 @@ msgstr ""
 
 #~ msgid "The email could not be delivered."
 #~ msgstr "Die E-mail konnte nicht gesendet werden."
-
-#~ msgid "The user has been invited."
-#~ msgstr "Der Benutzer wurde eingeladen."
 
 #~ msgid "This user is already registered"
 #~ msgstr "Dieser Benutzer ist bereits registriert"

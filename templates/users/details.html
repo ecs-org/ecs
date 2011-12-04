@@ -28,6 +28,9 @@
     <script type="text/javascript">
       window.addEvent('domready', function(){
           ecs.setupFormFieldHelpers();
+          {% if saved %}
+              ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The change of the user has been saved.' %}');
+          {% endif %}
       });
     </script>
 {% endblock %}
