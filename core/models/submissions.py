@@ -559,7 +559,9 @@ class SubmissionForm(models.Model):
         
     def allows_edits(self, user):
         s = self.submission
-        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished
+        with sudo():
+            in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
+        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not self.current_pending_vote
         
     def allows_amendments(self, user):
         s = self.submission
