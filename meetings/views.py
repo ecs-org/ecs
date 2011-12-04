@@ -271,17 +271,20 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)
-    constraint_formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
-    if constraint_formset.is_valid():
-        for constraint in constraint_formset.save(commit=False):
+    formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
+    saved = False
+    if formset.is_valid():
+        for constraint in formset.save(commit=False):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
-        return HttpResponseRedirect(reverse('ecs.meetings.views.edit_user_constraints', kwargs={'meeting_pk': meeting.pk, 'user_pk': user.pk}))
+        formset = UserConstraintFormSet(None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
+        saved = True
     return render(request, 'meetings/constraints/user_form.html', {
         'meeting': meeting,
         'participant': user,
-        'constraint_formset': constraint_formset,
+        'formset': formset,
+        'saved': saved,
     })
 
 @readonly(methods=['GET'])

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-04 16:21+0100\n"
+"POT-Creation-Date: 2011-12-04 17:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2051,35 +2051,35 @@ msgstr "Vergangene Sitzungen"
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:329
+#: meetings/views.py:332
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:338
+#: meetings/views.py:341
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:344
+#: meetings/views.py:347
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:358
+#: meetings/views.py:361
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:507 meetings/views.py:519
+#: meetings/views.py:510 meetings/views.py:522
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:521 meetings/views.py:586
+#: meetings/views.py:524 meetings/views.py:589
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:529 meetings/views.py:535 meetings/views.py:541
+#: meetings/views.py:532 meetings/views.py:538 meetings/views.py:544
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:556
+#: meetings/views.py:559
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2478,7 +2478,7 @@ msgid "New Boilerplate"
 msgstr "Neuer Textbaustein"
 
 #: templates/boilerplate/form.html:15
-#: templates/meetings/constraints/user_form.html:19
+#: templates/meetings/constraints/user_form.html:17
 #: templates/notifications/form.html:24 templates/submissions/form.html:24
 #: templates/users/indisposition.html:11 templates/users/profile_form.html:40
 msgid "Save"
@@ -2762,8 +2762,9 @@ msgid "Sitzungsassistent"
 msgstr ""
 
 #: templates/meetings/details.html:100
-msgid "Expert assignment saved"
-msgstr "Spezialistenzuordnung gespeichert"
+#: templates/meetings/constraints/user_form.html:32
+msgid "form saved"
+msgstr "Formular gespeichert"
 
 #: templates/meetings/details.html:100
 msgid ""
@@ -2866,6 +2867,14 @@ msgstr "nicht behandelt"
 #: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "examined"
 msgstr "behandelt"
+
+#: templates/meetings/constraints/user_form.html:32
+msgid ""
+"The constraints have been saved. The constraints will be taken into account "
+"when optimizing the timetable."
+msgstr ""
+"Die Einschränkungen wurden gespeichert. Sie werden bei der Optimierung der "
+"Zeitplanung berücksichtigt werden."
 
 #: templates/meetings/messages/boardmember_invitation.html:6
 #: templates/meetings/messages/protocol.html:6
@@ -4356,6 +4365,9 @@ msgstr ""
 #: votes/workflow.py:72
 msgid "B3"
 msgstr ""
+
+#~ msgid "Expert assignment saved"
+#~ msgstr "Spezialistenzuordnung gespeichert"
 
 #~ msgid ""
 #~ "\n"
