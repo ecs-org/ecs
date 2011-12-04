@@ -72,10 +72,6 @@ nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
-# for manage.py test_windmill we need windmill
-windmill:inst:all:pypi:windmill\>=1.6
-# for random text generation in windmill tests
-cicero:inst:all:pypi:cicero
 """
 
 # importlib is a dependency of celery, but importlib is included in
@@ -399,7 +395,6 @@ upstart_targets = {
 
 test_flavors = {
     'default': './manage.py test',
-    'windmill': './manage.py test_windmill firefox integration',
     'mainapp': './manage.py test',
     'mediaserver': 'false',  # include in the mainapp tests
     'mailserver': 'false', # included in the mainapp tests
