@@ -93,7 +93,7 @@
 
 {% if proxy_tasks %}
     <div class="task_list">
-        <h2>{% trans "Proxy Tasks" %}</h2>
+        <h3>{% trans "Proxy Tasks" %}</h3>
         {% regroup proxy_tasks by task_type.trans_name as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
