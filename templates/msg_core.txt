@@ -1,0 +1,9 @@
+{% load i18n core %}
+{% strip %}
+{% dedent %}
+        {% block content %}{% endblock %}
+{% enddedent %}
+{% endstrip %}
+
+{% blocktrans %}Sincerly yours,
+    The Team of the Ethics Commission{% endblocktrans %}

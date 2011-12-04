@@ -1,7 +1,8 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core %}
-{% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-Your submission "{{ project_title }}" ({{ ec_number }}) has be accepted for further processing.
 
-Sincerly yours,
-    The Team of the Ethics Commission
-{% endblocktrans %}
+{% block content %}
+    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
+        Your submission "{{ project_title }}" ({{ ec_number }}) has been accepted for further processing.
+    {% endblocktrans %}
+{% endblock %}

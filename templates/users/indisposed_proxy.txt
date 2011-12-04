@@ -1,7 +1,8 @@
+{% extends 'msg_core.txt' %}
 {% load i18n core userutils %}
-{% blocktrans with user|formal_name as name  %}
-{{ name }} is now indisposed. You have been selected as communication proxy.
 
-Sincerly yours,
-    The Team of the Ethics Commission
-{% endblocktrans %}
+{% block content %}
+    {% blocktrans with user|formal_name as name  %}
+        {{ name }} is now indisposed. You have been selected as communication proxy.
+    {% endblocktrans %}
+{% endblock %}
