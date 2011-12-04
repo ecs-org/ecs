@@ -109,8 +109,10 @@ def vote_sign_finished(request, document_pk=None):
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
-    always_mock = get.requesting.user. == "ecs_signing" or "ecs_fail_signing" user switcher user
-    always_fail = get.requesting.user == "ecs_fail_signing" user switcher user
+    all_fail = ["signing_fail"+str(x)+"@example.org" for x in range(1,4)]
+    all_sign = all_fail+ ["signing"+str(x)+"@example.org" for x in range(1,4)]
+    always_mock = request.user.email in all_sign 
+    always_fail = request.user.email in all_fail
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
@@ -130,7 +132,7 @@ def vote_sign(request, vote_pk=None):
         'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
     }
             
-    return sign(request, sign_dict, always_mock= always_mock, always_fail)
+    return sign(request, sign_dict, always_mock= always_mock, always_fail= always_fail)
 
 
 @user_group_required("EC-Signing Group")
