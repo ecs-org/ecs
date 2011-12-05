@@ -43,9 +43,9 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
     pdf_data_size = len(sign_dict['pdf_data'])
     pdf_id = SigningDepot().deposit(sign_dict)
 
-    PDFAS_SERVICE = getattr(settings, 'PDFAS_SERVICE', 'mock:')
+    pdfas_service = getattr(settings, 'PDFAS_SERVICE', 'mock:')
     if always_mock:
-        PDFAS_SERVICE = 'mock:'
+        pdfas_service = 'mock:'
     
     values = {
         'preview': 'false',
@@ -63,15 +63,16 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
         'locale': 'de',
         }
     data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
-    redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
+    redirect = '{0}Sign?{1}'.format(pdfas_service, data)
     
-    if PDFAS_SERVICE != 'mock:':
+    if pdfas_service != 'mock:':
         print('sign: redirect to [%s]' % redirect)
         return HttpResponseRedirect(redirect)
     else:
         # we mock calling the applet by just copying intput to output (pdf stays the same beside barcode),
         # and directly go to sign_receive, to make automatic tests possible
-        fakeget = request.GET.copy()
+        original_get = request.GET
+        fakeget = original_get.copy()
         fakeget['pdf-id'] = pdf_id # inject pdf-id for mock
             
         if always_fail:
@@ -81,8 +82,10 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
             return sign_error(request)
         else:
             request.GET = fakeget
-            pdf_data = sign_send(request).content
+            pdf_data = sign_send(request, always_mock=always_mock).content
             
+            fakeget = original_get.copy()
+            fakeget['pdf-id'] = pdf_id
             fakeget['pdfas-session-id'] = 'mock_pdf_as' # inject pdfas-session-id
             fakeget['pdf-url'] = request.build_absolute_uri('send')
             fakeget['num-bytes'] = len(pdf_data)
@@ -101,6 +104,7 @@ def sign_send(request, jsessionid=None, always_mock=False):
     if sign_dict is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
+    """
     if always_mock: 
         with NamedTemporaryFile(suffix='.pdf') as tmp_in:
             with NamedTemporaryFile(suffix='.pdf') as tmp_out:
@@ -109,8 +113,9 @@ def sign_send(request, jsessionid=None, always_mock=False):
                 pdf_textstamp(tmp_in, tmp_out, 'MOCK')
                 tmp_out.seek(0)
                 sign_dict['pdf_data'] = tmp_out.read()
+    """
     
-    return HttpResponse(sign_dict["pdf_data"], mimetype='application/pdf')
+    return HttpResponse(sign_dict["pdf_data"], content_type='application/pdf')
 
 
 @csrf_exempt
@@ -146,9 +151,9 @@ def sign_receive(request, jsessionid=None, always_mock=False):
     called by the sign_receive_landing view, to workaround some pdf-as issues
     '''
 
-    PDFAS_SERVICE = getattr(settings, 'PDFAS_SERVICE', 'mock:')
+    pdfas_service = getattr(settings, 'PDFAS_SERVICE', 'mock:')
     if always_mock:
-        PDFAS_SERVICE = 'mock:'
+        pdfas_service = 'mock:'
       
     try:    
         pdf_id = None
@@ -161,19 +166,16 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         
         q = {}
         for k in ('pdf-url', 'num-bytes', 'pdfas-session-id',):
-            if not request.REQUEST.has_key(k):
-                raise KeyError('missing key {0}, got: {1}'.format(k, request))
-    
-            q[k] = request.REQUEST[k]
+            q[k] = request.GET[k]
     
         pdf_url = q.pop('pdf-url')
-        url = '{0}{1}?{2}'.format(PDFAS_SERVICE, pdf_url, urllib.urlencode(q))
+        url = '{0}{1}?{2}'.format(pdfas_service, pdf_url, urllib.urlencode(q))
     
         sign_dict = SigningDepot().get(pdf_id)
         if sign_dict is None:
             raise KeyError('Invalid pdf-id ({0}) or sign_dict not found, session expired?'.format(pdf_id))
     
-        if PDFAS_SERVICE != 'mock:':
+        if pdfas_service != 'mock:':
             sock_pdfas = urllib2.urlopen(url)
             pdf_data = sock_pdfas.read(q['num-bytes'])
         else:
@@ -188,12 +190,15 @@ def sign_receive(request, jsessionid=None, always_mock=False):
             cls = get_callable(sign_dict['parent_type'])
             parent_obj = get_object_or_404(cls, pk=sign_dict['parent_pk'])
         doctype = get_object_or_404(DocumentType, identifier=sign_dict['document_type'])
+        version = sign_dict["document_version"]
         document = Document.objects.create(uuid=sign_dict["document_uuid"],
-             parent_object=parent_obj, branding='n', doctype=doctype, file=f,
+             branding='n', doctype=doctype, file=f,
              original_file_name=sign_dict["document_filename"], date=datetime.now(), 
-             version=sign_dict["document_version"],
-         )
-        
+             version=version
+        )
+        document.parent_object = parent_obj
+        document.save()
+
 
     except Exception as e:
         # something bad has happend, simulate a call to sign_error like pdf-as would do

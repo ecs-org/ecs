@@ -63,11 +63,15 @@ class SignatureTest(LoginTestCase):
     def test_success(self):
         '''Tests that signing a document is possible; Will use mock signing.
         '''
-        redirecturl = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success'))
+        response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success'))
+        redirecturl = response['Location']
+        print redirecturl
         eq_ (redirecturl, "redirect to success")
     
     def test_failure(self):     
         '''Tests that signing a document fails; Will use mock signing.
         '''
-        redirecturl = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail'))
+        response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail'))
+        redirecturl = response['Location']
+        print redirecturl
         eq_ (redirecturl[:17], 'redirect to error')
