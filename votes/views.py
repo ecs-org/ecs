@@ -102,8 +102,8 @@ def vote_sign(request, vote_pk=None):
     context = vote_context(vote)
         
     sign_dict = {
-        'success_func': 'ecs.core.views.votes.success_func',
-        'error_func': 'ecs.core.views.votes.error_func',
+        'success_func': 'ecs.votes.views.success_func',
+        'error_func': 'ecs.votes.views.error_func',
         'parent_pk': vote_pk,
         'parent_type': 'ecs.votes.models.Vote',    
         'document_uuid': uuid4().get_hex(),
