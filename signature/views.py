@@ -182,7 +182,10 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
     
-        parent_obj = get_object_or_404(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
+        if sign_dict['parent_type'] is not None:
+            parent_obj = get_object_or_404(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
+        else:
+            parent_obj = None
         doctype = get_object_or_404(DocumentType, identifier=sign_dict['document_type'])
         document = Document.objects.create(uuid=sign_dict["document_uuid"],
              parent_object=parent_obj, branding='n', doctype=doctype, file=f,
