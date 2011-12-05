@@ -87,32 +87,17 @@ def download_signed_vote(request, vote_pk=None):
     except Document.DoesNotExist:
         raise Http404('No signed document for vote %s available' % (vote_pk))
     return handle_download(request, signed_vote_doc)
-
-
-@user_flag_required('is_internal')
-@user_group_required("EC-Signing Group")
-def vote_sign_finished(request, document_pk=None):
-    document = get_object_or_404(Document, pk=document_pk)
-    vote = document.parent_object
-    now = datetime.now()
-    document.name = vote.submission_form.submission.get_ec_number_display(separator='-')
-    document.version = 'signed-at'
-    document.date = now
-    document.save()
-    vote.signed_at = now
-    vote.save()
-
-    return HttpResponseRedirect(reverse(
-        'readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
-
+  
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
+    # magic: all ecs signing[(_fail)][123] user have always_mock, all signing_fail user have always fail
     all_fail = ["signing_fail"+str(x)+"@example.org" for x in range(1,4)]
     all_sign = all_fail+ ["signing"+str(x)+"@example.org" for x in range(1,4)]
     always_mock = request.user.email in all_sign 
     always_fail = request.user.email in all_fail
+    
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
@@ -124,8 +109,9 @@ def vote_sign(request, vote_pk=None):
         'parent_pk': vote_pk,
         'parent_type': 'ecs.votes.models.Vote',    
         'document_uuid': uuid4().get_hex(),
-        'document_name': vote.top.submission.get_ec_number_display(),
+        'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
         'document_type': "votes",
+        'document_version': 'signed-at',
         'document_filename': _vote_filename(vote),
         'document_barcodestamp': True,
         'html_preview': render(request, html_template, context).content,
@@ -141,21 +127,20 @@ def vote_sign_retry(request, vote_pk=None, description=None):
     ct = ContentType.objects.get_for_model(vote.__class__)
     task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
     # display retry (sign again), ignore (redirect to readonly view), decline (push task back to vote_review)
-    
+    raise NotImplemented
 
 def success_func(document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     vote = document.parent_object
+    vote.signed_at = document.date
+    vote.save()
+
     ct = ContentType.objects.get_for_model(vote.__class__)
-    
     task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
     task.done()
-        
-    return (reverse('ecs.core.views.readonly_submission_form', 
-        kwargs={'submission_form_pk': vote.submission_form.pk}) + 
-        ('#b2_vote_review_tab' if vote.result == '2' else '#vote_review_tab'))
-    # 'ecs.core.views.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
- 
+    
+    return HttpResponseRedirect(reverse(
+        'readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
 def error_func(parent_pk=None, description=''):
     # redirect to retry, ignore, decline this vote for signing

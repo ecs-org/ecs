@@ -12,6 +12,7 @@ pdfutils
 '''
 import os, subprocess, tempfile, logging, copy, shutil, re
 from cStringIO import StringIO
+from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.template import Context, loader
@@ -59,8 +60,37 @@ def pdf_page_count(filelike):
     return pages
 
 
+def _pdf_stamp(source_filelike, dest_filelike, stamp_filename):
+    ''' takes source pdf, stamps another stamp_filename pdf onto every page of source and output it to dest
+    
+    :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
+    '''  
+    source_filelike.seek(0)
+    cmd = [which('pdftk').next(), '-', 'stamp', stamp_filename, 'output', '-', 'dont_ask']
+    popen = subprocess.Popen(cmd, bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=subprocess.PIPE)       
+    stdout, stderr = popen.communicate()
+    source_filelike.seek(0)
+    if popen.returncode != 0:
+        raise IOError('stamp pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
+
+def pdf_textstamp(source_filelike, dest_filelike, text):
+    ''' takes source pdf, stamps a text onto every page and output it to dest
+    
+    :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
+    '''
+    with NamedTemporaryFile(suffix='.pdf') as tmp_in:
+        with NamedTemporaryFile(suffix='.pdf') as tmp_out:
+            tmp_in.write(wkhtml2pdf('<HTML><BODY><h1>'+ text+ '</h1></BODY></HTML>'))
+            tmp_in.seek(0)
+            pdf_textstamp(tmp_in, tmp_out, 'MOCK')
+            tmp_out.seek(0)
+            stamp_filename = tmp_out.name
+            
+            _pdf_stamp(source_filelike, dest_filelike, stamp_filename)
+
+
 def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, barcodetype="qrcode", timeoutseconds=30):
-    ''' takes source pdf, stamps a barcode into it and output it to dest
+    ''' takes source pdf, stamps a barcode onto every page and output it to dest
     
     :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
     ''' 
@@ -107,16 +137,11 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ba
         os.close(barcode_pdf_oshandle)
     
     # implant barcode pdf to source pdf on every page 
-    source_filelike.seek(0)
-    cmd = [which('pdftk').next(), '-', 'stamp', barcode_pdf_name, 'output', '-', 'dont_ask']
-    popen = subprocess.Popen(cmd, bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=subprocess.PIPE)       
-    stdout, stderr = popen.communicate()
-    source_filelike.seek(0)
+    _pdf_stamp(source_filelike, dest_filelike, barcode_pdf_name)
+    
     if os.path.isfile(barcode_pdf_name):
         os.remove(barcode_pdf_name)
-    if popen.returncode != 0:
-        raise IOError('stamping pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-
+    
   
 def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
     ''' Extract Text from an pdf, you can extract the whole text, or only text from one page of an document. 

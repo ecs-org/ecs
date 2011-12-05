@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib
 import urllib2
+import traceback
 
 from datetime import datetime
 from tempfile import NamedTemporaryFile
@@ -16,9 +17,10 @@ from ecs.utils import forceauth
 
 from ecs.users.utils import user_group_required
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.pdfutils import pdf_barcodestamp
+from ecs.utils.pdfutils import pdf_barcodestamp, pdf_textstamp
 
 from ecs.signature.utils import SigningDepot
+
 
 
 @user_group_required("EC-Signing Group")
@@ -59,33 +61,33 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
         'invoke-preview-url': request.build_absolute_uri('preview'),
         # session-id=9085B85B364BEC31E7D38047FE54577D, not used
         'locale': 'de',
-    }
+        }
     data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
     redirect = '{0}Sign?{1}'.format(PDFAS_SERVICE, data)
     
     if PDFAS_SERVICE != 'mock:':
         print('sign: redirect to [%s]' % redirect)
         return HttpResponseRedirect(redirect)
-
-    # we mock calling the applet by just copying intput to output (pdf stays the same beside barcode),
-    # and directly go to sign_receive, to make automatic tests possible
-    fakeget = request.GET.copy()
-    fakeget['pdf-id'] = pdf_id # inject pdf-id for mock
-        
-    if always_fail:
-        fakeget['error'] = 'configuration error'
-        fakeget['cause'] = 'requested always_fail, so we failed'
-        request.GET = fakeget
-        return sign_error(request)
     else:
-        request.GET = fakeget
-        pdf_data = sign_send(request).content
-        
-        fakeget['pdfas-session-id'] = 'mock_pdf_as' # inject pdfas-session-id
-        fakeget['pdf-url'] = request.build_absolute_uri('send')
-        fakeget['num-bytes'] = len(pdf_data)
-        request.GET = fakeget
-        return sign_receive(request, always_mock=always_mock)
+        # we mock calling the applet by just copying intput to output (pdf stays the same beside barcode),
+        # and directly go to sign_receive, to make automatic tests possible
+        fakeget = request.GET.copy()
+        fakeget['pdf-id'] = pdf_id # inject pdf-id for mock
+            
+        if always_fail:
+            fakeget['error'] = 'configuration error'
+            fakeget['cause'] = 'requested always_fail, so we failed'
+            request.GET = fakeget
+            return sign_error(request)
+        else:
+            request.GET = fakeget
+            pdf_data = sign_send(request).content
+            
+            fakeget['pdfas-session-id'] = 'mock_pdf_as' # inject pdfas-session-id
+            fakeget['pdf-url'] = request.build_absolute_uri('send')
+            fakeget['num-bytes'] = len(pdf_data)
+            request.GET = fakeget
+            return sign_receive(request, always_mock=always_mock)
         
 
 @csrf_exempt
@@ -99,11 +101,16 @@ def sign_send(request, jsessionid=None, always_mock=False):
     if sign_dict is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
-    if always_mock:
-        # fixme: pdftk stamp mock over page and return this data
-        raise NotImplementedError()
-    else:
-        return HttpResponse(sign_dict["pdf_data"], mimetype='application/pdf')
+    if always_mock: 
+        with NamedTemporaryFile(suffix='.pdf') as tmp_in:
+            with NamedTemporaryFile(suffix='.pdf') as tmp_out:
+                tmp_in.write(sign_dict['pdf_data'])
+                tmp_in.seek(0)
+                pdf_textstamp(tmp_in, tmp_out, 'MOCK')
+                tmp_out.seek(0)
+                sign_dict['pdf_data'] = tmp_out.read()
+    
+    return HttpResponse(sign_dict["pdf_data"], mimetype='application/pdf')
 
 
 @csrf_exempt
@@ -175,19 +182,21 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
     
-        # create document in ecs.documents
-        parent_obj = get_object_or_raise_nice_exception(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
-        doctype = get_object_or_raise_nice_exception(DocumentType, identifier=sign_dict['document_type'])
-    document = Document.objects.create(uuid=sign_dict["document_uuid"],
-            parent_object=parent_obj, branding='n', doctype=doctype, file=f,
-            original_file_name=sign_dict["document_filename"], date=datetime.now())
+        parent_obj = get_object_or_404(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
+        doctype = get_object_or_404(DocumentType, identifier=sign_dict['document_type'])
+        document = Document.objects.create(uuid=sign_dict["document_uuid"],
+             parent_object=parent_obj, branding='n', doctype=doctype, file=f,
+             original_file_name=sign_dict["document_filename"], date=datetime.now(), 
+             version= sign_dict["document_version"],
+             )
+        
 
     except Exception as e:
         # something bad has happend, simulate a call to sign_error like pdf-as would do
         fakeget = request.GET.copy()
         fakeget['pdf-id'] = pdf_id # inject pdf-id 
         fakeget['error'] = repr(e)
-        fakeget['cause'] = e.blabbed
+        fakeget['cause'] = traceback.format_exc()
         request.GET = fakeget
         return sign_error(request)
     
@@ -204,18 +213,17 @@ def sign_error(request):
      * needs @csrf_exempt to ignore missing csrf token and @forceauth.exempt because pdf-as can't authenticate.
     '''
     sign_dict = None
+    error = cause = ''
+        
     if request.REQUEST.has_key('pdf-id'):
         sign_dict = SigningDepot().pop(request.REQUEST['pdf-id'])
         
     if request.REQUEST.has_key('error'):
         error = urllib.unquote_plus(request.REQUEST['error'])
-    else:
-        error = ''
+        
     if request.REQUEST.has_key('cause'):
         cause = urllib.unquote_plus(request.REQUEST['cause'])  # FIXME can't deal with UTF-8 encoded Umlauts
-    else:
-        cause = ''
-  
+    
     # no sign_dict, no calling of error_func possible
     if not sign_dict:
         return HttpResponse('<h1>sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))

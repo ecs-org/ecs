@@ -5,5 +5,4 @@ urlpatterns = patterns('ecs.votes.views',
     url(r'^(?P<vote_pk>\d+)/pdf/$', 'show_pdf_vote'),
     url(r'^(?P<vote_pk>\d+)/download/$', 'download_signed_vote'),
     url(r'^(?P<vote_pk>\d+)/sign$', 'vote_sign'),
-    url(r'^(?P<document_pk>\d+)/sign/finished/$', 'vote_sign_finished'),
 )

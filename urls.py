@@ -42,7 +42,7 @@ urlpatterns = patterns('',
     url(r'^meeting/', include('ecs.meetings.urls')),
     url(r'^notification/', include('ecs.notifications.urls')),
     url(r'^bugshot/', include('ecs.bugshot.urls')),
-
+    url(r'^signature/', include('ecs.signature.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
