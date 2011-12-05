@@ -43,4 +43,6 @@ urlpatterns += patterns('ecs.core.views',
     url(r'^form/(?P<submission_form_pk>\d+)/review/befangene/$', 'befangene_review'),
     url(r'^form/(?P<submission_form_pk>\d+)/review/vote/$', 'vote_review'),
     url(r'^form/(?P<submission_form_pk>\d+)/vote/prepare/$', 'vote_preparation'),
+    url(r'^form/(?P<submission_form_pk>\d+)/vote/prepare/$', 'vote_preparation'),
+    url(r'^form/(?P<submission_form_pk>\d+)/vote/b2-prepare/$', 'b2_vote_preparation'),
 )

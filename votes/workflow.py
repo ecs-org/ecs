@@ -57,7 +57,6 @@ class VoteSigning(Activity):
     def get_url(self):
         return reverse('ecs.votes.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})
 
-<<<<<<< local
 
 class VoteB2Review(Activity):
     class Meta:
@@ -105,5 +104,3 @@ class B2Resubmission(Activity):
         token = super(B2Resubmission, self).receive_token(*args, **kwargs)
         token.task.assign(self.workflow.data.submission_form.submission.presenter)
         return token
-=======
->>>>>>> other
