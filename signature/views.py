@@ -182,16 +182,17 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
     
-        if sign_dict['parent_type'] is not None:
-            parent_obj = get_object_or_404(get_callable(sign_dict['parent_type']), pk=sign_dict['parent_pk'])
-        else:
-            parent_obj = None
+        parent_obj = None
+        cls_name = sign_dict['parent_type']
+        if cls_name is not None:
+            cls = get_callable(sign_dict['parent_type'])
+            parent_obj = get_object_or_404(cls, pk=sign_dict['parent_pk'])
         doctype = get_object_or_404(DocumentType, identifier=sign_dict['document_type'])
         document = Document.objects.create(uuid=sign_dict["document_uuid"],
              parent_object=parent_obj, branding='n', doctype=doctype, file=f,
              original_file_name=sign_dict["document_filename"], date=datetime.now(), 
-             version= sign_dict["document_version"],
-             )
+             version=sign_dict["document_version"],
+         )
         
 
     except Exception as e:
@@ -205,7 +206,9 @@ def sign_receive(request, jsessionid=None, always_mock=False):
     
     else:
         SigningDepot().pop(pdf_id)
-        return HttpResponseRedirect(get_callable(sign_dict['success_func'], kwargs={'document_pk': document.pk}))
+        fn = get_callable(sign_dict['success_func'])
+        url = fn(document_pk=document.pk)
+        return HttpResponseRedirect(url)
 
 
 @csrf_exempt
@@ -231,7 +234,6 @@ def sign_error(request):
     if not sign_dict:
         return HttpResponse('<h1>sign_error: error=[%s], cause=[%s]</h1>' % (error, cause))
     else:
-        return HttpResponseRedirect(get_callable(sign_dict['error_func'], 
-            kwargs={'parent_pk': sign_dict['parent_pk'], 
-            'description': 'error=[{0}], cause=[{1}]'.format(error, cause)}))
-
+        fn = get_callable(sign_dict['error_func'])
+        url = fn(parent_pk=sign_dict['parent_pk'], description='error=[{0}], cause=[{1}]'.format(error, cause))
+        return HttpResponseRedirect(url)
