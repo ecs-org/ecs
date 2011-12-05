@@ -143,7 +143,7 @@ def submission_list(request, meeting_pk=None):
     })
 
 
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_resident_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     
@@ -169,10 +169,11 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
                 _add(submission)
 
     tmp = tempfile.NamedTemporaryFile(suffix='.zip')
-    with zipfile.ZipFile(tmp, 'w') as zf:
-        for submission, doc in files:
-            with doc.as_temporary_file() as docfile:
-                zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+    zf = zipfile.ZipFile(tmp, 'w')
+    for submission, doc in files:
+        with doc.as_temporary_file() as docfile:
+            zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+    zf.close()
     tmp.seek(0)
     response = HttpResponse(tmp, content_type='application/zip')
     response['Content-Disposition'] = 'attachment;filename=%s.zip' % '.'.join(filename_bits)
