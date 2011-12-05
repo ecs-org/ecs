@@ -180,6 +180,15 @@ class Submission(models.Model):
         except IndexError:
             return None
             
+    def get_most_recent_vote(self, **kwargs):
+        votes = self.votes.order_by('-pk')
+        if kwargs:
+            votes = votes.filter(**kwargs)
+        try:
+            return votes[:1].get()
+        except Vote.DoesNotExist:
+            return None
+            
     def get_first_meeting(self):
         return self.meetings.order_by('start')[:1][0]
 
@@ -560,12 +569,9 @@ class SubmissionForm(models.Model):
     def allows_edits(self, user):
         s = self.submission
         with sudo():
-            try:
-                most_recent_vote = s.votes.filter(is_draft=False).order_by('-pk')[:1][0]
-                if most_recent_vote.result == '2':
-                    return True # b2 resubmission
-            except Vote.DoesNotExist:
-                pass
+            most_recent_vote = s.get_most_recent_vote()
+            if most_recent_vote and most_recent_vote.result == '2':
+                return True # b2 resubmission
             in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
         return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not self.current_pending_vote
         
@@ -673,8 +679,8 @@ class SubmissionForm(models.Model):
     def get_presenting_parties(self):
         return get_presenting_parties(self)
 
-    def get_reviewing_parties(self):
-        return get_reviewing_parties(self)
+    def get_reviewing_parties(self, active=None):
+        return get_reviewing_parties(self, active=active)
 
     @property
     def additional_investigators(self):

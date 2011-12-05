@@ -34,7 +34,7 @@ def on_study_change(sender, **kwargs):
                     initial_review_task.reopen()
                     send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
             else:
-                involved_users = new_sf.get_involved_parties().get_users().difference([submission.presenter])
+                involved_users = new_sf.get_reviewing_parties(active=True).get_users()
                 for u in involved_users:
                     send_submission_message(submission, u, _('B2 change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
 

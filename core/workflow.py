@@ -100,11 +100,11 @@ def needs_paper_submission_review(wf):
 # b2 guards
 @guard(model=Submission)
 def is_b2(wf):
-    return wf.data.newest_submission_form.current_pending_vote.result == '2'
+    return wf.data.get_most_recent_vote().result == '2'
 
 @guard(model=Submission)
 def is_still_b2(wf):
-    vote = wf.data.newest_submission_form.current_pending_vote
+    vote = wf.data.get_most_recent_vote()
     return vote.result == '2' and not vote.insurance_review_required and not vote.executive_review_required
 
 @guard(model=Submission)

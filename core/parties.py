@@ -83,7 +83,7 @@ def get_presenting_parties(sf):
     return parties
 
 @sudo()
-def get_reviewing_parties(sf):
+def get_reviewing_parties(sf, active=None):
     from ecs.users.middleware import current_user_store
 
     parties = PartyList()
@@ -91,7 +91,10 @@ def get_reviewing_parties(sf):
     anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().is_internal
     from ecs.tasks.models import Task
     external_reviewer_pks = sf.submission.external_reviewers.all().values_list('pk', flat=True)
-    for task in Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).order_by('created_at').select_related('task_type').distinct():
+    tasks = Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).order_by('created_at').select_related('task_type').distinct()
+    if active:
+        tasks = tasks.open()
+    for task in tasks:
         if task.assigned_to.pk in external_reviewer_pks:
             parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
         else:
