@@ -94,7 +94,7 @@
         <li>
             <a href="#">{% trans "Votes" %}</a>
             <ul class="tab_headers">
-                {% if user|has_flag:'is_internal' and show_reviews and vote_review_form %}
+                {% if show_reviews and vote_review_form %}
                     <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#vote_review_tab">Votum</a>
                     </li>
@@ -177,7 +177,7 @@
             <a href="{% url ecs.notifications.views.select_notification_creation_type %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    {% if user|has_flag:'is_internal' and vote_review_form %}
+    {% if vote_review_form %}
         <div id="vote_review_tab" class="tab">
             {% block vote_review_tab_content %}
                 <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}</h3>

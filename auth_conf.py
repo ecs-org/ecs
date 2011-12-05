@@ -47,6 +47,7 @@ class SubmissionQFactory(authorization.QFactory):
         if profile.is_insurance_reviewer:
             until_vote_q |= self.make_q(insurance_review_required=True)
             q |= self.make_q(forms__notifications__review_lane='insrev')
+            q |= self.make_q(forms__votes__insurance_review_required=True)
         q |= until_vote_q & (
             self.make_q(current_submission_form__current_published_vote=None)
             | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)
@@ -83,6 +84,8 @@ class VoteQFactory(authorization.QFactory):
         q = self.make_q(submission_form__submission__pk__in=Submission.objects.values('pk').query)
         if not profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
+        if profile.is_insurance_reviewer:
+            q |= self.make_q(insurance_review_required=True)
         return q
 
 authorization.register(Vote, factory=VoteQFactory)

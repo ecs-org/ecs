@@ -25,7 +25,7 @@ from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFo
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
 from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
-from ecs.votes.forms import VoteReviewForm, VotePreparationForm
+from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
 from ecs.checklists.utils import get_checklist_comment
@@ -417,6 +417,37 @@ def vote_preparation(request, submission_form_pk=None):
         vote.submission_form = submission_form
         vote.save()
 
+    response = readonly_submission_form(request, submission_form=submission_form, extra_context={
+        'vote_review_form': form,
+        'vote_version': get_version_number(vote) if vote else 0,
+    })
+    response.has_errors = not form.is_valid()
+    return response
+
+
+@task_required()
+def b2_vote_preparation(request, submission_form_pk=None):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    try:
+        vote = submission_form.submission.votes.get(is_draft=True, upgrade_for__isnull=False)
+    except Vote.DoesNotExist:
+        vote = submission_form.submission.votes.order_by('-pk')[:1][0]
+        vote = Vote.objects.create(
+            submission_form=submission_form, 
+            result='2', 
+            is_draft=True, 
+            upgrade_for=vote, 
+            text=vote.text,
+        )
+
+    form = B2VotePreparationForm(request.POST or None, instance=vote)
+    form.bound_to_task = request.task_management.task
+
+    if form.is_valid():
+        vote = form.save(commit=False)
+        vote.submission_form = submission_form
+        vote.save()
+    
     response = readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': form,
         'vote_version': get_version_number(vote) if vote else 0,

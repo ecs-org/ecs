@@ -52,7 +52,7 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
 
     def clean(self):
         cd = self.cleaned_data
-        lane = cd['workflow_lane']
+        lane = cd.get('workflow_lane')
         if lane == SUBMISSION_LANE_BOARD:
             require_fields(self, ('medical_categories',))
         elif lane == SUBMISSION_LANE_EXPEDITED:

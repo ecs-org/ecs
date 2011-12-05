@@ -5,9 +5,13 @@ VOTE_PREPARATION_CHOICES = (
     ('2', _(u'2 positive under reserve')),
 )
 
+B3b = ('3b', _(u'3b recessed (examined)'))
+
+B2_VOTE_PREPARATION_CHOICES = VOTE_PREPARATION_CHOICES + (B3b,)
+
 VOTE_RESULT_CHOICES = VOTE_PREPARATION_CHOICES + (
     ('3a', _(u'3a recessed (not examined)')),
-    ('3b', _(u'3b recessed (examined)')),
+    B3b,
     ('4', _(u'4 negative')),
     ('5', _(u'5 withdrawn (applicant)')),
 )

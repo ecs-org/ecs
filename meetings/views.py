@@ -25,6 +25,7 @@ from ecs.ecsmail.utils import deliver
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
+from ecs.meetings.signals import on_meeting_end
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet)
@@ -375,7 +376,9 @@ def meeting_assistant_stop(request, meeting_pk=None):
                 submission.workflow_lane = SUBMISSION_LANE_BOARD
                 submission.save()
             submission.schedule_to_meeting()
-
+    
+    on_meeting_end.send(Meeting, meeting=meeting)
+    
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')

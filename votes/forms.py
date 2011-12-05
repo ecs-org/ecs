@@ -8,7 +8,7 @@ from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.utils.formutils import TranslatedModelForm
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task
-from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
 from ecs.users.utils import sudo
 
 def ResultField(**kwargs):
@@ -21,7 +21,8 @@ class SaveVoteForm(forms.ModelForm):
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final_version', 'signed_at', 'valid_until')
+        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final_version', 'signed_at', 'valid_until', 
+            'upgrade_for', 'insurance_review_required')
 
     def save(self, top, *args, **kwargs):
         kwargs['commit'] = False
@@ -51,13 +52,6 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             'is_final_version': _('Proofread and valid'),
         }
 
-class B2VoteReviewForm(TranslatedModelForm):
-    class Meta:
-        model = Vote
-        fields = ('text', 'is_final_version')
-        labels = {
-            'is_final_version': _('Proofread and valid'),
-        }
 
 class VotePreparationForm(forms.ModelForm):
     result = ResultField(choices=VOTE_PREPARATION_CHOICES, required=True)
@@ -72,3 +66,12 @@ class VotePreparationForm(forms.ModelForm):
         if commit:
             vote.save()
         return vote
+
+
+class B2VotePreparationForm(forms.ModelForm):
+    result = ResultField(choices=B2_VOTE_PREPARATION_CHOICES, required=True)
+    
+    class Meta:
+        model = Vote
+        fields = ('result', 'text')
+

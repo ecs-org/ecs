@@ -13,8 +13,10 @@ from ecs.votes.signals import on_vote_extension, on_vote_publication
 class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
+    upgrade_for = models.OneToOneField('self', null=True, related_name='previous')
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_(u'vote'))
     executive_review_required = models.NullBooleanField(blank=True)
+    insurance_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=_(u'comment'))
     is_draft = models.BooleanField(default=False)
     is_final_version = models.BooleanField(default=False)
@@ -107,6 +109,8 @@ def _post_vote_save(sender, **kwargs):
             submission_form.current_pending_vote = None
         submission_form.current_published_vote = vote
     else:
+        # handle Vote.submission_form changes (happens on b2 upgrades)
+        submission_form.submission.forms.filter(current_pending_vote=vote).exclude(pk=submission_form.pk).update(current_pending_vote=None)
         submission_form.current_pending_vote = vote
     submission_form.save(force_update=True)
 

@@ -23,15 +23,20 @@ def on_study_change(sender, **kwargs):
         involved_users = new_sf.get_involved_parties().get_users().difference([submission.presenter])
         for u in involved_users:
             send_submission_message(submission, u, _('Creation of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
-    elif not submission.votes.exists():
+    else:
         with sudo():
-            try:
-                initial_review_task = get_obj_tasks((InitialReview, InitialThesisReview), submission).exclude(closed_at__isnull=True)[0]
-            except IndexError:
-                pass
+            if not submission.votes.exists():
+                try:
+                    initial_review_task = get_obj_tasks((InitialReview, InitialThesisReview), submission).exclude(closed_at__isnull=True)[0]
+                except IndexError:
+                    pass
+                else:
+                    initial_review_task.reopen()
+                    send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
             else:
-                initial_review_task.reopen()
-                send_submission_message(submission, initial_review_task.assigned_to, _('Change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
+                involved_users = new_sf.get_involved_parties().get_users().difference([submission.presenter])
+                for u in involved_users:
+                    send_submission_message(submission, u, _('B2 change of study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
 
 
 @connect(signals.on_study_submit)
@@ -107,3 +112,16 @@ def on_categorization_review(sender, **kwargs):
     if is_acknowledged:
         meeting = submission.schedule_to_meeting()
         meeting.update_assigned_categories()
+
+
+@connect(signals.on_b2_upgrade)
+def on_b2_upgrade(sender, **kwargs):
+    submission, vote = kwargs['submission'], kwargs['vote']
+    vote.submission_form.is_acknowledged = True
+    vote.submission_form.save()
+    vote.submission_form.mark_current()
+    if vote.result != '1':
+        with sudo():
+            meeting = submission.schedule_to_meeting()
+            meeting.update_assigned_categories()
+

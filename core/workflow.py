@@ -5,15 +5,18 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
+from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
-from ecs.core.signals import on_initial_review, on_initial_thesis_review, on_categorization_review
+from ecs.core.signals import on_initial_review, on_initial_thesis_review, on_categorization_review, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer, get_checklist_comment
 from ecs.tasks.models import Task, TaskType
 from ecs.tasks.utils import block_if_task_exists
 from ecs.votes.models import Vote
+from ecs.meetings import signals as meeting_signals
+from ecs.utils import connect
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -93,6 +96,24 @@ def needs_gcp_review(wf):
 @block_if_task_exists('paper_submission_review')
 def needs_paper_submission_review(wf):
     return True
+    
+# b2 guards
+@guard(model=Submission)
+def is_b2(wf):
+    return wf.data.newest_submission_form.current_pending_vote.result == '2'
+
+@guard(model=Submission)
+def is_still_b2(wf):
+    vote = wf.data.newest_submission_form.current_pending_vote
+    return vote.result == '2' and not vote.insurance_review_required and not vote.executive_review_required
+
+@guard(model=Submission)
+def needs_insurance_b2_review(wf):
+    return wf.data.newest_submission_form.current_pending_vote.insurance_review_required
+
+@guard(model=Submission)
+def needs_executive_b2_review(wf):
+    return wf.data.newest_submission_form.current_pending_vote.executive_review_required
 
 ##############
 # Activities #
@@ -144,6 +165,47 @@ class Resubmission(Activity):
         token.task.assign(self.workflow.data.presenter)
         return token
 
+
+class B2ResubmissionReview(Activity):
+    class Meta:
+        model = Submission
+
+    def get_url(self):
+        return reverse('ecs.core.views.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form.pk})
+
+
+class InitialB2ResubmissionReview(B2ResubmissionReview):
+    class Meta:
+        model = Submission
+        
+    def get_choices(self):
+        return (
+            (None, _('Finish')),
+            ('insrev', _('Insurance Review')),
+            ('exerev', _('Executive Review')),
+        )
+        
+    def pre_perform(self, choice):
+        vote = self.workflow.data.newest_submission_form.current_pending_vote
+        if choice == 'insrev':
+            vote.executive_review_required = False
+            vote.insurance_review_required = True
+            vote.save()
+        elif choice == 'exerev':
+            vote.executive_review_required = True
+            vote.insurance_review_required = False
+            vote.save()
+        else:
+            vote.insurance_review_required = False
+            vote.executive_review_required = False
+            is_upgrade = vote.result != '2'
+            if is_upgrade:
+                vote.is_draft = False
+            vote.save()
+            if is_upgrade:
+                on_b2_upgrade.send(Submission, submission=self.workflow.data, vote=vote)
+
+
 class CategorizationReview(Activity):
     class Meta:
         model = Submission
@@ -152,7 +214,7 @@ class CategorizationReview(Activity):
         return True
 
     def get_url(self):
-        return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form.pk})
+        return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
     def pre_perform(self, choice):
         s = self.workflow.data
@@ -294,3 +356,19 @@ class VotePreparation(Activity):
 
     def get_url(self):
         return reverse('ecs.core.views.vote_preparation', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+
+
+class WaitForMeeting(Generic):
+    class Meta:
+        model = Submission
+        
+    def is_locked(self):
+        return not self.workflow.data.votes.exists()
+
+
+@connect(meeting_signals.on_meeting_end)
+def on_meeting_end(sender, **kwargs):
+    meeting = kwargs['meeting']
+    for submission in meeting.submissions.all():
+        submission.workflow.unlock(WaitForMeeting)
+    

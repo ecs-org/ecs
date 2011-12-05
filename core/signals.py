@@ -8,3 +8,4 @@ on_susar_presenter_change = Signal() # sender=Submission, kwargs: submission, ol
 on_initial_review = Signal() # sender=Submission, kwargs: submission, form
 on_initial_thesis_review = Signal() # sender=Submission, kwargs: submission, form
 on_categorization_review = Signal() # sender=Submission, kwargs: submission
+on_b2_upgrade = Signal() # sender=Submission, kwargs: submission, vote
