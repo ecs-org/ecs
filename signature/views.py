@@ -104,7 +104,6 @@ def sign_send(request, jsessionid=None, always_mock=False):
     if sign_dict is None:
         return HttpResponseForbidden('<h1>Error: Invalid pdf-id. Probably your signing session expired. Please retry.</h1>')
     
-    """
     if always_mock: 
         with NamedTemporaryFile(suffix='.pdf') as tmp_in:
             with NamedTemporaryFile(suffix='.pdf') as tmp_out:
@@ -113,8 +112,7 @@ def sign_send(request, jsessionid=None, always_mock=False):
                 pdf_textstamp(tmp_in, tmp_out, 'MOCK')
                 tmp_out.seek(0)
                 sign_dict['pdf_data'] = tmp_out.read()
-    """
-    
+
     return HttpResponse(sign_dict["pdf_data"], content_type='application/pdf')
 
 
@@ -189,12 +187,12 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         if cls_name is not None:
             cls = get_callable(sign_dict['parent_type'])
             parent_obj = get_object_or_404(cls, pk=sign_dict['parent_pk'])
+    
         doctype = get_object_or_404(DocumentType, identifier=sign_dict['document_type'])
-        version = sign_dict["document_version"]
         document = Document.objects.create(uuid=sign_dict["document_uuid"],
              branding='n', doctype=doctype, file=f,
              original_file_name=sign_dict["document_filename"], date=datetime.now(), 
-             version=version
+             version=sign_dict["document_version"]
         )
         document.parent_object = parent_obj
         document.save()
