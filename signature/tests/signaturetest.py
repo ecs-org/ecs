@@ -44,7 +44,7 @@ def success_func(document_pk=None):
     return ('redirect to success')
     
 def error_func(parent_pk=None, description=''):
-    return ('redirect to error')
+    return ('redirect to error:'+ description)
     
             
 class SignatureTest(LoginTestCase):
@@ -63,11 +63,11 @@ class SignatureTest(LoginTestCase):
     def test_success(self):
         '''Tests that signing a document is possible; Will use mock signing.
         '''
-        print(self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success')))
-        eq_ (self.success, True)
+        redirecturl = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success'))
+        eq_ (redirecturl, "redirect to success")
     
     def test_failure(self):     
         '''Tests that signing a document fails; Will use mock signing.
         '''
-        print(self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail')))
-        eq_ (self.success, False)
+        redirecturl = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail'))
+        eq_ (redirecturl[:17], 'redirect to error')
