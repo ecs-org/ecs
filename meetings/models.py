@@ -304,11 +304,11 @@ class Meeting(models.Model):
         for constraint in self.constraints.all():
             constraint_start = datetime.combine(start_date, constraint.start_time)
             constraint_end = datetime.combine(start_date, constraint.end_time)
-            for participation in Participation.objects.filter(user=constraint.user, ignored_for_optimization=False):
+            for participation in Participation.objects.filter(entry__meeting=self, user=constraint.user, ignored_for_optimization=False):
                 start = participation.entry.start
                 end = participation.entry.end
                 if (constraint_start >= start and constraint_start < end) or \
-                    (constraint_end > start and constraint_end < end) or \
+                    (constraint_end > start and constraint_end <= end) or \
                     (constraint_start <= start and constraint_end >= end):
                     entries_which_violate_constraints.append(participation.entry)
         return entries_which_violate_constraints
