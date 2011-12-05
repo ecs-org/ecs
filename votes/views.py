@@ -139,9 +139,8 @@ def success_func(document_pk=None):
     task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
     task.done()
     
-    return HttpResponseRedirect(reverse(
-        'readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+    return reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab'
 
 def error_func(parent_pk=None, description=''):
     # redirect to retry, ignore, decline this vote for signing
-    return (reverse('ecs.core.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'description': description}))
+    return reverse('ecs.vote.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'description': description})
