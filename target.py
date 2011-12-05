@@ -106,19 +106,19 @@ TEMPLATE_DEBUG = False
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
             )
 
-    def catalina_cmd(self):
+    def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
         if sys.platform == 'win32':
-            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as.work-dir={0}\\conf\\pdf-as&cd {0}&bin\\catalina.bat".format(TOMCAT_DIR)
+            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as.work-dir={0}\\conf\\pdf-as&cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
         else:
-            cmd = "CATALINA_BASE={0};CATALINA_OPTS=-Dpdf-as.work-dir={0}/conf/pdf-as;cd {0};bin/catalina.sh".format(TOMCAT_DIR)
+            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS=-Dpdf-as.work-dir={0}/conf/pdf-as'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
         return cmd
     
     def start_dev_signing(self):
-        local(self.catalina_cmd()+ " start")
+        local(self.catalina_cmd('start'))
         
     def stop_dev_signing(self):
-        local(self.catalina_cmd()+ " stop")
+        local(self.catalina_cmd('stop'))
     
     def apache_restart(self):
         pass
