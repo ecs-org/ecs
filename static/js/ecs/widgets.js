@@ -34,7 +34,7 @@ ecs.widgets.Widget = new Class({
         }
     },
     load: function(url, form, callback){
-        if ($defined(this.request) && this.request.running) {
+        if (this.request && this.request.running) {
             this.request.cancel();
         }
         var target_url = url;

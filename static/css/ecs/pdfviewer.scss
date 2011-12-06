@@ -30,6 +30,7 @@ body.pdfviewer{
     -moz-user-select: none;
     -o-user-select: none;
     user-select: none;
+    
 }
 
 .selectable, input, textarea{
@@ -513,6 +514,11 @@ body.pdfviewer .popup input{
     -moz-border-radius: 3px;
     letter-spacing: 1px;
 }
+
+body.pdfviewer .popup input[type=submit]{
+    color: $black;
+}
+
 
 body.pdfviewer .popup input:focus{
     background-color: $black;
