@@ -210,9 +210,9 @@ ecs.pdfviewer.AnnotationEditor = new Class({
     initContent: function(content){
         this.textarea = new Element('textarea', {html: this.text});
         this.authorInfo = new Element('div', {'class': 'authorInfo'});
-        var saveLink = new Element('a', {html: 'Save'});
-        var cancelLink = new Element('a', {html: 'Cancel'});
-        var deleteLink = new Element('a', {html: 'Delete'});
+        var saveLink = new Element('a', {html: 'Speichern'});
+        var cancelLink = new Element('a', {html: 'Abbrechen'});
+        var deleteLink = new Element('a', {html: 'Löschen'});
         this.nextLink = new Element('a', {html: '>', 'class': 'next'});
         this.previousLink = new Element('a', {html: '<', 'class': 'previous'});
         content.adopt(this.nextLink, this.previousLink, this.authorInfo, this.textarea, saveLink, cancelLink, deleteLink);
