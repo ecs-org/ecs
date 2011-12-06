@@ -30,10 +30,10 @@
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
             <span class="bold">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
-            <br />
         {% else %}
             <span class="bold">{{ entry.title|default:'<i>No title.</i>' }}</span><br />
         {% endif %}
+        <br />
     {% endfor %}
 
     {% for i, top in additional_tops %}
