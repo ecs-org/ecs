@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n tasks %}
 
 <div id="task_main">
 {% if not submission %}
@@ -28,11 +28,11 @@
 {% if mine_tasks %}
     <div class="task_list">
         <h3>{% trans "My Tasks" %}</h3>
-        {% regroup mine_tasks by task_type.trans_name as task_type_list %}
+        {% regroup mine_tasks by task_type.workflow_node.uid as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
-                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
-                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
+                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
+                <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <a href="{{ task.url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
@@ -44,11 +44,16 @@
 {% if assigned_tasks %}
     <div class="task_list">
         <h3>{% trans "Tasks assigned to me" %}</h3>
-        {% regroup assigned_tasks by task_type.trans_name as task_type_list %}
+        {% regroup assigned_tasks by task_type.workflow_node.uid as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
-                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
-                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
+                {% if task_type.list|length > 1 %}
+                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
+                </form>
+                {% endif %}
+                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
+                <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>
@@ -71,11 +76,16 @@
 {% if open_tasks %}
     <div class="task_list">
         <h3>{% trans "Open Tasks" %}</h3>
-        {% regroup open_tasks by task_type.trans_name as task_type_list %}
+        {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
-                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h4>
-                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
+                {% if task_type.list|length > 1 %}
+                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
+                </form>
+                {% endif %}
+                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
+                <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>
@@ -96,11 +106,16 @@
 {% if proxy_tasks %}
     <div class="task_list">
         <h3>{% trans "Proxy Tasks" %}</h3>
-        {% regroup proxy_tasks by task_type.trans_name as task_type_list %}
+        {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
-                <h3><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper }}</h3>
-                <ul class="tasks_{{ task_type.grouper|slugify }}"> {% for task in task_type.list %} <li>
+                {% if task_type.list|length > 1 %}
+                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
+                </form>
+                {% endif %}
+                <h3><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h3>
+                <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>

@@ -1,7 +1,9 @@
 import datetime
+
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
-from ecs.tasks.models import Task
+
+from ecs.tasks.models import Task, TaskType
 
 register = Library()
 
@@ -29,3 +31,7 @@ def fetch_tasks(parser, token):
     except ValueError:
         raise TemplateSyntaxError('{% fetch_tasks as VAR %} expected')
     return FetchTasksNode(varname)
+
+@register.filter
+def task_type_name(slug):
+    return TaskType.objects.filter(workflow_node__uid=slug).order_by('-pk')[0].trans_name

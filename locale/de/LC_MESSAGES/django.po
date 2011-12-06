@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 09:28+0100\n"
+"POT-Creation-Date: 2011-12-06 12:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -245,7 +245,7 @@ msgstr "Antwort"
 msgid "Delegate to"
 msgstr "Abgeben an"
 
-#: communication/tasks.py:53
+#: communication/tasks.py:55
 msgid "[ECS{ec_number}] {subject}."
 msgstr ""
 
@@ -2059,11 +2059,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:650
+#: meetings/models.py:652
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:651
+#: meetings/models.py:653
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2104,15 +2104,15 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:528 meetings/views.py:593
+#: meetings/views.py:528 meetings/views.py:596
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:536 meetings/views.py:542 meetings/views.py:548
+#: meetings/views.py:539 meetings/views.py:545 meetings/views.py:551
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:563
+#: meetings/views.py:566
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2765,8 +2765,8 @@ msgstr ""
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:11 templates/tasks/tasks.inc:73
-#: templates/tasks/tasks_full.inc:75
+#: templates/meetings/details.html:11 templates/tasks/tasks.inc:78
+#: templates/tasks/tasks_full.inc:80
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
@@ -3846,21 +3846,27 @@ msgstr "Meine Aufgaben"
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
-#: templates/tasks/tasks.inc:57 templates/tasks/tasks.inc.py:85
-#: templates/tasks/tasks.inc:110 templates/tasks/tasks_full.inc:61
-#: templates/tasks/tasks_full.inc.py:84 templates/tasks/tasks_full.inc:105
+#: templates/tasks/tasks.inc:52 templates/tasks/tasks.inc.py:84
+#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:58
+#: templates/tasks/tasks_full.inc.py:86 templates/tasks/tasks_full.inc:112
+msgid "Accept all"
+msgstr "Alle annehmen"
+
+#: templates/tasks/tasks.inc:62 templates/tasks/tasks.inc.py:95
+#: templates/tasks/tasks.inc:125 templates/tasks/tasks_full.inc:66
+#: templates/tasks/tasks_full.inc.py:94 templates/tasks/tasks_full.inc:120
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:62 templates/tasks/tasks_full.inc:65
+#: templates/tasks/tasks.inc:67 templates/tasks/tasks_full.inc:70
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:98 templates/tasks/tasks_full.inc:96
+#: templates/tasks/tasks.inc:108 templates/tasks/tasks_full.inc:106
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:122 templates/tasks/tasks_full.inc:116
+#: templates/tasks/tasks.inc:137 templates/tasks/tasks_full.inc:131
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
@@ -4695,9 +4701,6 @@ msgstr ""
 
 #~ msgid "delete"
 #~ msgstr "löschen"
-
-#~ msgid "Accept"
-#~ msgstr "Annehmen"
 
 #~ msgid "External Review Split"
 #~ msgstr "Gutachten Aufteilung"

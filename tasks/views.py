@@ -14,7 +14,7 @@ from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
-from ecs.tasks.models import Task
+from ecs.tasks.models import Task, TaskType
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
 
@@ -139,6 +139,31 @@ def accept_task(request, task_pk=None, full=False):
 def accept_task_full(request, task_pk=None):
     return accept_task(request, task_pk=task_pk, full=True)
 
+@require_POST
+def accept_task_type(request, flavor=None, slug=None, full=False):
+    tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True)
+    task_flavors = {
+        'assigned': tasks.filter(assigned_to=request.user, accepted=False),
+        'open': tasks.filter(assigned_to=None),
+        'proxy': tasks.filter(assigned_to__ecs_profile__is_indisposed=True),
+    }
+    tasks = task_flavors[flavor]
+
+    submission_pk = request.GET.get('submission')
+    if submission_pk:
+        submission = get_object_or_404(Submission, pk=submission_pk)
+        tasks = tasks.for_submission(submission)
+
+    for task in tasks.acceptable_for_user(request.user).filter(task_type__workflow_node__uid=slug):
+        task.accept(request.user)
+        task_accepted.send(type(task.node_controller), task=task)
+
+    view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
+    return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
+
+@require_POST
+def accept_task_type_full(request, flavor=None, slug=None):
+    return accept_task_type(request, flavor=flavor, slug=slug, full=True)
 
 @require_POST
 def decline_task(request, task_pk=None, full=False):
