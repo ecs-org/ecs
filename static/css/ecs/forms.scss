@@ -282,14 +282,14 @@ li.ModelChoiceField select {
   width: 35em;
 }
 td.TypedChoiceField select {
-  width: 6em;
+  width: 120px;
 }
 li.TypedChoiceField select {
-  min-width: 10em;
-  max-width: 22em;
+  min-width: 250px;
+  max-width: 350px;
 }
 li.NullBooleanField select {
-  width: 8em;
+  width: 130px;
 }
 li.TypedChoiceField ul{
   float: left;

@@ -295,13 +295,12 @@ table.notification td {
       font-size: 14px;
       padding-bottom: 1px;
       margin-bottom: 2px !important;
-      border-bottom: 1px solid $grey-80;
     }
     .list_item {
       display: block;
       margin-bottom: 5px;
-      padding-bottom: 2px;
-      background: #ddd; 
+      padding: 1px 3px;
+      background: $grey-90; 
     }
     .list_item span.doc_name:before {
       content: " | ";
@@ -359,7 +358,8 @@ iframe.upload {
 .dashboard_widget .messages li:nth-of-type(1) ,
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 .task_item:nth-of-type(1),
-.field_history .change:nth-of-type(1) {
+.field_history .change:nth-of-type(1) ,
+#meeting_list li:nth-of-type(1) {
   border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -375,7 +375,8 @@ iframe.upload {
 .dashboard_widget .submission_widget_list li:nth-child(odd) ,
 .administration_detail .user_list tr:nth-child(odd) ,
 .task_item:nth-child(odd),
-.field_history .change:nth-child(odd) {
+.field_history .change:nth-child(odd) ,
+#meeting_list li:nth-child(odd) {
   background: $middle-light-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -392,7 +393,8 @@ iframe.upload {
 .dashboard_widget .submission_widget_list li:nth-child(even) ,
 .administration_detail .user_list tr:nth-child(even) ,
 .task_item:nth-child(even),
-.field_history .change:nth-child(even) {
+.field_history .change:nth-child(even) ,
+#meeting_list li:nth-child(even) {
   background: $middle-dark-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -408,8 +410,10 @@ iframe.upload {
 .administration_detail .user_list tr:hover,
 .task_item:hover,
 .field_history .change:hover,
-#content .messages tr:hover {
+#content .messages tr:hover,
+#meeting_list li:hover {
   background: #fefefe;
+  cursor: pointer;
 }
 
 .submission_list_choose li {
