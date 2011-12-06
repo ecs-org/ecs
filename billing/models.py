@@ -74,3 +74,10 @@ class ChecklistPayment(models.Model):
     @property
     def reviewers(self):
         return User.objects.filter(pk__in=[c.user.pk for c in self.checklists.all()]).distinct()
+
+    @property
+    def stats(self):
+        stats = {}
+        price = Price.objects.get_review_price()
+        stats['total'] = self.checklists.count() * price.price
+        return stats

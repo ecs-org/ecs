@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 22:40+0100\n"
+"POT-Creation-Date: 2011-12-06 23:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2470,20 +2470,29 @@ msgstr "Alte Zahlungen"
 msgid "Payment of %(date)s"
 msgstr "Zahlung vom %(date)s"
 
-#: templates/billing/checklist_payment_list.html:20
+#: templates/billing/checklist_payment_list.html:18
+msgid "1 Review"
+msgstr "1 Gutachten"
+
+#: templates/billing/checklist_payment_list.html:18
+#, python-format
+msgid "%(count)s Reviews"
+msgstr "%(count)s Gutachten"
+
+#: templates/billing/checklist_payment_list.html:22
 msgid "No payment yet."
 msgstr "Es gibt noch keine Zahlung."
 
-#: templates/billing/checklist_payment_list.html:27
-#: templates/billing/invoice_list.html:27 templates/submissions/list.html:22
+#: templates/billing/checklist_payment_list.html:29
+#: templates/billing/invoice_list.html:29 templates/submissions/list.html:22
 #: templates/submissions/list.html:155 templates/submissions/widget.html:66
 #: templates/users/administration.html:28
 #: templates/users/administration.html:86 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
-#: templates/billing/checklist_payment_list.html:27
-#: templates/billing/invoice_list.html:27 templates/submissions/list.html:22
+#: templates/billing/checklist_payment_list.html:29
+#: templates/billing/invoice_list.html:29 templates/submissions/list.html:22
 #: templates/submissions/list.html:155 templates/submissions/widget.html:66
 #: templates/users/administration.html:28
 #: templates/users/administration.html:86
@@ -2513,7 +2522,16 @@ msgstr "Alte Rechnungen"
 msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
 
-#: templates/billing/invoice_list.html:20
+#: templates/billing/invoice_list.html:18
+msgid "1 Submission"
+msgstr "1 Einreichung"
+
+#: templates/billing/invoice_list.html:18
+#, python-format
+msgid "%(count)s Submissions"
+msgstr "%(count)s Einreichungen"
+
+#: templates/billing/invoice_list.html:22
 msgid "No invoice yet."
 msgstr "Es gibt noch keine Rechnung."
 
@@ -4428,9 +4446,6 @@ msgstr ""
 
 #~ msgid "submit data"
 #~ msgstr "Daten absenden"
-
-#~ msgid "B2 Review"
-#~ msgstr "B2 Review"
 
 #~ msgid "Expert assignment saved"
 #~ msgstr "Spezialistenzuordnung gespeichert"
