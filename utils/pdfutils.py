@@ -234,6 +234,8 @@ def _pdf_cop(filename, logger=pdfutils_logger):
 
 
 def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
+    if not getattr(settings, 'PDFCOP_ENABLED', True):
+        return src
     with tempfile.NamedTemporaryFile(suffix='.pdf') as tmp:
         shutil.copyfileobj(src, tmp)
         tmp.seek(0)
