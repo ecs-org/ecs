@@ -75,7 +75,9 @@
         <span class="bold">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
 
         {% for b1 in b1ized.all %}
-            <span class="bold">EK-Nr.: {{ b1.submission|ec_number }} {{ b1.submission.project_title_display }} ({{ b1.submission.current_submission_form.submitter_name }})
+            {% with b1.get_submission as submission %}
+                <span class="bold">EK-Nr.: {{ submission|ec_number }} {{ submission.project_title_display }} ({{ submission.current_submission_form.submitter_name }})
+            {% endwith %}
         {% endfor %}
     {% endif %}
 

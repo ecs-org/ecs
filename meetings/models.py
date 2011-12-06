@@ -384,7 +384,8 @@ class Meeting(models.Model):
 
         b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
         submission_forms = [x.submission_form for x in b2_votes]
-        b1ized = Vote.objects.filter(result='1', submission_form__in=submission_forms).order_by('submission_form__submission__ec_number')
+        b1ized = Vote.objects.filter(result='1', upgrade_for=b2_votes).order_by('submission_form__submission__ec_number')
+        print b1ized
 
         rts = list(self.retrospective_thesis_entries.all())
         es = list(self.expedited_entries.all())
