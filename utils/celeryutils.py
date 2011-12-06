@@ -1,5 +1,10 @@
+import anyjson
+from functools import wraps
+
 from djcelery.models import CrontabSchedule, IntervalSchedule, PeriodicTask
-import anyjson 
+
+from django.conf import settings
+from django.utils import translation
 
 
 def make_periodic_interval_task(name, task, every_sec, *args, **kwargs):
@@ -59,3 +64,17 @@ def make_periodic_crontab_task(name, task, minute, hour, day_of_week, *args, **k
     pt.kwargs = anyjson.serialize(kwargs)
     pt.save()
     print ("saved task: %s, created: %s" % (str(pt), str(created)))
+
+
+def translate(func):
+    @wraps(func)
+    def _inner(*args, **kwargs):
+        lang = kwargs.pop('language', settings.LANGUAGE_CODE)
+        prev_lang = translation.get_language()
+        translation.activate(lang)
+        try:
+            ret = func(*args, **kwargs)
+        finally:
+            translation.activate(prev_lang)
+        return ret
+    return _inner

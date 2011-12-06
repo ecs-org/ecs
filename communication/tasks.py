@@ -12,6 +12,7 @@ from django.core.mail import make_msgid
 from ecs.communication.models import Message
 from ecs.ecsmail.utils import deliver_to_recipient
 from ecs.users.utils import get_full_name
+from ecs.utils.celeryutils import translate
 
 
 @task()
@@ -25,6 +26,7 @@ def update_smtp_delivery(msgid, state, **kwargs):
 
 
 @periodic_task(run_every=timedelta(minutes=1))
+@translate
 def forward_messages(**kwargs):
     logger = forward_messages.get_logger(**kwargs)
     messages = Message.objects.filter(
