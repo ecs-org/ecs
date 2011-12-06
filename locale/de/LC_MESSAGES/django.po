@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-04 17:30+0100\n"
+"POT-Creation-Date: 2011-12-06 08:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,15 +111,15 @@ msgstr "Gutachter"
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:153 users/forms.py:121
+#: billing/views.py:153 users/forms.py:123
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:153 users/forms.py:120
+#: billing/views.py:153 users/forms.py:122
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:153 users/forms.py:128
+#: billing/views.py:153 users/forms.py:130
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -141,23 +141,23 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: checklists/bootstrap.py:23 core/bootstrap.py:135
+#: checklists/bootstrap.py:23 core/bootstrap.py:142
 msgid "Statistical Review"
 msgstr "Statistische Bewertung"
 
-#: checklists/bootstrap.py:24 core/bootstrap.py:133
+#: checklists/bootstrap.py:24 core/bootstrap.py:140
 msgid "Legal and Patient Review"
 msgstr "Pat.info Bewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:134
+#: checklists/bootstrap.py:25 core/bootstrap.py:141 core/workflow.py:184
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
-#: checklists/bootstrap.py:26 core/bootstrap.py:137
+#: checklists/bootstrap.py:26 core/bootstrap.py:144
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-#: checklists/bootstrap.py:27 core/bootstrap.py:136
+#: checklists/bootstrap.py:27 core/bootstrap.py:143
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -166,8 +166,8 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:126 core/forms/forms.py:433
-#: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:26
+#: checklists/bootstrap.py:56 core/bootstrap.py:128 core/forms/forms.py:433
+#: notifications/bootstrap.py:83 users/bootstrap.py:22 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
 
@@ -254,66 +254,80 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:127 votes/bootstrap.py:27
+#: core/bootstrap.py:129
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:128
+#: core/bootstrap.py:130
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:129
+#: core/bootstrap.py:131
+msgid "B2 Resubmission"
+msgstr "B2 Resubmission"
+
+#: core/bootstrap.py:132 core/bootstrap.py:133 core/bootstrap.py:134
+#, fuzzy
+msgid "B2 Resubmission Review"
+msgstr "Diplomarbeit Review"
+
+#: core/bootstrap.py:135
+#, fuzzy
+msgid "Wait For Meeting"
+msgstr "Sitzung Beenden"
+
+#: core/bootstrap.py:136
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:130
+#: core/bootstrap.py:137
 #, fuzzy
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:131 templates/submissions/readonly_form.html:82
+#: core/bootstrap.py:138 templates/submissions/readonly_form.html:82
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:132 templates/submissions/list.html:91
+#: core/bootstrap.py:139 templates/submissions/list.html:91
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:140
+#: core/bootstrap.py:147
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:141
+#: core/bootstrap.py:148
 #, fuzzy
 msgid "Initial Thesis Review Split"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:142
+#: core/bootstrap.py:149
 msgid "Thesis Recommendation"
 msgstr "Thesis Recommendation"
 
-#: core/bootstrap.py:143
+#: core/bootstrap.py:150
 msgid "Thesis Recommendation Review"
 msgstr "Thesis Recommendation Review"
 
-#: core/bootstrap.py:144
+#: core/bootstrap.py:151
 msgid "Thesis Vote Preparation"
 msgstr "Thesis Vote Preparation"
 
-#: core/bootstrap.py:147
+#: core/bootstrap.py:154
 msgid "Expedited Recommendation"
 msgstr "Expedited Empfehlung"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:155
 msgid "Expedited Vote Preparation"
 msgstr "Expedited Votum Vorbereitung"
 
-#: core/bootstrap.py:151
+#: core/bootstrap.py:158
 msgid "Local EC Recommendation"
 msgstr "begleitende EK Empfehlung"
 
-#: core/bootstrap.py:152
+#: core/bootstrap.py:159
 #, fuzzy
 msgid "Local EC Vote Preparation"
 msgstr "Thesis Vote Preparation"
@@ -1056,7 +1070,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:231 core/models/submissions.py:439
+#: core/paper_forms.py:231 core/models/submissions.py:448
 msgid "open"
 msgstr "offen"
 
@@ -1072,7 +1086,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:439
+#: core/paper_forms.py:235 core/models/submissions.py:448
 msgid "blind"
 msgstr "blind"
 
@@ -1088,7 +1102,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:239 core/models/submissions.py:439
+#: core/paper_forms.py:239 core/models/submissions.py:448
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1239,7 +1253,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:29
-#: meetings/forms.py:44 users/forms.py:156 users/forms.py:204
+#: meetings/forms.py:44 users/forms.py:158 users/forms.py:206
 msgid "title"
 msgstr "Titel"
 
@@ -1386,34 +1400,49 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Creation of study EC-Nr. {ec_number}"
 msgstr "Erstellung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:34
+#: core/triggers.py:35
 msgid "Change of study EC-Nr. {ec_number}"
 msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:60 core/triggers.py:62 core/triggers.py:71
-#: core/triggers.py:73
+#: core/triggers.py:39
+#, fuzzy
+msgid "B2 change of study EC-Nr. {ec_number}"
+msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
+
+#: core/triggers.py:65 core/triggers.py:67 core/triggers.py:76
+#: core/triggers.py:78
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:81
+#: core/triggers.py:86
 msgid "Submission accepted"
 msgstr "Einreichung akzeptiert"
 
-#: core/triggers.py:88
+#: core/triggers.py:93
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:90
+#: core/triggers.py:95
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:112
+#: core/workflow.py:133
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:113 notifications/models.py:172
+#: core/workflow.py:134 notifications/models.py:172
 msgid "Reject"
 msgstr "Ablehnen"
+
+#: core/workflow.py:183
+#, fuzzy
+msgid "Finish"
+msgstr "Abgeschlossen"
+
+#: core/workflow.py:185
+#, fuzzy
+msgid "Executive Review"
+msgstr "Prüfung Votum Executive"
 
 #: core/forms/fields.py:26
 msgid "Please enter a date in the format dd.mm.yyyy."
@@ -1733,12 +1762,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:771 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:785 users/forms.py:56
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:771 users/forms.py:54
+#: core/models/names.py:37 core/models/submissions.py:785 users/forms.py:56
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1755,11 +1784,11 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:805
+#: core/models/submissions.py:819
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:805
+#: core/models/submissions.py:819
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1775,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:656 templates/meetings/details.html:15
+#: core/views/submissions.py:687 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:762 templates/core.html:41
+#: core/views/submissions.py:793 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:764
+#: core/views/submissions.py:795
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:777
+#: core/views/submissions.py:808
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:800 templates/core.html:44
+#: core/views/submissions.py:831 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:810 templates/core.html:47
+#: core/views/submissions.py:841 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -1901,7 +1930,7 @@ msgstr "Einreichformular"
 msgid "Checklist"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: documents/bootstrap.py:31 votes/models.py:16
+#: documents/bootstrap.py:31 votes/models.py:17
 msgid "vote"
 msgstr "Votum"
 
@@ -2034,52 +2063,52 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:49 templates/core.html:65
+#: meetings/views.py:50 templates/core.html:65
 #: templates/submissions/list.html:112
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:58 templates/core.html:69
+#: meetings/views.py:59 templates/core.html:69
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:63 templates/core.html:70
+#: meetings/views.py:64 templates/core.html:70
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:211
+#: meetings/views.py:213
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:332
+#: meetings/views.py:334
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:341
+#: meetings/views.py:343
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:347
+#: meetings/views.py:349
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:361
+#: meetings/views.py:363
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:510 meetings/views.py:522
+#: meetings/views.py:514 meetings/views.py:526
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:524 meetings/views.py:589
+#: meetings/views.py:528 meetings/views.py:593
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:532 meetings/views.py:538 meetings/views.py:544
+#: meetings/views.py:536 meetings/views.py:542 meetings/views.py:548
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:559
+#: meetings/views.py:563
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2818,14 +2847,14 @@ msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:9
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:30
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:51
-#: users/forms.py:135
+#: users/forms.py:137
 msgid "Approved"
 msgstr "Bestätigt"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:21
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:42
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:63
-#: users/forms.py:136
+#: users/forms.py:138
 msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
@@ -2939,7 +2968,7 @@ msgid "Name"
 msgstr "Name"
 
 #: templates/meetings/tabs/open_tasks.html:9
-#: templates/users/administration.html:13 users/forms.py:207
+#: templates/users/administration.html:13 users/forms.py:209
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -2960,7 +2989,7 @@ msgstr "Zugeteilt"
 msgid "Assigend To"
 msgstr "Person"
 
-#: templates/meetings/tabs/status.html:4 users/forms.py:115
+#: templates/meetings/tabs/status.html:4 users/forms.py:117
 msgid "Title"
 msgstr "Titel"
 
@@ -4021,165 +4050,175 @@ msgstr "Passwort setzen"
 msgid "User Approval"
 msgstr "Benutzer bestätigen"
 
-#: users/forms.py:17
+#: users/forms.py:19
 msgid "Email"
 msgstr "E-mail"
 
-#: users/forms.py:18 users/forms.py:61
+#: users/forms.py:20 users/forms.py:63
 msgid "Password"
 msgstr "Passwort"
 
-#: users/forms.py:32
+#: users/forms.py:34
 msgid ""
 "Please enter a correct email and password. Note that the password is case-"
 "sensitive."
 msgstr ""
 
-#: users/forms.py:34
+#: users/forms.py:36
 msgid "This account is inactive."
 msgstr "Dieser Zugang ist deaktiviert."
 
-#: users/forms.py:41
+#: users/forms.py:43
 msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:54 users/forms.py:155 users/forms.py:203
+#: users/forms.py:56 users/forms.py:157 users/forms.py:205
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:55 users/forms.py:205
+#: users/forms.py:57 users/forms.py:207
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:56 users/forms.py:206
+#: users/forms.py:58 users/forms.py:208
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:57 users/forms.py:202
+#: users/forms.py:59 users/forms.py:204
 msgid "email"
 msgstr "E-Mail"
 
-#: users/forms.py:62
+#: users/forms.py:64
 msgid "Password (again)"
 msgstr "Passwort wiederholen"
 
-#: users/forms.py:67
+#: users/forms.py:69
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: users/forms.py:77
+#: users/forms.py:79
 msgid "Never"
 msgstr "nie"
 
-#: users/forms.py:78
+#: users/forms.py:80
 msgid "after 5 minutes"
 msgstr "nach fünf Minuten"
 
-#: users/forms.py:79 users/forms.py:80 users/forms.py:81
+#: users/forms.py:81 users/forms.py:82 users/forms.py:83
 msgid "after {0} hours"
 msgstr "nach {0} Stunden"
 
-#: users/forms.py:114
+#: users/forms.py:116
 msgid "Gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:116
+#: users/forms.py:118
 msgid "First Name"
 msgstr "Vorname"
 
-#: users/forms.py:117
+#: users/forms.py:119
 msgid "Last Name"
 msgstr "Nachname"
 
-#: users/forms.py:118
+#: users/forms.py:120
 msgid "Organisation"
 msgstr "Organisation"
 
-#: users/forms.py:119
+#: users/forms.py:121
 msgid "Job Title"
 msgstr "Berufsbezeichnung"
 
-#: users/forms.py:122
+#: users/forms.py:124
 msgid "Address"
 msgstr "Adresse"
 
-#: users/forms.py:123
+#: users/forms.py:125
 msgid "Additional Address Information"
 msgstr "Zusätzliche Adressinformationen"
 
-#: users/forms.py:124
+#: users/forms.py:126
 msgid "ZIP-Code"
 msgstr "Postleitzahl"
 
-#: users/forms.py:125
+#: users/forms.py:127
 msgid "City"
 msgstr "Ort"
 
-#: users/forms.py:126
+#: users/forms.py:128
 msgid "Phone"
 msgstr "Telefon"
 
-#: users/forms.py:127
+#: users/forms.py:129
 msgid "Fax"
 msgstr "Fax"
 
-#: users/forms.py:129
+#: users/forms.py:131
 msgid "Forwarding of unread messages"
 msgstr "Weiterleitung von ungelesenen Nachrichten"
 
-#: users/forms.py:134
+#: users/forms.py:136
 msgid "Approved/Not Approved"
 msgstr "Bestätigt/Nicht Bestätigt"
 
-#: users/forms.py:139
+#: users/forms.py:141
 msgid "Both"
 msgstr "Beide"
 
-#: users/forms.py:140
+#: users/forms.py:142
 msgid "active"
 msgstr "aktiv"
 
-#: users/forms.py:141
+#: users/forms.py:143
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:157 users/forms.py:208
+#: users/forms.py:159 users/forms.py:210
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:158 users/forms.py:209
+#: users/forms.py:160 users/forms.py:211
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:159 users/forms.py:210
+#: users/forms.py:161 users/forms.py:212
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:160
+#: users/forms.py:162
 msgid "Resident Member"
 msgstr ""
 
-#: users/forms.py:161 users/forms.py:211
+#: users/forms.py:163 users/forms.py:213
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:212
+#: users/forms.py:214
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:225
+#: users/forms.py:227
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
-#: users/forms.py:251
+#: users/forms.py:253
 msgid "is_indisposed"
 msgstr "Verhindert"
 
-#: users/forms.py:252
+#: users/forms.py:254
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
+
+#: users/forms.py:270 users/forms.py:274
+#, fuzzy
+msgid "New password"
+msgstr "Passwort setzen"
+
+#: users/forms.py:271 users/forms.py:275
+#, fuzzy
+msgid "New password confirmation"
+msgstr "Keine Angaben"
 
 #: users/utils.py:72
 msgid "Ms."
@@ -4189,28 +4228,27 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:137 users/views.py:370
-#, fuzzy
+#: users/utils.py:137 users/views.py:369
 msgid "ECS account creation"
-msgstr "ECS Verwaltung"
+msgstr "Erstellung eines ECS Zugangs"
 
-#: users/views.py:95
+#: users/views.py:94
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:152
+#: users/views.py:151
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort vergessen"
 
-#: users/views.py:227
+#: users/views.py:226
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: users/views.py:276 users/views.py:388
+#: users/views.py:275 users/views.py:387
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:380
+#: users/views.py:379
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
@@ -4262,35 +4300,27 @@ msgstr ""
 msgid "US States"
 msgstr ""
 
-#: votes/bootstrap.py:28
-msgid "B2 Resubmission"
-msgstr "B2 Resubmission"
-
-#: votes/bootstrap.py:29
-msgid "B2 Review"
-msgstr "B2 Review"
-
-#: votes/bootstrap.py:30
+#: votes/bootstrap.py:26
 msgid "Executive Vote Finalization"
 msgstr "Votum bearbeiten Executive"
 
-#: votes/bootstrap.py:31
+#: votes/bootstrap.py:27
 msgid "Executive Vote Review"
 msgstr "Prüfung Votum Executive"
 
-#: votes/bootstrap.py:32
+#: votes/bootstrap.py:28
 msgid "Internal Vote Review"
 msgstr "Interne Prüfung Votum"
 
-#: votes/bootstrap.py:33
+#: votes/bootstrap.py:29
 msgid "Office Vote Finalization"
 msgstr "Votum bearbeiten Office"
 
-#: votes/bootstrap.py:34 votes/bootstrap.py:35
+#: votes/bootstrap.py:30 votes/bootstrap.py:31
 msgid "Office Vote Review"
 msgstr "Office Vote Review"
 
-#: votes/bootstrap.py:36
+#: votes/bootstrap.py:32
 msgid "Vote Signing"
 msgstr "Vote Signing"
 
@@ -4302,31 +4332,31 @@ msgstr "1 Positiv"
 msgid "2 positive under reserve"
 msgstr "2 Vorbehaltlich positiv"
 
-#: votes/constants.py:9
-msgid "3a recessed (not examined)"
-msgstr "3a Vertagt (nicht behandelt)"
-
-#: votes/constants.py:10
+#: votes/constants.py:8
 msgid "3b recessed (examined)"
 msgstr "3b Vertagt (behandelt)"
 
-#: votes/constants.py:11
+#: votes/constants.py:13
+msgid "3a recessed (not examined)"
+msgstr "3a Vertagt (nicht behandelt)"
+
+#: votes/constants.py:15
 msgid "4 negative"
 msgstr "4 Negativ"
 
-#: votes/constants.py:12
+#: votes/constants.py:16
 msgid "5 withdrawn (applicant)"
 msgstr "5 Zurückgezogen (Antragsteller)"
 
-#: votes/forms.py:51 votes/forms.py:59
+#: votes/forms.py:52
 msgid "Proofread and valid"
 msgstr "Korrektur gelesen und gültig"
 
-#: votes/models.py:18
+#: votes/models.py:20
 msgid "comment"
 msgstr "Kommentar"
 
-#: votes/models.py:36
+#: votes/models.py:38
 msgid "No Result"
 msgstr ""
 
@@ -4363,13 +4393,16 @@ msgstr ""
 msgid "Publication of {vote}"
 msgstr "Veröffentlichung von {vote}"
 
-#: votes/workflow.py:71
+#: votes/workflow.py:70
 msgid "B1"
 msgstr ""
 
-#: votes/workflow.py:72
+#: votes/workflow.py:71
 msgid "B3"
 msgstr ""
+
+#~ msgid "B2 Review"
+#~ msgstr "B2 Review"
 
 #~ msgid "Expert assignment saved"
 #~ msgstr "Spezialistenzuordnung gespeichert"
@@ -4468,10 +4501,6 @@ msgstr ""
 #, fuzzy
 #~ msgid "Notification Group Review"
 #~ msgstr "Meldungsantwort"
-
-#, fuzzy
-#~ msgid "Executive Review"
-#~ msgstr "Prüfung Votum Executive"
 
 #~ msgid "retrospective"
 #~ msgstr "Retrospektiv"
@@ -4728,10 +4757,6 @@ msgstr ""
 #~ msgid "Sign Notification Answer"
 #~ msgstr "Meldungsantwort Unterschrift"
 
-#, fuzzy
-#~ msgid "B2 Resubmission Review"
-#~ msgstr "Diplomarbeit Review"
-
 #~ msgid "Study includes male participants"
 #~ msgstr "In die Studie werden männliche Teilnehmer eingeschlossen"
 
@@ -4768,9 +4793,6 @@ msgstr ""
 
 #~ msgid "Start Meeting"
 #~ msgstr "Sitzung Starten"
-
-#~ msgid "Stop Meeting"
-#~ msgstr "Sitzung Beenden"
 
 #~ msgid "Fast Lane Meeting"
 #~ msgstr "Expedited Review"
