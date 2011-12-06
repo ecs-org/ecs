@@ -620,6 +620,8 @@ class TimetableEntry(models.Model):
             for i, entry in enumerate(self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index')):
                 entry.timetable_index = i
                 entry.save()
+            # invisible tops don't have participations
+            self.participations.delete()
         self.meeting._clear_caches()
         self.meeting.create_boardmember_reviews()
 

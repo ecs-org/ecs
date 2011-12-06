@@ -255,13 +255,9 @@ class Submission(models.Model):
         elif current_top.meeting.started is None:
             current_top.refresh(duration=duration, visible=visible)
         else:
-            try:
-                last_vote = Vote.objects.filter(submission_form__submission=self).order_by('-pk')[0]
-            except IndexError:
-                pass
-            else:
-                if last_vote.is_recessed:
-                    return _schedule()
+            last_vote = self.get_most_recent_vote()
+            if last_vote and last_vote.is_recessed:
+                return _schedule()
         return current_top.meeting
     
     def get_filename_slice(self):
