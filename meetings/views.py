@@ -530,7 +530,10 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
-        start, end = meeting._get_timeframe_for_user(user)
+        timeframe = meeting._get_timeframe_for_user(user)
+        if timeframe is None:
+            continue
+        start, end = timeframe
         time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
         deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)

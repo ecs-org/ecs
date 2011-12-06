@@ -405,7 +405,9 @@ class Meeting(models.Model):
         })
 
     def _get_timeframe_for_user(self, user):
-        entries = list(self.timetable_entries.filter(participations__user=user).order_by('timetable_index'))
+        entries = list(self.timetable_entries.filter(participations__user=user).exclude(timetable_index__isnull=True).order_by('timetable_index'))
+        if not entries:
+            return None
         start = entries[0].start
         start -= timedelta(minutes=start.minute%10)
         end = entries[-1].end
