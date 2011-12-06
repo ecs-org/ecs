@@ -231,7 +231,8 @@ table.notification th {
 .task_back_log td, 
 .profile td, 
 table.notif_meta td, 
-table.notification td {
+table.notification td,
+.billing_summary td {
   border-bottom: 1px solid $wheatbrown;
 }
 .task_back_log {
@@ -360,7 +361,8 @@ iframe.upload {
 .task_item:nth-of-type(1),
 .field_history .change:nth-of-type(1) ,
 #meeting_list li:nth-of-type(1) ,
-.billing_list li:nth-of-type(1) {
+.billing_list li:nth-of-type(1) ,
+.billing_summary tr:nth-of-type(1) {
   border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -378,7 +380,8 @@ iframe.upload {
 .task_item:nth-child(odd),
 .field_history .change:nth-child(odd) ,
 #meeting_list li:nth-child(odd) ,
-.billing_list li:nth-child(odd) {
+.billing_list li:nth-child(odd) ,
+.billing_summary tr:nth-child(odd) {
   background: $middle-light-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -397,7 +400,8 @@ iframe.upload {
 .task_item:nth-child(even),
 .field_history .change:nth-child(even) ,
 #meeting_list li:nth-child(even) , 
-.billing_list li:nth-child(even) {
+.billing_list li:nth-child(even) ,
+.billing_summary tr:nth-child(even) {
   background: $middle-dark-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -415,9 +419,9 @@ iframe.upload {
 .field_history .change:hover,
 #content .messages tr:hover,
 #meeting_list li:hover, 
-.billing_list li:hover {
+.billing_list li:hover,
+.billing_summary tr:hover {
   background: #fefefe;
-  cursor: pointer;
 }
 
 .submission_list_choose li {

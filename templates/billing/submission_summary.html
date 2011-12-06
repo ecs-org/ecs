@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url ecs.documents.views.download_document document_pk=invoice.document.pk %}">Detailierte Auflistung</a>
+    <p><a href="{% url ecs.documents.views.download_document document_pk=invoice.document.pk %}" class="button_submit">Detailierte Auflistung</a></p>
 
     <h2>Zusammenfassung</h2>
     {% with invoice.stats as stats %}
@@ -25,11 +25,11 @@
             </tr>
         {% endfor %}
         <tr>
-            <td>Betragssumme (brutto = netto)</td>
+            <td><strong>(brutto = netto)</strong></td>
             <td></td>
             <td></td>
             <td></td>
-            <td>{{ stats.total|euro }}</td>
+            <td><strong>{{ stats.total|euro }}</strong></td>
         </tr>
     </table>
     {% endwith %}
