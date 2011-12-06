@@ -29,10 +29,9 @@
       <div class="form_main{% if readonly %} readonly{% endif %}">
         <div id="tabs">
           {% block tabs %}
-            {% for tab, fieldsets in tabs %}
+            {% for tab in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
-                    {% ifequal tab "Maßnahmen" %}
-                        {# FIXME (FMD2) #}
+                    {% if tab.slug == 'measures' %}
                         <div class="field">
                             <h3>Studienbezogen durchzuführende Therapie und Diagnostik <span class="paperform_number">6.1</span></h3>
                             {% with measure_formset as formset %}
@@ -51,10 +50,9 @@
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
                         </div>
-                    {% endifequal %}
+                    {% endif %}
                                         
-                    {% ifequal tab "Unterlagen" %}
-                        {# FIXME (FMD2) #}
+                    {% if tab.slug == 'documents' %}
                         {% if not readonly %}
                             {% if not protocol_uploaded %}
                                 <div class="errors">
@@ -67,9 +65,9 @@
                         {% else %}
                             {% include "documents/compact_list.html" %}
                         {% endif %}
-                    {% endifequal %}
+                    {% endif %}
 
-                    {% ifequal tab "Zentren" %}
+                    {% if tab.slug == 'centers' %}
                         {% if investigator_formset.non_form_errors %}
                             <div class="errors">
                                 <ul class="errorlist">
@@ -133,11 +131,11 @@
                                         </thead>
                                         <tbody>
                                         {% for form in investigatoremployee_formset.forms %}
-                                            {% ifequal form|form_value:'investigator_index'|default:0|add:0 investigator_index %}
+                                            {% if form|form_value:'investigator_index'|default:0|add:0 == investigator_index %}
                                             <tr class="form">
                                                 {% include "forms/tables/row.html" %}
                                             </tr>
-                                            {% endifequal %}
+                                            {% endif %}
                                         {% empty %}
                                             {% if not readonly %}
                                                 {% with investigatoremployee_formset.empty_form as form %}
@@ -153,19 +151,18 @@
                             </div>
                             {% endwith %}
                         {% endfor%}
-                    {% endifequal %}
+                    {% endif %}
                     
-                    {% for legend, fields in fieldsets %}
+                    {% for legend, fields in tab.fieldsets %}
                         <div class="field fieldset_{{ forloop.counter }}">
                             {% if legend %}
                                 <h3>{{ legend }}</h3>
                             {% endif %}
-                            {% ifequal legend "Zentren im Ausland" %}
-                                {# FIXME (FMD2) #}
+                            {% if fields.name == 'centers_abroad' %}
                                 {% with foreignparticipatingcenter_formset as formset %}
                                     {% include "forms/tables/inline_formset.html" %}
-                                {% endwith %}                            
-                            {% endifequal %}                            
+                                {% endwith %}
+                            {% endif %}
                             <ol>
                                 {% for field_name in fields %}
                                     {% with form|getitem:field_name as field %}

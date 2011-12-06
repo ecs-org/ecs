@@ -4,12 +4,44 @@ from django.utils.translation import ugettext as _
 from ecs.notifications.forms import (NotificationForm, ProgressReportNotificationForm,
     CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm, SafetyNotificationForm)
 
-# ((tab_label1, [(fieldset_legend11, [field111, field112, ..]), (fieldset_legend12, [field121, field122, ..]), ...]),
-#  (tab_label2, [(fieldset_legend21, [field211, field212, ..]), (fieldset_legend22, [field221, field222, ..]), ...]),
-# )
+
+class Tab(object):
+    def __init__(self, slug, label, fieldsets):
+        self.slug = slug
+        self.label = label
+        self.fieldsets = fieldsets
+        
+    def __getitem__(self, index):
+        # tabs used to be tuples, so we provide this for backwards compatibility.
+        # string keys are required to make django templates happy.
+        if isinstance(index, basestring):
+            return getattr(self, index)
+        if index == 0:
+            return self.label
+        if index == 1:
+            return self.fieldsets
+        raise IndexError
+
+
+class NamedProxy(object):
+    def __init__(self, data, name):
+        self._data = data
+        self._name = name
+    
+    def __getattr__(self, attr):
+        if attr == 'name':
+            return self._name
+        return getattr(self._data, attr)
+    
+    def __iter__(self):
+        return iter(self._data)
+    
+    def __len__(self):
+        return len(self._data)
+
 
 SUBMISSION_FORM_TABS = (
-    (_(u'Key data'), [
+    Tab('key_data', _(u'Key data'), [
         (_(u'type of project'), [
             'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
@@ -19,14 +51,14 @@ SUBMISSION_FORM_TABS = (
             'specialism', 'clinical_phase', 'external_reviewer_suggestions', 'already_voted',
         ]),
     ]),
-    (_(u'participant'), [
+    Tab('participants', _(u'participant'), [
         (_(u'test participant'), [
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_noncompetents', 'subject_males', 'subject_females', 
             'subject_childbearing', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
-        (_(u'centers abroad'), []),
+        (_(u'centers abroad'), NamedProxy([], 'centers_abroad')),
     ]),
-    (_(u'outline'), [
+    Tab('outline', _(u'outline'), [
         (_(u'outline'), [
             'german_project_title', 'project_title', 'protocol_number',
             'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
@@ -36,7 +68,7 @@ SUBMISSION_FORM_TABS = (
             'german_financing_info', 'german_additional_info',
         ]),
     ]),
-    (_(u'sponsor'), [
+    Tab('sponsor', _(u'sponsor'), [
         (_(u'sponsor'), [
             'sponsor_name', # 1.5.1
             'sponsor_address', 'sponsor_zip_code', 'sponsor_city', # 1.5.2
@@ -56,14 +88,14 @@ SUBMISSION_FORM_TABS = (
             'invoice_uid',
         ]),
     ]),
-    (_(u'applicant'), [
+    Tab('applicant', _(u'applicant'), [
         (_(u'applicant'), [
             'submitter_contact_gender', 'submitter_contact_title', 'submitter_contact_first_name', 'submitter_contact_last_name', 'submitter_email',
             'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
             'submitter_is_authorized_by_sponsor', 
         ]),
     ]),
-    (_(u'AMG'), [
+    Tab('amg', _(u'AMG'), [
         (_(u'drug trial'), ['eudract_number', 'pharma_checked_substance', 'pharma_reference_substance']),
         (_(u'AMG'), [
             'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
@@ -72,17 +104,17 @@ SUBMISSION_FORM_TABS = (
             'submission_type',
         ]),
     ]),
-    (_(u'MPG'), [
+    Tab('mpg', _(u'MPG'), [
         (_(u'Medical Device Study'), ['medtech_checked_product', 'medtech_reference_substance']),    
         (_(u'MPG'), [
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
     ]),
-    (_(u'measures'), [
+    Tab('measures', _(u'measures'), [
         (u'', ['additional_therapy_info',]),
     ]),
-    (_(u'biometrics'), [
+    Tab('biometrics', _(u'biometrics'), [
         (_(u'biometrics'), [
             'study_plan_blind', 'study_plan_observer_blinded', 'study_plan_randomized', 'study_plan_parallelgroups', 'study_plan_controlled',
             'study_plan_cross_over', 'study_plan_placebo', 'study_plan_factorized', 'study_plan_pilot_project', 'study_plan_equivalence_testing',
@@ -107,20 +139,20 @@ SUBMISSION_FORM_TABS = (
             'study_plan_dataprotection_choice', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
         ]),
     ]),
-    (_(u'insurance'), [
+    Tab('insurance', _(u'insurance'), [
         (_(u'insurance'), [
             'insurance_not_required',
             'insurance_name', 'insurance_address', 'insurance_phone', 'insurance_contract_number', 'insurance_validity',
         ]),
     ]),
-    (_(u'documents'), []),
-    (_(u'centres'), []),
+    Tab('documents', _(u'documents'), []),
+    Tab('centers', _(u'centres'), []),
 )
 
 def get_all_used_submission_form_fields():
     all_fields = []
-    for _, fieldsets in SUBMISSION_FORM_TABS:
-        for _, fields in fieldsets:
+    for tab in SUBMISSION_FORM_TABS:
+        for _, fields in tab.fieldsets:
             all_fields += fields
     return all_fields
 
@@ -128,44 +160,44 @@ def get_all_used_submission_form_fields():
 NOTIFICATION_FORM_TABS = {}
 
 NOTIFICATION_FORM_TABS[NotificationForm] = [
-    (_(u'General information'), [
+    Tab('general_information', _(u'General information'), [
         (_(u'General information'), [
             'submission_forms', 'comments',
         ]),
     ]),
-    (_(u'documents'), []),
+    Tab('documents', _(u'documents'), []),
 ]
 
 NOTIFICATION_FORM_TABS[SafetyNotificationForm] = [
-    (_(u'General information'), [
+    Tab('general_information', _(u'General information'), [
         (_(u'General information'), [
             'safety_type', 'submission_forms', 'comments',
         ]),
     ]),
-    (_(u'documents'), []),
+    Tab('documents', _(u'documents'), []),
 ]
 
 NOTIFICATION_FORM_TABS[SingleStudyNotificationForm] = [
-    (_(u'General information'), [
+    Tab('general_information', _(u'General information'), [
         (_(u'General information'), [
             'submission_form', 'comments',
         ]),
     ]),
-    (_(u'documents'), []),
+    Tab('documents', _(u'documents'), []),
 ]
 
 NOTIFICATION_FORM_TABS[AmendmentNotificationForm] = [
-    (_(u'General information'), [
+    Tab('general_information', _(u'General information'), [
         (_(u'General information'), [
             'comments',
         ]),
     ]),
-    (_(u'Made Changes'), [])
+    Tab('changes', _(u'Made Changes'), [])
 ]
 
 
 NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TABS[SingleStudyNotificationForm][:1] + [
-    (_(u'Study status'), [
+    Tab('study_status', _(u'Study status'), [
         (u'Status', [
             'study_started', 'reason_for_not_started', 'study_aborted', 'completion_date',
         ]),
@@ -176,16 +208,16 @@ NOTIFICATION_FORM_TABS[CompletionReportNotificationForm] = NOTIFICATION_FORM_TAB
             'SAE_count', 'SUSAR_count',
         ])
     ]),
-    (_(u'documents'), []),
+    Tab('documents', _(u'documents'), []),
 ]
 
 NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
-    (_(u'General information'), [
+    Tab('general_information', _(u'General information'), [
         (_(u'General information'), [
             'submission_form', 'comments',
         ]),
     ]),
-    (_(u'Study status'), [
+    Tab('study_status', _(u'Study status'), [
         (_(u'Status'), [
             'study_started', 'reason_for_not_started', 'runs_till',
         ]),
@@ -196,7 +228,7 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
             'SAE_count', 'SUSAR_count',
         ]),
     ]),
-    (_(u'documents'), []),
+    Tab('documents', _(u'documents'), []),
 ]
 
 def get_notification_form_tabs(form_cls):
