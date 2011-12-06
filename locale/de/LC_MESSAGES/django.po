@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 08:26+0100\n"
+"POT-Creation-Date: 2011-12-06 09:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -179,27 +179,31 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:44 core/forms/forms.py:314
+#: checklists/models.py:45 core/forms/forms.py:314
 #: core/models/submissions.py:159 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
 
-#: checklists/models.py:45
+#: checklists/models.py:46
 msgid "Completed"
 msgstr "Abgeschlossen"
 
-#: checklists/models.py:46 help/models.py:20
+#: checklists/models.py:47 help/models.py:20
 msgid "Review OK"
 msgstr "Überprüfung OK"
 
-#: checklists/models.py:47 help/models.py:21
+#: checklists/models.py:48 help/models.py:21
 msgid "Review Failed"
 msgstr "Überprüfung fehlgeschlagen"
 
-#: checklists/models.py:48
+#: checklists/models.py:49
 msgid "Dropped"
 msgstr "Fallengelassen"
+
+#: checklists/models.py:66
+msgid "Anonymous"
+msgstr "Anonym"
 
 #: checklists/workflow.py:49
 msgid "External Review Invitation"

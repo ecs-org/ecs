@@ -11,6 +11,7 @@ from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
 from ecs.documents.models import DocumentType
+from ecs.users.utils import get_current_user
 
 class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
@@ -60,7 +61,12 @@ class Checklist(models.Model):
     @property
     def short_name(self):
         if self.blueprint.multiple:
-            return "%s (%s)" % (self.blueprint, self.user)
+            u = get_current_user()
+            presenting_parties = self.submission.current_submission_form.get_presenting_parties()
+            name = _(u'Anonymous') if self.blueprint.reviewer_is_anonymous else unicode(self.user)
+            if u == self.user or (u.get_profile().is_internal and not u in presenting_parties):
+                name = unicode(self.user)
+            return "%s (%s)" % (self.blueprint, name)
         return unicode(self.blueprint)
 
     def __unicode__(self):
