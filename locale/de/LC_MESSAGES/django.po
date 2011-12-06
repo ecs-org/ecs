@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 12:49+0100\n"
+"POT-Creation-Date: 2011-12-06 20:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Firma"
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:81 core/forms/layout.py:59 core/forms/layout.py:60
+#: billing/views.py:81 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -1074,7 +1074,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:231 core/models/submissions.py:448
+#: core/paper_forms.py:231 core/models/submissions.py:444
 msgid "open"
 msgstr "offen"
 
@@ -1090,7 +1090,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:235 core/models/submissions.py:448
+#: core/paper_forms.py:235 core/models/submissions.py:444
 msgid "blind"
 msgstr "blind"
 
@@ -1106,7 +1106,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:239 core/models/submissions.py:448
+#: core/paper_forms.py:239 core/models/submissions.py:444
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1257,7 +1257,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:280 core/paper_forms.py:318 meetings/forms.py:29
-#: meetings/forms.py:44 users/forms.py:158 users/forms.py:206
+#: meetings/forms.py:44 users/forms.py:158 users/forms.py:205
 msgid "title"
 msgstr "Titel"
 
@@ -1499,7 +1499,7 @@ msgstr "Nächste Sitzung"
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:317 core/forms/layout.py:66 core/forms/layout.py:68
+#: core/forms/forms.py:317 core/forms/layout.py:98 core/forms/layout.py:100
 #: templates/meetings/tabs/status.html:61
 #: templates/submissions/readonly_form.html:228
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
@@ -1507,7 +1507,7 @@ msgstr "Andere Sitzungen"
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:318 core/forms/layout.py:75 core/forms/layout.py:77
+#: core/forms/forms.py:318 core/forms/layout.py:107 core/forms/layout.py:109
 #: templates/meetings/tabs/status.html:66
 #: templates/submissions/readonly_form.html:230
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
@@ -1587,111 +1587,111 @@ msgstr "Benutzer"
 msgid "End"
 msgstr "Ende"
 
-#: core/forms/layout.py:12
+#: core/forms/layout.py:44
 msgid "Key data"
 msgstr "Eckdaten"
 
-#: core/forms/layout.py:13
+#: core/forms/layout.py:45
 msgid "type of project"
 msgstr "Art des Projekts"
 
-#: core/forms/layout.py:22
+#: core/forms/layout.py:54
 msgid "participant"
 msgstr "Teilnehmer"
 
-#: core/forms/layout.py:23
+#: core/forms/layout.py:55
 msgid "test participant"
 msgstr "Prüfungsteilnehmer"
 
-#: core/forms/layout.py:27
+#: core/forms/layout.py:59
 msgid "centers abroad"
 msgstr "Zentren im Ausland"
 
-#: core/forms/layout.py:29 core/forms/layout.py:30
+#: core/forms/layout.py:61 core/forms/layout.py:62
 msgid "outline"
 msgstr "Kurzfassung"
 
-#: core/forms/layout.py:39 core/forms/layout.py:40
+#: core/forms/layout.py:71 core/forms/layout.py:72
 msgid "sponsor"
 msgstr "Sponsor"
 
-#: core/forms/layout.py:51
+#: core/forms/layout.py:83
 msgid "invoice recipient"
 msgstr "Rechnungsempfänger"
 
-#: core/forms/layout.py:67
+#: core/forms/layout.py:99
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
 
-#: core/forms/layout.py:76
+#: core/forms/layout.py:108
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: core/forms/layout.py:82
+#: core/forms/layout.py:114
 msgid "measures"
 msgstr "Maßnahmen"
 
-#: core/forms/layout.py:85 core/forms/layout.py:86
+#: core/forms/layout.py:117 core/forms/layout.py:118
 msgid "biometrics"
 msgstr "Biometrie"
 
-#: core/forms/layout.py:92
+#: core/forms/layout.py:124
 msgid "study plan"
 msgstr "Studienplanung"
 
-#: core/forms/layout.py:96
+#: core/forms/layout.py:128
 msgid "planned statistical analysis"
 msgstr "Geplante statistische Analyse"
 
-#: core/forms/layout.py:100
+#: core/forms/layout.py:132
 msgid "documentation form / data management"
 msgstr "Dokumentationsbögen / Datenmanagement"
 
-#: core/forms/layout.py:103
+#: core/forms/layout.py:135
 msgid "persons in charge"
 msgstr "Verantwortliche und Qualifikation"
 
-#: core/forms/layout.py:106
+#: core/forms/layout.py:138
 msgid "information privacy"
 msgstr "Datenschutz"
 
-#: core/forms/layout.py:110 core/forms/layout.py:111
+#: core/forms/layout.py:142 core/forms/layout.py:143
 msgid "insurance"
 msgstr "Versicherung"
 
-#: core/forms/layout.py:116 core/forms/layout.py:136 core/forms/layout.py:145
-#: core/forms/layout.py:154 core/forms/layout.py:179 core/forms/layout.py:199
+#: core/forms/layout.py:148 core/forms/layout.py:168 core/forms/layout.py:177
+#: core/forms/layout.py:186 core/forms/layout.py:211 core/forms/layout.py:231
 msgid "documents"
 msgstr "Unterlagen"
 
-#: core/forms/layout.py:117
+#: core/forms/layout.py:149
 msgid "centres"
 msgstr "Zentren"
 
-#: core/forms/layout.py:131 core/forms/layout.py:132 core/forms/layout.py:140
-#: core/forms/layout.py:141 core/forms/layout.py:149 core/forms/layout.py:150
-#: core/forms/layout.py:158 core/forms/layout.py:159 core/forms/layout.py:183
-#: core/forms/layout.py:184
+#: core/forms/layout.py:163 core/forms/layout.py:164 core/forms/layout.py:172
+#: core/forms/layout.py:173 core/forms/layout.py:181 core/forms/layout.py:182
+#: core/forms/layout.py:190 core/forms/layout.py:191 core/forms/layout.py:215
+#: core/forms/layout.py:216
 msgid "General information"
 msgstr "Allgemeine Angaben"
 
-#: core/forms/layout.py:163
+#: core/forms/layout.py:195
 msgid "Made Changes"
 msgstr "Vorgenommene Änderungen"
 
-#: core/forms/layout.py:168 core/forms/layout.py:188
+#: core/forms/layout.py:200 core/forms/layout.py:220
 msgid "Study status"
 msgstr "Studienstatus"
 
-#: core/forms/layout.py:172 core/forms/layout.py:192
+#: core/forms/layout.py:204 core/forms/layout.py:224
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: core/forms/layout.py:175
+#: core/forms/layout.py:207
 msgid "SAE / SUSAR"
 msgstr "SAE / SUSAR"
 
-#: core/forms/layout.py:189 templates/meetings/details.html:9
+#: core/forms/layout.py:221 templates/meetings/details.html:9
 #: templates/meetings/tabs/status.html:9
 #: templates/submissions/readonly_form.html:52
 msgid "Status"
@@ -1766,12 +1766,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:785 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:781 users/forms.py:56
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:785 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:781 users/forms.py:56
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1788,11 +1788,11 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:819
+#: core/models/submissions.py:815
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:819
+#: core/models/submissions.py:815
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2059,11 +2059,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:652
+#: meetings/models.py:655
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:653
+#: meetings/models.py:656
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2456,19 +2456,18 @@ msgid "Older Entries"
 msgstr "Ältere Einträge"
 
 #: templates/billing/checklist_payment_list.html:13
-#: templates/billing/external_review.html:30
+#: templates/billing/external_review.html:13
 msgid "Old Payments"
-msgstr ""
+msgstr "Alte Zahlungen"
 
 #: templates/billing/checklist_payment_list.html:17
-#, fuzzy, python-format
+#, python-format
 msgid "Payment of %(date)s"
-msgstr "Rechnung vom %(date)s"
+msgstr "Zahlung vom %(date)s"
 
 #: templates/billing/checklist_payment_list.html:20
-#, fuzzy
 msgid "No payment yet."
-msgstr "Es gibt noch keine Checkliste."
+msgstr "Es gibt noch keine Zahlung."
 
 #: templates/billing/checklist_payment_list.html:27
 #: templates/billing/invoice_list.html:27 templates/submissions/list.html:22
@@ -2486,13 +2485,21 @@ msgstr "Seite"
 msgid "of"
 msgstr "von"
 
-#: templates/billing/external_review.html:26
-#: templates/billing/submissions.html:26
+#: templates/billing/external_review.html:15
+msgid "Unbilled Reviews"
+msgstr "Unverechnete Gutachten"
+
+#: templates/billing/external_review.html:31
+#: templates/billing/submissions.html:30
 msgid "submit data"
 msgstr "Daten absenden"
 
+#: templates/billing/external_review.html:34
+msgid "No review yet."
+msgstr "Es gibt noch kein Gutachten."
+
 #: templates/billing/invoice_list.html:13
-#: templates/billing/submissions.html:29
+#: templates/billing/submissions.html:13
 msgid "Old Invoices"
 msgstr "Alte Rechnungen"
 
@@ -2502,9 +2509,16 @@ msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
 
 #: templates/billing/invoice_list.html:20
-#, fuzzy
 msgid "No invoice yet."
-msgstr "Firma/Organisation"
+msgstr "Es gibt noch keine Rechnung."
+
+#: templates/billing/submissions.html:15
+msgid "Unbilled Submissions"
+msgstr "Unverechnete Einreichungen"
+
+#: templates/billing/submissions.html:33
+msgid "No submission yet."
+msgstr "Es gibt noch keine Einreichung."
 
 #: templates/boilerplate/form.html:5 templates/boilerplate/form.html.py:6
 msgid "New Boilerplate"
@@ -2972,7 +2986,7 @@ msgid "Name"
 msgstr "Name"
 
 #: templates/meetings/tabs/open_tasks.html:9
-#: templates/users/administration.html:13 users/forms.py:209
+#: templates/users/administration.html:13 users/forms.py:208
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -3156,7 +3170,7 @@ msgid "Submit"
 msgstr "Einreichen"
 
 #: templates/notifications/form.html:37
-#: templates/submissions/base_form.html:66
+#: templates/submissions/base_form.html:64
 msgid "Your browser does not support iframes."
 msgstr ""
 
@@ -3359,11 +3373,11 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:62
+#: templates/submissions/base_form.html:60
 msgid "At least on protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
-#: templates/submissions/base_form.html:221
+#: templates/submissions/base_form.html:218
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -4084,19 +4098,19 @@ msgid ""
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:56 users/forms.py:157 users/forms.py:205
+#: users/forms.py:56 users/forms.py:157 users/forms.py:204
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:57 users/forms.py:207
+#: users/forms.py:57 users/forms.py:206
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:58 users/forms.py:208
+#: users/forms.py:58 users/forms.py:207
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:59 users/forms.py:204
+#: users/forms.py:59 users/forms.py:203
 msgid "email"
 msgstr "E-Mail"
 
@@ -4184,31 +4198,27 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:159 users/forms.py:210
+#: users/forms.py:159 users/forms.py:209
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:160 users/forms.py:211
+#: users/forms.py:160 users/forms.py:210
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:161 users/forms.py:212
+#: users/forms.py:161 users/forms.py:211
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:162
-msgid "Resident Member"
-msgstr ""
-
-#: users/forms.py:163 users/forms.py:213
+#: users/forms.py:162 users/forms.py:212
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:214
+#: users/forms.py:213
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:227
+#: users/forms.py:226
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
