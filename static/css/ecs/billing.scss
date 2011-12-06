@@ -1,9 +1,30 @@
 @import "ecs/variables.scss";
 
+.billing_list {
+    margin-bottom: 20px;
+    
+    li {
+       clear: both;
+       display: block;
+       padding: 5px 8px; 
+    }
+    
+    input[type=checkbox] {
+        display: block;
+        float: left;
+    }
+
+    .indent {
+        display: block;
+        margin-left: 20px;
+        vertical-align: top;
+    }
+}
+
 .billing_summary{
     border: 1px solid $black;
     
-    td{
+    td {
         border: 1px solid $black;
         padding: 0.1em;
         padding-right: 1em;

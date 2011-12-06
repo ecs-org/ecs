@@ -13,19 +13,24 @@
     {% if debug %}
         <a href="{% url ecs.billing.views.reset_external_review_payment %}" class="button_submit">reset</a>
     {% endif %}
-    <form action="" method="post">
-    <ol>
-        {% for checklist in checklists %}
-            {% with checklist.submission as submission %}
-            <li>
-                <input type="checkbox" name="pay_{{ checklist.pk }}" checked="checked" /> {{ checklist }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
-                <div><span class="price">{{ price.price|euro }}</span> ({{ price.text }})</div>
-            </li>
-            {% endwith %}
-        {% endfor %}
-        <li><input type="submit" value="{% trans 'submit data' %}"/></li>
-    </ol>
-    </form>
-
-    <a href="{% url ecs.billing.views.checklist_payment_list %}">{% trans 'Old Payments' %}</a>
+    <div class="billing_list">
+        <form action="" method="post">
+          <ol>
+              {% for checklist in checklists %}
+                  {% with checklist.submission as submission %}
+                  <li>
+                      <input type="checkbox" name="pay_{{ checklist.pk }}" checked="checked" /> 
+                      <span class="indent">
+                        {{ checklist }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
+                        <span class="price">{{ price.price|euro }}</span> ({{ price.text }})
+                      </span>
+                  </li>
+                  {% endwith %}
+              {% endfor %}
+          </ol>
+          <input type="submit" value="{% trans 'submit data' %}"/>
+        </form>
+    </div>
+    
+    <p><a href="{% url ecs.billing.views.checklist_payment_list %}">{% trans 'Old Payments' %}</a></p>
 {% endblock %}

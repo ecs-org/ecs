@@ -13,18 +13,23 @@
     {% if debug %}
         <a href="{% url ecs.billing.views.reset_submissions %}" class="button_submit">reset</a>
     {% endif %}
-    <form action="" method="post">
-    {% for submission in submissions %}
-        <div>
-            <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }} </a>
-            &nbsp;
-            {# <a href="{% url ecs.votes.views.show_html_vote vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a> #}
-            <input type="checkbox" name="bill_{{ submission.pk }}" checked="checked" /> {{ submission.project_title_display }}
-            <div><span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})</div>
-        </div>
-    {% endfor %}
-    <input type="submit" value="{% trans 'submit data' %}"/>
-    </form>
+    <div class="billing_list">
+        <form action="" method="post">
+          <ol>
+          {% for submission in submissions %}
+              <li>
+                <input type="checkbox" name="bill_{{ submission.pk }}" checked="checked" />
+                <span class="indent">
+                  <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }} </a>{{ submission.project_title_display }}<br>
+                  {# <a href="{% url ecs.votes.views.show_html_vote vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a> #}
+                  <span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})
+                </span>
+                </li>
+          {% endfor %}
+          </ol>
+        <input type="submit" value="{% trans 'submit data' %}"/>
+        </form>
+    </div>
 
-    <a href="{% url ecs.billing.views.invoice_list %}">{% trans 'Old Invoices' %}</a>
+    <p><a href="{% url ecs.billing.views.invoice_list %}">{% trans 'Old Invoices' %}</a></p>
 {% endblock %}
