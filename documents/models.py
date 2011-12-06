@@ -158,7 +158,10 @@ class Document(models.Model):
         return u'{0} {1}-{2} vom {3}'.format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
-        ext = mimetypes.guess_extension(self.mimetype)
+        if self.mimetype == 'application/vnd.ms-excel': # HACK: we want .xls not .xlb for excel files
+            ext = '.xls'
+        else:
+            ext = mimetypes.guess_extension(self.mimetype) or '.bin'
         name_slices = [self.doctype.name if self.doctype else 'Unterlage', self.name, self.version, self.date.strftime('%Y.%m.%d')]
         if self.parent_object and hasattr(self.parent_object, 'get_filename_slice'):
             name_slices.insert(0, self.parent_object.get_filename_slice())

@@ -26,7 +26,7 @@ from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):
-    attrs = ('name', 'contact', 'address1', 'address2', 'zip_code', 'city', 'uid')
+    attrs = ('name', 'contact', 'address1', 'address2', 'zip_code', 'city')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
     bits = ['%(name)s' % data, 'zH %s' % data['contact'].full_name]
     if data['address1']:
@@ -34,9 +34,10 @@ def _get_address(submission_form, prefix):
     if data['address2']:
         bits.append('%(address2)s' % data)
     bits.append('%(zip_code)s %(city)s' % data)
-    if data['uid']:
-        bits.append('UID-Nr. %(uid)s' % data)
     return ", ".join(bits)
+
+def _get_uid_number(submission_form, prefix):
+    return getattr(submission_form, '{0}_uid'.format(prefix)) or u'?'
     
 def _get_organizations(submission_form):
     organizations = submission_form.investigators.values_list('organisation')
@@ -53,15 +54,31 @@ class SimpleXLS(object):
         self.sheet = self.xls.add_sheet(sheet_name)
         self.sheet.panes_frozen = True
         self.sheet.horz_split_pos = 1
+        self.widths = []
         
-    def write_row(self, r, cells):
+    def write_row(self, r, cells, header=False):
         for i, cell in enumerate(cells):
-            self.sheet.write(r, i, cell)
+            cell = unicode(cell)
+            if header:
+                style = xlwt.easyxf('font: bold on; align: horiz center;')
+                self.sheet.write(r, i, cell, style)
+            else:
+                self.sheet.write(r, i, cell)
+            if i >= len(self.widths):
+                self.widths.append(len(cell))
+            else:
+                self.widths[i] = max(self.widths[i], len(cell))
             
     def write(self, *args, **kwargs):
         self.sheet.write(*args, **kwargs)
             
     def save(self, f):
+        # HACK: the width of the zero character of the default font is 256
+        # the default font is proportional, so we apply an arbitraty multiplication
+        # factor to get the width right (content with a lot of wide glyphs will
+        # still get a wrong width)
+        for i, width in enumerate(self.widths):
+            self.sheet.col(i).width = int((1 + width) * 256 * 1.1)
         self.xls.save(f)
 
 @readonly(methods=['GET'])
@@ -78,7 +95,7 @@ def submission_billing(request):
                 selected_for_billing.append(submission)
                 
         xls = SimpleXLS()
-        xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')))
+        xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'UID-Nr.'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')), header=True)
         for i, submission in enumerate(selected_for_billing):
             r = i + 1
             submission_form = submission.current_submission_form
@@ -86,6 +103,7 @@ def submission_billing(request):
                 "%s." % r,
                 submission.get_ec_number_display(),
                 _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
                 submission_form.eudract_number or '?',
                 submission_form.submitter_contact.full_name,
                 _get_organizations(submission_form),
@@ -93,7 +111,6 @@ def submission_billing(request):
             ])
         r = len(selected_for_billing) + 1
         xls.write(r, 6, xlwt.Formula('SUM(G2:G%s)' % r))
-        
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
@@ -150,7 +167,7 @@ def external_review_payment(request):
         reviewers = User.objects.filter(pk__in=[c.user.pk for c in selected_for_payment]).distinct()
 
         xls = SimpleXLS()
-        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum'), _(u'IBAN'), _('SWIFT-BIC'), _('Social Security Number')))
+        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum'), _(u'IBAN'), _('SWIFT-BIC'), _('Social Security Number')), header=True)
         for i, reviewer in enumerate(reviewers):
             checklists = reviewer.checklist_set.filter(pk__in=[c.pk for c in selected_for_payment])
             xls.write_row(i + 1, [

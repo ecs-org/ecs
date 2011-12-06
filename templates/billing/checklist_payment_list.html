@@ -13,9 +13,11 @@
     <h2>{% trans 'Old Payments' %}</h2>
     <ul>
     {% for payment in payments.object_list %}
-        <li><a href="{% url ecs.billing.views.view_checklist_payment payment_pk=payment.pk %}">
-            {% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}
-        </a></li>
+        <li>
+            <a href="{% url ecs.billing.views.view_checklist_payment payment_pk=payment.pk %}">{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</a>
+            [{% with payment.checklists.count as count %}{% if count == 1 %}{% trans '1 Review' %}{% else %}{% blocktrans with count as count %}{{ count }} Reviews{% endblocktrans %}{% endif %},{% endwith %}
+            {{ payment.stats.total|euro }}]
+        </li>
     {% empty %}
         <li><em>{% trans 'No payment yet.' %}</em></li>
     {% endfor %}
