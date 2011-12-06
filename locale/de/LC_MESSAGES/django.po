@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 23:00+0100\n"
+"POT-Creation-Date: 2011-12-06 23:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -242,7 +242,7 @@ msgstr "Beteiligte Personen"
 msgid "Person"
 msgstr "Person"
 
-#: communication/forms.py:89 templates/notifications/view/base.html:19
+#: communication/forms.py:89 templates/notifications/view/base.html:20
 msgid "Answer"
 msgstr "Antwort"
 
@@ -2072,52 +2072,52 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:50 templates/core.html:65
+#: meetings/views.py:54 templates/core.html:65
 #: templates/submissions/list.html:112
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:59 templates/core.html:69
+#: meetings/views.py:63 templates/core.html:69
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:64 templates/core.html:70
+#: meetings/views.py:68 templates/core.html:70
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:213
+#: meetings/views.py:227
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:334
+#: meetings/views.py:348
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:343
+#: meetings/views.py:357
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:349
+#: meetings/views.py:363
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:363
+#: meetings/views.py:377
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:514 meetings/views.py:526
+#: meetings/views.py:528 meetings/views.py:540
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:528 meetings/views.py:596
+#: meetings/views.py:542 meetings/views.py:610
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:539 meetings/views.py:545 meetings/views.py:551
+#: meetings/views.py:553 meetings/views.py:559 meetings/views.py:565
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:566
+#: meetings/views.py:580
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2503,12 +2503,12 @@ msgstr "von"
 msgid "Unbilled Reviews"
 msgstr "Unverechnete Gutachten"
 
-#: templates/billing/external_review.html:31
-#: templates/billing/submissions.html:30
+#: templates/billing/external_review.html:36
+#: templates/billing/submissions.html:35
 msgid "Create settlement"
 msgstr "Abrechnung erstellen"
 
-#: templates/billing/external_review.html:34
+#: templates/billing/external_review.html:40
 msgid "No review yet."
 msgstr "Es gibt noch kein Gutachten."
 
@@ -2539,7 +2539,7 @@ msgstr "Es gibt noch keine Rechnung."
 msgid "Unbilled Submissions"
 msgstr "Unverechnete Einreichungen"
 
-#: templates/billing/submissions.html:33
+#: templates/billing/submissions.html:39
 msgid "No submission yet."
 msgstr "Es gibt noch keine Einreichung."
 
@@ -3143,12 +3143,11 @@ msgstr "B3 (nicht behandelt)"
 
 #: templates/meetings/tabs/submissions.html:6
 msgid "Download all documents for this meeting (zip)"
-msgstr ""
+msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
 #: templates/meetings/tabs/submissions.html:14
-#, fuzzy
 msgid "Download documents (zip)"
-msgstr "Optionale Unterlagen"
+msgstr "Herunterladen(zip)"
 
 #: templates/meetings/tabs/tops.html:4
 msgid "Next TOPs"
@@ -3306,11 +3305,11 @@ msgstr "Anzahl SAE"
 msgid "SUSAR count"
 msgstr "Anzahl SUSAR"
 
-#: templates/notifications/view/base.html:45
+#: templates/notifications/view/base.html:46
 msgid "Back to answered notifications"
 msgstr "Zurück zu den beantworteten Meldungen"
 
-#: templates/notifications/view/base.html:47
+#: templates/notifications/view/base.html:48
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
@@ -3589,12 +3588,16 @@ msgstr ""
 "    "
 
 #: templates/submissions/presenter_change_new.txt:5
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "        Sie wurden als Einreicher für die Studie %(ec_number)s ausgewählt.\n"
 "    "
 msgstr ""
+"\n"
+"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
+"    "
 
 #: templates/submissions/presenter_change_previous.txt:5
 #, fuzzy, python-format
@@ -3723,22 +3726,30 @@ msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
 
 #: templates/submissions/susar_presenter_change_new.txt:5
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "        Sie wurden als Sicherheitsmeldungsersteller für die Studie "
 "%(ec_number)s ausgewählt.\n"
 "    "
 msgstr ""
+"\n"
+"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
+"    "
 
 #: templates/submissions/susar_presenter_change_previous.txt:5
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "        Sie sind nun nicht mehr Sicherheitsmeldungsersteller der Studie "
 "%(ec_number)s.\n"
 "    "
 msgstr ""
+"\n"
+"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
+"erstellen.\n"
+"    "
 
 #: templates/submissions/vote_publish.txt:5
 #, python-format
@@ -4446,6 +4457,9 @@ msgstr ""
 
 #~ msgid "submit data"
 #~ msgstr "Daten absenden"
+
+#~ msgid "B2 Review"
+#~ msgstr "B2 Review"
 
 #~ msgid "Expert assignment saved"
 #~ msgstr "Spezialistenzuordnung gespeichert"

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-import tempfile, zipfile
+import tempfile
+import zipfile
+import hashlib
+import os
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
@@ -12,6 +15,7 @@ from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
+from django.core.servers.basehttp import FileWrapper
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
@@ -154,7 +158,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
 
     def _add(submission):
         sf = submission.current_submission_form
-        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted')
+        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted').order_by('pk')
         for doc in docs:
             files.add((submission, doc))
         files.add((submission, sf.pdf_document))
@@ -165,17 +169,27 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
             _add(submission)
             filename_bits.append(submission.get_filename_slice())
         else:
-            for submission in meeting.submissions.all():
+            for submission in meeting.submissions.order_by('pk'):
                 _add(submission)
 
-    tmp = tempfile.NamedTemporaryFile(suffix='.zip')
-    zf = zipfile.ZipFile(tmp, 'w')
+    h = hashlib.sha1()
     for submission, doc in files:
-        with doc.as_temporary_file() as docfile:
-            zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
-    zf.close()
-    tmp.seek(0)
-    response = HttpResponse(tmp, content_type='application/zip')
+        h.update('(%s:%s)' % (submission.pk, doc.pk))
+
+    cache_file = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, '%s.zip' % h.hexdigest())
+    
+    if not os.path.exists(cache_file):
+        zf = zipfile.ZipFile(cache_file, 'w')
+        try:
+            for submission, doc in files:
+                with doc.as_temporary_file() as docfile:
+                    zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+        finally:
+            zf.close()
+    else:
+        os.utime(cache_file, None)
+
+    response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/zip')
     response['Content-Disposition'] = 'attachment;filename=%s.zip' % '.'.join(filename_bits)
     return response
 

@@ -12,17 +12,18 @@ Meldungen zur laufenden Studie(n)
 
 {% block content %}
 <h2>{{ notification }} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
-<p>
-    <strong>Eingereicht von: {{ notification.user }}</strong><br />
+<div class="notification_header">
+    <h3>Eingereicht von: {{ notification.user }} <br>{% block notification_header %}{% endblock %}</h3>
+
     <a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
     {% if notification.answer %}
     <a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
     {% endif %}
-</p>
-{% block notification_header %}{% endblock %}
-{% with notification.submission_forms.all as submission_forms %}
-    {% include "notifications/submission_data.html" %}
-{% endwith %}
+</div>
+
+  {% with notification.submission_forms.all as submission_forms %}
+      {% include "notifications/submission_data.html" %}
+  {% endwith %}
 
 <table class="notification">
     {% block table_rows %}

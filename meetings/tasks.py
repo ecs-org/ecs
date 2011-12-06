@@ -1,5 +1,8 @@
-import random, itertools, math
-from celery.decorators import task
+import random, itertools, math, os, time
+from datetime import timedelta
+from celery.decorators import task, periodic_task
+
+from django.conf import settings
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
 from ecs.meetings.models import Meeting
@@ -57,3 +60,17 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         print Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
 
     return retval
+
+
+@periodic_task(run_every=timedelta(seconds=3)) #24*60*60
+def cull_zip_cache():
+    logger = cull_zip_cache.get_logger()
+    logger.info("culling download cache")
+    for path in os.listdir(settings.ECS_DOWNLOAD_CACHE_DIR):
+        if path.startswith('.'):
+            continue
+        path = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, path)
+        age = time.time() - os.path.getmtime(path)
+        if age > settings.ECS_DOWNLOAD_CACHE_MAX_AGE:
+            os.remove(path)
+            

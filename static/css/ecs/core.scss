@@ -359,7 +359,8 @@ iframe.upload {
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 .task_item:nth-of-type(1),
 .field_history .change:nth-of-type(1) ,
-#meeting_list li:nth-of-type(1) {
+#meeting_list li:nth-of-type(1) ,
+.billing_list li:nth-of-type(1) {
   border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -376,7 +377,8 @@ iframe.upload {
 .administration_detail .user_list tr:nth-child(odd) ,
 .task_item:nth-child(odd),
 .field_history .change:nth-child(odd) ,
-#meeting_list li:nth-child(odd) {
+#meeting_list li:nth-child(odd) ,
+.billing_list li:nth-child(odd) {
   background: $middle-light-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -394,7 +396,8 @@ iframe.upload {
 .administration_detail .user_list tr:nth-child(even) ,
 .task_item:nth-child(even),
 .field_history .change:nth-child(even) ,
-#meeting_list li:nth-child(even) {
+#meeting_list li:nth-child(even) , 
+.billing_list li:nth-child(even) {
   background: $middle-dark-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -411,7 +414,8 @@ iframe.upload {
 .task_item:hover,
 .field_history .change:hover,
 #content .messages tr:hover,
-#meeting_list li:hover {
+#meeting_list li:hover, 
+.billing_list li:hover {
   background: #fefefe;
   cursor: pointer;
 }
