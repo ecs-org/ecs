@@ -27,7 +27,7 @@
                 <div><span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})</div>
             </div>
         {% endfor %}
-        <input type="submit" value="{% trans 'submit data' %}"/>
+        <input type="submit" value="{% trans 'Create settlement' %}"/>
         </form>
     {% else %}
         <em>{% trans 'No submission yet.' %}</em>

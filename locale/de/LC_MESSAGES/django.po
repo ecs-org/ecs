@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 20:55+0100\n"
+"POT-Creation-Date: 2011-12-06 22:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,55 +71,60 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:51
+#: billing/views.py:52
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:81 billing/views.py:153
+#: billing/views.py:98 billing/views.py:170
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:81 core/models/submissions.py:88
+#: billing/views.py:98 core/models/submissions.py:88
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:81
+#: billing/views.py:98
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:81
+#: billing/views.py:98
+#, fuzzy
+msgid "UID-Nr."
+msgstr "DVR-Nummer"
+
+#: billing/views.py:98
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:81 core/forms/layout.py:91 core/forms/layout.py:92
+#: billing/views.py:98 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:81
+#: billing/views.py:98
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:81 billing/views.py:153
+#: billing/views.py:98 billing/views.py:170
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:153
+#: billing/views.py:170
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:153
+#: billing/views.py:170
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:153 users/forms.py:123
+#: billing/views.py:170 users/forms.py:123
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:153 users/forms.py:122
+#: billing/views.py:170 users/forms.py:122
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:153 users/forms.py:130
+#: billing/views.py:170 users/forms.py:130
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -2491,8 +2496,8 @@ msgstr "Unverechnete Gutachten"
 
 #: templates/billing/external_review.html:31
 #: templates/billing/submissions.html:30
-msgid "submit data"
-msgstr "Daten absenden"
+msgid "Create settlement"
+msgstr "Abrechnung erstellen"
 
 #: templates/billing/external_review.html:34
 msgid "No review yet."
@@ -4420,6 +4425,9 @@ msgstr ""
 #: votes/workflow.py:71
 msgid "B3"
 msgstr ""
+
+#~ msgid "submit data"
+#~ msgstr "Daten absenden"
 
 #~ msgid "B2 Review"
 #~ msgstr "B2 Review"
