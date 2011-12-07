@@ -120,7 +120,7 @@ def tops(request, meeting_pk=None):
 
     next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number')[:3]
 
-    open_tops = {}
+    open_tops = SortedDict()
     for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number'):
         if top.submission:
             medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
@@ -132,7 +132,16 @@ def tops(request, meeting_pk=None):
             open_tops[bms].append(top)
         else:
             open_tops[bms] = [top]
+    
+    def board_member_cmp(a, b):
+        if not a:
+            return 1
+        if not b:
+            return -1
+        return a < b
 
+    open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
+    
     closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index', 'submission__ec_number')
 
     return render(request, 'meetings/tabs/tops.html', {
