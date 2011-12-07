@@ -24,7 +24,7 @@ class SigningDepot(object):
             return None
         else:
             resdict = cache.get(pdf_id)
-            cache.delete(pdf_id);
+            cache.delete(pdf_id)
             return resdict
 
 def with_sign_dict(func):
