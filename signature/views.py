@@ -144,7 +144,7 @@ def sign_receive(request, jsessionid=None, always_mock=False):
             document.save()
 
     except Exception as e:
-        # something bad has happend, call sign_error like pdf-as would do
+        # something bad has happened, call sign_error like pdf-as would do
         return sign_error(request, error=repr(e), cause=traceback.format_exc())
     
     else:
