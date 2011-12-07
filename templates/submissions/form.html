@@ -44,6 +44,11 @@
     </form>
 {% endblock %}
 
+{% block section_6_1 %}
+    <div class="hint">Bitte beachten Sie die <a href="javascript:void(openHelpPage())">Hinweise in den Hilfeseiten</a></div>
+    {{ block.super }}
+{% endblock %}
+
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 

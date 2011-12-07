@@ -288,13 +288,10 @@
           ecs.messages.alert('{{ message.tags|escapejs }}', '{{ message|escapejs }}')
       {% endfor %}
       
-      // workflow popups
-      
-      $('help_button').addEvent('click', function(e){
-          var link = $(e.target);
+      window.openHelpPage = function(e){
           {% if request.tracking_data.view %}
           var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
-          if(e.shift){
+          if(e && e.shift){
               url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
           }
           if(window.location.hash){
@@ -306,7 +303,9 @@
           var win = window.open(url, 'ecshelp');
           win.focus();
           return false;
-      });
+      };
+      
+      $('help_button').addEvent('click', window.openHelpPage);
       
       camera.install();
       new camera.Camera({

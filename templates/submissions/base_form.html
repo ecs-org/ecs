@@ -33,10 +33,12 @@
                 <div id="tabs-{{ forloop.counter }}" class="tab">
                     {% if tab.slug == 'measures' %}
                         <div class="field">
-                            <h3>Studienbezogen durchzuführende Therapie und Diagnostik <span class="paperform_number">6.1</span></h3>
+                            <h3>Ausschließlich studienbezogene Maßnahmen <span class="paperform_number">6.1</span></h3>
+                            {% block section_6_1 %}
                             {% with measure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
+                            {% endblock %}
                         </div>
                         <div class="field">
                             <h3>Invasive/strahlenbelastende Maßnahmen im Rahmen der Routineversorgung während der Studiendauer <span class="paperform_number">6.2</span></h3>
