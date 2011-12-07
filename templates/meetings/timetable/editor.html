@@ -20,6 +20,7 @@
         var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
     </div>
     <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
+    <div class="score">Score: {{ score }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">

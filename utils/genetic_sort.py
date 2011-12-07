@@ -33,7 +33,10 @@ def displacement_mutation(perm):
     rest = perm[:i] + perm[j:]
     k = random.randint(0, n - j + i)
     return rest[:k] + perm[i:j] + rest[k:]
-    
+
+def random_replacement_mutation(perm):
+    return tuple(random.sample(perm, len(perm)))
+
 
 class GeneticSorter(object):
     def __init__(self, data, evaluation_func=None, seed=None, population_size=None, crossover_p=0.3, mutations=None):

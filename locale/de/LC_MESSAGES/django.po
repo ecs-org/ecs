@@ -1414,9 +1414,8 @@ msgid "Change of study EC-Nr. {ec_number}"
 msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:39
-#, fuzzy
 msgid "B2 change of study EC-Nr. {ec_number}"
-msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
+msgstr "Zu bestätigende B2 Änderungen an Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:65 core/triggers.py:67 core/triggers.py:76
 #: core/triggers.py:78
@@ -1444,9 +1443,8 @@ msgid "Reject"
 msgstr "Ablehnen"
 
 #: core/workflow.py:183
-#, fuzzy
 msgid "Finish"
-msgstr "Abgeschlossen"
+msgstr "Fertig"
 
 #: core/workflow.py:185
 #, fuzzy

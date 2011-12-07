@@ -252,6 +252,8 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.duration = form.cleaned_data['duration']
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
+        if entry.optimal_start:
+            entry.move_to_optimal_position()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 @user_flag_required('is_internal')
@@ -274,10 +276,12 @@ def move_timetable_entry(request, meeting_pk=None):
 @user_flag_required('is_internal')
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    from ecs.meetings.tasks import _eval_timetable
     return render(request, 'meetings/timetable/editor.html', {
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
         'readonly': bool(meeting.optimization_task_id) or not meeting.started is None,
+        'score': _eval_timetable(meeting.metrics),
     })
 
 @user_flag_required('is_internal')
@@ -295,7 +299,10 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
     if not meeting.optimization_task_id:
         meeting.optimization_task_id = "xxx:fake"
         meeting.save()
-        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm, 'algorithm_parameters': {'population_size': 1000}})
+        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm, 'algorithm_parameters': {
+            'population_size': 400,
+            'iterations': 2000,
+        }})
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
