@@ -239,6 +239,7 @@ class Meeting(models.Model):
             
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
+        index = kwargs.pop('index', None)
         if visible:
             last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
             if last_index is None:
@@ -251,6 +252,10 @@ class Meeting(models.Model):
         if duration is not None:
             kwargs['duration_in_seconds'] = duration.seconds
         entry = self.timetable_entries.create(**kwargs)
+        if index is not None and index != -1:
+            entry.index = index
+        if entry.optimal_start:
+            entry.move_to_optimal_position()
         self._clear_caches()
         self.create_boardmember_reviews()
         return entry
@@ -385,7 +390,6 @@ class Meeting(models.Model):
         b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
         submission_forms = [x.submission_form for x in b2_votes]
         b1ized = Vote.objects.filter(result='1', upgrade_for=b2_votes).order_by('submission_form__submission__ec_number')
-        print b1ized
 
         rts = list(self.retrospective_thesis_entries.all())
         es = list(self.expedited_entries.all())
@@ -526,6 +530,17 @@ class TimetableEntry(models.Model):
             transaction.savepoint_commit(sid)
     
     index = property(_get_index, _set_index)
+    
+    def move_to_optimal_position(self):
+        i = 0
+        offset = 0
+        start = timedelta_to_seconds(datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start)
+        for entry in self.meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index').exclude(pk=self.pk):
+            if offset >= start:
+                break
+            offset += entry.duration_in_seconds
+            i += 1
+        self.index = i
     
     @cached_property
     def start(self):

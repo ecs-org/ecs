@@ -45,7 +45,11 @@ class FreeTimetableEntryForm(forms.Form):
     duration = TimedeltaField(initial=u'1h 30min', label=_(u"duration"))
     is_break = forms.BooleanField(label=_(u"break"), required=False)
     optimal_start = TimeField(required=False, label=_(u'ideal start time (time)'))
-    
+    index = forms.TypedChoiceField(label=_('Position'), coerce=int, empty_value=None, required=False, choices=[
+        ('', _('Automatic')), 
+        ('-1', _('Last')), 
+        ('0', _('First'))
+    ])
 
 class BaseConstraintFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):

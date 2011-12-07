@@ -252,6 +252,8 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         entry.duration = form.cleaned_data['duration']
         entry.optimal_start = form.cleaned_data['optimal_start']
         entry.save()
+        if entry.optimal_start:
+            entry.move_to_optimal_position()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     
 @user_flag_required('is_internal')
