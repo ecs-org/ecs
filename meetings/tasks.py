@@ -37,7 +37,7 @@ def _eval_timetable(metrics):
     v = 0.0
     v += 1000000.0 / (metrics._waiting_time_total + 1)
     v += 1000.0 / (metrics.constraint_violation_total + 1)
-    v += 1000000.0 / (metrics._optimal_start_diff_squared_sum + 1)
+    v += 10000000.0 / (metrics._optimal_start_diff_squared_sum + 1)
     return v
 
 @task()
