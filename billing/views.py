@@ -14,13 +14,14 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.decorators import developer
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, sudo
 from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.viewutils import render, render_html
 from ecs.ecsmail.utils import deliver, whitewash
+from ecs.tasks.models import Task
 
 from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistPayment
 from ecs.billing.stats import collect_submission_billing_stats
@@ -93,7 +94,10 @@ class SimpleXLS(object):
 @readonly(methods=['GET'])
 @user_flag_required('is_internal')
 def submission_billing(request):
-    unbilled_submissions = list(Submission.objects.filter(invoice__isnull=True, current_submission_form__is_acknowledged=True).order_by('ec_number'))
+    with sudo():
+        categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization_review', closed_at__isnull=False, deleted_at__isnull=True)
+        categorized_submissions = Submission.objects.filter(pk__in=categorization_tasks.values('data_id').query)
+    unbilled_submissions = list(categorized_submissions.filter(invoice__isnull=True).order_by('ec_number'))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 
