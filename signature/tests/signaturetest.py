@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
-from nose.tools import ok_, eq_
 
 from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
 from django.utils.http import urlquote
+from django.http import HttpResponse
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.documents.models import Document, DocumentType
 from ecs.signature.views import sign
  
-SIGN_INDICATE_SUCCCES = 'about:sucess'
-SIGN_INDICATE_FAILURE = 'about:error'
+SIGN_INDICATE_SUCCCES = 'sucess'
+SIGN_INDICATE_FAILURE = 'error'
 
 
 def _sign_dict():
@@ -29,23 +29,22 @@ def _sign_dict():
         'document_filename': 'unittest.pdf',
         'document_barcodestamp': True,
         'html_preview': '<HTML><BODY>unittest</BODY></HTML>',
-        }
-        
+    }
     sign_dict['pdf_data'] = wkhtml2pdf(sign_dict['html_preview'])
     return sign_dict
 
 def sign_success(request):
-    return sign(request, _sign_dict(), always_mock= True, always_fail= False)
+    return sign(request, _sign_dict(), always_mock=True, always_fail=False)
 
 def sign_fail(request):
-    return sign(request, _sign_dict(), always_mock= True, always_fail= True)
+    return sign(request, _sign_dict(), always_mock=True, always_fail=True)
 
-def success_func(document_pk=None):
-    document = get_object_or_404(Document, pk=document_pk) 
-    return (SIGN_INDICATE_SUCCCES)
+def success_func(request, document_pk=None):
+    Document.objects.get(pk=document_pk)
+    return HttpResponse(SIGN_INDICATE_SUCCCES)
     
-def error_func(parent_pk=None, description=''):
-    return (SIGN_INDICATE_FAILURE+"&"+ urlquote(description))
+def error_func(request, parent_pk=None, error=None, cause=None):
+    return HttpResponse('{0}: error={1} cause={2}'.format(SIGN_INDICATE_FAILURE, repr(error), repr(cause)))
 
 
 class SignatureTest(LoginTestCase):
@@ -61,18 +60,11 @@ class SignatureTest(LoginTestCase):
         self.client.login(email='unittest-signing@example.com', password='password')
         
     def test_success(self):
-        '''Tests that signing a document is possible; Will use mock signing.
-        '''
+        ''' Tests that signing a document is possible; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success'))
-        redirecturl = response['Location']
-        print redirecturl
-        eq_ (redirecturl, SIGN_INDICATE_SUCCCES)
+        self.failUnlessEqual(response.content, SIGN_INDICATE_SUCCCES)
     
     def test_failure(self):     
-        '''Tests that signing a document fails; Will use mock signing.
-        '''
+        ''' Tests that signing a document fails; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail'))
-        redirecturl = response['Location']
-        print redirecturl
-        eq_ (redirecturl[:len(SIGN_INDICATE_FAILURE)], SIGN_INDICATE_FAILURE)
-
+        self.failUnless(response.content.startswith(SIGN_INDICATE_FAILURE))

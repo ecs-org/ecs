@@ -2,7 +2,7 @@
 from uuid import uuid4
 
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 
@@ -91,10 +91,8 @@ def download_signed_vote(request, vote_pk=None):
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
     # magic: all ecs signing[(_fail)][123] user have always_mock, all signing_fail user have always fail
-    all_fail = ["signing_fail"+str(x)+"@example.org" for x in range(1,4)]
-    all_sign = all_fail+ ["signing"+str(x)+"@example.org" for x in range(1,4)]
-    always_mock = request.user.email in all_sign 
-    always_fail = request.user.email in all_fail
+    always_fail = request.user.email.startswith('signing_fail')
+    always_mock = always_fail or request.user.email.startswith('signing_mock')
     
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
@@ -118,27 +116,27 @@ def vote_sign(request, vote_pk=None):
             
     return sign(request, sign_dict, always_mock= always_mock, always_fail= always_fail)
 
-
 @user_group_required("EC-Signing Group")
 def vote_sign_retry(request, vote_pk=None, description=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     ct = ContentType.objects.get_for_model(vote.__class__)
-    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
+    task = get_object_or_404(Task, task_type__workflow_node__uid='vote_signing', content_type=ct, data_id=vote.id)
     # display retry (sign again), ignore (redirect to readonly view), decline (push task back to vote_review)
     raise NotImplemented
 
-def success_func(document_pk=None):
+def success_func(request, document_pk=None):
     document = get_object_or_404(Document, pk=document_pk)
     vote = document.parent_object
     vote.signed_at = document.date
     vote.save()
 
     ct = ContentType.objects.get_for_model(vote.__class__)
-    task = get_object_or_404(Task, task_type__name='Vote Signing', content_type=ct, data_id=vote.id)
+    task = get_object_or_404(Task, task_type__workflow_node__uid='vote_signing', content_type=ct, data_id=vote.id)
     task.done()
     
-    return reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab'
+    return HttpResponseRedirect(reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
 
-def error_func(parent_pk=None, description=''):
+def error_func(request, parent_pk=None, error=None, cause=None):
     # redirect to retry, ignore, decline this vote for signing
-    return reverse('ecs.vote.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'description': description})
+    return HttpResponse('signing failed')
+    return HttpResponseRedirect(reverse('ecs.vote.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'error': error}))

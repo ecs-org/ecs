@@ -382,6 +382,7 @@ def auth_user_testusers():
         ('thesis.executive', u'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False),
         ('signing', u'EC-Signing Group', {'is_internal': True, }),
         ('signing_fail', u'EC-Signing Group', {'is_internal': True }),
+        ('signing_mock', u'EC-Signing Group', {'is_internal': True }),
         ('statistic.rev', u'EC-Statistic Group', {'is_internal': False}),
         ('notification.rev', u'EC-Notification Review Group', {'is_internal': True, }),
         ('insurance.rev', u'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
