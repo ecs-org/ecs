@@ -1,0 +1,25 @@
+# localhost, for accessing debian documentation and apache standard files
+
+<VirtualHost 127.0.0.1:80>
+    DocumentRoot /var/www/
+
+    <Directory /var/www/>
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.0/255.0.0.0 ::1/128 
+        AllowOverride None
+    </Directory>
+
+    Alias /doc/ "/usr/share/doc/"
+    <Directory "/usr/share/doc/">
+        Options Indexes MultiViews FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    Alias /icons/ "/usr/share/apache2/icons/"
+    <Directory "/usr/share/apache2/icons">
+        Options Indexes MultiViews
+        AllowOverride None
+    </Directory>
+</VirtualHost>
+
