@@ -303,12 +303,6 @@ sqlparse:inst:all:pypi:sqlparse
 werkzeug:inst:all:pypi:werkzeug
 django-devserver:inst:all:https://github.com/dcramer/django-devserver/tarball/master
 
-# Qemu is used for virtual machine image creation and execution
-qemu:req:apt:apt-get:qemu-kvm
-qemu:req:mac:macports:qemu
-qemu:req:mac:homebreq:qemu
-qemu:static:win:http://homepage3.nifty.com/takeda-toshiya/qemu/qemu-0.13.0-windows.zip:unzip:qemu.exe
-
 # cherrypy running django (threaded wsgi server)
 django-wsgiserver:inst:all:pypi:django-wsgiserver
 
