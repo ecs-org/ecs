@@ -16,6 +16,7 @@ from django.utils.translation import ugettext as _
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.servers.basehttp import FileWrapper
+from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
@@ -52,20 +53,25 @@ def create_meeting(request):
 def meeting_list(request, meetings, title=None):
     if not title:
         title = _('Meetings')
+    paginator = Paginator(meetings, 12)
+    try:
+        meetings = paginator.page(int(request.GET.get('page', '1')))
+    except (EmptyPage, InvalidPage):
+        meetings = paginator.page(1)
     return render(request, 'meetings/list.html', {
-        'meetings': meetings.order_by('start'),
+        'meetings': meetings,
         'title': title,
     })
 
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def upcoming_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()), title=_('Upcoming Meetings'))
+    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()).order_by('start'), title=_('Upcoming Meetings'))
 
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def past_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()), title=_('Past Meetings'))
+    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()).order_by('-start'), title=_('Past Meetings'))
 
 @user_flag_required('is_executive_board_member')
 def reschedule_submission(request, submission_pk=None):

@@ -8,16 +8,26 @@
 {% endblock %}
 
 {% block content %}
-<div id="meeting_list">
-  <ol>
-      {% for meeting in meetings %}
-          <li>
-              <h3>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</h3>
-                  <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
-          </li>
-      {% endfor %}
-  </ol>
-</div>
+    <div id="meeting_list">
+      <ol>
+          {% for meeting in meetings.object_list %}
+              <li>
+                  <h3>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</h3>
+                      <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
+              </li>
+          {% endfor %}
+      </ol>
+    </div>
+
+    <div class="paginator">
+        {% if meetings.has_previous %}
+            <a href="?page={{ meetings.previous_page_number }}" class="prev_page">next</a>
+        {% endif %}
+        {% trans "Page" %} {{ meetings.number }} {% trans "of" %} {{ meetings.paginator.num_pages }}
+        {% if meetings.has_next %}
+            <a href="?page={{ meetings.next_page_number }}" class="next_page">next</a>
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block menuSelection %}meetings{% endblock %}
