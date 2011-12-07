@@ -7,7 +7,7 @@ from datetime import datetime
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse, get_callable
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
@@ -45,13 +45,13 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
     pdf_id = SigningDepot().deposit(sign_dict)
 
     if settings.PDFAS_SERVICE == 'mock:' or always_mock:
-        request.GET = request.GET.copy()
-        request.GET['pdf-id'] = pdf_id  # inject pdf-id for mock
         if always_fail:
-            return sign_error(request, error='configuration error', cause='requested always_fail, so we failed')
+            return sign_error(request, pdf_id=pdf_id, error='configuration error', cause='requested always_fail, so we failed')
         else:
             # we mock calling the applet by just copying intput to output (pdf stays the same beside barcode),
             # and directly go to sign_receive, to make automatic tests possible
+            request.GET = request.GET.copy()
+            request.GET['pdf-id'] = pdf_id  # inject pdf-id for mock
             pdf_data = sign_send(request, always_mock=always_mock).content
             
             request.GET['pdfas-session-id'] = 'mock_pdf_as' # inject pdfas-session-id
@@ -70,7 +70,7 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
         'pdf-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_send')),
         'pdf-id': pdf_id,
         'invoke-app-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_receive')),
-        'invoke-app-error-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_error')),
+        'invoke-app-error-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_error', kwargs={'pdf_id': pdf_id})),
         'invoke-preview-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_preview')),  # provided by our pdf-as patch
         'locale': 'de',
     }
@@ -82,7 +82,7 @@ def sign(request, sign_dict, always_mock=False, always_fail=False):
 @csrf_exempt    # pdf-as can't authenticate
 @forceauth.exempt
 @with_sign_dict
-def sign_send(request, jsessionid=None, always_mock=False):
+def sign_send(request, always_mock=False):
     ''' to be directly accessed by pdf-as so it can retrieve the pdf to sign '''
     if settings.PDFAS_SERVICE == 'mock:' or always_mock:
         with NamedTemporaryFile(suffix='.pdf') as tmp_in:
@@ -96,13 +96,14 @@ def sign_send(request, jsessionid=None, always_mock=False):
 
 
 @with_sign_dict
-def sign_preview(request, jsessionid=None):
+def sign_preview(request):
     ''' to be directly accessed by pdf-as so it can show a preview of the to be signed pdf on the applet page. '''
     return HttpResponse(request.sign_dict["html_preview"])
 
 
 @csrf_exempt    # pdf-as doesn't know about csrf tokens
-def sign_receive(request, jsessionid=None, always_mock=False):
+@with_sign_dict
+def sign_receive(request, always_mock=False):
     ''' to be directly accessed by pdf-as so it can bump ecs to download the signed pdf.
     
     called by the sign_receive_landing view, to workaround some pdf-as issues
@@ -115,14 +116,8 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         return v
 
     try:
-        pdf_id = _get('pdf-id')
-        
-        sign_dict = SigningDepot().get(pdf_id)
-        if sign_dict is None:
-            raise KeyError('Invalid pdf-id ({0}) or sign_dict not found, session expired?'.format(pdf_id))
-    
         if settings.PDFAS_SERVICE == 'mock:' or always_mock:
-            pdf_data = sign_dict['pdf_data']
+            pdf_data = request.sign_dict['pdf_data']
         else:
             q = dict((k, _get(k)) for k in ('pdf-id', 'pdfas-session-id',))
             url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, _get('pdf-url'), urllib.urlencode(q))
@@ -132,24 +127,24 @@ def sign_receive(request, jsessionid=None, always_mock=False):
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
     
-        doctype = DocumentType.objects.get(identifier=sign_dict['document_type'])
-        document = Document.objects.create(uuid=sign_dict["document_uuid"],
+        doctype = DocumentType.objects.get(identifier=request.sign_dict['document_type'])
+        document = Document.objects.create(uuid=request.sign_dict["document_uuid"],
              branding='n', doctype=doctype, file=f,
-             original_file_name=sign_dict["document_filename"], date=datetime.now(), 
-             version=sign_dict["document_version"]
+             original_file_name=request.sign_dict["document_filename"], date=datetime.now(), 
+             version=request.sign_dict["document_version"]
         )
-        parent_model_name = sign_dict['parent_type']
+        parent_model_name = request.sign_dict['parent_type']
         if parent_model_name is not None:
-            document.parent_object = _call_func(parent_model_name, pk=sign_dict['parent_pk'])
+            document.parent_object = _call_func(parent_model_name, pk=request.sign_dict['parent_pk'])
             document.save()
 
     except Exception as e:
         # something bad has happend, call sign_error like pdf-as would do
-        return sign_error(request, error=repr(e), cause=traceback.format_exc())
+        return sign_error(request, pdf_id=request.pdf_id, error=repr(e), cause=traceback.format_exc())
     
     else:
-        SigningDepot().pop(pdf_id)
-        return _call_func(sign_dict['success_func'], request, document_pk=document.pk)
+        SigningDepot().pop(request.pdf_id)
+        return _call_func(request.sign_dict['success_func'], request, document_pk=document.pk)
 
 
 @csrf_exempt    # pdf-as can't authenticate
@@ -157,7 +152,8 @@ def sign_receive(request, jsessionid=None, always_mock=False):
 @with_sign_dict
 def sign_error(request, error=None, cause=None):
     ''' to be directly accessed by pdf-as so it can report errors. '''
-    SigningDepot().pop(request.GET.get('pdf-id'))
+    SigningDepot().pop(request.pdf_id)
+
     if error is None:
         # FIXME: unquote_plus can't deal with UTF-8 encoded Umlauts
         error = urllib.unquote_plus(request.GET.get('error', ''))

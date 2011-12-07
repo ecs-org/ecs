@@ -3,7 +3,7 @@ import sys
 
 urlpatterns = patterns('ecs.signature.views',
     url(r'^send/$',    'sign_send'),
-    url(r'^error/$',   'sign_error'),
+    url(r'^error/(?P<pdf_id>\d+)/$',   'sign_error'),
     url(r'^preview/$', 'sign_preview'),
 
     # current version of pdf-as has some bug, to include jsessionid as part of the url

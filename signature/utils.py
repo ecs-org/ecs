@@ -30,8 +30,9 @@ class SigningDepot(object):
 def with_sign_dict(func):
     @wraps(func)
     def _inner(request, *args, **kwargs):
-        request.sign_dict = SigningDepot().get(request.GET.get('pdf-id'))
-        if request.sign_dict is None:
+        request.pdf_id = request.GET.get('pdf-id', kwargs.pop('pdf_id', None))
+        request.sign_dict = SigningDepot().get(request.pdf_id)
+        if request.pdf_id is None or request.sign_dict is None:
             raise Http404('Invalid pdf-id. Probably your signing session expired. Please retry.')
         return func(request, *args, **kwargs)
     return _inner

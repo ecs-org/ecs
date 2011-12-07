@@ -90,7 +90,6 @@ def download_signed_vote(request, vote_pk=None):
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
-    # magic: all ecs signing[(_fail)][123] user have always_mock, all signing_fail user have always fail
     always_fail = request.user.email.startswith('signing_fail')
     always_mock = always_fail or request.user.email.startswith('signing_mock')
     
@@ -138,5 +137,5 @@ def success_func(request, document_pk=None):
 
 def error_func(request, parent_pk=None, error=None, cause=None):
     # redirect to retry, ignore, decline this vote for signing
-    return HttpResponse('signing failed')
+    return HttpResponse('signing failed\n\nerror: {0}\ncause:\n{1}'.format(error, cause), content_type='text/plain')
     return HttpResponseRedirect(reverse('ecs.vote.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'error': error}))
