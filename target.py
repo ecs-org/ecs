@@ -8,7 +8,7 @@ import logging
 import distutils.dir_util
 
 from uuid import uuid4
-from fabric.api import local, env
+from fabric.api import local, env, warn
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import install_upstart, apache_setup, write_template, which
@@ -26,18 +26,9 @@ class SetupTarget(SetupTargetObject):
         self.queuing_password = uuid4().get_hex()
 
     def help(self, *args, **kwargs):
-        print('''%s targets
-
-targets:
-  
-  * update
-    usage: fab target:%s,update,*commands,**kwargs
-    
-    commands:
-      * homedir_config
-      * sslcert_config
-      * many others (unfinished)
-        ''' % (self.appname, self.appname))
+        print('''{0} targets
+  * system_setup
+        '''.format(self.appname))
     
     def update(self, *args, **kwargs):
         pass
@@ -45,23 +36,43 @@ targets:
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
         self.sslcert_config()
-        self.apache_config()
-        """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
         self.env_baseline()
+        """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
         self.local_settings_config()
         self.db_clear()
         self.queuing_config()
         self.signing_config()
         self.db_update()
         self.search_config()
+        
+        self.apache_config() # restarts apache at end
         self.upstart_install() # because upstart_install re/starts service at end, we put it last
  
     def homedir_config(self):   
         os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
         
     def sslcert_config(self):
-        local('sudo openssl req -config /ecs/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/%s.key -out /etc/ssl/certs/%s.pem' %
-        (self.hostname, self.hostname))
+        warn("Creating /autovm/ssleay.cnf")
+        local('''cat <<SSLEAYCNF_EOF > /autovm/ssleay.cnf
+RANDFILE                = /dev/urandom
+
+[ req ]
+default_bits            = 2048
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+prompt                  = no
+policy                  = policy_anything
+
+[ req_distinguished_name ]
+countryName            = AT
+stateOrProvinceName    = Vienna
+localityName           = Vienna
+organizationName       = ep3 Software & System House
+organizationalUnitName = Security
+commonName             = {0}
+emailAddress           = admin@{0}
+SSLEAYCNF_EOF'''.format(self.hostname))
+        local('sudo openssl req -config /autovm/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{0}.key -out /etc/ssl/certs/{0}.pem'.format(self.hostname))
     
     def local_settings_config(self):
         local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
@@ -94,17 +105,17 @@ TEMPLATE_DEBUG = False
         local_settings.close()
     
     def apache_config(self):
-        apache_setup(self.appname, use_sudo=self.use_sudo, dry=self.dry, hostname=self.hostname, ip=self.ip)
+        apache_setup(self.appname, use_sudo=self.use_sudo, dry=self.dry, hostname= self.hostname, ip= self.ip)
         
     def wsgi_config(self):
         write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-main.wsgi"),
             os.path.join(self.dirname, "main.wsgi"), 
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
-            )
+        )
         write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-service.wsgi"),
             os.path.join(self.dirname, "service.wsgi"), 
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
-            )
+        )
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
@@ -176,7 +187,6 @@ JETTY_PORT=8983
 
     def search_update(self):
         pass
-  
   
 
 
