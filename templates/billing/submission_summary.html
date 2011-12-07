@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load core %}
+{% load core i18n %}
 
 {% block menuSelection %}administration{% endblock %}
 
@@ -10,9 +10,9 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url ecs.documents.views.download_document document_pk=invoice.document.pk %}" class="button_submit">Detailierte Auflistung</a></p>
+    <p><a href="{% url ecs.documents.views.download_document document_pk=invoice.document.pk %}" class="button_submit">{% trans 'Download Invoice as xls file' %}</a></p>
 
-    <h2>Zusammenfassung</h2>
+    <h2>{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</h2>
     {% with invoice.stats as stats %}
     <table class="billing_summary">
         {% for item in stats.summary.values %}

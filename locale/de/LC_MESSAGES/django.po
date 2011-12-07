@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-06 23:33+0100\n"
+"POT-Creation-Date: 2011-12-07 11:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 
 #: billing/models.py:19
 msgid "fee exemption"
-msgstr "Gebührenbefreiung"
+msgstr "gebührenbefreit"
 
 #: billing/models.py:20
 msgid "External Reviewer"
@@ -2466,6 +2466,7 @@ msgid "Old Payments"
 msgstr "Alte Zahlungen"
 
 #: templates/billing/checklist_payment_list.html:17
+#: templates/billing/external_review_summary.html:15
 #, python-format
 msgid "Payment of %(date)s"
 msgstr "Zahlung vom %(date)s"
@@ -2512,12 +2513,17 @@ msgstr "Abrechnung erstellen"
 msgid "No review yet."
 msgstr "Es gibt noch kein Gutachten."
 
+#: templates/billing/external_review_summary.html:13
+msgid "Download payment as xls file"
+msgstr "Zahlung als xls-Datei herunterladen"
+
 #: templates/billing/invoice_list.html:13
 #: templates/billing/submissions.html:13
 msgid "Old Invoices"
 msgstr "Alte Rechnungen"
 
 #: templates/billing/invoice_list.html:17
+#: templates/billing/submission_summary.html:15
 #, python-format
 msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
@@ -2534,6 +2540,10 @@ msgstr "%(count)s Einreichungen"
 #: templates/billing/invoice_list.html:22
 msgid "No invoice yet."
 msgstr "Es gibt noch keine Rechnung."
+
+#: templates/billing/submission_summary.html:13
+msgid "Download Invoice as xls file"
+msgstr "Rechnung als xls-Datei herunterladen"
 
 #: templates/billing/submissions.html:15
 msgid "Unbilled Submissions"

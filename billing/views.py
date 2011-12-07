@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import xlwt
+from decimal import Decimal
 from StringIO import StringIO
 
 from django.http import HttpResponseRedirect
@@ -58,22 +59,30 @@ class SimpleXLS(object):
         
     def write_row(self, r, cells, header=False):
         for i, cell in enumerate(cells):
-            cell = unicode(cell)
             if header:
                 style = xlwt.easyxf('font: bold on; align: horiz center;')
                 self.sheet.write(r, i, cell, style)
             else:
                 self.sheet.write(r, i, cell)
+
+            try:
+                if isinstance(cell, (int, long, float, Decimal)):
+                    width = len(unicode(cell))
+                else:
+                    width = len(cell)
+            except TypeError:
+                width = 0
+
             if i >= len(self.widths):
-                self.widths.append(len(cell))
+                self.widths.append(width)
             else:
-                self.widths[i] = max(self.widths[i], len(cell))
+                self.widths[i] = max(self.widths[i], width)
             
     def write(self, *args, **kwargs):
         self.sheet.write(*args, **kwargs)
             
     def save(self, f):
-        # HACK: the width of the zero character of the default font is 256
+        # HACK: the width of the zero character in the default font is 256
         # the default font is proportional, so we apply an arbitraty multiplication
         # factor to get the width right (content with a lot of wide glyphs will
         # still get a wrong width)
@@ -110,7 +119,7 @@ def submission_billing(request):
                 submission.price.price,
             ])
         r = len(selected_for_billing) + 1
-        xls.write(r, 6, xlwt.Formula('SUM(G2:G%s)' % r))
+        xls.write(r, 7, xlwt.Formula('SUM(H2:H%s)' % r))
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()

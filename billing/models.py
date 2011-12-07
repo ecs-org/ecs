@@ -13,11 +13,11 @@ STUDY_PRICING_REMISSION = 4
 EXTERNAL_REVIEW_PRICING = 5
 
 PRICE_CATEGORIES = (
-    (STUDY_PRICING_OTHER, fu(_(u'All studies except multicentre drug studies'))),
-    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, fu(_(u'Multicentre drug trials for controlling ethics committees'))),
-    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, fu(_(u'Multicentre drug trials for locally responsible ethics committees'))),
-    (STUDY_PRICING_REMISSION, fu(_(u'fee exemption'))),
-    (EXTERNAL_REVIEW_PRICING, fu(_(u'External Reviewer'))),
+    (STUDY_PRICING_OTHER, _(u'All studies except multicentre drug studies')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, _(u'Multicentre drug trials for controlling ethics committees')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, _(u'Multicentre drug trials for locally responsible ethics committees')),
+    (STUDY_PRICING_REMISSION, _(u'fee exemption')),
+    (EXTERNAL_REVIEW_PRICING, _(u'External Reviewer')),
 )
 
 class PriceManager(models.Manager):
@@ -43,9 +43,12 @@ class PriceManager(models.Manager):
 class Price(models.Model):
     category = models.SmallIntegerField(choices=PRICE_CATEGORIES, unique=True, db_index=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    text = models.TextField(blank=True)
     
     objects = PriceManager()
+
+    @property
+    def text(self):
+        return dict(PRICE_CATEGORIES)[self.category]
     
     def __unicode__(self):
         return dict(PRICE_CATEGORIES)[self.category]
@@ -77,7 +80,5 @@ class ChecklistPayment(models.Model):
 
     @property
     def stats(self):
-        stats = {}
-        price = Price.objects.get_review_price()
-        stats['total'] = self.checklists.count() * price.price
-        return stats
+        from ecs.billing.stats import collect_checklist_billing_stats
+        return collect_checklist_billing_stats(self.checklists.all())

@@ -2,11 +2,10 @@
 from decimal import Decimal
 from ecs import bootstrap
 from ecs.billing.models import Price
-from ecs.billing.models import PRICE_CATEGORIES, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, STUDY_PRICING_REMISSION, EXTERNAL_REVIEW_PRICING
+from ecs.billing.models import STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, STUDY_PRICING_REMISSION, EXTERNAL_REVIEW_PRICING
 
 @bootstrap.register()
 def prices():
-    categories = dict(PRICE_CATEGORIES)
     prices = {
         STUDY_PRICING_OTHER: 1500,
         STUDY_PRICING_MULTICENTRIC_AMG_MAIN: 4000,
@@ -17,6 +16,4 @@ def prices():
     for category, price in prices.items():
         Price.objects.get_or_create(category=category, defaults={
             'price': price,
-            'text': categories[category],
         })
-

@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
+
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
+
 from ecs.billing.models import Price, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL
+from ecs.checklists.models import CHECKLIST_STATUS_CHOICES
 
 SUBMISSION_STAT_TEMPLATE = SortedDict((
     ('local', {
@@ -68,4 +71,14 @@ def collect_submission_billing_stats(submission_list):
     for val in summary.values():
         val['price'] = Price.objects.get(category=val['price'])
 
+    return {'summary': summary, 'total': total}
+
+def collect_checklist_billing_stats(checklist_list):
+    summary = SortedDict()
+    for status, label in CHECKLIST_STATUS_CHOICES:
+        summary[status] = {'label': label, 'count': 0}
+    price = Price.objects.get_review_price()
+    total = len(checklist_list) * price.price
+    for checklist in checklist_list:
+        summary[checklist.status]['count'] += 1
     return {'summary': summary, 'total': total}
