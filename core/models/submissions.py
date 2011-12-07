@@ -567,7 +567,7 @@ class SubmissionForm(models.Model):
         if s.presenter != user:
             return False
         with sudo():
-            most_recent_vote = s.get_most_recent_vote()
+            most_recent_vote = s.get_most_recent_vote(is_draft=False)
             if most_recent_vote and most_recent_vote.result == '2':
                 return True # b2 resubmission
             in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
