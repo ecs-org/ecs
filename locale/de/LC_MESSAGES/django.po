@@ -1444,9 +1444,8 @@ msgid "Reject"
 msgstr "Ablehnen"
 
 #: core/workflow.py:183
-#, fuzzy
 msgid "Finish"
-msgstr "Abgeschlossen"
+msgstr "Fertig"
 
 #: core/workflow.py:185
 #, fuzzy
