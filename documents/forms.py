@@ -47,7 +47,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         except PDFValidationError as e:
             logger.error('unreadable pdf document: %s' % e)
             self.pdf_error = True
-            raise ValidationError(_(u'Your PDF document could not be processed.'))
+            raise ValidationError(_(u'Your PDF document could not be processed.')+ str(e))
 
         while f.read(1024):
             pass
