@@ -34,7 +34,11 @@ _OPTIMIZATION_ALGORITHMS = {
 }
 
 def _eval_timetable(metrics):
-    return 1000*1000 * (1.0 / (metrics._waiting_time_total + 1)) + 1000.0 / (metrics.constraint_violation_total + 1) + 1000.0 / (math.sqrt(metrics._optimal_start_diff_squared_sum) + 1)
+    v = 0.0
+    v += 1000000.0 / (metrics._waiting_time_total + 1)
+    v += 1000.0 / (metrics.constraint_violation_total + 1)
+    v += 1000000.0 / (metrics._optimal_start_diff_squared_sum + 1)
+    return v
 
 @task()
 def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None, **kwargs):
