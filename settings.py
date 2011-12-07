@@ -366,10 +366,6 @@ ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 # default contact person if someone sends message to "EK"
 DEFAULT_CONTACT = 'office1@example.org'
 
-# FIXME: Agenda, Billing is send to whitelist instead of invited people (FMD2)
-AGENDA_RECIPIENT_LIST = ('emulbreh@googlemail.com', 'felix@erkinger.at', 'natano@natano.net',)
-BILLING_RECIPIENT_LIST = AGENDA_RECIPIENT_LIST
-
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
 if any(word in sys.argv for word in set(['syncdb', 'migrate', 'test', 'test_windmill', 'start_windmill'])):
