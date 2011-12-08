@@ -189,14 +189,14 @@
   font-weight: bold;
 }
 .catalogue_list_inner ol > li {
-  display: table;
+  display: block;
   padding: 10px;
 }
 #content .catalogue_list_inner ul {
   margin: 0;
 }
 .catalogue_list .items {
-  display: table-row;
+  display: table;
   width: 100%;
 }
 .catalogue_list .item_left {
@@ -211,6 +211,7 @@
 }
 .catalogue_list th {
   width: 30%;
+  background: none;
 }
 .catalogue_list td {
   width: 70%;
