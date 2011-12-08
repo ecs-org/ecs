@@ -70,20 +70,14 @@
 
 
 #checklist_summary_tab {
-    .checklist {
-        font-size: 120%;
-        margin-bottom: 5px;
-    }
 
     ol > li > ol {
         margin-left: 10px;
     }
     
-    & > ol > li {
-        padding-bottom: 15px;
-    }
-    
-    .answer{
+    .answer {
+        display: block;
+        
         & > .positive{
             color: #00ff00;
         }
@@ -95,12 +89,15 @@
         }
     }
     
-    .comment{
-        margin-left: 10px;
-        color: $black;
-        background-color: $white;
+    .comment {
+        display: inline-block;
+        margin: 5px 0 0 10px;
         font-family: monospace;
-        font-size: 110%;
+        background: $white;
+        font-style: normal;
+        line-height: 1.5;
+        border: 1px solid $grey-60;
+        padding: 3px 5px;
     }
 }
 

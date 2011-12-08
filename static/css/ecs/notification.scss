@@ -29,13 +29,24 @@
       li.BooleanField {
         padding-left: 10px;
       }
-      li.CharField label {
-        width: 100%;
-        display: block;
+      
+      li.CharField {
+        margin-top: 5px;
+      
+        label {
+          width: auto;
+          float: left;
+          display: block;
+          padding: 0 0 0 10px;
+          margin-right: 10px;
+        }
+        textarea {
+          display: block;
+          clear: both;
+          margin-left: 10px;
+        }
       }
-      li.CharField textarea {
-        margin-left: 10px;
-      }
+      
     }
 }
 

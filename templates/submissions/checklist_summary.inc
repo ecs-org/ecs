@@ -3,13 +3,13 @@
 <ol>
 {% for checklist, answers in checklist_summary %}
     <li>
-        <div class="checklist">{{ checklist.blueprint.name }}: {{ checklist.user|formal_name }}</div>
+        <h4 class="checklist">{{ checklist.blueprint.name }}: {{ checklist.user|formal_name }}</h4>
         <ol>
         {% for answer in answers %}
             <li>
-                <div class="answer">{{ answer.question.number}}. {{ answer.question.text }}: <span class="{% if answer.is_answered %}{% if answer.is_positive %}positive{% else %}negative{% endif %}{% else %}unanswered{% endif %}">{{ answer.answer|yes_no_unknown }}</span></div>
+                <span class="answer">{{ answer.question.number}}. {{ answer.question.text }}: <span class="{% if answer.is_answered %}{% if answer.is_positive %}positive{% else %}negative{% endif %}{% else %}unanswered{% endif %}">{{ answer.answer|yes_no_unknown }}</span></span>
                 {% if answer.comment %}
-                    <div class="comment">{{ answer.comment }}</div>
+                    <span class="comment">{{ answer.comment }}</span>
                 {% endif %}
             </li>
 
