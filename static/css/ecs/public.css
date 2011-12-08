@@ -1,0 +1,251 @@
+/* public */
+
+/* reset base.scss classes */
+
+* body {
+	margin: 0;
+	padding: 0;
+}
+#header, #toggle_sidebar_button {
+  display: none;
+}
+#content {
+  position: absolute;
+  right: 0 !important;
+  top: 0 !important;
+  overflow: auto;
+  height: 100% !important;
+  width: 100% !important;
+}
+.innerwrap {
+  background: none;
+  border: none;
+  margin: 70px auto 0;
+  min-width: 340px;
+  width: 340px;
+  text-align: left;
+}
+#sidebar {
+  position: relative;
+  display: none !important;
+  width: 0 !important;
+  height: 0px !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+#toggle_sidebar_button {
+  display:none !important;
+}
+
+/* login and register forms */
+
+.innerwrap img,
+.innerwrap a img {
+  border: none;
+  margin: 0 0 10px 10px;
+}
+#content .innerwrap form {
+  padding: 20px 20px;
+  background: #D8E6EF;
+  border: 1px solid #b7d4e5;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+#content .innerwrap p {
+  display: block;
+  margin-bottom: 5px;
+}
+.innerwrap label {
+  font-size: 14px;
+  font-weight: bolder;
+  display: block;
+  margin-bottom: 2px;
+  clear: both;
+}
+.innerwrap input {
+  display: block;
+  padding: 5px;
+  font-size: 14px;
+  width: 286px;
+  clear: both;
+}
+.innerwrap input[type=submit] {
+	display: inline-block;
+	width: 100%;
+  margin: 10px 0 0;
+  padding: 4px 7px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+#content form {
+  float: none;
+}
+#content h2 {
+	margin-bottom: 20px;
+}
+#id_gender {
+  width: 100px;
+}
+.public_area {
+  margin: 0 0 5px 10px;
+}
+.pw_reg {
+  margin: 5px 0 0 10px;
+  font-size: 12px;
+}
+#browser_warning {
+  margin: 10px;
+}
+.reg_detail {
+  padding: 4px 0;
+  border-bottom: 1px solid #BCD3E0;
+  background: #E1EBF2;
+}
+.reg_detail label {
+  font-size: 12px;
+  display: inline-block;
+  width: 80px;
+  border-right: 1px solid #C9DBE5;
+  margin-right: 10px;
+}
+.login_error .errorlist {
+  display: inline-block;
+  margin-top: 20px;
+  color: red;
+}
+.login_error ul,
+.register_error ul {
+  display: inline-block;
+  margin: 0 !important;
+}
+.login_error ul ul,
+.register_error ul ul {
+  margin: 0;
+}
+.login_error ul li,
+.register_error ul li {
+  margin: 0 0 5px 5px;
+  border: none;
+  max-width: none;
+  padding: 0;
+  background: none;
+}
+.login_error ul ul li {
+  border: none;
+  padding: 8px 0;
+  margin-left: 6px;
+}
+.login_error_msg {
+  display: block;
+  margin: 20px 5px 5px;
+  color: red;
+  padding: 5px;
+  background: #FAE5E3;
+  border: 1px solid #F4CECB;
+  border-radius: 3px;
+}
+
+/* catalogue list */
+
+#header_public {
+  position: absolute;
+  top: 0;
+  padding: 20px 0;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid #B7D4E5;
+  background: #D8E6EF;
+}
+#header_public img {
+  margin: 0 0 0 23px;
+}
+#content .catalogue_list {
+  position: absolute;
+  width: 100%;
+  top: 90px;
+  left: 0;
+  right: 0;
+}
+.header_inner,
+.catalogue_list_inner {
+  margin: 0 auto;
+  max-width: 1000px;
+}
+.catalogue_list_inner .content {
+  float: left;
+  padding: 20px;
+  border: 1px solid #EBDFC3;
+  background: #F8F8EF;
+}
+#content .catalogue_list_inner .content h2 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+#content .catalogue_list_inner .content h3 {
+  background: none;
+  border-bottom: none;
+  font-weight: bold;
+}
+.catalogue_list_inner ol > li {
+  display: table;
+  padding: 10px;
+}
+#content .catalogue_list_inner ul {
+  margin: 0;
+}
+.catalogue_list .item_left {
+  display: table-cell;
+  min-width: 180px;
+}
+.catalogue_list .item_right {
+  display: table-cell;
+}
+.catalogue_list table {
+  width: 100%;
+}
+.catalogue_list th {
+  width: 30%;
+}
+.catalogue_list td {
+  width: 70%;
+}
+
+#content .catalogue_list > .votes > div > h3{
+    margin: 0px;
+    padding: 0px;
+}
+
+#content .catalogue_list .english_title {
+    font-size: 80%;
+    color: #666666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.catalogue_list > .votes > div span{
+    display: block;
+}
+.catalogue_list > .votes > div span.type{
+    font-style: italic;
+}
+.catalogue_list > .votes > div span > b{
+    font-weight: normal;
+}
+
+.catalogue_list > .votes > div .investigator{
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #999;
+}
+
+.catalogue_list > .years{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#content .catalogue_list > .years a.selected{
+    color: #000;
+    font-weight: bold;
+}
