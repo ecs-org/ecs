@@ -1,0 +1,19 @@
+{% extends "core.html" %}
+{% load i18n %}
+
+{% block menuSelection %}communication{% endblock %}
+
+{% block htmltitle %}{% trans 'Signature Error' %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans 'Signature Error' %}{% endblock %}
+
+{% block content %}
+<div class="signature_error">
+    <table>
+        <tr><th>{% trans 'Error' %}:</th><td><pre>{{ error }}</pre></td></tr>
+        <tr><th>{% trans 'Cause' %}:</th><td><pre>{{ cause }}</pre></td></tr>
+    </table>
+    <p>
+        <a href="{% url ecs.signature.views.sign_error pdf_id=pdf_id %}?action=try_again">{% trans 'Try again' %}</a>
+    </p>
+</div>
+{% endblock %}

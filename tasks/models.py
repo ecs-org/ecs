@@ -152,7 +152,7 @@ class Task(models.Model):
 
     @property
     def managed_transparently(self):
-        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'external_review']
+        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'external_review', 'vote_signing']
 
     @property
     def is_locked(self):

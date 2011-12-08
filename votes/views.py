@@ -90,15 +90,14 @@ def download_signed_vote(request, vote_pk=None):
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 def vote_sign(request, vote_pk=None):
-    always_fail = request.user.email.startswith('signing_fail')
-    always_mock = always_fail or request.user.email.startswith('signing_mock')
-    
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
     context = vote_context(vote)
         
-    sign_dict = {
+    sign_session_id = request.GET.get('sign_session_id')
+
+    return sign(request, {
         'success_func': 'ecs.votes.views.success_func',
         'error_func': 'ecs.votes.views.error_func',
         'parent_pk': vote_pk,
@@ -111,10 +110,11 @@ def vote_sign(request, vote_pk=None):
         'document_barcodestamp': True,
         'html_preview': render(request, html_template, context).content,
         'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
-    }
-            
-    return sign(request, sign_dict, always_mock= always_mock, always_fail= always_fail)
+        'task_type_uid': 'vote_signing',
+        'sign_session_id': sign_session_id,
+    })
 
+"""
 @user_group_required("EC-Signing Group")
 def vote_sign_retry(request, vote_pk=None, description=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
@@ -122,20 +122,14 @@ def vote_sign_retry(request, vote_pk=None, description=None):
     task = get_object_or_404(Task, task_type__workflow_node__uid='vote_signing', content_type=ct, data_id=vote.id)
     # display retry (sign again), ignore (redirect to readonly view), decline (push task back to vote_review)
     raise NotImplemented
+"""
 
-def success_func(request, document_pk=None):
-    document = get_object_or_404(Document, pk=document_pk)
+def success_func(request, document=None):
     vote = document.parent_object
     vote.signed_at = document.date
     vote.save()
-
-    ct = ContentType.objects.get_for_model(vote.__class__)
-    task = get_object_or_404(Task, task_type__workflow_node__uid='vote_signing', content_type=ct, data_id=vote.id)
-    task.done()
-    
-    return HttpResponseRedirect(reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab')
+    return reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab'
 
 def error_func(request, parent_pk=None, error=None, cause=None):
     # redirect to retry, ignore, decline this vote for signing
     return HttpResponse('signing failed\n\nerror: {0}\ncause:\n{1}'.format(error, cause), content_type='text/plain')
-    return HttpResponseRedirect(reverse('ecs.vote.views.vote_sign_retry', kwargs={'vote_pk': parent_pk, 'error': error}))
