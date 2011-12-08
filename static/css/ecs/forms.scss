@@ -15,7 +15,7 @@ ul.errorlist {
 .errorlist li {
   display: inline-block;
   color: red;
-  padding: 5px;
+  padding: 3px 5px;
   background: #FAE5E3;
   border: 1px solid #F4CECB;
   border-radius: 3px;
@@ -63,6 +63,10 @@ ul.errorlist {
     
     tr.version:nth-of-type(2) td {
         background: #eee;
+    }
+    
+    ul li {
+      list-style: circle;
     }
     
     ol {

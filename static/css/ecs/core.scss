@@ -219,7 +219,8 @@ input[disabled] {
 .task_back_log th, 
 .profile th, 
 table.notif_meta th, 
-table.notification th {
+table.notification th,
+.catalogue_list th {
   background-color: #ebe8d0;
   border-bottom: 1px solid $wheatbrown;
   border-collapse: collapse;
@@ -232,7 +233,8 @@ table.notification th {
 .profile td, 
 table.notif_meta td, 
 table.notification td,
-.billing_summary td {
+.billing_summary td,
+.catalogue_list td {
   border-bottom: 1px solid $wheatbrown;
 }
 .task_back_log {
@@ -362,7 +364,8 @@ iframe.upload {
 .field_history .change:nth-of-type(1) ,
 #meeting_list li:nth-of-type(1) ,
 .billing_list li:nth-of-type(1) ,
-.billing_summary tr:nth-of-type(1) {
+.billing_summary tr:nth-of-type(1) ,
+.catalogue_list ol > li:nth-of-type(1) {
   border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -381,7 +384,8 @@ iframe.upload {
 .field_history .change:nth-child(odd) ,
 #meeting_list li:nth-child(odd) ,
 .billing_list li:nth-child(odd) ,
-.billing_summary tr:nth-child(odd) {
+.billing_summary tr:nth-child(odd) , 
+.catalogue_list ol > li:nth-child(odd) {
   background: $middle-light-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -401,7 +405,8 @@ iframe.upload {
 .field_history .change:nth-child(even) ,
 #meeting_list li:nth-child(even) , 
 .billing_list li:nth-child(even) ,
-.billing_summary tr:nth-child(even) {
+.billing_summary tr:nth-child(even) ,
+.catalogue_list ol > li:nth-child(even) {
   background: $middle-dark-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }

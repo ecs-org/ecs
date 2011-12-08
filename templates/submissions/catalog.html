@@ -3,7 +3,7 @@
 
 {% block htmlcss %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/public.css" />
+  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/public.css" />
 {% endblock %}
 
 
@@ -14,61 +14,93 @@
 
 {% block content %}
 <div id="header_public">
-  <a href="/"><img src="/static/images/logo.png" /></a>
+  <div class="header_inner">
+    <a href="/"><img src="/static/images/logo.png" /></a>
+  </div>
 </div>
 
 <div class="catalogue_list">
-    
-    <h2>{% trans "Catalog of Approved Studies" %}</h2>
-    
-    <div class="years">
-    {% for date in years %}
-        <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
-    {% endfor %}
-    </div>
-    
-    <div class="votes">
-    {% for vote in votes %}
-        {% with vote.submission_form as sf %}
-        <div>
-            <h3>{{ sf.german_project_title }}</h3>
-            <span class="english_title">{{ sf.project_title }}</span>
-            {% if sf.project_type_education_context %}
-                <span class="type">{{ sf.get_project_type_education_context_display }} ({{ sf.submitter_contact }})</span>
-            {% endif %}
-            <span><b>Sponsor:</b> {{ sf.sponsor_name }}</span>
-            <span><b>EK-Nr:</b> {{ sf.submission.get_ec_number_display }}</span>
-            <span><b>Datum der ersten Sitzung:</b> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}</span>
-            <span><b>Datum des Votums:</b> {{ vote.published_at|date:'d.m.Y' }}</span>
-            {% for investigator in sf.investigators.all %}
-            <div class="investigator">
-                <span><b>Verantwortlicher Prüfarzt:</b> {{ investigator.contact }}</span>
-                <span><b>Prüfzentrum:</b> {{ investigator.organisation }}</span>
-                <span><b>Ethikkomission:</b> {{ investigator.ethics_commission }}
-                    {% if investigator.ethics_commission.system and sf.is_amg %}
-                        {% if sf.is_categorized_multicentric_and_local %}
-                            (Lokal)
-                        {% else %}
-                            {% if sf.is_categorized_multicentric_and_main %}
-                                (Leitethikkomission)
+  <div class="catalogue_list_inner">
+    <div class="content form_main">
+      
+      <h1>{% trans "Catalog of Approved Studies" %}</h1>
+      
+      <h3 class="years">
+      {% for date in years %}
+          <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+      {% endfor %}
+      </h3>
+      
+      <ol class="votes">
+      {% for vote in votes %}
+          {% with vote.submission_form as sf %}
+          <li>
+              <div class="item_left">
+                <h2>EK-Nr: {{ sf.submission.get_ec_number_display }}:</h2>
+              </div>
+              <div class="item_right">
+                <h2>{{ sf.german_project_title }}</h2>
+
+                <span class="english_title">{{ sf.project_title }}</span>
+                {% if sf.project_type_education_context %}
+                    <span class="type">{{ sf.get_project_type_education_context_display }} ({{ sf.submitter_contact }})</span>
+                {% endif %}
+
+                
+                <table>
+                  <tr>
+                    <th>Sponsor:</th>
+                    <td>{{ sf.sponsor_name }}</td>
+                  </tr>
+                  <tr>
+                    <th>Datum der ersten Sitzung:</th>
+                    <td>{{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}</td>
+                  </tr>
+                  <tr>
+                    <th>Datum des Votums:</th>
+                    <td>{{ vote.published_at|date:'d.m.Y' }}</td>
+                  </tr>
+                </table>
+                {% for investigator in sf.investigators.all %}
+                <table>
+                  <tr>
+                    <th>Verantwortlicher Prüfarzt:</th>
+                    <td>{{ investigator.contact }}</td>
+                  </tr>
+                  <tr>
+                    <th>Prüfzentrum:</th>
+                    <td>{{ investigator.organisation }}</td>
+                  </tr>
+                  <tr>
+                    <th>Ethikkomission:</th>
+                    <td>{{ investigator.ethics_commission }}
+                        {% if investigator.ethics_commission.system and sf.is_amg %}
+                            {% if sf.is_categorized_multicentric_and_local %}
+                                (Lokal)
+                            {% else %}
+                                {% if sf.is_categorized_multicentric_and_main %}
+                                    (Leitethikkomission)
+                                {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-                </span>
-            </div>
-            {% endfor %}
+                    </td>
+                  </tr>
+                </table>
+                {% endfor %}
+              </div>
 
-        </div>
-        {% endwith %}
-    {% endfor %}
+          </li>
+          {% endwith %}
+      {% endfor %}
+      </ol>
+  
+      <h3 class="years">
+      {% for date in years %}
+          <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+      {% endfor %}
+      </h3>
     </div>
-
-    <div class="years">
-    {% for date in years %}
-        <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
-    {% endfor %}
-    </div>
-
+  </div>
 </div>
 {% endblock %}
 
