@@ -25,16 +25,17 @@
       
       <h1>{% trans "Catalog of Approved Studies" %}</h1>
       
-      <h3 class="years">
+      <div class="years">
       {% for date in years %}
           <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
       {% endfor %}
-      </h3>
+      </div>
       
       <ol class="votes">
       {% for vote in votes %}
           {% with vote.submission_form as sf %}
           <li>
+            <div class="items">
               <div class="item_left">
                 <h2>EK-Nr: {{ sf.submission.get_ec_number_display }}:</h2>
               </div>
@@ -64,7 +65,7 @@
                 {% for investigator in sf.investigators.all %}
                 <table>
                   <tr>
-                    <th>Verantwortlicher Prüfarzt:</th>
+                    <th>Verantwortliche/r Prüfärtzin/arzt :</th>
                     <td>{{ investigator.contact }}</td>
                   </tr>
                   <tr>
@@ -88,17 +89,17 @@
                 </table>
                 {% endfor %}
               </div>
-
+            </div>
           </li>
           {% endwith %}
       {% endfor %}
       </ol>
   
-      <h3 class="years">
+      <div class="years">
       {% for date in years %}
           <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
       {% endfor %}
-      </h3>
+      </div>
     </div>
   </div>
 </div>

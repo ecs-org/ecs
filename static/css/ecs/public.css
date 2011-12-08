@@ -195,9 +195,13 @@
 #content .catalogue_list_inner ul {
   margin: 0;
 }
+.catalogue_list .items {
+  display: table-row;
+  width: 100%;
+}
 .catalogue_list .item_left {
   display: table-cell;
-  min-width: 180px;
+  width: 180px;
 }
 .catalogue_list .item_right {
   display: table-cell;
@@ -211,10 +215,23 @@
 .catalogue_list td {
   width: 70%;
 }
-
-#content .catalogue_list > .votes > div > h3{
-    margin: 0px;
-    padding: 0px;
+#content .years a {
+  display: inline-block;
+  padding: 5px 8px;
+  margin-bottom: 12px;
+  background: #dddddd;
+  color: #333333;
+  font-size: 12px;
+  clear: both;
+  text-align: center;  
+  border-radius: 3px;
+  font-size: 16px;
+  font-weight: bold;
+}
+#content .years a:hover {
+  background: #333333;
+  color: #dddddd;
+  text-decoration: none;
 }
 
 #content .catalogue_list .english_title {
@@ -224,28 +241,3 @@
     margin-bottom: 5px;
 }
 
-.catalogue_list > .votes > div span{
-    display: block;
-}
-.catalogue_list > .votes > div span.type{
-    font-style: italic;
-}
-.catalogue_list > .votes > div span > b{
-    font-weight: normal;
-}
-
-.catalogue_list > .votes > div .investigator{
-    margin-top: 10px;
-    padding-left: 10px;
-    border-left: 1px solid #999;
-}
-
-.catalogue_list > .years{
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-#content .catalogue_list > .years a.selected{
-    color: #000;
-    font-weight: bold;
-}
