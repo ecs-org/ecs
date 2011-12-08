@@ -1,5 +1,7 @@
 {% load core i18n %}
 
+<div id="meeting_list" class="form_main">
+  
 {% if expert_formset.total_form_count %}
     <form method="post">
     {{ expert_formset.management_form }}
@@ -7,7 +9,7 @@
     {% for form in expert_formset.forms %}
         <li>
             <span>
-                {{ form.instance.category }}
+                <strong>{{ form.instance.category }}</strong>
                 [Einreichungen:
                 {% for submission in form.submissions %}
                      <a href="{% url view_submission submission_pk=submission.pk %}">
@@ -33,3 +35,4 @@
 {% else %}
     <em>{% trans 'no board member required' %}</em>
 {% endif %}
+</div>

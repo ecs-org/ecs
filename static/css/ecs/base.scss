@@ -100,7 +100,7 @@ a {
   overflow-x: hidden;
   overflow-y: auto;
 
-    h1, h4, h5 {
+    h1, h2, h3, h4, h5 {
         display: block;
     }
 
@@ -130,7 +130,7 @@ a {
     }
 
     p {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
     }
     
     ul {
@@ -138,10 +138,10 @@ a {
     }
     
     table {
-      margin: 0 0 10px 0;
+        margin: 0 0 10px 0;
     }
     table, th, td {
-      text-align: left;
+        text-align: left;
     }
     th, td {
       padding: 2px 3px;
@@ -190,14 +190,12 @@ a {
 }
 
 #content h2, #task_main h2 {
-  display: block;
   font-size: 18px;
   letter-spacing: 1px;  
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 #content h3, #task_main h3 {
   position: relative;
-  display: block;
   font-size: 16px;
   margin-bottom: 10px;
 }

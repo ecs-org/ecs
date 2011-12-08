@@ -1,13 +1,16 @@
 {% load core i18n userutils %}
 
 {% if next_tops %}
+
+<div id="meeting_list" class="form_main">
+  
 <h2>{% trans 'Next TOPs' %}</h2>
-<ul>
+<ol>
 {% for top in next_tops %}
     <li>
         {{ top }} - 
         {% if top.submission %}
-            {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+            {{ top.submission|ec_number }}: {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
             <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
             | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
         {% else %}
@@ -15,25 +18,24 @@
         {% endif %}
     </li>
 {% endfor %}
-</ul>
+</ol>
 {% endif %}
 
 {% if open_tops %}
 <h2>{% trans "Open TOPs" %}</h2>
-<ul>
+<div>
 {% for board_members, tops in open_tops.iteritems %}
-    <li>
         {% if board_members %}
-            {% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}
+            <h4>{% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}</h4>
         {% else %}
-            <i>{% trans "No board member." %}</i>
+            <h4><i>{% trans "No board member." %}</i></h4>
         {% endif %}
-        <ul>
+        <ol>
         {% for top in tops %}
             <li>
                 {{ top }} - 
                 {% if top.submission %}
-                    {{ top.submission|ec_number }} {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+                    {{ top.submission|ec_number }}: {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
                     <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
                     | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
                 {% else %}
@@ -41,25 +43,26 @@
                 {% endif %}
             </li>
         {% endfor %}
-        </ul>
+        </ol>
     </li>
 {% endfor %}
-</ul>
+</div>
 {% endif %}
 
 
 {% if closed_tops %}
 <h2>{% trans "Finished TOPs" %}</h2>
-<ul>
+<ol>
 {% for top in closed_tops %}
     <li>
         {{ top }} - 
         {% if top.submission %}
-            {{ top.submission|ec_number }} ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
+            {{ top.submission|ec_number }}: ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
         {% else %}
             {{ top.title }}
         {% endif %}
     </li>
 {% endfor %}
-</ul>
+</ol>
 {% endif %}
+</div>

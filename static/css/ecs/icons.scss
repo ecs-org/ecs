@@ -162,7 +162,7 @@
   background-position: 0 -672px;
 }
 
-.icon_diff, .icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .form_main ol li .datepicker_toggler, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview  {
+.icon_diff, .icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .form_main ol li .datepicker_toggler, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview, .icon_download  {
   @include icon_bg_16;
 }
 
@@ -212,6 +212,9 @@
 }
 .task_list .preview {
   background-position: 0 -1056px;
+}
+.icon_download {
+  background-position: 0 -384px;
 }
 
 .task_complete, 

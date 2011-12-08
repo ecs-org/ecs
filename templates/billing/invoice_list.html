@@ -11,17 +11,21 @@
 
 {% block content %}
     <h2>{% trans 'Old Invoices' %}</h2>
-    <ul>
-    {% for invoice in invoices.object_list %}
-        <li>
-            <a href="{% url ecs.billing.views.view_invoice invoice_pk=invoice.pk %}">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</a>
-            [{% with invoice.submissions.count as count %}{% if count == 1 %}{% trans '1 Submission' %}{% else %}{% blocktrans with count as count %}{{ count }} Submissions{% endblocktrans %}{% endif %},{% endwith %}
-            {{ invoice.stats.total|euro }}]
-        </li>
-    {% empty %}
-        <li><em>{% trans 'No invoice yet.' %}</em></li>
-    {% endfor %}
-    </ul>
+    
+    <div class="billing_list">
+      <ol>
+      {% for invoice in invoices.object_list %}
+          <li>
+              <a href="{% url ecs.billing.views.view_invoice invoice_pk=invoice.pk %}">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</a>
+              [{% with invoice.submissions.count as count %}{% if count == 1 %}{% trans '1 Submission' %}{% else %}{% blocktrans with count as count %}{{ count }} Submissions{% endblocktrans %}{% endif %},{% endwith %}
+              {{ invoice.stats.total|euro }}]
+          </li>
+      {% empty %}
+          <li><em>{% trans 'No invoice yet.' %}</em></li>
+      {% endfor %}
+      </ol>
+    </div>
+    
     <div class="paginator">
         {% if invoices.has_previous %}
             <a href="?page={{ invoices.previous_page_number }}" class="prev_page">next</a>
