@@ -161,7 +161,8 @@
 #header_public img {
   margin: 0 0 0 23px;
 }
-#content .catalogue_list {
+#content .catalogue_list,
+#content .wrapper_404 {
   position: absolute;
   width: 100%;
   top: 90px;
@@ -169,11 +170,13 @@
   right: 0;
 }
 .header_inner,
-.catalogue_list_inner {
+.catalogue_list_inner,
+.wrapper_404_inner {
   margin: 0 auto;
   max-width: 1000px;
 }
-.catalogue_list_inner .content {
+.catalogue_list_inner .content,
+.wrapper_404 .content {
   float: left;
   padding: 20px;
   border: 1px solid #EBDFC3;
