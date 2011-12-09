@@ -81,12 +81,14 @@
 .icon_delegate {
   background-position: -240px -208px;
 }
-.icon_done,
-.icon_accept {
+.icon_done {
   background-position: -16px -160px;
 }
-.icon_done:active,
-.icon_done:hover {
+.icon_accept {
+  background-position: -32px -160px;
+}
+.icon_accept:active,
+.icon_accept:hover {
   background-position: 0 -160px;
 }
 .icon_sort {
