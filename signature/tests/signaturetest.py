@@ -29,7 +29,6 @@ def _sign_dict():
         'document_filename': 'unittest.pdf',
         'document_barcodestamp': True,
         'html_preview': '<HTML><BODY>unittest</BODY></HTML>',
-        'task_type_uid': None,
     }
     sign_dict['pdf_data'] = wkhtml2pdf(sign_dict['html_preview'])
     return sign_dict

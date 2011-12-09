@@ -96,6 +96,31 @@ class Vote(models.Model):
     def is_valid(self):
         return self.valid_until < datetime.now()
 
+    def get_render_context(self):
+        submission = self.submission_form.submission
+        form = None
+        documents = None
+        vote_date = None
+        meeting = None
+        if self.top:
+            submission = self.top.submission
+            vote_date = self.top.meeting.start.strftime('%d.%m.%Y')
+            meeting = self.top.meeting
+        if submission and submission.forms.count() > 0:
+            form = submission.forms.all()[0]
+        if form:
+            documents = form.documents.all()
+        
+        return {
+            'meeting': meeting,
+            'vote': self,
+            'submission': submission,
+            'form': form,
+            'documents': documents,
+            'vote_date': vote_date,
+            'ec_number': self.get_ec_number(),
+        }
+
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 00:05+0100\n"
+"POT-Creation-Date: 2011-12-09 22:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2483,35 +2483,35 @@ msgstr "Ältere Einträge"
 msgid "Old Payments"
 msgstr "Alte Zahlungen"
 
-#: templates/billing/checklist_payment_list.html:17
+#: templates/billing/checklist_payment_list.html:19
 #: templates/billing/external_review_summary.html:15
 #, python-format
 msgid "Payment of %(date)s"
 msgstr "Zahlung vom %(date)s"
 
-#: templates/billing/checklist_payment_list.html:18
+#: templates/billing/checklist_payment_list.html:20
 msgid "1 Review"
 msgstr "1 Gutachten"
 
-#: templates/billing/checklist_payment_list.html:18
+#: templates/billing/checklist_payment_list.html:20
 #, python-format
 msgid "%(count)s Reviews"
 msgstr "%(count)s Gutachten"
 
-#: templates/billing/checklist_payment_list.html:22
+#: templates/billing/checklist_payment_list.html:24
 msgid "No payment yet."
 msgstr "Es gibt noch keine Zahlung."
 
-#: templates/billing/checklist_payment_list.html:29
-#: templates/billing/invoice_list.html:29 templates/meetings/list.html:26
+#: templates/billing/checklist_payment_list.html:32
+#: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:155
 #: templates/submissions/widget.html:66 templates/users/administration.html:28
 #: templates/users/administration.html:86 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
-#: templates/billing/checklist_payment_list.html:29
-#: templates/billing/invoice_list.html:29 templates/meetings/list.html:26
+#: templates/billing/checklist_payment_list.html:32
+#: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:155
 #: templates/submissions/widget.html:66 templates/users/administration.html:28
 #: templates/users/administration.html:86
@@ -2540,22 +2540,22 @@ msgstr "Zahlung als xls-Datei herunterladen"
 msgid "Old Invoices"
 msgstr "Alte Rechnungen"
 
-#: templates/billing/invoice_list.html:17
+#: templates/billing/invoice_list.html:19
 #: templates/billing/submission_summary.html:15
 #, python-format
 msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
 
-#: templates/billing/invoice_list.html:18
+#: templates/billing/invoice_list.html:20
 msgid "1 Submission"
 msgstr "1 Einreichung"
 
-#: templates/billing/invoice_list.html:18
+#: templates/billing/invoice_list.html:20
 #, python-format
 msgid "%(count)s Submissions"
 msgstr "%(count)s Einreichungen"
 
-#: templates/billing/invoice_list.html:22
+#: templates/billing/invoice_list.html:24
 msgid "No invoice yet."
 msgstr "Es gibt noch keine Rechnung."
 
@@ -3026,7 +3026,7 @@ msgid ""
 "Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 msgstr ""
 
-#: templates/meetings/tabs/experts.html:34
+#: templates/meetings/tabs/experts.html:36
 msgid "no board member required"
 msgstr "kein Sitzungsmitglied erforderlich"
 
@@ -3169,36 +3169,36 @@ msgstr "B3 (behandelt)"
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
-#: templates/meetings/tabs/submissions.html:6
+#: templates/meetings/tabs/submissions.html:7
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
-#: templates/meetings/tabs/submissions.html:14
+#: templates/meetings/tabs/submissions.html:16
 msgid "Download documents (zip)"
 msgstr "Herunterladen(zip)"
 
-#: templates/meetings/tabs/tops.html:4
+#: templates/meetings/tabs/tops.html:7
 msgid "Next TOPs"
 msgstr "Nächste TOPs"
 
-#: templates/meetings/tabs/tops.html:12 templates/meetings/tabs/tops.html:38
+#: templates/meetings/tabs/tops.html:15 templates/meetings/tabs/tops.html:40
 #: templates/scratchpad/popup.html:7
 msgid "Scratchpad"
 msgstr "Notizblock"
 
-#: templates/meetings/tabs/tops.html:22
+#: templates/meetings/tabs/tops.html:25
 msgid "Open TOPs"
 msgstr "Offene TOPs"
 
-#: templates/meetings/tabs/tops.html:29
+#: templates/meetings/tabs/tops.html:31
 msgid "No board member."
 msgstr ""
 
-#: templates/meetings/tabs/tops.html:52
+#: templates/meetings/tabs/tops.html:54
 msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
-#: templates/meetings/tabs/tops.html:58
+#: templates/meetings/tabs/tops.html:60
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
@@ -3406,13 +3406,38 @@ msgstr "Allgemeiner Notizblock"
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
-#: templates/signature/error.html:12
+#: templates/signature/error.html:6 templates/signature/error.html.py:7
+msgid "Signature Error"
+msgstr "Unterzeichnungsfehler"
+
+#: templates/signature/error.html:11
+#, python-format
+msgid "Failed to sign %(obj)s"
+msgstr "%(obj)s konnte nicht unterzeichnet werden"
+
+#: templates/signature/error.html:14
 msgid "Error"
 msgstr "Fehler"
 
-#: templates/signature/error.html:13
+#: templates/signature/error.html:15
 msgid "Cause"
 msgstr "Ursache"
+
+#: templates/signature/error.html:18
+msgid "Try again"
+msgstr "Nochmal versuchen"
+
+#: templates/signature/error.html:19
+msgid "Skip"
+msgstr "Überspringen"
+
+#: templates/signature/error.html:20
+msgid "Push back"
+msgstr "Zurückwerfen"
+
+#: templates/signature/error.html:21 templates/submissions/form.html:112
+msgid "Cancel"
+msgstr "Abbrechen"
 
 #: templates/submissions/acknowledge_message.txt:5
 #, python-format
@@ -3543,10 +3568,6 @@ msgstr ""
 #: templates/submissions/form.html:111
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
-
-#: templates/submissions/form.html:112
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #: templates/submissions/form.html:112
 msgid "Don't Submit"

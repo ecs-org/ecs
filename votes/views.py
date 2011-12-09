@@ -9,9 +9,10 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
-from ecs.signature.views import sign
+from ecs.signature.views import sign, batch_sign
 from ecs.users.utils import user_group_required, user_flag_required
 from ecs.tasks.models import Task
+from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render, pdf_response
@@ -29,49 +30,19 @@ def _vote_filename(vote):
     return filename.replace(' ', '_')
 
 
-def vote_context(vote):
-    top = vote.top
-    submission = vote.submission_form.submission
-    form = None
-    documents = None
-    vote_date = None
-    meeting = None
-    if top:
-        submission = top.submission
-        vote_date = top.meeting.start.strftime('%d.%m.%Y')
-        meeting = top.meeting
-    if submission and submission.forms.count() > 0:
-        form = submission.forms.all()[0]
-    if form:
-        documents = form.documents.all()
-    
-    context = {
-        'meeting': meeting,
-        'vote': vote,
-        'submission': submission,
-        'form': form,
-        'documents': documents,
-        'vote_date': vote_date,
-        'ec_number': vote.get_ec_number(),
-    }
-    return context
-
-
 @readonly()
 def show_html_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'db/meetings/wkhtml2pdf/vote.html'
-    context = vote_context(vote)
-    return render(request, template, context)
+    return render(request, template, vote.get_render_context())
 
 
 @readonly()
 def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'db/meetings/wkhtml2pdf/vote.html'
-    context = vote_context(vote)
     pdf_name = _vote_filename(vote)
-    pdf_data = wkhtml2pdf(render(request, template, context).content )
+    pdf_data = wkhtml2pdf(render(request, template, vote.get_render_context()).content )
     return pdf_response(pdf_data, filename=pdf_name)
   
 
@@ -89,30 +60,33 @@ def download_signed_vote(request, vote_pk=None):
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
+@task_required()
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
-    context = vote_context(vote)
+    context = vote.get_render_context()
         
     sign_session_id = request.GET.get('sign_session_id')
-
-    return sign(request, {
-        'success_func': 'ecs.votes.views.success_func',
-        'error_func': 'ecs.votes.views.error_func',
-        'parent_pk': vote_pk,
-        'parent_type': 'ecs.votes.models.Vote',    
-        'document_uuid': uuid4().get_hex(),
-        'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
-        'document_type': "votes",
-        'document_version': 'signed-at',
-        'document_filename': _vote_filename(vote),
-        'document_barcodestamp': True,
-        'html_preview': render(request, html_template, context).content,
-        'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
-        'task_type_uid': 'vote_signing',
-        'sign_session_id': sign_session_id,
-    })
+    if sign_session_id:
+        return sign(request, {
+            'success_func': 'ecs.votes.views.success_func',
+            'error_func': 'ecs.votes.views.error_func',
+            'parent_pk': vote_pk,
+            'parent_type': 'ecs.votes.models.Vote',    
+            'document_uuid': uuid4().get_hex(),
+            'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
+            'document_type': "votes",
+            'document_version': 'signed-at',
+            'document_filename': _vote_filename(vote),
+            'document_barcodestamp': True,
+            'html_preview': render(request, html_template, context).content,
+            'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
+            'sign_session_id': sign_session_id,
+        })
+    else:
+        task = request.related_tasks[0]
+        return batch_sign(request, request.related_tasks[0])
 
 """
 @user_group_required("EC-Signing Group")
