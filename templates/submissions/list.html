@@ -81,11 +81,6 @@
                 <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
              {% endif %}
              <a href="{% url ecs.core.views.submission_pdf submission_form_pk=submission_form.pk %}">{% trans "Download PDF" %}</a>
-             {% with submission.get_most_recent_vote as vote %}
-                {% if vote and not vote.result == '2' %}
-                    | <a href="{% url ecs.core.views.vote_review submission_form_pk=submission_form.pk %}">{% trans "Vote Review" %}</a>
-                {% endif %}
-             {% endwith %}
             {% with submission.paper_submission_review_task as paper_submission_review_task %}
                 {% if paper_submission_review_task %}
                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
