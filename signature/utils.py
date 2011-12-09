@@ -5,34 +5,38 @@ from functools import wraps
 from django.core.cache import cache
 from django.http import Http404
 
-class SigningDepot(object):
-    __DEFAULT_TIMEOUT_SEC=180
-   
-    def __gen_id(self):
+class SigningData(dict):
+    def __init__(self, *args, **kwargs):
+        super(SigningData, self).__init__(*args, **kwargs)
+        self.id = None
+
+    def _gen_id(self):
         return '%s' % random.randint(1, int(1e17) - 1)
 
-    def deposit(self, sign_dict):
-        pdf_id = self.__gen_id()
-        cache.set(pdf_id, sign_dict,  self.__DEFAULT_TIMEOUT_SEC)
-        return pdf_id
-    
-    def get(self, pdf_id):
-        return cache.get(pdf_id)
+    @classmethod
+    def retrieve(cls, id):
+        data = cache.get(id)
+        if not data is None:
+            data = cls(data)
+            data.id = id
+        return data
 
-    def pop(self, pdf_id):
-        if pdf_id is None:
-            return None
-        else:
-            resdict = cache.get(pdf_id)
-            cache.delete(pdf_id)
-            return resdict
+    def store(self, timeout=None):
+        if not self.id:
+            self.id = self._gen_id()
+        cache.set(self.id, dict(self), timeout)
 
-def with_sign_dict(func):
+    def delete(self):
+        if self.id:
+            cache.delete(self.id)
+
+def with_sign_data(func):
     @wraps(func)
     def _inner(request, *args, **kwargs):
-        request.pdf_id = request.GET.get('pdf-id', kwargs.pop('pdf_id', None))
-        request.sign_dict = SigningDepot().get(request.pdf_id)
-        if request.pdf_id is None or request.sign_dict is None:
+        pdf_id = request.GET.get('pdf-id', kwargs.pop('pdf_id', None))
+        request.sign_data = SigningData.retrieve(pdf_id)
+        if request.sign_data is None:
             raise Http404('Invalid pdf-id. Probably your signing session expired. Please retry.')
+        request.sign_session = SigningData.retrieve(request.sign_data.get('sign_session_id'))
         return func(request, *args, **kwargs)
     return _inner

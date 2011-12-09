@@ -13,7 +13,6 @@ from ecs.core import bootstrap
 from ecs.users.utils import sudo
 from ecs.notifications.models import Notification, NotificationAnswer
 from ecs.votes.models import Vote
-from ecs.votes.views import vote_context
 
 def test_pdf_html(request, submission_pk=None):
     with sudo():
@@ -151,7 +150,7 @@ def test_vote_pdf_html(request, vote_pk=None):
     with sudo(vote.submission_form.submission.presenter):
         bootstrap.templates()
         template = loader.get_template('db/meetings/wkhtml2pdf/vote.html')
-        html = template.render(Context(vote_context(vote)))
+        html = template.render(Context(vote.get_render_context()))
     return HttpResponse(html)
 
 def test_render_vote_pdf(request, vote_pk=None):
@@ -159,7 +158,7 @@ def test_render_vote_pdf(request, vote_pk=None):
         vote = get_object_or_404(Vote, pk=vote_pk)
     with sudo(vote.submission_form.submission.presenter):
         bootstrap.templates()
-        pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote_context(vote))
+        pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote.get_render_context())
     return pdf_response(pdf, filename='test.pdf')
 
 def developer_test_vote_pdf(request):

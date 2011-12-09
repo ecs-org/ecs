@@ -154,7 +154,7 @@ def accept_task_type(request, flavor=None, slug=None, full=False):
         submission = get_object_or_404(Submission, pk=submission_pk)
         tasks = tasks.for_submission(submission)
 
-    for task in tasks.acceptable_for_user(request.user).filter(task_type__workflow_node__uid=slug):
+    for task in tasks.acceptable_for_user(request.user).filter(task_type__workflow_node__uid=slug).order_by('created_at'):
         task.accept(request.user)
         task_accepted.send(type(task.node_controller), task=task)
 

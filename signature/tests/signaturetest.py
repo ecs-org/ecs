@@ -12,7 +12,7 @@ from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.documents.models import Document, DocumentType
 from ecs.signature.views import sign
  
-SIGN_INDICATE_SUCCCES = 'sucess'
+SIGN_INDICATE_SUCCCES = 'about:sucess'
 SIGN_INDICATE_FAILURE = 'error'
 
 
@@ -39,9 +39,8 @@ def sign_success(request):
 def sign_fail(request):
     return sign(request, _sign_dict(), always_mock=True, always_fail=True)
 
-def success_func(request, document_pk=None):
-    Document.objects.get(pk=document_pk)
-    return HttpResponse(SIGN_INDICATE_SUCCCES)
+def success_func(request, document=None):
+    return SIGN_INDICATE_SUCCCES
     
 def error_func(request, parent_pk=None, error=None, cause=None):
     return HttpResponse('{0}: error={1} cause={2}'.format(SIGN_INDICATE_FAILURE, repr(error), repr(cause)))
@@ -62,7 +61,7 @@ class SignatureTest(LoginTestCase):
     def test_success(self):
         ''' Tests that signing a document is possible; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_success'))
-        self.failUnlessEqual(response.content, SIGN_INDICATE_SUCCCES)
+        self.failUnlessEqual(response['Location'], SIGN_INDICATE_SUCCCES)
     
     def test_failure(self):     
         ''' Tests that signing a document fails; Will use mock signing. '''

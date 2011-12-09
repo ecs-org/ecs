@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-07 11:02+0100\n"
+"POT-Creation-Date: 2011-12-09 22:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,88 +43,89 @@ msgstr "gebührenbefreit"
 msgid "External Reviewer"
 msgstr "Gutachter"
 
-#: billing/stats.py:9
+#: billing/stats.py:12
 msgid "fees note - local EC"
 msgstr "Gebührennoten - lokale EK"
 
-#: billing/stats.py:14
+#: billing/stats.py:17
 msgid "fees note - AMG"
 msgstr "Gebührennoten - AMG"
 
-#: billing/stats.py:19
+#: billing/stats.py:22
 msgid "fees note - MPG"
 msgstr "Gebührennoten - MPG"
 
-#: billing/stats.py:24
+#: billing/stats.py:27
 msgid "fees note - other"
 msgstr "Gebührennoten - sonstige"
 
-#: billing/stats.py:29
+#: billing/stats.py:32
 msgid "fees note - controlling-EC monocentric"
 msgstr "Gebührennoten - Leit-EK monozentrisch"
 
-#: billing/stats.py:34
+#: billing/stats.py:37
 msgid "fees note - controlling-EC multicentric"
 msgstr "Gebührennoten - Leit-EK multizentrisch"
 
-#: billing/stats.py:40
+#: billing/stats.py:43
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:52
+#: billing/views.py:54
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:98 billing/views.py:170
+#: billing/views.py:111 billing/views.py:183
+#: templates/billing/external_review_summary.html:20
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:98 core/models/submissions.py:88
+#: billing/views.py:111 core/models/submissions.py:88
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:98
+#: billing/views.py:111
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:98
+#: billing/views.py:111
 #, fuzzy
 msgid "UID-Nr."
 msgstr "DVR-Nummer"
 
-#: billing/views.py:98
+#: billing/views.py:111
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:98 core/forms/layout.py:91 core/forms/layout.py:92
+#: billing/views.py:111 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:98
+#: billing/views.py:111
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:98 billing/views.py:170
+#: billing/views.py:111 billing/views.py:183
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:170
+#: billing/views.py:183
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:170
+#: billing/views.py:183
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:170 users/forms.py:123
+#: billing/views.py:183 users/forms.py:123
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:170 users/forms.py:122
+#: billing/views.py:183 users/forms.py:122
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:170 users/forms.py:130
+#: billing/views.py:183 users/forms.py:130
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -1694,8 +1695,8 @@ msgstr "Teilnehmer/innen"
 msgid "SAE / SUSAR"
 msgstr "SAE / SUSAR"
 
-#: core/forms/layout.py:221 templates/meetings/details.html:9
-#: templates/meetings/tabs/status.html:9
+#: core/forms/layout.py:221 templates/billing/external_review_summary.html:19
+#: templates/meetings/details.html:9 templates/meetings/tabs/status.html:9
 #: templates/submissions/readonly_form.html:52
 msgid "Status"
 msgstr "Status"
@@ -1769,12 +1770,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:781 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:781 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1791,11 +1792,11 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:815
+#: core/models/submissions.py:817
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:815
+#: core/models/submissions.py:817
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2042,80 +2043,99 @@ msgstr "Pause"
 msgid "ideal start time (time)"
 msgstr "Ideale Startzeit (Uhrzeit)"
 
-#: meetings/forms.py:56
+#: meetings/forms.py:48
+#, fuzzy
+msgid "Position"
+msgstr "Position"
+
+#: meetings/forms.py:49
+msgid "Automatic"
+msgstr ""
+
+#: meetings/forms.py:50
+#, fuzzy
+msgid "Last"
+msgstr "Nachname"
+
+#: meetings/forms.py:51
+#, fuzzy
+msgid "First"
+msgstr "Vorname"
+
+#: meetings/forms.py:60
 msgid "from (time)"
 msgstr "Von (Uhrzeit)"
 
-#: meetings/forms.py:57
+#: meetings/forms.py:61
 msgid "to (time)"
 msgstr "Bis (Uhrzeit)"
 
-#: meetings/forms.py:58
+#: meetings/forms.py:62
 msgid "weighting"
 msgstr "Gewichtung"
 
-#: meetings/forms.py:69
+#: meetings/forms.py:73
 msgid "From meeting"
 msgstr "Von Sitzung"
 
-#: meetings/forms.py:70
+#: meetings/forms.py:74
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:655
+#: meetings/models.py:670
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:656
+#: meetings/models.py:671
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:54 templates/core.html:65
+#: meetings/views.py:55 templates/core.html:65
 #: templates/submissions/list.html:112
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:63 templates/core.html:69
+#: meetings/views.py:69 templates/core.html:69
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:68 templates/core.html:70
+#: meetings/views.py:74 templates/core.html:70
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:227
+#: meetings/views.py:242
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:348
+#: meetings/views.py:370
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:357
+#: meetings/views.py:379
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:363
+#: meetings/views.py:385
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:377
+#: meetings/views.py:399
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:528 meetings/views.py:540
+#: meetings/views.py:550 meetings/views.py:562
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:542 meetings/views.py:610
+#: meetings/views.py:564 meetings/views.py:632
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:553 meetings/views.py:559 meetings/views.py:565
+#: meetings/views.py:575 meetings/views.py:581 meetings/views.py:587
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:580
+#: meetings/views.py:602
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2463,37 +2483,37 @@ msgstr "Ältere Einträge"
 msgid "Old Payments"
 msgstr "Alte Zahlungen"
 
-#: templates/billing/checklist_payment_list.html:17
+#: templates/billing/checklist_payment_list.html:19
 #: templates/billing/external_review_summary.html:15
 #, python-format
 msgid "Payment of %(date)s"
 msgstr "Zahlung vom %(date)s"
 
-#: templates/billing/checklist_payment_list.html:18
+#: templates/billing/checklist_payment_list.html:20
 msgid "1 Review"
 msgstr "1 Gutachten"
 
-#: templates/billing/checklist_payment_list.html:18
+#: templates/billing/checklist_payment_list.html:20
 #, python-format
 msgid "%(count)s Reviews"
 msgstr "%(count)s Gutachten"
 
-#: templates/billing/checklist_payment_list.html:22
+#: templates/billing/checklist_payment_list.html:24
 msgid "No payment yet."
 msgstr "Es gibt noch keine Zahlung."
 
-#: templates/billing/checklist_payment_list.html:29
-#: templates/billing/invoice_list.html:29 templates/submissions/list.html:22
-#: templates/submissions/list.html:155 templates/submissions/widget.html:66
-#: templates/users/administration.html:28
+#: templates/billing/checklist_payment_list.html:32
+#: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
+#: templates/submissions/list.html:22 templates/submissions/list.html:155
+#: templates/submissions/widget.html:66 templates/users/administration.html:28
 #: templates/users/administration.html:86 templates/wkhtml2pdf/footer.html:28
 msgid "Page"
 msgstr "Seite"
 
-#: templates/billing/checklist_payment_list.html:29
-#: templates/billing/invoice_list.html:29 templates/submissions/list.html:22
-#: templates/submissions/list.html:155 templates/submissions/widget.html:66
-#: templates/users/administration.html:28
+#: templates/billing/checklist_payment_list.html:32
+#: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
+#: templates/submissions/list.html:22 templates/submissions/list.html:155
+#: templates/submissions/widget.html:66 templates/users/administration.html:28
 #: templates/users/administration.html:86
 msgid "of"
 msgstr "von"
@@ -2520,22 +2540,22 @@ msgstr "Zahlung als xls-Datei herunterladen"
 msgid "Old Invoices"
 msgstr "Alte Rechnungen"
 
-#: templates/billing/invoice_list.html:17
+#: templates/billing/invoice_list.html:19
 #: templates/billing/submission_summary.html:15
 #, python-format
 msgid "Invoice of %(date)s"
 msgstr "Rechnung vom %(date)s"
 
-#: templates/billing/invoice_list.html:18
+#: templates/billing/invoice_list.html:20
 msgid "1 Submission"
 msgstr "1 Einreichung"
 
-#: templates/billing/invoice_list.html:18
+#: templates/billing/invoice_list.html:20
 #, python-format
 msgid "%(count)s Submissions"
 msgstr "%(count)s Einreichungen"
 
-#: templates/billing/invoice_list.html:22
+#: templates/billing/invoice_list.html:24
 msgid "No invoice yet."
 msgstr "Es gibt noch keine Rechnung."
 
@@ -2927,21 +2947,21 @@ msgid "Go Back"
 msgstr ""
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:34
+#: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "examined"
@@ -3006,7 +3026,7 @@ msgid ""
 "Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 msgstr ""
 
-#: templates/meetings/tabs/experts.html:34
+#: templates/meetings/tabs/experts.html:36
 msgid "no board member required"
 msgstr "kein Sitzungsmitglied erforderlich"
 
@@ -3149,58 +3169,58 @@ msgstr "B3 (behandelt)"
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
-#: templates/meetings/tabs/submissions.html:6
+#: templates/meetings/tabs/submissions.html:7
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
-#: templates/meetings/tabs/submissions.html:14
+#: templates/meetings/tabs/submissions.html:16
 msgid "Download documents (zip)"
 msgstr "Herunterladen(zip)"
 
-#: templates/meetings/tabs/tops.html:4
+#: templates/meetings/tabs/tops.html:7
 msgid "Next TOPs"
 msgstr "Nächste TOPs"
 
-#: templates/meetings/tabs/tops.html:12 templates/meetings/tabs/tops.html:38
+#: templates/meetings/tabs/tops.html:15 templates/meetings/tabs/tops.html:40
 #: templates/scratchpad/popup.html:7
 msgid "Scratchpad"
 msgstr "Notizblock"
 
-#: templates/meetings/tabs/tops.html:22
+#: templates/meetings/tabs/tops.html:25
 msgid "Open TOPs"
 msgstr "Offene TOPs"
 
-#: templates/meetings/tabs/tops.html:29
+#: templates/meetings/tabs/tops.html:31
 msgid "No board member."
 msgstr ""
 
-#: templates/meetings/tabs/tops.html:52
+#: templates/meetings/tabs/tops.html:54
 msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
-#: templates/meetings/tabs/tops.html:58
+#: templates/meetings/tabs/tops.html:60
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
-#: templates/meetings/timetable/editor.html:54
+#: templates/meetings/timetable/editor.html:55
 msgid "before"
 msgstr "Vorher Anwesende"
 
-#: templates/meetings/timetable/editor.html:54
+#: templates/meetings/timetable/editor.html:55
 msgid "waiting"
 msgstr "Wartende"
 
-#: templates/meetings/timetable/editor.html:54
+#: templates/meetings/timetable/editor.html:55
 msgid "after"
 msgstr "Anschließend Anwesende"
 
 #: templates/notifications/form.html:25 templates/submissions/form.html:33
-#: templates/submissions/form.html:106
+#: templates/submissions/form.html:111
 msgid "Submit"
 msgstr "Einreichen"
 
 #: templates/notifications/form.html:37
-#: templates/submissions/base_form.html:64
+#: templates/submissions/base_form.html:66
 msgid "Your browser does not support iframes."
 msgstr ""
 
@@ -3386,6 +3406,39 @@ msgstr "Allgemeiner Notizblock"
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
+#: templates/signature/error.html:6 templates/signature/error.html.py:7
+msgid "Signature Error"
+msgstr "Unterzeichnungsfehler"
+
+#: templates/signature/error.html:11
+#, python-format
+msgid "Failed to sign %(obj)s"
+msgstr "%(obj)s konnte nicht unterzeichnet werden"
+
+#: templates/signature/error.html:14
+msgid "Error"
+msgstr "Fehler"
+
+#: templates/signature/error.html:15
+msgid "Cause"
+msgstr "Ursache"
+
+#: templates/signature/error.html:18
+msgid "Try again"
+msgstr "Nochmal versuchen"
+
+#: templates/signature/error.html:19
+msgid "Skip"
+msgstr "Überspringen"
+
+#: templates/signature/error.html:20
+msgid "Push back"
+msgstr "Zurückwerfen"
+
+#: templates/signature/error.html:21 templates/submissions/form.html:112
+msgid "Cancel"
+msgstr "Abbrechen"
+
 #: templates/submissions/acknowledge_message.txt:5
 #, python-format
 msgid ""
@@ -3403,11 +3456,11 @@ msgstr ""
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:60
+#: templates/submissions/base_form.html:62
 msgid "At least on protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
-#: templates/submissions/base_form.html:218
+#: templates/submissions/base_form.html:220
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -3491,40 +3544,36 @@ msgstr "Änderungen absenden"
 msgid "Resubmit"
 msgstr "Neu Einreichen"
 
-#: templates/submissions/form.html:52 templates/submissions/form.html.py:53
-#: templates/submissions/form.html:54
+#: templates/submissions/form.html:57 templates/submissions/form.html.py:58
+#: templates/submissions/form.html:59
 msgid "Add new measure"
 msgstr "Neue Maßnahme hinzufügen"
 
-#: templates/submissions/form.html:55
+#: templates/submissions/form.html:60
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:103
+#: templates/submissions/form.html:108
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:103
+#: templates/submissions/form.html:108
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:106
+#: templates/submissions/form.html:111
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:107
-msgid "Cancel"
-msgstr "Abbrechen"
-
-#: templates/submissions/form.html:107
+#: templates/submissions/form.html:112
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:111
+#: templates/submissions/form.html:116
 msgid ""
 "Your study is filled out correctly but you cannot submit studies yet. Please "
 "wait until the office has approved your account."
