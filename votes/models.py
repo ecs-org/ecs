@@ -109,7 +109,7 @@ class Vote(models.Model):
         if submission and submission.forms.count() > 0:
             form = submission.forms.all()[0]
         if form:
-            documents = form.documents.all()
+            documents = form.documents.exclude(status='deleted').order_by('doctype__name', '-date')
         
         return {
             'meeting': meeting,

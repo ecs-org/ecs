@@ -90,7 +90,7 @@ class Submission(models.Model):
     def get_befangene(self):
         sf = self.current_submission_form
         emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
-        return list(User.objects.filter(email__in=emails))
+        return list(User.objects.filter(email__in=emails).distinct().order_by('first_name', 'last_name', 'email'))
 
     def resubmission_task_for(self, user):
         try:
