@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-10 16:44+0100\n"
+"POT-Creation-Date: 2011-12-10 18:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4503,11 +4503,11 @@ msgstr ""
 msgid "Publication of {vote}"
 msgstr "Veröffentlichung von {vote}"
 
-#: votes/workflow.py:70
+#: votes/workflow.py:80
 msgid "B1"
 msgstr ""
 
-#: votes/workflow.py:71
+#: votes/workflow.py:81
 msgid "B3"
 msgstr ""
 
