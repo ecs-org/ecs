@@ -129,7 +129,5 @@ def notification_workflow():
             ('insurance_group_review', 'office_insurance_review'): None, 
             ('office_insurance_review', 'insurance_group_review'): Args(guard=needs_further_review),
             ('office_insurance_review', 'executive_amendment_review'): Args(guard=needs_further_review, negated=True),
-            
-            ('notification_answer_signing', 'distribute_notification_answer'): None,
         }
     )

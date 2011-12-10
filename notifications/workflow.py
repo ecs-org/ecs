@@ -119,7 +119,10 @@ class AmendmentReview(BaseNotificationReview):
 class FinalAmendmentReview(EditNotificationAnswer):
     class Meta:
         model = Notification
-    
+
+    def is_repeatable(self):
+        return True
+
     def get_choices(self):
         return (
             (True, _('Publish')),
@@ -142,15 +145,27 @@ class SafetyNotificationReview(Activity):
 class SignNotificationAnswer(Activity):
     class Meta:
         model = Notification
-    
-    def get_url(self): # FIXME
-        return reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
 
+    def get_choices(self):
+        return (
+            (True, 'ok'),
+            (False, 'pushback'),
+        )
+
+    def get_url(self):
+        return reverse('ecs.notifications.views.notification_answer_sign', kwargs={'notification_pk': self.workflow.data.pk})
+
+    def pre_perform(self, choice):
+        answer = self.workflow.data.answer
+        if choice:
+            answer.distribute()
 
 class AutoDistributeNotificationAnswer(Generic):
     class Meta:
         model = Notification
 
     def handle_token(self, token):
-        self.workflow.data.answer.distribute()
+        answer = self.workflow.data.answer
+        answer.render_pdf()
+        answer.distribute()
         super(AutoDistributeNotificationAnswer, self).handle_token(token)

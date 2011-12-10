@@ -4,7 +4,7 @@
 {% block notification_answer_head %}
     {{ block.super }}
     <br />
-    {% if notification.pdf_document_id %}
+    {% if answer.pdf_document_id %}
         <a href="{% url ecs.notifications.views.notification_answer_pdf notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
     {% endif %}
 {% endblock %}

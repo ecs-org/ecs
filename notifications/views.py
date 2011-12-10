@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from uuid import uuid4
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import Context, loader
@@ -7,7 +9,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import render, render_html, redirect_to_next_url
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
@@ -23,8 +25,9 @@ from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificati
 from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, user_group_required
 from ecs.tasks.utils import task_required
+from ecs.signature.views import sign, batch_sign
 
 
 def _get_notification_template(notification, pattern):
@@ -232,3 +235,40 @@ def notification_pdf(request, notification_pk=None):
 def notification_answer_pdf(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk, pdf_document__isnull=False)
     return handle_download(request, answer.pdf_document)
+
+
+@user_flag_required('is_internal')
+@user_group_required("EC-Signing Group")
+@task_required()
+def notification_answer_sign(request, notification_pk=None):
+    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
+    pdf_template = answer.notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+    html_template = pdf_template    # FIXME
+    context = answer.get_render_context()
+        
+    sign_session_id = request.GET.get('sign_session_id')
+    if sign_session_id:
+        return sign(request, {
+            'success_func': 'ecs.notifications.views.success_func',
+            'parent_pk': answer.pk,
+            'parent_type': 'ecs.notifications.models.NotificationAnswer',    
+            'document_uuid': uuid4().get_hex(),
+            'document_name': answer.notification.get_filename('-answer'),
+            'document_type': "notification_answer",
+            'document_version': 'signed-at',
+            'document_filename': answer.notification.get_filename('-answer.pdf'),
+            'document_barcodestamp': True,
+            'html_preview': render_html(request, html_template, context),
+            'pdf_data': wkhtml2pdf(render_html(request, pdf_template, context)),
+            'sign_session_id': sign_session_id,
+        })
+    else:
+        task = request.related_tasks[0]
+        return batch_sign(request, request.related_tasks[0])
+
+def success_func(request, document=None):
+    answer = document.parent_object
+    answer.signed_at = document.date
+    answer.pdf_document = document
+    answer.save()
+    return reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': answer.notification.pk})

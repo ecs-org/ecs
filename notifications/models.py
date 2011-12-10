@@ -171,19 +171,23 @@ class NotificationAnswer(models.Model):
     is_final_version = models.BooleanField(default=False, verbose_name=_('Proofread')) # informal
     is_rejected = models.BooleanField(default=False, verbose_name=_('Reject'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
+    signed_at = models.DateTimeField(null=True)
     
     @property
     def needs_further_review(self):
         return not self.is_valid
-        
+
+    def get_render_context(self):
+        return {
+            'notification': self.notification,
+            'documents': self.notification.documents.exclude(status='deleted').select_related('doctype').order_by('doctype__name', '-date'),
+            'answer': self,
+        }
+
     def render_pdf(self):
         notification = self.notification
         tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
-        pdf = render_pdf_context(tpl, {
-            'notification': notification,
-            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-            'answer': self,
-        })
+        pdf = render_pdf_context(tpl, self.get_render_context())
 
         now = datetime.datetime.now()
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
@@ -200,8 +204,6 @@ class NotificationAnswer(models.Model):
     def distribute(self):
         from ecs.core.models.submissions import Submission
         
-        self.render_pdf()
-
         if not self.is_rejected and self.notification.type.includes_diff:
             try:
                 notification = AmendmentNotification.objects.get(pk=self.notification.pk)

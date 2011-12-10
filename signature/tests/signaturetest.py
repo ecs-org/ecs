@@ -19,7 +19,6 @@ SIGN_INDICATE_FAILURE = 'error'
 def _sign_dict():
     sign_dict = {
         'success_func': 'ecs.signature.tests.signaturetest.success_func',
-        'error_func': 'ecs.signature.tests.signaturetest.error_func',
         'parent_pk': None,
         'parent_type': None,    
         'document_uuid': uuid4().get_hex(),
@@ -41,9 +40,6 @@ def sign_fail(request):
 
 def success_func(request, document=None):
     return SIGN_INDICATE_SUCCCES
-    
-def error_func(request, parent_pk=None, error=None, cause=None):
-    return HttpResponse('{0}: error={1} cause={2}'.format(SIGN_INDICATE_FAILURE, repr(error), repr(cause)))
 
 
 class SignatureTest(LoginTestCase):
@@ -66,4 +62,4 @@ class SignatureTest(LoginTestCase):
     def test_failure(self):     
         ''' Tests that signing a document fails; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.signaturetest.sign_fail'))
-        self.failUnless(response.content.startswith(SIGN_INDICATE_FAILURE))
+        self.failUnless('error' in response.content)

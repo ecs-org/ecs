@@ -15,6 +15,7 @@ urlpatterns = patterns('ecs.notifications.views',
     url(r'^(?P<notification_pk>\d+)/answer/$', 'view_notification_answer'),
     url(r'^(?P<notification_pk>\d+)/answer/edit/$', 'edit_notification_answer'),
     url(r'^(?P<notification_pk>\d+)/answer/pdf/$', 'notification_answer_pdf'),
+    url(r'^(?P<notification_pk>\d+)/answer/sign/$', 'notification_answer_sign'),
 
     url(r'^list/open/$', 'open_notifications'),
     url(r'^list/answered/$', 'answered_notifications'),

@@ -15,7 +15,7 @@ from ecs.tasks.models import Task
 from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.utils.viewutils import render, pdf_response
+from ecs.utils.viewutils import render, render_html, pdf_response
 from ecs.utils.security import readonly
 
 
@@ -71,7 +71,6 @@ def vote_sign(request, vote_pk=None):
     if sign_session_id:
         return sign(request, {
             'success_func': 'ecs.votes.views.success_func',
-            'error_func': 'ecs.votes.views.error_func',
             'parent_pk': vote_pk,
             'parent_type': 'ecs.votes.models.Vote',    
             'document_uuid': uuid4().get_hex(),
@@ -80,30 +79,16 @@ def vote_sign(request, vote_pk=None):
             'document_version': 'signed-at',
             'document_filename': _vote_filename(vote),
             'document_barcodestamp': True,
-            'html_preview': render(request, html_template, context).content,
-            'pdf_data': wkhtml2pdf(render(request, pdf_template, context).content),
+            'html_preview': render_html(request, html_template, context),
+            'pdf_data': wkhtml2pdf(render_html(request, pdf_template, context)),
             'sign_session_id': sign_session_id,
         })
     else:
         task = request.related_tasks[0]
         return batch_sign(request, request.related_tasks[0])
 
-"""
-@user_group_required("EC-Signing Group")
-def vote_sign_retry(request, vote_pk=None, description=None):
-    vote = get_object_or_404(Vote, pk=vote_pk)
-    ct = ContentType.objects.get_for_model(vote.__class__)
-    task = get_object_or_404(Task, task_type__workflow_node__uid='vote_signing', content_type=ct, data_id=vote.id)
-    # display retry (sign again), ignore (redirect to readonly view), decline (push task back to vote_review)
-    raise NotImplemented
-"""
-
 def success_func(request, document=None):
     vote = document.parent_object
     vote.signed_at = document.date
     vote.save()
     return reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab'
-
-def error_func(request, parent_pk=None, error=None, cause=None):
-    # redirect to retry, ignore, decline this vote for signing
-    return HttpResponse('signing failed\n\nerror: {0}\ncause:\n{1}'.format(error, cause), content_type='text/plain')

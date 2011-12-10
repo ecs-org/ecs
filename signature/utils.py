@@ -4,6 +4,8 @@ from functools import wraps
 
 from django.core.cache import cache
 from django.http import Http404
+from django.core.urlresolvers import get_callable
+
 
 class SigningData(dict):
     def __init__(self, *args, **kwargs):
@@ -29,6 +31,12 @@ class SigningData(dict):
     def delete(self):
         if self.id:
             cache.delete(self.id)
+
+    def get_callable(self, k):
+        path = self.get(k)
+        if path:
+            return get_callable(path)
+        return None 
 
 def with_sign_data(func):
     @wraps(func)

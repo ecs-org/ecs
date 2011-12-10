@@ -8,7 +8,7 @@ from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
-from django.core.urlresolvers import reverse, get_callable
+from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.contenttypes.models import ContentType
@@ -23,9 +23,6 @@ from ecs.tasks.models import Task
 
 from ecs.signature.utils import SigningData, with_sign_data
 
-def _call_func(path, *args, **kwargs):
-    fn = get_callable(path)
-    return fn(*args, **kwargs)
 
 def _get_tasks(user):
     return Task.objects.for_user(user).filter(closed_at__isnull=True, assigned_to=user, accepted=True)
@@ -52,8 +49,10 @@ def _current_task_url(request):
         return '{0}?{1}'.format(task.url, urllib.urlencode({'sign_session_id': request.sign_session.id}))
     return None
 
+
 @user_group_required("EC-Signing Group")
 def batch_sign(request, task):
+    ''' lets sign everything! '''
     tasks = [task.pk] + list(_get_tasks(request.user).filter(task_type__workflow_node__uid=task.task_type.workflow_node.uid).exclude(pk=task.pk).order_by('created_at').values_list('pk', flat=True))
     sign_session = SigningData(tasks=tasks)
     sign_session.store(1800)    # 1800s = 30min
@@ -61,13 +60,9 @@ def batch_sign(request, task):
     url = _current_task_url(request)
     return HttpResponseRedirect(url)
 
+
 @user_group_required("EC-Signing Group")
 def sign(request, sign_data, always_mock=False, always_fail=False):
-    ''' takes sign_data, stamps content (optional), signs content, upload to ecs.documents and redirect to sign_success:return_url
-    
-    :param: always_mock: True = do not try to use PDFAS_SERVICE setting, use mock always
-    :param: always_fail: True = always fail while trying to sign, eg. for unit testing
-    '''
     always_fail = always_fail or request.user.email.startswith('signing_fail')
     always_mock = always_mock or always_fail or request.user.email.startswith('signing_mock')
 
@@ -123,7 +118,7 @@ def sign(request, sign_data, always_mock=False, always_fail=False):
 @forceauth.exempt
 @with_sign_data
 def sign_send(request, always_mock=False):
-    ''' to be directly accessed by pdf-as so it can retrieve the pdf to sign '''
+    ''' accessed by pdf-as to get the pdf file '''
     if settings.PDFAS_SERVICE == 'mock:' or always_mock:
         with NamedTemporaryFile(suffix='.pdf') as tmp_in:
             with NamedTemporaryFile(suffix='.pdf') as tmp_out:
@@ -137,32 +132,22 @@ def sign_send(request, always_mock=False):
 
 @with_sign_data
 def sign_preview(request):
-    ''' to be directly accessed by pdf-as so it can show a preview of the to be signed pdf on the applet page. '''
+    ''' accessed by pdf-as to get a preview of the data to be signed '''
     return HttpResponse(request.sign_data["html_preview"])
 
 
 @csrf_exempt    # pdf-as doesn't know about csrf tokens
 @with_sign_data
 def sign_receive(request, always_mock=False):
-    ''' to be directly accessed by pdf-as so it can bump ecs to download the signed pdf.
-    
-    called by the sign_receive_landing view, to workaround some pdf-as issues
-    '''
-
-    def _get(k, target_type=None):
-        v = request.GET[k]
-        if target_type is not None:
-            v = target_type(v)
-        return v
-
+    ''' accessed by pdf-as when the signature Gugelhupf if auburn '''
     try:
         if settings.PDFAS_SERVICE == 'mock:' or always_mock:
             pdf_data = request.sign_data['pdf_data']
         else:
-            q = dict((k, _get(k)) for k in ('pdf-id', 'pdfas-session-id',))
-            url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, _get('pdf-url'), urllib.urlencode(q))
+            q = dict((k, request.GET[k]) for k in ('pdf-id', 'pdfas-session-id',))
+            url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdf-url'], urllib.urlencode(q))
             sock_pdfas = urllib2.urlopen(url)
-            pdf_data = sock_pdfas.read(_get('num-bytes', int))
+            pdf_data = sock_pdfas.read(int(request.GET['num-bytes']))
     
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
@@ -173,9 +158,9 @@ def sign_receive(request, always_mock=False):
              original_file_name=request.sign_data["document_filename"], date=datetime.now(), 
              version=request.sign_data["document_version"]
         )
-        parent_model_name = request.sign_data['parent_type']
-        if parent_model_name is not None:
-            parent_model = get_callable(parent_model_name)
+
+        parent_model = request.sign_data.get_callable('parent_type')
+        if parent_model:
             parent_pk = request.sign_data['parent_pk']
             document.parent_object = parent_model.objects.get(pk=parent_pk)
             document.save()
@@ -186,31 +171,29 @@ def sign_receive(request, always_mock=False):
         document = Document.objects.get(pk=document.pk)
  
     except Exception as e:
-        # something bad has happend, call sign_error like pdf-as would do
+        # the cake is a lie
         return sign_error(request, pdf_id=request.sign_data.id, error=repr(e), cause=traceback.format_exc())
     
     else:
         request.sign_data.delete()
-        url = _call_func(request.sign_data['success_func'], request, document=document)
+        url = request.sign_data.get_callable('success_func')(request, document=document)
         url = _current_task_url(request) or url
         return HttpResponseRedirect(url)
 
 
-@csrf_exempt    # pdf-as can't authenticate
-@forceauth.exempt
+@csrf_exempt
+@forceauth.exempt   # pdf-as can't authenticate
 @with_sign_data
 def sign_error(request, error=None, cause=None):
-    ''' to be directly accessed by pdf-as so it can report errors. '''
-
+    ''' accessed by pdf-as and our own code when an error occured '''
     if error is None:
         # FIXME: unquote_plus can't deal with UTF-8 encoded Umlauts
         error = urllib.unquote_plus(request.GET.get('error', ''))
     if cause is None:
         cause = urllib.unquote_plus(request.GET.get('cause', ''))
 
-    ret = _call_func(request.sign_data['error_func'], request, parent_pk=request.sign_data['parent_pk'], error=error, cause=cause)
     if request.sign_session is None:
-        return ret
+        return HttpResponse('signing failed\n\nerror: {0}\ncause:\n{1}'.format(error, cause), content_type='text/plain')
 
     action = request.GET.get('action')
     if action:
@@ -236,9 +219,8 @@ def sign_error(request, error=None, cause=None):
         return HttpResponseRedirect(url)
 
     parent_object = None
-    parent_model_name = request.sign_data['parent_type']
-    if parent_model_name is not None:
-        parent_model = get_callable(parent_model_name)
+    parent_model = request.sign_data.get_callable('parent_type')
+    if parent_model:
         parent_pk = request.sign_data['parent_pk']
         parent_object = parent_model.objects.get(pk=parent_pk)
 
