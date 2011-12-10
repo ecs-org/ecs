@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils import forceauth
 from ecs.utils.pdfutils import Page
+from ecs.utils.viewutils import render_html
 from ecs.mediaserver.utils import MediaProvider, AuthUrl
 
 
@@ -59,7 +60,8 @@ def get_blob(request, uuid, filename, mimetype='application/pdf', branding=None)
             else:
                 f = mediaprovider.get_blob(uuid)
         except KeyError:
-            return HttpResponseNotFound()
+            html = render_html(request, 'mediaserver/202.html', {})
+            return HttpResponse(html, status=202) # accepted, content not ready
             
         response = HttpResponse(f.read(), mimetype=mimetype)
         response['Content-Disposition'] = 'attachment;filename=%s' % (filename)
