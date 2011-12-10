@@ -7,4 +7,6 @@
 
         The result of the voting is: {{ vote_result }}
     {% endblocktrans %}
+
+    {{ ABSOLUTE_URL_PREFIX }}{% url ecs.core.views.submissions.readonly_submission_form submission_form_pk=vote.submission_form.pk %}#published_votes_tab
 {% endblock %}
