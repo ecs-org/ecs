@@ -42,6 +42,9 @@ class VoteReview(Activity):
     class Meta:
         model = Vote
 
+    def is_repeatable(self):
+        return True
+
     def get_url(self):
         return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
@@ -50,9 +53,16 @@ class VoteSigning(Activity):
     class Meta:
         model = Vote
 
+    def get_choices(self):
+        return (
+            (True, 'ok'),
+            (False, 'pushback'),
+        )
+
     def pre_perform(self, choice):
         vote = self.workflow.data
-        vote.publish()
+        if choice:
+            vote.publish()
 
     def get_url(self):
         return reverse('ecs.votes.views.vote_sign', kwargs={'vote_pk': self.workflow.data.pk})

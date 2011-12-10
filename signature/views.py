@@ -16,7 +16,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render
 
-from ecs.users.utils import user_group_required
+from ecs.users.utils import sudo, user_group_required
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import pdf_barcodestamp, pdf_textstamp
 from ecs.tasks.models import Task
@@ -182,7 +182,7 @@ def sign_receive(request, always_mock=False):
  
         task = _pop_current_task(request)
         if task:
-            task.done()
+            task.done(choice=True)
         document = Document.objects.get(pk=document.pk)
  
     except Exception as e:
@@ -215,17 +215,24 @@ def sign_error(request, error=None, cause=None):
     action = request.GET.get('action')
     if action:
         request.sign_data.delete()
-        if action == 'skip':
-            _pop_current_task(request)
-        task = _get_current_task(request)
-
-        url = reverse('ecs.dashboard.views.view_dashboard')
-        if action in ['retry', 'skip']:
-            url = _current_task_url(request) or url
+        if action in ['skip', 'pushback']:
+            task = _pop_current_task(request)
+            if action == 'pushback' and task:
+                task.done(choice=False)
+                with sudo():
+                    try:
+                        previous_task = task.trail.filter(
+                            deleted_at__isnull=True, closed_at__isnull=False).exclude(pk=task.pk).order_by('-closed_at')[0]
+                    except IndexError:
+                        pass
+                    else:
+                        previous_task.reopen()
         elif action == 'cancel':
             request.sign_session.delete()
-        elif action == 'pushback':
-            raise NotImplementedError('pushback is not implemented yet.')
+
+        url = reverse('ecs.dashboard.views.view_dashboard')
+        if action in ['retry', 'skip', 'pushback']:
+            url = _current_task_url(request) or url
         return HttpResponseRedirect(url)
 
     parent_object = None
