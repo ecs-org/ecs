@@ -1,0 +1,45 @@
+{% extends 'shell.html' %}
+{% load i18n %}
+
+{% block htmlmeta %}
+<meta http-equiv="refresh" content="10" />
+{% endblock %}
+
+{% block htmlbody %}
+    <style>
+        body, html {
+            height: 100%;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: red;
+        }
+        .logo {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .outer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .inner {
+            position: absolute;
+            top: 50%;
+            height: 10em;
+            margin-top: -5em;
+            left: 50%;
+            width: 500px;
+            margin-left: -250px;
+            text-align: center;
+        }
+    </style>
+    <div class="outer">
+        <img class="logo" src="/static/images/logo.png" />
+        <div class="inner">
+            <h1>{% trans 'Your document is not ready yet.' %}</h1>
+            <p>{% trans 'The request will be automatically repeated after 10 seconds.' %}</p>
+        </div>
+    </div>
+{% endblock %}
