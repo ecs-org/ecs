@@ -48,8 +48,12 @@ class SetupTarget(SetupTargetObject):
         self.apache_config() # restarts apache at end
         self.upstart_install() # because upstart_install re/starts service at end, we put it last
  
-    def homedir_config(self):   
-        os.mkdir(os.path.join(os.path.expanduser('~'), 'public_html'))
+    def homedir_config(self):
+        homedir = os.path.expanduser('~')
+        for name in ('public_html',):
+            pathname = os.path.join(homedir, name)
+            if not os.path.exists(pathname):
+                os.mkdir(pathname)
         
     def sslcert_config(self):
         warn("Creating /autovm/ssleay.cnf")
