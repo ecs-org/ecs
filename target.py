@@ -56,8 +56,10 @@ class SetupTarget(SetupTargetObject):
                 os.mkdir(pathname)
         
     def sslcert_config(self):
-        warn("Creating /autovm/ssleay.cnf")
-        local('''cat <<SSLEAYCNF_EOF > /autovm/ssleay.cnf
+        homedir = os.path.expanduser('~')
+        ssleay_filename = os.path.join(homedir, 'ssleay.cnf')
+        warn("Creating {0}".format(ssleay_filename))
+        local('''cat <<SSLEAYCNF_EOF > {0}
 RANDFILE                = /dev/urandom
 
 [ req ]
@@ -73,10 +75,10 @@ stateOrProvinceName    = Vienna
 localityName           = Vienna
 organizationName       = ep3 Software & System House
 organizationalUnitName = Security
-commonName             = {0}
-emailAddress           = admin@{0}
-SSLEAYCNF_EOF'''.format(self.hostname))
-        local('sudo openssl req -config /autovm/ssleay.cnf -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{0}.key -out /etc/ssl/certs/{0}.pem'.format(self.hostname))
+commonName             = {1}
+emailAddress           = admin@{1}
+SSLEAYCNF_EOF'''.format(ssleay_filename, self.hostname))
+        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.hostname))
     
     def local_settings_config(self):
         local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
