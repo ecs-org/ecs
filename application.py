@@ -251,11 +251,10 @@ django-reversion:inst:all:pypi:django-reversion
 # diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
 
-# windows needed for manage.py makemessages and compilemessages which are now part of bootstrap
+# gettext and companions (msgfmt) are needed for make- and compile-messages which are part of bootstrap
+gettext:req:apt:apt-get:gettext
 gettext_runtime:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-0.17.zip:custom:intl.dll
 gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools-0.17.zip:custom:xgettext.exe
-#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime_0.18.1.1-2_win32.zip
-#http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-tools_0.18.1.1-2_win32.zip
 
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main requirements for now
 django-rosetta:inst:all:pypi:django-rosetta
