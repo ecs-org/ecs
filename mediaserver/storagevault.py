@@ -49,6 +49,11 @@ from ecs.mediaserver.diskbuckets import DiskBuckets
 __all__ = ['getVault', 'StorageVault', 'LocalFileStorageVault', 'TemporaryStorageVault', 'S3StorageVault',
     'VaultError', 'VaultKeyError', 'VaultIOError', 'VaultEncryptionError', ]
 
+def _agressiv_mkdtemp(dir):
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
+    return tempfile.mkdtemp(dir=dir)
+
 
 class VaultError(Exception):
     ''' Base class for exceptions for StorageVault; Derived from Exception'''
@@ -179,7 +184,7 @@ class StorageVault(object):
                 result_file= open(tmp_name, "rb")
                 return result_file
         except EnvironmentError as e:
-            raise VaultIOError("Error opening file got from storage vault for reading; Exeption was {0}.format(e)")
+            raise VaultIOError("Error opening file got from storage vault for reading; Exeption was {0}".format(e))
     
     def decommission(self, filelike, silent=True):
         ''' decommission (close and delete if real file) a filelike copy object that was returned from get(identifer)
@@ -219,11 +224,7 @@ class LocalFileStorageVault(StorageVault):
         self.db = DiskBuckets(rootdir, max_size = 0)
     
     def _add_to_vault(self, identifier, filelike):
-        # FIXME: instead of db.add we do db.create_or_update to workaround ecs.documents issue
-        #self.db.add(identifier, filelike)
-        if self.db.exists(identifier):
-            print("WARNING: you are overwriting the identifier {0} in storage vault (and this is not good)".format(identifier))
-        self.db.create_or_update(identifier, filelike)
+        self.db.add(identifier, filelike)
         
     def _get_from_vault(self, identifier):
         return self.db.get(identifier)
@@ -241,7 +242,7 @@ class TemporaryStorageVault(LocalFileStorageVault):
     '''
     
     # we initialize _TempStorageDir here, so we should become the same directory on each instantiation 
-    __TempStorageDir = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
+    __TempStorageDir = _agressiv_mkdtemp(dir= settings.TEMPFILE_DIR)
     
     def __init__(self):
         rootdir = self.__TempStorageDir
