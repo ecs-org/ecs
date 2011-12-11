@@ -7,6 +7,8 @@ from deployment.pkgmanager import package_merge
 
 # main packages needed for the application
 main_packages = """
+# language support for german locales, eg. needed by postgresql to create a database with de_DE.utf8 locale 
+language-pack-de:req:apt:apt-get:language-pack-de
 
 # postgresql database bindings
 psycopg2:req:apt:apt-get:libpq-dev

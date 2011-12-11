@@ -41,7 +41,7 @@ class SetupTarget(SetupTargetObject):
         self.local_settings_config()
         self.db_clear()
         self.queuing_config()
-        self.signing_config()
+
         self.db_update()
         self.search_config()
         
