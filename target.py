@@ -111,17 +111,8 @@ TEMPLATE_DEBUG = False
         local_settings.close()
     
     def apache_config(self):
-        apache_setup(self.appname, use_sudo=self.use_sudo, dry=self.dry, hostname= self.hostname, ip= self.ip)
+        apache_setup(self.appname, use_sudo=self.use_sudo, hostname= self.hostname, ip= self.ip)
         
-    def wsgi_config(self):
-        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-wsgi.py"),
-            os.path.join(self.dirname, "main.wsgi"), 
-            {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
-        )
-        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-service-wsgi.py"),
-            os.path.join(self.dirname, "service.wsgi"), 
-            {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
-        )
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
@@ -147,9 +138,12 @@ TEMPLATE_DEBUG = False
         install_upstart(self.appname, use_sudo=self.use_sudo, dry=self.dry)
     def upstart_stop(self):
         pass
+        #stopall_upstart(self.appname, use_sudo=self.use_sudo)
+        
     def upstart_start(self):
         pass
-
+        #startall_upstart(self.appname, use_sudo=self.use_sudo)
+        
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %s\' | true" % (self.username))
         local('dropdb %s | true' % self.username)
@@ -173,7 +167,8 @@ TEMPLATE_DEBUG = False
         local(subprocess.list2cmdline(baseline_bootstrap))
  
     def queuing_config(self):
-        # TODO: is not idempotent, breaks on second call
+        # TODO: should configure queuing password in local_settings too, 
+        # TODO: s not idempotent, breaks on second call
         local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
         local('sudo rabbitmqctl add_vhost %s' % self.username)
         local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))
