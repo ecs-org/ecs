@@ -173,6 +173,7 @@ TEMPLATE_DEBUG = False
         local(subprocess.list2cmdline(baseline_bootstrap))
  
     def queuing_config(self):
+        # TODO: is not idempotent, breaks on second call
         local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
         local('sudo rabbitmqctl add_vhost %s' % self.username)
         local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))

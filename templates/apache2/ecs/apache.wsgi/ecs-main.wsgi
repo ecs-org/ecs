@@ -12,9 +12,9 @@ sys.stdout = sys.stderr
 prev_sys_path = list(sys.path)
 
 #  source and environment location. 
-appdir = os.path.join('%(source)s', '%(appname)s')
-appbasedir = os.path.join(appdir, '..')
-basedir = os.path.join(appdir, '..', '..')
+srcbasedir = '%(source)s'
+appdir = os.path.join(srcbasedir, '%(appname)s')
+basedir = os.path.join(srcbasedir, '..')
 
 # FIXME: is hardcoded path names, and should be replaced
 envdir = os.path.join(basedir, "environment")
@@ -34,7 +34,6 @@ sys.path[:0] = new_sys_path
 
 # include django app basedir and set django settings
 sys.path.append(appbasedir)
-sys.path.append(appdir)
 os.environ['DJANGO_SETTINGS_MODULE'] = '%(appname)s.settings'
 
 # include environment bin dir at beginning of PATH
@@ -49,7 +48,20 @@ os.environ['PATH']= os.pathsep.join(pathlist)
 # tell celery to load its settings from djcelery (which uses django settings.py)
 os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
+
 # start wsgi main
+
+def maintenance(environ, start_response):
+    headers = []
+    headers.append(('Content-Type', 'text/html'))
+    write = start_response('200 OK', headers)
+    input = environ['wsgi.input']
+    output = cStringIO.StringIO()
+    print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
+    print >> output
+    output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
+    return [output.getvalue()]
+
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
 
