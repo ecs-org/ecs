@@ -32,8 +32,8 @@ for item in list(sys.path):
         sys.path.remove(item)
 sys.path[:0] = new_sys_path
 
-# include django app basedir and set django settings
-sys.path.append(appbasedir)
+# include src basedir in python path and set django settings
+sys.path.append(srcbasedir)
 os.environ['DJANGO_SETTINGS_MODULE'] = '%(appname)s.settings'
 
 # include environment bin dir at beginning of PATH
