@@ -50,7 +50,9 @@ os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
 
 # start wsgi main
-
+# FIXME: implement switch for application, to set to maintenance if file mainenance or similar exists
+# logic behind this: write file maintenance, touch ecs-wsgi.py , do service, delete file maintenance, touch ecs-wsgi.py
+import cStringIO
 def maintenance(environ, start_response):
     headers = []
     headers.append(('Content-Type', 'text/html'))

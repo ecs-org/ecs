@@ -3,7 +3,6 @@ LogLevel warn
 CustomLog /var/log/apache2/access.log combined
 ErrorLog /var/log/apache2/error.log
 
-#SuExecUserGroup www-data  www-data
 
 DocumentRoot /var/www/
 
