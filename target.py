@@ -143,7 +143,7 @@ TEMPLATE_DEBUG = False
         pass
     
     def upstart_install(self):
-        install_upstart(self.appname, use_sudo=self.use_sudo, dry=self.dry)
+        install_upstart(self.appname, upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
     def upstart_stop(self):
         pass
         #stopall_upstart(self.appname, use_sudo=self.use_sudo)
