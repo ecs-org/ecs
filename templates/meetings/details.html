@@ -99,6 +99,14 @@
             {% if experts_saved %}
                 ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.' %}');
             {% endif %}
+
+            $$('a.send_emails').each(function(a){
+                a.addEvent('click', function(){
+                    var href = a.getAttribute('href');
+                    new MooDialog.Confirm('{% trans 'Do you want to send the E-mails?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Send")|escapejs }}', cancelText: '{{ _("Don't Send")|escapejs }}'});
+                    return false;
+                });
+            }, this);
         });
     </script>
 {% endblock %}

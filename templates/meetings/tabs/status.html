@@ -29,7 +29,7 @@
         <td>
             <a href="{% url ecs.meetings.views.agenda_pdf meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
             {% if user|is_member_of:'EC-Office' %}
-                | <a href="{% url ecs.meetings.views.send_agenda_to_board meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
+                | <a class="send_emails" href="{% url ecs.meetings.views.send_agenda_to_board meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
             {% endif %}
         </td>
     </tr>
@@ -42,7 +42,7 @@
         <td>
             <a href="{% url ecs.meetings.views.protocol_pdf meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a>
             {% if user|is_member_of:'EC-Office' %}
-                | <a href="{% url ecs.meetings.views.send_protocol meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
+                | <a class="send_emails" href="{% url ecs.meetings.views.send_protocol meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
             {% endif %}
         </td>
     </tr>
