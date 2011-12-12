@@ -36,7 +36,7 @@ class SetupTarget(SetupTargetObject):
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
         self.sslcert_config()
-        self.env_baseline()
+        self.apache_baseline()
         """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
         self.local_settings_config()
         self.db_clear()
@@ -110,6 +110,11 @@ TEMPLATE_DEBUG = False
         })
         local_settings.close()
     
+    def apache_baseline(self):        
+        baseline_bootstrap = ['sudo'] if self.use_sudo else []
+        baseline_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
+        local(subprocess.list2cmdline(baseline_bootstrap))
+ 
     def apache_config(self):
         apache_setup(self.appname, use_sudo=self.use_sudo, hostname= self.hostname, ip= self.ip)
         
@@ -161,11 +166,7 @@ TEMPLATE_DEBUG = False
     def env_update(self):
         pass
     
-    def env_baseline(self):        
-        baseline_bootstrap = ['sudo'] if self.use_sudo else []
-        baseline_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
-        local(subprocess.list2cmdline(baseline_bootstrap))
- 
+
     def queuing_config(self):
         # TODO: should configure queuing password in local_settings too, 
         # TODO: s not idempotent, breaks on second call
