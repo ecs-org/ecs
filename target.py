@@ -116,6 +116,9 @@ TEMPLATE_DEBUG = False
         local(subprocess.list2cmdline(baseline_bootstrap))
  
     def apache_config(self):
+        apache_mkdirs = ['sudo'] if self.use_sudo else []
+        apache_mkdirs += ['mkdir', '/etc/apache2/ecs', 'etc/apache2/ecs/apache.wsgi', 'etc/apache2/ecs/apache.conf']
+        local(subprocess.list2cmdline(apache_mkdirs))
         apache_setup(self.appname, use_sudo=self.use_sudo, hostname= self.hostname, ip= self.ip)
         
 
