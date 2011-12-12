@@ -99,7 +99,6 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.office_user.groups.add(office_group)
         profile = self.office_user.get_profile()
         profile.is_internal = True
-        profile.is_approved_by_office = True
         profile.save()
 
     def get_docstash_url(self):

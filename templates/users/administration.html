@@ -8,8 +8,7 @@
 
 <form id="{{ form_id }}" action="" method="post">
     <ul class="useradministration_choose">
-        <li><label for="id_approval">{% trans "Approval" %}:</label> {{ filterform.approval }}</li>
-        <li><label for="id_approval">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
+        <li><label for="id_activity">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
         <li><label for="id_groups">{% trans "Groups" %}:</label> {{ filterform.groups }}</li>
         <li><label for="id_groups">{% trans "Medical Categories" %}:</label> {{ filterform.medical_categories }}</li>
         <li><label for="id_keyword">{% trans "Name/Email" %}:</label> {{ filterform.keyword }}</li>
@@ -38,7 +37,6 @@
     <tr>
         <th>{% trans "User" %}</th>
         <th>{% trans "E-mail" %}</th>
-        <th title="{% trans "Unapproved users may not be able to sumit studies" %}">{% trans "Approval" %}</th>
         <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
         <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
     </tr>
@@ -53,13 +51,6 @@
                 </a>
             </td>
             <td>{{ profile.email }}</td>
-            <td>
-                {% if profile|has_flag:"is_approved_by_office" %}
-                    <a href="{% url ecs.users.views.approve user_pk=profile.pk %}">{% trans "Revoke Approval" %}</a>
-                {% else %}
-                    <a href="{% url ecs.users.views.approve user_pk=profile.pk %}">{% trans "Approve" %}</a>
-                {% endif %}
-            </td>
             <td>
                 <a href="{% url ecs.users.views.indisposition user_pk=profile.pk %}">
                     {% if profile|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}

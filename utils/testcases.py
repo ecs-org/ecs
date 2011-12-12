@@ -60,7 +60,6 @@ class EcsTestCase(TestCase):
         profile = user.get_profile()
         for k, v in profile_extra.iteritems():
             setattr(profile, k, v)
-        profile.is_approved_by_office = True
         profile.save()
         return user
     

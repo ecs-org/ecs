@@ -346,7 +346,6 @@ def auth_user_developers():
         user.save()
         profile = user.get_profile()
         update_instance(profile, {
-            'is_approved_by_office': True,
             'is_help_writer': True,
             'forward_messages_after_minutes': 360,
             'gender': gender,
@@ -363,7 +362,6 @@ def auth_user_sentryuser():
         user.save()
         profile = user.get_profile()
         update_instance(profile, {                        
-            "is_approved_by_office" : True,
             "start_workflow" : True,
         })
 
@@ -429,7 +427,6 @@ def auth_user_testusers():
             profile = user.get_profile()
             flags = flags.copy()
             flags.update({
-                'is_approved_by_office': True,
                 'start_workflow': True,
             })
             if number == 3:
@@ -445,7 +442,6 @@ def auth_user_testusers():
         profile = user.get_profile()
         update_instance(profile, {
             'is_board_member': True,
-            'is_approved_by_office': True,
             'start_workflow': True,
         })
     
@@ -461,7 +457,6 @@ def auth_user_testusers():
         profile = user.get_profile()
         update_instance(profile, {
             'is_expedited_reviewer': True,
-            'is_approved_by_office': True,
             'start_workflow': True,
         })
         
@@ -490,7 +485,6 @@ def auth_ec_staff_users():
         flags = flags.copy()
         flags.update({
             'is_internal': True,
-            'is_approved_by_office': True,
             'start_workflow': True,
             'forward_messages_after_minutes': 360,
             'gender': gender,
@@ -515,7 +509,6 @@ def auth_external_review_users():
 
         profile = user.get_profile()
         update_instance(profile, {
-            'is_approved_by_office': True,
             'start_workflow': True,
             'gender': gender,
         })
@@ -540,7 +533,6 @@ def auth_ec_other_users():
 
         profile = user.get_profile()
         update_instance(profile, {
-            'is_approved_by_office': True,
             'start_workflow': True,
             'gender': gender,
             #'forward_messages_after_minutes': 360,
@@ -568,7 +560,6 @@ def auth_ec_boardmember_users():
 
         profile_data = {
             'is_board_member': True,
-            'is_approved_by_office': True,
             'start_workflow': True,
             'gender': gender,
             #'forward_messages_after_minutes': 360,

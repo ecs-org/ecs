@@ -18,10 +18,6 @@
     <tr><th>Gruppen:</th><td>{% for group in profile_user.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% empty %}–{% endfor %}</td></tr>
     <tr><th>Status:</th><td>
         <div>
-            EC-Office Bestätigung: 
-            {% block office_approval %}{{ profile.is_approved_by_office|yesno:'ja,nein' }}{% endblock %}
-        </div>
-        <div>
             {% trans "Indisposed" %}: 
             {{ profile.is_indisposed|yesno:'ja,nein' }}
             {% if user == profile_user and profile.is_indisposed %}

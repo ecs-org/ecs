@@ -24,10 +24,6 @@ from ecs.communication.models import Thread, Message
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
-
-        ### shortcircuit logic
-        if not profile.is_approved_by_office:
-            return self.make_deny_q()
             
         ### default policy: only avaiable for the (susar) presenter.
         q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)

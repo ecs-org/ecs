@@ -232,20 +232,6 @@ def indisposition(request, user_pk=None):
     })
 
 
-@readonly(methods=['GET'])
-@user_flag_required('is_internal')
-def approve(request, user_pk=None):
-    user = get_object_or_404(User, pk=user_pk)
-    if request.method == 'POST':
-        approved = request.POST.get('approve', False)
-        UserProfile.objects.filter(user=user).update(is_approved_by_office=approved)
-        if approved:
-            attach_to_submissions(user)
-    return render(request, 'users/approve.html', {
-        'profile_user': user,
-    })
-
-
 @require_POST
 @user_flag_required('is_internal')
 def toggle_active(request, user_pk=None):
@@ -287,7 +273,6 @@ def administration(request, limit=20):
         'page': '1',
         'groups': '',
         'medical_categories': '',
-        'approval': 'both',
         'activity': 'active',
         'keyword': '',
     }
@@ -296,13 +281,7 @@ def administration(request, limit=20):
     filterform = AdministrationFilterForm(filterdict)
     filterform.is_valid()  # force clean
 
-    approval_lookup = {
-        'both': User.objects.all(),
-        'yes': User.objects.filter(ecs_profile__is_approved_by_office=True),
-        'no': User.objects.filter(ecs_profile__is_approved_by_office=False),
-    }
-
-    users = approval_lookup[filterform.cleaned_data['approval']]
+    users = User.objects.all()
 
     if filterform.cleaned_data['activity'] == 'active':
         users = users.filter(is_active=True)

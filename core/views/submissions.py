@@ -519,7 +519,7 @@ def create_submission_form(request):
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
 
-        if submit and valid and request.user.get_profile().is_approved_by_office:
+        if submit and valid:
             submission_form = form.save(commit=False)
             submission = request.docstash.get('submission')
             if submission:   # refetch submission object because it could have changed
@@ -657,7 +657,6 @@ def export_submission(request, submission_pk):
     return response
 
 
-@user_flag_required('is_approved_by_office')
 def import_submission_form(request):
     form = SubmissionImportForm(request.POST or None, request.FILES or None)
 

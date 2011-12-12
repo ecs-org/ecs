@@ -13,7 +13,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
     last_password_change = models.DateTimeField(default=datetime.datetime.now)
     is_phantom = models.BooleanField(default=False)
-    is_approved_by_office = models.BooleanField(default=False)
     is_indisposed = models.BooleanField(default=False)
     communication_proxy = models.ForeignKey(User, null=True)
     start_workflow = models.BooleanField(default=False)

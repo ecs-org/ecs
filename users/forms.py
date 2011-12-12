@@ -132,11 +132,6 @@ class ProfileForm(TranslatedModelForm):
         }
 
 class AdministrationFilterForm(forms.Form):
-    approval = forms.ChoiceField(required=False, choices=(
-        ('both', _(u'Approved/Not Approved')),
-        ('yes', _(u'Approved')),
-        ('no', _(u'Not Approved')),
-    ))
     activity = forms.ChoiceField(required=False, choices=(
         ('both', _(u'Both')),
         ('active', _(u'active')),
@@ -235,7 +230,6 @@ class InvitationForm(forms.Form):
         user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
         user.save()
         profile = user.get_profile()
-        profile.is_approved_by_office = True
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
         profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
