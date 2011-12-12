@@ -1,1 +1,1 @@
-include ../mods-available/wsgi.load
+include mods-available/wsgi.load

@@ -1,2 +1,2 @@
 # proxy is needed by ecs.signature (ajp proxy)
-include ../mods-available/proxy.load
+include mods-available/proxy.load

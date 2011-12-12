@@ -1,1 +1,1 @@
-include ../mods-available/rewrite.load
+include mods-available/rewrite.load
