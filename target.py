@@ -114,11 +114,11 @@ TEMPLATE_DEBUG = False
         apache_setup(self.appname, use_sudo=self.use_sudo, dry=self.dry, hostname= self.hostname, ip= self.ip)
         
     def wsgi_config(self):
-        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-main.wsgi"),
+        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-wsgi.py"),
             os.path.join(self.dirname, "main.wsgi"), 
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
         )
-        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-service.wsgi"),
+        write_template(os.path.join(self.dirname, "templates", "apache2", self.appname, "apache.wsgi", "ecs-service-wsgi.py"),
             os.path.join(self.dirname, "service.wsgi"), 
             {'source': os.path.join(self.dirname, ".."), 'appname': self.appname,}
         )
