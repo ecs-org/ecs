@@ -1,2 +1,2 @@
 # proxy_ajp is needed by ecs.signature (to proxy pdf-as)
-include mods-available/proxy_ajp.load
+Include /etc/apache2/mods-available/proxy_ajp.load
