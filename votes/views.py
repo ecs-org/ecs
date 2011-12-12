@@ -15,7 +15,7 @@ from ecs.tasks.models import Task
 from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.utils.viewutils import render, render_html, pdf_response
+from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.utils.security import readonly
 
 
@@ -80,7 +80,7 @@ def vote_sign(request, vote_pk=None):
             'document_filename': _vote_filename(vote),
             'document_barcodestamp': True,
             'html_preview': render_html(request, html_template, context),
-            'pdf_data': wkhtml2pdf(render_html(request, pdf_template, context)),
+            'pdf_data': render_pdf(request, pdf_template, context),
             'sign_session_id': sign_session_id,
         })
     else:

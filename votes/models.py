@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
@@ -97,30 +98,13 @@ class Vote(models.Model):
         return self.valid_until < datetime.now()
 
     def get_render_context(self):
-        submission = self.submission_form.submission
-        form = None
-        documents = None
-        vote_date = None
-        meeting = None
-        if self.top:
-            submission = self.top.submission
-            vote_date = self.top.meeting.start.strftime('%d.%m.%Y')
-            meeting = self.top.meeting
-        if submission and submission.forms.count() > 0:
-            form = submission.forms.all()[0]
-        if form:
-            documents = form.documents.exclude(status='deleted').order_by('doctype__name', '-date')
-        
         return {
-            'meeting': meeting,
             'vote': self,
-            'submission': submission,
-            'form': form,
-            'documents': documents,
-            'vote_date': vote_date,
-            'ec_number': self.get_ec_number(),
+            'submission': self.get_submission(),
+            'form': self.submission_form,
+            'documents': self.submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
         }
-
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']

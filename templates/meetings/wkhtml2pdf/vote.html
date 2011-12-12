@@ -3,12 +3,17 @@
 {% block title %}Votum{% endblock %}
 
 {% block content %}
-  {% include 'db/wkhtml2pdf/ec_head.inc' %}
-  <h1>Sitzung der Ethik-Kommission am {{ vote_date }}, {{ vote.top }}:</h1>
+{% include 'db/wkhtml2pdf/ec_head.inc' %}
 
-<p><b>EK Nr: {{ ec_number }}</b></p>
+{% if vote.top %}
+  <h1>Sitzung der Ethik-Kommission am {{ vote.top.meeting.start|date:'d.m.Y' }}, {{ vote.top }}:</h1>
+{% else %}
+  <h1>Votum</h1>
+{% endif %}
+
+<p><b>EK Nr: {{ vote.get_ec_number }}</b></p>
 <p>
-  <b>Antragsteller:</b> 
+  <b>Antragsteller:</b>
   {% if form.submitter %}
   	{{ form.submitter.first_name }} {{ form.submitter.last_name }} <br>
   {% else %}
@@ -130,14 +135,7 @@
 <p>
 	<strong>ACHTUNG:</strong> Unter Berücksichtigung der "ICH-Guideline for Good Clinical Practice" gilt dieser Beschluss <strong><u>ein Jahr ab Datum der Ausstellung</strong></u>. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit mittles Formular für "Meldungen" rechtzeitig vorzulegen. 
 </p>
-    
-{% endblock %}
 
-{% block footer %}
-<div id="footer">
-  <span class="footer_left">EK Nr: {{ ec_number }}</span>
-  <span class="footer_middle">Seite x von y </span>
-  <span class="footer_right">Datum der Signierung</span>
-</div>
-{% endblock %}
+<p>Dieses Votum ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse {{ ABSOLUTE_URL_PREFIX }}{% url ecs.votes.views.download_signed_vote vote_pk=vote.pk %} abrufbar.</p>
 
+{% endblock %}

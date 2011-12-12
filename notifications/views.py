@@ -9,8 +9,7 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
 
-from ecs.utils.viewutils import render, render_html, redirect_to_next_url
-from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.viewutils import render, render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -259,7 +258,7 @@ def notification_answer_sign(request, notification_pk=None):
             'document_filename': answer.notification.get_filename('-answer.pdf'),
             'document_barcodestamp': True,
             'html_preview': render_html(request, html_template, context),
-            'pdf_data': wkhtml2pdf(render_html(request, pdf_template, context)),
+            'pdf_data': render_pdf(request, pdf_template, context),
             'sign_session_id': sign_session_id,
         })
     else:
