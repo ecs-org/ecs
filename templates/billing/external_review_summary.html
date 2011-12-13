@@ -13,19 +13,16 @@
     <p><a href="{% url ecs.documents.views.download_document document_pk=payment.document.pk %}" class="button_submit">{% trans 'Download payment as xls file' %}</a></p>
 
     <h2>{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
-    {% with payment.stats as stats %}
     <table class="billing_summary">
         <tr>
-            <th>{% trans 'Status' %}</th>
-            <th>{% trans 'amt.' %}</th>
+            <th>{% trans 'Reviewer' %}</th>
+            <th>{% trans 'Study' %}</th>
         </tr>
-        {% for item in stats.summary.values %}
+        {% for checklist in payment.checklists.all %}
             <tr>
-                <td>{{ item.label }}</td>
-                <td>{{ item.count }}</td>
+                <td>{{ checklist.user }}</td>
+                <td>{{ checklist.submission|ec_number }}</td>
             </tr>
         {% endfor %}
     </table>
-    {% endwith %}
 {% endblock %}
-

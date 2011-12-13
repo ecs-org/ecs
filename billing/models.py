@@ -79,6 +79,5 @@ class ChecklistPayment(models.Model):
         return User.objects.filter(pk__in=[c.user.pk for c in self.checklists.all()]).distinct()
 
     @property
-    def stats(self):
-        from ecs.billing.stats import collect_checklist_billing_stats
-        return collect_checklist_billing_stats(self.checklists.all())
+    def total(self):
+        return Price.objects.get_review_price().price * self.checklists.count()
