@@ -32,7 +32,7 @@ class SetupTarget(SetupTargetObject):
     
     def update(self, *args, **kwargs):
         pass
-    
+        
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
         self.sslcert_config()
@@ -80,6 +80,12 @@ emailAddress           = admin@{1}
 SSLEAYCNF_EOF'''.format(ssleay_filename, self.hostname))
         local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.hostname))
     
+    
+    def ca_config(self):
+        homedir = os.path.expanduser('~')
+        openssl_cnf = os.path.join(homedir, 'openssl.cnf')
+        
+    
     def local_settings_config(self):
         local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
         local_settings.write("""
@@ -104,6 +110,10 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
 DEBUG = False
 TEMPLATE_DEBUG = False
+
+ECS_PDFCOP = '#'
+ECS_PDFDECRYPT = '#'
+PDFCOP_ENABLED = False
             """ % {
             'username': self.username,
             'queuing_password': self.queuing_password,
@@ -144,6 +154,7 @@ TEMPLATE_DEBUG = False
     
     def upstart_install(self):
         install_upstart(self.appname, upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
+
     def upstart_stop(self):
         pass
         #stopall_upstart(self.appname, use_sudo=self.use_sudo)
@@ -168,13 +179,13 @@ TEMPLATE_DEBUG = False
         pass
     def env_update(self):
         pass
-    
 
     def queuing_config(self):
         # TODO: should configure queuing password in local_settings too, 
-        # TODO: s not idempotent, breaks on second call
-        local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
-        local('sudo rabbitmqctl add_vhost %s' % self.username)
+        if not int(local('sudo rabbitmqctl list_users | grep %s | wc -l' % self.username, capture=True)):
+            local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
+        if not int(local('sudo rabbitmqctl list_vhosts | grep %s | wc -l' % self.username, capture=True)):
+            local('sudo rabbitmqctl add_vhost %s' % self.username)
         local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))
 
     def search_config(self):
