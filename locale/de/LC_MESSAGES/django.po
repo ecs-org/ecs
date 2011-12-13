@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-13 12:12+0100\n"
+"POT-Creation-Date: 2011-12-13 21:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -146,23 +146,23 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: checklists/bootstrap.py:23 core/bootstrap.py:142
+#: checklists/bootstrap.py:23 core/bootstrap.py:143
 msgid "Statistical Review"
 msgstr "Statistische Bewertung"
 
-#: checklists/bootstrap.py:24 core/bootstrap.py:140
+#: checklists/bootstrap.py:24 core/bootstrap.py:141
 msgid "Legal and Patient Review"
 msgstr "Pat.info Bewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:141 core/workflow.py:184
+#: checklists/bootstrap.py:25 core/bootstrap.py:142 core/workflow.py:195
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
-#: checklists/bootstrap.py:26 core/bootstrap.py:144
+#: checklists/bootstrap.py:26 core/bootstrap.py:145
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-#: checklists/bootstrap.py:27 core/bootstrap.py:143
+#: checklists/bootstrap.py:27 core/bootstrap.py:144
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -171,7 +171,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:128 core/forms/forms.py:433
+#: checklists/bootstrap.py:56 core/bootstrap.py:129 core/forms/forms.py:433
 #: notifications/bootstrap.py:83 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
@@ -263,80 +263,85 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:129
+#: core/bootstrap.py:130
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:130
+#: core/bootstrap.py:131
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:131
+#: core/bootstrap.py:132
 msgid "B2 Resubmission"
 msgstr "B2 Resubmission"
 
-#: core/bootstrap.py:132 core/bootstrap.py:133 core/bootstrap.py:134
+#: core/bootstrap.py:133 core/bootstrap.py:134 core/bootstrap.py:135
 #, fuzzy
 msgid "B2 Resubmission Review"
 msgstr "Diplomarbeit Review"
 
-#: core/bootstrap.py:135
+#: core/bootstrap.py:136
 #, fuzzy
 msgid "Wait For Meeting"
 msgstr "Sitzung Beenden"
 
-#: core/bootstrap.py:136
+#: core/bootstrap.py:137
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:137
+#: core/bootstrap.py:138
 #, fuzzy
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:138 templates/submissions/readonly_form.html:82
+#: core/bootstrap.py:139 templates/submissions/readonly_form.html:82
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:139 templates/submissions/list.html:86
+#: core/bootstrap.py:140 templates/submissions/list.html:86
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:147
+#: core/bootstrap.py:148
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:149
 #, fuzzy
 msgid "Initial Thesis Review Split"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:149
+#: core/bootstrap.py:150
 msgid "Thesis Recommendation"
 msgstr "Thesis Recommendation"
 
-#: core/bootstrap.py:150
+#: core/bootstrap.py:151
 msgid "Thesis Recommendation Review"
 msgstr "Thesis Recommendation Review"
 
-#: core/bootstrap.py:151
+#: core/bootstrap.py:152
 msgid "Thesis Vote Preparation"
 msgstr "Thesis Vote Preparation"
 
-#: core/bootstrap.py:154
+#: core/bootstrap.py:155
+#, fuzzy
+msgid "Expedited Recommendation Split"
+msgstr "Expedited Empfehlung"
+
+#: core/bootstrap.py:156
 msgid "Expedited Recommendation"
 msgstr "Expedited Empfehlung"
 
-#: core/bootstrap.py:155
+#: core/bootstrap.py:157
 msgid "Expedited Vote Preparation"
 msgstr "Expedited Votum Vorbereitung"
 
-#: core/bootstrap.py:158
+#: core/bootstrap.py:160
 msgid "Local EC Recommendation"
 msgstr "begleitende EK Empfehlung"
 
-#: core/bootstrap.py:159
+#: core/bootstrap.py:161
 #, fuzzy
 msgid "Local EC Vote Preparation"
 msgstr "Thesis Vote Preparation"
@@ -1405,48 +1410,48 @@ msgstr "Sicherheitsmeldungsersteller"
 msgid "Primary Investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: core/triggers.py:25
+#: core/triggers.py:24
 msgid "Creation of study EC-Nr. {ec_number}"
 msgstr "Erstellung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:35
+#: core/triggers.py:34
 msgid "Change of study EC-Nr. {ec_number}"
 msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:39
+#: core/triggers.py:38
 msgid "B2 change of study EC-Nr. {ec_number}"
 msgstr "Zu bestätigende B2 Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:65 core/triggers.py:67 core/triggers.py:76
-#: core/triggers.py:78
+#: core/triggers.py:64 core/triggers.py:66 core/triggers.py:75
+#: core/triggers.py:77
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:86
+#: core/triggers.py:85
 msgid "Submission accepted"
 msgstr "Einreichung akzeptiert"
 
-#: core/triggers.py:93
+#: core/triggers.py:92
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:95
+#: core/triggers.py:94
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:133
+#: core/workflow.py:144
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:134 notifications/models.py:172
+#: core/workflow.py:145 notifications/models.py:172
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:183
+#: core/workflow.py:194
 msgid "Finish"
 msgstr "Fertig"
 
-#: core/workflow.py:185
+#: core/workflow.py:196
 #, fuzzy
 msgid "Executive Review"
 msgstr "Prüfung Votum Executive"
@@ -1811,28 +1816,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:686 templates/meetings/details.html:15
+#: core/views/submissions.py:685 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:792 templates/core.html:41
+#: core/views/submissions.py:791 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:794
+#: core/views/submissions.py:793
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:807
+#: core/views/submissions.py:806
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:830 templates/core.html:44
+#: core/views/submissions.py:829 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:840 templates/core.html:47
+#: core/views/submissions.py:839 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3684,7 +3689,7 @@ msgstr "Generell"
 
 #: templates/submissions/readonly_form.html:56
 msgid "Workflow"
-msgstr "Arbeitsverlauf"
+msgstr "Arbeitsablauf"
 
 #: templates/submissions/readonly_form.html:60
 msgid "Workflow Log"

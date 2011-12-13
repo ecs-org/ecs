@@ -14,19 +14,20 @@ def get_obj_tasks(activities, obj, data=None):
     return tasks
 
 
-def block_if_task_exists(node_uid):
+def block_if_task_exists(node_uid, **kwargs):
     ''' workflow guard decorator for tasks which should only be started once '''
     def _decorator(func):
         @wraps(func)
         def _inner(wf):
             with sudo():
-                task_exists = Task.objects.for_data(wf.data).filter(task_type__workflow_node__uid=node_uid).exists()
-            if task_exists:
-                return False
-            else:
-                return func(wf)
+                if Task.objects.for_data(wf.data).filter(task_type__workflow_node__uid=node_uid, **kwargs).exists():
+                    return False
+            return func(wf)
         return _inner
     return _decorator
+
+def block_duplicate_task(node_uid):
+    return block_if_task_exists(node_uid, deleted_at=None, closed_at=None)
 
 
 def task_required(n=1):
@@ -39,4 +40,3 @@ def task_required(n=1):
             return view(request, *args, **kwargs)
         return decorated
     return decorator
-        

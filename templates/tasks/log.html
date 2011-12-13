@@ -13,7 +13,7 @@
     {% for task in tasks %}
         <tr class="task{% if task.closed_at %} closed{% endif %}{% if task.deleted_at %} deleted{% endif %}">
             <td>{{ task.created_at|date:'d.m.Y H:i' }}</td>
-            <td>{{ task.task_type }}</td>
+            <td>{{ task.task_type }} {% if task.expedited_review_categories.exists %}[{% for cat in task.expedited_review_categories.all %}{{ cat }}{% if not forloop.last %}, {% endif %}{% endfor %}]{% endif %}</td>
             <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
             <td>{% if task.assigned_at %}{{ task.assigned_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
             <td>{{ task.accepted|yesno }}</td>

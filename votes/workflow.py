@@ -88,9 +88,7 @@ class VoteB2Review(Activity):
             # abort all tasks
             with sudo():
                 open_tasks = Task.objects.for_data(sf.submission).filter(deleted_at__isnull=True, closed_at=None)
-                for task in open_tasks:
-                    task.deleted_at = datetime.now()
-                    task.save()
+                open_tasks.mark_deleted()
         if choice == '3b':
             sf.submission.schedule_to_meeting()
 

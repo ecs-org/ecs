@@ -8,12 +8,12 @@ from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
 from ecs.core.signals import on_initial_review, on_initial_thesis_review, on_categorization_review, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
-from ecs.checklists.utils import get_checklist_answer, get_checklist_comment
+from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task, TaskType
-from ecs.tasks.utils import block_if_task_exists
+from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
 from ecs.votes.models import Vote
 from ecs.meetings import signals as meeting_signals
 from ecs.utils import connect
@@ -44,11 +44,7 @@ def is_retrospective_thesis(wf):
 
 @guard(model=Submission)
 def is_expedited(wf):
-    return wf.data.workflow_lane == SUBMISSION_LANE_EXPEDITED
-
-@guard(model=Submission)
-def is_localec(wf):
-    return wf.data.workflow_lane == SUBMISSION_LANE_LOCALEC
+    return wf.data.is_expedited
 
 @guard(model=Submission)
 def is_expedited_or_retrospective_thesis(wf):
@@ -96,7 +92,22 @@ def needs_gcp_review(wf):
 @block_if_task_exists('paper_submission_review')
 def needs_paper_submission_review(wf):
     return True
-    
+
+@guard(model=Submission)
+@block_duplicate_task('expedited_vote_preparation')
+def needs_expedited_vote_preparation(wf):
+    return has_expedited_recommendation(wf)
+
+@guard(model=Submission)
+@block_duplicate_task('localec_recommendation')
+def needs_localec_recommendation(wf):
+    return wf.data.is_localec
+
+@guard(model=Submission)
+@block_duplicate_task('localec_vote_preparation')
+def needs_localec_vote_preparation(wf):
+    return has_localec_recommendation(wf)
+
 # b2 guards
 @guard(model=Submission)
 def is_b2(wf):
@@ -226,19 +237,32 @@ class CategorizationReview(Activity):
                 for question in blueprint.questions.order_by('text'):
                     ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
 
-        with sudo():
-            excats = list(s.expedited_review_categories.all())
-            expedited_recommendation_tasks = Task.objects.for_data(s).filter(
-                deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
-            expedited_recommendation_tasks.filter(assigned_to__isnull=False).exclude(expedited_review_categories__in=excats).mark_deleted()
-            if not expedited_recommendation_tasks and s.workflow_lane == SUBMISSION_LANE_EXPEDITED:
-                task_type = TaskType.objects.get(workflow_node__uid='expedited_recommendation', workflow_node__graph__auto_start=True)
-                token = task_type.workflow_node.bind(self.workflow).receive_token(None)
-                expedited_recommendation_tasks = [token.task]
-            for task in expedited_recommendation_tasks:
-                task.expedited_review_categories = excats
-
         on_categorization_review.send(Submission, submission=self.workflow.data)
+
+
+class ExpeditedRecommendationSplit(Generic):
+    class Meta:
+        model = Submission
+
+    def emit_token(self, *args, **kwargs):
+        s = self.workflow.data
+        with sudo():
+            open_tasks = Task.objects.for_data(s).filter(
+                deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
+            open_tasks.filter(assigned_to__isnull=True).exclude(
+                expedited_review_categories__in=s.expedited_review_categories.values('pk').query).mark_deleted()
+            missing_cats = s.expedited_review_categories.all()
+            for task in open_tasks:
+                missing_cats = missing_cats.exclude(pk__in=task.expedited_review_categories.values('pk').query)
+            missing_cats = list(missing_cats)
+
+        tokens = []
+        for cat in missing_cats:
+            cat_tokens = super(ExpeditedRecommendationSplit, self).emit_token(*args, **kwargs)
+            for token in cat_tokens:
+                token.task.expedited_review_categories = [cat]
+            tokens += cat_tokens
+        return tokens
 
 
 class PaperSubmissionReview(Activity):
@@ -293,6 +317,7 @@ def unlock_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ChecklistReview)
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
+
 class NonRepeatableChecklistReview(ChecklistReview):
     def is_repeatable(self):
         return False
@@ -303,42 +328,6 @@ class NonRepeatableChecklistReview(ChecklistReview):
 def unlock_non_repeatable_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(NonRepeatableChecklistReview)
 post_save.connect(unlock_non_repeatable_checklist_review, sender=Checklist)
-
-class BoardMemberReview(ChecklistReview):
-    def is_reentrant(self):
-        return True
-
-def unlock_boardmember_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(BoardMemberReview)
-post_save.connect(unlock_boardmember_review, sender=Checklist)
-
-
-class ExpeditedRecommendation(NonRepeatableChecklistReview):
-    def is_reentrant(self):
-        return True
-
-    def receive_token(self, *args, **kwargs):
-        token = super(ExpeditedRecommendation, self).receive_token(*args, **kwargs)
-        s = self.workflow.data
-        token.task.expedited_review_categories = s.expedited_review_categories.all()
-        return token
-
-def unlock_expedited_recommendation(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(ExpeditedRecommendation)
-post_save.connect(unlock_expedited_recommendation, sender=Checklist)
-
-
-class LocalEcRecommendation(ChecklistReview):
-    def pre_perform(self, choice):
-        super(LocalEcRecommendation, self).pre_perform(choice)
-        if has_localec_recommendation(self.workflow):
-            submission = self.workflow.data
-            Vote.objects.create(result='1', text=get_checklist_comment(submission, 'localec_review', 1),
-                submission_form=submission.current_submission_form, is_draft=True)
-
-def unlock_localec_recommendation(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(LocalEcRecommendation)
-post_save.connect(unlock_localec_recommendation, sender=Checklist)
 
 
 class RecommendationReview(NonRepeatableChecklistReview):
@@ -371,4 +360,3 @@ def on_meeting_end(sender, **kwargs):
     meeting = kwargs['meeting']
     for submission in meeting.submissions.all():
         submission.workflow.unlock(WaitForMeeting)
-    

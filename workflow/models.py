@@ -5,7 +5,7 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
 from ecs.workflow.controllers import bind_node, bind_edge, bind_guard, NodeController
-from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_unlocked, deadline_reached
+from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_marked_deleted, token_unlocked, deadline_reached
 from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
@@ -243,7 +243,14 @@ class Token(models.Model):
         self.consumed_at = timestamp or datetime.now()
         self.save()
         token_consumed.send(self)
-        
+
+    def mark_deleted(self, timestamp=None):
+        if self.consumed_at:
+            raise TokenAlreadyConsumed()
+        self.consumed_at = timestamp or datetime.now()
+        self.save()
+        token_marked_deleted.send(self)
+
     def unlock(self):
         if not self.locked:
             return False
