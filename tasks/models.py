@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
-from ecs.workflow.signals import token_received, token_consumed
+from ecs.workflow.signals import token_received, token_consumed, token_marked_deleted
 from ecs.authorization.managers import AuthorizationManager
 
 class TaskType(models.Model):
@@ -37,7 +37,8 @@ class TaskQuerySet(models.query.QuerySet):
         return self.filter(deleted_at__isnull=True, closed_at=None)
         
     def mark_deleted(self):
-        return self.update(deleted_at=datetime.now())
+        for t in self.all():
+            t.mark_deleted()
 
     def acceptable_for_user(self, user):
         return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
@@ -196,6 +197,16 @@ class Task(models.Model):
             self.data.workflow.do(token, choice=choice)
         else:
             self.close(commit=commit)
+    
+    def mark_deleted(self, commit=True):
+        assert self.deleted_at is None
+        token = self.workflow_token
+        if token:
+            token.mark_deleted()
+        else:
+            self.deleted_at = datetime.now()
+            if commit:
+                self.save()
             
     def reopen(self, user=None):
         assert self.closed_at is not None
@@ -207,6 +218,7 @@ class Task(models.Model):
         new.created_by = user
         new.accept(user=user, check_authorization=False, commit=False)
         new.save()
+        new.expedited_review_categories = self.expedited_review_categories.all()
         return new
         
     def assign(self, user, check_authorization=True, commit=True):
@@ -263,6 +275,11 @@ def workflow_token_consumed(sender, **kwargs):
     for task in Task.objects.filter(workflow_token=sender, closed_at__isnull=True):
         task.close()
 
+def workflow_token_marked_deleted(sender, **kwargs):
+    for task in Task.objects.filter(workflow_token=sender, deleted_at__isnull=True):
+        task.deleted_at = datetime.now()
+        task.save()
+
 def node_saved(sender, **kwargs):
     node, created = kwargs['instance'], kwargs['created']
     if not created or not node.node_type.is_activity:
@@ -272,4 +289,5 @@ def node_saved(sender, **kwargs):
         
 token_received.connect(workflow_token_received)
 token_consumed.connect(workflow_token_consumed)
+token_marked_deleted.connect(workflow_token_marked_deleted)
 post_save.connect(node_saved, sender=Node)

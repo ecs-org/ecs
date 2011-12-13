@@ -47,7 +47,7 @@ checklist_questions = {
         Args('6',  u'Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?'),
         Args('7a', u'Haben sie einen „conflict of interest“ offenzulegen?',
             description=u'''Die Ethik-Kommission der Medizinischen Universität Wien ist bemüht sicherzustellen, dass alle, die am Begutachtungsverfahren für eines der eingereichten Projekte teilnehmen, die Möglichkeit haben, etwaige Sachverhalte und Interessen, die eine objektive Begutachtung hindern können, anzugeben. Dies können finanzielle sowie akademische Interessen sein. Die Gutachter werden ersucht, Stellung zu nehmen und Interessen offen zu legen.''', is_inverted=True),
-        Args('7b', u'Erklären Sie, dass Sie alle Informationen, die Sie im Namen dieser Begutachtung erhalten habe, vertraulich behandlen?'),
+        Args('7b', u'Bestätigen Sie, dass Sie alle Informationen, die Sie im Rahmen dieser Begutachtung erhalten haben, vertraulich behandeln?'),
     ],
     u'gcp_review': [
         Args( '1', u'Sind die Allgemeinen Informationen ausreichend und korrekt angegeben?'),

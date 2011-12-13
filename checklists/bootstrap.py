@@ -19,7 +19,7 @@ def checklist_blueprints():
     blueprints = (
         dict(slug='thesis_review', name=_("Thesis Review")),
         dict(slug='expedited_review', name=_("Expedited Review"), multiple=True),
-        dict(slug='localec_review', name=_("Local-EC Review"), multiple=False),
+        dict(slug='localec_review', name=_("Local-EC Review")),
         dict(slug='statistic_review', name=_("Statistical Review")),
         dict(slug='legal_review', name=_("Legal and Patient Review")),
         dict(slug='insurance_review', name=_("Insurance Review")),

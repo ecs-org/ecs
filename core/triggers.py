@@ -7,7 +7,6 @@ from ecs.core.models import Submission
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
-from ecs.checklists.utils import get_checklist_answer
 
 
 def send_submission_message(submission, user, subject, template, **kwargs):

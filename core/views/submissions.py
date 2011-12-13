@@ -28,10 +28,10 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
-from ecs.checklists.utils import get_checklist_comment
+from ecs.checklists.models import ChecklistBlueprint, ChecklistAnswer
 from ecs.notifications.models import NotificationType
 
-from ecs.core.workflow import ChecklistReview, RecommendationReview, ExpeditedRecommendation, BoardMemberReview
+from ecs.core.workflow import ChecklistReview, RecommendationReview
 
 from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
@@ -136,8 +136,7 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
 
-CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview,
-    ExpeditedRecommendation, BoardMemberReview)
+CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview)
 
 
 @readonly()
@@ -157,7 +156,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             checklist_form = checklist_overwrite[checklist]
         else:
             try:
-                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint)
+                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(closed_at__isnull=False, assigned_to=request.user)
                 reopen_task = reopen_tasks.order_by('-created_at')[0]
             except IndexError:
                 checklist_form = make_checklist_form(checklist)(readonly=True)
@@ -239,8 +238,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 def delete_task(request, submission_form_pk=None, task_pk=None):
     with sudo():
         task = get_object_or_404(Task, pk=task_pk)
-    task.deleted_at = datetime.now()
-    task.save()
+    task.mark_deleted()
     return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
@@ -319,9 +317,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     checklist.status = 'dropped'
     checklist.save()
     with sudo():
-        for task in Task.objects.for_data(checklist).exclude(closed_at__isnull=False):
-            task.deleted_at = datetime.now()
-            task.save()
+        Task.objects.for_data(checklist).exclude(closed_at__isnull=False).mark_deleted()
     return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
@@ -401,14 +397,17 @@ def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
     if submission_form.submission.is_expedited:
-        checklist = 'expedited_review'
+        blueprint_slug = 'expedited_review'
     elif submission_form.submission.is_localec:
-        checklist = 'localec_review'
+        blueprint_slug = 'localec_review'
     else:
-        checklist = 'thesis_review'
-    form = VotePreparationForm(request.POST or None, instance=vote, initial={
-        'text': get_checklist_comment(submission_form.submission, checklist, 1)
-    })
+        blueprint_slug = 'thesis_review'
+
+    checklist_answers = ChecklistAnswer.objects.filter(checklist__submission=submission_form.submission,
+        question__blueprint__slug=blueprint_slug, question__number='1')
+
+    initial_text = u'\n\n'.join([a.comment for a in checklist_answers])
+    form = VotePreparationForm(request.POST or None, instance=vote, initial={'text': initial_text})
     
     form.bound_to_task = request.task_management.task
     

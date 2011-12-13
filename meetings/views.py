@@ -684,9 +684,7 @@ def meeting_details(request, meeting_pk=None, active=None):
                         with sudo():
                             tasks = list(Task.objects.for_data(entry.submission).filter(
                                 task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True))
-                        for task in tasks:
-                            task.deleted_at = datetime.now()
-                            task.save()
+                        tasks.mark_deleted()
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
 
