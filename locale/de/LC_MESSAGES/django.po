@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-12 14:39+0100\n"
+"POT-Creation-Date: 2011-12-13 12:12+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1381,7 +1381,7 @@ msgstr "Institution"
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
-#: core/parties.py:62
+#: core/parties.py:62 templates/billing/submissions.html:29
 msgid "Sponsor"
 msgstr ""
 
@@ -2521,7 +2521,7 @@ msgid "Unbilled Reviews"
 msgstr "Unverechnete Gutachten"
 
 #: templates/billing/external_review.html:36
-#: templates/billing/submissions.html:35
+#: templates/billing/submissions.html:36
 msgid "Create settlement"
 msgstr "Abrechnung erstellen"
 
@@ -2565,7 +2565,7 @@ msgstr "Rechnung als xls-Datei herunterladen"
 msgid "Unbilled Submissions"
 msgstr "Unverechnete Einreichungen"
 
-#: templates/billing/submissions.html:39
+#: templates/billing/submissions.html:40
 msgid "No submission yet."
 msgstr "Es gibt noch keine Einreichung."
 
@@ -3684,11 +3684,11 @@ msgstr "Generell"
 
 #: templates/submissions/readonly_form.html:56
 msgid "Workflow"
-msgstr ""
+msgstr "Arbeitsverlauf"
 
 #: templates/submissions/readonly_form.html:60
 msgid "Workflow Log"
-msgstr "Workflow Protokoll"
+msgstr "Arbeitsablauf Protokoll"
 
 #: templates/submissions/readonly_form.html:65
 #: templates/submissions/tabs/involved_parties.html:2
