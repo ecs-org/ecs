@@ -49,3 +49,7 @@
   vertical-align: top;
 }
 */
+
+table.cert_list tr.revoked{
+    text-decoration: line-through;
+}

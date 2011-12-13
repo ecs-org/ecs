@@ -1,0 +1,38 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}{% trans "PKI" %} | {{ block.super }}{% endblock %}
+
+{% block headertitle %}{% trans "PKI" %}{% endblock %}
+
+{% block content %}
+<div>
+<form action="" method="post" class="form_main" id="cert_form">
+    <div>
+    <ol>
+        {% for field in form %}
+            {% include "forms/field.html" %}
+        {% endfor %}
+    </ol>
+    </div>
+    <span class="button"><input type="submit" value="{% trans 'Create Certificate' %}" /></span>
+</form>
+</div>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            var form = $('cert_form');
+            ecs.setupAutocomplete(form);
+            form.addEvent('submit', function(){
+                setTimeout(function(){
+                    window.location.href = '{% url ecs.pki.views.cert_list %}';
+                }, 2000);
+            });
+            
+        });
+    </script>
+{% endblock %}
+

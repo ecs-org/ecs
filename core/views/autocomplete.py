@@ -25,6 +25,7 @@ AUTOCOMPLETE_QUERYSETS = {
 
 INTERNAL_AUTOCOMPLETE_QUERYSETS = {
     'users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.order_by('first_name', 'last_name', 'email')],
+    'internal-users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(ecs_profile__is_internal=True).order_by('first_name', 'last_name', 'email')],
     'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
 }
 

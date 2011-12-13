@@ -1,0 +1,42 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}{% trans "PKI" %} | {{ block.super }}{% endblock %}
+
+{% block headertitle %}{% trans "PKI" %}{% endblock %}
+
+{% block content %}
+
+<a href="{% url ecs.pki.views.create_cert %}">{% trans 'Create new certificate' %}</a>
+
+<table class="cert_list">
+    <tr>
+        <th>User</th>
+        <th>Fingerprint</th>
+        <th>CN</th>
+        <th></th>
+    </tr>
+    {% for cert in certs %}
+        <tr class="{% if cert.is_revoked %}revoked{% endif %}">
+            <td>{{ cert.user }}</td>
+            <td style="font-family:monospace">{{ cert.fingerprint }}</td>
+            <td>{{ cert.cn }}</td>
+            <td>
+                {% if not cert.is_revoked %}
+                <form action="{% url ecs.pki.views.revoke_cert cert_pk=cert.pk %}" method="post">
+                    <a class="submit_parent">{% trans 'Revoke' %}</a>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.setupSubmitLinks('a.submit_parent');
+        });
+    </script>
+{% endblock %}
