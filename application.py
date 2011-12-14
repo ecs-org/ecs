@@ -38,7 +38,7 @@ docutils:inst:all:pypi:docutils\>=0.7
 
 
 # django main
-django:inst:all:pypi:django==1.2.7
+django:inst:all:pypi:django==1.2.3
 south:inst:all:pypi:south
 django-piston:inst:all:pypi:django-piston
 django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
