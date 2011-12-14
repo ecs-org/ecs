@@ -8,7 +8,6 @@ from ecs.workflow.tests import WorkflowTestCase
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_user, create_user
 from ecs.core.bootstrap import auth_groups
-from ecs.users.bootstrap import user_workflow
 
 
 class RegistrationTest(MailTestCase, WorkflowTestCase):
@@ -24,7 +23,6 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         '''
         # create user workflow
         auth_groups()
-        user_workflow()
 
         response = self.client.post(reverse('ecs.users.views.register'), {
             'gender': 'm',
