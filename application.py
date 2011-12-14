@@ -38,10 +38,10 @@ docutils:inst:all:pypi:docutils\>=0.7
 
 
 # django main
-django:inst:all:pypi:django==1.2.3
+django:inst:all:pypi:django==1.2.7
 south:inst:all:pypi:south
-django-piston:inst:all:http://bitbucket.org/jespern/django-piston/get/default.gz
-django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
+django-piston:inst:all:django-piston
+django-extensions:inst:all:django-extensions
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 # Todo: django-dbtemplates version 1.2.1 has many new features (reversion support, south support, better caching support)
@@ -204,7 +204,7 @@ imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
 imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
-imagemagick:static:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.6.5-Q16-windows.zip:unzipflatsecond:montage.exe
+imagemagick:static:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.7.4-Q16-windows.zip:unzipflatsecond:montage.exe
 
 # PIL requirements for ubuntu
 libjpeg62-dev:req:apt:apt-get:libjpeg62-dev
