@@ -229,7 +229,6 @@ antiword:req:mac:macports:antiword
 antiword:req:openbsd:pkg:antiword
 antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 # mpmath needed for massimport statistic function
 mpmath:inst:all:pypi:mpmath
 
@@ -285,7 +284,6 @@ pylint:inst:all:pypi:pylint
 #django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
 
 # django-test-utils is used for testmaker
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
 django-test-utils:inst:all:pypi:django-test-utils
 """
 
