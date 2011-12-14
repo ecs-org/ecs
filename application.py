@@ -18,7 +18,7 @@ psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:req:openbsd:pkg:postgresql-server
 psycopg2:req:openbsd:pkg:postgresql-client
 psycopg2:inst:!win:pypi:psycopg2==2.4.1
-psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.0.13.win32-py2.6-pg8.4.1-release.exe
+psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.4.1.win32-py2.6-pg9.0.4-release.exe
 
 # sqlite database bindings
 pysqlite:req:apt:apt-get:libsqlite3-dev
@@ -27,8 +27,8 @@ pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:req:openbsd:pkg:sqlite3
 pysqlite:inst:!win:pypi:pysqlite
-pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.5.6.win32-py2.6.exe
-
+pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.6.3.win32-py2.6.exe
+                     
 # timezone handling
 pytz:inst:all:pypi:pytz
 
