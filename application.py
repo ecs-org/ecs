@@ -87,16 +87,12 @@ main_packages += """
 # queuing: celery 
 python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
 anyjson:inst:all:pypi:anyjson\>=0.3.1
-# Fixme: new set would be amqplib 1.0.2, kombu 1.4.1, celery 2.3.3 
-#amqplib:inst:all:pypi:amqplib==0.6.1
 amqplib:inst:all:pypi:amqplib\>=1.0.2
-#kombu:inst:all:pypi:kombu==1.1.6
 kombu:inst:all:pypi:kombu\>=1.4.1
 pyparsing:inst:all:pypi:pyparsing\<2.0.0
-#celery:inst:all:pypi:celery==2.2.6
+ordereddict:inst:all:pypi:ordereddict
 celery:inst:all:pypi:celery==2.3.3
 django-picklefield:inst:all:pypi:django-picklefield
-#django-celery:inst:all:pypi:django-celery==2.2.4
 django-celery:inst:all:pypi:django-celery==2.3.3
 
 
@@ -150,7 +146,7 @@ pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
 pdftotext:req:openbsd:pkg:poppler
 pdftotext:req:openbsd:pkg:poppler-data
-pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdf-3.02pl4-win32.zip:unzipflat:pdftotext.exe
+pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdfbin-win-3.03.zip:custom:pdftotext.exe
 
 # excel generation / xlwt
 xlwt:inst:all:pypi:xlwt
@@ -274,7 +270,7 @@ quality_packages= """
 # nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
 coverage:inst:!win:pypi:coverage
-coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
+coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.5.1.win32-py2.6.exe
 nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
 unittest2:inst:all:pypi:unittest2
 #logilab-common:inst:all:pypi:logilab-common\>=0.49.0
@@ -362,7 +358,7 @@ import ecs.target as target
 testing_bundle = main_packages
 default_bundle = main_packages
 future_bundle = main_packages
-developer_bundle = package_merge((default_bundle, quality_packages, guitest_packages, developer_packages))
+developer_bundle = package_merge((default_bundle, quality_packages, developer_packages))
 quality_bundle = package_merge((default_bundle, quality_packages))
 system_bundle = package_merge((default_bundle, system_packages))
 

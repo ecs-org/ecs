@@ -333,6 +333,27 @@ def custom_install_mocca(pkgline, filename):
     return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
 
+def custom_install_pdftotext(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    tempdir = tempfile.mkdtemp()
+    outputdir = os.path.dirname(get_pythonexe())
+    result = False
+    
+    try:
+        if pkg_manager.static_install_unzip(filename, tempdir, checkfilename, pkgline):
+            try:
+                shutil.copy(os.path.join(tempdir,"xpdfbin-win-3.03", "bin32", checkfilename), 
+                    os.path.join(outputdir, checkfilename))
+            except EnvironmentError:
+                pass
+            else:
+                result = True
+    finally:    
+        shutil.rmtree(tempdir)
+    
+    return result
+    
 def custom_install_origami(pkgline, filename):
     return custom_install_ruby_gem(pkgline, filename)
 
