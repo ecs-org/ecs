@@ -40,7 +40,7 @@ docutils:inst:all:pypi:docutils\>=0.7
 # django main
 django:inst:all:pypi:django==1.2.7
 south:inst:all:pypi:south
-django-piston:inst:all:django-piston
+django-piston:inst:all:pypi:django-piston
 django-extensions:inst:all:django-extensions
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
