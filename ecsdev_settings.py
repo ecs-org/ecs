@@ -54,7 +54,7 @@ if user in conf_dict.keys():
         "same_host_as_server": True,
     }
     
-    if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver', 'testmaker'])):
+    if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
     ABSOLUTE_URL_PREFIX = "http://{0}".format(domain)

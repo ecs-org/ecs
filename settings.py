@@ -569,17 +569,13 @@ if 'test' in sys.argv or 'test_windmill' in sys.argv:
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
 
 
-if any(word in sys.argv for word in set(['runserver','runconcurrentserver','testmaker'])):
+if any(word in sys.argv for word in set(['runserver','runconcurrentserver'])):
     EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
     
     logging.basicConfig(
             level = logging.DEBUG,
             format = '%(asctime)s %(levelname)s %(message)s',
             )
-        
-# testmaker workaround
-if 'testmaker' in sys.argv:
-    INSTALLED_APPS += ('test_utils',)
-    
+
 import djcelery
 djcelery.setup_loader()

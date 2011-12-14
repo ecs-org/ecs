@@ -282,8 +282,6 @@ logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
 pylint:inst:all:pypi:pylint
 #django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
 
-# django-test-utils is used for testmaker
-django-test-utils:inst:all:pypi:django-test-utils
 """
 
 
