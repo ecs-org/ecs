@@ -17,7 +17,7 @@ psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:req:openbsd:pkg:postgresql-server
 psycopg2:req:openbsd:pkg:postgresql-client
-psycopg2:inst:!win:pypi:psycopg2
+psycopg2:inst:!win:pypi:psycopg2==2.4.1
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.0.13.win32-py2.6-pg8.4.1-release.exe
 
 # sqlite database bindings
@@ -41,11 +41,11 @@ docutils:inst:all:pypi:docutils\>=0.7
 django:inst:all:pypi:django==1.2.7
 south:inst:all:pypi:south
 django-piston:inst:all:pypi:django-piston
-django-extensions:inst:all:pypi:django-extensions
+django-extensions:inst:all:http://github.com/django-extensions/django-extensions/tarball/master
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 # Todo: django-dbtemplates version 1.2.1 has many new features (reversion support, south support, better caching support)
-django-dbtemplates:inst:all:pypi:django-dbtemplates
+django-dbtemplates:inst:all:pypi:django-dbtemplates==0.7.4
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
@@ -71,7 +71,7 @@ ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p35
 
 # unit testing
 nose:inst:all:pypi:nose
-django-nose:inst:all:pypi:django-nose
+django-nose:inst:all:pypi:django-nose==0.1.2
 # for testing the export we need concurrent requests
 django_concurrent_test_server:inst:all:pypi:django_concurrent_test_server
 """
@@ -109,7 +109,7 @@ mock:inst:all:pypi:mock\<0.8
 # so we fake it for windows and right now also for the rest, was python-daemon:inst:!win:pypi:python-daemon==1.5.5
 python-daemon:inst:all:dir:ecs/utils/fake-daemon/
 lamson:inst:all:pypi:lamson
-beautifulsoup:inst:all:pypi:beautifulsoup\<3.1
+beautifulsoup:inst:all:http://www.crummy.com/software/BeautifulSoup/download/3.x/BeautifulSoup-3.0.8.tar.gz
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 
 
@@ -246,7 +246,7 @@ pygooglechart:inst:all:pypi:pygooglechart
 django-sentry:inst:all:pypi:django-sentry==1.11.4
 
 # ecs.help needs reversion from now on
-django-reversion:inst:all:pypi:django-reversion
+django-reversion:inst:all:pypi:django-reversion==1.3.3
 
 # diff_match_patch is used for the submission diff and django-reversion
 diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
@@ -275,7 +275,7 @@ vncserver:req:apt:apt-get:vnc4server
 quality_packages= """
 # nose and django-nose is in main app
 unittest-xml-reporting:inst:all:pypi:unittest-xml-reporting
-coverage:inst:!win:pypi:coverage\<3.4
+coverage:inst:!win:pypi:coverage
 coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
 nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
 unittest2:inst:all:pypi:unittest2
