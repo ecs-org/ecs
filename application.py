@@ -55,8 +55,8 @@ python-memcached:inst:all:pypi:python-memcached
 #lxml:inst:!win:pypi:lxml\<2.3
 #lxml:instbin:win:http://pypi.python.org/packages/2.6/l/lxml/lxml-2.2.8.win32-py2.6.exe
 cssmin:inst:all:pypi:cssmin
-django-appconf:inst:all:pypi:django-appconf\>=0.4.1
 versiontools:inst:all:pypi:versiontools
+django-appconf:inst:all:pypi:django-appconf\>=0.4.1
 django_compressor:inst:all:pypi:django_compressor\>=1.1
 # sass/scss css preprocessor
 pyscss:inst:all:pypi:pyScss\>=1.0.8
