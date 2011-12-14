@@ -14,7 +14,7 @@ def workflow_sync():
 
 @bootstrap.register()
 def create_settings_dirs():
-    for workdir in (settings.LOGFILE_DIR, settings.TEMPFILE_DIR, settings.GENFILE_DIR, settings.INCOMING_FILESTORE):
+    for workdir in (settings.LOGFILE_DIR, settings.ECS_DOWNLOAD_CACHE_DIR, settings.TEMPFILE_DIR, settings.GENFILE_DIR, settings.INCOMING_FILESTORE):
         if not os.path.isdir(workdir):
             os.makedirs(workdir)
 

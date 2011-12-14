@@ -250,8 +250,6 @@ ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
 ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
 ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
 
-ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-cache"))
-ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 
 # authorization
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
@@ -276,6 +274,10 @@ LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 GENFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-generated"))
 # url where in the url tree the files under this directory are served
 GENFILE_URL = MEDIA_URL+ 'generated/'
+
+# directory where to store zipped submission patientinformation and submission form pdfs
+ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-cache"))
+ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 
 # directory where to store temporary files, used mostly with external utilities
 TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
