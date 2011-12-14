@@ -229,8 +229,7 @@ antiword:req:mac:macports:antiword
 antiword:req:openbsd:pkg:antiword
 antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
-# mpmath needed for massimport statistic function
-mpmath:inst:all:pypi:mpmath
+
 
 # feedback: jsonrpclib for ecs feedback and fab ticket
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
