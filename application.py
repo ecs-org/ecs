@@ -277,9 +277,9 @@ coverage:inst:!win:pypi:coverage
 coverage:instbin:win:http://pypi.python.org/packages/2.6/c/coverage/coverage-3.2.win32-py2.6.exe
 nose-xcover:inst:all:http://github.com/cmheisel/nose-xcover/tarball/master
 unittest2:inst:all:pypi:unittest2
-logilab-common:inst:all:pypi:logilab-common\>=0.49.0
-logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
-pylint:inst:all:pypi:pylint
+#logilab-common:inst:all:pypi:logilab-common\>=0.49.0
+#logilab-astng:inst:all:pypi:logilab-astng\>=0.20.0
+# disbaled pylint for now because it throws errors: pylint:inst:all:pypi:pylint
 #django-lint:inst:all:http://chris-lamb.co.uk/releases/django-lint/LATEST/django-lint-0.13.tar.gz
 
 """
