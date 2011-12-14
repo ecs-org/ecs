@@ -41,7 +41,7 @@ docutils:inst:all:pypi:docutils\>=0.7
 django:inst:all:pypi:django==1.2.7
 south:inst:all:pypi:south
 django-piston:inst:all:pypi:django-piston
-django-extensions:inst:all:django-extensions
+django-extensions:inst:all:pypi:django-extensions
 # docstash now uses django-picklefield
 django-picklefield:inst:all:pypi:django-picklefield
 # Todo: django-dbtemplates version 1.2.1 has many new features (reversion support, south support, better caching support)
