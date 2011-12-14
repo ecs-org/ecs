@@ -35,7 +35,7 @@ class SetupTarget(SetupTargetObject):
         
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
-        self.sslcert_config()
+        self.servercert_config()
         self.apache_baseline()
         """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
         self.local_settings_config()
@@ -55,7 +55,7 @@ class SetupTarget(SetupTargetObject):
             if not os.path.exists(pathname):
                 os.mkdir(pathname)
         
-    def sslcert_config(self):
+    def servercert_config(self):
         homedir = os.path.expanduser('~')
         ssleay_filename = os.path.join(homedir, 'ssleay.cnf')
         warn("Creating {0}".format(ssleay_filename))
