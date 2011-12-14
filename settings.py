@@ -261,8 +261,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 
 # PDF Signing settings, 
 # PDF_AS_SERVICE can either be undefined, or empty string, or string beginning with "mock:" to mock ecs.signature
-# for real pdf-as usage use http://localhost:4780/ per default (as stated in source:/signing/readme.txt)
-# deployment should use same like hostname, with pdf-as appended 
+# for real pdf-as usage use http://localhost:4780/ per default 
+# deployment should use something like 'https://hostname/pdf-as'
 #PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 PDFAS_SERVICE = 'mock:'
 
