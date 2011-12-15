@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-13 21:58+0100\n"
+"POT-Creation-Date: 2011-12-15 13:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,6 @@ msgid "statistical result"
 msgstr "Statistikergebnis"
 
 #: billing/views.py:111 billing/views.py:183
-#: templates/billing/external_review_summary.html:20
 msgid "amt."
 msgstr "Anz."
 
@@ -1699,8 +1698,8 @@ msgstr "Teilnehmer/innen"
 msgid "SAE / SUSAR"
 msgstr "SAE / SUSAR"
 
-#: core/forms/layout.py:221 templates/billing/external_review_summary.html:19
-#: templates/meetings/details.html:9 templates/meetings/tabs/status.html:9
+#: core/forms/layout.py:221 templates/meetings/details.html:9
+#: templates/meetings/tabs/status.html:9
 #: templates/submissions/readonly_form.html:52
 msgid "Status"
 msgstr "Status"
@@ -2191,7 +2190,7 @@ msgid ""
 "Nutzen/Risikoverhältnisses."
 msgstr ""
 
-#: notifications/forms.py:53
+#: notifications/forms.py:53 templates/billing/external_review_summary.html:19
 msgid "Study"
 msgstr "Studie"
 
@@ -2261,6 +2260,15 @@ msgstr ""
 #, python-format
 msgid "%(user)s shared annotations with you."
 msgstr "%(user)s hat Anmerkungen mit Ihnen geteilt."
+
+#: pki/forms.py:25
+msgid "A certificate with this CN already exists."
+msgstr ""
+
+#: pki/forms.py:28
+#, fuzzy
+msgid "The passphrases do not match."
+msgstr "Die Passwörter stimmen nicht überein."
 
 #: tasks/forms.py:16
 msgid "delegate"
@@ -2537,6 +2545,10 @@ msgstr "Es gibt noch kein Gutachten."
 #: templates/billing/external_review_summary.html:13
 msgid "Download payment as xls file"
 msgstr "Zahlung als xls-Datei herunterladen"
+
+#: templates/billing/external_review_summary.html:18
+msgid "Reviewer"
+msgstr "Gutachter"
 
 #: templates/billing/invoice_list.html:13
 #: templates/billing/submissions.html:13
@@ -3388,6 +3400,26 @@ msgstr ""
 msgid "shared with:"
 msgstr "geteilt mit:"
 
+#: templates/pki/cert_list.html:4 templates/pki/cert_list.html.py:6
+#: templates/pki/create_cert.html:4 templates/pki/create_cert.html.py:6
+msgid "PKI"
+msgstr ""
+
+#: templates/pki/cert_list.html:10
+#, fuzzy
+msgid "Create new certificate"
+msgstr "Eine neue Meldung erstellen"
+
+#: templates/pki/cert_list.html:27
+#: templates/submissions/tabs/involved_parties.html:62
+msgid "Revoke"
+msgstr "Widerrufen"
+
+#: templates/pki/create_cert.html:18
+#, fuzzy
+msgid "Create Certificate"
+msgstr "Meldung Erstellen"
+
 #: templates/scratchpad/popup.html:5 templates/scratchpad/popup_list.html:11
 #, python-format
 msgid "Scratchpad for submission %(ec_number)s"
@@ -3850,10 +3882,6 @@ msgstr "Befristete Autorisierung"
 #: templates/submissions/tabs/involved_parties.html:39
 msgid "Timeframe"
 msgstr "Zeitraum"
-
-#: templates/submissions/tabs/involved_parties.html:62
-msgid "Revoke"
-msgstr "Widerrufen"
 
 #: templates/submissions/tabs/involved_parties.html:78
 msgid "Authorize"

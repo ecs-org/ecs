@@ -71,40 +71,25 @@ def do_rendering(identifier=None, mimetype='application/pdf', **kwargs):
         return False, str(identifier), "already in progress"
     
     
-
-#@periodic_task(track_started=True, run_every=crontab(hour=3, minute=38, day_of_week="*"))
-@task(track_started=True)
+@periodic_task(run_every=crontab(hour=3, minute=38))
 def do_aging(dry_run=False, **kwargs):
-    ''' runs every night at 3:38, and ages render_diskcache and doc_diskcache
-    '''
-    logger = logging.getLogger() #do_aging.get_logger(**kwargs)
+    ''' ages render_diskcache and doc_diskcache '''
+    logger = do_aging.get_logger(**kwargs)
     
-    render_diskcache = DiskBuckets(settings.MS_SERVER ["render_diskcache"],
-        max_size= settings.MS_SERVER ["render_diskcache_maxsize"])
-    doc_diskcache = DiskBuckets(settings.MS_SERVER ["doc_diskcache"],
-        max_size = settings.MS_SERVER ["doc_diskcache_maxsize"])
+    render_diskcache = DiskBuckets(settings.MS_SERVER["render_diskcache"],
+        max_size=settings.MS_SERVER["render_diskcache_maxsize"])
+    doc_diskcache = DiskBuckets(settings.MS_SERVER["doc_diskcache"],
+        max_size=settings.MS_SERVER["doc_diskcache_maxsize"])
 
     ifunc = ignore_none if not dry_run else ignore_all
-    
+
     try:
         logger.debug("start aging render_diskcache")    
-        sfunc = satisfied_on_less_then(settings.MS_SERVER ["render_diskcache_maxsize"])
-        render_diskcache.age(ignoreitem= ifunc, onerror= onerror_log, satisfied= sfunc)
-    
-    except BucketError as e:
-        logger.warning("aging render_diskcache was not successful, until end of list reached; Exception Details {0}".format(e)) 
-    
-    else:
+        sfunc = satisfied_on_less_then(settings.MS_SERVER["render_diskcache_maxsize"])
+        render_diskcache.age(ignoreitem=ifunc, onerror=onerror_log, satisfied=sfunc)
         logger.info("aging render_diskcache was successful")
-
-    try:
+    finally:
         logger.debug("start aging doc_diskcache") 
-        sfunc = satisfied_on_less_then(settings.MS_SERVER ["doc_diskcache_maxsize"])   
-        doc_diskcache.age(ignoreitem= ifunc, onerror= onerror_log, satisfied= sfunc)
-    
-    except BucketError as e:
-        logger.warning("aging doc_diskcache was not successful, until end of list reached; Exception Details {0}".format(e)) 
-    
-    else:
+        sfunc = satisfied_on_less_then(settings.MS_SERVER["doc_diskcache_maxsize"])
+        doc_diskcache.age(ignoreitem=ifunc, onerror=onerror_log, satisfied=sfunc)
         logger.info("aging doc_diskcache was successful")
-

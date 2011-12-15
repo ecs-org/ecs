@@ -170,26 +170,16 @@ def index_pdf(document_pk=None, **kwargs):
     
     return result
 
-    
 
-#@periodic_task(track_started=True, run_every=crontab(hour=3, minute=48, day_of_week="*"))
-@task()
+@periodic_task(run_every=crontab(hour=3, minute=48))
 def age_incoming(dry_run=False, **kwargs):
-    ''' runs every night at 3:48, and ages settings.INCOMING_FILESTORE with files older than 14 days
-    '''
-    logger = logging.getLogger() #age_incoming.get_logger(**kwargs)
-    db = DiskBuckets(settings.INCOMING_FILESTORE, max_size= 0)
+    ''' ages settings.INCOMING_FILESTORE with files older than 14 days '''
+    logger = age_incoming.get_logger(**kwargs)
+    db = DiskBuckets(settings.INCOMING_FILESTORE, max_size=0)
     ifunc = ignore_none if not dry_run else ignore_all
     
-    try:
-        logger.debug("start aging INCOMING_FILESTORE {0}, INCOMING_FILESTORE_MAXAGE {1}".format(
-            settings.INCOMING_FILESTORE, settings.INCOMING_FILESTORE_MAXAGE))
-        db.age(ignoreitem= ifunc, onerror= onerror_log, 
-            satisfied= satisfied_on_newer_then(settings.INCOMING_FILESTORE_MAXAGE))
-
-    except BucketError as e:
-        logger.warning("aging INCOMING_FILESTORE was not successful, until end of list reached; Exception Details {0}".format(e)) 
-    
-    else:
-        logger.info("aging INCOMING_FILESTORE was successful")
-
+    logger.debug("start aging INCOMING_FILESTORE {0}, INCOMING_FILESTORE_MAXAGE {1}".format(
+        settings.INCOMING_FILESTORE, settings.INCOMING_FILESTORE_MAXAGE))
+    db.age(ignoreitem=ifunc, onerror=onerror_log,
+        satisfied=satisfied_on_newer_then(settings.INCOMING_FILESTORE_MAXAGE))
+    logger.info("aging INCOMING_FILESTORE was successful")
