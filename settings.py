@@ -434,17 +434,13 @@ CELERY_IMPORTS = (
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',
-    'ecs.mediaserver.tasks', # TODO: this should be switchable in case we only want to be a mediaserver or coreapp (FMD2)
+    'ecs.mediaserver.tasks', 
     'ecs.ecsmail.tasks',
     'ecs.workflow.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',
     'ecs.help.tasks',
 )
-# define queues in celery, to be served different
-#CELERY_QUEUES = {"default": {"exchange": "default","binding_key": "default"},}
-# define "default" as the default queue (was celery for historical reasons)
-#CELERY_DEFAULT_QUEUE = "default"
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away
