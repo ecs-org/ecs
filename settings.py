@@ -301,16 +301,16 @@ STORAGE_VAULT_OPTIONS = {
 }
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "encrypt_key": os.path.join(PROJECT_DIR, "..", "target", "ecs", "ecs_mediaserver.pub"),
+    "encrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.pub"),
     "encrypt_owner": "ecs_mediaserver",
-    "signing_key": os.path.join(PROJECT_DIR, "..", "target", "ecs", "ecs_authority.sec"),
+    "signing_key": os.path.join(PROJECT_DIR, "ecs_authority.sec"),
     "signing_owner": "ecs_authority",
 }
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-    "decrypt_key": os.path.join(PROJECT_DIR, "..", "target", "mediaserver", "ecs_mediaserver.sec"),
+    "decrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.sec"),
     "decrypt_owner": "ecs_mediaserver",
-    "verify_key":  os.path.join(PROJECT_DIR, "..", "target", "mediaserver", "ecs_authority.pub"),
+    "verify_key":  os.path.join(PROJECT_DIR, "ecs_authority.pub"),
     "verify_owner": "ecs_authority",
 }
 
