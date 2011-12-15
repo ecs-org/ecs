@@ -1,6 +1,7 @@
 import random, itertools, math, os, time
 from datetime import timedelta
 from celery.decorators import task, periodic_task
+from celery.schedules import crontab
 
 from django.conf import settings
 
@@ -84,7 +85,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
     return retval
 
 
-@periodic_task(run_every=timedelta(seconds=3)) #24*60*60
+@periodic_task(run_every=crontab(hour=3, minute=28))
 def cull_zip_cache():
     logger = cull_zip_cache.get_logger()
     logger.info("culling download cache")
@@ -95,4 +96,3 @@ def cull_zip_cache():
         age = time.time() - os.path.getmtime(path)
         if age > settings.ECS_DOWNLOAD_CACHE_MAX_AGE:
             os.remove(path)
-            
