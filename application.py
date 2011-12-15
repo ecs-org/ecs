@@ -307,8 +307,6 @@ sfood:inst:all:pypi:snakefood
 
 # FIXME: who needs simplejson, and why is it in developer packages
 simplejson:inst:all:pypi:simplejson
-# deployment: massimport statistics 
-levenshtein:inst:!win:http://pylevenshtein.googlecode.com/files/python-Levenshtein-0.10.1.tar.bz2
 """
 
 # required for django_extensions unittests:
