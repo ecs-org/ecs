@@ -17,6 +17,14 @@ def handler500(request):
     t = loader.get_template('500.html') # You need to create a 500.html template.
     return HttpResponseServerError(t.render(Context({'request': request,})))
 
+def fake404handler(request):
+    ''' 404 error fake handler to be called via /trigger404 ''' 
+    from django.template import Context, loader
+    from django.http import HttpResponseNotFound
+
+    t = loader.get_template('404.html') 
+    return HttpResponseNotFound(t.render(Context({'request': request,})))
+    
 
 urlpatterns = patterns('',
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
@@ -54,12 +62,15 @@ urlpatterns = patterns('',
 
 if settings.DEBUG:
     from django.http import HttpResponse
+    import logging
+    logger = logging.getLogger(__name__)
     def __trigger_log(request):
         logger.warn('foo')
         return HttpResponse()
     urlpatterns += patterns('', 
         url(r'^trigger500/$', lambda request: 1/0), 
-        url(r'^trigger-warning-log/$', __trigger_log)
+        url(r'^trigger-warning-log/$', __trigger_log),
+        url(r'^trigger404/$', 'ecs.urls.fake404handler'),
     )
 
 if 'sentry' in settings.INSTALLED_APPS:
