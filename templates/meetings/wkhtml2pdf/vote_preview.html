@@ -22,31 +22,6 @@
   <b>Projekttitel:</b> {{ form.german_project_title|default:form.project_title }}
 </p>
 
-<p>Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:</p>
-
-<table class="full_width withborders">
-  <tbody>
-    <tr>
-        <th>Dokument</th>
-        <th>Name</th>
-        <th>Version/Identifikation</th>
-        <th>Datum</th>
-    </tr>
-    {% for doc in documents %}
-    <tr>
-        <td>{% ifchanged doc.doctype.name %}<strong>{{ doc.doctype.name }}</strong>{% endifchanged %}</td>
-        <td>{% if doc.name %}<strong>{{ doc.name }}</strong>{% endif %}</td>
-        <td><strong>{{ doc.version }}</strong></td>
-        <td><strong>{{ doc.date|date:'d.m.Y' }}</strong></td>
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="4"><em>(keine Unterlagen)</em></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
 <h4>Die Kommission fasst folgenden Beschluss:</h4>
 
 {% if vote.result == '1' %}
@@ -84,30 +59,4 @@
       {{ vote.text|linebreaksbr}}
     </p>
 {% endif %}
-
-
-{% if submission.current_submission_form.is_amg %}
-<p>"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum vollständigen Eingelangen der in diesem Votm gefordereten Informationen gehemmt.
-</p>
-{% endif %}
-
-{% if submission.current_submission_form.is_amg or submission.current_submission_form.is_mpg %}
-<p>
-    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.current_submission_form.is_amg %}AMG{% endif %}{% if submission.current_submission_form.is_amg and submission.current_submission_form.is_mpg %}/{% endif %}{% if submission.current_submission_form.is_mpg %}MPG{% endif %} handelt.
-</p>
-{% else %}
-<p>
-    Die Ethik-Kommision geht - rechtlich unverbindlich - davon aus, daß es sich <b>nicht</b> um eine klinische Prüfung gemäß AMG/MPG handelt.
-</p>
-{% endif %}
-
-<p>
-    Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend. Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben:  
-    {% for bef in submission.get_befangene %}    
-        {{ bef.first_name }} {{ bef.last_name }}<br/>
-    {% empty %}
-        <b>keine</b>    
-    {% endfor %}
-</p>
-    
 {% endblock %}
