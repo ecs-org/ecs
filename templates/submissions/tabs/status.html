@@ -161,17 +161,15 @@
     <tr>
         <th>Sitzungen:</th>
         <td colspan="3">
-            <ul>
                 {% for meeting in submission.meetings.all %}
-                    <li>
+                    <div>
                         {% if user|has_flag:'is_internal' %}
                             <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                         {% else %}
                             {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
                         {% endif %}
-                    </li>
+                    </div><br>
                 {% endfor %}
-            </ul>
             {% if user|has_flag:'is_executive_board_member' %}
                 <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
@@ -180,13 +178,11 @@
     <tr>
         <th>Voten:</th>
         <td colspan="3">
-            <ul>
                 {% for vote in submission.votes.all %}
                     {% if vote.result %}
-                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</li>
+                    <div>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</div><br>
                     {% endif %}
                 {% endfor %}
-            </ul>
         </td>
     </tr>
     {% endif %}
@@ -194,14 +190,12 @@
     <tr>
         <th>Gutachten:</th>
         <td>
-            <ul>
             {% for checklist in external_review_checklists %}
-                <li>{{ checklist }} [{{ checklist.get_status_display }}]
+                <div>{{ checklist }} [{{ checklist.get_status_display }}]
                 {% if checklist.status == 'new' or checklist.status == 'review_fail' %}
                     | <a href="{% url ecs.core.views.drop_checklist_review submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "drop" %}</a>
-                {% endif %}</li>
+                {% endif %}</div><br>
             {% endfor %}
-            </ul>
         </td>
     </tr>
     {% else %}

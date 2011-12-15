@@ -204,8 +204,11 @@
 }
 
 ul.thread {
-  list-style-type: none;
   margin: 20px 0px !important;
+  
+    li {
+      list-style-type: none;
+    }
 }
 
 .thread { 
