@@ -156,11 +156,6 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.security.SecurityReviewMiddleware',
 )
 
-STARTUP_CALLS = (
-    'ecs.integration.startup.startup',
-    'ecs.users.startup.startup',
-)
-
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -228,6 +223,13 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 # ecs settings
 ##############
 
+# used by ecs.utils.startup middleware: executes list on framework startup
+STARTUP_CALLS = (
+    'ecs.integration.startup.startup',
+    'ecs.users.startup.startup',
+)
+
+# used by ecs.pki 
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
 ECS_CA_CONFIG = os.path.join(PROJECT_DIR, '..', 'openssl.cnf')
 
@@ -236,6 +238,7 @@ ECS_CA_CONFIG = os.path.join(PROJECT_DIR, '..', 'openssl.cnf')
 ECS_PDFCOP_CONFIG_FILE = os.path.join(PROJECT_DIR, 'utils', 'pdfcop.conf.yml')
 ECS_PDFCOP_POLICY = 'ecs'
 
+# ecs.utils.pdfutils wkhtmltopdf uses these options to steer pdf generation out of html files
 WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
 
 # whether ecs.tracking should store requests
