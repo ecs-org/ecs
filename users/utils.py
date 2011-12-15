@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.db import transaction
 from django.utils.encoding import force_unicode
-from django.contrib.sites.models import Site
 from django.http import HttpRequest
 
 from ecs.users.middleware import current_user_store, current_user_store
@@ -132,10 +131,8 @@ def create_phantom_user(email, role=None):
 
         invitation = Invitation.objects.create(user=user)
 
-        domain = Site.objects.get_current().domain
-
         subject = _(u'ECS account creation')
-        link = 'http://{0}{1}'.format(domain, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+        link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
         htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
             'link': link,
         }))

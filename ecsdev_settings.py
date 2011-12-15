@@ -30,15 +30,14 @@ if user in DBPWD_DICT:
     CELERY_ALWAYS_EAGER = False
 
 conf_dict = {
-    'shredder': (2, 's.ecsdev.ep3.at', 8833, 'Skj45A6R2z36gVKF17i2', 'SfMS0teNT7E2yD6GVVK6JH0xwfkeykw'),
-    'testecs': (3, 'test.ecsdev.ep3.at', 8843, 'GHz36o6OJHOm8uKmYiD1', 'dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6'),
-    'chipper': (4, 'doc.ecsdev.ep3.at', 8853, 'Edoij38So9js7SEiu982', 'ESDOFK934JSDFihsnu3w4SDOJFuihwi'),
+    'shredder': ('s.ecsdev.ep3.at', 8833, 'Skj45A6R2z36gVKF17i2', 'SfMS0teNT7E2yD6GVVK6JH0xwfkeykw'),
+    'testecs': ('test.ecsdev.ep3.at', 8843, 'GHz36o6OJHOm8uKmYiD1', 'dwvKMtJmRUiXeaMWGCHnEJZjD4CDEh6'),
+    'chipper': ('doc.ecsdev.ep3.at', 8853, 'Edoij38So9js7SEiu982', 'ESDOFK934JSDFihsnu3w4SDOJFuihwi'),
 }
 
 if user in conf_dict.keys():
-    site_id, domain, mailport, ms_key_id, ms_key_secret = conf_dict[user]
+    domain, mailport, ms_key_id, ms_key_secret = conf_dict[user]
 
-    SITE_ID = site_id
     ECSMAIL_OVERRIDE = {
         'port': mailport,
         'authoritative_domain': domain,
