@@ -1,0 +1,30 @@
+[ ca ]
+default_ca  = CA_default
+
+[ CA_default ]
+dir           = %(basedir)s
+certs         = $dir/%(certs)s
+crl_dir       = $dir/%(crl)s
+database      = $dir/%(database)s
+new_certs_dir = $dir/%(new_certs_dir)s
+
+certificate = $dir/%(certificate)s
+serial      = $dir/%(serial)s
+crlnumber   = $dir/%(crlnumber)s
+crl         = $dir/%(crl)s
+private_key = $dir/%(private_key)s
+
+#x509_extensions = usr_cert
+default_md   = sha1
+preserve     = no
+policy       = policy_any
+default_days = %(default_days)s
+default_bits = %(default_bits)s
+
+[ policy_any ]
+countryName            = supplied
+stateOrProvinceName    = optional
+organizationName       = optional
+organizationalUnitName = optional
+commonName             = supplied
+emailAddress           = optional
