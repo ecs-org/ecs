@@ -157,7 +157,7 @@
 .thread_list_choose,
 .messages_header .sort_options {
   margin-right: 10px;
-  background: $middle-light-brown-bg;
+  background: $beige;
   border-radius: 3px;
 }
 .thread_list_choose {
@@ -254,10 +254,10 @@ ul.thread {
     }
     
     li.message:nth-child(odd) {
-      background: $middle-light-brown-bg;
+      background: $beige;
     }
     li.message:nth-child(even) {
-      background: $middle-dark-brown-bg;
+      background: $beige-dark;
     }
     pre {
       padding: 10px;

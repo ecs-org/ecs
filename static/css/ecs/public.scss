@@ -181,8 +181,8 @@
 .wrapper_404 .content {
   float: left;
   padding: 20px;
-  border: 1px solid $light-brown-border;
-  background: $light-brown-bg;
+  border: 1px solid $bisque;
+  background: $beige-light;
   margin-bottom: 40px;
 }
 
@@ -190,7 +190,7 @@
   
   .content h1 {
     padding: 8px 10px;
-    background: $light-brown-border;
+    background: $bisque;
   }
   .content h2 {
     font-size: 16px;
@@ -207,18 +207,18 @@
   ol > li {
     display: block;
     padding: 10px;
-    border-bottom: 3px solid $light-brown-border;
+    border-bottom: 3px solid $bisque;
     
       &:first-child {
-        border-top: 3px solid $light-brown-border;
+        border-top: 3px solid $bisque;
       }
   }
   p {
     padding-bottom: 2px;
-    border-bottom: 1px solid $light-brown-border;
+    border-bottom: 1px solid $bisque;
     
     span.border_right {
-      border-right: 1px solid $light-brown-border;
+      border-right: 1px solid $bisque;
       padding-right: 5px;
       margin-right: 5px;
     }
@@ -232,7 +232,7 @@
 }
 .catalogue_list .indented {
   padding-left: 20px;
-  border-left: 20px solid $light-brown-border;
+  border-left: 20px solid $bisque;
 }
 #content .years a {
   display: inline-block;

@@ -228,24 +228,24 @@ ul.errorlist {
           padding: 0px 5px;
           border-radius: 3px;
           border: 1px solid #bbb;
-          background-color: $readonly-navitem-bg;
+          background-color: $grey-ochre;
           
             a {
               text-decoration: none !important;
               color: $grey-20 !important;
             }
             &.active {
-              background: $middle-light-brown-bg; 
+              background: $beige; 
             }
             &.errors {
               border: 1px solid $red;
-              background-color: $navitem-error-red-bg;
+              background-color: $brick-red;
             }
             &.errors a {
               color: #fff !important;
             }
             &.errors.active {
-              background-color: $navitem-error-orange-bg;
+              background-color: $orange;
             }
         }        
     }

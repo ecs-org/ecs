@@ -1,8 +1,8 @@
-/* color names inspired by x11 and svg color schemes: http://www.graphviz.org/doc/info/colors.html */
+/* COLORS
+ *
+ * color names inspired by x11 and svg color schemes: http://www.graphviz.org/doc/info/colors.html 
+ */
 
-/* general colors */
-
-$red: #ff0000;
 
 $black: #000000;
 $white: #ffffff;
@@ -18,28 +18,41 @@ $grey-80: #CDCDCD;
 $grey-90: #E6E6E6;
 $grey-95: #F3F3F3;
 
-
-$light-brown-bg: #F8F8EF;
-$middle-light-brown-bg: #EFEFDD; /* used e.g. for zebra odd */
-$middle-dark-brown-bg: #E8E8D8; /* used e.g. for zebra even */
-
-
 $lightblue: #D8E6EF; /* used for header backgrounds */
-$lightskyblue: #B7D4E5;
+$lightskyblue: #B7D4E5; /* bg colors */
+$lightskyblue-light: #E2EAF0; /* bg colors */
 
-$royalblue-dark: #2B558E;
+$skyblue: #6CA6CD; /* link bg */
+
+$royalblue-dark: #2B558E; /* main link color */
 $royalblue-light: adjust-color(#2B558E, $lightness: 25%);
 
+$bisque-extra-light: #F8F8EF; /* background color */
+$bisque: #EBDFC3; /* used for borders */
+
 $wheatbrown: #EDDFBF;
+
+$grey-ochre: #DDDAC8; /* readonly nav colors */
+$grey-ochre-light: #F2F0E5;
+$grey-ochre-dark: #C7C5BB;
+
+$beige-light: #F8F8EF; /* content background */
+$beige: #EFEFDD; /* used e.g. for zebra odd */
+$beige-dark: #E8E8D8; /* used e.g. for zebra even */
 
 $yellow: #ffff00;
 $yellow-dark: #F9F77A;
 $yellow-extra-dark: adjust-color(#F9F77A, $lightness: -25%);
 
+$brick-red: #FB6464;
+$red: #ff0000;
+$orange: #FF8000;
+
+/* examples: */
+
 //$moritz : #38FA90;
 //$moritz-light : lighten(moritz, 20%)
 //$moritz-extra-light : lighten(moritz, 30%)
-
 
 //pastel
 //extra-light
@@ -48,29 +61,6 @@ $yellow-extra-dark: adjust-color(#F9F77A, $lightness: -25%);
 //dark = duenkler
 //extra-dark
 //neon
- 
+
 //$zebra_brown_odd: middle-light-brown-bg;
 //$zebra_brown_even: middle-dark-brown-bg;
-
-
-/* border colors */
-
-$light-brown-border: #EBDFC3;
-
-/* navigation colors */
-
- 
-$link-lightblue: #E2EAF0;
-
-$navitem-error-red-bg: #FB6464;
-$navitem-error-orange-bg: #FF8000;
-
-$readonly-mainnav-bg: #C7C5BB;
-$readonly-navitem-bg: #DDDAC8;
-$readonly-navitem-sub-active: #F2F0E5;
-
-
-/* error colors */
-
-$error-red: ;
-$error-orange: ;

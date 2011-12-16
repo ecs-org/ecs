@@ -51,8 +51,8 @@ body {
   display: block;
   margin: 10px;
   padding: 10px;
-  border: 1px solid $light-brown-border;
-  background: $light-brown-bg;
+  border: 1px solid $bisque;
+  background: $beige-light;
   min-width: 700px;
 }
 #sidebar {
@@ -66,7 +66,7 @@ body {
   color: $grey-20;
   background: #f6f6e9;
   word-wrap: break-word;
-  border-left: 1px solid $light-brown-border;
+  border-left: 1px solid $bisque;
     
     .user_logout a {
     color: #800000;
@@ -210,7 +210,7 @@ a {
   padding: 10px;
   background: #f3f3db;
   margin: 0 -10px;
-  border-bottom: 1px solid $light-brown-border;
+  border-bottom: 1px solid $bisque;
 }
 .form_main h3:first-child,
 .notification_list h3:first-child {

@@ -21,15 +21,15 @@
         text-shadow: 0 1px 2px $grey-20;
         
         &.active {
-          background: $readonly-mainnav-bg;
+          background: $grey-ochre-dark;
           color: $grey-20;
           text-shadow: 0 1px 2px $white;
         }
         
         &.errors {
-          background: $navitem-error-red-bg;
+          background: $brick-red;
           color: #fff !important;
-          text-shadow: 0 1px 2px $navitem-error-red-bg;
+          text-shadow: 0 1px 2px $brick-red;
         }
     }
     
@@ -37,7 +37,7 @@
         position: absolute;
         left: 0;
         line-height: 30px;
-        background: $readonly-mainnav-bg;
+        background: $grey-ochre-dark;
         width: 86%;
         padding: 2px 5px;
         border-radius: 0 5px 5px 5px;
@@ -45,25 +45,25 @@
         li a {
             text-decoration: none;
             padding: 3px 5px;
-            background: $readonly-navitem-bg;
+            background: $grey-ochre;
             color: $grey-20;
             border-radius: 3px;
             text-shadow: 0 0 0 $white;
         }
         
         li.active a {
-            background: $readonly-navitem-sub-active;
+            background: $grey-ochre-light;
         }
         
         li.readonly_review a {
-            background: $link-lightblue;
+            background: $lightskyblue-light;
             color: $royalblue-dark;
         }
         
         li.errors a {
-          background: $navitem-error-red-bg;
+          background: $brick-red;
           color: #fff !important;
-          text-shadow: 0 1px 2px $navitem-error-red-bg;
+          text-shadow: 0 1px 2px $brick-red;
         }
     }
 }

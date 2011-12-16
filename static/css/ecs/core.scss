@@ -31,9 +31,9 @@ input[disabled] {
           }
       }
       a.errors {
-        background: $navitem-error-red-bg;
+        background: $brick-red;
         color: #fff !important;
-        text-shadow: 0 1px 2px $navitem-error-red-bg;
+        text-shadow: 0 1px 2px $brick-red;
       }
     }
 }
@@ -41,8 +41,8 @@ input[disabled] {
 .tab_header_groups a.active.errors, 
 .tab_headers .active.errors a {
   color: $white;
-  background: $navitem-error-orange-bg;
-  text-shadow: 0 1px 2px $navitem-error-orange-bg;
+  background: $orange;
+  text-shadow: 0 1px 2px $orange;
 }
 
 .tab_headers {
@@ -56,18 +56,18 @@ input[disabled] {
   
     li a {
       padding: 3px 5px;
-      background: $link-lightblue;
-      color: $royalblue-dark;
+      background: $skyblue;
+      color: $white;
       font-weight: normal;
       border-radius: 3px;
       text-shadow: 0 0 0 $white;
     }
     .active a {
-      background: $royalblue-dark;
-      color: $link-lightblue;
+      background: $lightskyblue-light;
+      color: $royalblue-dark;
     }
     .errors a {
-      background: $navitem-error-red-bg;
+      background: $brick-red;
       color: #fff !important;
     }
     .disabled a {
@@ -317,7 +317,7 @@ table.notification td,
 }
 
 .document_container {
-  background: $light-brown-bg;
+  background: $beige-light;
 }
 iframe.upload {
   border-width: 0px;
@@ -384,7 +384,7 @@ iframe.upload {
 #meeting_list li:nth-child(odd) ,
 .billing_list li:nth-child(odd) ,
 .billing_summary tr:nth-child(odd) {
-  background: $middle-light-brown-bg;
+  background: $beige;
   border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(even) ,
@@ -404,7 +404,7 @@ iframe.upload {
 #meeting_list li:nth-child(even) , 
 .billing_list li:nth-child(even) ,
 .billing_summary tr:nth-child(even) {
-  background: $middle-dark-brown-bg;
+  background: $beige-dark;
   border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:hover,
