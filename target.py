@@ -355,6 +355,28 @@ def custom_install_pdftotext(pkgline, filename):
     return result
     
 def custom_install_origami(pkgline, filename):
+    env = get_pythonenv()
+    gem_bindir = gem_home = os.path.join(env, 'gems', 'bin')
+    if sys.platform == 'win32':
+        bindir = os.path.join(env, 'Scripts')
+        for binfile in ['pdfcop', 'pdfdecrypt']:
+            with open(os.path.join(bindir, '{0}.bat'.format(binfile)), 'w') as f:
+                f.write("""@echo off
+set GEM_HOME=%VIRTUAL_ENV%\gems
+set GEM_PATH=%GEM_HOME%
+ruby.exe %GEM_HOME%\\bin\\{0} %*
+                """.format(binfile))
+    else:
+        bindir = os.path.join(env, 'bin')
+        for binfile in ['pdfcop', 'pdfdecrypt']:
+            wrapper = os.path.join(bindir, binfile)
+            with open(wrapper, 'w') as f:
+                f.write("""#!/bin/sh
+export GEM_HOME="${{VIRTUAL_ENV}}/gems"
+export GEM_PATH="${{GEM_HOME}}"
+"${{GEM_HOME}}/bin/{0}" $*
+                """.format(binfile))
+            os.chmod(wrapper, 0755)
     return custom_install_ruby_gem(pkgline, filename)
 
 def custom_install_ruby_gem(pkgline, filename):
@@ -367,7 +389,7 @@ def custom_install_ruby_gem(pkgline, filename):
     is_win = sys.platform == 'win32'
     bindir = os.path.join(env, 'Scripts' if is_win else 'bin')
     gembin = 'gem.bat' if is_win else 'gem'
-    gem_cmd = [gembin, 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
+    gem_cmd = [gembin, 'install', '--no-ri', '--no-rdoc', filename]
     gem = subprocess.Popen(gem_cmd)
     gem.wait()
     return gem.returncode == 0
