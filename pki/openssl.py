@@ -29,40 +29,6 @@ class CA(object):
         for key, value in kwargs.items():
             setattr(self, key, value)
         
-    def get_config(self):
-        return """
-[ ca ]
-default_ca  = CA_default
-
-[ CA_default ]
-dir           = %(basedir)s
-certs         = $dir/%(certs)s
-crl_dir       = $dir/%(crl)s
-database      = $dir/%(database)s
-new_certs_dir = $dir/%(new_certs_dir)s
-
-certificate = $dir/%(certificate)s
-serial      = $dir/%(serial)s
-crlnumber   = $dir/%(crlnumber)s
-crl         = $dir/%(crl)s
-private_key = $dir/%(private_key)s
-
-#x509_extensions = usr_cert
-default_md   = sha1
-preserve     = no
-policy       = policy_any
-default_days = %(default_days)s
-default_bits = %(default_bits)s
-
-[ policy_any ]
-countryName            = supplied
-stateOrProvinceName    = optional
-organizationName       = optional
-organizationalUnitName = optional
-commonName             = supplied
-emailAddress           = optional
-""" % self.__dict__
-
     def _exec(self, cmd, env_vars=None):
         cmd = [OPENSSL_PATH] + cmd
         print ' '.join(cmd)
@@ -96,10 +62,7 @@ emailAddress           = optional
     def _gen_crl(self):
         self._exec_ca(['-gencrl', '-crldays', '1', '-out', self.crl_path])
 
-    def setup(self, subject, key_length=1024):
-        with open(self.config, 'w') as f:
-            f.write(self.get_config())
-        
+    def setup(self, subject, key_length=2048):
         if not os.path.exists(self.basedir):
             for dirname in [self.certs, self.crl_dir, self.new_certs_dir]:
                 os.makedirs(os.path.join(self.basedir, dirname), 0755)
@@ -188,43 +151,4 @@ emailAddress           = optional
 
     def revoke_by_fingerprint(self, fingerprint):
         return self.revoke(self.get_cert_path_for_fingerprint(fingerprint))
-
-class OpenSSL(object):
-    def get_pw_env(self, pw, env_vars=None):
-        var = "ecs_%s" % "".join(random.sample(string.letters+string.digits, 10))
-        if env_vars is None:
-            env_vars = {}
-        env_vars[var] = pw
-        return var, env_vars
-        
-    def get_serial(self, cert):
-        output = self._exec(['x509', '-in', cert, '-noout', '-serial'])
-        x = output.rstrip("\n").split('=')
-
-        if len(x[1]) > 2:
-            sl = re.findall('[a-fA-F0-9]{2}', x[1].lower())
-            return ':'.join(sl)
-
-        return x[1].lower()
-
-    def get_hash(self, cert):
-        output = self._exec(['x509', '-hash', '-in', cert])
-        return output.rstrip("\n")
-
-    def is_revoked(self, cert):
-        output = self._exec_ca('crl', '-text', '-noout', '-in', self.crl, )
-        
-        serial_re = re.compile('^\s+Serial\sNumber\:\s+(\w+)')
-        lines = output.split('\n')
-        serial = self.get_serial(cert)
-
-        for line in lines:
-            match = serial_re.match(line)
-            if match and match.group(1) == serial:
-                return True
-        return False
-        
-    def dump(self, cert):
-        return self._exec(['x509', '-in', cert, '-noout', '-text'])
-    
 
