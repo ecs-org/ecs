@@ -231,6 +231,13 @@ STARTUP_CALLS = (
 
 ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-config')
 
+# used by ecs.utils.startup middleware: executes list on framework startup
+STARTUP_CALLS = (
+    'ecs.integration.startup.startup',
+    'ecs.users.startup.startup',
+)
+
+# used by ecs.pki 
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
 ECS_CA_CONFIG = os.path.join(ECS_CONFIG_DIR, 'openssl-ca.cnf')
 

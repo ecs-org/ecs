@@ -8,7 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< local
 "POT-Creation-Date: 2011-12-17 15:47+0100\n"
+=======
+"POT-Creation-Date: 2011-12-15 13:54+0100\n"
+>>>>>>> other
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3411,7 +3415,11 @@ msgid "Create new certificate"
 msgstr "Eine neue Meldung erstellen"
 
 #: templates/pki/cert_list.html:27
+<<<<<<< local
 #: templates/submissions/tabs/involved_parties.html:61
+=======
+#: templates/submissions/tabs/involved_parties.html:62
+>>>>>>> other
 msgid "Revoke"
 msgstr "Widerrufen"
 
@@ -3887,7 +3895,11 @@ msgstr "Befristete Autorisierung"
 msgid "Timeframe"
 msgstr "Zeitraum"
 
+<<<<<<< local
 #: templates/submissions/tabs/involved_parties.html:77
+=======
+#: templates/submissions/tabs/involved_parties.html:78
+>>>>>>> other
 msgid "Authorize"
 msgstr "Autorisieren"
 
