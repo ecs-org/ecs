@@ -367,7 +367,7 @@ def custom_install_ruby_gem(pkgline, filename):
     is_win = sys.platform == 'win32'
     bindir = os.path.join(env, 'Scripts' if is_win else 'bin')
     gembin = 'gem.bat' if is_win else 'gem'
-    gem_cmd = ['gem.bat', 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
+    gem_cmd = [gembin, 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
     gem = subprocess.Popen(gem_cmd)
     gem.wait()
     return gem.returncode == 0
