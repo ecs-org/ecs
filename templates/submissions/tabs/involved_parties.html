@@ -22,8 +22,7 @@
                 <td>
                     {% if party.user %}
                         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=party.user.pk %}" target="_blank">
-                            <span class="icon_send"></span>
-                            {% trans "Send Message" %}
+                            <span class="icon_send"></span>{% trans "Send Message" %}
                         </a>
                     {% endif %}
                 </td>
@@ -43,6 +42,7 @@
                 <th>{% trans 'E-Mail' %}</th>
             {% endif %}
             <th></th>
+            <th></th>
         </thead>
         <tbody>
             {% for ta in temporary_auth %}
@@ -55,11 +55,10 @@
                     {% endif %}
                     <td>
                         <a href="{% url ecs.communication.views.new_thread submission_pk=submission_form.submission.pk,to_user_pk=ta.user.pk %}" target="_blank">
-                            <span class="icon_send"></span>
-                            {% trans "Send Message" %}
+                            <span class="icon_send"></span>{% trans "Send Message" %}
                         </a>
                         {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
-                            | <a href="{% url ecs.core.views.revoke_temporary_access submission_pk=submission.pk temp_auth_pk=ta.pk %}">{% trans 'Revoke' %}</a>
+                            <td><a href="{% url ecs.core.views.revoke_temporary_access submission_pk=submission.pk temp_auth_pk=ta.pk %}"><span class="icon_revoke"></span>{% trans 'Revoke' %}</a></td>
                         {% endif %}
                     </td>
                 </tr>
