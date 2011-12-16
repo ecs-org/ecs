@@ -5,6 +5,8 @@ import sys
 import shutil
 import tempfile
 import logging
+import string
+import random
 import distutils.dir_util
 
 from uuid import uuid4
@@ -16,15 +18,34 @@ from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 
 
-
 class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.appname = 'ecs'
         self.dirname = os.path.dirname(__file__)
-        self.queuing_password = uuid4().get_hex()
-
+        
+    def configure(self, config_file):
+        self.config = load_config(config_file)
+        self.homedir = os.path.expanduser('~')
+        self.configdir = os.path.join(self.homedir, 'ecs-conf')
+        # set legacy attributes
+        for attr in ('ip', 'host'):
+            setattr(self, attr, self.config[attr])
+        self.config['local_hostname'] = self.config['host'].split('.')[0]
+        self.config.setdefault('postgresql.username', self.config['user'])
+        self.config.setdefault('rabbitmq.username', self.config['user'])
+        self.config.setdefault('rabbitmq.password', self.random_string(20))
+        
+    def random_string(self, length=40):
+        chars = string.string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
+        return ''.join(random.choice(chars) for i in xrange(length))
+    
+    def write_config_template(self, template, dst, context=None):
+        if context is None:
+            context = self.config
+        write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context)
+        
     def help(self, *args, **kwargs):
         print('''{0} targets
   * system_setup
@@ -62,8 +83,8 @@ class SetupTarget(SetupTargetObject):
         self.homedir_config()
         self.servercert_config()
         self.apache_baseline()
-        """ install_logrotate(appname, use_sudo=use_sudo, dry=dry)"""
-        self.local_settings_config()
+        # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
+        self.django_config()
         self.db_clear()
         self.queuing_config()
 
@@ -78,106 +99,32 @@ class SetupTarget(SetupTargetObject):
  
     def homedir_config(self):
         homedir = os.path.expanduser('~')
-        for name in ('public_html', '.python-eggs', ):
+        for name in ('public_html', '.python-eggs', 'ecs-conf'):
             pathname = os.path.join(homedir, name)
             if not os.path.exists(pathname):
                 os.mkdir(pathname)
-        
+
     def servercert_config(self):
-        homedir = os.path.expanduser('~')
-        ssleay_filename = os.path.join(homedir, 'ssleay.cnf')
+        ssleay_filename = os.path.join(self.homedir, 'ssleay.cnf')
         warn("Creating {0}".format(ssleay_filename))
-        local('''cat <<SSLEAYCNF_EOF > {0}
-RANDFILE                = /dev/urandom
-
-[ req ]
-default_bits            = 2048
-default_keyfile         = privkey.pem
-distinguished_name      = req_distinguished_name
-prompt                  = no
-policy                  = policy_anything
-
-[ req_distinguished_name ]
-countryName            = AT
-stateOrProvinceName    = Vienna
-localityName           = Vienna
-organizationName       = ep3 Software & System House
-organizationalUnitName = Security
-commonName             = {1}
-emailAddress           = admin@{1}
-SSLEAYCNF_EOF'''.format(ssleay_filename, self.hostname))
         local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.hostname))
-    
+        self.write_config_template('ssleay.cnf', ssleay_filename)
     
     def ca_config(self):
-        homedir = os.path.expanduser('~')
-        openssl_cnf = os.path.join(homedir, 'openssl.cnf')
+        openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
+        self.write_config_template('openssl-ca.cnf', openssl_cnf)
         
-    
-    def local_settings_config(self):
-        local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
-        local_settings.write("""
-import sys
-
-# database settings
-DATABASES_OVERRIDE = {}
-DATABASES_OVERRIDE['default'] = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': '%(username)s',
-    'USER': '%(username)s',
-}
-
-# rabbitmq/celery settings
-BROKER_USER = '%(username)s'
-BROKER_PASSWORD = '%(queuing_password)s'
-BROKER_VHOST = '%(username)s'
-BROKER_BACKEND = ''
-CELERY_ALWAYS_EAGER = False
-
-# haystack settings
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
-
-# disabled PDFCOP (still not working, current error unknown)
-PDFCOP_ENABLED = False
-
-# email settings
-ECSMAIL_OVERRIDE = {
-        'authoritative_domain': '%(hostname)s',
-        'trusted_sources': ['127.0.0.1', '%(ip)s'],
-    }
-
-# Mediaserver Server Access
-MS_CLIENT_OVERRIDE = {
-        'server': 'https://%(hostname)s',
-    }
-
-MS_SERVER_OVERRIDE = {
-    'render_memcache_lib': 'memcache',
-    'render_memcache_host': '127.0.0.1',
-    'render_memcache_host': 11211,
-    # smaller ms caches for testing aging
-    'doc_diskcache_maxsize': 2**26, # 64mb 
-    'render_diskcache_maxsize': 2**25, # 32Mb
-}
-
-if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-ABSOLUTE_URL_PREFIX = "https://%(hostname)s"
-
-DEBUG = False
-TEMPLATE_DEBUG = False
-
-            """ % {
-            'username': self.username,
-            'hostname': self.hostname,
-            'ip': self.ip,
-            'queuing_password': self.queuing_password,
-        })
-        local_settings.close()
-    
-    def apache_baseline(self):        
+    def ca_update(self):
+        try:
+            replacement = self.config.get_path('ca.dir')
+        except KeyError:
+            return
+        basedir = os.path.join(self.homedir, 'ecs-ca')
+        
+    def django_config(self):
+        self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
+        
+    def apache_baseline(self):
         baseline_bootstrap = ['sudo'] if self.use_sudo else []
         baseline_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
         local(subprocess.list2cmdline(baseline_bootstrap))
@@ -186,8 +133,12 @@ TEMPLATE_DEBUG = False
         apache_mkdirs = ['sudo'] if self.use_sudo else []
         apache_mkdirs += ['mkdir', '-p', '/etc/apache2/ecs', '/etc/apache2/ecs/apache.wsgi', '/etc/apache2/ecs/apache.conf']
         local(subprocess.list2cmdline(apache_mkdirs))
-        apache_setup(self.appname, use_sudo=self.use_sudo, hostname= self.hostname, ip= self.ip)
-        
+        apache_setup(self.appname, use_sudo=self.use_sudo, 
+            hostname=self.hostname, 
+            ip=self.ip, 
+            ca_certificate_file='',
+            ca_revocation_file='',
+        )
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
@@ -238,7 +189,6 @@ TEMPLATE_DEBUG = False
         pass
 
     def queuing_config(self):
-        # TODO: should configure queuing password in local_settings too, 
         if int(local('sudo rabbitmqctl list_vhosts | grep %s | wc -l' % self.username, capture=True)):
             local('sudo rabbitmqctl delete_vhost %s' % self.username)
         
@@ -253,14 +203,8 @@ TEMPLATE_DEBUG = False
     def search_config(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % self.username)
         local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
-        
-        jetty_cnf = open(os.path.expanduser('~/jetty.cnf'), 'w')
-        jetty_cnf.write("""
-NO_START=0
-VERBOSE=yes
-JETTY_PORT=8983
-        """)
-        jetty_cnf.close()
+        with open(os.path.expanduser('~/jetty.cnf'), 'w') as f:
+            f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
         local('sudo cp ~{0}/jetty.cnf /etc/default/jetty'.format(self.username))
         local('sudo /etc/init.d/jetty stop')
         local('sudo /etc/init.d/jetty start')
