@@ -229,9 +229,10 @@ STARTUP_CALLS = (
     'ecs.users.startup.startup',
 )
 
-# used by ecs.pki 
+ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-config')
+
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
-ECS_CA_CONFIG = os.path.join(PROJECT_DIR, '..', 'openssl.cnf')
+ECS_CA_CONFIG = os.path.join(ECS_CONFIG_DIR, 'openssl-ca.cnf')
 
 # These settings are passed to pdfcop from origami via the `--config` and `--policy` options.
 # see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
@@ -514,6 +515,11 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+# load config from ecs-config/django.py
+_config_file = os.path.join(ECS_CONFIG_DIR, 'django.py')
+if os.path.exists(_config_file):
+    execfile(_config_file)
 
 # apply local overrides
 local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
