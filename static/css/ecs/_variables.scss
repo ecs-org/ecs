@@ -1,4 +1,4 @@
-// color names inspired by x11 and svg color schemes: http://www.graphviz.org/doc/info/colors.html
+/* color names inspired by x11 and svg color schemes: http://www.graphviz.org/doc/info/colors.html */
 
 /* general colors */
 
@@ -20,14 +20,15 @@ $grey-95: #F3F3F3;
 
 
 $light-brown-bg: #F8F8EF;
-$middle-light-brown-bg: #EFEFDD; // used e.g. for zebra odd
-$middle-dark-brown-bg: #E8E8D8; // used e.g. for zebra even
+$middle-light-brown-bg: #EFEFDD; /* used e.g. for zebra odd */
+$middle-dark-brown-bg: #E8E8D8; /* used e.g. for zebra even */
 
 
-$lightblue: #D8E6EF; // used for header backgrounds
+$lightblue: #D8E6EF; /* used for header backgrounds */
 $lightskyblue: #B7D4E5;
 
-$link-blue: #2B558E;
+$royalblue-dark: #2B558E;
+$royalblue-light: adjust-color(#2B558E, $lightness: 25%);
 
 $wheatbrown: #EDDFBF;
 

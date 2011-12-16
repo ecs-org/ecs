@@ -38,61 +38,37 @@
       {% for vote in votes %}
           {% with vote.submission_form as sf %}
           <li>
-            <div class="items">
-              <div class="item_left">
-                <h2>EK-Nr: {{ sf.submission.get_ec_number_display }}:</h2>
-              </div>
-              <div class="item_right">
-                <h2>{{ sf.german_project_title }}</h2>
+             
+            <h2>{{ sf.german_project_title }}</h2>
 
-                <span class="english_title">{{ sf.project_title }}</span>
-                {% if sf.project_type_education_context %}
-                    <span class="type">{{ sf.get_project_type_education_context_display }} ({{ sf.submitter_contact }})</span>
-                {% endif %}
+            <span class="english_title">{{ sf.project_title }}</span>
+            {% if sf.project_type_education_context %}
+                <span class="type">{{ sf.get_project_type_education_context_display }} ({{ sf.submitter_contact }})</span>
+            {% endif %}
 
-                
-                <table>
-                  <tr>
-                    <th>Sponsor:</th>
-                    <td>{{ sf.sponsor_name }}</td>
-                  </tr>
-                  <tr>
-                    <th>Datum der ersten Sitzung:</th>
-                    <td>{{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}</td>
-                  </tr>
-                  <tr>
-                    <th>Datum des Votums:</th>
-                    <td>{{ vote.published_at|date:'d.m.Y' }}</td>
-                  </tr>
-                </table>
-                {% for investigator in sf.investigators.all %}
-                <table>
-                  <tr>
-                    <th>Verantwortliche/r Prüfärtzin/arzt :</th>
-                    <td>{{ investigator.contact }}</td>
-                  </tr>
-                  <tr>
-                    <th>Prüfzentrum:</th>
-                    <td>{{ investigator.organisation }}</td>
-                  </tr>
-                  <tr>
-                    <th>Ethikkomission:</th>
-                    <td>{{ investigator.ethics_commission }}
-                        {% if investigator.ethics_commission.system and sf.is_amg %}
-                            {% if sf.is_categorized_multicentric_and_local %}
-                                (Lokal)
-                            {% else %}
-                                {% if sf.is_categorized_multicentric_and_main %}
-                                    (Leitethikkomission)
-                                {% endif %}
+            <p><strong>Sponsor:</strong> {{ sf.sponsor_name }}</p>
+            <p><strong>Diplomarbeit:</strong> </p>
+            <p><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}<span class="border_right"></span><strong>Sitzung:</strong> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}<span class="border_right"></span><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}</p>
+
+            {% for investigator in sf.investigators.all %}
+            <div class="indented">
+            <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
+            <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>
+            <p><strong>Ethikkomission:</strong> 
+              {{ investigator.ethics_commission }}
+                    {% if investigator.ethics_commission.system and sf.is_amg %}
+                        {% if sf.is_categorized_multicentric_and_local %}
+                            (Lokal)
+                        {% else %}
+                            {% if sf.is_categorized_multicentric_and_main %}
+                                (Leitethikkomission)
                             {% endif %}
                         {% endif %}
-                    </td>
-                  </tr>
-                </table>
-                {% endfor %}
-              </div>
+                    {% endif %}
+            </p>
             </div>
+            {% endfor %}
+
           </li>
           {% endwith %}
       {% endfor %}
