@@ -57,18 +57,18 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls')),
 )
 
-if settings.DEBUG:
-    from django.http import HttpResponse
-    import logging
-    logger = logging.getLogger(__name__)
-    def __trigger_log(request):
-        logger.warn('foo')
-        return HttpResponse()
-    urlpatterns += patterns('', 
-        url(r'^trigger500/$', lambda request: 1/0), 
-        url(r'^trigger-warning-log/$', __trigger_log),
-        url(r'^trigger404/$', 'ecs.urls.fake404handler'),
-    )
+#if settings.DEBUG: (TODO: does not work, because if DEBUG=False, no trigger500 page is available)
+from django.http import HttpResponse
+import logging
+logger = logging.getLogger(__name__)
+def __trigger_log(request):
+    logger.warn('foo')
+    return HttpResponse()
+urlpatterns += patterns('', 
+    url(r'^trigger500/$', lambda request: 1/0), 
+    url(r'^trigger-warning-log/$', __trigger_log),
+    url(r'^trigger404/$', 'ecs.urls.fake404handler'),
+)
 
 if 'sentry' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
