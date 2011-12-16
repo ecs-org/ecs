@@ -10,6 +10,16 @@
     SSLEngine on
     SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
     SSLCertificateKeyFile "/etc/ssl/private/%(hostname)s.key"
+
+    SSLCACertificateFile %(ca_certificate_file)s
+    SSLCARevocationFile %(ca_revocation_file)s
+    SSLVerifyClient none
+    
+    <Location /pki/secure>
+        SSLRequireSSL
+        SSLVerifyClient require
+        SSLVerifyDepth 1
+    </Location>
     
     DocumentRoot %(home)s/public_html
     <Directory "%(home)s/public_html">
