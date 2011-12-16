@@ -155,8 +155,9 @@
   padding: 20px 0;
   left: 0;
   width: 100%;
-  border-bottom: 1px solid #B7D4E5;
+  border-bottom: 3px solid #B7D4E5;
   background: #D8E6EF;
+  
 }
 #header_public img {
   margin: 0 0 0 23px;
@@ -165,7 +166,7 @@
 #content .wrapper_404 {
   position: absolute;
   width: 100%;
-  top: 90px;
+  top: 100px;
   left: 0;
   right: 0;
 }
@@ -222,7 +223,7 @@
 #content .years a {
   display: inline-block;
   padding: 5px 8px;
-  margin-bottom: 12px;
+  margin: 0 10px 12px 0;
   background: #dddddd;
   color: #333333;
   font-size: 12px;
