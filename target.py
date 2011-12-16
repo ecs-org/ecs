@@ -360,12 +360,14 @@ def custom_install_origami(pkgline, filename):
 def custom_install_ruby_gem(pkgline, filename):
     env = get_pythonenv()
     gem_home = os.path.join(env, 'gems')
-    bindir = os.path.join(env, 'Scripts' if sys.platform == 'win32' else 'bin')
 
     os.environ['GEM_HOME'] = gem_home
     os.environ['GEM_PATH'] = gem_home
 
-    gem_cmd = ['gem', 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
+    is_win = sys.platform == 'win32'
+    bindir = os.path.join(env, 'Scripts' if is_win else 'bin')
+    gembin = 'gem.bat' if is_win else 'gem'
+    gem_cmd = ['gem.bat', 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
     gem = subprocess.Popen(gem_cmd)
     gem.wait()
     return gem.returncode == 0
