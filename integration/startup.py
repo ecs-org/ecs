@@ -36,8 +36,3 @@ def startup():
     #logger.addHandler(logging.StreamHandler())
 
     _patch_sentry_GroupedMessage_get_score()
-
-    # allow to run ruby programs
-    gem_home = os.path.join(os.environ['VIRTUAL_ENV'], 'gems')
-    os.environ['GEM_HOME'] = gem_home
-    os.environ['GEM_PATH'] = gem_home
