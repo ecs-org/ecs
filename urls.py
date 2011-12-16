@@ -5,6 +5,7 @@ from django.views.static import serve
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
+from ecs.utils.viewutils import render
 
 # stuff that needs called at the beginning, but not in settings.py
 admin.autodiscover()
@@ -19,11 +20,7 @@ def handler500(request):
 
 def fake404handler(request):
     ''' 404 error fake handler to be called via /trigger404 ''' 
-    from django.template import Context, loader
-    from django.http import HttpResponseNotFound
-
-    t = loader.get_template('404.html') 
-    return HttpResponseNotFound(t.render(Context({'request': request,})))
+    return render(request, '404.html', {}) 
     
 
 urlpatterns = patterns('',
