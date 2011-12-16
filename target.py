@@ -358,34 +358,14 @@ def custom_install_origami(pkgline, filename):
     return custom_install_ruby_gem(pkgline, filename)
 
 def custom_install_ruby_gem(pkgline, filename):
-    
-    gem_home = os.path.join(get_pythonenv(),'gems')
-    filename_dir = os.path.dirname(filename)
-    filename = os.path.basename(filename)
-    
-    if not os.path.exists(gem_home):
-        os.mkdir(gem_home)
-        
-    if not os.path.exists(os.path.join(filename_dir, filename)):
-        print "gem to install does not exist:", filename
-    
-    if sys.platform == 'win32':
-        gem_home = gem_home.replace("\\", "/")
-        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'Scripts').replace("\\", "/")
-        install = 'cd {0}& set GEM_HOME="{1}"& set GEM_PATH="{1}"&\
-gem install --no-ri --no-rdoc --local --bindir="{2}" {3}'.format(
-            filename_dir, gem_home, bin_dir, filename)
-    else:
-        bin_dir = os.path.join(os.environ['VIRTUAL_ENV'],'bin')
-        install = 'export GEM_HOME="{0}"; export GEM_PATH="{0}";\
-gem install --no-ri --no-rdoc --local --bindir="{1}" {2}'.format(
-            filename_dir, gem_home, bin_dir, filename)
-    
-    popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
-    stdout, stderr = popen.communicate() 
-    returncode = popen.returncode  
-    if returncode != 0:
-        print "Error:", returncode, stdout, stderr
-        return False
-    else:
-        return True
+    env = get_pythonenv()
+    gem_home = os.path.join(env, 'gems')
+    bindir = os.path.join(env, 'Scripts' if sys.platform == 'win32' else 'bin')
+
+    os.environ['GEM_HOME'] = gem_home
+    os.environ['GEM_PATH'] = gem_home
+
+    gem_cmd = ['gem', 'install', '--no-ri', '--no-rdoc', '--bindir', bindir, filename]
+    gem = subprocess.Popen(gem_cmd)
+    gem.wait()
+    return gem.returncode == 0
