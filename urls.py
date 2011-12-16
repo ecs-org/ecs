@@ -5,6 +5,7 @@ from django.views.static import serve
 from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
+from ecs.utils.viewutils import render
 
 # stuff that needs called at the beginning, but not in settings.py
 admin.autodiscover()
@@ -19,11 +20,7 @@ def handler500(request):
 
 def fake404handler(request):
     ''' 404 error fake handler to be called via /trigger404 ''' 
-    from django.template import Context, loader
-    from django.http import HttpResponseNotFound
-
-    t = loader.get_template('404.html') 
-    return HttpResponseNotFound(t.render(Context({'request': request,})))
+    return render(request, '404.html', {}) 
     
 
 urlpatterns = patterns('',
@@ -60,18 +57,18 @@ urlpatterns = patterns('',
     url(r'^search/', include('haystack.urls')),
 )
 
-if settings.DEBUG:
-    from django.http import HttpResponse
-    import logging
-    logger = logging.getLogger(__name__)
-    def __trigger_log(request):
-        logger.warn('foo')
-        return HttpResponse()
-    urlpatterns += patterns('', 
-        url(r'^trigger500/$', lambda request: 1/0), 
-        url(r'^trigger-warning-log/$', __trigger_log),
-        url(r'^trigger404/$', 'ecs.urls.fake404handler'),
-    )
+#if settings.DEBUG: (TODO: does not work, because if DEBUG=False, no trigger500 page is available)
+from django.http import HttpResponse
+import logging
+logger = logging.getLogger(__name__)
+def __trigger_log(request):
+    logger.warn('foo')
+    return HttpResponse()
+urlpatterns += patterns('', 
+    url(r'^trigger500/$', lambda request: 1/0), 
+    url(r'^trigger-warning-log/$', __trigger_log),
+    url(r'^trigger404/$', 'ecs.urls.fake404handler'),
+)
 
 if 'sentry' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
