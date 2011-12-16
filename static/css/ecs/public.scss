@@ -1,3 +1,5 @@
+@import "ecs/variables.scss";
+
 /* public */
 
 /* reset base.scss classes */
@@ -151,22 +153,21 @@
 
 #header_public {
   position: absolute;
-  top: 0;
+  top: 10px;
   padding: 20px 0;
   left: 0;
   width: 100%;
-  border-bottom: 1px solid #B7D4E5;
-  background: #D8E6EF;
   
+  img {
+    margin: 0 0 0 23px;
+  }  
 }
-#header_public img {
-  margin: 0 0 0 23px;
-}
+
 #content .catalogue_list,
 #content .wrapper_404 {
   position: absolute;
   width: 100%;
-  top: 100px;
+  top: 90px;
   left: 0;
   right: 0;
 }
@@ -180,69 +181,76 @@
 .wrapper_404 .content {
   float: left;
   padding: 20px;
-  border: 1px solid #EBDFC3;
-  background: #F8F8EF;
+  border: 1px solid $light-brown-border;
+  background: $light-brown-bg;
+  margin-bottom: 40px;
 }
-#content .catalogue_list_inner .content h2 {
-  font-size: 16px;
-  margin-bottom: 6px;
+
+#content .catalogue_list_inner {
+  
+  .content h1 {
+    padding: 8px 10px;
+    background: $light-brown-border;
+  }
+  .content h2 {
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .content h3 {
+    background: none;
+    border-bottom: none;
+    font-weight: bold;
+  }
+  ul {
+    margin: 0;
+  }
+  ol > li {
+    display: block;
+    padding: 10px;
+    border-bottom: 3px solid $light-brown-border;
+    
+      &:first-child {
+        border-top: 3px solid $light-brown-border;
+      }
+  }
+  p {
+    padding-bottom: 2px;
+    border-bottom: 1px solid $light-brown-border;
+    
+    span.border_right {
+      border-right: 1px solid $light-brown-border;
+      padding-right: 5px;
+      margin-right: 5px;
+    }
+  }
+  .english_title {
+    font-size: 11px;
+    color: $grey-40;
+    display: block;
+    margin-bottom: 5px;
+  }
 }
-#content .catalogue_list_inner .content h3 {
-  background: none;
-  border-bottom: none;
-  font-weight: bold;
-}
-.catalogue_list_inner ol > li {
-  display: block;
-  padding: 10px;
-}
-#content .catalogue_list_inner ul {
-  margin: 0;
-}
-.catalogue_list .items {
-  display: table;
-  width: 100%;
-}
-.catalogue_list .item_left {
-  display: table-cell;
-  width: 180px;
-}
-.catalogue_list .item_right {
-  display: table-cell;
-}
-.catalogue_list table {
-  width: 100%;
-}
-.catalogue_list th {
-  width: 30%;
-  background: none;
-}
-.catalogue_list td {
-  width: 70%;
+.catalogue_list .indented {
+  padding-left: 20px;
+  border-left: 20px solid $light-brown-border;
 }
 #content .years a {
   display: inline-block;
   padding: 5px 8px;
   margin: 0 10px 12px 0;
-  background: #dddddd;
-  color: #333333;
+  background: $grey-90;
+  color: $grey-20;
   font-size: 12px;
   clear: both;
   text-align: center;  
   border-radius: 3px;
   font-size: 16px;
   font-weight: bold;
-}
-#content .years a:hover {
-  background: #333333;
-  color: #dddddd;
-  text-decoration: none;
-}
-
-#content .catalogue_list .english_title {
-    font-size: 80%;
-    color: #666666;
-    display: block;
-    margin-bottom: 5px;
+  
+    &:hover {
+      background: $grey-20;
+      color: $grey-90;
+      text-decoration: none;
+    }
 }
 

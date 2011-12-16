@@ -19,7 +19,7 @@ input[disabled] {
         text-decoration: none;
         padding: 4px 7px;
         background: #f4f4f4;
-        color: $link-blue;
+        color: $royalblue-dark;
         font-weight: bolder;
         margin-right: 3px;
         border-radius: 5px 5px 0 0;
@@ -27,7 +27,7 @@ input[disabled] {
         
           &.active {
             background: $lightskyblue;
-            color: $link-blue;
+            color: $royalblue-dark;
           }
       }
       a.errors {
@@ -57,13 +57,13 @@ input[disabled] {
     li a {
       padding: 3px 5px;
       background: $link-lightblue;
-      color: $link-blue;
+      color: $royalblue-dark;
       font-weight: normal;
       border-radius: 3px;
       text-shadow: 0 0 0 $white;
     }
     .active a {
-      background: $link-blue;
+      background: $royalblue-dark;
       color: $link-lightblue;
     }
     .errors a {
@@ -364,8 +364,7 @@ iframe.upload {
 .field_history .change:nth-of-type(1) ,
 #meeting_list li:nth-of-type(1) ,
 .billing_list li:nth-of-type(1) ,
-.billing_summary tr:nth-of-type(1) ,
-.catalogue_list ol > li:nth-of-type(1) {
+.billing_summary tr:nth-of-type(1) {
   border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
@@ -384,8 +383,7 @@ iframe.upload {
 .field_history .change:nth-child(odd) ,
 #meeting_list li:nth-child(odd) ,
 .billing_list li:nth-child(odd) ,
-.billing_summary tr:nth-child(odd) , 
-.catalogue_list ol > li:nth-child(odd) {
+.billing_summary tr:nth-child(odd) {
   background: $middle-light-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }
@@ -405,8 +403,7 @@ iframe.upload {
 .field_history .change:nth-child(even) ,
 #meeting_list li:nth-child(even) , 
 .billing_list li:nth-child(even) ,
-.billing_summary tr:nth-child(even) ,
-.catalogue_list ol > li:nth-child(even) {
+.billing_summary tr:nth-child(even) {
   background: $middle-dark-brown-bg;
   border-bottom: 1px solid $wheatbrown;
 }

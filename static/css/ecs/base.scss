@@ -87,7 +87,7 @@ body {
 a {
   outline: 0;
   cursor: pointer;
-  color: $link-blue;
+  color: $royalblue-dark;
   text-decoration: none;
 }
 #content {
@@ -125,7 +125,7 @@ a {
     
     a {
         text-decoration: none;
-        color: $link-blue;
+        color: $royalblue-dark;
         
         &:hover{
             text-decoration: underline;
@@ -340,7 +340,7 @@ a.button_submit:hover,
     }
     a, .togglers  {
       text-decoration: none;
-      color: $link-blue;
+      color: $royalblue-dark;
     }
     a, a img {
       text-decoration: none;
