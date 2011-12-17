@@ -13,13 +13,13 @@
 <p>
   <b>Antragsteller:</b>
   {% if form.submitter %}
-    {{ form.submitter.first_name }} {{ form.submitter.last_name }} <br/>
+    {{ form.submitter.first_name }} {{ form.submitter.last_name }}
   {% else %}
-    {{ form.submitter_contact }} <br/>
-  {% endif %}
+    {{ form.submitter_contact }}
+  {% endif %}<br />
   <b>Sponsor/CRO:</b> {{ form.sponsor_name }} <br/>
   <b>Einreichende Institution:</b> {{ form.submitter_organisation }}<br/>
-  <b>Projekttitel:</b> {{ form.german_project_title|default:form.project_title }}
+  <b>Projekttitel:</b> {{ form.german_project_title|default:form.project_title }}<br />
 </p>
 
 <h4>Die Kommission fasst folgenden Beschluss:</h4>

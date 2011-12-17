@@ -1,7 +1,8 @@
 {% load i18n %}
-
+<!DOCTYPE html>
 <html>
     <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <script type="text/javascript">
             function subst() {
                 var context = {};
@@ -21,10 +22,104 @@
                 }
             }
         </script>
+        <style type="text/css">
+            /* Reset CSS. http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css  */
+            html{color:#000;background:#FFF;}
+            body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,
+            pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td
+            {margin:0;padding:0;}
+            table {border-collapse:collapse;border-spacing:0;}
+            fieldset,img{border:0;}
+            address,caption, cite,code,dfn,em,strong,th,var
+            {font-style:normal;font-weight:normal;}
+            li{list-style:none;}
+            caption,th {text-align:left;}
+            h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+            q:before,q:after{content:'';}
+            abbr,acronym{border:0;font-variant:normal;}
+            sup {vertical-align:text-top;}
+            sub {vertical-align:text-bottom;}
+            input,textarea, select
+            {font-family:inherit;font-size:inherit;font-weight:inherit;}
+            input,textarea, select{*font-size:100%;}
+            legend{color:#000;}
+            
+            /* Your Base Foundation */
+            strong { font-weight:900 !important; }
+            hr     { border:0; margin:0; padding:0; height:1pt; color:#000; background-color:#000; }
+
+            /* Normal */
+            @font-face {
+               font-family: "DejaSans";
+               src: "./media/DejaVuSans.ttf";
+               font-weight:normal;
+            }
+            /* Bold */
+            @font-face {
+               font-family: "DejaSans";
+               src: "./media/DejaVuSans-Bold.ttf";
+               font-weight: bold;
+            }
+            /* Italic */
+            @font-face {
+               font-family: "DejaSans";
+               src: "./media/DejaVuSans-Oblique.ttf";
+               font-style: italic;
+            }
+            /* Bold and italic */
+            @font-face {
+               font-family: "DejaSans";
+               src: "./media/DejaVuSans-BoldOblique.ttf";
+               font-weight: bold;
+               font-style: italic;
+            }
+            * {
+              line-height: 14pt;
+            }
+            body, #content {
+                font-family: DejaSans;
+                font-size: 10pt;
+                width: 170mm;       /* = 210mm (A4) - 20mm margin on both sides */
+            }
+            p {
+                padding: 2pt 0;
+                margin-bottom: 0.2cm;
+            }
+            #footer {
+              font-family: DejaSans;
+              font-size: 8pt;
+              display: block;
+              width: 170mm;       /* = 210mm (A4) - 20mm margin on both sides */
+            }
+            #footer .left {
+              float: left;
+              width: 33%;
+              display: inline-block;
+            }
+            #footer .middle {
+              display: inline-block;
+              position: relative;
+              margin: 0 auto;
+              text-align: center;
+              width: 33%;
+            }
+            #footer .right {
+              float: right;
+              width: 33%;
+              display: inline-block;
+              text-align: right;
+            }
+        </style>
     </head>
 
 
     <body onload="subst()">
-        <p>{% trans "Page" %} <span class="page"></span>/<span class="topage"></span></p>
+        <div id="footer">
+        {% block footer %}
+            <div class="left">{% block footer_left %}{% endblock %}</div>
+            <div class="middle">{% block footer_middle %}{% endblock %}</div>
+            <div class="right">{% block footer_right %}<p>{% trans "Page" %} <span class="page"></span>/<span class="topage"></span></p>{% endblock %}</div>
+        {% endblock %}
+        </div>
     </body>
 </html>

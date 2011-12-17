@@ -74,42 +74,43 @@
            font-weight: bold;
         }
         * {
-          line-height: 6pt;
+          line-height: 14pt;
         }
         body, #content {
             font-family: DejaSans;
-            font-size: 5pt;
+            font-size: 10pt;
+            width: 170mm;       /* = 210mm (A4) - 20mm margin on both sides */
         }
         p {
             padding: 2pt 0;
-            margin-bottom: 0.02cm;
+            margin-bottom: 0.2cm;
         }
         h1 {
-          font-size: 10pt;
-          line-height: 12pt;
+          font-size: 18pt;
+          line-height: 18pt;
           text-align: center;
-          margin: 0 0 0.2cm 0;
-          padding: 0.02cm;
+          margin: 0 0 0.5cm 0;
+          padding: 0.1cm;
         }
         h2 {
-          font-size: 8pt;
-          line-height: 10pt;
-          margin-bottom: 0.2cm;
+          font-size: 16pt;
+          line-height: 16pt;
+          margin-bottom: 0.4cm;
         }
         h3 {
           display: block;
-          font-size: 7pt;
-          line-height: 8pt;
+          font-size: 14pt;
+          line-height: 14pt;
           font-weight: bold;
           margin: 0.2cm 0;
           padding: 0.2cm 0;
-          border-top: 0.05cm solid #000;
+          border-top: 1px solid #000;
         }
         h4 {
-          font-size: 6pt;
+          font-size: 12pt;
           font-weight: bold;
           font-weight: normal;
-          margin-bottom: 0.02cm;
+          margin-bottom: 0.2cm;
           margin-top: 0.2cm;
         }
         table {
@@ -125,7 +126,7 @@
           font-weight: 900;
         }
         ol, ul {
-          margin-bottom: 0.2cm;
+          margin-bottom: 0.5cm;
         }
         ol li {
           list-style: decimal inside;
@@ -150,18 +151,18 @@
           font-family: DejaSans;
         }
         .underline {
-          border-bottom: 0.02cm solid #000000;
+          text-decoration: underline;
         }
         .italic_underline {
           text-decoration: underline;
           font-style: italic;
         }
         .small {
-          font-size: 4pt !important;
+          font-size: 8pt !important;
         }
         .big {
-          font-size: 6pt;
-          line-height: 5pt;
+          font-size: 12pt;
+          line-height: 14pt;
         }
         .bold {
           font-weight: 900;
@@ -182,12 +183,12 @@
         }
         .checkbox {
           font-family: DejaSans;
-          font-size: 7pt;
-          border: 0.05cm solid #000;
+          font-size: 10pt;
+          border: 1pt solid #000;
           font-weight: 900;
-          width: 0.19cm;
-          height: 0.18cm;
-          line-height: 0.19cm;
+          width: 0.25cm;
+          height: 0.24cm;
+          line-height: 0.25cm;
           display: inline-block;
           text-align: center;
         }
@@ -204,18 +205,18 @@
         }
         .full_width th,
         .full_width td {
-          padding: 0.02cm;
+          padding: 0.1cm;
         }
         table.withborders td,
         table.withborders th {
-          border: 0.02cm solid #000000;
+          border: 1pt solid #000000;
         }
         table.withborders th {
-          border-bottom: 0.02cm solid #000000;
+          border-bottom: 2pt solid #000000;
         }
         table.withrowborders,
         table.withrowborders tr {
-          border-top: 0.02cm solid #000000;
+          border-top: 1pt solid #000000;
         }
         table.withrowborders tr td {
           padding: 4pt 0;
@@ -229,24 +230,24 @@
         }
         .title {
           display: block;
-          padding: 0.5%;
+          padding: 0.2cm;
           border: 1pt solid #000;
         }
         .main_part {
-          margin: 0.3cm 0;
+          margin: 0.5cm 0;
           padding: 0;
           page-break-after: avoid;
         }
         .main_part h2 {
           display: block;
-          border: 0.02cm solid #000000;
+          border: 1pt solid #000000;
           text-align: center;
-          padding: 0.02cm;
+          padding: 0.2cm;
         }
         .border_bottom {
           display: block;
-          padding-bottom: 0.02cm;
-          border-bottom: 0.02cm solid #000;
+          padding-bottom: 0.1cm;
+          border-bottom: 1pt solid #000;
         }
         .bg_grey {
           background: #eee;
@@ -256,14 +257,14 @@
           display: block;
           float: left;
           width: 100%;
-          margin-bottom: 0.5cm;
+          margin-bottom: 1cm;
         }
         .column_left,
         .column_right {
           display: block;
           width: 48%;
-          height: 2.6cm;
-          border: 0.02cm solid #000;
+          height: 4cm;
+          border: 1pt solid #000;
           padding: 0.5%;
         }
         .column_left {
@@ -273,7 +274,7 @@
           float: right;
         }
         .two_columns span {
-          font-size: 4pt;
+          font-size: 7pt;
         }
         .diff .field {
           margin: 0 0 0.3cm 0.2cm;
@@ -286,9 +287,9 @@
         .signature_date .line {
           display: block;
           float: left;
-          border-top: 0.02cm solid #000;
+          border-top: 1pt solid #000;
           padding-top: 0.2cm;
-          width: 5cm;
+          width: 8cm;
         }
         .signature_date .line:last-child {
           float: right;
@@ -302,43 +303,10 @@
         .diff span.deleted{
           color: #660000;
         }
-        #footer {
-          display: block;
-          width: 100%;
-          margin-top: 2cm;
-        }
-        .footer_left {
-          float: left;
-          width: 33%;
-          display: inline-block;
-        }
-        .footer_middle {
-          display: inline-block;
-          position: relative;
-          margin: 0 auto;
-          text-align: center;
-          width: 33%;
-        }
-        .footer_right {
-          float: right;
-          width: 33%;
-          display: inline-block;
-          text-align: right;
-        }
     </style>
     {% endblock %}
   </head>
   <body>
-    <div id="content">
-    {% block content %}{% endblock %}
-    </div>
-    <div id="footer">
-      {% block footer %}{% endblock %}
-    </div>
-    <div id="footerpage">
-      <div align="right">
-        {% block footerpage %} {% endblock %}
-      </div>
-    </div>
+    <div id="content">{% block content %}{% endblock %}</div>
   </body>
 </html>
