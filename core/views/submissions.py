@@ -494,6 +494,7 @@ def create_submission_form(request):
 
     notification_type = request.docstash.get('notification_type', None)
     valid = False
+    allows_edits = True
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -517,14 +518,16 @@ def create_submission_form(request):
 
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
+        submission = request.docstash.get('submission')
+        if submission:   # refetch submission object because it could have changed
+            submission = Submission.objects.get(pk=submission.pk)
+            allows_edits = submission.current_submission_form.allows_edits(request.user)
+        else:
+            submission = Submission.objects.create()
 
-        if submit and valid:
+        print '{0} {1} {2}'.format(submit, valid, allows_edits)
+        if submit and valid and allows_edits:
             submission_form = form.save(commit=False)
-            submission = request.docstash.get('submission')
-            if submission:   # refetch submission object because it could have changed
-                submission = Submission.objects.get(pk=submission.pk)
-            else:
-                submission = Submission.objects.create()
             submission_form.submission = submission
             submission_form.is_notification_update = bool(notification_type)
             submission_form.is_transient = bool(notification_type)
@@ -565,6 +568,7 @@ def create_submission_form(request):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
+        'allows_edits': allows_edits,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,

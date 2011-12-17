@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-15 13:54+0100\n"
+"POT-Creation-Date: 2011-12-17 15:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -145,23 +145,23 @@ msgstr "Express Gutachten"
 msgid "Local-EC Review"
 msgstr "GCP Review"
 
-#: checklists/bootstrap.py:23 core/bootstrap.py:143
+#: checklists/bootstrap.py:23 core/bootstrap.py:132
 msgid "Statistical Review"
 msgstr "Statistische Bewertung"
 
-#: checklists/bootstrap.py:24 core/bootstrap.py:141
+#: checklists/bootstrap.py:24 core/bootstrap.py:130
 msgid "Legal and Patient Review"
 msgstr "Pat.info Bewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:142 core/workflow.py:195
+#: checklists/bootstrap.py:25 core/bootstrap.py:131 core/workflow.py:195
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
-#: checklists/bootstrap.py:26 core/bootstrap.py:145
+#: checklists/bootstrap.py:26 core/bootstrap.py:134
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-#: checklists/bootstrap.py:27 core/bootstrap.py:144
+#: checklists/bootstrap.py:27 core/bootstrap.py:133
 msgid "Board Member Review"
 msgstr "Board Member Review"
 
@@ -170,7 +170,7 @@ msgstr "Board Member Review"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:129 core/forms/forms.py:433
+#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:433
 #: notifications/bootstrap.py:83 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
@@ -262,85 +262,85 @@ msgstr ""
 msgid "unread ECS messages for %(user)s"
 msgstr "ungelesende ECS Nachrichten für %(user)s"
 
-#: core/bootstrap.py:130
+#: core/bootstrap.py:119
 #, fuzzy
 msgid "Review Split"
 msgstr "Review"
 
-#: core/bootstrap.py:131
+#: core/bootstrap.py:120
 msgid "Resubmission"
 msgstr "Neueinreichung"
 
-#: core/bootstrap.py:132
+#: core/bootstrap.py:121
 msgid "B2 Resubmission"
 msgstr "B2 Resubmission"
 
-#: core/bootstrap.py:133 core/bootstrap.py:134 core/bootstrap.py:135
+#: core/bootstrap.py:122 core/bootstrap.py:123 core/bootstrap.py:124
 #, fuzzy
 msgid "B2 Resubmission Review"
 msgstr "Diplomarbeit Review"
 
-#: core/bootstrap.py:136
+#: core/bootstrap.py:125
 #, fuzzy
 msgid "Wait For Meeting"
 msgstr "Sitzung Beenden"
 
-#: core/bootstrap.py:137
+#: core/bootstrap.py:126
 msgid "Initial Review"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:138
+#: core/bootstrap.py:127
 #, fuzzy
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:139 templates/submissions/readonly_form.html:82
+#: core/bootstrap.py:128 templates/submissions/readonly_form.html:82
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
-#: core/bootstrap.py:140 templates/submissions/list.html:86
+#: core/bootstrap.py:129 templates/submissions/list.html:86
 msgid "Paper Submission Review"
 msgstr "Formale Prüfung Unterschrift"
 
-#: core/bootstrap.py:148
+#: core/bootstrap.py:137
 msgid "Initial Thesis Review"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:149
+#: core/bootstrap.py:138
 #, fuzzy
 msgid "Initial Thesis Review Split"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: core/bootstrap.py:150
+#: core/bootstrap.py:139
 msgid "Thesis Recommendation"
 msgstr "Thesis Recommendation"
 
-#: core/bootstrap.py:151
+#: core/bootstrap.py:140
 msgid "Thesis Recommendation Review"
 msgstr "Thesis Recommendation Review"
 
-#: core/bootstrap.py:152
+#: core/bootstrap.py:141
 msgid "Thesis Vote Preparation"
 msgstr "Thesis Vote Preparation"
 
-#: core/bootstrap.py:155
+#: core/bootstrap.py:144
 #, fuzzy
 msgid "Expedited Recommendation Split"
 msgstr "Expedited Empfehlung"
 
-#: core/bootstrap.py:156
+#: core/bootstrap.py:145
 msgid "Expedited Recommendation"
 msgstr "Expedited Empfehlung"
 
-#: core/bootstrap.py:157
+#: core/bootstrap.py:146
 msgid "Expedited Vote Preparation"
 msgstr "Expedited Votum Vorbereitung"
 
-#: core/bootstrap.py:160
+#: core/bootstrap.py:149
 msgid "Local EC Recommendation"
 msgstr "begleitende EK Empfehlung"
 
-#: core/bootstrap.py:161
+#: core/bootstrap.py:150
 #, fuzzy
 msgid "Local EC Vote Preparation"
 msgstr "Thesis Vote Preparation"
@@ -1815,28 +1815,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:685 templates/meetings/details.html:15
+#: core/views/submissions.py:688 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:791 templates/core.html:41
+#: core/views/submissions.py:794 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:793
+#: core/views/submissions.py:796
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:806
+#: core/views/submissions.py:809
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:829 templates/core.html:44
+#: core/views/submissions.py:832 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:839 templates/core.html:47
+#: core/views/submissions.py:842 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3060,7 +3060,7 @@ msgstr "kein Sitzungsmitglied erforderlich"
 
 #: templates/meetings/tabs/open_tasks.html:8
 #: templates/submissions/tabs/involved_parties.html:6
-#: templates/submissions/tabs/involved_parties.html:40
+#: templates/submissions/tabs/involved_parties.html:39
 msgid "Name"
 msgstr "Name"
 
@@ -3411,7 +3411,7 @@ msgid "Create new certificate"
 msgstr "Eine neue Meldung erstellen"
 
 #: templates/pki/cert_list.html:27
-#: templates/submissions/tabs/involved_parties.html:62
+#: templates/submissions/tabs/involved_parties.html:61
 msgid "Revoke"
 msgstr "Widerrufen"
 
@@ -3508,7 +3508,7 @@ msgstr "Es ist mindestens ein Protokoll erforderlich."
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
-#: templates/submissions/catalog.html:26
+#: templates/submissions/catalog.html:29
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
@@ -3617,9 +3617,13 @@ msgstr "Meldung Erstellen"
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
+#: templates/submissions/form.html:116
+msgid "This form can't be submitted at the moment."
+msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
+
 #: templates/submissions/list.html:49 templates/submissions/list.html.py:81
 #: templates/submissions/readonly_form.html:20
-#: templates/submissions/tabs/involved_parties.html:90
+#: templates/submissions/tabs/involved_parties.html:89
 #: templates/submissions/tabs/status.html:21
 msgid "Edit"
 msgstr "Bearbeiten"
@@ -3861,33 +3865,33 @@ msgid "Involvement"
 msgstr "Beteiligung"
 
 #: templates/submissions/tabs/involved_parties.html:7
-#: templates/submissions/tabs/involved_parties.html:41
+#: templates/submissions/tabs/involved_parties.html:40
 msgid "Organization"
 msgstr "Organisation"
 
 #: templates/submissions/tabs/involved_parties.html:9
-#: templates/submissions/tabs/involved_parties.html:43
+#: templates/submissions/tabs/involved_parties.html:42
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#: templates/submissions/tabs/involved_parties.html:26
-#: templates/submissions/tabs/involved_parties.html:59
+#: templates/submissions/tabs/involved_parties.html:25
+#: templates/submissions/tabs/involved_parties.html:58
 msgid "Send Message"
 msgstr "Nachricht senden"
 
-#: templates/submissions/tabs/involved_parties.html:36
+#: templates/submissions/tabs/involved_parties.html:35
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
-#: templates/submissions/tabs/involved_parties.html:39
+#: templates/submissions/tabs/involved_parties.html:38
 msgid "Timeframe"
 msgstr "Zeitraum"
 
-#: templates/submissions/tabs/involved_parties.html:78
+#: templates/submissions/tabs/involved_parties.html:77
 msgid "Authorize"
 msgstr "Autorisieren"
 
-#: templates/submissions/tabs/involved_parties.html:84
+#: templates/submissions/tabs/involved_parties.html:83
 msgid "Biased Parties"
 msgstr "Befangene Parteien"
 
@@ -3912,15 +3916,15 @@ msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 msgid "New/Undecided"
 msgstr "Neu/Unentschieden"
 
-#: templates/submissions/tabs/status.html:176
+#: templates/submissions/tabs/status.html:174
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:201
+#: templates/submissions/tabs/status.html:196
 msgid "drop"
 msgstr "fallen lassen"
 
-#: templates/submissions/tabs/status.html:218
+#: templates/submissions/tabs/status.html:212
 msgid "Export"
 msgstr "Export"
 
@@ -4171,7 +4175,7 @@ msgstr ""
 msgid "Invite"
 msgstr "Einladen"
 
-#: templates/users/invitation/set_password_form.html:13
+#: templates/users/invitation/set_password_form.html:16
 msgid "Set Password"
 msgstr "Passwort setzen"
 
@@ -4337,15 +4341,15 @@ msgstr "Passwort setzen"
 msgid "New password confirmation"
 msgstr "Keine Angaben"
 
-#: users/utils.py:72
+#: users/utils.py:71
 msgid "Ms."
 msgstr "Frau"
 
-#: users/utils.py:74
+#: users/utils.py:73
 msgid "Mr."
 msgstr "Herr"
 
-#: users/utils.py:137 users/views.py:348
+#: users/utils.py:134 users/views.py:348
 msgid "ECS account creation"
 msgstr "Erstellung eines ECS Zugangs"
 
