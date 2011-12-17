@@ -41,6 +41,22 @@
             padding: 0px 10px;
         }
     }
+    
+    .CharField {
+        
+        .ecs-TextAreaToolbar {
+           display: inline-block;
+        }
+        
+        textarea#id_invitation_text {
+            display: block;
+            margin-left: 240px;
+        }
+        
+        .boilerplate_selector {
+            left: 260px;
+        }
+    }
 }
 /*
 .administration_detail .useradministration_choose .textboxlist {
