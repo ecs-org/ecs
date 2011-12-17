@@ -43,8 +43,9 @@
 
 .innerwrap img,
 .innerwrap a img {
+  float: left;
   border: none;
-  margin: 0 0 10px 10px;
+  margin: 0 10px 10px 10px;
 }
 #content .innerwrap form {
   padding: 20px 20px;
@@ -175,10 +176,11 @@
 .catalogue_list_inner,
 .wrapper_404_inner {
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 800px;
 }
 .catalogue_list_inner .content,
 .wrapper_404 .content {
+  font-size: 14px;
   float: left;
   padding: 20px;
   border: 1px solid $bisque;

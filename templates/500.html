@@ -1,19 +1,50 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <meta charset="UTF-8" />
+        <style>
+          
+         /* reset base.scss classes */
+          
+          *, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 22px;
+          }
+          #content {
+            margin: 50px auto 0;
+            max-width: 800px;
+          }
+          .innerwrap {
+            padding: 20px;
+            border: 1px solid #EBDFC3;
+            background: #F8F8EF;
+          }
+          #content .innerwrap p {
+            display: block;
+            margin-bottom: 10px;
+          }
+          #content a {
+            color: #2B558E;
+            text-decoration: none;
+          }
+          #content a:hover {
+            text-decoration: underline;
+          }
+
+        </style>
+        
     </head>
     <body>
       <div id="content">
         <div class="innerwrap">
-          <div class="wrapper">
-              <p><strong>Entschuldigung,</p><p>ein Fehler ist aufgetreten !</strong></p>
+              <p><strong>Entschuldigung, ein Fehler ist aufgetreten !</strong></p>
               <p>Der Fehler wurde protokolliert.</p>
               {% if request.sentry.id %}
-              <p>Um auf diesen Fehler Bezug zu nehmen notieren Sie sich die Nummer <strong>{{ request.sentry.id }}</strong>.</p>
+              <p>Um auf diesen Fehler Bezug zu nehmen notieren Sie sich bitte diese Nummer: <strong>{{ request.sentry.id }}</strong>.</p>
               {% endif %}
-              <p><a href="/"> Klicken Sie hier</a> um zur Hauptseite zu wechseln</p>          
-          </div>
+              <p>Um zur Hauptseite zu wechseln, <a href="/"> klicken Sie hier</a>.</p>          
         </div>
       </div>         
     </body>
