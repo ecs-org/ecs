@@ -303,6 +303,12 @@
         .diff span.deleted{
           color: #660000;
         }
+        .metadata {     /* don't set display:none because the metadata wouldn't show up */
+          display: block;
+          overflow: hidden;
+          height: 1px;
+          width: 1px;
+        }
     </style>
     {% endblock %}
   </head>
