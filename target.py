@@ -197,7 +197,8 @@ JETTY_PORT=8983
         """)
         jetty_cnf.close()
         local('sudo cp ~{0}/jetty.cnf /etc/default/jetty'.format(self.username))
-        local('sudo /etc/init.d/jetty restart')
+        local('sudo /etc/init.d/jetty stop')
+        local('sudo /etc/init.d/jetty start')
 
     def search_update(self):
         pass
