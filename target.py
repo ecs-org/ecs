@@ -117,6 +117,8 @@ SSLEAYCNF_EOF'''.format(ssleay_filename, self.hostname))
     def local_settings_config(self):
         local_settings = open(os.path.join(self.dirname, 'local_settings.py'), 'w')
         local_settings.write("""
+import sys
+
 # database settings
 DATABASES_OVERRIDE = {}
 DATABASES_OVERRIDE['default'] = {
