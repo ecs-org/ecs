@@ -139,11 +139,38 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 # disabled PDFCOP (still not working, current error unknown)
 PDFCOP_ENABLED = False
 
+# email settings
+ECSMAIL_OVERRIDE = {
+        'authoritative_domain': '%(hostname)s',
+        'trusted_sources': ['127.0.0.1', '%(ip)s'],
+    }
+
+# Mediaserver Server Access
+MS_CLIENT_OVERRIDE = {
+        'server': 'https://%(hostname)s',
+    }
+
+MS_SERVER_OVERRIDE = {
+    'render_memcache_lib': 'memcache',
+    'render_memcache_host': '127.0.0.1',
+    'render_memcache_host': 11211,
+    # smaller ms caches for testing aging
+    'doc_diskcache_maxsize': 2**26, # 64mb 
+    'render_diskcache_maxsize': 2**25, # 32Mb
+}
+
+if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+ABSOLUTE_URL_PREFIX = "https://%(hostname)s"
+
 DEBUG = False
 TEMPLATE_DEBUG = False
 
             """ % {
             'username': self.username,
+            'hostname': self.hostname,
+            'ip': self.ip,
             'queuing_password': self.queuing_password,
         })
         local_settings.close()
