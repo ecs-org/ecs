@@ -45,7 +45,8 @@ class SetupTarget(SetupTargetObject):
         self.db_update()
         self.search_config()
         
-        self.apache_config() # restarts apache at end
+        self.apache_config() 
+        self.apache_restart()
         self.upstart_install() # because upstart_install re/starts service at end, we put it last
  
     def homedir_config(self):
@@ -144,8 +145,8 @@ TEMPLATE_DEBUG = False
         local(self.catalina_cmd('stop'))
     
     def apache_restart(self):
-        pass
-    
+        local('sudo /etc/init.d/apache2 restart')
+        
     def wsgi_reload(self):
         pass
     
