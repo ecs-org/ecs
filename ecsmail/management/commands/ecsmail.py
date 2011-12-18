@@ -1,5 +1,5 @@
 import os
-
+import logging
 from django.core.management.base import BaseCommand, CommandError
 
 
@@ -20,8 +20,10 @@ class Command(BaseCommand):
 
             from ecs.ecsmail import lamson_settings
             import asyncore
-            print("starting ecsmail server, Listen: %s:%s, Relay: %s" % 
-                (lamson_settings.receiver.host, lamson_settings.receiver.port, str(lamson_settings.relay)))
+            startmsg = "starting ecsmail server, Listen: {0}:{1}, Relay: {2}".format(
+                lamson_settings.receiver.host, lamson_settings.receiver.port, str(lamson_settings.relay))
+            print (startmsg)
+            logging.info(startmsg)
             asyncore.loop(timeout=0.1, use_poll=True)
             
         elif args[0] == 'logging':
