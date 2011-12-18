@@ -227,7 +227,7 @@ def custom_install_gettext_tools(pkgline, filename):
 
   
 def custom_check_tomcat_apt_user(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
     
 def custom_install_tomcat_apt_user(pkgline, filename):
     install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(os.path.join(get_pythonenv(), "tomcat-6"))
@@ -241,7 +241,7 @@ def custom_install_tomcat_apt_user(pkgline, filename):
         return True
 
 def custom_check_tomcat_other_user(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6"))
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
     
 def custom_install_tomcat_other_user(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
