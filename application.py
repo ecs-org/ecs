@@ -378,8 +378,8 @@ logrotate_targets = {
 }
 
 upstart_targets = {
-    'celeryd': (None, './manage.py celeryd -l warning -L ../../ecs-log/celeryd.log'),    
-    'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -L ../../ecs-log/celerybeat.log'),
+    'celeryd': (None, './manage.py celeryd -l warning -f ../../ecs-log/celeryd.log'),    
+    'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -f ../../ecs-log/celerybeat.log'),
     'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'), 
     'signature': ('upstart-tomcat.conf', ''),
 }
