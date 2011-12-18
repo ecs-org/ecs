@@ -50,7 +50,7 @@ class SetupTarget(SetupTargetObject):
  
     def homedir_config(self):
         homedir = os.path.expanduser('~')
-        for name in ('public_html',):
+        for name in ('public_html', '.python-eggs', ):
             pathname = os.path.join(homedir, name)
             if not os.path.exists(pathname):
                 os.mkdir(pathname)
@@ -111,9 +111,6 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 DEBUG = False
 TEMPLATE_DEBUG = False
 
-ECS_PDFCOP = '#'
-ECS_PDFDECRYPT = '#'
-PDFCOP_ENABLED = False
             """ % {
             'username': self.username,
             'queuing_password': self.queuing_password,
@@ -200,7 +197,7 @@ JETTY_PORT=8983
         """)
         jetty_cnf.close()
         local('sudo cp ~{0}/jetty.cnf /etc/default/jetty'.format(self.username))
-        local('sudo /etc/init.d/jetty start')
+        local('sudo /etc/init.d/jetty restart')
 
     def search_update(self):
         pass
