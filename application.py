@@ -65,6 +65,7 @@ pyscss:inst:all:pypi:pyScss\>=1.0.8
 # pdf parsing/cleaning: origami
 ruby:req:apt:apt-get:ruby
 rubygems:req:apt:apt-get:rubygems
+rubyopenssl:req:apt:apt-get:libopenssl-ruby1.8
 ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
 origami:static:all:http://rubygems.org/gems/origami-1.2.3.gem:custom:pdfcop
 
