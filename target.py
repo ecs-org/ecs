@@ -230,7 +230,14 @@ def custom_check_tomcat_apt_user(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
     
 def custom_install_tomcat_apt_user(pkgline, filename):
-    install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(os.path.join(get_pythonenv(), "tomcat-6"))
+    tomcatpath = os.path.join(get_pythonenv(), "tomcat-6")
+    
+    if os.path.exists(os.path.join(tomcatpath)):
+        if os.path.exists(tomcatpath+"-old"):
+            shutil.rmtree(tomcatpath+"-old")
+        shutil.move(tomcatpath, tomcatpath+"-old")
+        
+    install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(tomcatpath)
     popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
     stdout, stderr = popen.communicate() 
     returncode = popen.returncode  
