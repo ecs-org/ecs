@@ -210,10 +210,15 @@ TEMPLATE_DEBUG = False
 
     def queuing_config(self):
         # TODO: should configure queuing password in local_settings too, 
-        if not int(local('sudo rabbitmqctl list_users | grep %s | wc -l' % self.username, capture=True)):
-            local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))
-        if not int(local('sudo rabbitmqctl list_vhosts | grep %s | wc -l' % self.username, capture=True)):
-            local('sudo rabbitmqctl add_vhost %s' % self.username)
+        if int(local('sudo rabbitmqctl list_vhosts | grep %s | wc -l' % self.username, capture=True)):
+            local('sudo rabbitmqctl delete_vhost %s' % self.username)
+        
+        local('sudo rabbitmqctl add_vhost %s' % self.username)
+            
+        if int(local('sudo rabbitmqctl list_users | grep %s | wc -l' % self.username, capture=True)):
+            local('sudo rabbitmqctl delete_user %s ' % (self.username))
+        
+        local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))       
         local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))
 
     def search_config(self):
