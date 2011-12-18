@@ -56,9 +56,7 @@ class SetupTarget(SetupTargetObject):
         self.apache_config() 
         self.apache_restart()
         
-        self.upstart_install()
-    
-        
+        self.upstart_install()        
     
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
