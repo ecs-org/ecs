@@ -11,7 +11,7 @@ from uuid import uuid4
 from fabric.api import local, env, warn
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
-from deployment.utils import install_upstart, apache_setup, write_template, which
+from deployment.utils import install_upstart, control_upstart, apache_setup, strbool
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 
@@ -28,11 +28,38 @@ class SetupTarget(SetupTargetObject):
     def help(self, *args, **kwargs):
         print('''{0} targets
   * system_setup
+  # howto update:
+        # on host: fab target:ecs,service,True
+        # from executing host: make source update, clean_pyc, write version.py
+        # on host bootstrap, fab appreq, fab appenv, fab appsys:ecs,update=True
+        # on host: fab target:ecs,service,False 
+        
         '''.format(self.appname))
     
-    def update(self, *args, **kwargs):
-        pass
+    def service(self, enable=True):
+        enable= strbool(enable)
+        if enable:
+            # TODO: write scheduled service note into file where ecs-wsgi.py reads it
+            self.wsgi_reload()
+            self.upstart_stop()
+        else:
+            # TODO: delete service mode file
+            self.upstart_start()
+            self.wsgi_reload()
+
+    def update(self, *args, **kwargs):        
+        self.homedir_config()
+        self.local_settings_config()
+        self.db_update()
+        self.search_config()
         
+        self.apache_config() 
+        self.apache_restart()
+        
+        self.upstart_install()
+    
+        
+    
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
         self.servercert_config()
@@ -47,7 +74,9 @@ class SetupTarget(SetupTargetObject):
         
         self.apache_config() 
         self.apache_restart()
-        self.upstart_install() # because upstart_install re/starts service at end, we put it last
+        
+        self.upstart_install()
+        self.upstart_start()
  
     def homedir_config(self):
         homedir = os.path.expanduser('~')
@@ -109,6 +138,9 @@ CELERY_ALWAYS_EAGER = False
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
+# disabled PDFCOP (still not working, current error unknown)
+PDFCOP_ENABLED = False
+
 DEBUG = False
 TEMPLATE_DEBUG = False
 
@@ -150,16 +182,16 @@ TEMPLATE_DEBUG = False
     def wsgi_reload(self):
         pass
     
+    
     def upstart_install(self):
         install_upstart(self.appname, upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
     def upstart_stop(self):
-        pass
-        #stopall_upstart(self.appname, use_sudo=self.use_sudo)
+        control_upstart(self.appname, "stop", use_sudo=self.use_sudo, dry=self.dry)
         
     def upstart_start(self):
-        pass
-        #startall_upstart(self.appname, use_sudo=self.use_sudo)
+        control_upstart(self.appname, "start", use_sudo=self.use_sudo, dry=self.dry)
+        
         
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %s\' | true" % (self.username))
