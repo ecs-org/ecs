@@ -9,6 +9,8 @@ from django.core.cache import cache
 from django.http import Http404
 from django.core.urlresolvers import reverse
 
+def _total_seconds(td): # work around python < 2.7
+    return float(td.microseconds + (td.seconds + td.days * 24 * 3600) * 10**6) / 10**6
 
 class SigningData(dict):
     def __init__(self, *args, **kwargs):
@@ -31,7 +33,7 @@ class SigningData(dict):
             self.id = self._gen_id()
         timeout = None
         if kwargs:
-            timeout = timedelta(**kwargs).total_seconds()
+            timeout = _total_seconds(timedelta(**kwargs))
         cache.set(self.id, dict(self), timeout)
 
     def delete(self):
