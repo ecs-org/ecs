@@ -9,39 +9,20 @@
         <h1>Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}</h1>
     </div>
     
-    <table class="full_width withborders">
-    <tr>
-        <th width="215" height="24">Ethik-Kommission</th>
-        <th width="50">EK-Nummer</th>
-        <th width="84">Protokoll-Nr.</th>
-        <th width="84">EudraCT-Nr.</th>
-        <th width="84">Datum des Votums</th>
-        <th width="195">Prüfer</th>
-    </tr>
-    {% for submission_form in notification.submission_forms.all %}
-    <tr>
-        <td>{{ submission_form.submission.main_ethics_commission }}</td>
-        <td>{{ submission_form.submission.get_ec_number_display }}</td>
-        <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
-        <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
-        <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
-        <td>{{ submission_form.submission.primary_investigator.contact }}</td>
-    </tr>
-    {% endfor %}
-    </table>
-
-    <h2>Angaben zum Forschungsprojekt</h2>
-
-    {% block mainitem %}
-        <h4>Studientitel:</h4>
-            {% for submission_form in notification.submission_forms.all %}
-            <p>
-                {{ submission_form.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
-            </p>
-            {% endfor %}
-          <p><b>Begründung/Stellungnahme/Mitteilung:</b></p>
-          <p>{{ notification.comments|linebreaksbr|default:"nicht vorhanden" }}</p>
-    {% endblock %}
+    <div>
+        {% block study_info %}
+        <h4>Angaben zur Studie</h4>
+        {% with notification.submission_forms.all.0 as sf %}
+        <p>
+            <b>EK Nr:</b> <b>{{ sf.submission.get_ec_number_display }}</b><br />
+            <b>Projekttitel:</b> {{ sf.submission.project_title_display }}<br />
+            <b>Antragsteller:</b> {{ sf.submitter }}<br />
+            <b>Institution:</b> {{ sf.submitter_organisation }}<br />
+            <b>Sponsor:</b> {{ sf.sponsor_name }}<br />
+        <p>
+        {% endwith %}
+        {% endblock %}
+    </div>
 
     {% block documents %}
         {% if documents %}
@@ -49,7 +30,9 @@
             {% include 'db/wkhtml2pdf/documents.html' %}
         {% endif %}
     {% endblock %}
-    
+    <p style="height:0.5cm"></p>
     <p>{{ answer.text|linebreaksbr }}</p>
 
+    <p></p>
+    <p>{% now "d.m.Y" %}</p>
 {% endblock %}

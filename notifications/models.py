@@ -172,6 +172,7 @@ class NotificationAnswer(models.Model):
     is_rejected = models.BooleanField(default=False, verbose_name=_('Reject'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     signed_at = models.DateTimeField(null=True)
+    executive_reviewer = models.ForeignKey('auth.User', null=True)
     
     @property
     def needs_further_review(self):
