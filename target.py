@@ -340,32 +340,6 @@ def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
    
 def custom_install_pdfas(pkgline, filename):
-    
-    def _patch_pdfas_war(target):
-        patchlib = import_from(os.path.join(os.path.dirname(get_pythonexe()), 'python-patch.py'))
-        patchlib.logger.setLevel(logging.INFO)
-        old_cwd = os.getcwd()
-        temp_dir = tempfile.mkdtemp()
-        pkg_manager = get_pkg_manager()
-        success = False
-        
-        try:
-            if pkg_manager.static_install_unzip(target, temp_dir, None, None):
-                os.chdir(os.path.join(temp_dir, "jsp"))
-                p = patchlib.fromfile(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                    'signature', 'pdf-as-3.2-jsp.patch'))
-                if p.apply():
-                    os.remove(target)
-                    zipball_create(target, temp_dir)
-                    success = True
-                else:
-                    print("Error: Failed patching:", target, temp_dir)
-        finally:
-            os.chdir(old_cwd)
-            shutil.rmtree(temp_dir)
-            
-        return success
-    
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
     temp_dir = tempfile.mkdtemp()
@@ -374,19 +348,19 @@ def custom_install_pdfas(pkgline, filename):
     result = False
     
     try:
+        pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline)
         if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
-            if _patch_pdfas_war(os.path.join(temp_dest, "webapps", checkfilename)):
-                write_regex_replace(
-                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
-                    r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
-                    r'\1http://localhost:4780\3')
-                write_regex_replace(
-                    os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
-                    r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
-                    r'\2http://localhost:4780\4')
-                
-                distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
-                result = True
+            write_regex_replace(
+                os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
+                r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
+                r'\1http://localhost:4780\3')
+            write_regex_replace(
+                os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
+                r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
+                r'\2http://localhost:4780\4')
+            
+            distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
+            result = True
     finally:    
         shutil.rmtree(temp_dir)
     

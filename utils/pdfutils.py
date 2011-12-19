@@ -29,24 +29,6 @@ WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64
 PDFDECRYPT_PATH = which_path('ECS_PDFDECRYPT', 'pdfdecrypt')
 PDFCOP_PATH = which_path('ECS_PDFCOP', 'pdfcop')
 
-PDF_MOCK_PREFIX = u"""
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-    </head>
-    <body>
-        <h1 style="text-align:center;">
-            <strong>
-"""
-
-PDF_MOCK_POSTFIX = u"""
-            </strong>
-        </h1>
-    </body>
-</html>
-"""
-
 PDF_MAGIC = r"%PDF-"
 
 pdfutils_logger = logging.getLogger(__name__)
@@ -90,22 +72,6 @@ def _pdf_stamp(source_filelike, dest_filelike, stamp_filename):
     source_filelike.seek(0)
     if popen.returncode != 0:
         raise IOError('stamp pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-
-
-def pdf_textstamp(source_filelike, dest_filelike, text):
-    ''' takes source pdf, stamps a text onto every page and output it to dest
-    
-    :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
-    '''
-    with NamedTemporaryFile(suffix='.pdf', delete=False) as tmp_stamp:
-        data = wkhtml2pdf(PDF_MOCK_PREFIX+ unicode(text)+ PDF_MOCK_POSTFIX)
-        tmp_stamp.write(data)
-        tmp_stamp.seek(0)
-        stamp_filename = tmp_stamp.name
-            
-    _pdf_stamp(source_filelike, dest_filelike, stamp_filename)
-    if os.path.isfile(stamp_filename):
-        os.remove(stamp_filename)
 
 
 def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, barcodetype="qrcode", timeoutseconds=30):
