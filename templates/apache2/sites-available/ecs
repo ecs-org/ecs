@@ -11,11 +11,11 @@
     SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
     SSLCertificateKeyFile "/etc/ssl/private/%(hostname)s.key"
 
-    SSLCACertificateFile %(ca_certificate_file)s
-    SSLCARevocationFile %(ca_revocation_file)s
+    SSLCACertificateFile "%(ca_certificate_file)s"
+    SSLCARevocationFile "%(ca_revocation_file)s"
     SSLVerifyClient none
     
-    <Location /pki/secure>
+    <Location /secure>
         SSLRequireSSL
         SSLVerifyClient require
         SSLVerifyDepth 1

@@ -26,12 +26,13 @@
         window.addEvent('domready', function(){
             var form = $('cert_form');
             ecs.setupAutocomplete(form);
+            /*
             form.addEvent('submit', function(){
                 setTimeout(function(){
                     window.location.href = '{% url ecs.pki.views.cert_list %}';
                 }, 2000);
             });
-            
+            */
         });
     </script>
 {% endblock %}

@@ -16,14 +16,18 @@ from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_
 from deployment.utils import install_upstart, control_upstart, apache_setup, strbool
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
+from deployment.conf import load_config
 
 
 class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
+        config_file = kwargs.pop('config', None)
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.appname = 'ecs'
         self.dirname = os.path.dirname(__file__)
+        if config_file:
+            self.configure(config_file)
         
     def configure(self, config_file):
         self.config = load_config(config_file)
@@ -34,11 +38,12 @@ class SetupTarget(SetupTargetObject):
             setattr(self, attr, self.config[attr])
         self.config['local_hostname'] = self.config['host'].split('.')[0]
         self.config.setdefault('postgresql.username', self.config['user'])
+        self.config.setdefault('postgresql.database', self.config['user'])
         self.config.setdefault('rabbitmq.username', self.config['user'])
         self.config.setdefault('rabbitmq.password', self.random_string(20))
         
     def random_string(self, length=40):
-        chars = string.string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
+        chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
         return ''.join(random.choice(chars) for i in xrange(length))
     
     def write_config_template(self, template, dst, context=None):
@@ -88,6 +93,8 @@ class SetupTarget(SetupTargetObject):
         self.db_clear()
         self.queuing_config()
 
+        self.ca_config()
+        self.gpg_config()
         self.db_update()
         self.search_config()
         
@@ -107,12 +114,14 @@ class SetupTarget(SetupTargetObject):
     def servercert_config(self):
         ssleay_filename = os.path.join(self.homedir, 'ssleay.cnf')
         warn("Creating {0}".format(ssleay_filename))
-        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.hostname))
+        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
         self.write_config_template('ssleay.cnf', ssleay_filename)
     
     def ca_config(self):
         openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
-        self.write_config_template('openssl-ca.cnf', openssl_cnf)
+        from ecs.pki.openssl import CA
+        ca = CA(os.path.join(self.homedir, 'ecs-ca'), config=openssl_cnf)
+        self.write_config_template('openssl-ca.cnf', openssl_cnf, ca.__dict__)
         
     def ca_update(self):
         try:
@@ -120,6 +129,18 @@ class SetupTarget(SetupTargetObject):
         except KeyError:
             return
         basedir = os.path.join(self.homedir, 'ecs-ca')
+        if os.path.exists(basedir):
+            warn('CA directory exists (%s), refusing to overwrite.')
+            return
+        shutil.copytree(replacement, basedir)
+        
+    def gpg_config(self):
+        for key in ('encrypt_key', 'signing_key', 'decrypt_key', 'verify_key'):
+            src = self.config.get_path('mediaserver.storage.%s' % key)
+            if not os.path.exists(src):
+                warn('missing gpg key: %s' % src)
+            else:
+                shutil.copy(src, os.path.join(self.homedir, 'src', 'ecs'))
         
     def django_config(self):
         self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
@@ -134,10 +155,10 @@ class SetupTarget(SetupTargetObject):
         apache_mkdirs += ['mkdir', '-p', '/etc/apache2/ecs', '/etc/apache2/ecs/apache.wsgi', '/etc/apache2/ecs/apache.conf']
         local(subprocess.list2cmdline(apache_mkdirs))
         apache_setup(self.appname, use_sudo=self.use_sudo, 
-            hostname=self.hostname, 
+            hostname=self.host, 
             ip=self.ip, 
-            ca_certificate_file='',
-            ca_revocation_file='',
+            ca_certificate_file=os.path.join(self.homedir, 'ecs-ca', 'ca.cert.pem'),
+            ca_revocation_file=os.path.join(self.homedir, 'ecs-ca', 'crl.pem'),
         )
 
     def catalina_cmd(self, what):
@@ -172,9 +193,9 @@ class SetupTarget(SetupTargetObject):
         
         
     def db_clear(self):
-        local("sudo su - postgres -c \'createuser -S -d -R %s\' | true" % (self.username))
-        local('dropdb %s | true' % self.username)
-        local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %s' % self.username)
+        local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
+        local('dropdb %(postgresql.database)s | true' % self.config)
+        local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s' % self.config)
          
     def db_update(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')

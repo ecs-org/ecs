@@ -147,6 +147,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLoginMiddleware',  # deactivate previous users sessions on login
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
+    'ecs.pki.middleware.ClientCertMiddleware',
     #'ecs.TestMiddleware',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
@@ -229,7 +230,7 @@ STARTUP_CALLS = (
     'ecs.users.startup.startup',
 )
 
-ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-config')
+ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
 
 # used by ecs.utils.startup middleware: executes list on framework startup
 STARTUP_CALLS = (

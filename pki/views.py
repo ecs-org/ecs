@@ -7,22 +7,22 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-from ecs.utils.viewutils import render
-from ecs.users.utils import user_flag_required
+from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.users.utils import user_group_required
 
 from ecs.pki.utils import get_ca, get_subject_for_user
 from ecs.pki.forms import CertForm
 from ecs.pki.models import Certificate
 
 
-@user_flag_required('is_internal')
+@user_group_required('EC-Signing Group')
 def cert_list(request, user_pk=None):
     return render(request, 'pki/cert_list.html', {
         'certs': Certificate.objects.select_related('user').order_by('is_revoked', 'user__email', 'cn'),
     })
 
 
-@user_flag_required('is_internal')
+@user_group_required('EC-Signing Group')
 def create_cert(request, user_pk=None):
     form = CertForm(request.POST or None)
 
@@ -50,7 +50,7 @@ def create_cert(request, user_pk=None):
 
 
 @require_POST
-@user_flag_required('is_internal')
+@user_group_required('EC-Signing Group')
 def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
     ca = get_ca()
@@ -60,3 +60,9 @@ def revoke_cert(request, cert_pk=None):
     return HttpResponseRedirect(reverse('ecs.pki.views.cert_list'))
 
 
+def authenticate(request):
+    if request.user.ecs_profile.is_internal:
+        request.session['ecs_pki_authenticated'] = True
+        request.session.modified = True
+    return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
+    

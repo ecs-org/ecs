@@ -13,5 +13,5 @@ stateOrProvinceName    = Vienna
 localityName           = Vienna
 organizationName       = ep3 Software & System House
 organizationalUnitName = Security
-commonName             = %(hostname)s
-emailAddress           = admin@%(hostname)s
+commonName             = %(host)s
+emailAddress           = admin@%(host)s

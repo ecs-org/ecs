@@ -253,6 +253,9 @@ gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependenc
 
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main requirements for now
 django-rosetta:inst:all:pypi:django-rosetta
+
+# yaml is used for vm branding configuration
+pyyaml:inst:all:pypi:pyyaml==3.10
 """
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting

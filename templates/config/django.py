@@ -1,7 +1,7 @@
 # database settings
 DATABASES['default'].update({
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': '%(postgresql.username)s',
+    'NAME': '%(postgresql.database)s',
     'USER': '%(postgresql.username)s',
 })
 
@@ -43,8 +43,8 @@ FEEDBACK_CONFIG = {
 }
 
 BUGSHOT_CONFIG = {
-    'bugshoturl': '%(bugshot.url)', 
-    'milestone': '%(bugshot.milestone)',
+    'bugshoturl': '%(bugshot.url)s', 
+    'milestone': '%(bugshot.milestone)s',
 }
 
 MS_CLIENT = {
@@ -57,16 +57,16 @@ MS_CLIENT = {
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "encrypt_key": os.path.join(PROJECT_DIR, "..", "target", "ecs", "ecs_mediaserver.pub"),
+    "encrypt_key": os.path.join(PROJECT_DIR, "..", "ecs", "ecs_mediaserver.pub"),
     "encrypt_owner": '%(mediaserver.storage.encrypt_owner)s',
-    "signing_key": os.path.join(PROJECT_DIR, "..", "target", "ecs", "ecs_authority.sec"),
+    "signing_key": os.path.join(PROJECT_DIR, "..", "ecs", "ecs_authority.sec"),
     "signing_owner": '%(mediaserver.storage.signing_owner)s',
 }
 
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-    "decrypt_key": os.path.join(PROJECT_DIR, "..", "target", "mediaserver", "ecs_mediaserver.sec"),
+    "decrypt_key": os.path.join(PROJECT_DIR, "..", "ecs" "ecs_mediaserver.sec"),
     "decrypt_owner": "%(mediaserver.storage.decrypt_owner)s",
-    "verify_key":  os.path.join(PROJECT_DIR, "..", "target", "mediaserver", "ecs_authority.pub"),
+    "verify_key":  os.path.join(PROJECT_DIR, "..", "ecs", "ecs_authority.pub"),
     "verify_owner": "%(mediaserver.storage.verify_owner)s",
 }
