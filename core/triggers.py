@@ -106,11 +106,8 @@ def on_initial_thesis_review(sender, **kwargs):
 @connect(signals.on_categorization_review)
 def on_categorization_review(sender, **kwargs):
     submission = kwargs['submission']
-
-    is_acknowledged = submission.newest_submission_form.is_acknowledged
-    if is_acknowledged:
-        meeting = submission.schedule_to_meeting()
-        meeting.update_assigned_categories()
+    meeting = submission.schedule_to_meeting()
+    meeting.update_assigned_categories()
 
 
 @connect(signals.on_b2_upgrade)
