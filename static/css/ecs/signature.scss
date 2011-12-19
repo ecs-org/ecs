@@ -1,0 +1,54 @@
+@import "ecs/variables.scss";
+
+#batch_sign {
+    .nav {
+        float: left;
+        padding: 10px;
+        width: 220px;
+
+        .actions a {
+            display: block;
+            width: 200px;
+            text-align: center;
+            background-color: #eeeeff;
+            border: 1px solid #bbbbbb;
+            border-radius: 3px;
+            color: #333333;
+            margin-bottom: 5px;
+            padding: 3px;
+            font-weight: bold;
+            text-decoration: none;
+            &.highlight {
+                border-color: #00dd00;
+            }
+        }
+        .mocca {
+            margin-top: 30px;
+            width: 200px;
+            height: 180px;
+        }
+        .error {
+            margin-top: 30px;
+            color: red;
+            font-weight: bold;
+            border: 2px solid red;
+            border-radius: 5px;
+            padding: 5px;
+            width: 200px;
+        }
+    }
+
+    .preview {
+        float: left;
+        padding: 30px;
+        background-color: white;
+        border: 3px solid #bbbbbb;
+        border-radius: 5px;
+        position: relative;
+
+        iframe {
+            width: 700px;
+            height: 300px;
+        }
+    }
+}

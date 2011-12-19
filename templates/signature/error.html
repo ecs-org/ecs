@@ -1,24 +1,16 @@
-{% extends "core.html" %}
+{% extends "signature/batch_base.html" %}
 {% load i18n %}
 
-{% block menuSelection %}communication{% endblock %}
+{% block actions %}
+    {{ block.super }}
+    <a class="highlight" href="{% url ecs.signature.views.batch_action pdf_id=pdf_id action="retry" %}">{% trans 'Try again' %}</a>
+{% endblock %}
 
-{% block htmltitle %}{% trans 'Signature Error' %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans 'Signature Error' %}{% endblock %}
-
-{% block content %}
-<div class="signature_error">
-    <h3>{% blocktrans with parent_object as obj %}Failed to sign {{ obj }}{% endblocktrans %}</h3>
-
+{% block navbottom %}
     <table>
-        <tr><th>{% trans 'Error' %}:</th><td><pre>{{ error }}</pre></td></tr>
-        <tr><th>{% trans 'Cause' %}:</th><td><pre>{{ cause }}</pre></td></tr>
+        <div class="error">
+            {{ error|escape }}<br />
+            {{ cause|escape }}
+        </div>
     </table>
-    <p>
-        <a href="{% url ecs.signature.views.sign_error pdf_id=pdf_id %}?action=retry" class="button_submit">{% trans 'Try again' %}</a>
-        <a href="{% url ecs.signature.views.sign_error pdf_id=pdf_id %}?action=skip" class="button_submit">{% trans 'Skip' %}</a>
-        <a href="{% url ecs.signature.views.sign_error pdf_id=pdf_id %}?action=pushback" class="button_submit">{% trans 'Push back' %}</a>
-        <a href="{% url ecs.signature.views.sign_error pdf_id=pdf_id %}?action=cancel" class="button_submit">{% trans 'Cancel' %}</a>
-    </p>
-</div>
 {% endblock %}

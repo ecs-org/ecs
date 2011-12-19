@@ -18,7 +18,7 @@ SIGN_INDICATE_FAILURE = 'error'
 
 def _sign_dict():
     sign_dict = {
-        'success_func': 'ecs.signature.tests.signaturetest.success_func',
+        'success_func': success_func,
         'parent_pk': None,
         'parent_type': None,    
         'document_uuid': uuid4().get_hex(),
@@ -33,10 +33,10 @@ def _sign_dict():
     return sign_dict
 
 def sign_success(request):
-    return sign(request, _sign_dict(), always_mock=True, always_fail=False)
+    return sign(request, _sign_dict(), force_mock=True, force_fail=False)
 
 def sign_fail(request):
-    return sign(request, _sign_dict(), always_mock=True, always_fail=True)
+    return sign(request, _sign_dict(), force_mock=True, force_fail=True)
 
 def success_func(request, document=None):
     return SIGN_INDICATE_SUCCCES

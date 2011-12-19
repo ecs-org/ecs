@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
-from ecs.signature.views import sign, batch_sign
+from ecs.signature.views import init_batch_sign
 from ecs.users.utils import user_group_required, user_flag_required
 from ecs.tasks.models import Task
 from ecs.tasks.utils import task_required
@@ -56,38 +56,34 @@ def download_signed_vote(request, vote_pk=None):
     except Document.DoesNotExist:
         raise Http404('No signed document for vote %s available' % (vote_pk))
     return handle_download(request, signed_vote_doc)
-  
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
 @task_required()
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
+    return init_batch_sign(request, request.related_tasks[0], get_vote_sign_data)
+
+def get_vote_sign_data(request, task):
+    vote = task.data
     pdf_template = 'db/meetings/wkhtml2pdf/vote.html'
     html_template = 'db/meetings/wkhtml2pdf/vote_preview.html'
     context = vote.get_render_context()
-        
-    sign_session_id = request.GET.get('sign_session_id')
-    if sign_session_id:
-        return sign(request, {
-            'success_func': 'ecs.votes.views.success_func',
-            'parent_pk': vote_pk,
-            'parent_type': 'ecs.votes.models.Vote',    
-            'document_uuid': uuid4().get_hex(),
-            'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
-            'document_type': "votes",
-            'document_version': 'signed-at',
-            'document_filename': _vote_filename(vote),
-            'document_barcodestamp': True,
-            'html_preview': render_html(request, html_template, context),
-            'pdf_data': render_pdf(request, pdf_template, context),
-            'sign_session_id': sign_session_id,
-        })
-    else:
-        task = request.related_tasks[0]
-        return batch_sign(request, request.related_tasks[0])
+    return {
+        'success_func': sign_success,
+        'parent_pk': vote.pk,
+        'parent_type': Vote,
+        'document_uuid': uuid4().get_hex(),
+        'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
+        'document_type': "votes",
+        'document_version': 'signed-at',
+        'document_filename': _vote_filename(vote),
+        'document_barcodestamp': True,
+        'html_preview': render_html(request, html_template, context),
+        'pdf_data': render_pdf(request, pdf_template, context),
+    }
 
-def success_func(request, document=None):
+def sign_success(request, document=None):
     vote = document.parent_object
     vote.signed_at = document.date
     vote.save()

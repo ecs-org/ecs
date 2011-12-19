@@ -1,0 +1,25 @@
+{% extends "core.html" %}
+{% load i18n %}
+
+{% block htmltitle %}{% trans 'Batch Signature' %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans 'Batch Signature' %}{% endblock %}
+
+{% block content %}
+<div id="batch_sign" style="display:block;">
+<div class="nav">
+    <div class="actions">
+        {% block actions %}
+        <a href="{% url ecs.signature.views.batch_action pdf_id=pdf_id action="skip" %}">{% trans 'Skip' %}</a>
+        <a href="{% url ecs.signature.views.batch_action pdf_id=pdf_id action="pushback" %}">{% trans 'Push back' %}</a>
+        <a href="{% url ecs.signature.views.batch_action pdf_id=pdf_id action="cancel" %}">{% trans 'Cancel' %}</a>
+        {% endblock %}
+    </div>
+
+    {% block navbottom %}{% endblock %}
+</div>
+<div class="preview">
+    <iframe frameborder="0" scrolling="auto" src="{% url ecs.signature.views.sign_preview pdf_id=pdf_id %}">{% trans "Your browser does not support iframes." %}</iframe>
+</div>
+<div style="clear:both;"></div>
+</div>
+{% endblock %}
