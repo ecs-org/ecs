@@ -255,6 +255,7 @@ gettext_tools:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependenc
 django-rosetta:inst:all:pypi:django-rosetta
 
 # yaml is used for vm branding configuration
+libyaml-dev:req:apt:apt-get:libyaml-dev
 pyyaml:inst:all:pypi:pyyaml==3.10
 """
 
