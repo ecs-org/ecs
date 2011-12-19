@@ -108,7 +108,8 @@ class NodeController(object):
             if edge.bind_guard(self.workflow)():
                 try:
                     token = edge.to_node.bind(self.workflow).receive_token(self.node, trail=trail)
-                    tokens.append(token)
+                    if token:
+                        tokens.append(token)
                 except TokenRejected:
                     pass
         return tokens
@@ -125,7 +126,10 @@ class NodeController(object):
             self.emit_token(deadline=deadline, trail=tokens)
             
     def receive_token(self, source, trail=(), repeated=False):
-        if not self.is_reentrant() and self.has_tokens(consumed=None):
+        reentrant = self.is_reentrant()
+        if not reentrant and self.has_tokens(consumed=None):
+            if reentrant is None:
+                return
             raise TokenRejected("%s is not repeatable" % self.node)
         token = self.workflow.tokens.create(
             node=self.node, 
@@ -199,7 +203,7 @@ class Activity(NodeController):
 class FlowController(NodeController):
     def receive_token(self, source, trail=None):
         token = super(FlowController, self).receive_token(source, trail=trail)
-        if not self.is_locked():
+        if token and not self.is_locked():
             self.handle_token(token)
 
     def unlock_token(self, token):

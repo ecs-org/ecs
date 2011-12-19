@@ -352,6 +352,9 @@ class WaitForMeeting(Generic):
     class Meta:
         model = Submission
         
+    def is_reentrant(self):
+        return None # throw away any token after the first
+        
     def is_locked(self):
         next_meeting = self.workflow.data.next_meeting
         if not next_meeting:
