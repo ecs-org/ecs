@@ -6,7 +6,7 @@
 {% block content %}
     {% include 'db/wkhtml2pdf/ec_head.inc' %}
     <div class="header">
-        <h1>{% trans 'Notification Answer' %}</h1>
+        <h1>Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}</h1>
     </div>
     
     <table class="full_width withborders">
@@ -30,10 +30,6 @@
     {% endfor %}
     </table>
 
-    {% block headitem %}
-        <h1>{{ notification.type.name }} vom {{ notification.timestamp|date:'d.m.Y' }}</h1>
-    {% endblock %}
-    
     <h2>Angaben zum Forschungsprojekt</h2>
 
     {% block mainitem %}
@@ -49,18 +45,8 @@
 
     {% block documents %}
         {% if documents %}
-        <h4>Anlagen</h4>
-
-        <ol>
-            {% block doclist %}
-            {% for doc in documents %}
-                <li>
-                    {{ doc.doctype.name|default:"Sonstige Unterlagen" }}: Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                    {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
-                </li>
-            {% endfor %}
-            {% endblock %}
-        </ol>
+            <h4>Eingereichte Unterlagen</h4>
+            {% include 'db/wkhtml2pdf/documents.html' %}
         {% endif %}
     {% endblock %}
     

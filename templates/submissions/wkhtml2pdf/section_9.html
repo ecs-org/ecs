@@ -1,22 +1,5 @@
 {% load core corepdf %}
-<table class="full_width withborders">
-  <tbody>
-    <tr>
-        <th>Dokument</th>
-        <th>Name</th>
-        <th>Version/Identifikation</th>
-        <th>Datum</th>
-    </tr>
-    {% for doc in documents %}
-    <tr>
-        <td>{% ifchanged doc.doctype.name %}<strong>{{ doc.doctype.name }}</strong>{% endifchanged %}</td>
-        <td>{% if doc.name %}<strong>{{ doc.name }}</strong>{% endif %}</td>
-        <td><strong>{{ doc.version }}</strong></td>
-        <td><strong>{{ doc.date|date:'d.m.Y' }}</strong></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+{% include 'db/wkhtml2pdf/documents.html' %}
 </center>
 
 
