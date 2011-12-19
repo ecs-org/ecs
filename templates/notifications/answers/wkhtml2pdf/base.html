@@ -1,5 +1,5 @@
 {% extends 'db/wkhtml2pdf/skeleton.html' %}
-{% load core corepdf i18n %}
+{% load core corepdf i18n userutils %}
 
 {% block title %}Meldung{% endblock %}
 
@@ -33,6 +33,8 @@
     <p style="height:0.5cm"></p>
     <p>{{ answer.text|linebreaksbr }}</p>
 
-    <p></p>
+    {% if answer.executive_reviewer %}
+        <p>{{ answer.executive_reviewer|full_name }}</p>
+    {% endif %}
     <p>{% now "d.m.Y" %}</p>
 {% endblock %}

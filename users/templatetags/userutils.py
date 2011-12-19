@@ -2,7 +2,7 @@
 
 from django.template import Library
 
-from ecs.users.utils import get_formal_name
+from ecs.users.utils import get_formal_name, get_full_name
 
 
 register = Library()
@@ -18,6 +18,10 @@ def is_member_of(user, groupname):
 @register.filter
 def formal_name(user):
     return get_formal_name(user)
+
+@register.filter
+def full_name(user):
+    return get_full_name(user)
 
 @register.filter
 def has_perm(user, permission):
