@@ -109,8 +109,8 @@ def needs_localec_vote_preparation(wf):
     return has_localec_recommendation(wf)
 
 # b2 guards
-@block_duplicate_task('b2_resubmission')
 @guard(model=Submission)
+@block_duplicate_task('b2_resubmission')
 def is_b2(wf):
     return wf.data.get_most_recent_vote().result == '2'
 
@@ -358,7 +358,7 @@ class WaitForMeeting(Generic):
             return True
         if not next_meeting.ended:
             return True
-        return self.workflow.data.votes.filter(top__meeting=next_meeting).exists()
+        return not self.workflow.data.votes.filter(top__meeting=next_meeting).exists()
 
 
 @connect(meeting_signals.on_meeting_end)
