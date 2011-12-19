@@ -34,6 +34,7 @@
 
 <h4>Die Kommission fasst folgenden Beschluss:</h4>
 
+<p>
 {% if vote.result == '1' %}
     Es besteht kein Einwand gegen die Durchführung der Studie.
 {% endif %}
@@ -52,6 +53,7 @@
 {% if vote.result == '5' %}
     Der Antrag wurde vom Antragsteller zurückgezogen.
 {% endif %}
+<p>
 
 {% with submission.past_votes.all as past_votes %}
 {% if past_votes %}

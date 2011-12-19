@@ -521,11 +521,10 @@ def create_submission_form(request):
         submission = request.docstash.get('submission')
         if submission:   # refetch submission object because it could have changed
             submission = Submission.objects.get(pk=submission.pk)
-            allows_edits = submission.current_submission_form.allows_edits(request.user)
+            allows_edits = bool(notification_type) or submission.current_submission_form.allows_edits(request.user)
         else:
             submission = Submission.objects.create()
 
-        print '{0} {1} {2}'.format(submit, valid, allows_edits)
         if submit and valid and allows_edits:
             submission_form = form.save(commit=False)
             submission_form.submission = submission
