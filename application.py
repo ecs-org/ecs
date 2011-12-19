@@ -256,7 +256,9 @@ django-rosetta:inst:all:pypi:django-rosetta
 
 # yaml is used for vm branding configuration
 libyaml-dev:req:apt:apt-get:libyaml-dev
-pyyaml:inst:all:pypi:pyyaml==3.10
+pyyaml:inst:!win:pypi:pyyaml==3.10
+pyyaml:instbin:win:http://pypi.python.org/packages/2.6/P/PyYAML/PyYAML-3.10.win32-py2.6.exe
+
 """
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
