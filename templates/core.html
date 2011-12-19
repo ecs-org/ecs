@@ -249,7 +249,7 @@
       var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
       var feedback_handler = function(event) { 
         event.stop();
-        var url = '/feedback/input/i/1/' + get_origin() + '/';
+        var url = '/feedback/popup/i/1/' + get_origin() + '/';
         // TODO: fix for feedback and userswitcher target (should display original_user)
         new ecs.Dialog(url, {
           title: 'Feedback von {% if request.original_user %}{{ request.original_user }}{% else %}{{ user }}{% endif %}',
