@@ -1,0 +1,22 @@
+<table class="full_width withborders">
+  <tbody>
+    <tr>
+        <th>Dokument</th>
+        <th>Name</th>
+        <th>Version</th>
+        <th>Datum</th>
+    </tr>
+    {% for doc in documents %}
+        <tr>
+            <td>{% ifchanged doc.doctype.name %}{{ doc.doctype }}{% endifchanged %}</td>
+            <td>{% if doc.name %}{{ doc.name }}{% endif %}</td>
+            <td>{{ doc.version }}</td>
+            <td>{{ doc.date|date:'d.m.Y' }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="4"><em>(keine Unterlagen)</em></td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
