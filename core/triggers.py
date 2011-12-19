@@ -116,6 +116,7 @@ def on_b2_upgrade(sender, **kwargs):
     vote.submission_form.is_acknowledged = True
     vote.submission_form.save()
     vote.submission_form.mark_current()
+
     if vote.result != '1':
         with sudo():
             meeting = submission.schedule_to_meeting()
