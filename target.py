@@ -117,8 +117,8 @@ class SetupTarget(SetupTargetObject):
     def servercert_config(self):
         ssleay_filename = os.path.join(self.homedir, 'ssleay.cnf')
         warn("Creating {0}".format(ssleay_filename))
-        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
         self.write_config_template('ssleay.cnf', ssleay_filename)
+        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
     
     def ca_config(self):
         openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
