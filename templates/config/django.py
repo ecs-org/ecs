@@ -72,16 +72,16 @@ MS_CLIENT = {
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "encrypt_key": '%(mediaserver.storage.encrypt_key)s',
+    "encrypt_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_mediaserver.pub"),
     "encrypt_owner": '%(mediaserver.storage.encrypt_owner)s',
-    "signing_key": '%(mediaserver.storage.signing_key)s',
+    "signing_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_authority.sec"),
     "signing_owner": '%(mediaserver.storage.signing_owner)s',
 }
 
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
-    "decrypt_key": '%(mediaserver.storage.decrypt_key)s',
+    "decrypt_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_mediaserver.sec"),
     "decrypt_owner": "%(mediaserver.storage.decrypt_owner)s",
-    "verify_key":  '%(mediaserver.storage.verify_key)s',
+    "verify_key":  os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_authority.pub"),
     "verify_owner": "%(mediaserver.storage.verify_owner)s",
 }
