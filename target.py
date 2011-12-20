@@ -134,6 +134,7 @@ class SetupTarget(SetupTargetObject):
             ssl_cert = self.config.get_path('ssl.cert')
             local('sudo cp %s /etc/ssl/private/%s.key' % (ssl_key, self.host))
             local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
+            local('sudo chmod 0600 /etc/ssl/private/%s.key' % self.host)
         except KeyError:
             warn('Missing SSL key or certificate - a new pair will be generated')
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
