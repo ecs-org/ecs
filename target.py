@@ -94,6 +94,7 @@ class SetupTarget(SetupTargetObject):
         self.upstart_install()
     
     def system_setup(self, *args, **kwargs):
+        self.host_config()
         self.homedir_config()
         self.servercert_config()
         self.apache_baseline()
@@ -113,6 +114,12 @@ class SetupTarget(SetupTargetObject):
         
         self.upstart_install()
         self.upstart_start()
+        
+    def host_config(self):
+        _, tmp = tempfile.mkstemp()
+        self.write_config_template('hosts', tmp)
+        local('sudo cp %s /etc/hosts' % tmp)
+        os.remove(tmp)
  
     def homedir_config(self):
         homedir = os.path.expanduser('~')
