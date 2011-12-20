@@ -245,7 +245,7 @@ class ModelDiffer(object):
         identity = None
         if self.identify:
             identity = getattr(new or old, self.identify)
-        return ModelDiffNode(old, new, SortedDict(sorted(d)), identity=identity)
+        return ModelDiffNode(old, new, SortedDict(d), identity=identity)
 
 
 class AtomicModelDiffer(ModelDiffer):
