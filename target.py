@@ -86,6 +86,7 @@ class SetupTarget(SetupTargetObject):
         self.homedir_config()
         self.local_settings_config()
         self.db_update()
+        self.ca_update()
         self.search_config()
         
         self.apache_config() 
@@ -152,7 +153,10 @@ class SetupTarget(SetupTargetObject):
     def ca_config(self):
         openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
         from ecs.pki.openssl import CA
-        ca = CA(os.path.join(self.homedir, 'ecs-ca'), config=openssl_cnf)
+        cadir = os.path.join(self.homedir, 'ecs-ca')
+        if os.path.exists(cadir):
+            local('rm -r %s' % cadir)
+        ca = CA(cadir, config=openssl_cnf)
         self.write_config_template('openssl-ca.cnf', openssl_cnf, ca.__dict__)
         
     def ca_update(self):
@@ -162,7 +166,7 @@ class SetupTarget(SetupTargetObject):
             return
         basedir = os.path.join(self.homedir, 'ecs-ca')
         if os.path.exists(basedir):
-            warn('CA directory exists (%s), refusing to overwrite.')
+            warn('CA directory exists (%s), refusing to overwrite.' % basedir)
             return
         shutil.copytree(replacement, basedir)
         
