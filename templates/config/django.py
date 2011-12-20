@@ -20,7 +20,7 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
 # ecsmail settings
-ECS_MAIL['authoritative_domain'] = '%(hostname)s'
+ECS_MAIL['authoritative_domain'] = '%(host)s'
 ECS_MAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
 
 import sys
@@ -28,9 +28,9 @@ if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrents
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-PDFAS_SERVICE = 'https://%(hostname)s:4780/pdf-as/'
+PDFAS_SERVICE = 'https://%(host)s:4780/pdf-as/'
 
-ABSOLUTE_URL_PREFIX = "https://%(hostname)s"
+ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
 
 ECS_PDFCOP = '#'
