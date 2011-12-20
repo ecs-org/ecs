@@ -22,10 +22,12 @@ from deployment.conf import load_config
 class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
-        config_file = kwargs.pop('config', 'ecs.yml')
+        dirname = os.path.dirname(__file__)
+        config_file = kwargs.pop('config', os.path.join(dirname, '..', 'ecs.yml'))
         super(SetupTarget, self).__init__(*args, **kwargs)
+        self.dirname = dirname
         self.appname = 'ecs'
-        self.dirname = os.path.dirname(__file__)
+        
         if config_file:
             self.configure(config_file)
         
