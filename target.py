@@ -121,9 +121,6 @@ class SetupTarget(SetupTargetObject):
                 os.mkdir(pathname)
 
     def servercert_config(self):
-        ssleay_filename = os.path.join(self.homedir, 'ssleay.cnf')
-        warn("Creating {0}".format(ssleay_filename))
-        self.write_config_template('ssleay.cnf', ssleay_filename)
         try:
             ssl_key = self.config.get_path('ssl.key')
             ssl_cert = self.config.get_path('ssl.cert')
@@ -131,7 +128,9 @@ class SetupTarget(SetupTargetObject):
             local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
         except KeyError:
             warn('Missing SSL key or certificate - a new pair will be generated')
-            local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
+            openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
+            self.write_config_template('openssl-ssl.cnf', openssl_cnf)
+            local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
     
     def ca_config(self):
         openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
