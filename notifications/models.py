@@ -162,6 +162,7 @@ class AmendmentNotification(DiffNotification, Notification):
 class SafetyNotification(Notification):
     safety_type = models.CharField(max_length=6, db_index=True, choices=SAFETY_TYPE_CHOICES, verbose_name=_('Type'))
     is_acknowledged = models.BooleanField(default=False)
+    reviewer = models.ForeignKey('auth.User', null=True)
 
 
 class NotificationAnswer(models.Model):

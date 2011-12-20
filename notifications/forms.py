@@ -47,7 +47,7 @@ class SafetyNotificationForm(MultiNotificationForm):
         
     class Meta:
         model = SafetyNotification
-        exclude = NotificationForm._meta.exclude
+        exclude = NotificationForm._meta.exclude + ('reviewer',)
 
 class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))

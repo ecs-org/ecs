@@ -6,13 +6,13 @@
 {% block content %}
     {% include 'db/wkhtml2pdf/ec_head.inc' %}
     <div class="header">
-        <h1>Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}</h1>
+        <h1>{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}{% endblock %}</h1>
     </div>
     
     <div>
         {% block study_info %}
         <h4>Angaben zur Studie</h4>
-        {% with notification.submission_forms.all.0 as sf %}
+        {% for sf in notification.submission_forms.all %}
         <p>
             <b>EK Nr:</b> <b>{{ sf.submission.get_ec_number_display }}</b><br />
             <b>Projekttitel:</b> {{ sf.submission.project_title_display }}<br />
@@ -20,7 +20,7 @@
             <b>Institution:</b> {{ sf.submitter_organisation }}<br />
             <b>Sponsor:</b> {{ sf.sponsor_name }}<br />
         <p>
-        {% endwith %}
+        {% endfor %}
         {% endblock %}
     </div>
 
@@ -32,9 +32,11 @@
     {% endblock %}
     <p style="height:0.5cm"></p>
     <p>{{ answer.text|linebreaksbr }}</p>
-
+    
+    {% block reviewer %}
     {% if answer.executive_reviewer %}
         <p>{{ answer.executive_reviewer|full_name }}</p>
     {% endif %}
+    {% endblock %}
     <p>{% now "d.m.Y" %}</p>
 {% endblock %}

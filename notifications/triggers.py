@@ -6,6 +6,7 @@ from ecs.communication.utils import send_system_message_template
 from ecs.notifications import signals
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils import connect
+from ecs.users.utils import get_current_user
 
 
 @connect(signals.on_notification_submit)
@@ -19,6 +20,7 @@ def on_safety_notification_review(sender, **kwargs):
     notification = kwargs['notification']
     notification = notification.safetynotification
     notification.is_acknowledged = True
+    notification.reviewer = get_current_user()
     notification.save()
 
     # automatically create notification answer
