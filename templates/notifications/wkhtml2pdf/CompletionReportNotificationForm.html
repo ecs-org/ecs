@@ -1,10 +1,16 @@
 {% extends "db/notifications/wkhtml2pdf/ReportNotificationForm.html" %}
-{% block mainitem %}
-    {% with notification.completionreportnotification as notification %}
-        {{ block.super }}
-        <ul>
-          <li>Die Studie wurde abgebrochen: {{ notification.study_aborted|yesno:"Ja,Nein" }}</li>
-          <li>Datum der Beendigung: {{ notification.completion_date|date:'d.m.Y' }}</li>
-        </ul>
-    {% endwith %}
+{% load i18n %}
+
+{% block formname %}Formular für Abschlussberichte / Beendigung der Studie{% endblock %}
+{% block typeoptions %}<h1>1. Beendigung der Studie / Abschlussbericht</h1>{% endblock %}
+
+{% block study_status %}
+{% with notification.completionreportnotification as notification %}
+    {% if notification.study_aborted %}
+        Die Studie wurde abgebrochen am
+    {% else %}
+        Die Studie wurde abgeschlossen am
+    {% endif %}
+    {{ notification.completion_date|date:'d.m.Y' }}
+{% endwith %}
 {% endblock %}

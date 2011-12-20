@@ -1,0 +1,4 @@
+{% extends 'db/notifications/wkhtml2pdf/base.html' %}
+{% load core corepdf %}
+
+{% block typeoptions %}<h1>1. Sicherheitsbericht ({{ notification.safetynotification.get_safety_type_display }}) vom {{ notification.timestamp|date:'d.m.Y'}}</h1>{% endblock %}

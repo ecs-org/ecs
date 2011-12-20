@@ -1,10 +1,14 @@
 {% extends 'db/notifications/wkhtml2pdf/ReportNotificationForm.html' %}
 {% load i18n %}
-{% block mainitem %}
-    
-    {% with notification.progressreportnotification as notification %}
-        {{ block.super }}
-        <p>Votumsverlängerungsantrag: Ja</p>
-        <p>Die Studie läuft noch bis voraussichtlich: {{ notification.runs_till|date:'d.m.Y' }}</p>
-    {% endwith %}
+
+{% block formname %}Formular für Zwischenberichte / Verlängerung des Votums{% endblock %}
+{% block typeoptions %}<h1>1. Verlängerung der Studie / Zwischenbericht</h1>{% endblock %}
+
+{% block study_status %}
+    Die Studie läuft voraussichtlich bis {{ notification.progressreportnotification.runs_till|date:'d.m.Y' }}
+{% endblock %}
+
+{% block comments %}
+    {{ block.super }}<br />
+    Ich beantrage die Verlängerung der Gültigkeit des Votums.
 {% endblock %}

@@ -97,11 +97,16 @@ class Notification(models.Model):
         except NotificationAnswer.DoesNotExist:
             return None
 
+    def get_submission_form(self):
+        if self.submission_forms.exists():
+            return self.submission_forms.all()[0]
+        return None
+
     def get_submission(self):
-        if self.submission_forms.count():
-            return self.submission_forms.all()[0].submission
-        else:
-            return None
+        sf = self.get_submission_form()
+        if sf:
+            return sf.submission
+        return None
             
     def get_filename(self, suffix=".pdf"):
         ec_num = '_'.join(str(s['submission__ec_number']) for s in self.submission_forms.order_by('submission__ec_number').values('submission__ec_number').distinct())

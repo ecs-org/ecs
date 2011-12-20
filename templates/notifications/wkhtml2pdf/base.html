@@ -4,105 +4,91 @@
 {% block title %}Meldung{% endblock %}
 
 {% block content %}
-    <div class="header">
-        <h1>Meldung</h1>
-        <p class="center">Formular für die Meldung von Amendments, SUSARs und für sonstige Mitteilungen an Österreichische Ethik-Kommissionen.
-        Version 5.1 vom 25.08.2006</p>
-    </div>
-    <h1>MITTEILUNG</h1>
-    <p>an folgende Österreichische Ethik-Kommissionen:</p>
+<div class="header withborder">
+    <h1>{% block formtitle %}Meldung{% endblock %}</h1>
+    <p class="center">{% block formname %}Formular für die Meldung von Amendments, SUSARs und für sonstige Mitteilungen an Österreichische Ethik-Kommissionen.
+    <span class="small">Version 5.1 vom 25.08.2006</span>{% endblock %}</p>
+</div>
 
 <div class="two_columns">
-  
     <div class="column_left">
       <span class="small">Adresse der Ethikkommission (optional)</span><br>
-      An die<br/>
-      Ethikkommission<br/>
-      der Medizinischen Universität Wien<br/>
-      Borschkegasse 8b<br/>
-      1090 Wien<br/>
     </div>
-    
     <div class="column_right">
        <span class="small">Raum für Eingangsstempel, EK-Nummer, etc.</span>
     </div>
-  
 </div>
 
+{% block submission_table %}
 <table class="full_width withborders">
 <tr>
     <th width="215" height="24">Ethik-Kommission</th>
-    <th width="50">EK-Nummer</th>
-    <th width="84">Protokoll-Nr.</th>
-    <th width="84">EudraCT-Nr.</th>
+    <th width="50">EK-Nr</th>
     <th width="84">Datum des Votums</th>
+    <th width="195">Zentrum</th>
     <th width="195">Prüfer</th>
 </tr>
-{% for submission_form in notification.submission_forms.all %}
+{% for sf in notification.submission_forms.all %}
 <tr>
-    <td>{{ submission_form.submission.main_ethics_commission }}</td>
-    <td>{{ submission_form.submission }}</a></td>
-    <td>{{ submission_form.submission.current_submission_form.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
-    <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
-    <td>{{ submission_form.current_published_vote.signed_at|date:'d.m.Y' }}</td>
-    <td>{{ submission_form.submission.primary_investigator.contact }}</td>
+    <td>{{ sf.submission.main_ethics_commission }}</td>
+    <td>{{ sf.submission|ec_number }}</a></td>
+    <td>{{ sf.current_published_vote.signed_at|date:'d.m.Y' }}</td>
+    <td>{{ sf.submission.primary_investigator.organisation|default:'<i>nicht vorhanden</i>' }}</td>
+    <td>{{ sf.submission.primary_investigator.user|default:'<i>nicht vorhanden</i>' }}</td>
 </tr>
 {% endfor %}
 </table>
-
-{% block headitem %}
-<p>{{ notification.type.name }} vom {{ notification.timestamp|date:'d.m.Y' }}</p>
 {% endblock %}
 
-<div class="type-options">{% block typeoptions %}{% endblock %}</div>
+<p>{% block typeoptions %}{% endblock %}</p>
 
-<h3>2. Angaben zum Forschungsprojekt</h3>
-
-<h4>2.1. Projekttitel (Kurzbezeichnung):</h4>
-  <p>
-    {% for sf in submission_forms %}
-    {{ sf.submission.project_title_display }}{% if not forloop.last %}, {% endif %}
-    {% endfor %}
-  </p>
-  
-<h4>2.2. Protokollnummer (falls vorhanden):</h4>
-  <p>
-      {% for protocol_number in protocol_numbers %}
-          {{ protocol_number }}{% if not forloop.last %}, {% endif %}
-      {% empty %}
-          –
-      {% endfor %}
-  </p>
+<h3>2. Angaben zur Studie</h3>
+{% block submission_details %}
+{% for sf in notification.submission_forms.all %}
+    <table class="full_width">
+        <tbody>
+            <tr>
+                <td width="25%">2.0 EK Nr:</td>
+                <td class="value">{{ sf.submission|ec_number }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">2.1 Projekttitel: <span class="value">{{ sf.submission.project_title_display|default:'<i>nicht vorhanden</i>' }}</span></td>
+            </tr>
+            <tr>
+                <td>2.2 Protokollnummer:</td>
+                <td class="value">{{ sf.protocol_number|default:'<i>nicht vorhanden</i>' }}</td>
+            </tr>
+            <tr>
+                <td>2.3 Eudract Nr:</td>
+                <td class="value">{{ sf.eudract_number|default:'<i>nicht vorhanden</i>' }}</td>
+            </tr>
+            <tr>
+                <td>2.4 Antragsteller/in:</td>
+                <td class="value">{{ sf.submitter }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {% if not forloop.last %}
+        <div style="height:0.5cm;"></div>
+    {% endif %}
+{% endfor %}
+{% endblock %}
 
 {% block mainitem %}
 <h3>3. Begründung/Stellungnahme/Mitteilung</h3>
   <p>
-    {{ notification.comments|linebreaksbr|default:"nicht vorhanden" }}
+    {{ notification.comments|linebreaksbr|default:"<i>nicht vorhanden</i>" }}
   </p>
 {% endblock %}
 
 {% block documents %}
     {% if documents %}
-    <h3>4. Anlagen</h3>
-
-    <ol>
-        {% block doclist %}
-        {% for doc in documents %}
-            <li>
-                {{ doc.doctype.name|default:"Sonstige Unterlagen" }}: Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
-                {% if doc.original_file_name %}(Dateiname: {{ doc.original_file_name|smart_truncate:4 }}){% endif %}
-            </li>
-        {% endfor %}
-        {% endblock %}
-    </ol>
+        <h3>Dokumente</h3>
+        {% include 'db/wkhtml2pdf/documents.html' %}
     {% endif %}
 {% endblock %}
 
-<h3>{% if notification.documents.all %} 5. {% else %} 4. {% endif %} Unterschrift</h3>
-
-<div class="signature_date">
-  <span class="line">Unterschrift (Prüfer/in bzw. Antragsteller/in)</span>
-  <span class="line">Datum</span>
-</div>
-
+<p>
+    <b>Meldung erstellt am:</b> {{ notification.timestamp|date:'d.m.Y' }}
+</p>
 {% endblock %}
