@@ -173,7 +173,7 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djcelery',
-    
+
     'ecs.utils.countries',
     'compressor',
     'dbtemplates',
