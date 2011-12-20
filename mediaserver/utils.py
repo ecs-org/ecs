@@ -90,7 +90,7 @@ class MediaProvider:
                         num += 1
                         sprite_images = map(workdir, page_images[offset:offset + n])
                         sprite_path = workdir('p%s-%s.png' % (offset + 1, offset + n + 1))
-                        _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s>' % (w, h)] + [sprite_path])
+                        _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s>' % (w, h)] + ['PNG8:%s' % sprite_path])
                         yield Page(identifier, tx, ty, width, num), open(sprite_path, 'rb')
                     
                     for f in os.listdir(private_workdir):
