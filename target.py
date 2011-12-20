@@ -45,6 +45,9 @@ class SetupTarget(SetupTargetObject):
     def random_string(self, length=40):
         chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
         return ''.join(random.choice(chars) for i in xrange(length))
+        
+    def print_random_string(self, length=40):
+        print self.random_string(length=length)
     
     def write_config_template(self, template, dst, context=None):
         if context is None:
