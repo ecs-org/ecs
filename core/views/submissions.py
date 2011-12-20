@@ -522,10 +522,10 @@ def create_submission_form(request):
         if submission:   # refetch submission object because it could have changed
             submission = Submission.objects.get(pk=submission.pk)
             allows_edits = bool(notification_type) or submission.current_submission_form.allows_edits(request.user)
-        else:
-            submission = Submission.objects.create()
 
         if submit and valid and allows_edits:
+            if not submission:
+                submission = Submission.objects.create()
             submission_form = form.save(commit=False)
             submission_form.submission = submission
             submission_form.is_notification_update = bool(notification_type)
