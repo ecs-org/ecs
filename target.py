@@ -13,7 +13,7 @@ from uuid import uuid4
 from fabric.api import local, env, warn
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
-from deployment.utils import install_upstart, control_upstart, apache_setup, strbool
+from deployment.utils import control_upstart, apache_setup, strbool, write_template
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
@@ -186,7 +186,7 @@ class SetupTarget(SetupTargetObject):
     
     
     def upstart_install(self):
-        install_upstart(self.appname, upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
+        control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
     def upstart_stop(self):
         control_upstart(self.appname, "stop", use_sudo=self.use_sudo, dry=self.dry)
