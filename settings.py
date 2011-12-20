@@ -238,7 +238,7 @@ STARTUP_CALLS = (
     'ecs.users.startup.startup',
 )
 
-# used by ecs.pki 
+# used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
 ECS_CA_CONFIG = os.path.join(ECS_CONFIG_DIR, 'openssl-ca.cnf')
 
