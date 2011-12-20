@@ -1,3 +1,6 @@
+DEBUG = False
+TEMPLATE_DEBUG = False
+
 # database settings
 DATABASES['default'].update({
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -16,8 +19,19 @@ CELERY_ALWAYS_EAGER = False
 HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
-DEBUG = False
-TEMPLATE_DEBUG = False
+# ecsmail settings
+ECS_MAIL['authoritative_domain'] = '%(hostname)s'
+ECS_MAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
+
+import sys
+if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+PDFAS_SERVICE = 'https://%(hostname)s:4780/pdf-as/'
+
+ABSOLUTE_URL_PREFIX = "https://%(hostname)s"
+
 
 ECS_PDFCOP = '#'
 ECS_PDFDECRYPT = '#'
@@ -54,6 +68,7 @@ MS_CLIENT = {
     "key_secret": "%(mediaserver.client.key_secret)s",
     "same_host_as_server": %(mediaserver.client.same_host_as_server)s,
 }
+
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
