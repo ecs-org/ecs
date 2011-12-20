@@ -122,7 +122,14 @@ class SetupTarget(SetupTargetObject):
         ssleay_filename = os.path.join(self.homedir, 'ssleay.cnf')
         warn("Creating {0}".format(ssleay_filename))
         self.write_config_template('ssleay.cnf', ssleay_filename)
-        local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
+        try:
+            ssl_key = self.config.get_path('ssl.key')
+            ssl_cert = self.config.get_path('ssl.cert')
+            local('sudo cp %s /etc/ssl/private/%s.key' % (ssl_key, self.host))
+            local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
+        except KeyError:
+            warn('Missing SSL key or certificate - a new pair will be generated')
+            local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(ssleay_filename, self.host))
     
     def ca_config(self):
         openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
@@ -209,16 +216,16 @@ class SetupTarget(SetupTargetObject):
         pass
 
     def queuing_config(self):
-        if int(local('sudo rabbitmqctl list_vhosts | grep %s | wc -l' % self.username, capture=True)):
-            local('sudo rabbitmqctl delete_vhost %s' % self.username)
+        if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
+            local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
         
         local('sudo rabbitmqctl add_vhost %s' % self.username)
             
-        if int(local('sudo rabbitmqctl list_users | grep %s | wc -l' % self.username, capture=True)):
-            local('sudo rabbitmqctl delete_user %s ' % (self.username))
+        if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
+            local('sudo rabbitmqctl delete_user %(rabbitmq.username)s ' % self.config)
         
-        local('sudo rabbitmqctl add_user %s %s' % (self.username, self.queuing_password))       
-        local('sudo rabbitmqctl set_permissions -p %s %s ".*" ".*" ".*"' % (self.username, self.username))
+        local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
+        local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
 
     def search_config(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % self.username)

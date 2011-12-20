@@ -57,7 +57,7 @@ MS_CLIENT = {
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
-    "encrypt_key": '%(mediaserver.storage.encrypt_key)',
+    "encrypt_key": '%(mediaserver.storage.encrypt_key)s',
     "encrypt_owner": '%(mediaserver.storage.encrypt_owner)s',
     "signing_key": '%(mediaserver.storage.signing_key)s',
     "signing_owner": '%(mediaserver.storage.signing_owner)s',
