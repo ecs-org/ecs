@@ -238,11 +238,11 @@ class SetupTarget(SetupTargetObject):
         local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
 
     def search_config(self):
-        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/solr_schema.xml' % self.username)
-        local('sudo cp ~%s/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
-        with open(os.path.expanduser('~/jetty.cnf'), 'w') as f:
+        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/ecs-conf/solr_schema.xml' % self.username)
+        local('sudo cp ~%s/ecs-conf/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
+        with open(os.path.expanduser('~/ecs-conf/jetty.cnf'), 'w') as f:
             f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
-        local('sudo cp ~{0}/jetty.cnf /etc/default/jetty'.format(self.username))
+        local('sudo cp ~{0}/ecs-conf/jetty.cnf /etc/default/jetty'.format(self.username))
         local('sudo /etc/init.d/jetty stop')
         local('sudo /etc/init.d/jetty start')
 
