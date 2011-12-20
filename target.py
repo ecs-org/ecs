@@ -22,7 +22,7 @@ from deployment.conf import load_config
 class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
-        config_file = kwargs.pop('config', None)
+        config_file = kwargs.pop('config', 'ecs.yml')
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.appname = 'ecs'
         self.dirname = os.path.dirname(__file__)
@@ -41,7 +41,11 @@ class SetupTarget(SetupTargetObject):
         self.config.setdefault('postgresql.database', self.config['user'])
         self.config.setdefault('rabbitmq.username', self.config['user'])
         self.config.setdefault('rabbitmq.password', self.random_string(20))
-        
+        self.config.setdefault('mediaserver.storage.encrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.pub'))
+        self.config.setdefault('mediaserver.storage.signing_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.sec'))
+        self.config.setdefault('mediaserver.storage.decrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.sec'))
+        self.config.setdefault('mediaserver.storage.verify_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.pub'))
+
     def random_string(self, length=40):
         chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
         return ''.join(random.choice(chars) for i in xrange(length))
@@ -76,7 +80,7 @@ class SetupTarget(SetupTargetObject):
             self.upstart_start()
             self.wsgi_reload()
 
-    def update(self, *args, **kwargs):        
+    def update(self, *args, **kwargs):
         self.homedir_config()
         self.local_settings_config()
         self.db_update()
@@ -85,7 +89,7 @@ class SetupTarget(SetupTargetObject):
         self.apache_config() 
         self.apache_restart()
         
-        self.upstart_install()        
+        self.upstart_install()
     
     def system_setup(self, *args, **kwargs):
         self.homedir_config()
@@ -97,7 +101,7 @@ class SetupTarget(SetupTargetObject):
         self.queuing_config()
 
         self.ca_config()
-        self.gpg_config()
+        self.ca_update()
         self.db_update()
         self.search_config()
         
@@ -136,14 +140,6 @@ class SetupTarget(SetupTargetObject):
             warn('CA directory exists (%s), refusing to overwrite.')
             return
         shutil.copytree(replacement, basedir)
-        
-    def gpg_config(self):
-        for key in ('encrypt_key', 'signing_key', 'decrypt_key', 'verify_key'):
-            src = self.config.get_path('mediaserver.storage.%s' % key)
-            if not os.path.exists(src):
-                warn('missing gpg key: %s' % src)
-            else:
-                shutil.copy(src, os.path.join(self.homedir, 'src', 'ecs'))
         
     def django_config(self):
         self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
