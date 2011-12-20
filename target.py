@@ -83,21 +83,30 @@ class SetupTarget(SetupTargetObject):
             self.wsgi_reload()
 
     def update(self, *args, **kwargs):
+        self.host_config()
         self.homedir_config()
-        self.local_settings_config()
-        self.db_update()
+        self.servercert_config()
+        
+        self.apache_baseline()
+        self.django_config()
+        self.queuing_config()
+        
         self.ca_update()
+        self.db_update()
         self.search_config()
         
         self.apache_config() 
-        self.apache_restart()
-        
         self.upstart_install()
+        
+        self.apache_restart()
+        self.upstart_start()
+        
     
     def system_setup(self, *args, **kwargs):
         self.host_config()
         self.homedir_config()
         self.servercert_config()
+        
         self.apache_baseline()
         # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
         self.django_config()
@@ -106,14 +115,15 @@ class SetupTarget(SetupTargetObject):
 
         self.gpg_config()
         self.ca_config()
+        
         self.ca_update()
         self.db_update()
         self.search_config()
         
         self.apache_config() 
-        self.apache_restart()
-        
         self.upstart_install()
+        
+        self.apache_restart()
         self.upstart_start()
         
     def host_config(self):
