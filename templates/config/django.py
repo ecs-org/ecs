@@ -20,8 +20,8 @@ HAYSTACK_SEARCH_ENGINE = 'solr'
 HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
 
 # ecsmail settings
-ECS_MAIL['authoritative_domain'] = '%(host)s'
-ECS_MAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
+ECSMAIL['authoritative_domain'] = '%(host)s'
+ECSMAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
 
 import sys
 if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
