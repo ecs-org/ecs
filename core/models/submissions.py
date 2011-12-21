@@ -38,7 +38,7 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
-    befangene = models.ManyToManyField(User, null=True, related_name='befangen_for_submissions')
+    befangene = models.ManyToManyField(User, null=True, blank=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     valid_until = models.DateField(null=True, blank=True)
 
@@ -86,11 +86,6 @@ class Submission(models.Model):
         return u"%s%s%s" % (num, separator, year)
         
     get_ec_number_display.short_description = _('EC-Number')
-
-    def get_befangene(self):
-        sf = self.current_submission_form
-        emails = filter(None, [sf.sponsor_email, sf.invoice_email, sf.submitter_email] + [x.email for x in sf.investigators.all()])
-        return list(User.objects.filter(email__in=emails).distinct().order_by('first_name', 'last_name', 'email'))
 
     def resubmission_task_for(self, user):
         try:
