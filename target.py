@@ -208,9 +208,10 @@ class SetupTarget(SetupTargetObject):
     def catalina_config(self):
         write_regex_replace(
             os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'server.xml'),
-            r'(^[ \t]+<!--[ \t]*$)?'+
-            r'(^[ \t]+<Connector port="8009".protocol="AJP/1.3" redirectPort="8443" />[ \t]*$)'+
-            r'(^[ \t]+-->[ \t]*$)?',
+            r'^'+
+            r'([ \t]+<!--[ \t]*\n|\r\n)?'+
+            r'([ \t]+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
+            r'([ \t]+-->[ \t]*\n|\r\n)?',
             r'\2', multiline=True)
         write_regex_replace(
             os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'pdf-as', 'cfg', 'config.properties'),
