@@ -671,14 +671,6 @@ class SubmissionForm(models.Model):
     def current_vote(self):
         return self.current_pending_vote or self.current_published_vote
 
-    @property
-    def past_votes(self):       # for vote pdf
-        from ecs.votes.models import Vote
-        votes = Vote.objects.filter(published_at__isnull=False, submission_form__submission=self.submission)
-        if self.current_vote:
-            votes.exclude(pk=self.current_vote.pk)
-        return votes.distinct().order_by('published_at')
-
     def get_involved_parties(self):
         return get_involved_parties(self)
 

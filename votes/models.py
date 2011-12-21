@@ -98,13 +98,17 @@ class Vote(models.Model):
         return self.valid_until < datetime.now()
 
     def get_render_context(self):
+        past_votes = Vote.objects.filter(published_at__isnull=False, submission_form__submission=self.submission_form.submission).exclude(pk=self.pk).order_by('published_at')
+
         return {
             'vote': self,
             'submission': self.get_submission(),
             'form': self.submission_form,
             'documents': self.submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
             'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
+            'past_votes': past_votes,
         }
+
 
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']

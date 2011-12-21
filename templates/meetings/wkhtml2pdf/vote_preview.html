@@ -42,7 +42,6 @@
 {% endif %}
 <p>
 
-{% with submission.past_votes.all as past_votes %}
 {% if past_votes %}
     <b>Kommentare:</b><br>
     {% for vote in past_votes %}
@@ -50,7 +49,6 @@
     {% endfor %}
     {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
 {% endif %}
-{% endwith %}
 
 {% if vote.text %}
   <b>Ergänzende Kommentare{% if vote.top %} der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}:</b><br />
