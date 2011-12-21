@@ -98,6 +98,7 @@ class SetupTarget(SetupTargetObject):
         self.search_config()
         
         self.apache_config() 
+        self.catalina_config()
         self.upstart_install()
         
         self.apache_restart()
@@ -122,7 +123,8 @@ class SetupTarget(SetupTargetObject):
         self.db_update()
         self.search_config()
         
-        self.apache_config() 
+        self.apache_config()
+        self.catalina_config()
         self.upstart_install()
         
         self.apache_restart()
@@ -202,6 +204,22 @@ class SetupTarget(SetupTargetObject):
             ca_certificate_file=os.path.join(self.homedir, 'ecs-ca', 'ca.cert.pem'),
             ca_revocation_file=os.path.join(self.homedir, 'ecs-ca', 'crl.pem'),
         )
+
+    def catalina_config(self):
+        write_regex_replace(
+            os.path.join(get_pythonenv(), "tomcat-6", 'conf', 'server.xml'),
+            r'(^[ \t]+<!--[ \t]*$)?'+
+            r'(^[ \t]+<Connector port="8009".protocol="AJP/1.3" redirectPort="8443" />)[ \t]*$)'+
+            r'(^[ \t]+-->[ \t]*$)?',
+            r'\2', multiline=True)
+        write_regex_replace(
+            os.path.join(get_pythonenv(), 'conf', 'pdf-as', 'cfg', 'config.properties'),
+            r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
+            r'\1https://{0}\3'.format(self.config.host))
+        write_regex_replace(
+            os.path.join(get_pythonenv(), 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
+            r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
+            r'\2http://{0}\4'.format(self.config.host))
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
