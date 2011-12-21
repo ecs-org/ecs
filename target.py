@@ -130,6 +130,8 @@ class SetupTarget(SetupTargetObject):
         
     def host_config(self):
         _, tmp = tempfile.mkstemp()
+        local('sudo echo "{0}" > /etc/hostname'.format(self.config.host))
+        local('sudo hostname -F /etc/hostname')
         self.write_config_template('hosts', tmp)
         local('sudo cp %s /etc/hosts' % tmp)
         os.remove(tmp)
