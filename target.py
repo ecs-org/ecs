@@ -132,7 +132,7 @@ class SetupTarget(SetupTargetObject):
         
     def host_config(self):
         _, tmp = tempfile.mkstemp()
-        local('sudo echo "{0}" > /etc/hostname'.format(self.config.host))
+        local('sudo echo "{0}" > /etc/hostname'.format(self.config['host']))
         local('sudo hostname -F /etc/hostname')
         self.write_config_template('hosts', tmp)
         local('sudo cp %s /etc/hosts' % tmp)
@@ -215,11 +215,11 @@ class SetupTarget(SetupTargetObject):
         write_regex_replace(
             os.path.join(get_pythonenv(), 'conf', 'pdf-as', 'cfg', 'config.properties'),
             r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
-            r'\1https://{0}\3'.format(self.config.host))
+            r'\1https://{0}\3'.format(self.config['host']))
         write_regex_replace(
             os.path.join(get_pythonenv(), 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
             r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
-            r'\2http://{0}\4'.format(self.config.host))
+            r'\2http://{0}\4'.format(self.config['host']))
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
