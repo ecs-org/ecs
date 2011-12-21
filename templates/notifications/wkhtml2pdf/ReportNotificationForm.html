@@ -53,15 +53,15 @@
             {% endif %}
             <tr>
                 <td>3.2 Rekrutierten Teilnehmer/innen:</td>
-                <td class="value">{{ notification.recruited_subjects }}</td>
+                <td class="value">{{ notification.recruited_subjects|default_if_none:"keine Angaben" }}</td>
             </tr>
             <tr>
                 <td>3.3 Teilnehmer/innen die die Studie beendet haben:</td>
-                <td class="value">{{ notification.finished_subjects }}</td>
+                <td class="value">{{ notification.finished_subjects|default_if_none:"keine Angaben" }}</td>
             </tr>
             <tr>
                 <td>3.4 Studienabbrüche:</td>
-                <td class="value">{{ notification.aborted_subjects }}</td>
+                <td class="value">{{ notification.aborted_subjects|default_if_none:"keine Angaben" }}</td>
             </tr>
             <tr>
                 <td colspan="2">3.5 SAEs: <span class="value">{{ notification.SAE_count }}</span>, SUSARs: <span class="value">{{ notification.SUSAR_count }}</span></td>
