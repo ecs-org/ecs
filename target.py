@@ -23,7 +23,9 @@ class SetupTarget(SetupTargetObject):
     """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
     def __init__(self, *args, **kwargs):
         dirname = os.path.dirname(__file__)
-        config_file = kwargs.pop('config', os.path.join(dirname, '..', 'ecs.yml'))
+        config_file = kwargs.pop('config', None)
+        if config_file is None:
+            config_file = os.path.join(dirname, '..', 'ecs.yml')
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.dirname = dirname
         self.appname = 'ecs'
