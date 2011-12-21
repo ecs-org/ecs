@@ -178,7 +178,7 @@
     <tr>
         <th>Voten:</th>
         <td colspan="3">
-                {% for vote in submission.votes.all %}
+                {% for vote in published_votes %}
                     {% if vote.result %}
                     <div>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</div>
                     {% endif %}
