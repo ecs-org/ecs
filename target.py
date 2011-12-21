@@ -209,7 +209,7 @@ class SetupTarget(SetupTargetObject):
         write_regex_replace(
             os.path.join(get_pythonenv(), "tomcat-6", 'conf', 'server.xml'),
             r'(^[ \t]+<!--[ \t]*$)?'+
-            r'(^[ \t]+<Connector port="8009".protocol="AJP/1.3" redirectPort="8443" />)[ \t]*$)'+
+            r'(^[ \t]+<Connector port="8009".protocol="AJP/1.3" redirectPort="8443" />[ \t]*$)'+
             r'(^[ \t]+-->[ \t]*$)?',
             r'\2', multiline=True)
         write_regex_replace(
