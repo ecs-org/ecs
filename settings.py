@@ -230,13 +230,9 @@ STARTUP_CALLS = (
     'ecs.users.startup.startup',
 )
 
+# directory for generated config files
 ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
 
-# used by ecs.utils.startup middleware: executes list on framework startup
-STARTUP_CALLS = (
-    'ecs.integration.startup.startup',
-    'ecs.users.startup.startup',
-)
 
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
