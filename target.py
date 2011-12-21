@@ -219,7 +219,7 @@ class SetupTarget(SetupTargetObject):
         write_regex_replace(
             os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
             r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
-            r'\2http://{0}\4'.format(self.config['host']))
+            r'\2https://{0}\4'.format(self.config['host']))
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
