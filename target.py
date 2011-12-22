@@ -157,7 +157,8 @@ class SetupTarget(SetupTargetObject):
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
             local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
-    
+        local('sudo update-ca-certificates') # needed for all in special java that pdf-as knows server cert
+
     def gpg_config(self):
         for key, filename in (('encrypt_key', 'ecs_mediaserver.pub'), ('signing_key', 'ecs_authority.sec'), ('decrypt_key', 'ecs_mediaserver.sec'), ('verify_key', 'ecs_authority.pub')):
             try:
