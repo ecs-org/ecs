@@ -195,7 +195,8 @@ mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdr
 mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
 
 # mediaserver: image magick is used for rendering tasks as well
-imagemagick:req:apt:apt-get:imagemagick
+imagemagick:req:apt:apt-get:graphicsmagick-imagemagick-compat 
+# imagemagick up to 6.6 has a bug concerning 8bit png's, graphicsmagick is a fork with more stability 
 #imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
