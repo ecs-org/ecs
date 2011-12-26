@@ -29,7 +29,7 @@ class ratelimit(object):
         if not self.should_ratelimit(request):
             return fn(request, *args, **kwargs)
         
-        counts = self.get_counters(request).values()
+        counts = self.get_counters(request)
         
         # Increment rate limiting counter
         self.cache_incr(self.current_key(request))
@@ -47,8 +47,8 @@ class ratelimit(object):
         # memcache is only backend that can increment atomically
         try:
             # add first, to ensure the key exists
-            cache._cache.add(key, '0', time=self.expire_after())
-            cache._cache.incr(key)
+            cache.add(key, 0, timeout=self.expire_after())
+            cache.incr(key)
         except AttributeError:
             cache.set(key, cache.get(key, 0) + 1, self.expire_after())
     
@@ -56,7 +56,8 @@ class ratelimit(object):
         return True
     
     def get_counters(self, request):
-        return self.cache_get_many(self.keys_to_check(request))
+        results = self.cache_get_many(self.keys_to_check(request))
+        return map(int, results.values())
     
     def keys_to_check(self, request):
         extra = self.key_extra(request)
