@@ -81,12 +81,12 @@ class PasswordChangeTest(MailTestCase):
         self.failUnlessEqual(response.status_code, 200)
         
         response = self.client.post(password_reset_url, {
-            'new_password1': '1234',
-            'new_password2': '1234',
+            'new_password1': '12345678',
+            'new_password2': '12345678',
         })
         self.failUnlessEqual(response.status_code, 200)
         user = get_user('new.user@example.org')
-        self.failUnless(user.check_password('1234'))
+        self.failUnless(user.check_password('12345678'))
         
         response = self.client.get(password_reset_url)
         self.failUnlessEqual(response.status_code, 200)
@@ -108,14 +108,14 @@ class PasswordChangeTest(MailTestCase):
 
         response = self.client.post(url, {
             'old_password': 'test', 
-            'new_password1': '1234',
-            'new_password2': '1234',
+            'new_password1': '12345678',
+            'new_password2': '12345678',
         })
         self.failUnlessEqual(response.status_code, 200)
         self.client.logout()
         
         user = get_user('foobar@example.com')
-        self.failUnless(user.check_password('1234'))
+        self.failUnless(user.check_password('12345678'))
         
 class MiddlewareTest(EcsTestCase):
     '''Tests for the user middleware
