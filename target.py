@@ -266,6 +266,12 @@ class SetupTarget(SetupTargetObject):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate --noinput')
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
 
+    def db_dump(self):
+        local('pg_dump --create --encoding="utf-8" --file=~/%(postgresql.database)s.sql.dump %(postgresql.database)s' % self.config)
+
+    def db_restore(self):
+        local('psql --file=~/%(postgresql.database)s.sql.dump --database=%(postgresql.database)s' % self.config)
+                
     def env_clear(self):
         pass
     def env_boot(self):
