@@ -682,9 +682,9 @@ def meeting_details(request, meeting_pk=None, active=None):
                     # delete obsolete board member review tasks
                     for entry in entries:
                         with sudo():
-                            tasks = list(Task.objects.for_data(entry.submission).filter(
-                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True))
-                        tasks.mark_deleted()
+                            tasks = Task.objects.for_data(entry.submission).filter(
+                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True)
+                            tasks.mark_deleted()
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
 
