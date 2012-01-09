@@ -799,8 +799,7 @@ def all_submissions(request):
 
         m = re.match(r'(\d{4})', keyword)
         if m:
-            num = int(m.group(1))
-            submissions_q = Q(ec_number=datetime.now().year*10000 + num)
+            submissions_q = Q(ec_number__endswith=m.group(1))
 
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
