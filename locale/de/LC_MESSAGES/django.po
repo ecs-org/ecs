@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-09 12:47+0100\n"
+"POT-Creation-Date: 2012-01-09 17:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1449,9 +1449,8 @@ msgid "Finish"
 msgstr "Fertig"
 
 #: core/workflow.py:197
-#, fuzzy
 msgid "Executive Review"
-msgstr "Prüfung Votum Executive"
+msgstr "Begutachtung Executive"
 
 #: core/forms/fields.py:26
 msgid "Please enter a date in the format dd.mm.yyyy."
@@ -2223,14 +2222,12 @@ msgid "save successful"
 msgstr "speichern erflogreich"
 
 #: notifications/workflow.py:81 notifications/workflow.py:102
-#, fuzzy
 msgid "Ready"
-msgstr "Gelesen"
+msgstr "Fertig"
 
 #: notifications/workflow.py:82 notifications/workflow.py:129
-#, fuzzy
 msgid "Needs further review"
-msgstr "Gutachten Statistik"
+msgstr "Weitere Begutachtung erforderlich"
 
 #: pdfviewer/models.py:28
 msgid "top"
@@ -3063,29 +3060,26 @@ msgstr ""
 msgid "no board member required"
 msgstr "kein Sitzungsmitglied erforderlich"
 
-#: templates/meetings/tabs/open_tasks.html:8
-#: templates/submissions/tabs/involved_parties.html:6
-#: templates/submissions/tabs/involved_parties.html:39
-msgid "Name"
-msgstr "Name"
-
-#: templates/meetings/tabs/open_tasks.html:9
-#: templates/users/administration.html:12 users/forms.py:203
-msgid "Groups"
-msgstr "Gruppen"
-
-#: templates/meetings/tabs/open_tasks.html:10
-#, fuzzy
-msgid "Accepted?"
-msgstr "Angenommen"
-
-#: templates/meetings/tabs/open_tasks.html:11 templates/tasks/log.html:5
+#: templates/meetings/tabs/open_tasks.html:8 templates/tasks/log.html:5
 msgid "Created At"
 msgstr "Erstellt"
 
-#: templates/meetings/tabs/open_tasks.html:12 templates/tasks/log.html:8
+#: templates/meetings/tabs/open_tasks.html:9 templates/tasks/log.html:6
+#: templates/users/administration.html:11
+msgid "Activity"
+msgstr "Tätigkeit"
+
+#: templates/meetings/tabs/open_tasks.html:10 templates/tasks/log.html:7
+msgid "Group"
+msgstr "Gruppe"
+
+#: templates/meetings/tabs/open_tasks.html:11 templates/tasks/log.html:8
 msgid "Assigend At"
 msgstr "Zugeteilt"
+
+#: templates/meetings/tabs/open_tasks.html:12 templates/tasks/log.html:9
+msgid "Accepted"
+msgstr "Angenommen"
 
 #: templates/meetings/tabs/open_tasks.html:13 templates/tasks/log.html:10
 msgid "Assigend To"
@@ -3829,6 +3823,11 @@ msgstr ""
 msgid "Involvement"
 msgstr "Beteiligung"
 
+#: templates/submissions/tabs/involved_parties.html:6
+#: templates/submissions/tabs/involved_parties.html:39
+msgid "Name"
+msgstr "Name"
+
 #: templates/submissions/tabs/involved_parties.html:7
 #: templates/submissions/tabs/involved_parties.html:40
 msgid "Organization"
@@ -3892,18 +3891,6 @@ msgstr "fallen lassen"
 #: templates/submissions/tabs/status.html:212
 msgid "Export"
 msgstr "Export"
-
-#: templates/tasks/log.html:6 templates/users/administration.html:11
-msgid "Activity"
-msgstr "Tätigkeit"
-
-#: templates/tasks/log.html:7
-msgid "Group"
-msgstr "Gruppe"
-
-#: templates/tasks/log.html:9
-msgid "Accepted"
-msgstr "Angenommen"
 
 #: templates/tasks/log.html:11
 msgid "Closed At"
@@ -3996,6 +3983,10 @@ msgstr "mehr"
 #: templates/users/administration.html:7
 msgid "List of Users"
 msgstr "Liste der Benutzer"
+
+#: templates/users/administration.html:12 users/forms.py:203
+msgid "Groups"
+msgstr "Gruppen"
 
 #: templates/users/administration.html:13
 msgid "Medical Categories"
@@ -4486,27 +4477,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "recruited_subjects"
-#~ msgstr "Rekrutierte Versuchspersonen"
-
-#~ msgid "finished_subjects"
-#~ msgstr "Beendete Versuchspersonen"
-
-#~ msgid "aborted_subjects"
-#~ msgstr "Abgebrochene Versuchspersonen"
-
-#~ msgid "SAE_count"
-#~ msgstr "SAE Zahl"
-
-#~ msgid "SUSAR_count"
-#~ msgstr "SUSAR Zahl"
-
-#~ msgid "Failed to sign %(obj)s"
-#~ msgstr "%(obj)s konnte nicht unterzeichnet werden"
-
-#~ msgid "Error"
-#~ msgstr "Fehler"
-
-#~ msgid "Cause"
-#~ msgstr "Ursache"
