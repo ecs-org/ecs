@@ -89,14 +89,17 @@
                 $('diff_show_old').addEvent('click', function() {
                   $$('.diff .deleted').show();
                   $$('.diff .inserted').hide();
+                  return false;
                 });
                 $('diff_show_new').addEvent('click', function() {
                   $$('.diff .deleted').hide();
                   $$('.diff .inserted').show();
+                  return false;
                 });
                 $('diff_show_all').addEvent('click', function() {
                   $$('.diff .deleted').show();
                   $$('.diff .inserted').show();
+                  return false;
                 });
             }
 
