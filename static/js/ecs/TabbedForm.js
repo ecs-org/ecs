@@ -60,7 +60,7 @@ ecs.TabbedForm = new Class({
 
     },
     save: function(){
-        this._save(function(responseText, response){ecs.messages.alert('Save', 'Das Formular wurde gespeichert.');}, 'save');
+        this._save(function(responseText, response){ecs.messages.alert('Speichern', 'Das Formular wurde gespeichert.');}, 'save');
     },
     autosave: function(force){
         if(!this.autosaveDisabled && (force === true || (this.lastSave.data != this.form.toQueryString()))){
