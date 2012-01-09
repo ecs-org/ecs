@@ -10,12 +10,12 @@
           <li>
             <span class="top">{{ top }}</span>
             {% if top.submission %}
-                - {{ top.submission }} 
+                <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk submission_pk=top.submission.pk %}"><span class="icon_download" title="{% trans 'Download documents (zip)' %}"></span></a>
+                {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
                 {% if top.submission.current_submission_form.is_amg %}AMG{% endif %}
                 {% if top.submission.current_submission_form.is_mpg %}MPG{% endif %}
-                <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk submission_pk=top.submission.pk %}"><span class="icon_download" title="{% trans 'Download documents (zip)' %}"></span></a>
             {% else %}
-                - {{ top.title }}
+                {{ top.title }}
             {% endif %}
           </li>
     {% endfor %}
