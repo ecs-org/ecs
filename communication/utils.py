@@ -43,7 +43,7 @@ def send_message(sender, receiver, subject, text, submission=None, task=None, re
 
 def send_system_message(*args, **kwargs):
     kwargs.setdefault('reply_receiver', get_current_user())
-    return send_message(get_user('root@example.org'), *args, **kwargs)
+    return send_message(get_user('root@system.local'), *args, **kwargs)
 
 @msg_fun
 def send_message_template(sender, receiver, subject, template, context, *args, **kwargs):
@@ -71,4 +71,4 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
 
 def send_system_message_template(*args, **kwargs):
     kwargs.setdefault('reply_receiver', get_current_user())
-    return send_message_template(get_user('root@example.org'), *args, **kwargs)
+    return send_message_template(get_user('root@system.local'), *args, **kwargs)

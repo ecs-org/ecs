@@ -16,7 +16,7 @@ from ecs.users.utils import get_user, get_or_create_user
 class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):
-        get_or_create_user('root@example.org', is_superuser=True)
+        get_or_create_user('root@system.local', is_superuser=True)
         get_or_create_user(settings.DEFAULT_CONTACT)
         
         integration_bootstrap.create_settings_dirs()

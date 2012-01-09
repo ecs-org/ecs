@@ -362,7 +362,7 @@ DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used fo
 # ecsmail server settings
 ECSMAIL_DEFAULT = {
     'log_dir':   LOGFILE_DIR,
-    'postmaster': 'root@example.org', # the email address of the ecs user where emails from local machine to postmaster will get send
+    'postmaster': 'root@system.local', # the email address of the ecs user where emails from local machine to postmaster will get send
     # THIS MUST BE A VALID ecs user name !
     'listen': '0.0.0.0', 
     'port': 8823,

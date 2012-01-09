@@ -28,7 +28,7 @@ def post_save_handler(**kwargs):
     instance = kwargs['instance']
     user = get_current_user()
     if not user or not user.is_authenticated():
-        user = get_user('root@example.org')
+        user = get_user('root@system.local')
 
     sender_path = '.'.join([sender.__module__, sender.__name__])
     if _ignored_models_rex.match(sender_path):
