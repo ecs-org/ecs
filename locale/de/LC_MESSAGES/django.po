@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-09 10:02+0100\n"
+"POT-Creation-Date: 2012-01-09 12:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2991,6 +2991,14 @@ msgstr "nicht behandelt"
 #: templates/meetings/wkhtml2pdf/agenda.html:42
 msgid "examined"
 msgstr "behandelt"
+
+#: templates/meetings/assistant/top.html:98
+msgid "copy positive"
+msgstr "Pos. kopieren"
+
+#: templates/meetings/assistant/top.html:101
+msgid "copy negative"
+msgstr "Neg. kopieren"
 
 #: templates/meetings/constraints/user_form.html:32
 msgid ""
