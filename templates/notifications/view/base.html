@@ -42,9 +42,7 @@ Meldungen zur laufenden Studie(n)
     {% endblock %}
 </table>
 
-{% if notification.answer %}
-    <a href="{% url ecs.notifications.views.answered_notifications %}" class="button_submit">{% trans "Back to answered notifications" %}</a>
-{% else %}
+{% if not notification.answer %}
     <a href="{% url ecs.notifications.views.open_notifications %}" class="button_submit">{% trans "Back to open notifications" %}</a>
 {% endif %}
 

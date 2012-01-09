@@ -58,12 +58,14 @@ def _notification_list(request, answered=None, stashed=False):
 
 @readonly()
 def open_notifications(request):
-    return _notification_list(request, answered=False, stashed=True)
-
-
-@readonly()
-def answered_notifications(request):
-    return _notification_list(request, answered=True)
+    title = _('Open Notifications')
+    notifications = _get_notifications(answer__isnull=True)
+    context = {
+        'title': title,
+        'notifs': notifications,
+        'stashed_notifications': DocStash.objects.filter(group='ecs.notifications.views.create_notification'),
+    }
+    return render(request, 'notifications/list.html', context)
 
 
 @readonly()
