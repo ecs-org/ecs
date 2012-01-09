@@ -794,12 +794,20 @@ def all_submissions(request):
     title = _('All Studies')
     if keyword:
         title = _('Study Search')
-        submissions_q = Q(ec_number__icontains=keyword)
+
+        submissions_q = Q()
+
+        m = re.match(r'(\d{4})', keyword)
+        if m:
+            num = int(m.group(1))
+            submissions_q = Q(ec_number=datetime.now().year*10000 + num)
+
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:
             num = int(m.group(1))
             year = int(m.group(2))
             submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+
         if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
             try:
                 doc = Document.objects.get(uuid=keyword)
