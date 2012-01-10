@@ -91,6 +91,15 @@
                         {% for form in investigator_formset.forms %}
                             {% with forloop.counter0 as investigator_index %}
                             <div class="investigator" id="investigator{{ forloop.counter0 }}">
+                                {% if form.non_field_errors %}
+                                    <div class="errors">
+                                        <ul class="errorlist">
+                                            {% for error in form.non_field_errors %}
+                                                <li>{{ error }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
                                 <div class="field">
                                     <div class="investigator_form">
                                         {% for hidden in form.hidden_fields %}
@@ -107,6 +116,15 @@
                                 </div>
                                 <div class="field">
                                     <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
+                                    {% if investigatoremployee_formset.non_form_errors %}
+                                        <div class="errors">
+                                            <ul class="errorlist">
+                                                {% for error in investigatoremployee_formset.non_form_errors %}
+                                                    <li>{{ error }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
                                     {# XXX: reuse forms/tables/inline_formset.html (FMD2) #}
                                     <table class="inline_formset investigatoremployee_formset">
                                         <thead>
@@ -134,19 +152,31 @@
                                         <tbody>
                                         {% for form in investigatoremployee_formset.forms %}
                                             {% if form|form_value:'investigator_index'|default:0|add:0 == investigator_index %}
-                                            <tr class="form">
-                                                {% include "forms/tables/row.html" %}
-                                            </tr>
-                                            {% endif %}
-                                        {% empty %}
-                                            {% if not readonly %}
-                                                {% with investigatoremployee_formset.empty_form as form %}
-                                                    <tr class="form template">
-                                                        {% include "forms/tables/row.html" %}
-                                                    </tr>
-                                                {% endwith %}
+                                                <tr class="form">
+                                                    {% include "forms/tables/row.html" %}
+                                                </tr>
                                             {% endif %}
                                         {% endfor%}
+                                        {% if not readonly and forloop.last %}
+                                        {% with investigatoremployee_formset.empty_form as form %}
+                                            <tr class="form template">
+                                                <td>
+                                                    {% for hidden in form.hidden_fields %}
+                                                        {{ hidden }}
+                                                    {% endfor %}
+                                                </td>
+                                                {% for field in form %}
+                                                    {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
+                                                        {% with field|get_field_info as field_info %}
+                                                        <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}">
+                                                            {{ field }}
+                                                        </td>
+                                                        {% endwith %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </tr>
+                                        {% endwith %}
+                                        {% endif %}
                                         </tbody>
                                     </table>
                                 </div>

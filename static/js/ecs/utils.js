@@ -186,7 +186,7 @@ ecs.InvestigatorFormset = new Class({
         });
 
         this.inline_formset.addEvent('formAdded', (function(form, index){
-            form.getElement('.investigatoremployee_formset tbody').innerHTML = '';
+            form.getElement('.'+this.options.investigatorEmployeeFormsetClass+' tbody').innerHTML = '';
             this.employee_formset.addContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
         }).bind(this));
 
@@ -273,12 +273,12 @@ ecs.InvestigatorFormset = new Class({
         }
 
         var i = 0;
-        this.inline_formset.forms.each(function(){
+        this.inline_formset.forms.each(function(form){
             var li = new Element('li');
             if (this.options.readonly) {
                 li.addClass('readonly');
             }
-            if (this.inline_formset.forms[i].getElement('.errors')) {
+            if (form.getElement('.errors')) {
                 li.addClass('errors');
             }
             var a = new Element('a', {

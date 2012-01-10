@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-10 12:23+0100\n"
+"POT-Creation-Date: 2012-01-10 17:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgstr "Spezialistenbewertung"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:433
+#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:439
 #: notifications/bootstrap.py:83 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
@@ -183,7 +183,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:45 core/forms/forms.py:314
+#: checklists/models.py:45 core/forms/forms.py:320
 #: core/models/submissions.py:154 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
@@ -1495,15 +1495,19 @@ msgstr "Sicherheitsmeldungsersteller"
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:315 templates/core.html:64
+#: core/forms/forms.py:288
+msgid "At least one employee is required."
+msgstr "Zumindest ein Mitarbeiter ist verpflichtend anzugeben."
+
+#: core/forms/forms.py:321 templates/core.html:64
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:316
+#: core/forms/forms.py:322
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:317 core/forms/layout.py:98 core/forms/layout.py:100
+#: core/forms/forms.py:323 core/forms/layout.py:98 core/forms/layout.py:100
 #: templates/meetings/tabs/status.html:61
 #: templates/submissions/readonly_form.html:228
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
@@ -1511,7 +1515,7 @@ msgstr "Andere Sitzungen"
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:318 core/forms/layout.py:107 core/forms/layout.py:109
+#: core/forms/forms.py:324 core/forms/layout.py:107 core/forms/layout.py:109
 #: templates/meetings/tabs/status.html:66
 #: templates/submissions/readonly_form.html:230
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
@@ -1519,75 +1523,75 @@ msgstr "AMG"
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:319 templates/meetings/tabs/status.html:96
+#: core/forms/forms.py:325 templates/meetings/tabs/status.html:96
 #: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:321
+#: core/forms/forms.py:327
 msgid "Board"
 msgstr "Normal"
 
-#: core/forms/forms.py:322
+#: core/forms/forms.py:328
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:323 templates/meetings/tabs/status.html:86
+#: core/forms/forms.py:329 templates/meetings/tabs/status.html:86
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:324 core/models/constants.py:29
+#: core/forms/forms.py:330 core/models/constants.py:29
 #: templates/meetings/tabs/status.html:91
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/forms/forms.py:326
+#: core/forms/forms.py:332
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:327
+#: core/forms/forms.py:333
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:328
+#: core/forms/forms.py:334
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:329
+#: core/forms/forms.py:335
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:330
+#: core/forms/forms.py:336
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:331 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:337 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:332 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:338 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:333
+#: core/forms/forms.py:339
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:403
+#: core/forms/forms.py:409
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:414
+#: core/forms/forms.py:420
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:432 templates/users/administration.html:38
+#: core/forms/forms.py:438 templates/users/administration.html:38
 msgid "User"
 msgstr "Benutzer"
 
-#: core/forms/forms.py:434
+#: core/forms/forms.py:440
 msgid "End"
 msgstr "Ende"
 
@@ -1812,28 +1816,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:688 templates/meetings/details.html:15
+#: core/views/submissions.py:690 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:794 templates/core.html:41
+#: core/views/submissions.py:796 templates/core.html:41
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:796
+#: core/views/submissions.py:798
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:816
+#: core/views/submissions.py:818
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:839 templates/core.html:44
+#: core/views/submissions.py:841 templates/core.html:44
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:849 templates/core.html:47
+#: core/views/submissions.py:851 templates/core.html:47
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -3455,7 +3459,7 @@ msgstr "Einreichung"
 msgid "At least on protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
-#: templates/submissions/base_form.html:220
+#: templates/submissions/base_form.html:229
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 

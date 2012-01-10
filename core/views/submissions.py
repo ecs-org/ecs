@@ -516,6 +516,9 @@ def create_submission_form(request):
         if save or autosave:
             return HttpResponse('save successfull')
 
+        for name, formset in formsets.iteritems():
+            formset.full_clean()        # work around django bug: full_clean does not get called in is_valid if total_form_count==0
+
         formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
         submission = request.docstash.get('submission')
