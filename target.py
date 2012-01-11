@@ -14,6 +14,7 @@ from fabric.api import local, env, warn
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import control_upstart, apache_setup, strbool, write_template
+from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
@@ -73,38 +74,17 @@ class SetupTarget(SetupTargetObject):
         
         '''.format(self.appname))
     
-    def service(self, enable=True):
+    def maintenance(self, enable=True):
         enable= strbool(enable)
         if enable:
             # TODO: write scheduled service note into file where ecs-wsgi.py reads it
             self.wsgi_reload()
-            self.upstart_stop()
+            self.daemons_stop()
         else:
             # TODO: delete service mode file
-            self.upstart_start()
+            self.daemons_start()
             self.wsgi_reload()
-
-    def update(self, *args, **kwargs):
-        self.host_config()
-        self.homedir_config()
-        self.servercert_config()
-        
-        self.apache_baseline()
-        self.django_config()
-        self.queuing_config()
-        
-        self.ca_update()
-        self.db_update()
-        self.search_config()
-        
-        self.apache_config() 
-        self.catalina_config()
-        self.upstart_install()
-        
-        self.apache_restart()
-        self.upstart_start()
-        
-    
+   
     def system_setup(self, *args, **kwargs):
         self.host_config()
         self.homedir_config()
@@ -125,11 +105,22 @@ class SetupTarget(SetupTargetObject):
         
         self.apache_config()
         self.catalina_config()
-        self.upstart_install()
+        self.daemons_install()
         
         self.apache_restart()
-        self.upstart_start()
+        self.daemons_start()
+
+
+    def update(self, *args, **kwargs):
+        self.homedir_config()
+        self.apache_baseline()
+        self.env_update()
+        self.db_update()
+        self.search_config()      
+        self.apache_restart()
+        self.daemons_start()
         
+            
     def host_config(self):
         _, tmp = tempfile.mkstemp()
         local('sudo echo "{0}" > /etc/hostname'.format(self.config['host']))
@@ -244,17 +235,16 @@ class SetupTarget(SetupTargetObject):
         
     def wsgi_reload(self):
         pass
+        # FIXME: implement wsgi_reload, touch ecs-wsgi
     
-    
-    def upstart_install(self):
+    def daemons_install(self):
         control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
-    def upstart_stop(self):
+    def daemons_stop(self):
         control_upstart(self.appname, "stop", use_sudo=self.use_sudo, dry=self.dry)
         
-    def upstart_start(self):
+    def daemons_start(self):
         control_upstart(self.appname, "start", use_sudo=self.use_sudo, dry=self.dry)
-        
         
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
@@ -273,12 +263,20 @@ class SetupTarget(SetupTargetObject):
         local('psql --file=~/%(postgresql.database)s.sql.dump --database=%(postgresql.database)s' % self.config)
                 
     def env_clear(self):
+        # todo: implement env_clear
         pass
+    
     def env_boot(self):
+        env_bootstrap = ['sudo'] if self.use_sudo else []
+        env_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), 'whereever/sdfkljsd']
         pass
+        # FIXME implement env_boot
+    
     def env_update(self):
         pass
-
+        # FIXME implement env_update, call fab appenv:ecs,default
+        # run("%s; fab appreq:ecs,flavor=%s,only_list=True; fab appenv:ecs,flavor=%s" % (env.activate, env.appenv, env.appenv))
+        
     def queuing_config(self):
         if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
             local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
@@ -302,7 +300,8 @@ class SetupTarget(SetupTargetObject):
 
     def search_update(self):
         pass
-  
+        # FIXME: implement search update
+        # %s; cd %s; if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput" % (env.activate, env.targetappdir)
 
 
 def custom_check_gettext_runtime(pkgline, checkfilename):
