@@ -44,16 +44,18 @@
                 </form>
             {% endif %}
             {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
-            {% if not entry.is_break %}
-            <span class="users">Teilnehmer: 
-                {% for user, ignored in entry.users %}
-                    <a href="{% url ecs.meetings.views.toggle_participation meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-            </span>
+            {% if not entry.is_break%}
+                {% if entry.submission or entry.users %}
+                <span class="users">Teilnehmer: 
+                    {% for user, ignored in entry.users %}
+                        <a href="{% url ecs.meetings.views.toggle_participation meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </span>
+                {% endif %}
             {% else %}
-            <span>
-                Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
-            </span>
+                <span>
+                    Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
+                </span>
             {% endif %}
         </li>
     {% endfor %}
