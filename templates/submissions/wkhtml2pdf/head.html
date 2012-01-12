@@ -1,11 +1,9 @@
 {% load core corepdf %}
 
 <div class="title">
+  <div style="float:right;font-weight:bold;height:0;">EK Nr: {{ submission_form.submission|ec_number }}</div>
   <h1>Antrag</h1>
-  <div style="width:100%; overflow:auto;">
-    <span style="display:block; float:left;">Version 6.3 vom 25.03.2011</span>
-    <span style="display:block; float:right;">EK-Nr: {{ submission_form.submission|ec_number }}</span>
-  </div>
+  <p>Version 6.3 vom 25.03.2011</p>
 </div>
 
 <div class="infotext">
