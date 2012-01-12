@@ -17,8 +17,13 @@ from ecs.mediaserver.storagevault import getVault
 from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.tasks import do_rendering
 
-
 MONTAGE_PATH = which('montage').next()
+def _detect_graphicsmagick():
+    global MONTAGE_GM
+    popen = subprocess.Popen([MONTAGE_PATH, '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    popen.communicate()
+    MONTAGE_GM = popen.returncode != 0  # gm montage does not support -version
+_detect_graphicsmagick()
 PDFDRAW_PATH = which('pdfdraw').next()
 
 
@@ -90,7 +95,11 @@ class MediaProvider:
                         num += 1
                         sprite_images = map(workdir, page_images[offset:offset + n])
                         sprite_path = workdir('p%s-%s.png' % (offset + 1, offset + n + 1))
-                        _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s>' % (w, h)] + ['PNG8:%s' % sprite_path])
+                        geometry = (w, h)
+                        if MONTAGE_GM:
+                            # graphicsmagick does not correctly handle -geometry
+                            geometry = (width, height)
+                        _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s' % geometry] + ['PNG8:%s' % sprite_path])
                         yield Page(identifier, tx, ty, width, num), open(sprite_path, 'rb')
                     
                     for f in os.listdir(private_workdir):
