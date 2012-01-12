@@ -5,10 +5,10 @@
       <h4>Navigation</h4>
         {% with meeting.open_tops.count as open_top_count %}
             {% if not meeting.started %}
-                <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
+                <div class="button"><a class="start_meeting" href="{% url ecs.meetings.views.meeting_assistant_start meeting_pk=meeting.pk %}">Sitzung starten</a></div>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
-                    <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
+                    <div class="button"><a class="stop_meeting" href="{% url ecs.meetings.views.meeting_assistant_stop meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
                 {% endif %}
                 <div class="button"><a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_comments meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
                 {% if not meeting.ended %}
@@ -70,5 +70,21 @@
         setInterval(function(){
             $('clock').innerHTML = (new Date()).format('%H:%M');
         }, 6000);
+        $$('a.start_meeting').each(function(a){
+            a.addEvent('click', function(){
+                var href = a.getAttribute('href');
+                var widget = a.getParent('.ecs-Widget').retrieve('ecs.widgets.Widget');
+                new MooDialog.Confirm('{% trans 'Do you want to start the meeting?' %}', function(){widget.load(href);}, null, {okText: '{{ _("Start (meeting)")|escapejs }}', cancelText: '{{ _("Don't Start")|escapejs }}'});
+                return false;
+            });
+        }, this);
+        $$('a.stop_meeting').each(function(a){
+            a.addEvent('click', function(){
+                var href = a.getAttribute('href');
+                var widget = a.getParent('.ecs-Widget').retrieve('ecs.widgets.Widget');
+                new MooDialog.Confirm('{% trans 'Do you want to stop the meeting?' %}', function(){widget.load(href);}, null, {okText: '{{ _("Stop (meeting)")|escapejs }}', cancelText: '{{ _("Don't Stop")|escapejs }}'});
+                return false;
+            });
+        }, this);
     });
 </script>
