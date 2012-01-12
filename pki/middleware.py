@@ -2,10 +2,10 @@ from urllib import urlencode
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from ecs.pki.views import authenticate
 
 class ClientCertMiddleware(object):
     def process_request(self, request):
+        from ecs.pki.views import authenticate
         url = reverse(authenticate)
         if not getattr(settings, 'ECS_REQUIRE_CLIENT_CERTS', True):
             return
