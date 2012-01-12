@@ -27,7 +27,7 @@ checklist_questions = {
         Args('10', u"Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?"),
     ],
     u'insurance_review': [
-        Args('1', u"Sind die Angaben zu Versicherung vollständig und adäquat?"),
+        Args('1', u"Sind die vorgelegten Unterlagen zur Versicherung vollständig und akzeptabel?"),
     ],
     u'external_review': [
         Args('1a', u'Ist die Ausarbeitung des Projektes hinreichend um es begutachten zu können?', requires_comment=True),
