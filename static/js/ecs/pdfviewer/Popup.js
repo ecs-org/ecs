@@ -87,10 +87,10 @@ ecs.pdfviewer.MenuPopup = new Class({
             {label: 'Suche', command: 'showSearch'},
             {label: 'Zoom', command: 'cycleIn'},
             {label: 'Anmerkung', command: 'toggleAnnotationMode'},
-            {label: 'Men&uuml; verlassen', command: ''},
+            {label: 'Men&uuml; verlassen', command: null},
             {label: 'Anmerkung zeigen', command: 'gotoNextAnnotation'},
             {label: 'Hilfe', command: 'showHelp'},
-            {label: 'Anmerkung teilen', command: 'shareAnnotations'},
+            this.viewer.allowAnnotationSharing ? {label: 'Anmerkung teilen', command: 'shareAnnotations'}: {label: '', command: null},
             {label: 'Letzte Seite', command: 'lastPage'}
         ];
         menuItems.each(function(item){

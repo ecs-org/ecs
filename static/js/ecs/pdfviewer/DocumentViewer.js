@@ -28,6 +28,7 @@ ecs.pdfviewer.DocumentViewer = new Class({
         this.searchURL = options.searchURL;
         this.editAnnotationURL = options.editAnnotationURL;
         this.deleteAnnotationURL = options.deleteAnnotationURL;
+        this.allowAnnotationSharing = options.allowAnnotationSharing;
         this.helpURL = options.helpURL;
         this.metaKey = options.metaKey || '';
         this.minAnnotationWidth = options.minAnnotationWidth || 20;

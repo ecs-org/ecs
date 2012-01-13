@@ -1,5 +1,5 @@
 {% extends "shell.html" %}
-{% load i18n pdfviewer compress %}
+{% load i18n pdfviewer compress userutils %}
 
 {% block htmltitle %}
 {% if document.parent_object %}{{ document.parent_object }}: {% endif %}{{ document.doctype_name }}
@@ -52,6 +52,7 @@
                 searchURL: '{% url ecs.documents.views.document_search_json document_pk=document.pk %}',
                 editAnnotationURL: '{% url ecs.pdfviewer.views.edit_annotation document_pk=document.pk %}',
                 deleteAnnotationURL: '{% url ecs.pdfviewer.views.delete_annotation document_pk=document.pk %}',
+                allowAnnotationSharing: {{ user|has_flag:'is_internal'|yesno:'true,false' }},
                 helpURL: '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}',
 
                 wheelScrollThreshold: 1,
