@@ -570,11 +570,12 @@ class SubmissionForm(models.Model):
     def allows_amendments(self, user):
         s = self.submission
         if s.presenter == user and self.is_current and not s.is_finished:
-            return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
+            if not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True).unanswered().exists():
+                return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
     def allows_export(self, user):
-        return user in (self.submitter, self.submission.presenter, self.submission.susar_presenter) or user.ecs_profile.is_internal
+        return user.ecs_profile.is_internal or user == self.submission.presenter
 
     @property
     def is_amg(self):
