@@ -721,7 +721,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     resubmission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
         task_type__workflow_node__uid='resubmission')
     paper_submission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
-        task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'])
+        task_type__workflow_node__uid='paper_submission_review')
     b2_resubmission_tasks = tasks.filter(content_type=vote_ct,
         data_id__in=Vote.objects.filter(submission_form__submission__pk__in=visible_submission_pks).values('pk').query,
         task_type__workflow_node__uid='b2_resubmission')

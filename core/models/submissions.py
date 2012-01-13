@@ -101,7 +101,7 @@ class Submission(models.Model):
 
     def paper_submission_review_task_for(self, user):
         try:
-            return Task.objects.for_data(self).filter(task_type__workflow_node__uid__in=['paper_submission_review', 'thesis_paper_submission_review'], closed_at=None, deleted_at=None)[0]
+            return Task.objects.for_data(self).filter(task_type__workflow_node__uid='paper_submission_review', closed_at=None, deleted_at=None)[0]
         except IndexError:
             return None
 
