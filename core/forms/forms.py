@@ -69,7 +69,7 @@ class SubmissionFormForm(NewReadonlyFormMixin, ModelFormPickleMixin, forms.Model
     class Meta:
         model = SubmissionForm
         fields = (
-            'project_title', 'german_project_title', 'specialism', 'clinical_phase', 'already_voted', 'external_reviewer_suggestions',
+            'project_title', 'german_project_title', 'specialism', 'clinical_phase', 'already_voted',
             
             'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 

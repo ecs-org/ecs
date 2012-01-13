@@ -44,6 +44,8 @@ CHANGELOG = (
     ('+', SubmissionForm, 'project_type_non_interventional_study', False),
     ('+', SubmissionForm, 'project_type_gender_medicine', False),
     ('*', '0.8'),
+    ('-', SubmissionForm, 'external_reviewer_suggestions', 'nicht zutreffend'),
+    ('*', '0.9'),
 )
 
 class FieldDocs(object):

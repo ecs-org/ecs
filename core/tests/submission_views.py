@@ -25,7 +25,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'investigatoremployee-0-investigator_index': [u'0'], u'study_plan_secondary_objectives': [u''], u'eudract_number': [u'2020-002323-99'], 
     u'study_plan_dropout_ratio': [u'0'], u'german_protected_subjects_info': [u'bla bla bla'], u'sponsor_contact_gender': [u''], 
     u'study_plan_misc': [u''], u'german_preclinical_results': [u'bla bla bla'], u'study_plan_biometric_planning': [u'Mag. rer.soc.oec. Jane Doe/ Statistikerin'], 
-    u'external_reviewer_suggestions': [u'Nicht Zutreffend'], u'investigatoremployee-0-title': [u''], u'nontesteduseddrug-INITIAL_FORMS': [u'0'], u'submitter_contact_last_name': [u'Doe'], 
+    u'investigatoremployee-0-title': [u''], u'nontesteduseddrug-INITIAL_FORMS': [u'0'], u'submitter_contact_last_name': [u'Doe'], 
     u'investigatoremployee-0-sex': [u''], u'study_plan_stratification': [u''], u'sponsor_agrees_to_publishing': [u'on'], u'german_recruitment_info': [u'bla bla bla'], 
     u'investigator-1-phone': [u''], u'submitter_email': [u''], u'invoice_uid': [u''], u'nontesteduseddrug-0-preparation_form': [u''], 
     u'investigator-1-contact_first_name': [u'John'], u'investigator-1-email': [u'rofl@copter.com'], u'german_concurrent_study_info': [u'bla bla bla'], 
