@@ -519,7 +519,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 tasks = Task.objects.for_submission(top.submission).filter(deleted_at=None)
                 tasks = tasks.filter(task_type__workflow_node__data_ct=blueprint_ct, task_type__workflow_node__data_id=blueprint.id
                     ) | tasks.filter(content_type=checklist_ct, data_id__in=Checklist.objects.filter(blueprint=blueprint)).exclude(workflow_token__node__uid='external_review_review')
-                tasks = list(tasks)
+                tasks = list(tasks.order_by('-created_at'))
             checklists = []
             for task in tasks:
                 lookup_kwargs = {'blueprint': blueprint}
@@ -529,7 +529,9 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                     checklist = top.submission.checklists.exclude(status='dropped').get(**lookup_kwargs)
                 except Checklist.DoesNotExist:
                     checklist = None
-                checklists.append((task, checklist))
+                if not checklist in [x[1] for x in checklists]:
+                    checklists.append((task, checklist))
+            checklists.reverse()
             checklist_review_states[blueprint] = checklists
 
     return render(request, 'meetings/assistant/top.html', {
