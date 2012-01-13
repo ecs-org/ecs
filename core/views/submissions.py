@@ -202,7 +202,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'vote': vote,
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
-        'show_reviews': any(checklist_reviews),
         'open_notifications': notifications.unanswered(),
         'answered_notifications': notifications.answered(),
         'stashed_notifications': stashed_notifications,
@@ -214,14 +213,16 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'temporary_auth_form': TemporaryAuthorizationForm(),
     }
 
-    if request.user not in (submission.presenter, submission.susar_presenter, submission_form.submitter, submission_form.sponsor):
-        context['show_reviews'] = True
+    presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
+    if not request.user in presenting_users:
         context.update({
-            'categorization_review_form': CategorizationReviewForm(instance=submission, readonly=True),
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
-        if request.user.get_profile().is_executive_board_member:
+        profile = request.user.get_profile()
+        if profile.is_internal:
+            context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
+        if profile.is_executive_board_member:
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
             if tasks and not [t for t in tasks if not t.closed_at]:
                 context['categorization_task'] = tasks[0]
