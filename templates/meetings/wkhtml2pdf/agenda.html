@@ -36,23 +36,26 @@
         <br />
     {% endfor %}
 
-    {% for i, top in additional_tops %}
-        <span class="bold">#TOP {{ i }}</span>
-        <span class="bold">EK Nr.</span>
-            {{ top.submission.get_ec_number_display }}{% with top|last_recessed_vote as vote %}{% if vote %} ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}){% endif %}{% endwith %}<br />
-        <span class="bold">Antragsteller:</span>
-            {% with top.submission.current_submission_form.submitter as submitter %}
-                {% if not submitter.first_name or not submitter.last_name %}
-                    {{ top.submission.current_submission_form.submitter_contact }}
-                {% else %}
-                    {{ submitter }}
-                {% endif %}
-            {% endwith %}
+    {% if meeting.additional_entries.exists %}
+        <h2>Weitere TOPs</h2>
+        {% for entry in meeting.additional_entries.all %}
+            <span class="bold">#{{ entry }}</span>
+            <span class="bold">EK Nr.</span>
+                {{ entry.submission.get_ec_number_display }}{% with entry|last_recessed_vote as vote %}{% if vote %} ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}){% endif %}{% endwith %}<br />
+            <span class="bold">Antragsteller:</span>
+                {% with entry.submission.current_submission_form.submitter as submitter %}
+                    {% if not submitter.first_name or not submitter.last_name %}
+                        {{ entry.submission.current_submission_form.submitter_contact }}
+                    {% else %}
+                        {{ submitter }}
+                    {% endif %}
+                {% endwith %}
+                <br />
+            <span class="bold">Einreichende Institution:</span>
+                {{ entry.submission.current_submission_form.submitter_organisation }}<br />
+            <span class="bold">Projekttitel:</span>
+                {{ entry.submission.project_title_display }}<br />
             <br />
-        <span class="bold">Einreichende Institution:</span>
-            {{ top.submission.current_submission_form.submitter_organisation }}<br />
-        <span class="bold">Projekttitel:</span>
-            {{ top.submission.project_title_display }}<br />
-        <br />
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}

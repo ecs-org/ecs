@@ -402,17 +402,15 @@ def meeting_assistant_stop(request, meeting_pk=None):
     for vote in Vote.objects.filter(top__meeting=meeting):
         vote.save() # trigger post_save for all votes
 
-    for k in ('retrospective_thesis_entries', 'expedited_entries', 'localec_entries'):
-        tops = getattr(meeting, k).exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query)
-        for top in tops:
-            submission = top.submission
-            with sudo():
-                Task.objects.for_data(submission).open().mark_deleted()
-            vote = Vote.objects.create(top=top, result='3a')
-            if submission.is_expedited:
-                submission.workflow_lane = SUBMISSION_LANE_BOARD
-                submission.save()
-            submission.schedule_to_meeting()
+    for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
+        submission = top.submission
+        with sudo():
+            Task.objects.for_data(submission).open().mark_deleted()
+        vote = Vote.objects.create(top=top, result='3a')
+        if submission.is_expedited:
+            submission.workflow_lane = SUBMISSION_LANE_BOARD
+            submission.save()
+        submission.schedule_to_meeting()
     
     on_meeting_end.send(Meeting, meeting=meeting)
     

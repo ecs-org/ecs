@@ -20,56 +20,57 @@
     {% endif %}
 
     {% for top, vote in tops %}
-        <span class="bold">#{{ top }}</span>
-        {% if top.submission %}
-            <span class="bold">EK Nr.</span> {{ top.submission|ec_number }}<br />
+        {% with top.submission as submission %}
+            <span class="bold">#{{ top }}</span>
+            {% if submission %}
+                <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
+                <span class="bold">Antragsteller:</span>
+                    {% with submission.current_submission_form.submitter as submitter %}
+                        {% if not submitter.first_name or not submitter.last_name %}
+                            {{ submission.current_submission_form.submitter_contact }}
+                        {% else %}
+                            {{ submitter }}
+                        {% endif %}
+                    {% endwith %}
+                    <br />
+                {% if submission.current_submission_form.sponsor_name %}
+                    <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
+                {% endif %}<br />
+                <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+                <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
+
+                {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
+            {% else %}
+                <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span></br />
+            {% endif %}
+        {% endwith %}
+    {% endfor %}
+
+    {% if additional_tops %}
+        <h2>Weitere TOPs</h2>
+        {% for top, vote in additional_tops %}
+            {% with top.submission as submission %}
+            <span class="bold">#{{ top }}</span>
+            <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
             <span class="bold">Antragsteller:</span>
-                {% with top.submission.current_submission_form.submitter as submitter %}
+                {% with submission.current_submission_form.submitter as submitter %}
                     {% if not submitter.first_name or not submitter.last_name %}
-                        {{ top.submission.current_submission_form.submitter_contact }}
+                        {{ submission.current_submission_form.submitter_contact }}
                     {% else %}
                         {{ submitter }}
                     {% endif %}
                 {% endwith %}
                 <br />
-            {% if top.submission.current_submission_form.sponsor_name %}
-                <span class="bold">Sponsor/CRO:</span> {{ top.submission.current_submission_form.sponsor_name }}
+            {% if submission.current_submission_form.sponsor_name %}
+                <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
             {% endif %}<br />
-            <span class="bold">Einreichende Institut:</span> {{ top.submission.current_submission_form.submitter_organisation }}<br />
-            <span class="bold">Projekttitel:</span> {{ top.submission.project_title_display }}<br />
-        {% else %}
-            <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span></br />
-        {% endif %}
+            <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+            <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
 
-        {% with top.submission as submission %}
-            {% if submission %}
-                {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
-            {% endif %}
-        {% endwith %}
-    {% endfor %}
-
-    {% for i, top, vote in additional_tops %}
-        {% with top.submission as submission %}
-        <span class="bold">#TOP {{ i }}</span>
-        <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
-        <span class="bold">Antragsteller:</span>
-            {% with submission.current_submission_form.submitter as submitter %}
-                {% if not submitter.first_name or not submitter.last_name %}
-                    {{ submission.current_submission_form.submitter_contact }}
-                {% else %}
-                    {{ submitter }}
-                {% endif %}
+            {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% endwith %}
-            <br />
-        {% if submission.current_submission_form.sponsor_name %}
-            <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
-        {% endif %}<br />
-        <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
-        <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
-
-        {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
-        {% endwith %}
-    {% endfor %}
+        {% endfor %}
+    {% endif %}
 
     {% if b1ized.count %}
         <span class="bold">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />

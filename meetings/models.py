@@ -167,19 +167,6 @@ class Meeting(models.Model):
 
     objects = MeetingManager()
     
-
-    @property
-    def retrospective_thesis_submissions(self):
-        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
-
-    @property
-    def expedited_submissions(self):
-        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
-
-    @property
-    def localec_submissions(self):
-        return self.submissions.filter(workflow_lane=SUBMISSION_LANE_LOCALEC)
-
     @property
     def retrospective_thesis_entries(self):
         return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
@@ -191,6 +178,11 @@ class Meeting(models.Model):
     @property
     def localec_entries(self):
         return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
+
+    @property
+    def additional_entries(self):
+        entries = self.retrospective_thesis_entries.all() | self.expedited_entries.all() | self.localec_entries.all()
+        return entries.order_by('pk')
 
     def __unicode__(self):
         return "%s: %s" % (self.start, self.title)
@@ -368,13 +360,8 @@ class Meeting(models.Model):
         return True   # work around a django bug
 
     def get_agenda_pdf(self, request):
-        rts = list(self.retrospective_thesis_entries.all())
-        es = list(self.expedited_entries.all())
-        ls = list(self.localec_entries.all())
-
         return render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
             'meeting': self,
-            'additional_tops': enumerate(rts + es + ls, len(self)+1),
         })
         
     def get_protocol_pdf(self, request):
@@ -387,20 +374,17 @@ class Meeting(models.Model):
                 vote = None
             tops.append((top, vote,))
 
-        b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
-        submission_forms = [x.submission_form for x in b2_votes]
-        b1ized = Vote.objects.filter(result='1', upgrade_for=b2_votes).order_by('submission_form__submission__ec_number')
-
-        rts = list(self.retrospective_thesis_entries.all())
-        es = list(self.expedited_entries.all())
-        ls = list(self.localec_entries.all())
         additional_tops = []
-        for i, top in enumerate(rts + es + ls, len(tops) + 1):
+        for top in self.additional_entries.all():
             try:
                 vote = Vote.objects.filter(top=top)[0]
             except IndexError:
                 vote = None
-            additional_tops.append((i, top, vote,))
+            additional_tops.append((top, vote,))
+
+        b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
+        submission_forms = [x.submission_form for x in b2_votes]
+        b1ized = Vote.objects.filter(result='1', upgrade_for=b2_votes).order_by('submission_form__submission__ec_number')
 
         return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
@@ -473,10 +457,7 @@ class TimetableEntry(models.Model):
     objects = AuthorizationManager()
 
     def __unicode__(self):
-        if self.index is not None:
-            return u"TOP %s" % (self.index + 1)
-        else:
-            return u"TOP"
+        return u"TOP %s" % (self.agenda_index + 1)
     
     def _get_duration(self):
         return timedelta(seconds=self.duration_in_seconds)
@@ -485,6 +466,17 @@ class TimetableEntry(models.Model):
         self.duration_in_seconds = int(timedelta_to_seconds(d))
     
     duration = property(_get_duration, _set_duration)
+
+    @property
+    def agenda_index(self):
+        if not self.timetable_index is None:
+            return self.timetable_index
+        else:
+            index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            if index is None:
+                index = -1
+            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lte=self.pk).count()
+            return index
     
     @cached_property
     def optimal_start_offset(self):
