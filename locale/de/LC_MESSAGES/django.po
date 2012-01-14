@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-14 12:25+0100\n"
+"POT-Creation-Date: 2012-01-14 12:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1492,7 +1492,7 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:317 core/forms/layout.py:98 core/forms/layout.py:100
-#: templates/meetings/tabs/status.html:61
+#: templates/meetings/tabs/status.html:64
 #: templates/submissions/readonly_form.html:224
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
@@ -1500,14 +1500,14 @@ msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:318 core/forms/layout.py:107 core/forms/layout.py:109
-#: templates/meetings/tabs/status.html:66
+#: templates/meetings/tabs/status.html:69
 #: templates/submissions/readonly_form.html:226
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:319 templates/meetings/tabs/status.html:96
+#: core/forms/forms.py:319 templates/meetings/tabs/status.html:99
 #: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
@@ -1520,12 +1520,12 @@ msgstr "Normal"
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:323 templates/meetings/tabs/status.html:86
+#: core/forms/forms.py:323 templates/meetings/tabs/status.html:89
 msgid "Expedited"
 msgstr "Expedited"
 
 #: core/forms/forms.py:324 core/models/constants.py:29
-#: templates/meetings/tabs/status.html:91
+#: templates/meetings/tabs/status.html:94
 msgid "Local EC"
 msgstr "Lokale EK"
 
@@ -2066,11 +2066,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:662
+#: meetings/models.py:663
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:663
+#: meetings/models.py:664
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2111,7 +2111,7 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:564 meetings/views.py:632
+#: meetings/views.py:564 meetings/views.py:635
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2119,7 +2119,7 @@ msgstr "Zeitfenster"
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:602
+#: meetings/views.py:605
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2856,7 +2856,7 @@ msgstr "Planung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:37
+#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:40
 msgid "Timetable"
 msgstr "Zeitplanung"
 
@@ -3141,70 +3141,74 @@ msgstr "Tagesordnung PDF"
 msgid "Send agenda to board"
 msgstr "Agenda an die Sitzungsmitglieder versenden"
 
-#: templates/meetings/tabs/status.html:38
+#: templates/meetings/tabs/status.html:34
+msgid "Last sent"
+msgstr "Zuletzt versendet"
+
+#: templates/meetings/tabs/status.html:41
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/tabs/status.html:41
+#: templates/meetings/tabs/status.html:44
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/tabs/status.html:43
+#: templates/meetings/tabs/status.html:46
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
-#: templates/meetings/tabs/status.html:45
+#: templates/meetings/tabs/status.html:48
 msgid "Send protocol"
 msgstr "Protokoll versenden"
 
-#: templates/meetings/tabs/status.html:51
+#: templates/meetings/tabs/status.html:54
 msgid "Statistics"
 msgstr "Statistik"
 
-#: templates/meetings/tabs/status.html:53
+#: templates/meetings/tabs/status.html:56
 msgid "Gesamt"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:56
+#: templates/meetings/tabs/status.html:59
 msgid "Normal"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:71
+#: templates/meetings/tabs/status.html:74
 msgid "AMG/MPG"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:76
+#: templates/meetings/tabs/status.html:79
 #, fuzzy
 msgid "Andere"
 msgstr "Geschlecht"
 
-#: templates/meetings/tabs/status.html:81
+#: templates/meetings/tabs/status.html:84
 #, fuzzy
 msgid "Retro. Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/status.html:103
+#: templates/meetings/tabs/status.html:106
 #, fuzzy
 msgid "Dissertation"
 msgstr "Diplomarbeit / Dissertation"
 
-#: templates/meetings/tabs/status.html:108
+#: templates/meetings/tabs/status.html:111
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
 
-#: templates/meetings/tabs/status.html:113
+#: templates/meetings/tabs/status.html:116
 msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
-#: templates/meetings/tabs/status.html:118
+#: templates/meetings/tabs/status.html:121
 msgid "Remission"
 msgstr "Gebührenbefreiung"
 
-#: templates/meetings/tabs/status.html:123
+#: templates/meetings/tabs/status.html:126
 msgid "B3 (examined)"
 msgstr "B3 (behandelt)"
 
-#: templates/meetings/tabs/status.html:128
+#: templates/meetings/tabs/status.html:131
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 

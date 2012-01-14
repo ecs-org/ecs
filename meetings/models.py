@@ -164,6 +164,7 @@ class Meeting(models.Model):
     comments = models.TextField(null=True, blank=True)
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
+    agenda_sent_at = models.DateTimeField(null=True)
 
     objects = MeetingManager()
     

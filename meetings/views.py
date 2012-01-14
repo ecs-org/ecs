@@ -585,6 +585,9 @@ def send_agenda_to_board(request, meeting_pk=None):
         sf = top.submission.current_submission_form
         for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
             send_system_message_template(u, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+
+    meeting.agenda_sent_at = datetime.now()
+    meeting.save()
     
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
