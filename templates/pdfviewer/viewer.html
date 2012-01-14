@@ -169,6 +169,8 @@
         var x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
         return x;
      }
+
+    {% if request.user|has_flag:'is_internal' %}
     camera.install();
     new camera.Camera({
         'class': 'bugshot',
@@ -186,6 +188,7 @@
             return (e.meta || e.control) && e.key == ':';
         }
     });
+    {% endif %}
     });
 </script>
 
