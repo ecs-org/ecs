@@ -295,6 +295,7 @@ def befangene_review(request, submission_form_pk=None):
     form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
+        return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
 
