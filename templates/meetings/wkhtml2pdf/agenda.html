@@ -30,6 +30,9 @@
                 {{ entry.submission.current_submission_form.submitter_organisation }}<br />
             <span class="bold">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
+            {% if entry.submission.invite_primary_investigator_to_meeting %}
+                Antragsteller um {{ entry.start|date:'H:i' }} Uhr zur Sitzung eingeladen.<br />
+            {% endif %}
         {% else %}
             <span class="bold">{{ entry.title|default:'<i>No title.</i>' }}</span><br />
         {% endif %}
