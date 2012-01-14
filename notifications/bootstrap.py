@@ -7,8 +7,8 @@ from ecs.utils import Args
 from ecs.bootstrap.utils import update_instance
 from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer, SafetyNotificationReview, FinalAmendmentReview,
-    SignNotificationAnswer, AmendmentReview, SimpleNotificationReview, is_susar, is_report, is_amendment, needs_further_review,
-    needs_executive_group_review, needs_insurance_group_review, needs_notification_group_review,
+    FinalAmendmentSigningReview, SignNotificationAnswer, AmendmentReview, SimpleNotificationReview, is_susar, is_report, is_amendment,
+    needs_further_review, needs_executive_group_review, needs_insurance_group_review, needs_notification_group_review,
 )
 
 
@@ -95,7 +95,7 @@ def notification_workflow():
             'executive_amendment_review': Args(AmendmentReview, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
             'insurance_group_review': Args(SimpleNotificationReview, group=INSURANCE_GROUP, name=_('Amendment Review')),
             'office_insurance_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Amendment Review')),
-            'final_executive_office_review': Args(FinalAmendmentReview, group=OFFICE_GROUP, name=_('Amendment Review')),
+            'final_executive_office_review': Args(FinalAmendmentSigningReview, group=OFFICE_GROUP, name=_('Amendment Review')),
             'final_notification_office_review': Args(FinalAmendmentReview, group=OFFICE_GROUP, name=_('Amendment Review')),
         },
         edges={

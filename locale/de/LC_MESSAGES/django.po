@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-14 12:55+0100\n"
+"POT-Creation-Date: 2012-01-14 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2210,8 +2210,13 @@ msgid "Ready"
 msgstr "Fertig"
 
 #: notifications/workflow.py:82 notifications/workflow.py:129
+#: notifications/workflow.py:143
 msgid "Needs further review"
 msgstr "Weitere Begutachtung erforderlich"
+
+#: notifications/workflow.py:142
+msgid "Sign"
+msgstr "Unterzeichnen"
 
 #: pdfviewer/models.py:28
 msgid "top"
@@ -2823,7 +2828,7 @@ msgstr "zuletzt bearbeitet"
 msgid "ago by"
 msgstr ""
 
-#: templates/mediaserver/202.html:41 templates/pdfviewer/viewer.html:201
+#: templates/mediaserver/202.html:41 templates/pdfviewer/viewer.html:204
 msgid "Your document is not ready yet."
 msgstr "Das Dokument steht noch nicht bereit."
 
@@ -2983,21 +2988,21 @@ msgstr ""
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:44
+#: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:44
+#: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:35
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:44
+#: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "examined"
 msgstr "behandelt"
 
@@ -3352,7 +3357,7 @@ msgstr "Anzahl SUSAR"
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
-#: templates/pdfviewer/viewer.html:202
+#: templates/pdfviewer/viewer.html:205
 msgid ""
 "\n"
 "        Click <a href=\"\" click=\"window.location.reload; return false;"

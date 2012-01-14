@@ -128,7 +128,21 @@ class FinalAmendmentReview(EditNotificationAnswer):
             (True, _('Publish')),
             (False, _('Needs further review')),
         )
-        
+
+
+class FinalAmendmentSigningReview(EditNotificationAnswer):
+    class Meta:
+        model = Notification
+
+    def is_repeatable(self):
+        return True
+
+    def get_choices(self):
+        return (
+            (True, _('Sign')),
+            (False, _('Needs further review')),
+        )
+
 
 class SafetyNotificationReview(Activity):
     class Meta:
