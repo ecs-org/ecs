@@ -254,7 +254,11 @@ class Submission(models.Model):
             if last_vote and last_vote.is_recessed:
                 return _schedule()
         return current_top.meeting
-    
+
+    @property
+    def is_reschedulable(self):
+        return self.meetings.filter(started=None).exists()
+
     def get_filename_slice(self):
         return self.get_ec_number_display(separator='_')
 

@@ -161,16 +161,16 @@
     <tr>
         <th>Sitzungen:</th>
         <td colspan="3">
-                {% for meeting in submission.meetings.all %}
-                    <div>
-                        {% if user|has_flag:'is_internal' %}
-                            <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
-                        {% else %}
-                            {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            {% if user|has_flag:'is_executive_board_member' %}
+            {% for meeting in submission.meetings.all %}
+                <div>
+                    {% if user|has_flag:'is_internal' %}
+                        <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
+                    {% else %}
+                        {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
+                    {% endif %}
+                </div>
+            {% endfor %}
+            {% if user|has_flag:'is_executive_board_member' and submission.is_reschedulable %}
                 <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
@@ -178,11 +178,11 @@
     <tr>
         <th>Voten:</th>
         <td colspan="3">
-                {% for vote in published_votes %}
-                    {% if vote.result %}
-                    <div>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</div>
-                    {% endif %}
-                {% endfor %}
+            {% for vote in published_votes %}
+                {% if vote.result %}
+                <div>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</div>
+                {% endif %}
+            {% endfor %}
         </td>
     </tr>
     {% endif %}
