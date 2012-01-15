@@ -2,7 +2,7 @@
 
 #NameVirtualhost %(ip)s:443
 
-<VirtualHost %(ip)s:443>
+<VirtualHost *:443>
     ServerName %(hostname)s
     ServerAlias *.%(hostname)s
     ServerAdmin admin@%(hostname)s
