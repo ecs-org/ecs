@@ -129,6 +129,7 @@ class SetupTarget(SetupTargetObject):
         _, tmp = tempfile.mkstemp()
         with tempfile.NamedTemporaryFile() as h:
             h.write(self.config['host'])
+            h.flush()
             local('sudo cp {0} /etc/hostname'.format(h.name))
         local('sudo hostname -F /etc/hostname')
         self.write_config_template('hosts', tmp)
