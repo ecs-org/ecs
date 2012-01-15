@@ -98,6 +98,8 @@ class SetupTarget(SetupTargetObject):
 
         self.gpg_config()
         self.ca_config()
+        self.backup_config()
+        self.mail_config()
         
         self.ca_update()
         self.db_update()
@@ -106,6 +108,8 @@ class SetupTarget(SetupTargetObject):
         self.apache_config()
         self.catalina_config()
         self.daemons_install()
+        
+        self.custom_network_config()
         
         self.apache_restart()
         self.daemons_start()
@@ -128,7 +132,27 @@ class SetupTarget(SetupTargetObject):
         self.write_config_template('hosts', tmp)
         local('sudo cp %s /etc/hosts' % tmp)
         os.remove(tmp)
+    
+    def custom_network_config(self):
+        if 'network.resolv' in self.config:
+            with tempfile.NamedTemporaryFile() as t:
+                t.write(self.config['network.resolv'])
+                local('sudo cp {0} /etc/resolv.conf'.format(t.name))
+                
+        if 'network.interfaces' in self.config:
+            with tempfile.NamedTemporaryFile() as t:
+                t.write(self.config['network.interfaces'])
+                local('sudo cp {0} /etc/network/interfaces'.format(t.name))
  
+    def backup_config(self):
+        if 'backup.host' not in self.config:
+            warn('no backup configuration, skipping backup config')
+        else:
+            pass
+        
+    def mail_config(self):
+        pass
+        
     def homedir_config(self):
         homedir = os.path.expanduser('~')
         for name in ('public_html', '.python-eggs', 'ecs-conf'):
@@ -147,7 +171,7 @@ class SetupTarget(SetupTargetObject):
             warn('Missing SSL key or certificate - a new pair will be generated')
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
-            local('sudo openssl req -config {0} -nodes -new -newkey rsa:1024 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
+            local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
         local('sudo update-ca-certificates') # needed for all in special java that pdf-as knows server cert
 
     def gpg_config(self):
@@ -205,6 +229,7 @@ class SetupTarget(SetupTargetObject):
             r'([ \t]+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
             r'([ \t]+-->[ \t]*\n|\r\n)?',
             r'\2', multiline=True)
+        """ # FIXME: Disabled because of cert problems
         write_regex_replace(
             os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'pdf-as', 'cfg', 'config.properties'),
             r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
@@ -215,6 +240,7 @@ class SetupTarget(SetupTargetObject):
             r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
             #r'\2https://{0}\4'.format(self.config['host']))
             r'\2http://{0}:4780\4'.format(self.config['host']))
+        """
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
