@@ -1,4 +1,3 @@
-from ecs.settings import ECS_USERSWITCHER
 DEBUG = False
 TEMPLATE_DEBUG = False
 
