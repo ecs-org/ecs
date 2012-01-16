@@ -161,6 +161,37 @@ class SetupTarget(SetupTargetObject):
             pass
         
     def mail_config(self):
+        '''
+        smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+myhostname = ecsdev.ep3.at
+mydestination = ecsdev.ep3.at, localhost.ep3.at, , localhost
+myorigin = /etc/mailname # $myhostname
+mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128 %(ip)s/32
+[localhost:8823]
+
+mydestination =
+local_recipient_maps =
+local_transport = error:local mail delivery is disabled
+myorigin = /etc/mailname # $myhostname
+relay_domains = $myhostname
+
+  myorigin = example.com
+  mydestination =
+  local_recipient_maps =
+  local_transport = error:local mail delivery is disabled
+  relay_domains = example.com
+  parent_domain_matches_subdomains = 
+      debug_peer_list smtpd_access_maps
+  smtpd_recipient_restrictions =
+      permit_mynetworks reject_unauth_destination
+  
+  relay_recipient_maps = hash:/etc/postfix/relay_recipients
+  transport_maps = hash:/etc/postfix/transport
+
+/etc/postfix/transport:
+$myhostname   smtp:[localhost:8823]
+        '''
         pass
         
     def homedir_config(self):
@@ -314,8 +345,9 @@ class SetupTarget(SetupTargetObject):
         # run("%s; fab appreq:ecs,flavor=%s,only_list=True; fab appenv:ecs,flavor=%s" % (env.activate, env.appenv, env.appenv))
         
     def queuing_config(self):
-        if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
-            local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
+        local('sudo rabbitmqctl force_reset')
+        #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
+        #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
         
         local('sudo rabbitmqctl add_vhost %s' % self.username)
             
