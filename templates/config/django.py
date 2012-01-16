@@ -33,7 +33,7 @@ PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
 
 ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
-ECS_USERSWITCHER = %(userswitcher.enabled)s
+ECS_USERSWITCHER = %(userswitcher.enable)s
 
 ECS_PDFCOP = '#'
 ECS_PDFDECRYPT = '#'
