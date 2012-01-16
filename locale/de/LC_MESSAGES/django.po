@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-16 16:10+0100\n"
+"POT-Creation-Date: 2012-01-16 17:53+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1507,8 +1507,8 @@ msgstr "AMG"
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:319 templates/meetings/tabs/status.html:99
-#: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
+#: core/forms/forms.py:319 templates/tasks/tasks.inc:24
+#: templates/tasks/tasks_full.inc:23
 msgid "Other"
 msgstr "Andere"
 
@@ -3035,31 +3035,38 @@ msgstr ""
 #: templates/meetings/messages/boardmember_invitation.html:6
 #: templates/meetings/messages/protocol.html:6
 #: templates/meetings/messages/resident_boardmember_invitation.html:6
-#, python-format
-msgid ""
-"\n"
-"Sehr geehrte/r %(recipient)s,\n"
-msgstr ""
+#, fuzzy, python-format
+msgid "Dear(f) %(recipient)s"
+msgstr "Sehr geehrte %(receiver)s!"
 
-#: templates/meetings/messages/boardmember_invitation.html:12
+#: templates/meetings/messages/boardmember_invitation.html:6
+#: templates/meetings/messages/protocol.html:6
+#: templates/meetings/messages/resident_boardmember_invitation.html:6
+#, fuzzy, python-format
+msgid "Dear(m) %(recipient)s"
+msgstr "Sehr geehrter %(receiver)s!"
+
+#: templates/meetings/messages/boardmember_invitation.html:10
 #, python-format
 msgid ""
 "\n"
 "Sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
 "am %(meeting_start)s Uhr, sine tempore\n"
 "im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
-"Ihre Answesenheit ist zeitplanmäßig vom %(time)s Uhr erforderlich.\n"
-"Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
+"Ihre Answesenheit ist zeitplanmäßig von %(time)s Uhr erforderlich.\n"
+"Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 "Berücksichtigen Sie bitte, dass ihre Teilnahme auch über das Ende des\n"
 "angegebenen Zeitfensters erforderlich sein kein.\n"
 msgstr ""
 
-#: templates/meetings/messages/boardmember_invitation.html:24
-#: templates/meetings/messages/protocol.html:16
-#: templates/meetings/messages/resident_boardmember_invitation.html:21
+#: templates/meetings/messages/boardmember_invitation.html:22
+#: templates/meetings/messages/protocol.html:14
+#: templates/meetings/messages/resident_boardmember_invitation.html:19
+#: templates/users/password_reset/reset_email.html:9
+#: templates/users/registration/activation_email.html:7
 msgid ""
 "\n"
-"Mit freundlichen Grüßen,\n"
+"Mit freundlichen Grüßen,<br />\n"
 "    Ethik-Kommission der MedUni Wien\n"
 msgstr ""
 
@@ -3073,14 +3080,14 @@ msgid ""
 "    "
 msgstr ""
 
-#: templates/meetings/messages/resident_boardmember_invitation.html:12
+#: templates/meetings/messages/resident_boardmember_invitation.html:10
 #, python-format
 msgid ""
 "\n"
 "Sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
 "am %(meeting_start)s Uhr, sine tempore\n"
 "im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
-"Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
+"Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 msgstr ""
 
 #: templates/meetings/tabs/experts.html:36
@@ -3202,28 +3209,28 @@ msgstr "Geschlecht"
 msgid "Retro. Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/status.html:106
+#: templates/meetings/tabs/status.html:101
 #, fuzzy
 msgid "Dissertation"
 msgstr "Diplomarbeit / Dissertation"
 
-#: templates/meetings/tabs/status.html:111
+#: templates/meetings/tabs/status.html:106
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
 
-#: templates/meetings/tabs/status.html:116
+#: templates/meetings/tabs/status.html:111
 msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
-#: templates/meetings/tabs/status.html:121
+#: templates/meetings/tabs/status.html:116
 msgid "Remission"
 msgstr "Gebührenbefreiung"
 
-#: templates/meetings/tabs/status.html:126
+#: templates/meetings/tabs/status.html:121
 msgid "B3 (examined)"
 msgstr "B3 (behandelt)"
 
-#: templates/meetings/tabs/status.html:131
+#: templates/meetings/tabs/status.html:126
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
@@ -3498,20 +3505,16 @@ msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 msgid "Catalog of Approved Studies"
 msgstr "Register der Genehmigten Studien"
 
-#: templates/submissions/change_message.txt:2
+#: templates/submissions/change_message.txt:5
 #, python-format
 msgid ""
 "\n"
-"The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
-"\n"
-"Sincerly yours,\n"
-"    The Team of the Ethics Commission\n"
+"    The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
+"    "
 msgstr ""
 "\n"
-"Die Studie \"%(project_title)s\" (%(ec_number)s) wurde geändert.\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission\n"
+"        Die Studie \"%(project_title)s\" (%(ec_number)s) wurde geändert.\n"
+"    "
 
 #: templates/submissions/change_presenter.html:4
 #: templates/submissions/change_presenter.html:5
@@ -3545,26 +3548,22 @@ msgstr ""
 "        Die Studie \"%(project_title)s\" (%(ec_number)s) wurde erstellt.\n"
 "    "
 
-#: templates/submissions/decline_message.txt:2
+#: templates/submissions/decline_message.txt:5
 #, python-format
 msgid ""
 "\n"
-"Your submission \"%(project_title)s\" (%(ec_number)s) cannot be accepted in "
-"the present shape.\n"
-"Please check your inbox for more precise information. You can resubmit\n"
-"your study as appropriate.\n"
-"\n"
-"Sincerly yours,\n"
-"    The Team of the Ethics Commission\n"
+"    Your submission \"%(project_title)s\" (%(ec_number)s) cannot be accepted "
+"in the present shape.\n"
+"    Please check your inbox for more precise information. You can resubmit\n"
+"    your study as appropriate.\n"
+"    "
 msgstr ""
 "\n"
 "Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
 "vorliegenden Form nicht angenommen werden.\n"
 "Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
 "die Studie ggf. neu einreichen.\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission\n"
+"    "
 
 #: templates/submissions/form.html:28
 msgid "Submit Amendment"
@@ -4504,6 +4503,19 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
+#~ "\n"
+#~ "Sincerly yours,\n"
+#~ "    The Team of the Ethics Commission\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Die Studie \"%(project_title)s\" (%(ec_number)s) wurde geändert.\n"
+#~ "\n"
+#~ "Mit freundlichen Grüßen,\n"
+#~ "    Das Team der Ethik-Kommission\n"
 
 #~ msgid "external reviewer suggestions"
 #~ msgstr "Vorschläge für Gutachter (Nicht aus dem AKH Wien)"
