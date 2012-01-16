@@ -8,6 +8,7 @@ import logging
 import string
 import random
 import distutils.dir_util
+import time
 
 from uuid import uuid4
 from fabric.api import local, env, warn
@@ -345,7 +346,18 @@ $myhostname   smtp:[localhost:8823]
         # run("%s; fab appreq:ecs,flavor=%s,only_list=True; fab appenv:ecs,flavor=%s" % (env.activate, env.appenv, env.appenv))
         
     def queuing_config(self):
-        local('sudo rabbitmqctl force_reset')
+        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y psmisc"')
+        local('sudo killall beam')
+        local('sudo killall epmd')
+        time.sleep(1)
+        local('sudo killall beam')
+        local('sudo killall epmd')
+        time.sleep(1)
+        local('sudo apt-get -y remove --purge rabbitmq-server')
+        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
+        
+        
+        #local('sudo rabbitmqctl force_reset')
         #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
         #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
         
