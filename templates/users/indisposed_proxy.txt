@@ -2,7 +2,7 @@
 {% load i18n core userutils %}
 
 {% block content %}
-    {% blocktrans with user|formal_name as name  %}
+    {% blocktrans with user as name  %}
         {{ name }} is now indisposed. You have been selected as communication proxy.
     {% endblocktrans %}
 {% endblock %}
