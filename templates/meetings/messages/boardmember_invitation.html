@@ -3,9 +3,7 @@
 <body>
 {% block content %}
     <p>
-{% blocktrans with recipient as recipient %}
-Sehr geehrte/r {{ recipient }},
-{% endblocktrans %}
+{% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}
     </p>
 
     <p>
@@ -13,8 +11,8 @@ Sehr geehrte/r {{ recipient }},
 Sie sind eingeladen für die Sitzung der Ethik-Kommission
 am {{ meeting_start }} Uhr, sine tempore
 im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.
-Ihre Answesenheit ist zeitplanmäßig vom {{ time }} Uhr erforderlich.
-Bitte kommen unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.
+Ihre Answesenheit ist zeitplanmäßig von {{ time }} Uhr erforderlich.
+Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.
 Berücksichtigen Sie bitte, dass ihre Teilnahme auch über das Ende des
 angegebenen Zeitfensters erforderlich sein kein.
 {% endblocktrans %}
@@ -22,7 +20,7 @@ angegebenen Zeitfensters erforderlich sein kein.
 
     <p>
 {% blocktrans%}
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen,<br />
     Ethik-Kommission der MedUni Wien
 {% endblocktrans %}
     </p>

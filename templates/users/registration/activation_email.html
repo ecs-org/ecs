@@ -1,6 +1,13 @@
+{% load i18n %}
 <html>
 <body>
 <p>Sie haben Sich für das ECS-System angemeldet.</p>
 <p>Klicken Sie auf <a href="{{ activation_url }}">diesen Link</a> um die Registrierung abzuschließen.</p> 
+<p>
+{% blocktrans%}
+Mit freundlichen Grüßen,<br />
+    Ethik-Kommission der MedUni Wien
+{% endblocktrans %}
+</p>
 </body>
 </html>

@@ -3,18 +3,16 @@
 <body>
 {% block content %}
     <p>
-{% blocktrans with recipient as recipient %}
-Sehr geehrte/r {{ recipient }},
-{% endblocktrans %}
+{% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}
     </p>
 
     <p>
-        anbei senden wir Ihnen das Protokoll für die Sitzung vom {{ meeting.start|date:'d.m.Y' }}.
+        Anbei senden wir Ihnen das Protokoll für die Sitzung vom {{ meeting.start|date:'d.m.Y' }}.
     </p>
 
     <p>
 {% blocktrans%}
-Mit freundlichen Grüßen,
+Mit freundlichen Grüßen,<br />
     Ethik-Kommission der MedUni Wien
 {% endblocktrans %}
     </p>
