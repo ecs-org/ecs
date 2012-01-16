@@ -1,5 +1,6 @@
 127.0.0.1 localhost
-%(ip)s %(host)s %(local_hostname)s
+%(ip)s %(host)s %(local_hostname)s autovm autovm.local
+# autovm and autovm.local are for #cking rabbitmq workaround
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 ip6-localhost ip6-loopback
