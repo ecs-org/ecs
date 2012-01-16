@@ -565,7 +565,6 @@ if 'ECS_USERSWITCHER' not in locals():
 
 if not ECS_USERSWITCHER:
     MIDDLEWARE_CLASSES = tuple(item for item in MIDDLEWARE_CLASSES if item != 'ecs.userswitcher.middleware.UserSwitcherMiddleware')
-    INSTALLED_APPS = tuple(item for item in INSTALLED_APPS if item != 'ecs.userswitcher')
 
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load compress %}
-{% load i18n userutils core scratchpad %}
+{% load i18n userutils core scratchpad userswitcher %}
 
 {% block account %}
   <div class="user_data">
@@ -10,11 +10,7 @@
     </div>
     
   </div>
-  {% load userswitcher_tag %}
-  {% if userswitcher_enabled %}
-    {% load userswitcher %}
-    {% userswitcher %}
-  {% endif %}
+  {% userswitcher %}
 {% endblock %}
 
 {% block usertoolbar %}
