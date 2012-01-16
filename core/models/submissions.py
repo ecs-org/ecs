@@ -748,6 +748,7 @@ class Investigator(models.Model):
     
     class Meta:
         app_label = 'core'
+        ordering = ['id']
 
     def save(self, **kwargs):
         if self.email:
@@ -789,6 +790,7 @@ class InvestigatorEmployee(models.Model):
     
     class Meta:
         app_label = 'core'
+        ordering = ['id']
     
     @property
     def full_name(self):
@@ -823,6 +825,7 @@ class Measure(models.Model):
     
     class Meta:
         app_label = 'core'
+        ordering = ['id']
 
 
 # 3b
@@ -837,6 +840,7 @@ class NonTestedUsedDrug(models.Model):
     
     class Meta:
         app_label = 'core'
+        ordering = ['id']
 
 
 # 2.6.2 + 2.7
@@ -849,6 +853,7 @@ class ForeignParticipatingCenter(models.Model):
     
     class Meta:
         app_label = 'core'
+        ordering = ['id']
 
 
 class TemporaryAuthorization(models.Model):
