@@ -10,8 +10,11 @@
     </div>
     
   </div>
-  {% load userswitcher %}
-  {% userswitcher %}
+  {% load userswitcher_tag %}
+  {% if userswitcher_enabled %}
+    {% load userswitcher %}
+    {% userswitcher %}
+  {% endif %}
 {% endblock %}
 
 {% block usertoolbar %}

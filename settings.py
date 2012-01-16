@@ -493,6 +493,9 @@ DEVSERVER_MODULES = (
 ###################
 #these are local fixes, they default to a sane value if unset
 
+#ECS_USERSWITCHER = True/False
+# default to True
+
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
 # needs to be overriden in local_settings for eg. windows
 
@@ -555,6 +558,14 @@ except ImportError:
     pass
 else:
     INSTALLED_APPS += ('django_wsgiserver',) # anywhere
+
+# user switcher
+if 'ECS_USERSWITCHER' not in locals():
+    ECS_USERSWITCHER = True
+
+if not ECS_USERSWITCHER:
+    MIDDLEWARE_CLASSES = tuple(item for item in MIDDLEWARE_CLASSES if item != 'ecs.userswitcher.middleware.UserSwitcherMiddleware')
+    INSTALLED_APPS = tuple(item for item in INSTALLED_APPS if item != 'ecs.userswitcher')
 
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:

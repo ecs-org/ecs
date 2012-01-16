@@ -1,3 +1,4 @@
+from ecs.settings import ECS_USERSWITCHER
 DEBUG = False
 TEMPLATE_DEBUG = False
 
@@ -33,6 +34,7 @@ PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
 
 ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
+ECS_USERSWITCHER = %(userswitcher.enabled)s
 
 ECS_PDFCOP = '#'
 ECS_PDFDECRYPT = '#'

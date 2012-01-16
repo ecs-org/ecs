@@ -40,7 +40,7 @@ urlpatterns = patterns('',
     url(r'^vote/', include('ecs.votes.urls')),
     url(r'^dashboard/', include('ecs.dashboard.urls')),
     url(r'^feedback/', include('ecs.feedback.urls')),
-    url(r'^userswitcher/', include('ecs.userswitcher.urls')),
+
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
     url(r'^mediaserver/', include('ecs.mediaserver.urls')),
     url(r'^task/', include('ecs.tasks.urls')),
@@ -78,6 +78,11 @@ if settings.DEBUG:
         url(r'^trigger404/$', 'ecs.urls.fake404handler'),
     )
 
+if 'ecs.userswitcher' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+        url(r'^userswitcher/', include('ecs.userswitcher.urls')),
+    )
+        
 if 'sentry' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         # redirect sentry login/logout pages to standard pages because we dont want sentry handle login
