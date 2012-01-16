@@ -1,4 +1,6 @@
 {% load i18n core %}
+{% if receiver.ecs_profile.gender == 'f' %}{% blocktrans with receiver as receiver %}Dear(f) {{ receiver }}{% endblocktrans %}{% else %}{% blocktrans with receiver as receiver %}Dear(m) {{ receiver }}{% endblocktrans %}{% endif %}
+
 {% strip %}
 {% dedent %}
         {% block content %}{% endblock %}
