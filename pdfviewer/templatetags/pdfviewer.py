@@ -38,3 +38,8 @@ def annotations_for_user(document, user):
 def is_ready(document):
     return document.status == 'ready'
 
+@register.filter
+def truncatechars(s, n):
+    if len(s) > n:
+        s = s[:n] + '&hellip;'
+    return s

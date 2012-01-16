@@ -69,6 +69,13 @@ body.pdfviewer .hidden{
     width: 780px;
 }
 
+#pdfviewer .header .title {
+    padding-right: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 2em;
+}
+
 #pdfviewer .header .details{
     font-size: 11px;
     color: $grey-40;
@@ -583,6 +590,15 @@ body.pdfviewer .popup.menu{
 /* annotation sharing popup */
 body.pdfviewer .popup.annotationSharing{
     color: $white;
+    width: 500px;
+    height: 400px;
+    top: 200px;
+    margin-left: -270px;
+}
+body.pdfviewer .popup.annotationSharing > .content {
+    width: 500px;
+    height: 400px;
+    overflow: auto;
 }
 body.pdfviewer .popup.annotationSharing #annotation_share{
     color: $white;
