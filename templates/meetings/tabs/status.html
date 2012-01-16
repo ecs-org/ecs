@@ -95,11 +95,6 @@
         <td>{{ localec_submissions|length }}</td>
         <td>{% with localec_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
     </tr>
-    <tr>
-        <th>{% trans "Other" %}</th>
-        <td>{{ other_submissions|length }}</td>
-        <td>{% with other_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
 </table>
 <table>
     <tr>

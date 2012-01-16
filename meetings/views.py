@@ -718,7 +718,6 @@ def meeting_details(request, meeting_pk=None, active=None):
         'retrospective_thesis_submissions': submissions.for_thesis_lane(),
         'expedited_submissions': submissions.expedited(),
         'localec_submissions': submissions.localec(),
-        'other_submissions': submissions.filter(workflow_lane=None),
 
         'dissertation_submissions': submissions.filter(current_submission_form__project_type_education_context=1),
         'diploma_thesis_submissions': submissions.filter(current_submission_form__project_type_education_context=2),
