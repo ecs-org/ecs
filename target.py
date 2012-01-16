@@ -13,7 +13,7 @@ from uuid import uuid4
 from fabric.api import local, env, warn
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
-from deployment.utils import control_upstart, apache_setup, strbool, write_template
+from deployment.utils import control_upstart, apache_setup, strbool, strint, write_template
 from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
@@ -51,12 +51,19 @@ class SetupTarget(SetupTargetObject):
         self.config.setdefault('mediaserver.storage.decrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.sec'))
         self.config.setdefault('mediaserver.storage.verify_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.pub'))
 
-    def random_string(self, length=40):
-        chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
+    def random_string(self, length=40, simpleset=False):
+        if simpleset:
+            chars = string.ascii_letters + string.digits
+        else:
+            chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
+            
         return ''.join(random.choice(chars) for i in xrange(length))
         
-    def print_random_string(self, length=40):
-        print self.random_string(length=length)
+    def print_random_string(self, length=40, simpleset=False):
+        simpleset= strbool(simpleset)
+        length = strint(length)
+        
+        print self.random_string(length=length, simpleset=simpleset)
     
     def write_config_template(self, template, dst, context=None):
         if context is None:
