@@ -11,7 +11,7 @@ import distutils.dir_util
 import time
 
 from uuid import uuid4
-from fabric.api import local, env, warn
+from fabric.api import local, env, warn, settings
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import control_upstart, apache_setup, strbool, strint, write_template
