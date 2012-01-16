@@ -355,13 +355,14 @@ $myhostname   smtp:[localhost:8823]
             local('sudo killall epmd')
             time.sleep(1)
             local('sudo apt-get -y remove --purge rabbitmq-server')
+            """
             local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
-            
+            """
         
         #local('sudo rabbitmqctl force_reset')
         #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
         #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
-        
+        """
         local('sudo rabbitmqctl add_vhost %s' % self.username)
             
         if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
@@ -369,7 +370,7 @@ $myhostname   smtp:[localhost:8823]
         
         local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
         local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
-
+        """
     def search_config(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/ecs-conf/solr_schema.xml' % self.username)
         local('sudo cp ~%s/ecs-conf/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
