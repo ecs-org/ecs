@@ -86,4 +86,4 @@ class ExternalReviewReview(Activity):
                 {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX},
                 submission=c.submission)
         elif c.status == 'review_fail':
-            send_system_message_template(c.user, _('External Review Declined'), 'checklists/external_review_declined.txt', None, submission=c.submission)
+            send_system_message_template(c.user, _('Query regarding review'), 'checklists/external_review_declined.txt', None, submission=c.submission)

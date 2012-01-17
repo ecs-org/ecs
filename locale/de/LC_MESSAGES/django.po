@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-16 17:53+0100\n"
+"POT-Creation-Date: 2012-01-17 14:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -226,8 +226,8 @@ msgid "Drop"
 msgstr "Fallen lassen"
 
 #: checklists/workflow.py:89
-msgid "External Review Declined"
-msgstr "Gutachten Abgelehnt"
+msgid "Query regarding review"
+msgstr "Rückfrage zum Gutachten"
 
 #: communication/forms.py:20 communication/forms.py:35
 msgid "Ethics Commission"
@@ -1413,8 +1413,8 @@ msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
 #: core/triggers.py:85
-msgid "Submission accepted"
-msgstr "Einreichung akzeptiert"
+msgid "Acknowledgement of Receipt"
+msgstr "Eingangsbestätigung"
 
 #: core/triggers.py:92
 msgid "Changes to study EC-Nr. {ec_number}"
@@ -2456,13 +2456,15 @@ msgstr "Sehr geehrte %(receiver)s!"
 msgid "Dear(m) %(receiver)s"
 msgstr "Sehr geehrter %(receiver)s!"
 
-#: templates/msg_core.txt:10
+#: templates/msg_core.txt:12
 msgid ""
 "Sincerly yours,\n"
-"    The Team of the Ethics Commission"
+"\n"
+"The Team of the Ethics Commission"
 msgstr ""
 "Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission"
+"\n"
+"Das Team der Ethik-Kommission"
 
 #: templates/administration/detail.html:10
 #: templates/users/invitation/invite_user.html:4
@@ -2608,19 +2610,17 @@ msgstr "Es gibt nocht keinen Textbaustein!"
 #, python-format
 msgid ""
 "\n"
-"        Your external review for the study %(ec_number)s can not be accepted "
-"in the\n"
-"        present shape.\n"
-"        Please check your inbox for more precise information. You can "
-"resubmit\n"
-"        your external review as appropriate.\n"
+"        There are further inquiries about your review of study "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"\n"
+"        Please check your inbox for more precise information.\n"
 "    "
 msgstr ""
 "\n"
-"        Ihr Gutachten fur die Studie (%(ec_number)s) kann in der "
-"vorliegenden Form nicht angenommen werden.\n"
-"        Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie "
-"können das Guthaben ggf. neu einsenden.\n"
+"        Bezüglich des von Ihnen erstellten Gutachtens zur Studie "
+"\"%(project_title)s\" (%(ec_number)s) haben sich Rückfragen seitens der Ethikkommission ergeben.\n"
+"\n"
+"        Kontrollieren Sie bitte ihren Nachrichteneingang für nähere Angaben.\n"
 "    "
 
 #: templates/checklists/external_review_publish.txt:5
@@ -3063,7 +3063,6 @@ msgstr ""
 #: templates/meetings/messages/protocol.html:14
 #: templates/meetings/messages/resident_boardmember_invitation.html:19
 #: templates/users/password_reset/reset_email.html:9
-#: templates/users/registration/activation_email.html:7
 msgid ""
 "\n"
 "Mit freundlichen Grüßen,<br />\n"
@@ -3480,14 +3479,22 @@ msgstr "Nochmal versuchen"
 #, python-format
 msgid ""
 "\n"
-"        Your submission \"%(project_title)s\" (%(ec_number)s) has been "
-"accepted for further processing.\n"
+"        The Ethics Commission acknowledges the arrival of your submission "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"        You can find information about the processing stage of your study in "
+"your ECS account.\n"
 "    "
 msgstr ""
 "\n"
-"        Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur "
-"weiteren Bearbeitung akzeptiert.\n"
+"        Die Ethik-Kommission bestätigt den Eingang Ihres Antrags "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"        Informationen über den Stand der Bearbeitung der Studie finden Sie "
+"in Ihrem ECS Account unter dem Reiter Generell/Status.\n"
 "    "
+
+#: templates/submissions/acknowledge_message.txt:9
+msgid "See"
+msgstr "Siehe"
 
 #: templates/submissions/base_form.html:12
 msgid "Submission"
@@ -4503,6 +4510,40 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "External Review Declined"
+#~ msgstr "Gutachten Abgelehnt"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Your external review for the study %(ec_number)s can not be "
+#~ "accepted in the\n"
+#~ "        present shape.\n"
+#~ "        Please check your inbox for more precise information. You can "
+#~ "resubmit\n"
+#~ "        your external review as appropriate.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Ihr Gutachten fur die Studie (%(ec_number)s) kann in der "
+#~ "vorliegenden Form nicht angenommen werden.\n"
+#~ "        Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. "
+#~ "Sie können das Guthaben ggf. neu einsenden.\n"
+#~ "    "
+
+#~ msgid "Submission accepted"
+#~ msgstr "Einreichung akzeptiert"
+
+#~ msgid ""
+#~ "\n"
+#~ "        Your submission \"%(project_title)s\" (%(ec_number)s) has been "
+#~ "accepted for further processing.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur "
+#~ "weiteren Bearbeitung akzeptiert.\n"
+#~ "    "
 
 #~ msgid ""
 #~ "\n"

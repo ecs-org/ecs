@@ -82,7 +82,7 @@ def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
     review_user = get_current_user()
     if submission_form.is_acknowledged:
-        send_submission_message(submission, submission.presenter, _('Submission accepted'), 'submissions/acknowledge_message.txt')
+        send_submission_message(submission, submission.presenter, _('Acknowledgement of Receipt'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             submission_form.mark_current()
             involved_users = submission_form.get_involved_parties().get_users().difference([submission_form.presenter])
