@@ -2,7 +2,7 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number %}
-        Sie sind nun nicht mehr Sicherheitsmeldungsersteller der Studie {{ ec_number }}.
+    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
+        You are not the susar presenter of study "{{ project_title }}" ({{ ec_number }}) anymore.
     {% endblocktrans %}
 {% endblock %}
