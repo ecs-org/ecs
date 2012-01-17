@@ -148,11 +148,13 @@ class SetupTarget(SetupTargetObject):
         if 'network.resolv' in self.config:
             with tempfile.NamedTemporaryFile() as t:
                 t.write(self.config['network.resolv'])
+                t.flush()
                 local('sudo cp {0} /etc/resolv.conf'.format(t.name))
                 
         if 'network.interfaces' in self.config:
             with tempfile.NamedTemporaryFile() as t:
                 t.write(self.config['network.interfaces'])
+                t.flush()
                 local('sudo cp {0} /etc/network/interfaces'.format(t.name))
  
     def backup_config(self):
