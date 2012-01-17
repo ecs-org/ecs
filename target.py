@@ -19,6 +19,7 @@ from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
+from copy import deepcopy
 
 
 class SetupTarget(SetupTargetObject):
@@ -66,7 +67,12 @@ class SetupTarget(SetupTargetObject):
         
         print self.random_string(length=length, simpleset=simpleset)
     
-    def write_config_template(self, template, dst, context=None):
+    def get_config_template(self, template):
+        with open(os.path.join(self.dirname, 'templates', 'config', template)) as f:
+            data = f.read()
+        return data
+    
+    def write_config_template(self, template, dst, context=None, filemode=None):
         if context is None:
             context = self.config
         write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context)
@@ -161,7 +167,28 @@ class SetupTarget(SetupTargetObject):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
         else:
-            pass
+            # TODO: workaround until readyvm is rebuild
+            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y  backupninja debconf-utils hwinfo duplicity"')
+            local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_sec']))
+            local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_pub']))
+            
+            context = deepcopy(self.config)
+            context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'root')
+            context['backup.include'] = self.get_config_template('duplicity.root.include')
+            self.write_config_template('duplicity.template', 
+                '/etc/backup.d/90.dup', context, use_sudo=True, filemode= '0600')
+
+            context = deepcopy(self.config)
+            context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'opt')
+            context['backup.include'] = self.get_config_template('duplicity.opt.include')
+            self.write_config_template('duplicity.template', 
+                '/etc/backup.d/91.dup', context, use_sudo=True, filemode= '0600')
+
+            self.write_config_template('10.sys', 
+                '/etc/backup.d/10.sys', use_sudo=True, filemode= '0600')
+        
+            self.write_config_template('20.pgsql', 
+                '/etc/backup.d/20.pgsql', use_sudo=True, filemode= '0600')
         
     def mail_config(self):
         '''
@@ -357,14 +384,13 @@ $myhostname   smtp:[localhost:8823]
             local('sudo killall epmd')
             time.sleep(1)
             local('sudo apt-get -y remove --purge rabbitmq-server')
-            """
+            
             local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
-            """
-        
+            
         #local('sudo rabbitmqctl force_reset')
         #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
         #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
-        """
+        
         local('sudo rabbitmqctl add_vhost %s' % self.username)
             
         if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
@@ -372,7 +398,7 @@ $myhostname   smtp:[localhost:8823]
         
         local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
         local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
-        """
+        
     def search_config(self):
         local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/ecs-conf/solr_schema.xml' % self.username)
         local('sudo cp ~%s/ecs-conf/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
