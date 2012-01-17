@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-17 16:11+0100\n"
+"POT-Creation-Date: 2012-01-17 16:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2074,57 +2074,57 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:55 templates/core.html:61
+#: meetings/views.py:56 templates/core.html:61
 #: templates/submissions/list.html:107
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:69 templates/core.html:65
+#: meetings/views.py:70 templates/core.html:65
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:74 templates/core.html:66
+#: meetings/views.py:75 templates/core.html:66
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:242
+#: meetings/views.py:247
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:370
+#: meetings/views.py:384
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:379
+#: meetings/views.py:393
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:385
+#: meetings/views.py:399
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:399
+#: meetings/views.py:415
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:550 meetings/views.py:562
+#: meetings/views.py:569 meetings/views.py:581
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:564 meetings/views.py:636
+#: meetings/views.py:583 meetings/views.py:655
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:575
+#: meetings/views.py:594
 #, python-format
 msgid "EC Meeting (%s)"
 msgstr "EK Sitzung (%s)"
 
-#: meetings/views.py:582 meetings/views.py:588
+#: meetings/views.py:601 meetings/views.py:607
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:606
+#: meetings/views.py:625
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2657,12 +2657,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten zur Studie "
-"%(ec_number)s.\n"
-"        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu erstellen: %(ABSOLUTE_URL_PREFIX)s"
-"%(task_url)s\n"
-"        Sollte es Ihnen nicht möglich sein, die Begutachtung durchzuführen, bitten wir Sie "
-"um möglichst kurzfristige Absage bzw. um Vorschläge anderer geeigneter Gutachter.\n"
+"        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten zur "
+"Studie %(ec_number)s.\n"
+"        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu erstellen: "
+"%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
+"        Sollte es Ihnen nicht möglich sein, die Begutachtung durchzuführen, "
+"bitten wir Sie um möglichst kurzfristige Absage bzw. um Vorschläge anderer "
+"geeigneter Gutachter.\n"
 "    "
 
 #: templates/communication/list.html:12 templates/pdfviewer/viewer.html:46
@@ -3671,27 +3672,29 @@ msgstr ""
 "    "
 
 #: templates/submissions/presenter_change_new.txt:5
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
-"        Sie wurden als Einreicher für die Studie %(ec_number)s ausgewählt.\n"
+"        You have been selected as presenter of study \"%(project_title)s"
+"\" (%(ec_number)s).\n"
 "    "
 msgstr ""
 "\n"
-"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
-"erstellen.\n"
+"        Die Funktion des \"Einreichers\" für die Studie \"%(project_title)s"
+"\" (%(ec_number)s) wurde an Sie übertragen.\n"
 "    "
 
 #: templates/submissions/presenter_change_previous.txt:5
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
-"        Sie sind nun nicht mehr Einreicher der Studie %(ec_number)s.\n"
+"        You are not the presenter of study \"%(project_title)s"
+"\" (%(ec_number)s) anymore.\n"
 "    "
 msgstr ""
 "\n"
-"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
-"erstellen.\n"
+"        Die Funktion des \"Einreichers\" für die Studie \"%(project_title)s"
+"\" (%(ec_number)s) wurde an eine andere Person übertragen.\n"
 "    "
 
 #: templates/submissions/readonly_form.html:11
@@ -4509,6 +4512,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "External Review Invitation"
-#~ msgstr "Einladung Gutachten"
