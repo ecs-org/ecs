@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-17 17:50+0100\n"
+"POT-Creation-Date: 2012-01-17 17:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4144,20 +4144,6 @@ msgstr ""
 #: templates/users/profile_form.html:22
 msgid "Settings"
 msgstr "Einstellungen"
-
-#: templates/users/invitation/invitation_email.html:8
-#, python-format
-msgid ""
-"\n"
-"        A user account on the ECS system has been created for you.\n"
-"        To accept the invitation follow <a href=\"%(link)s\">this link</a>.\n"
-"        "
-msgstr ""
-"\n"
-"        Ein Zugang für das ECS System wurde für Sie erstellt.\n"
-"        Zum akzeptieren und setzen Ihres Passworts für diesen Zugang klicken "
-"Sie <a href=\"%(link)s\">hier</a>.\n"
-"        "
 
 #: templates/users/invitation/invite_user.html:19
 msgid "Invite"

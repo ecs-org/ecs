@@ -1,14 +1,18 @@
 {% load i18n %}
 
-
 <html>
     <head></head>
     <body>
-        <pre>{{ invitation_text }}</pre>
-        <p>{% blocktrans with link as link %}
-        A user account on the ECS system has been created for you.
-        To accept the invitation follow <a href="{{ link }}">this link</a>.
-        {% endblocktrans %}</p>
+        <p>
+        {% if invitation_text %}
+            <pre>{{ invitation_text }}</pre>
+        {% else %}
+            Sie wurden als beteiligte Person in einem Antrag an die Ethikkommission der MedUni Wien angegeben.<br />
+            Aus diesem Grund wurde für Sie ein Zugang zum elektronischen Einreich- und Verwaltungssystem (ECS) angelegt.<br />
+        {% endif %}
+        </p>
+        <p>
+            Um den Zugang zu aktivieren und Ihr Passworts zu setzen klicken Sie <a href="{{ link }}">hier</a>.
+        </p>
     </body>
 </html>
-

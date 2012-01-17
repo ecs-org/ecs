@@ -137,7 +137,6 @@ def create_phantom_user(email, role=None):
             'link': link,
         }))
         msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
-        #print rawmail
     except Exception, e:
         transaction.savepoint_rollback(sid)
         raise e
