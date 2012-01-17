@@ -572,7 +572,8 @@ def send_agenda_to_board(request, meeting_pk=None):
         start, end = timeframe
         time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
-        deliver(user.email, subject=_(u'Invitation to meeting'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        subject = _(u'EC Meeting (%s)') % (meeting.start.strftime('%d.%m.%Y'),)
+        deliver(user.email, subject=subject, message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
