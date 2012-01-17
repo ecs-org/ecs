@@ -7,19 +7,14 @@
     </p>
 
     <p>
-{% blocktrans with meeting.start|date:'d.m.Y, H:i' as meeting_start and time as time %}
-Sie sind eingeladen für die Sitzung der Ethik-Kommission
-am {{ meeting_start }} Uhr, sine tempore
-im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.
-Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.
-{% endblocktrans %}
-    </p>
-
-    <p>
-{% blocktrans%}
+Sie sind zur Teilnahme an der  Sitzung der Ethik-Kommission der MedUni Wien am {{ meeting.start|date:'d.m.Y, H:i' }} Uhr s.t. eingeladen.<br />
+Ort der Sitzung: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
+Das voraussichtliche Ende ist {{ meeting.end|date:'d.m.Y, H:i' }} Uhr.<br />
+<br />
+<br />
 Mit freundlichen Grüßen,<br />
-    Ethik-Kommission der MedUni Wien
-{% endblocktrans %}
+<br />
+Das Team der Ethik-Kommission
     </p>
 {% endblock %}
 </body>

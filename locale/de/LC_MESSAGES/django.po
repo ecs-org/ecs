@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-17 16:58+0100\n"
+"POT-Creation-Date: 2012-01-17 17:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2115,12 +2115,12 @@ msgstr "Tagesordnung"
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:594
+#: meetings/views.py:594 meetings/views.py:600
 #, python-format
 msgid "EC Meeting (%s)"
 msgstr "EK Sitzung (%s)"
 
-#: meetings/views.py:601 meetings/views.py:607
+#: meetings/views.py:607
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
@@ -3061,29 +3061,26 @@ msgstr "Sehr geehrter %(recipient)s!"
 #, python-format
 msgid ""
 "\n"
-"        Ihre Anwesenheit bezüglich Einreichung %(ec_number)s "
-"(%(project_title)s), zur Sitzung am %(date)s ist von %(start)s bis %(end)s "
-"Uhr erforderlich.\n"
+"        Your study \"%(project_title)s\" (%(ec_number)s), will be discussed "
+"at the meeting on %(date)s at %(start)s o'clock.\n"
+"        The presence of the primary investigator (or its legal "
+"representative) necessary; the Sponsor is entitled to attend the meeting "
+"too.\n"
 "    "
 msgstr ""
+"\n"
+"        Ihre Studie \"%(project_title)s\" (%(ec_number)s) wird in der "
+"Sitzung vom %(date)s um %(start)s Uhr behandelt.\n"
+"        Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt "
+"erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des "
+"Projektes teilzunehmen.\n"
+"    "
 
 #: templates/meetings/messages/protocol.html:14
-#: templates/meetings/messages/resident_boardmember_invitation.html:19
-#: templates/users/password_reset/reset_email.html:9
 msgid ""
 "\n"
 "Mit freundlichen Grüßen,<br />\n"
 "    Ethik-Kommission der MedUni Wien\n"
-msgstr ""
-
-#: templates/meetings/messages/resident_boardmember_invitation.html:10
-#, python-format
-msgid ""
-"\n"
-"Sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
-"am %(meeting_start)s Uhr, sine tempore\n"
-"im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
-"Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
 msgstr ""
 
 #: templates/meetings/tabs/experts.html:36
