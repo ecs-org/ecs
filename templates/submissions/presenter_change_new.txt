@@ -2,7 +2,7 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number %}
-        Sie wurden als Einreicher für die Studie {{ ec_number }} ausgewählt.
+    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
+        You have been selected as presenter of study "{{ project_title }}" ({{ ec_number }}).
     {% endblocktrans %}
 {% endblock %}
