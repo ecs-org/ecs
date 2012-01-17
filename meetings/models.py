@@ -398,11 +398,13 @@ class Meeting(models.Model):
         entries = list(self.timetable_entries.filter(participations__user=user).exclude(timetable_index__isnull=True).order_by('timetable_index'))
         if not entries:
             return None
-        start = entries[0].start
-        start -= timedelta(minutes=start.minute%10)
-        end = entries[-1].end
+        start, end = entries[0].start, entries[-1].end
+        start -= timedelta(minutes=start.minute%10)     # round to 10 minutes
         if end.minute % 10 > 0:
             end += timedelta(minutes=10-end.minute%10)
+        min_dur = timedelta(minutes=30)                 # take minimal duration into account
+        if end-start < min_dur:
+            end = start + min_dur
         return (start, end)
 
     def get_timetable_pdf(self, request):

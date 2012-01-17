@@ -3,6 +3,8 @@
 
 {% block content %}
     {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        Your submission "{{ project_title }}" ({{ ec_number }}) has been accepted for further processing.
+        The Ethics Commission acknowledges the arrival of your submission "{{ project_title }}" ({{ ec_number }}).
+        You can find information about the processing stage of your study in your ECS account.
     {% endblocktrans %}
+        {% trans 'See' %}: {{ ABSOLUTE_URL_PREFIX }}{% url view_submission submission_pk=submission.pk %}
 {% endblock %}

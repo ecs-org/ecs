@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-16 17:53+0100\n"
+"POT-Creation-Date: 2012-01-17 16:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,8 +210,8 @@ msgid "Anonymous"
 msgstr "Anonym"
 
 #: checklists/workflow.py:49
-msgid "External Review Invitation"
-msgstr "Einladung Gutachten"
+msgid "Request for review"
+msgstr "Bitte um Begutachtung"
 
 #: checklists/workflow.py:73 notifications/workflow.py:128
 msgid "Publish"
@@ -226,8 +226,8 @@ msgid "Drop"
 msgstr "Fallen lassen"
 
 #: checklists/workflow.py:89
-msgid "External Review Declined"
-msgstr "Gutachten Abgelehnt"
+msgid "Query regarding review"
+msgstr "Rückfrage zum Gutachten"
 
 #: communication/forms.py:20 communication/forms.py:35
 msgid "Ethics Commission"
@@ -1396,16 +1396,16 @@ msgid "Primary Investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
 #: core/triggers.py:24
-msgid "Creation of study EC-Nr. {ec_number}"
-msgstr "Erstellung der Studie EK-Nr. {ec_number}"
+msgid "Submission of study EC-Nr. {ec_number}"
+msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
 #: core/triggers.py:34
-msgid "Change of study EC-Nr. {ec_number}"
-msgstr "Zu bestätigende Änderungen an Studie EK-Nr. {ec_number}"
+msgid "Changes new study {ec_number}"
+msgstr "Änderungen Neueinreichung {ec_number}"
 
 #: core/triggers.py:38
-msgid "B2 change of study EC-Nr. {ec_number}"
-msgstr "Zu bestätigende B2 Änderungen an Studie EK-Nr. {ec_number}"
+msgid "Changes B2 {ec_number}"
+msgstr "Änderungen B2 {ec_number}"
 
 #: core/triggers.py:64 core/triggers.py:66 core/triggers.py:75
 #: core/triggers.py:77
@@ -1413,8 +1413,8 @@ msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
 #: core/triggers.py:85
-msgid "Submission accepted"
-msgstr "Einreichung akzeptiert"
+msgid "Acknowledgement of Receipt"
+msgstr "Eingangsbestätigung"
 
 #: core/triggers.py:92
 msgid "Changes to study EC-Nr. {ec_number}"
@@ -2066,11 +2066,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:663
+#: meetings/models.py:665
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:664
+#: meetings/models.py:666
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2111,15 +2111,20 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:564 meetings/views.py:635
+#: meetings/views.py:564 meetings/views.py:636
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:575 meetings/views.py:581 meetings/views.py:587
+#: meetings/views.py:575
+#, python-format
+msgid "EC Meeting (%s)"
+msgstr "EK Sitzung (%s)"
+
+#: meetings/views.py:582 meetings/views.py:588
 msgid "Invitation to meeting"
 msgstr "Einladung zur Sitzung"
 
-#: meetings/views.py:605
+#: meetings/views.py:606
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2249,7 +2254,6 @@ msgid "A certificate with this CN already exists."
 msgstr ""
 
 #: pki/forms.py:28
-#, fuzzy
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -2456,13 +2460,15 @@ msgstr "Sehr geehrte %(receiver)s!"
 msgid "Dear(m) %(receiver)s"
 msgstr "Sehr geehrter %(receiver)s!"
 
-#: templates/msg_core.txt:10
+#: templates/msg_core.txt:12
 msgid ""
 "Sincerly yours,\n"
-"    The Team of the Ethics Commission"
+"\n"
+"The Team of the Ethics Commission"
 msgstr ""
 "Mit freundlichen Grüßen,\n"
-"    Das Team der Ethik-Kommission"
+"\n"
+"Das Team der Ethik-Kommission"
 
 #: templates/administration/detail.html:10
 #: templates/users/invitation/invite_user.html:4
@@ -2608,19 +2614,19 @@ msgstr "Es gibt nocht keinen Textbaustein!"
 #, python-format
 msgid ""
 "\n"
-"        Your external review for the study %(ec_number)s can not be accepted "
-"in the\n"
-"        present shape.\n"
-"        Please check your inbox for more precise information. You can "
-"resubmit\n"
-"        your external review as appropriate.\n"
+"        There are further inquiries about your review of study "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"\n"
+"        Please check your inbox for more precise information.\n"
 "    "
 msgstr ""
 "\n"
-"        Ihr Gutachten fur die Studie (%(ec_number)s) kann in der "
-"vorliegenden Form nicht angenommen werden.\n"
-"        Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie "
-"können das Guthaben ggf. neu einsenden.\n"
+"        Bezüglich des von Ihnen erstellten Gutachtens zur Studie "
+"\"%(project_title)s\" (%(ec_number)s) haben sich Rückfragen seitens der "
+"Ethikkommission ergeben.\n"
+"\n"
+"        Kontrollieren Sie bitte ihren Nachrichteneingang für nähere "
+"Angaben.\n"
 "    "
 
 #: templates/checklists/external_review_publish.txt:5
@@ -2633,7 +2639,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Es liegt ein neues Gutachten für die Studie %(ec_number)s vor.\n"
+"        Zur Studie %(ec_number)s ist ein Gutachten eingelangt.\n"
 "        Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei "
 "herunterzuladen:\n"
 "    "
@@ -2642,18 +2648,22 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        You have been invited to make an external review for the study "
+"        The Ethics Commission requests, that you review study "
 "%(ec_number)s.\n"
 "        Click the following link to make the review: %(ABSOLUTE_URL_PREFIX)s"
 "%(task_url)s\n"
+"        If you can't make the review, we bid for near-term refusal and "
+"suggesion of another reviewer.\n"
 "    "
 msgstr ""
 "\n"
-"        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s zu "
-"erstellen.\n"
-"        Klicken Sie auf den folgenden Link um ein Gutachten abzugeben: "
-"%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
-"     "
+"        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten zur Studie "
+"%(ec_number)s.\n"
+"        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu erstellen: %(ABSOLUTE_URL_PREFIX)s"
+"%(task_url)s\n"
+"        Sollte es Ihnen nicht möglich sein, die Begutachtung durchzuführen, bitten wir Sie "
+"um möglichst kurzfristige Absage bzw. um Vorschläge anderer geeigneter Gutachter.\n"
+"    "
 
 #: templates/communication/list.html:12 templates/pdfviewer/viewer.html:46
 msgid "Date"
@@ -3035,40 +3045,16 @@ msgstr ""
 #: templates/meetings/messages/boardmember_invitation.html:6
 #: templates/meetings/messages/protocol.html:6
 #: templates/meetings/messages/resident_boardmember_invitation.html:6
-#, fuzzy, python-format
+#, python-format
 msgid "Dear(f) %(recipient)s"
-msgstr "Sehr geehrte %(receiver)s!"
+msgstr "Sehr geehrte %(recipient)s!"
 
 #: templates/meetings/messages/boardmember_invitation.html:6
 #: templates/meetings/messages/protocol.html:6
 #: templates/meetings/messages/resident_boardmember_invitation.html:6
-#, fuzzy, python-format
-msgid "Dear(m) %(recipient)s"
-msgstr "Sehr geehrter %(receiver)s!"
-
-#: templates/meetings/messages/boardmember_invitation.html:10
 #, python-format
-msgid ""
-"\n"
-"Sie sind eingeladen für die Sitzung der Ethik-Kommission\n"
-"am %(meeting_start)s Uhr, sine tempore\n"
-"im Büro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien.\n"
-"Ihre Answesenheit ist zeitplanmäßig von %(time)s Uhr erforderlich.\n"
-"Bitte kommen Sie unbedingt eine halbe Stunde vor Ihrer geplanten Teilnahme.\n"
-"Berücksichtigen Sie bitte, dass ihre Teilnahme auch über das Ende des\n"
-"angegebenen Zeitfensters erforderlich sein kein.\n"
-msgstr ""
-
-#: templates/meetings/messages/boardmember_invitation.html:22
-#: templates/meetings/messages/protocol.html:14
-#: templates/meetings/messages/resident_boardmember_invitation.html:19
-#: templates/users/password_reset/reset_email.html:9
-#: templates/users/registration/activation_email.html:7
-msgid ""
-"\n"
-"Mit freundlichen Grüßen,<br />\n"
-"    Ethik-Kommission der MedUni Wien\n"
-msgstr ""
+msgid "Dear(m) %(recipient)s"
+msgstr "Sehr geehrter %(recipient)s!"
 
 #: templates/meetings/messages/primary_investigator_invitation.txt:5
 #, python-format
@@ -3078,6 +3064,15 @@ msgid ""
 "(%(project_title)s), zur Sitzung am %(date)s ist von %(start)s bis %(end)s "
 "Uhr erforderlich.\n"
 "    "
+msgstr ""
+
+#: templates/meetings/messages/protocol.html:14
+#: templates/meetings/messages/resident_boardmember_invitation.html:19
+#: templates/users/password_reset/reset_email.html:9
+msgid ""
+"\n"
+"Mit freundlichen Grüßen,<br />\n"
+"    Ethik-Kommission der MedUni Wien\n"
 msgstr ""
 
 #: templates/meetings/messages/resident_boardmember_invitation.html:10
@@ -3411,9 +3406,8 @@ msgid "PKI"
 msgstr ""
 
 #: templates/pki/cert_list.html:10
-#, fuzzy
 msgid "Create new certificate"
-msgstr "Eine neue Meldung erstellen"
+msgstr "Neues Zertifikat erstellen"
 
 #: templates/pki/cert_list.html:27
 #: templates/submissions/tabs/involved_parties.html:61
@@ -3421,9 +3415,8 @@ msgid "Revoke"
 msgstr "Widerrufen"
 
 #: templates/pki/create_cert.html:18
-#, fuzzy
 msgid "Create Certificate"
-msgstr "Meldung Erstellen"
+msgstr "Zertifikat Erstellen"
 
 #: templates/scratchpad/popup.html:5 templates/scratchpad/popup_list.html:11
 #, python-format
@@ -3456,9 +3449,8 @@ msgid "No scratchpad"
 msgstr "Kein Notizblock"
 
 #: templates/signature/batch_base.html:4 templates/signature/batch_base.html:5
-#, fuzzy
 msgid "Batch Signature"
-msgstr "Unterzeichnungsfehler"
+msgstr "Stapelsignatur"
 
 #: templates/signature/batch_base.html:12
 msgid "Skip"
@@ -3480,14 +3472,22 @@ msgstr "Nochmal versuchen"
 #, python-format
 msgid ""
 "\n"
-"        Your submission \"%(project_title)s\" (%(ec_number)s) has been "
-"accepted for further processing.\n"
+"        The Ethics Commission acknowledges the arrival of your submission "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"        You can find information about the processing stage of your study in "
+"your ECS account.\n"
 "    "
 msgstr ""
 "\n"
-"        Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) wurde zur "
-"weiteren Bearbeitung akzeptiert.\n"
+"        Die Ethik-Kommission bestätigt den Eingang Ihres Antrags "
+"\"%(project_title)s\" (%(ec_number)s).\n"
+"        Informationen über den Stand der Bearbeitung der Studie finden Sie "
+"in Ihrem ECS Account unter dem Reiter Generell/Status.\n"
 "    "
+
+#: templates/submissions/acknowledge_message.txt:9
+msgid "See"
+msgstr "Siehe"
 
 #: templates/submissions/base_form.html:12
 msgid "Submission"
@@ -3541,11 +3541,17 @@ msgstr "Es gibt noch keine Checkliste."
 #, python-format
 msgid ""
 "\n"
-"        The study \"%(project_title)s\" (%(ec_number)s) has been created.\n"
+"        The study \"%(project_title)s\" (%(ec_number)s) has been submitted "
+"to the Ethics Commission of the Medical University of Vienna.\n"
+"        You receive this message, because you are listed as an involved "
+"party of the study.\n"
 "    "
 msgstr ""
 "\n"
-"        Die Studie \"%(project_title)s\" (%(ec_number)s) wurde erstellt.\n"
+"        Die Studie \"%(project_title)s\" (%(ec_number)s) wurde bei der Ethik-"
+"Kommission der MedUni Wien eingereicht.\n"
+"        Sie erhalten diese Mitteilung, weil Sie in der Studie als beteiligte "
+"Person aufscheinen.\n"
 "    "
 
 #: templates/submissions/decline_message.txt:5
@@ -4083,8 +4089,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        %(name)s ist nun verhindert. Sie wurden als Nachrichtenvertretung "
-"ausgewählt.\n"
+"        %(name)s ist derzeit verhindert. Sie wurden als "
+"Nachrichtenvertretung ausgewählt.\n"
 "    "
 
 #: templates/users/indisposition.html:4 templates/users/indisposition.html:5
@@ -4504,45 +4510,5 @@ msgstr ""
 msgid "B3"
 msgstr ""
 
-#~ msgid ""
-#~ "\n"
-#~ "The study \"%(project_title)s\" (%(ec_number)s) has been changed.\n"
-#~ "\n"
-#~ "Sincerly yours,\n"
-#~ "    The Team of the Ethics Commission\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Die Studie \"%(project_title)s\" (%(ec_number)s) wurde geändert.\n"
-#~ "\n"
-#~ "Mit freundlichen Grüßen,\n"
-#~ "    Das Team der Ethik-Kommission\n"
-
-#~ msgid "external reviewer suggestions"
-#~ msgstr "Vorschläge für Gutachter (Nicht aus dem AKH Wien)"
-
-#~ msgid ""
-#~ "for graduate work or retrospective or non-interventional studies specify "
-#~ "\"not applicable\""
-#~ msgstr ""
-#~ "Bei Diplomarbeiten, retrospektiven oder nicht-interventionellen Studien "
-#~ "\"nicht zutreffend\" angeben."
-
-#~ msgid ""
-#~ "\n"
-#~ "        You have been invited to make an external review for the study "
-#~ "%(ec_number)s.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Sie wurden eingeladen ein Gutachten für die Studie %(ec_number)s "
-#~ "zu erstellen.\n"
-#~ "    "
-
-#~ msgid "Stop"
-#~ msgstr "Beenden"
-
-#~ msgid "At least one employee is required."
-#~ msgstr "Zumindest ein Mitarbeiter ist verpflichtend anzugeben."
-
-#~ msgid "Back to answered notifications"
-#~ msgstr "Zurück zu den beantworteten Meldungen"
+#~ msgid "External Review Invitation"
+#~ msgstr "Einladung Gutachten"

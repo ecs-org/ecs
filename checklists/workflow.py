@@ -46,7 +46,7 @@ class ExternalReview(Activity):
         token = super(ExternalReview, self).receive_token(*args, **kwargs)
         token.task.accept(c.user)
         if c.status == 'new':
-            send_system_message_template(c.user, _('External Review Invitation'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
+            send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
         return token
 
 def unlock_external_review(sender, **kwargs):
@@ -86,4 +86,4 @@ class ExternalReviewReview(Activity):
                 {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX},
                 submission=c.submission)
         elif c.status == 'review_fail':
-            send_system_message_template(c.user, _('External Review Declined'), 'checklists/external_review_declined.txt', None, submission=c.submission)
+            send_system_message_template(c.user, _('Query regarding review'), 'checklists/external_review_declined.txt', None, submission=c.submission)

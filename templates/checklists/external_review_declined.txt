@@ -2,10 +2,9 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number %}
-        Your external review for the study {{ ec_number }} can not be accepted in the
-        present shape.
-        Please check your inbox for more precise information. You can resubmit
-        your external review as appropriate.
+    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
+        There are further inquiries about your review of study "{{ project_title }}" ({{ ec_number }}).
+
+        Please check your inbox for more precise information.
     {% endblocktrans %}
 {% endblock %}
