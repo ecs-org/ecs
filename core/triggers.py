@@ -21,7 +21,7 @@ def on_study_change(sender, **kwargs):
     if not old_sf: # first version of the submission
         involved_users = new_sf.get_involved_parties().get_users().difference([submission.presenter])
         for u in involved_users:
-            send_submission_message(submission, u, _('Creation of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
+            send_submission_message(submission, u, _('Submission of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt')
     else:
         with sudo():
             if not submission.votes.exists():

@@ -3,7 +3,8 @@
 
 {% block content %}
     {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url %}
-        You have been invited to make an external review for the study {{ ec_number }}.
+        The Ethics Commission requests, that you review study {{ ec_number }}.
         Click the following link to make the review: {{ ABSOLUTE_URL_PREFIX }}{{ task_url }}
+        If you can't make the review, we bid for near-term refusal and suggesion of another reviewer.
     {% endblocktrans %}
 {% endblock %}
