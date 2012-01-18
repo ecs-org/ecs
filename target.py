@@ -169,19 +169,20 @@ class SetupTarget(SetupTargetObject):
         else:
             #local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
             #local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
-            
+            """
             context = deepcopy(self.config)
             context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'root')
             context['backup.include'] = self.get_config_template('duplicity.root.include')
             self.write_config_template('duplicity.template', 
-                '/etc/backup.d/90.dup', context, use_sudo=True, filemode= '0600')
+                '/etc/backup.d/90.dup', context=context, use_sudo=True, filemode= '0600')
 
             context = deepcopy(self.config)
             context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'opt')
             context['backup.include'] = self.get_config_template('duplicity.opt.include')
             self.write_config_template('duplicity.template', 
-                '/etc/backup.d/91.dup', context, use_sudo=True, filemode= '0600')
-
+                '/etc/backup.d/91.dup', context=context, use_sudo=True, filemode= '0600')
+            """
+            
             self.write_config_template('10.sys', 
                 '/etc/backup.d/10.sys', use_sudo=True, filemode= '0600')
         
