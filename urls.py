@@ -6,7 +6,6 @@ from django.views.generic.simple import direct_to_template
 from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render
-from ecs.pki import views as pki_views
 
 # stuff that needs called at the beginning, but not in settings.py
 admin.autodiscover()
@@ -54,8 +53,7 @@ urlpatterns = patterns('',
     url(r'^notification/', include('ecs.notifications.urls')),
     url(r'^bugshot/', include('ecs.bugshot.urls')),
     url(r'^signature/', include('ecs.signature.urls')),
-    url(r'^pki/', include('ecs.pki.urls')),
-    url(r'^secure/login/$', pki_views.authenticate),
+    url(r'^', include('ecs.pki.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
