@@ -9,6 +9,7 @@ import string
 import random
 import distutils.dir_util
 import time
+import copy
 
 from uuid import uuid4
 from fabric.api import local, env, warn, settings
@@ -19,7 +20,6 @@ from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
-from copy import deepcopy
 
 
 class SetupTarget(SetupTargetObject):
@@ -78,13 +78,8 @@ class SetupTarget(SetupTargetObject):
         write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context, filemode=filemode, use_sudo=use_sudo)
         
     def help(self, *args, **kwargs):
-        print('''{0} targets
-  * system_setup
-  # howto update:
-        # on host: fab target:ecs,service,True
-        # from executing host: make source update, clean_pyc, write version.py
-        # on host bootstrap, fab appreq, fab appenv, fab appsys:ecs,update=True
-        # on host: fab target:ecs,service,False 
+        print('''fab target:{0},action[,config=path-to-config.yml]
+  * actions: system_setup, update, and others
         
         '''.format(self.appname))
     
@@ -167,21 +162,19 @@ class SetupTarget(SetupTargetObject):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
         else:
-            #local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
-            #local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
-            """
-            context = deepcopy(self.config)
-            context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'root')
-            context['backup.include'] = self.get_config_template('duplicity.root.include')
-            self.write_config_template('duplicity.template', 
-                '/etc/backup.d/90.dup', context=context, use_sudo=True, filemode= '0600')
+            local('sudo gpg --homedir /root/.gnupg --rebuild-keydb-caches')
+            local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
+            local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
 
-            context = deepcopy(self.config)
-            context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'opt')
-            context['backup.include'] = self.get_config_template('duplicity.opt.include')
+            self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
+            self.config['duplicity.include'] = self.get_config_template('duplicity.root.include')
             self.write_config_template('duplicity.template', 
-                '/etc/backup.d/91.dup', context=context, use_sudo=True, filemode= '0600')
-            """
+                '/etc/backup.d/90.dup', context=self.config, use_sudo=True, filemode= '0600')
+
+            self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'opt')
+            self.config['duplicity.include'] = self.get_config_template('duplicity.opt.include')
+            self.write_config_template('duplicity.template', 
+                '/etc/backup.d/91.dup', context=self.config, use_sudo=True, filemode= '0600')
             
             self.write_config_template('10.sys', 
                 '/etc/backup.d/10.sys', use_sudo=True, filemode= '0600')

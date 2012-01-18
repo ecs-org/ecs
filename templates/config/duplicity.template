@@ -72,7 +72,7 @@ keep = 60
 # bandwithlimit. For details, see duplicity manpage, section "URL FORMAT".
 #desturl = file:///usr/local/backup
 #desturl = rsync://user@other.host//var/backup/bla
-desturl = ftp://%(backup.username)s:%(backup.password)s@%(backup.host)s%(backup.hostdir)s
+desturl = ftp://%(backup.username)s:%(backup.password)s@%(backup.host)s%(duplicity.root)s
 
 # bandwith limit, in kbit/s ; default is 0, i.e. no limit
 #bandwidthlimit = 128
@@ -146,4 +146,4 @@ destuser =
 #exclude = /home/*/.aMule
 #exclude = /home/*/gtk-gnutella-downloads
 
-%(backup.include)s
+%(duplicity.include)s
