@@ -1,15 +1,16 @@
-{% load core i18n %}
+{% load core i18n meetingutils %}
 <html>
 <body>
 {% block content %}
     <p>
 {% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}
-    </p>
-
-    <p>
+<br />
+<br />
 Sie sind zur Teilnahme an der  Sitzung der Ethik-Kommission der MedUni Wien am {{ meeting.start|date:'d.m.Y, H:i' }} Uhr s.t. eingeladen.<br />
+<br />
 Ort der Sitzung: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
-Das voraussichtliche Ende ist {{ meeting.end|date:'d.m.Y, H:i' }} Uhr.<br />
+<br />
+Das voraussichtliche Ende ist {{ meeting.end|datetimeround:30|date:'d.m.Y, H:i' }} Uhr.<br />
 <br />
 <br />
 Mit freundlichen Grüßen,<br />

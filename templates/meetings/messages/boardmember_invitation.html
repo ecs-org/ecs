@@ -1,23 +1,27 @@
-{% load core i18n %}
+{% load core i18n meetingutils %}
 <html>
 <body>
 {% block content %}
     <p>
 {% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}
-    </p>
-
-    <p>
+<br />
+<br />
 Ihre Anwesenheit für die Sitzung der Ethikkommission am {{ meeting.start|date:'d.m.Y, H:i' }} Uhr s.t. ist erforderlich.<br />
+<br />
 Ihr geschätztes Zeitfenster ist von {{ time }} Uhr.<br />
+<br />
 Kommen Sie bitte mindestens eine halbe Stunde früher und rechnen Sie damit, dass das Zeitfenster überschritten werden kann.<br />
-Das voraussichtliche Ende ist {{ meeting.end|date:'d.m.Y, H:i' }} Uhr.<br />
+<br />
+Das voraussichtliche Ende ist {{ meeting.end|datetimeround:30|date:'d.m.Y, H:i' }} Uhr.<br />
+<br />
 Ort der Sitzung: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
+<br />
 Bitte bestätigen Sie unbedingt Ihre Teilnahme (auch wenn Sie sich zu einem früheren Zeitpunkt bereits gemeldet haben).<br />
 <br />
 <br />
 Mit freundlichen Grüßen,<br />
 <br />
-Ethik-Kommission der MedUni Wien
+das Team der Ethik-Kommission
     </p>
 {% endblock %}
 </body>
