@@ -72,10 +72,10 @@ class SetupTarget(SetupTargetObject):
             data = f.read()
         return data
     
-    def write_config_template(self, template, dst, context=None, filemode=None):
+    def write_config_template(self, template, dst, context=None, filemode=None, use_sudo=False):
         if context is None:
             context = self.config
-        write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context)
+        write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context, use_sudo=use_sudo)
         
     def help(self, *args, **kwargs):
         print('''{0} targets
