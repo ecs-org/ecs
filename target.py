@@ -167,8 +167,8 @@ class SetupTarget(SetupTargetObject):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
         else:
-            local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_sec']))
-            local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_pub']))
+            local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
+            local('sudo gpg --homedir /root/.gpg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
             
             context = deepcopy(self.config)
             context['backup.hostdir'] = os.path.join(context['backup.hostdir'], 'root')
