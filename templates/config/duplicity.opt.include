@@ -1,0 +1,2 @@
+# include the opt dir as whole 
+include = /opt
