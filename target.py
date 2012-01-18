@@ -167,8 +167,6 @@ class SetupTarget(SetupTargetObject):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
         else:
-            # TODO: workaround until readyvm is rebuild
-            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y  backupninja debconf-utils hwinfo duplicity"')
             local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_sec']))
             local('sudo gpg --homedir /root/.gpg/ --batch --yes --import {0}'.format(self.config['backup.encrypt_gpg_pub']))
             
@@ -376,7 +374,6 @@ $myhostname   smtp:[localhost:8823]
         
     def queuing_config(self):
         with settings(warn_only=True):
-            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y psmisc"')
             local('sudo killall beam')
             local('sudo killall epmd')
             time.sleep(1)
