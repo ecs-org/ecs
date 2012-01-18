@@ -75,9 +75,11 @@
             <ul class="tab_headers">
                 {% if user|has_flag:'is_internal' %}
                     <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
+                    {% if categorization_review_form %}
                     <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
                         <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
                     </li>
+                    {% endif %}
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
                     <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>
@@ -212,7 +214,7 @@
     {% endif %}
 
     {% if categorization_review_form %}
-    {% if user|has_flag:'is_internal' or user|is_member_of:'EC-Thesis Executive Group' %}
+    {% if user|has_flag:'is_internal' %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
                 {% if categorization_task and categorization_review_form.readonly %}
