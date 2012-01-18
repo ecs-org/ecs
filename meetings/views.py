@@ -582,6 +582,7 @@ def send_agenda_to_board(request, meeting_pk=None):
     timetable_pdf = meeting.get_timetable_pdf(request)
     timetable_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot')))
     attachments = ((agenda_filename, agenda_pdf, 'application/pdf'), (timetable_filename, timetable_pdf, 'application/pdf'))
+    subject = _(u'EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
@@ -591,20 +592,18 @@ def send_agenda_to_board(request, meeting_pk=None):
         start, end = timeframe
         time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
-        subject = _(u'EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
         deliver(user.email, subject=subject, message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
         htmlmail = unicode(render_html(request, 'meetings/messages/resident_boardmember_invitation.html', {'meeting': meeting, 'recipient': user}))
-        subject = _(u'EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
         deliver(user.email, subject=subject, message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
         sf = top.submission.current_submission_form
         for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
-            send_system_message_template(u, _(u'Invitation to meeting'), 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+            send_system_message_template(u, subject, 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
 
     meeting.agenda_sent_at = datetime.now()
     meeting.save()

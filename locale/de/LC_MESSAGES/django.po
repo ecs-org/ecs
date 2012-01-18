@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-18 12:28+0100\n"
+"POT-Creation-Date: 2012-01-18 13:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2111,20 +2111,16 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:583 meetings/views.py:655
+#: meetings/views.py:583 meetings/views.py:654
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:594 meetings/views.py:600
+#: meetings/views.py:585
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:607
-msgid "Invitation to meeting"
-msgstr "Einladung zur Sitzung"
-
-#: meetings/views.py:625
+#: meetings/views.py:624
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2635,11 +2631,18 @@ msgid ""
 "\n"
 "        There is an new external review for the study %(ec_number)s "
 "available.\n"
+"\n"
+"        You can see it in the tab \"Reviews\".\n"
+"\n"
 "        Please click the following link to download the review as PDF file:\n"
 "    "
 msgstr ""
 "\n"
 "        Zur Studie %(ec_number)s ist ein Gutachten eingelangt.\n"
+"\n"
+"        Dieses steht Ihnen im ECS unter dem Reiter \"Beurteilungen\" zur "
+"Verfügung.\n"
+"\n"
 "        Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei "
 "herunterzuladen:\n"
 "    "
@@ -2650,8 +2653,10 @@ msgid ""
 "\n"
 "        The Ethics Commission requests, that you review study "
 "%(ec_number)s.\n"
+"\n"
 "        Click the following link to make the review: %(ABSOLUTE_URL_PREFIX)s"
 "%(task_url)s\n"
+"\n"
 "        If you can't make the review, we bid for near-term refusal and "
 "suggesion of another reviewer.\n"
 "    "
@@ -2659,8 +2664,10 @@ msgstr ""
 "\n"
 "        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten zur "
 "Studie %(ec_number)s.\n"
+"\n"
 "        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu erstellen: "
 "%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
+"\n"
 "        Sollte es Ihnen nicht möglich sein, die Begutachtung durchzuführen, "
 "bitten wir Sie um möglichst kurzfristige Absage bzw. um Vorschläge anderer "
 "geeigneter Gutachter.\n"
@@ -3063,6 +3070,7 @@ msgid ""
 "\n"
 "        Your study \"%(project_title)s\" (%(ec_number)s), will be discussed "
 "at the meeting on %(date)s at %(start)s o'clock.\n"
+"\n"
 "        The presence of the primary investigator (or its legal "
 "representative) necessary; the Sponsor is entitled to attend the meeting "
 "too.\n"
@@ -3071,17 +3079,11 @@ msgstr ""
 "\n"
 "        Ihre Studie \"%(project_title)s\" (%(ec_number)s) wird in der "
 "Sitzung vom %(date)s um %(start)s Uhr behandelt.\n"
+"\n"
 "        Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt "
 "erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des "
 "Projektes teilzunehmen.\n"
 "    "
-
-#: templates/meetings/messages/protocol.html:14
-msgid ""
-"\n"
-"Mit freundlichen Grüßen,<br />\n"
-"    Ethik-Kommission der MedUni Wien\n"
-msgstr ""
 
 #: templates/meetings/tabs/experts.html:36
 msgid "no board member required"
@@ -3837,7 +3839,7 @@ msgstr ""
 "    "
 
 #: templates/submissions/vote_publish.txt:5
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "\n"
 "        The Vote for the study %(ec_number)s \"%(project_title)s\" has been "
@@ -3847,8 +3849,6 @@ msgstr ""
 "\n"
 "        Das Votum für die Studie  %(ec_number)s \"%(project_title)s\" ist "
 "Ihnen nun zugänglich.\n"
-"\n"
-"        Der Beschluss der Abstimmung lautet: %(vote_result)s\n"
 "    "
 
 #: templates/submissions/tabs/involved_parties.html:5

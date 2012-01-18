@@ -4,17 +4,14 @@
 {% block content %}
     <p>
 {% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}
-    </p>
-
-    <p>
-        Anbei senden wir Ihnen das Protokoll der Sitzung vom {{ meeting.start|date:'d.m.Y' }}.
-    </p>
-
-    <p>
-{% blocktrans%}
+<br />
+<br />
+Anbei senden wir Ihnen das Protokoll der Sitzung vom {{ meeting.start|date:'d.m.Y' }}.<br />
+<br />
+<br />
 Mit freundlichen Grüßen,<br />
-    Ethik-Kommission der MedUni Wien
-{% endblocktrans %}
+<br />
+das Team der Ethik-Kommission
     </p>
 {% endblock %}
 </body>
