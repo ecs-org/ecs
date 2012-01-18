@@ -50,7 +50,8 @@ INSURANCE_FIELDS = (
 )
 
 INVOICE_REQUIRED_FIELDS = (
-    'invoice_name', 'invoice_address', 'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email'
+    'invoice_name', 'invoice_contact_gender', 'invoice_contact_first_name', 'invoice_contact_last_name', 'invoice_address',
+    'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email',
 )
 
 class SubmissionFormForm(NewReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):

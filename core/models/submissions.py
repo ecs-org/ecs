@@ -297,7 +297,7 @@ class SubmissionForm(models.Model):
     # 1.5
     sponsor = models.ForeignKey(User, null=True, related_name="sponsored_submission_forms")
     sponsor_name = models.CharField(max_length=100, null=True)
-    sponsor_contact = NameField()
+    sponsor_contact = NameField(required=('gender', 'first_name', 'last_name',))
     sponsor_address = models.CharField(max_length=60, null=True)
     sponsor_zip_code = models.CharField(max_length=10, null=True)
     sponsor_city = models.CharField(max_length=80, null=True)
@@ -489,7 +489,7 @@ class SubmissionForm(models.Model):
     
     # 9.x
     submitter = models.ForeignKey(User, null=True, related_name='submitted_submission_forms')
-    submitter_contact = NameField()
+    submitter_contact = NameField(required=('gender', 'first_name', 'last_name',))
     submitter_email = models.EmailField(blank=False, null=True)
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
@@ -733,7 +733,7 @@ class Investigator(models.Model):
     main = models.BooleanField(default=True, blank=True)
 
     user = models.ForeignKey(User, null=True, related_name='investigations')
-    contact = NameField(required=('first_name', 'last_name',))
+    contact = NameField(required=('gender', 'first_name', 'last_name',))
     organisation = models.CharField(max_length=80)
     phone = models.CharField(max_length=30, blank=True)
     mobile = models.CharField(max_length=30, blank=True)

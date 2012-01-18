@@ -1,5 +1,5 @@
 {% extends 'db/wkhtml2pdf/skeleton.html' %}
-{% load core i18n %}
+{% load core i18n meetingutils %}
 
 {% block title %}Meeting Agenda{% endblock %}
 
@@ -31,7 +31,7 @@
             <span class="bold">Projekttitel:</span>
                 {{ entry.submission.project_title_display }}<br />
             {% if entry.submission.invite_primary_investigator_to_meeting %}
-                Antragsteller um {{ entry.start|date:'H:i' }} Uhr zur Sitzung eingeladen.<br />
+                Antragsteller um {{ entry.start|datetimeround:-10|date:'H:i' }} Uhr zur Sitzung eingeladen.<br />
             {% endif %}
         {% else %}
             <span class="bold">{{ entry.title|default:'<i>No title.</i>' }}</span><br />
