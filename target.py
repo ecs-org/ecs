@@ -343,7 +343,7 @@ $myhostname   smtp:[localhost:8823]
         
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
-        local('dropdb %(postgresql.database)s | true' % self.config)
+        local('dropdb %(postgresql.database)s | true' % self.config, capture=True)
         local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s' % self.config)
          
     def db_update(self):
