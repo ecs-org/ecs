@@ -39,7 +39,7 @@ sign = yes
 
 # ID of the GnuPG public key used for data encryption.
 # if not set, symmetric encryption is used, and data signing is not possible.
-encryptkey = %(backup.encrypt_owner)s
+encryptkey = %(backup.encrypt_keyid)s
 
 # ID of the GnuPG private key used for data signing.
 # if not set, encryptkey will be used.
