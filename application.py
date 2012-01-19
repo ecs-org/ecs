@@ -357,7 +357,9 @@ memcached:req:apt:apt-get:memcached
 # backup stuff
 debconf-utils:req:apt:apt-get:debconf-utils
 hwinfo:req:apt:apt-get:hwinfo
+ncftp:req:apt:apt-get:ncftp
 duplicity:req:apt:apt-get:duplicity
+duply:req:apt:apt-get:duply
 backupninja:req:apt:apt-get:backupninja 
 """
 
