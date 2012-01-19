@@ -323,9 +323,8 @@ $myhostname   smtp:[localhost:8823]
         local('sudo /etc/init.d/apache2 restart')
         
     def wsgi_reload(self):
-        pass
-        # FIXME: implement wsgi_reload, touch ecs-wsgi
-    
+        local('sudo touch /etc/apache2/ecs/apache.wsgi/ecs-wsgi.py')
+        
     def daemons_install(self):
         control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
