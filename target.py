@@ -15,7 +15,7 @@ from uuid import uuid4
 from fabric.api import local, env, warn, settings
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
-from deployment.utils import control_upstart, apache_setup, strbool, strint, write_template
+from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template
 from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
@@ -86,11 +86,11 @@ class SetupTarget(SetupTargetObject):
     def maintenance(self, enable=True):
         enable= strbool(enable)
         if enable:
-            # TODO: write scheduled service note into file where ecs-wsgi.py reads it
+            touch(os.path.join(self.configdir, 'service.now'))
             self.wsgi_reload()
             self.daemons_stop()
         else:
-            # TODO: delete service mode file
+            os.remove(os.path.join(self.configdir, 'service.now'))
             self.daemons_start()
             self.wsgi_reload()
    

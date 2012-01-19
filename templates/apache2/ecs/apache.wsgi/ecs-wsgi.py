@@ -4,6 +4,7 @@
 import os
 import sys
 import site
+import cStringIO
 
 # writing to stdout as wsgi is considered an error, and borks wsgi setup
 sys.stdout = sys.stderr
@@ -16,10 +17,11 @@ srcbasedir = '%(source)s'
 appdir = os.path.join(srcbasedir, '%(appname)s')
 basedir = os.path.join(srcbasedir, '..')
 
-# FIXME: is hardcoded path names, and should be replaced
+# TODO: partly hardcoded path names, and should be replaced
 envdir = os.path.join(basedir, "environment")
 sitedir = os.path.join(envdir, "/lib/python2.6/site-packages")
 bindir = os.path.join(envdir, "bin")
+service_indicator  = os.path.join(basedir, 'ecs-conf', 'service.now')
 
 # Add each new site-packages directory.. 
 site.addsitedir(sitedir)
@@ -48,11 +50,7 @@ os.environ['PATH']= os.pathsep.join(pathlist)
 # tell celery to load its settings from djcelery (which uses django settings.py)
 os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
 
-
-# start wsgi main
-# FIXME: implement switch for application, to set to maintenance if file mainenance or similar exists
-# logic behind this: write file maintenance, touch ecs-wsgi.py , do service, delete file maintenance, touch ecs-wsgi.py
-import cStringIO
+# maintenance loop (so we can be sure no django is accessing database or therelike)
 def maintenance(environ, start_response):
     headers = []
     headers.append(('Content-Type', 'text/html'))
@@ -64,6 +62,12 @@ def maintenance(environ, start_response):
     output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     return [output.getvalue()]
 
+# late import of django, because we needed to mangle python paths first, to include environment
 import django.core.handlers.wsgi
-application = django.core.handlers.wsgi.WSGIHandler()
+
+# start wsgi main or maintenance, depending existence of service_indicator
+if os.path.exists(service_indicator):
+    application = maintenance
+else:
+    application = django.core.handlers.wsgi.WSGIHandler()
 
