@@ -4,15 +4,20 @@
     <head></head>
     <body>
         <p>
-        {% if invitation_text %}
-            <pre>{{ invitation_text }}</pre>
-        {% else %}
-            Sie wurden als beteiligte Person in einem Antrag an die Ethikkommission der MedUni Wien angegeben.<br />
-            Aus diesem Grund wurde für Sie ein Zugang zum elektronischen Einreich- und Verwaltungssystem (ECS) angelegt.<br />
-        {% endif %}
-        </p>
-        <p>
-            Um den Zugang zu aktivieren und Ihr Passworts zu setzen klicken Sie <a href="{{ link }}">hier</a>.
+{% if invitation_text %}
+    <pre>{{ invitation_text }}</pre>
+{% else %}
+    Sie wurden als beteiligte Person in einem Antrag an die Ethikkommission der MedUni Wien angegeben.<br />
+    <br />
+    Aus diesem Grund wurde für Sie ein Zugang zum elektronischen Einreich- und Verwaltungssystem (ECS) angelegt.<br />
+{% endif %}
+<br />
+Um den Zugang zu aktivieren und Ihr Passworts zu setzen klicken Sie <a href="{{ link }}">hier</a>.
+<br />
+<br />
+Mit freundlichen Grüßen,<br />
+<br />
+das Team der Ethik-Kommission
         </p>
     </body>
 </html>

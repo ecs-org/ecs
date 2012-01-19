@@ -345,7 +345,7 @@ def invite(request):
 
             invitation = Invitation.objects.create(user=user)
 
-            subject = _(u'ECS account creation')
+            subject = 'Erstellung eines Zugangs zum ECS'
             link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
             htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
                 'invitation_text': form.cleaned_data['invitation_text'],
