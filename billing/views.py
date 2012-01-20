@@ -14,7 +14,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.decorators import developer
-from ecs.users.utils import user_flag_required, sudo
+from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
@@ -92,7 +92,7 @@ class SimpleXLS(object):
         self.xls.save(f)
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def submission_billing(request):
     with sudo():
         categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization_review', closed_at__isnull=False, deleted_at__isnull=True)
@@ -140,7 +140,7 @@ def submission_billing(request):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def view_invoice(request, invoice_pk=None):
     invoice = get_object_or_404(Invoice, pk=invoice_pk)
     return render(request, 'billing/submission_summary.html', {
@@ -148,7 +148,7 @@ def view_invoice(request, invoice_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def invoice_list(request):
     invoices = Invoice.objects.all().order_by('-created_at')
     paginator = Paginator(invoices, 25)
@@ -166,7 +166,7 @@ def reset_external_review_payment(request):
     return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def external_review_payment(request):
     checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status='new').filter(
         Q(billing_state__isnull=True)|Q(billing_state__isnull=False, billing_state__billed_at=None))
@@ -223,7 +223,7 @@ def external_review_payment(request):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def view_checklist_payment(request, payment_pk=None):
     payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
     return render(request, 'billing/external_review_summary.html', {
@@ -231,7 +231,7 @@ def view_checklist_payment(request, payment_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def checklist_payment_list(request):
     payments = ChecklistPayment.objects.all().order_by('-created_at')
     paginator = Paginator(payments, 25)

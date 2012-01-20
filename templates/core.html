@@ -71,11 +71,11 @@
           </ul>
         </li>
     {% endif %}
-    {% if user|has_flag:"is_internal" or user|has_flag:"is_executive_board_member" %}
+    {% if user|has_flag:"is_internal" %}
         <li>
           <span class="togglers">{% trans "Administration" %}</span>
           <ul class="elements">
-                {% if user|has_flag:"is_internal" %}
+                {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Group" %}
                     <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
                     <li><a href="{% url ecs.billing.views.submission_billing %}">{% trans "Accounting of fees" %}</a></li>
                     <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>

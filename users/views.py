@@ -27,9 +27,9 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
 from ecs.core.models.submissions import attach_to_submissions
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_flag_required, user_group_required
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
-from ecs.users.utils import get_user, create_user
+from ecs.users.utils import get_user, create_user, user_group_required
 from ecs.communication.utils import send_system_message_template
 
 
@@ -214,7 +214,7 @@ def notify_return(request):
 
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     form = IndispositionForm(request.POST or None, instance=user.get_profile())
@@ -233,7 +233,7 @@ def indisposition(request, user_pk=None):
 
 
 @require_POST
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -246,7 +246,7 @@ def toggle_active(request, user_pk=None):
 
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
@@ -265,7 +265,7 @@ def details(request, user_pk=None):
         'saved': saved,
     })
 
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
@@ -332,7 +332,7 @@ def administration(request, limit=20):
 
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def invite(request):
     form = InvitationForm(request.POST or None)
     comment = None
