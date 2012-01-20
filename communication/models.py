@@ -141,6 +141,13 @@ class Thread(models.Model):
         # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
         smtp_delivery_state = "received" if is_received else "new"
         
+        previous_message = self.last_message
+        if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
+            receiver = previous_message.reply_receiver
+            if origin == MESSAGE_ORIGIN_ALICE:
+                self.receiver = previous_message.reply_receiver
+            else:
+                self.sender = previous_message.reply_receiver
         msg = self.messages.create(
             sender=user, 
             receiver=receiver, 
@@ -153,12 +160,6 @@ class Thread(models.Model):
             rawmsg_digest_hex= rawmsg_digest_hex,
             reply_receiver=reply_receiver
         )
-        previous_message = self.last_message
-        if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
-            if origin == MESSAGE_ORIGIN_ALICE:
-                self.receiver = previous_message.reply_receiver
-            else:
-                self.sender = previous_message.reply_receiver
         self.last_message = msg
         self.closed_by_sender = False
         self.closed_by_receiver = False

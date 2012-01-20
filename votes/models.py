@@ -58,9 +58,12 @@ class Vote(models.Model):
         return super(Vote, self).save(**kwargs)
 
     def publish(self):
-        self.published_at = datetime.now()
-        self.valid_until = self.published_at.replace(year=self.published_at.year + 1)
+        now = datetime.now()
+        self.published_at = now
+        self.valid_until = self.published_at + timedelta(days=365)
         self.save()
+        if self.submission_form:
+            Vote.objects.filter(pk__in=self.submission_form.submission.forms.values('current_published_vote__pk')).exclude(pk=self.pk).update(valid_until=now)
         on_vote_publication.send(sender=Vote, vote=self)
     
     def extend(self):

@@ -11,6 +11,7 @@ from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participati
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 from ecs.votes.models import Vote
 from ecs.votes.constants import FINAL_VOTE_RESULTS
+from ecs.votes.signals import on_vote_creation
 from ecs.tasks.models import Task
 
 from ecs.utils.formutils import TranslatedModelForm
@@ -121,8 +122,7 @@ class ExpeditedVoteForm(forms.ModelForm):
             vote.top = self.instance
             vote.is_draft = False
             vote.save()
-            with sudo():
-                Task.objects.for_data(vote.submission_form.submission).open().mark_deleted()
+            on_vote_creation.send(Vote, vote=vote)
             return vote
         return None
 

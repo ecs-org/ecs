@@ -205,8 +205,6 @@ def edit_notification_answer(request, notification_pk=None):
     if form.is_valid():
         answer = form.save(commit=False)
         answer.notification = notification
-        if request.user.ecs_profile.is_executive_board_member:
-            answer.executive_reviewer = request.user
         answer.save()
 
     response = render(request, 'notifications/answers/form.html', {

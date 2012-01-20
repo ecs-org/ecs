@@ -17,6 +17,8 @@ from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
 from ecs.votes.models import Vote
 from ecs.meetings import signals as meeting_signals
 from ecs.utils import connect
+from ecs.votes.models import Vote
+from ecs.votes.signals import on_vote_creation
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -215,6 +217,7 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
                 vote.is_draft = False
             vote.save()
             if is_upgrade:
+                on_vote_creation.send(Vote, vote=vote)
                 on_b2_upgrade.send(Submission, submission=self.workflow.data, vote=vote)
 
 
