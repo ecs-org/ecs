@@ -155,11 +155,19 @@ a {
       padding: 0;
     }
     
-    #status_tab table table {
-      margin: -3px 0 3px;
-    }
-    #status_tab tr.version.rejected {
-      color: $red;
+    #status_tab {
+      
+      table table {
+        margin: -3px 0 3px;
+      }
+      
+      tr.version.rejected {
+        color: $red;
+      }
+      
+      tr.sub th {
+        min-width: 90px;
+      } 
     }
     
     ol {
