@@ -1,5 +1,5 @@
 {% extends 'db/wkhtml2pdf/skeleton.html' %}
-{% load core corepdf i18n userutils %}
+{% load core corepdf i18n userutils notifications %}
 
 {% block title %}Meldung{% endblock %}
 
@@ -34,9 +34,13 @@
     <p>{{ answer.text|linebreaksbr }}</p>
     
     {% block reviewer %}
-    {% if answer.executive_reviewer %}
-        <p>{{ answer.executive_reviewer|full_name }}</p>
-    {% endif %}
+        {% if answer.notification.type.name == 'Amendment' %}
+            {% with answer.notification|amendment_reviewer as reviewer %}
+            {% if reviewer %}
+                <p>{{ reviewer }}</p>
+            {% endif %}
+            {% endwith %}
+        {% endif %}
     {% endblock %}
     <p>{% now "d.m.Y" %}</p>
 {% endblock %}
