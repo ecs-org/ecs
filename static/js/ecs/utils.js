@@ -28,14 +28,26 @@ ecs.datepickerInputSelector = '.DateField > input, .DateTimeField > input[name$=
 
 ecs.setupFormFieldHelpers = function(context){
     context = $(context || document.body);
+
+    var datepickerTogglers = [];
     context.getElements(ecs.datepickerInputSelector).each(function(input){
-        (new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'})).injectAfter(input);
+        var toggler = new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'});
+        toggler.injectAfter(input);
+        datepickerTogglers.push(toggler);
     });
+
     var datepicker = new DatePicker(context.getElements(ecs.datepickerInputSelector), {
         format: 'd.m.Y',
         inputOutputFormat: 'd.m.Y',
         allowEmpty: true,
         toggleElements: context.getElements('.datepicker_toggler')
+    });
+    
+    datepickerTogglers.each(function(toggler){
+        toggler.getPrevious().addEvent('focus', function(e){
+            $(e.target).blur();
+            toggler.click();
+        });
     });
 
     ecs.setupAutocomplete(context);
