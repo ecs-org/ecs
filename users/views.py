@@ -143,15 +143,17 @@ def activate(request, token=None):
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
-        token = _password_reset_token_factory.generate_token(form.cleaned_data['email'])
-        reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
-        htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
-            'reset_url': reset_url,
-        }))
-        deliver(form.cleaned_data['email'], subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
-            from_email= settings.DEFAULT_FROM_EMAIL)
+        email = form.cleaned_data['email']
+        if email != 'root@system.local':
+            token = _password_reset_token_factory.generate_token(email)
+            reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
+            htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
+                'reset_url': reset_url,
+            }))
+            deliver(email, subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
+                from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/password_reset/request_complete.html', {
-            'email': form.cleaned_data['email'],
+            'email': email,
         })
     return render(request, 'users/password_reset/request_form.html', {
         'form': form,
