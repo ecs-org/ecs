@@ -10,6 +10,7 @@ from ecs.votes.models import Vote
 from ecs.tasks.models import Task
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
 from ecs.users.utils import sudo
+from ecs.votes.signals import on_vote_creation
 
 def ResultField(**kwargs):
     return Vote._meta.get_field('result').formfield(widget=forms.RadioSelect(), **kwargs)
@@ -36,12 +37,7 @@ class VoteForm(SaveVoteForm):
 
     def save(self, *args, **kwargs):
         instance = super(VoteForm, self).save(*args, **kwargs)
-
-        if instance.result in PERMANENT_VOTE_RESULTS:
-            # abort all tasks
-            with sudo():
-                Task.objects.for_data(instance.submission_form.submission).open().mark_deleted()
-
+        on_vote_creation.send(Vote, vote=instance)
         return instance
         
 class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
@@ -74,4 +70,3 @@ class B2VotePreparationForm(forms.ModelForm):
     class Meta:
         model = Vote
         fields = ('result', 'text')
-

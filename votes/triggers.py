@@ -1,9 +1,20 @@
 from django.utils.translation import ugettext as _
 from django.conf import settings
+
 from ecs.communication.utils import send_system_message_template
 from ecs.utils import connect
 from ecs.votes import signals
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS
+from ecs.users.utils import sudo
+from ecs.tasks.models import Task
 
+
+@connect(signals.on_vote_creation)
+def on_vote_creation(sender, **kwargs):
+    vote = kwargs['vote']
+    if vote.result in PERMANENT_VOTE_RESULTS:
+        with sudo():
+            Task.objects.for_data(vote.submission_form.submission).exclude(task_type__workflow_node__uid='b2_review').open().mark_deleted()
 
 @connect(signals.on_vote_publication)
 def on_vote_published(sender, **kwargs):
