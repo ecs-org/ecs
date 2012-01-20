@@ -48,12 +48,11 @@
   margin: 0 10px 10px 10px;
 }
 #content .innerwrap form {
+  float: left;
   padding: 20px 20px;
   background: #D8E6EF;
   border: 1px solid #b7d4e5;
   border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
 }
 #content .innerwrap p {
   display: block;
