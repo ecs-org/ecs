@@ -11,5 +11,4 @@
 - /var/cache/pbuilder/*
 + /var/cache/squid/
 - /var/cache/squid/*
-+ /dev
-+ /dev/.static/dev/**
+
