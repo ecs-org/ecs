@@ -192,15 +192,28 @@ class SetupTarget(SetupTargetObject):
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
 
+            with settings(warn_only=True):
+                local('sudo mkdir -m 0600 -p /root/.duply/root')
+                local('sudo mkdir -m 0600 -p /root/.duply/opt')
+                
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
-            self.config['duplicity.include'] = self.get_config_template('duplicity.root.include')
-            self.write_config_template('duplicity.template', 
-                '/etc/backup.d/90.dup', context=self.config, use_sudo=True, filemode= '0600')
+            self.config['duplicity.include'] = '/'
+            self.write_config_template('duply.template', 
+                '/root/.duply/root/conf', context=self.config, use_sudo=True, filemode= '0600')
+            self.write_config_template('duplicity.root.files', '/root/.duply/root/exclude', use_sudo=True)
 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'opt')
-            self.config['duplicity.include'] = self.get_config_template('duplicity.opt.include')
-            self.write_config_template('duplicity.template', 
-                '/etc/backup.d/91.dup', context=self.config, use_sudo=True, filemode= '0600')
+            self.config['duplicity.include'] = '/opt'
+            self.write_config_template('duply.template', 
+                '/root/.duply/opt/conf', context=self.config, use_sudo=True, filemode= '0600')
+            
+            self.config['duplicity.duply_conf'] = "root"
+            self.write_config_template('duply-backupninja.sh',
+                '/etc/backup.d/90duply.sh', use_sudo=True, filemode= '0600')
+            
+            self.config['duplicity.duply_conf'] = "opt"
+            self.write_config_template('duply-backupninja.sh',
+                '/etc/backup.d/91duply.sh', use_sudo=True, filemode= '0600')
             
             self.write_config_template('10.sys', 
                 '/etc/backup.d/10.sys', use_sudo=True, filemode= '0600')
