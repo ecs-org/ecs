@@ -50,7 +50,7 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
     })
 
 
-@readonly(methods=['GET'])
+#@readonly(methods=['GET'])
 def read_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     msg = thread.last_message 

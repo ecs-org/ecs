@@ -154,7 +154,7 @@ MIDDLEWARE_CLASSES = (
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'ecs.utils.security.SecurityReviewMiddleware',
+    #'ecs.utils.security.SecurityReviewMiddleware', # this middleware is not meant to be used in production
 )
 
 INSTALLED_APPS = (

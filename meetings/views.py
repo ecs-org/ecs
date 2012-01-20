@@ -572,7 +572,7 @@ def agenda_pdf(request, meeting_pk=None):
     return pdf_response(pdf, filename=filename)
 
 
-@readonly()
+#@readonly()
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

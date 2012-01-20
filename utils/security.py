@@ -12,7 +12,7 @@ def readonly(methods=('GET', 'POST')):
     return decorator
 
 
-IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models', 'django.contrib.sessions')
+IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models', 'django.contrib.sessions.models')
 IGNORABLE_MODELS = ('ecs.users.models.UserSettings', 'ecs.documents.models.DownloadHistory')
 
 def fqn(obj):
@@ -32,15 +32,16 @@ class SecurityReviewMiddleware(threading.local):
         if self._is_readonly():
             if sender.__module__ in IGNORABLE_MODULES or fqn(sender) in IGNORABLE_MODELS:
                 return
-            logger.warn("readonly view %s used %s: %s" % (
+            logger.warn("readonly view %s used %s for %s: %s" % (
                 fqn(self._current_view), 
                 'INSERT' if kwargs['created'] else 'UPDATE',
+                type(kwargs['instance']),
                 kwargs['instance'],
             ))
         
     def _post_delete(self, sender, **kwargs):
         if self._is_readonly():
-            if sender.__module__ in IGNORABLE_MODULES:
+            if sender.__module__ in IGNORABLE_MODULES or fqn(sender) in IGNORABLE_MODELS:
                 return
             logger.warn("readonly view %s used DELETE %s" % (
                 fqn(self._current_view),
