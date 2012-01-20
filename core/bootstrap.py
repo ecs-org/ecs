@@ -320,17 +320,16 @@ def auth_user_developers():
     try:
         from ecs.core.bootstrap_settings import developers
     except ImportError:
-        # first, Last, email, password, gender (sic!)
-        developers = ((u'John', u'Doe', u'developer@example.org', 'changeme', 'f'),)
+        # first, Last, email, gender (sic!)
+        developers = ((u'John', u'Doe', u'developer@example.org', 'f'),)
 
     translators_group = _get_group('translators')
     sentry_group = _get_group('sentryusers')
 
-    for first, last, email, password, gender in developers:
+    for first, last, email, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
         user.first_name = first
         user.last_name = last
-        user.set_password(password)
         user.is_staff = False
         user.is_superuser = False
         user.groups.add(translators_group)
@@ -461,13 +460,12 @@ def auth_ec_staff_users():
     try:
         from ecs.core.bootstrap_settings import staff_users
     except ImportError:
-        staff_users = ((u'Staff', u'User', u'staff@example.org', 'changeme', ('EC-Office',), {},'f'),)
+        staff_users = ((u'Staff', u'User', u'staff@example.org', ('EC-Office',), {},'f'),)
 
-    for first, last, email, password, groups, flags, gender in staff_users:
+    for first, last, email, groups, flags, gender in staff_users:
         user, created = get_or_create_user(email, start_workflow=False)
         user.first_name = first
         user.last_name = last
-        user.set_password(password)
         user.is_staff = True
         user.save()
         for group in groups:
@@ -489,14 +487,13 @@ def auth_external_review_users():
     try:
         from ecs.core.bootstrap_settings import external_review_users
     except ImportError:
-        other_users = ((u'External', u'Reviewer', u'otherexternal@example.org', 'changeme','f'),)
+        other_users = ((u'External', u'Reviewer', u'otherexternal@example.org', 'f'),)
 
-    for first, last, email, password, gender in external_review_users:
+    for first, last, email, gender in external_review_users:
         user, created = get_or_create_user(email, start_workflow=False)
         if created:
             user.first_name = first
             user.last_name = last
-            user.set_password(password)
             user.save()
 
         profile = user.get_profile()
@@ -511,14 +508,13 @@ def auth_ec_other_users():
     try:
         from ecs.core.bootstrap_settings import other_users
     except ImportError:
-        other_users = ((u'Other', u'User', u'other@example.org', 'changeme', ('EC-Statistic Group',),'f'),)
+        other_users = ((u'Other', u'User', u'other@example.org', ('EC-Statistic Group',),'f'),)
 
-    for first, last, email, password, groups, gender in other_users:
+    for first, last, email, groups, gender in other_users:
         user, created = get_or_create_user(email, start_workflow=False)
         if created:
             user.first_name = first
             user.last_name = last
-            user.set_password(password)
             user.save()
         for group in groups:
             user.groups.add(_get_group(group))
@@ -536,15 +532,14 @@ def auth_ec_boardmember_users():
     try:
         from ecs.core.bootstrap_settings import board_members
     except ImportError:
-        board_members = ((u'Board', u'Member', u'boardmember@example.org', 'changeme', ('Pharma',),'f'),)
+        board_members = ((u'Board', u'Member', u'boardmember@example.org', ('Pharma',),'f'),)
 
     board_member_group = _get_group('EC-Board Member')
-    for first, last, email, password, medcategories, gender in board_members:
+    for first, last, email, medcategories, gender in board_members:
         user, created = get_or_create_user(email, start_workflow=False)
         if created:
             user.first_name = first
             user.last_name = last
-            user.set_password(password)
             user.save()
         user.groups.add(board_member_group)
 

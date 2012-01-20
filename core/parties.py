@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 from django.contrib.auth.models import User, Group
 
 from ecs.users.utils import sudo
@@ -85,6 +88,7 @@ def get_presenting_parties(sf):
 @sudo()
 def get_reviewing_parties(sf, active=None):
     from ecs.users.middleware import current_user_store
+    _ = ugettext
 
     parties = PartyList()
 
@@ -101,6 +105,8 @@ def get_reviewing_parties(sf, active=None):
             party = Party(user=task.assigned_to, involvement=task.task_type.trans_name)
             if party not in parties:
                 parties.append(party)
+    for temp_auth in sf.submission.temp_auth.filter(end__gt=datetime.now()):
+        parties.append(Party(user=temp_auth.user, involvement=_('Temporary Authorization')))
     return parties
 
 @sudo()

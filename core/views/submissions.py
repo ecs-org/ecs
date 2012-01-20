@@ -180,6 +180,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission_forms = reversed(submission_forms)
 
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
+    # only show selected external reviews
+    external_review_checklists = external_review_checklists.filter(user__in=submission.external_reviewers.values('pk').query)
+
     notifications = submission.notifications.order_by('-timestamp')
     votes = submission.votes
     
