@@ -197,13 +197,13 @@ class SetupTarget(SetupTargetObject):
                 local('sudo mkdir -m 0600 -p /root/.duply/opt')
                 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
-            self.config['duplicity.include'] = '/'
+            self.config['duplicity.include'] = "SOURCE='/'"
             self.write_config_template('duply.template', 
                 '/root/.duply/root/conf', context=self.config, use_sudo=True, filemode= '0600')
             self.write_config_template('duplicity.root.files', '/root/.duply/root/exclude', use_sudo=True)
 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'opt')
-            self.config['duplicity.include'] = '/opt'
+            self.config['duplicity.include'] = "SOURCE='/opt'"
             self.write_config_template('duply.template', 
                 '/root/.duply/opt/conf', context=self.config, use_sudo=True, filemode= '0600')
             
