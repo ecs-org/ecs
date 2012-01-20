@@ -1,7 +1,7 @@
 GPG_KEY='%(backup.encrypt_keyid)s'
 GPG_PW=''
 GPG_OPTS=''
-TARGET='ftp://%(backup.username)s:%(backup.password)s@%(backup.host)s/%(duplicity.root)s
+TARGET='ftp://%(backup.username)s:%(backup.password)s@%(backup.host)s/%(duplicity.root)s'
 # defaults to 1M, if not set
 MAX_AGE=2M
 # defaults to 1, if not set
