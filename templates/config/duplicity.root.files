@@ -1,6 +1,10 @@
 + /tmp
 - /tmp/**
-+ /var
+- /home/ecs/ecs-cache/**
+- /home/ecs/ecs-temp/**
+- /home/ecs/ecs-doccache/**
+- /home/ecs/ecs-rendercache/**
+- /home/ecs/src/ecs/static/CACHE/**
 + /var/cache/apt/archives/partial/
 - /var/cache/apt/*
 - /var/cache/apt/archives/*
@@ -11,4 +15,4 @@
 - /var/cache/pbuilder/*
 + /var/cache/squid/
 - /var/cache/squid/*
-
+- /lost+found

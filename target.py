@@ -152,7 +152,7 @@ class SetupTarget(SetupTargetObject):
             local('sudo cp {0} /etc/hostname'.format(h.name))
         local('sudo hostname -F /etc/hostname')
 
-        value = local('ip addr show eth0 | grep inet[^6] | sed -re "s/[[:space:]]+inet.([^ ]+).+/\1/g"', capture=True)
+        value = local('ip addr show eth0 | grep inet[^6] | sed -re "s/[[:space:]]+inet.([^ ]+).+/\\1/g"', capture=True)
         if value != self.config['ip']:
             warn('current ip ({0}) and to be configured ip ({1}) are not the same'.format(value, self.config['ip']))
 
@@ -206,7 +206,8 @@ class SetupTarget(SetupTargetObject):
             self.config['duplicity.include'] = "SOURCE='/opt'"
             self.write_config_template('duply.template', 
                 '/root/.duply/opt/conf', context=self.config, use_sudo=True, filemode= '0600')
-            
+            self.write_config_template('duplicity.opt.files', '/root/.duply/opt/exclude', use_sudo=True)
+
             self.config['duplicity.duply_conf'] = "root"
             self.write_config_template('duply-backupninja.sh',
                 '/etc/backup.d/90duply.sh', use_sudo=True, filemode= '0600')
