@@ -74,29 +74,17 @@ def send_reminder_messages(today=None):
 
     votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2')
     for vote in votes:
-        try:
-            until_meeting = Meeting.objects.filter(start__gt=vote.top.meeting.start).order_by('start')[2]
-        except IndexError:
-            continue
-        
-        if vote.submission_form.is_thesis or not vote.submission_form.project_type_education_context is None:
-            deadline = until_meeting.deadline_diplomathesis.date()
+        if today < vote.valid_until:
+            days_valid = (vote.valid_until - today).days
         else:
-            deadline = until_meeting.deadline.date()
+            days_valid = 0 - (today - vote.valid_until).days
 
-        if today < deadline:
-            days_until_deadline = (deadline - today).days
-        else:
-            days_until_deadline = 0 - (today - deadline).days
-
-        if days_until_deadline == 21:
+        if days_valid == 21:
             send_vote_reminder_submitter(vote)
-        elif days_until_deadline == 7:
+        elif days_valid == 7:
             send_vote_reminder_office(vote)
-        elif days_until_deadline == -1:
+        elif days_valid == -1:
             send_vote_expired(vote)
-        else:
-            continue
 
 @periodic_task(run_every=timedelta(minutes=1))
 def expire_votes():
