@@ -380,9 +380,10 @@ def accept_invitation(request, invitation_uuid=None):
     except Invitation.DoesNotExist:
         raise Http404
 
-    form = PasswordChangeForm(invitation.user, request.POST or None)
+    user = invitation.user
+    form = SetPasswordForm(invitation.user, request.POST or None)
     if form.is_valid():
-        user = form.save()
+        form.save()
         profile = user.get_profile()
         profile.last_password_change = datetime.now()
         profile.is_phantom = False
@@ -392,12 +393,6 @@ def accept_invitation(request, invitation_uuid=None):
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)
         return HttpResponseRedirect(reverse('ecs.users.views.edit_profile'))
-
-    password = uuid4().get_hex()
-    invitation.user.set_password(password)
-    invitation.user.save()
-    form.fields['old_password'].widget = forms.HiddenInput()
-    form.fields['old_password'].initial = password
 
     return render(request, 'users/invitation/set_password_form.html', {
         'form': form,
