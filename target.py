@@ -152,7 +152,7 @@ class SetupTarget(SetupTargetObject):
             local('sudo cp {0} /etc/hostname'.format(h.name))
         local('sudo hostname -F /etc/hostname')
 
-        value = local('ip addr show eth0 | grep inet[^6] | sed -re "s/[[:space:]]+inet.([^ ]+).+/\\1/g"', capture=True)
+        value = local('ip addr show eth0 | grep inet[^6] | sed -re "s/[[:space:]]+inet.([^ /]+).+/\\1/g"', capture=True)
         if value != self.config['ip']:
             warn('current ip ({0}) and to be configured ip ({1}) are not the same'.format(value, self.config['ip']))
 
