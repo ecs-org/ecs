@@ -116,7 +116,7 @@ def open_tasks(request, meeting_pk=None):
     })
 
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Group', 'EC-Signing Group')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
