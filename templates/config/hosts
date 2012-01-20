@@ -1,5 +1,5 @@
 127.0.0.1 localhost
-%(ip)s %(host)s autovm autovm.local testecs testecs.local
+%(current_ip)s %(host)s %(local_hostname)s autovm autovm.local testecs testecs.local
 # autovm* testecs* are for #cking rabbitmq workaround
 
 # The following lines are desirable for IPv6 capable hosts

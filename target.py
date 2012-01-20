@@ -12,7 +12,7 @@ import time
 import copy
 
 from uuid import uuid4
-from fabric.api import local, env, warn, settings
+from fabric.api import local, env, warn, abort, settings
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template
@@ -82,21 +82,11 @@ class SetupTarget(SetupTargetObject):
   * actions: system_setup, update, and others
         
         '''.format(self.appname))
-    
-    def maintenance(self, enable=True):
-        enable= strbool(enable)
-        if enable:
-            touch(os.path.join(self.configdir, 'service.now'))
-            self.wsgi_reload()
-            self.daemons_stop()
-        else:
-            os.remove(os.path.join(self.configdir, 'service.now'))
-            self.daemons_start()
-            self.wsgi_reload()
-   
+
     def system_setup(self, *args, **kwargs):
-        self.host_config()
+        
         self.homedir_config()
+        self.host_config(with_current_ip=True)
         self.servercert_config()
         
         self.apache_baseline()
@@ -119,7 +109,8 @@ class SetupTarget(SetupTargetObject):
         self.daemons_install()
         
         self.custom_network_config()
-        
+        self.host_config(with_current_ip=False)
+
         self.apache_restart()
         self.daemons_start()
 
@@ -129,18 +120,53 @@ class SetupTarget(SetupTargetObject):
         self.apache_baseline()
         self.env_update()
         self.db_update()
-        self.search_config()      
+        self.search_config()
         self.apache_restart()
         self.daemons_start()
+
+    def maintenance(self, enable=True):
+        enable= strbool(enable)
+        if enable:
+            touch(os.path.join(self.configdir, 'service.now'))
+            self.wsgi_reload()
+            self.daemons_stop()
+        else:
+            os.remove(os.path.join(self.configdir, 'service.now'))
+            self.daemons_start()
+            self.wsgi_reload()        
+    
+    def homedir_config(self):
+        homedir = os.path.expanduser('~')
+        for name in ('public_html', '.python-eggs', 'ecs-conf'):
+            pathname = os.path.join(homedir, name)
+            if not os.path.exists(pathname):
+                os.mkdir(pathname)
+                
+    def host_config(self, with_current_ip=False):
+        with_current_ip = strbool(with_current_ip)
         
-            
-    def host_config(self):
         _, tmp = tempfile.mkstemp()
         with tempfile.NamedTemporaryFile() as h:
             h.write(self.config['host'])
             h.flush()
             local('sudo cp {0} /etc/hostname'.format(h.name))
         local('sudo hostname -F /etc/hostname')
+
+        value = local('ip addr show eth0 | grep inet[^6] | sed -re "s/[[:space:]]+inet.([^ ]+).+/\1/g"', capture=True)
+        if value != self.config['ip']:
+            warn('current ip ({0}) and to be configured ip ({]}} are not the same'.format(value, self.config['ip']))
+
+        if with_current_ip: 
+            if value.succeeded:
+                self.config['current_ip'] = value
+                if self.config['current_ip'] != self.config['ip']:
+                    warn('Temporary set hosts resolution of {0} to {1} instead of {2}'.format(
+                        self.config['host'], self.config['current_ip'], self.config['ip']))
+            else:
+                abort("no ip address ? ip addr grep returned: {0}".format(value))
+        else:
+            self.config['current_ip'] = self.config['ip']
+        
         self.write_config_template('hosts', tmp)
         local('sudo cp %s /etc/hosts' % tmp)
         os.remove(tmp)
@@ -216,12 +242,6 @@ $myhostname   smtp:[localhost:8823]
         '''
         pass
         
-    def homedir_config(self):
-        homedir = os.path.expanduser('~')
-        for name in ('public_html', '.python-eggs', 'ecs-conf'):
-            pathname = os.path.join(homedir, name)
-            if not os.path.exists(pathname):
-                os.mkdir(pathname)
 
     def servercert_config(self):
         try:
