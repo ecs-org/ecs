@@ -35,6 +35,9 @@ class TaskQuerySet(models.query.QuerySet):
         
     def open(self):
         return self.filter(deleted_at__isnull=True, closed_at=None)
+
+    def closed(self):
+        return self.filter(deleted_at__isnull=True, closed_at__isnull=False)
         
     def mark_deleted(self):
         for t in self.all():
@@ -104,6 +107,9 @@ class TaskManager(AuthorizationManager):
         
     def open(self):
         return self.all().open()
+
+    def closed(self):
+        return self.all().closed()
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')

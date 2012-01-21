@@ -21,8 +21,15 @@ def on_vote_published(sender, **kwargs):
     vote = kwargs['vote']
     if vote.submission_form and not vote.submission_form.is_categorized_multicentric_and_local:
         parties = vote.submission_form.get_presenting_parties()
+        reply_receiver = None
+        with sudo():
+            try:
+                task = Task.objects.for_data(vote).closed().filter(task_type__groups__name='EC-Office').order_by('-closed_at')[0]
+                reply_receiver = task.assigned_to
+            except IndexError:
+                pass
         parties.send_message(_('Vote {ec_number}').format(ec_number=vote.get_ec_number()), 'submissions/vote_publish.txt',
-            {'vote': vote}, submission=vote.submission_form.submission, cc_groups=settings.ECS_VOTE_RECEIVER_GROUPS)
+            {'vote': vote}, submission=vote.submission_form.submission, cc_groups=settings.ECS_VOTE_RECEIVER_GROUPS, reply_receiver=reply_receiver)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):
