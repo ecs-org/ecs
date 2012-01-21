@@ -838,7 +838,11 @@ def all_submissions(request):
         filter_form = SubmissionMinimalFilterForm
         filtername = 'submission_filter_search'
 
-    return submission_list(request, submissions, keyword=keyword, filtername=filtername, filter_form=filter_form, extra_context=extra_context, title=title)
+    kwargs = {'filtername': filtername, 'filter_form': filter_form, 'extra_context': extra_context, 'title': title}
+    if keyword:
+        kwargs['order_by'] = ('-ec_number',)
+
+    return submission_list(request, submissions, **kwargs)
 
 
 @readonly()
