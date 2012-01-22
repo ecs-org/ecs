@@ -15,7 +15,7 @@ from uuid import uuid4
 from fabric.api import local, env, warn, abort, settings
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
-from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template
+from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template, write_template_dir
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
@@ -71,10 +71,11 @@ class SetupTarget(SetupTargetObject):
             data = f.read()
         return data
     
-    def write_config_template(self, template, dst, context=None, filemode=None, use_sudo=False):
+    def write_config_template(self, template, dst, context=None, filemode=None, force=False, use_sudo=False):
         if context is None:
             context = self.config
-        write_template(os.path.join(self.dirname, 'templates', 'config', template), dst, context=context, filemode=filemode, use_sudo=use_sudo)
+        write_template(os.path.join(self.dirname, 'templates', 'config', template),
+            dst, context=context, filemode=filemode, force=force, use_sudo=use_sudo)
         
     def help(self, *args, **kwargs):
         print('''fab target:{0},action[,config=path-to-config.yml]
@@ -111,6 +112,7 @@ class SetupTarget(SetupTargetObject):
         
         self.custom_network_config()
         self.host_config(with_current_ip=False)
+        self.firewall_config()
 
         self.apache_restart()
         self.daemons_start()
@@ -187,6 +189,13 @@ class SetupTarget(SetupTargetObject):
                 t.flush()
                 local('sudo cp {0} /etc/network/interfaces'.format(t.name))
  
+    def firewall_config(self):
+        # temporary fix until new readyvm is build
+        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y shorewall"')        
+        write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'),
+            '/', use_sudo=True)
+        
+        
     def backup_config(self):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
@@ -213,17 +222,17 @@ class SetupTarget(SetupTargetObject):
 
             self.config['duplicity.duply_conf'] = "root"
             self.write_config_template('duply-backupninja.sh',
-                '/etc/backup.d/90duply.sh', use_sudo=True, filemode= '0600')
+                '/etc/backup.d/90duply.sh', backup=False, use_sudo=True, filemode= '0600')
             
             self.config['duplicity.duply_conf'] = "opt"
             self.write_config_template('duply-backupninja.sh',
-                '/etc/backup.d/91duply.sh', use_sudo=True, filemode= '0600')
+                '/etc/backup.d/91duply.sh', backup=False, use_sudo=True, filemode= '0600')
             
             self.write_config_template('10.sys', 
-                '/etc/backup.d/10.sys', use_sudo=True, filemode= '0600')
+                '/etc/backup.d/10.sys', backup=False, use_sudo=True, filemode= '0600')
         
             self.write_config_template('20.pgsql', 
-                '/etc/backup.d/20.pgsql', use_sudo=True, filemode= '0600')
+                '/etc/backup.d/20.pgsql', backup=False, use_sudo=True, filemode= '0600')
         
     def mail_config(self):
         '''

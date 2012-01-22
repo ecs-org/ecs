@@ -353,7 +353,6 @@ memcached:req:apt:apt-get:memcached
 #memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 
-
 # backup stuff
 debconf-utils:req:apt:apt-get:debconf-utils
 hwinfo:req:apt:apt-get:hwinfo
@@ -361,6 +360,10 @@ ncftp:req:apt:apt-get:ncftp
 duplicity:req:apt:apt-get:duplicity
 duply:req:apt:apt-get:duply
 backupninja:req:apt:apt-get:backupninja 
+
+# firewall
+shorewall:req:apt:apt-get:shorewall
+
 """
 
  
