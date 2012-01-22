@@ -343,19 +343,6 @@ def auth_user_developers():
             'start_workflow': True,
         })
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
-    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
-def auth_user_sentryuser():
-        user, created = get_or_create_user('sentry@example.org', start_workflow=False)
-        user.groups.add(_get_group('userswitcher_target'))
-        user.is_staff = True
-        user.is_superuser = True
-        user.save()
-        profile = user.get_profile()
-        update_instance(profile, {                        
-            "start_workflow" : True,
-        })
-
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
