@@ -10,7 +10,6 @@ developers = (
     (u'Markus', u'Froehlich', 'froema@ep3.at', 'm'),
     (u'Thomas', u'Neumann', 'tom@newtone.cc', 'm'),
     (u'Esther', u'Neumann', 'es_data@yahoo.de', 'f'),
-    (u'Hudson', u'Windmill', 'windmill@example.org', 'f'),
 )
 
 staff_users = ()
