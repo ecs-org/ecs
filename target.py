@@ -16,7 +16,6 @@ from fabric.api import local, env, warn, abort, settings
 
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template
-from deployment.mercurial import repo_clone
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
@@ -84,13 +83,12 @@ class SetupTarget(SetupTargetObject):
         '''.format(self.appname))
 
     def system_setup(self, *args, **kwargs):
-        
+        ''' System Setup; Destructive '''
         self.homedir_config()
         self.host_config(with_current_ip=True)
-        self.servercert_config()
         
         self.apache_baseline()
-        # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
+        self.servercert_config()
         self.django_config()
         self.db_clear()
         self.queuing_config()
@@ -99,10 +97,13 @@ class SetupTarget(SetupTargetObject):
         self.ca_config()
         self.backup_config()
         self.mail_config()
+        # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
         
         self.ca_update()
         self.db_update()
+        
         self.search_config()
+        self.search_update()
         
         self.apache_config()
         self.catalina_config()
@@ -116,15 +117,17 @@ class SetupTarget(SetupTargetObject):
 
 
     def update(self, *args, **kwargs):
+        ''' System Update: Non destructive '''
         self.homedir_config()
-        self.apache_baseline()
         self.env_update()
         self.db_update()
         self.search_config()
+        self.search_update()
         self.apache_restart()
         self.daemons_start()
 
     def maintenance(self, enable=True):
+        ''' Enable/Disable System Maintenance (stop daemons, display service html)'''
         enable= strbool(enable)
         if enable:
             touch(os.path.join(self.configdir, 'service.now'))
@@ -436,9 +439,7 @@ $myhostname   smtp:[localhost:8823]
         local('sudo /etc/init.d/jetty start')
 
     def search_update(self):
-        pass
-        # FIXME: implement search update
-        # %s; cd %s; if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput" % (env.activate, env.targetappdir)
+        local('cd ~/src/ecs; . ~/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput ')
 
 
 def custom_check_gettext_runtime(pkgline, checkfilename):
