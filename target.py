@@ -71,11 +71,11 @@ class SetupTarget(SetupTargetObject):
             data = f.read()
         return data
     
-    def write_config_template(self, template, dst, context=None, filemode=None, force=False, use_sudo=False):
+    def write_config_template(self, template, dst, context=None, filemode=None, backup=True, force=False, use_sudo=False):
         if context is None:
             context = self.config
         write_template(os.path.join(self.dirname, 'templates', 'config', template),
-            dst, context=context, filemode=filemode, force=force, use_sudo=use_sudo)
+            dst, context=context, filemode=filemode, backup=backup, force=force, use_sudo=use_sudo)
         
     def help(self, *args, **kwargs):
         print('''fab target:{0},action[,config=path-to-config.yml]
@@ -194,7 +194,7 @@ class SetupTarget(SetupTargetObject):
         local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y shorewall"')        
         write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'),
             '/', use_sudo=True)
-        
+        local('sudo /etc/init.d/shorewall restart')               
         
     def backup_config(self):
         if 'backup.host' not in self.config:
