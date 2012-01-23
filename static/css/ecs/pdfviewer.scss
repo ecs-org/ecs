@@ -256,14 +256,14 @@ body.pdfviewer #navigation{
 
 #pdfviewer .annotation > .overlay{
     position: absolute;
-    background-color: $bluegreen;
-    opacity: 0.5;
+    background-color: #ffff00;
+    opacity: 0.2;
     border: 1px solid transparent;
 }
 
 #pdfviewer .annotation:hover > .overlay{
     border: 1px dotted #ff0000;
-    opacity: 0.8;
+    opacity: 0.3;
 }
 
 #pdfviewer .annotation > .overlay > .resizeHandle{
@@ -296,6 +296,11 @@ body.pdfviewer #navigation{
 #pdfviewer .annotation.foreign > .overlay,
 #pdfviewer .annotation.foreign > .marker{
     background-color: $bluegreen;
+    opacity: 0.5;
+}
+
+#pdfviewer .annotation.foreign:hover > .overlay{
+    opacity: 0.8;
 }
 
 #pdfviewer .annotation:hover > .text{
