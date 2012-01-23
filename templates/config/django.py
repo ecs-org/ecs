@@ -36,10 +36,6 @@ ECS_REQUIRE_CLIENT_CERTS = not %(debug.no_client_certs)s
 ECS_USERSWITCHER = %(debug.userswitcher)s
 ECS_DEVELOPER_TAB = %(debug.developer_tab)s
 
-ECS_PDFCOP = '#'
-ECS_PDFDECRYPT = '#'
-PDFCOP_ENABLED = False
-
 SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'

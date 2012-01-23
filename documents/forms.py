@@ -12,7 +12,7 @@ from django.conf import settings
 from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.pdfutils import sanitize_pdf, PDFValidationError
+from ecs.utils.pdfutils import sanitize_pdf
 from ecs.utils.formutils import require_fields
 from ecs.utils.pathutils import tempfilecopy
 
@@ -42,12 +42,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         pdf.seek(0)
         
         # sanitization
-        try:
-            f = sanitize_pdf(pdf)
-        except PDFValidationError as e:
-            logger.error('unreadable pdf document: %s' % e)
-            self.pdf_error = True
-            raise ValidationError(_(u'Your PDF document could not be processed.')+ str(e))
+        f = sanitize_pdf(pdf)
 
         while f.read(1024):
             pass

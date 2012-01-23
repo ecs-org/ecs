@@ -11,7 +11,6 @@ from django.contrib.contenttypes import generic
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.countries.models import Country
-from ecs.utils.pdfutils import PDFValidationError
 
 CURRENT_SERIALIZER_VERSION = '0.8'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
@@ -334,13 +333,7 @@ class DocumentSerializer(ModelSerializer):
         if not obj.doctype.is_downloadable:
             raise SkipInstance
         return super(DocumentSerializer, self).dump(obj, zf)
-        
-    def load(self, data, zf, version, commit=True):
-        try:
-            return super(DocumentSerializer, self).load(data, zf, version, commit=commit)
-        except PDFValidationError:
-            raise SkipInstance
-        
+
     def dump_field(self, fieldname, val, zf, obj):
         field = self.model._meta.get_field(fieldname)
 

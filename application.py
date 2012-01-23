@@ -62,14 +62,6 @@ django_compressor:inst:all:pypi:django_compressor\>=1.1
 pyscss:inst:all:pypi:pyScss\>=1.0.8
 
 
-# pdf parsing/cleaning: origami
-ruby:req:apt:apt-get:ruby
-rubygems:req:apt:apt-get:rubygems
-rubyopenssl:req:apt:apt-get:libopenssl-ruby1.8
-ruby:req:win:http://rubyforge.org/frs/download.php/75107/rubyinstaller-1.8.7-p352.exe:exec:ruby.exe
-origami:static:all:http://rubygems.org/gems/origami-1.2.3.gem:custom:pdfcop
-
-
 # unit testing
 nose:inst:all:pypi:nose
 django-nose:inst:all:pypi:django-nose==0.1.2
@@ -174,6 +166,10 @@ pdftk:req:suse:zypper:pdftk
 # Mac OS X: get pdftk here: http://www.pdflabs.com/docs/install-pdftk/
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 # OpenBSD: build pdftk yourself: http://www.pdflabs.com/docs/build-pdftk/
+
+qpdf:req:apt:apt-get:qpdf
+qpdf:req:mac:homebrew:qpdf
+qpdf:static:win:http://downloads.sourceforge.net/project/qpdf/qpdf/2.3.1/qpdf-2.3.1-bin-msvc.zip:unzipflat:qpdf.exe
 
 # mediaserver: python-memcached (and mockcache for testing) 
 python-memcached:inst:all:pypi:python-memcached

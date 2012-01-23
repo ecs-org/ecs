@@ -237,12 +237,6 @@ ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
 ECS_CA_CONFIG = os.path.join(ECS_CONFIG_DIR, 'openssl-ca.cnf')
 
-# These settings are passed to pdfcop from origami via the `--config` and `--policy` options.
-# see http://code.google.com/p/origami-pdf/source/browse/bin/config/pdfcop.conf.yml
-ECS_PDFCOP_CONFIG_FILE = os.path.join(PROJECT_DIR, 'utils', 'pdfcop.conf.yml')
-ECS_PDFCOP_POLICY = 'ecs'
-PDFCOP_ENABLED = False
-
 # ecs.utils.pdfutils wkhtmltopdf uses these options to steer pdf generation out of html files
 WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
 

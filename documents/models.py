@@ -28,7 +28,7 @@ from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
 from ecs.mediaserver.client import generate_media_url, generate_pages_urllist, download_from_mediaserver
 
-from ecs.utils.pdfutils import sanitize_pdf, PDFValidationError
+from ecs.utils.pdfutils import sanitize_pdf
 
 
 logger = logging.getLogger(__name__)
@@ -219,11 +219,7 @@ class Document(models.Model):
                 content_type, encoding = mimetypes.guess_type(filename_to_check) # look what kind of mimetype we would guess
 
             if self.mimetype == 'application/pdf' or content_type == 'application/pdf':
-                try:
-                    sanitize_pdf(self.file, decrypt=False)
-                except PDFValidationError as e:
-                    raise # FIXME
-                    logger.error('not a valid pdf document, but mimetype was application/pdf')
+                sanitize_pdf(self.file, decrypt=False)
 
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
