@@ -494,8 +494,11 @@ DEVSERVER_MODULES = (
 ###################
 #these are local fixes, they default to a sane value if unset
 
+#ECS_DEVELOPER_TAB = True/False
+# default to True, Developer tab will be shown if user has sentry view permissions
+
 #ECS_USERSWITCHER = True/False
-# default to True
+# default to True, Userswitcher will be shown so user can switch to testusers quickly 
 
 #ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
 # needs to be overriden in local_settings for eg. windows
@@ -566,6 +569,10 @@ if 'ECS_USERSWITCHER' not in locals():
 
 if not ECS_USERSWITCHER:
     MIDDLEWARE_CLASSES = tuple(item for item in MIDDLEWARE_CLASSES if item != 'ecs.userswitcher.middleware.UserSwitcherMiddleware')
+
+# developer tab
+if 'ECS_DEVELOPER_TAB' not in locals():
+    ECS_DEVELOPER_TAB = True
 
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:
