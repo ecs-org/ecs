@@ -87,25 +87,24 @@ class SetupTarget(SetupTargetObject):
         ''' System Setup; Destructive '''
         self.homedir_config()
         self.host_config(with_current_ip=True)
-        
-        self.apache_baseline()
         self.servercert_config()
-        self.django_config()
-        self.db_clear()
-        self.queuing_config()
-
-        self.gpg_config()
-        self.ca_config()
+        
         self.backup_config()
         self.mail_config()
+        self.queuing_config()
         # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
-        
+
+        self.db_clear()
+        self.django_config()
+        self.gpg_config()
+        self.ca_config()        
         self.ca_update()
         self.db_update()
         
         self.search_config()
         self.search_update()
         
+        self.apache_baseline()
         self.apache_config()
         self.catalina_config()
         self.daemons_install()
@@ -190,7 +189,7 @@ class SetupTarget(SetupTargetObject):
                 local('sudo cp {0} /etc/network/interfaces'.format(t.name))
  
     def firewall_config(self):
-        # temporary fix until new readyvm is build
+        # FIXME: temporary fix until new readyvm is build
         local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y shorewall"')        
         write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'),
             '/', use_sudo=True)
@@ -233,10 +232,35 @@ class SetupTarget(SetupTargetObject):
         
             self.write_config_template('20.pgsql', 
                 '/etc/backup.d/20.pgsql', backup=False, use_sudo=True, filemode= '0600')
+
+    def servercert_config(self):
+        try:
+            ssl_key = self.config.get_path('ssl.key')
+            ssl_cert = self.config.get_path('ssl.cert')
+            local('sudo cp %s /etc/ssl/private/%s.key' % (ssl_key, self.host))
+            local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
+            local('sudo chmod 0600 /etc/ssl/private/%s.key' % self.host)
+        except KeyError:
+            warn('Missing SSL key or certificate - a new pair will be generated')
+            openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
+            self.write_config_template('openssl-ssl.cnf', openssl_cnf)
+            local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
+        local('sudo update-ca-certificates') # needed for all in special java that pdf-as knows server cert
         
     def mail_config(self):
         '''
-        smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+        with tempfile.NamedTemporaryFile() as h:
+            h.write(self.config['host'])
+            h.flush()
+            local('sudo cp {0} /etc/mailname'.format(h.name))
+    
+        self.config['postfix.cert'] = '/etc/ssl/private/{0}.pem'.format(self.host)
+        self.config['postfix.key'] = '/etc/ssl/private/{0}.key'.format(self.host)
+        self.write_config_template('postfix.main.cf', '/etc/postfix/main.cf', use_sudo=True)
+        self.write_config_template('postfix.master.cf', '/etc/postfix/master.cf', use_sudo=True)                                   
+        self.write_config_template('aliases', '/etc/aliases', use_sudo=True)
+        
+smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
 smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
 myhostname = ecsdev.ep3.at
 mydestination = ecsdev.ep3.at, localhost.ep3.at, , localhost
@@ -268,21 +292,6 @@ $myhostname   smtp:[localhost:8823]
         '''
         pass
         
-
-    def servercert_config(self):
-        try:
-            ssl_key = self.config.get_path('ssl.key')
-            ssl_cert = self.config.get_path('ssl.cert')
-            local('sudo cp %s /etc/ssl/private/%s.key' % (ssl_key, self.host))
-            local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
-            local('sudo chmod 0600 /etc/ssl/private/%s.key' % self.host)
-        except KeyError:
-            warn('Missing SSL key or certificate - a new pair will be generated')
-            openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
-            self.write_config_template('openssl-ssl.cnf', openssl_cnf)
-            local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
-        local('sudo update-ca-certificates') # needed for all in special java that pdf-as knows server cert
-
     def gpg_config(self):
         for key, filename in (('encrypt_key', 'ecs_mediaserver.pub'), ('signing_key', 'ecs_authority.sec'), ('decrypt_key', 'ecs_mediaserver.sec'), ('verify_key', 'ecs_authority.pub')):
             try:
@@ -375,7 +384,7 @@ $myhostname   smtp:[localhost:8823]
         control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
     def daemons_stop(self):
-        control_upstart(self.appname, "stop", use_sudo=self.use_sudo, dry=self.dry)
+        control_upstart(self.appname, "stop", use_sudo=self.use_sudo, fail_soft=True, dry=self.dry)
         
     def daemons_start(self):
         control_upstart(self.appname, "start", use_sudo=self.use_sudo, dry=self.dry)
