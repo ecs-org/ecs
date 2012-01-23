@@ -89,7 +89,7 @@ def batch_action(request, action=None):
         if action == 'pushback' and task:
             task.done(choice=False)
             with sudo():
-                previous_task = task.trail.closes().exclude(pk=task.pk).order_by('-closed_at')[0]
+                previous_task = task.trail.closed().exclude(pk=task.pk).order_by('-closed_at')[0]
                 previous_task.reopen()
     elif action == 'cancel':
         request.sign_session.delete()
