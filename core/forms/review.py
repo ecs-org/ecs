@@ -57,6 +57,8 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
             require_fields(self, ('medical_categories',))
         elif lane == SUBMISSION_LANE_EXPEDITED:
             require_fields(self, ('expedited_review_categories',))
+        if lane != SUBMISSION_LANE_BOARD:
+            cd['invite_primary_investigator_to_meeting'] = False
         return cd
 
 
