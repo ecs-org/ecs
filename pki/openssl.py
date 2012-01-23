@@ -108,7 +108,11 @@ class CA(object):
             self._exec(['req', '-batch', '-new', '-key', key_file, '-out', csr_file, '-subj', subject])
             
             # sign the request
-            self._exec_ca(['-in', csr_file, '-out', cert_file])
+            to_be_signed = ['-in', csr_file, '-out', cert_file] 
+            if days:
+                to_be_signed += ['-days', str(days)]
+            self._exec_ca(to_be_signed)
+            
             fingerprint = self.get_fingerprint(cert_file)
             shutil.copyfile(cert_file, self.get_cert_path_for_fingerprint(fingerprint))
             #cmd = ['x509', '-req', 
