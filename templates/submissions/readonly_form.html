@@ -339,6 +339,23 @@
                     }
                 });
             });
+            
+            var laneSelect = $('id_workflow_lane');
+            if(laneSelect && laneSelect.getProperty('disabled') != 'disabled'){
+                function limit(){
+                    var board = laneSelect.value == '3';
+                    var c = $('id_invite_primary_investigator_to_meeting');
+                    if(board){
+                        c.removeProperty('disabled');
+                    }
+                    else{
+                        c.setProperty('disabled', 'disabled');
+                        c.removeProperty('checked');
+                    }
+                }
+                laneSelect.addEvent('change', limit);
+                limit();
+            }
         });
     </script>
 {% endblock %}
