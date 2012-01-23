@@ -95,7 +95,7 @@
           </ul>
         </li>
     {% endif %}
-    {% if user|has_perm:"sentry.can_view" %}
+    {% if debug and user|has_perm:"sentry.can_view" %}
       <li>
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">

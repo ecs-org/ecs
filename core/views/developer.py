@@ -13,7 +13,9 @@ from ecs.core import bootstrap
 from ecs.users.utils import sudo
 from ecs.notifications.models import Notification, NotificationAnswer
 from ecs.votes.models import Vote
+from ecs.utils.decorators import developer
 
+@developer
 def test_pdf_html(request, submission_pk=None):
     with sudo():
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -28,6 +30,7 @@ def test_pdf_html(request, submission_pk=None):
         }))
     return HttpResponse(html)
 
+@developer
 def test_render_pdf(request, submission_pk=None):
     with sudo():
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -41,11 +44,13 @@ def test_render_pdf(request, submission_pk=None):
         })
     return pdf_response(pdf, filename='test.pdf')
 
+@developer
 def developer_test_pdf(request):
     with sudo():
         submissions = list(Submission.objects.all().order_by('ec_number'))
     return render(request, 'developer/render_test_pdf.html', {'submissions': submissions})
 
+@developer
 def test_checklist_pdf_html(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
@@ -57,6 +62,7 @@ def test_checklist_pdf_html(request, checklist_pk=None):
         }))
     return HttpResponse(html)
 
+@developer
 def test_render_checklist_pdf(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
@@ -67,11 +73,13 @@ def test_render_checklist_pdf(request, checklist_pk=None):
         })
     return pdf_response(pdf, filename='test.pdf')
 
+@developer
 def developer_test_checklist_pdf(request):
     with sudo():
         checklists = list(Checklist.objects.all().order_by('submission__ec_number', 'blueprint__name'))
     return render(request, 'developer/render_test_checklist_pdf.html', {'checklists': checklists})
 
+@developer
 def test_notification_pdf_html(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
@@ -89,6 +97,7 @@ def test_notification_pdf_html(request, notification_pk=None):
         }))
     return HttpResponse(html)
 
+@developer
 def test_render_notification_pdf(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
@@ -106,11 +115,13 @@ def test_render_notification_pdf(request, notification_pk=None):
         })
     return pdf_response(pdf, filename='test.pdf')
 
+@developer
 def developer_test_notification_pdf(request):
     with sudo():
         notifications = list(Notification.objects.all())
     return render(request, 'developer/render_test_notification_pdf.html', {'notifications': notifications})
 
+@developer
 def test_notification_answer_pdf_html(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
@@ -125,6 +136,7 @@ def test_notification_answer_pdf_html(request, notification_answer_pk=None):
         }))
     return HttpResponse(html)
 
+@developer
 def test_render_notification_answer_pdf(request, notification_answer_pk=None):
     with sudo():
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
@@ -139,11 +151,13 @@ def test_render_notification_answer_pdf(request, notification_answer_pk=None):
         })
     return pdf_response(pdf, filename='test.pdf')
 
+@developer
 def developer_test_notification_answer_pdf(request):
     with sudo():
         notification_answers = list(NotificationAnswer.objects.all())
     return render(request, 'developer/render_test_notification_answer_pdf.html', {'notification_answers': notification_answers})
 
+@developer
 def test_vote_pdf_html(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
@@ -153,6 +167,7 @@ def test_vote_pdf_html(request, vote_pk=None):
         html = template.render(Context(vote.get_render_context()))
     return HttpResponse(html)
 
+@developer
 def test_render_vote_pdf(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
@@ -161,11 +176,13 @@ def test_render_vote_pdf(request, vote_pk=None):
         pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote.get_render_context())
     return pdf_response(pdf, filename='test.pdf')
 
+@developer
 def developer_test_vote_pdf(request):
     with sudo():
         votes = list(Vote.objects.filter(published_at__isnull=False))
     return render(request, 'developer/render_test_vote_pdf.html', {'votes': votes})
 
+@developer
 def developer_translations(request):
     from django.contrib.auth.models import Group
     from ecs.tasks.models import TaskType
