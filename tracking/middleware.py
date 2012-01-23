@@ -7,20 +7,22 @@ HTML_TITLE_MAX_OFFSET = 1000
 
 class TrackingMiddleware(object):
     def process_view(self, request, view, args, kwargs):
-        if request.user.is_anonymous() or request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
+        if request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
             request.tracking_data = None
         else:
             view, created = View.objects.get_or_create_for_url(request.path)
-            request.tracking_data = Request(
-                url=request.path,
-                method=request.method,
-                ip=request.META['REMOTE_ADDR'],
-                view=view,
-                user=request.user,
-            )
+            kwargs = {
+                'url': request.path,
+                'method': request.method,
+                'ip': request.META['REMOTE_ADDR'],
+                'view': view,
+            }
+            if not request.user.is_anonymous():
+                kwargs['user'] = request.user
+            request.tracking_data = Request(**kwargs)
         
     def process_response(self, request, response):
-        if not getattr(settings, 'ECS_TRACKING_ENABLED', False) or not getattr(request, 'tracking_data', None):
+        if not getattr(settings, 'ECS_TRACKING_ENABLED', False) or not getattr(request, 'tracking_data', None) or request.tracking_data.user is None:
             return response
         
         ct = response['Content-Type']

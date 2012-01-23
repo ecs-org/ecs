@@ -23,12 +23,14 @@ from ecs.help.models import Page, Attachment
 from ecs.help.forms import HelpPageForm, AttachmentUploadForm, ImportForm
 from ecs.help.utils import publish_parts
 from ecs.help import serializer
+from ecs.utils import forceauth
 
 
 def redirect_to_page(page):
     return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
 
 
+@forceauth.exempt
 def view_help_page(request, page_pk=None):
     from reversion.models import Version
     page = get_object_or_404(Page, pk=page_pk)
@@ -42,6 +44,7 @@ def view_help_page(request, page_pk=None):
     })
 
 
+@forceauth.exempt
 def find_help(request, view_pk=None, anchor=''):
     anchor = request.GET.get('anchor', anchor)
     pages = Page.objects.filter(view=view_pk)
@@ -61,6 +64,7 @@ def find_help(request, view_pk=None, anchor=''):
     return HttpResponseRedirect(reverse('ecs.help.views.index'))
 
 
+@forceauth.exempt
 def index(request):
     try:
         page = Page.objects.get(slug='index')
@@ -79,6 +83,7 @@ def attachments(request):
     })
 
 
+@forceauth.exempt
 def download_attachment(request, attachment_pk=None):
     attachment = get_object_or_404(Attachment, pk=attachment_pk)
     return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)

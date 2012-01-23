@@ -36,6 +36,7 @@
     </div>
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
+      | <a href="" id="help_button" class="help_trigger">{% trans 'Online Help Pages' %}</a>
     </div>
     <div class="form_public">
       <form method="post" action="" class="login_error" id="login_form">
@@ -80,6 +81,23 @@
             } else {
                 $('login_button').focus();
             }
+            window.openHelpPage = function(e){
+                {% if request.tracking_data.view %}
+                var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
+                if(e && e.shift){
+                    url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
+                }
+                if(window.location.hash){
+                    url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
+                }
+                {% else %}
+                var url = '{% url ecs.help.views.index %}';
+                {% endif %}
+                var win = window.open(url, 'ecshelp');
+                win.focus();
+                return false;
+            };
+            $('help_button').addEvent('click', window.openHelpPage);
         });
     </script>
 {% endblock %}
