@@ -15,8 +15,6 @@ psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:homebrew:postgresql
 psycopg2:req:mac:macports:postgresql84-server
 psycopg2:req:suse:zypper:postgresql-devel
-psycopg2:req:openbsd:pkg:postgresql-server
-psycopg2:req:openbsd:pkg:postgresql-client
 psycopg2:inst:!win:pypi:psycopg2==2.4.1
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.4.1.win32-py2.6-pg9.0.4-release.exe
 
@@ -25,7 +23,6 @@ pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:homebrew:sqlite
 pysqlite:req:mac:macports:sqlite3
 pysqlite:req:suse:zypper:sqlite3-devel
-pysqlite:req:openbsd:pkg:sqlite3
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.6.3.win32-py2.6.exe
                      
@@ -119,7 +116,6 @@ gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
 gnupg:req:suse:zypper:gpg2
-gnupg:req:openbsd:pkg:gnupg
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
 
 
@@ -137,8 +133,6 @@ pdftotext:req:apt:apt-get:poppler-utils
 #pdftotext:req:mac:homebrew:poppler
 pdftotext:req:mac:macports:poppler
 pdftotext:req:suse:zypper:poppler-tools
-pdftotext:req:openbsd:pkg:poppler
-pdftotext:req:openbsd:pkg:poppler-data
 pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdfbin-win-3.03.zip:custom:pdftotext.exe
 
 # excel generation / xlwt
@@ -165,7 +159,6 @@ pdftk:static:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdft
 pdftk:req:suse:zypper:pdftk
 # Mac OS X: get pdftk here: http://www.pdflabs.com/docs/install-pdftk/
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
-# OpenBSD: build pdftk yourself: http://www.pdflabs.com/docs/build-pdftk/
 
 qpdf:req:apt:apt-get:qpdf
 qpdf:req:mac:homebrew:qpdf
@@ -180,7 +173,6 @@ ghostscript:req:apt:apt-get:ghostscript
 #ghostscript:req:mac:homebrew:ghostscript
 ghostscript:req:mac:macports:ghostscript
 ghostscript:req:suse:zypper:ghostscript-library
-ghostscript:req:openbsd:pkg:ghostscript--
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
 # mediaserver: new rendering may use mupdf
@@ -196,7 +188,6 @@ imagemagick:req:apt:apt-get:graphicsmagick-imagemagick-compat
 #imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
 imagemagick:req:suse:zypper:ImageMagick
-imagemagick:req:openbsd:pkg:ImageMagick--
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 imagemagick:static:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.7.4-Q16-windows.zip:unzipflatsecond:montage.exe
 
@@ -220,7 +211,6 @@ antiword:req:mac:homebrew:antiword
 antiword:req:mac:macports:antiword
 # antiword has to be built by hand for opensuse
 #antiword:req:suse:zypper:antiword
-antiword:req:openbsd:pkg:antiword
 antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
 # antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
 
