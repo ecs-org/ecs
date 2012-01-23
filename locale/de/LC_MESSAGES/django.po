@@ -4329,7 +4329,7 @@ msgstr "ECS - Anmeldung"
 
 #: users/views.py:151
 msgid "ECS - Password Reset"
-msgstr "ECS - Passwort vergessen"
+msgstr "ECS - Passwort zurücksetzen"
 
 #: users/views.py:226
 msgid "{user} indisposed"
