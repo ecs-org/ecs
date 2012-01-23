@@ -1,5 +1,5 @@
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = %(debug.enable)s
+TEMPLATE_DEBUG = %(debug.template)s
 
 # database settings
 DATABASES['default'].update({
@@ -16,8 +16,7 @@ BROKER_BACKEND = ''
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings
-HAYSTACK_SEARCH_ENGINE = 'solr'
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/'
+HAYSTACK_SEARCH_ENGINE = '%(haystack.search_engine)s'
 
 # ecsmail settings
 ECSMAIL['authoritative_domain'] = '%(host)s'
@@ -33,7 +32,8 @@ PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
 
 ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
-ECS_USERSWITCHER = %(userswitcher.enable)s
+ECS_USERSWITCHER = %(debug.userswitcher)s
+ECS_DEVELOPER_TAB = %(debug.developer_tab)s
 
 ECS_PDFCOP = '#'
 ECS_PDFDECRYPT = '#'
