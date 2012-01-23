@@ -32,6 +32,7 @@ PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
 
 ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
+ECS_REQUIRE_CLIENT_CERTS = not %(debug.no_client_certs)s
 ECS_USERSWITCHER = %(debug.userswitcher)s
 ECS_DEVELOPER_TAB = %(debug.developer_tab)s
 
