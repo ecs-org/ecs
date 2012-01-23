@@ -34,11 +34,9 @@ def redirect_to_page(page):
 def view_help_page(request, page_pk=None):
     from reversion.models import Version
     page = get_object_or_404(Page, pk=page_pk)
-    related_pages = Page.objects.filter(view=page.view).exclude(pk=page.pk).order_by('title')
     available_versions = Version.objects.get_for_object(page)
     return render(request, 'help/view_page.html', {
         'page': page,
-        'related_pages': related_pages,
         'versions': len(available_versions),
         'current': available_versions[len(available_versions)-1]
     })
@@ -155,16 +153,11 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
             except Page.DoesNotExist:
                 pass
         return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
-        
-    related_pages = Page.objects.filter(view=view).order_by('title')
-    if page:
-        related_pages = related_pages.exclude(pk=page.pk)
 
     return render(request, 'help/edit_page.html', {
         'page': page,
         'view': view,
         'form': form,
-        'related_pages': related_pages,
     })
     
     

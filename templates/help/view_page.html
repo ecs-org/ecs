@@ -9,14 +9,6 @@
     <div class="restructuredtext">
         {{ page.publish_parts.fragment|safe }}
     </div>
-    {% if related_pages %}
-    <h3>Siehe auch:</h3>
-    <ul>
-        {% for relpage in related_pages %}
-            <li><a href="{% url ecs.help.views.view_help_page page_pk=relpage.pk %}">{{ relpage.title }}</a></li>
-        {% endfor %}
-    </ul>
-    {% endif %}
 {% endblock %}
 
 {% block nav_left %}
