@@ -92,6 +92,8 @@ class SetupTarget(SetupTargetObject):
         self.backup_config()
         self.mail_config()
         self.queuing_config()
+        # temporary fix until tomorrow
+        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y qpdf"')
         # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
 
         self.db_clear()
@@ -416,9 +418,8 @@ $myhostname   smtp:[localhost:8823]
         # FIXME implement env_boot
     
     def env_update(self):
-        pass
-        # FIXME implement env_update, call fab appenv:ecs,default
-        # run("%s; fab appreq:ecs,flavor=%s,only_list=True; fab appenv:ecs,flavor=%s" % (env.activate, env.appenv, env.appenv))
+        local('sudo bash -c "cd ~/src/; . ~/environment/bin/activate;  fab appreq:ecs,flavor=system"')
+        local('cd ~/src/; . ~/environment/bin/activate; fab appenv:ecs,flavor=system')
         
     def queuing_config(self):
         with settings(warn_only=True):
