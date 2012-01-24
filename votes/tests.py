@@ -16,44 +16,40 @@ class VoteRemindersTest(CommunicationTestCase):
     '''
     
     def setUp(self, *args, **kwargs):
-        rval = super(VoteRemindersTest, self).setUp(*args, **kwargs)
+        super(VoteRemindersTest, self).setUp(*args, **kwargs)
 
         # alice is the submitter and bob is the postmaster
         settings.ECSMAIL['postmaster'] = 'bob@example.com'
         
         # there has to be a test submission
-        self.submission_form = create_submission_form()
-        self.submission_form.submission.save()
-        self.submission_form.project_type_education_context = None
-        self.submission_form.submitter_email = self.alice.email
-        self.submission_form.save()
+        submission_form = create_submission_form()
+        submission_form.submission.save()
+        submission_form.project_type_education_context = None
+        submission_form.submitter_email = self.alice.email
+        submission_form.save()
 
-        self.submission_form_thesis = create_submission_form()
-        self.submission_form_thesis.submission.is_thesis = True
-        self.submission_form_thesis.submission.save()
-        self.submission_form_thesis.project_type_education_context = 1  # "Dissertation"
-        self.submission_form_thesis.submitter_email = self.alice.email
-        self.submission_form_thesis.save()
+        submission_form_thesis = create_submission_form()
+        submission_form_thesis.submission.is_thesis = True
+        submission_form_thesis.submission.save()
+        submission_form_thesis.project_type_education_context = 1  # "Dissertation"
+        submission_form_thesis.submitter_email = self.alice.email
+        submission_form_thesis.save()
 
-        self.january_meeting = Meeting.objects.create(title='January Meeting', start=datetime(2042, 1, 1))
-        self.february_meeting = Meeting.objects.create(title='February Meeting', start=datetime(2042, 2, 1))
-        self.march_meeting = Meeting.objects.create(title='March Meeting', start=datetime(2042, 3, 1))
-        self.april_meeting = Meeting.objects.create(title='April Meeting', start=datetime(2042, 4, 1))
+        meeting = Meeting.objects.create(title='January Meeting', start=datetime(2042, 1, 1))
+        meeting.started = meeting.start
+        meeting.ended = meeting.start + timedelta(hours=8)
+        meeting.deadline = meeting.start - timedelta(days=7)
+        meeting.deadline_diplomathesis = meeting.start - timedelta(days=2)
+        meeting.save()
 
-        for meeting in (self.january_meeting, self.february_meeting, self.march_meeting, self.april_meeting):
-            meeting.started = meeting.start
-            meeting.ended = meeting.start + timedelta(hours=8)
-            meeting.deadline = meeting.start - timedelta(days=7)
-            meeting.deadline_diplomathesis = meeting.start - timedelta(days=2)
-            meeting.save()
+        meeting.add_entry(submission=submission_form.submission, duration_in_seconds=60)
+        meeting.add_entry(submission=submission_form_thesis.submission, duration_in_seconds=60)
 
-        self.january_meeting.add_entry(submission=self.submission_form.submission, duration_in_seconds=60)
-        self.january_meeting.add_entry(submission=self.submission_form_thesis.submission, duration_in_seconds=60)
-
-        self.vote = Vote.objects.create(submission_form=self.submission_form, top=self.january_meeting.timetable_entries.get(submission=self.submission_form.submission), result='2')
-        self.vote_thesis = Vote.objects.create(submission_form=self.submission_form_thesis, top=self.january_meeting.timetable_entries.get(submission=self.submission_form_thesis), result='2')
-
-        return rval
+        self.valid_until = datetime.today().date() + timedelta(days=365)
+        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='2')
+        self.vote.publish()
+        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='2')
+        self.vote_thesis.publish()
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.
@@ -61,7 +57,7 @@ class VoteRemindersTest(CommunicationTestCase):
         
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=(self.april_meeting.deadline+timedelta(days=1)).date())
+        send_reminder_messages(today=self.valid_until+timedelta(days=1))
         self.failUnless(alice_message_count < Message.objects.filter(receiver=self.alice).count())
         self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
@@ -71,24 +67,24 @@ class VoteRemindersTest(CommunicationTestCase):
         
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis+timedelta(days=1)).date())
+        send_reminder_messages(today=self.valid_until+timedelta(days=1))
         self.failUnless(alice_message_count < Message.objects.filter(receiver=self.alice).count())
         self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office(self):
-        '''FIXME check if ok: Tests that messages get sent to the postmaster before the deadline of a submission meeting.
+        '''Tests that messages get sent to office before the deadline
         '''
         
         message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=(self.april_meeting.deadline-timedelta(days=7)).date())
+        send_reminder_messages(today=self.valid_until-timedelta(days=7))
         self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office_diplomathesis(self):
-        '''FIXME check if ok: Tests that messages get sent to the postmaster before the deadline of a diploma thesis submission meeting.
+        '''Tests that messages get sent to office for a thesis submission
         '''
         
         message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis-timedelta(days=7)).date())
+        send_reminder_messages(today=self.valid_until-timedelta(days=7))
         self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_submitter(self):
@@ -96,7 +92,7 @@ class VoteRemindersTest(CommunicationTestCase):
         '''
         
         message_count = Message.objects.filter(receiver=self.alice).count()
-        send_reminder_messages(today=(self.april_meeting.deadline-timedelta(days=21)).date())
+        send_reminder_messages(today=self.valid_until-timedelta(days=21))
         self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())
 
     def test_reminder_submitter_diplomathesis(self):
@@ -104,6 +100,6 @@ class VoteRemindersTest(CommunicationTestCase):
         '''
         
         message_count = Message.objects.filter(receiver=self.alice).count()
-        send_reminder_messages(today=(self.april_meeting.deadline_diplomathesis-timedelta(days=21)).date())
+        send_reminder_messages(today=self.valid_until-timedelta(days=21))
         self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())
 

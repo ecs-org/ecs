@@ -72,12 +72,13 @@ def send_reminder_messages(today=None):
     if today is None:
         today = datetime.today().date()
 
-    votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2')
+    votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2').exclude(published_at__isnull=True, valid_until__isnull=True)
     for vote in votes:
-        if today < vote.valid_until:
-            days_valid = (vote.valid_until - today).days
+        valid_until = vote.valid_until.date()
+        if today < valid_until:
+            days_valid = (valid_until - today).days
         else:
-            days_valid = 0 - (today - vote.valid_until).days
+            days_valid = 0 - (today - valid_until).days
 
         if days_valid == 21:
             send_vote_reminder_submitter(vote)
