@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-23 22:06+0100\n"
+"POT-Creation-Date: 2012-01-24 16:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2829,18 +2829,22 @@ msgid "Replace"
 msgstr "Ersetzen"
 
 #: templates/documents/upload_form.html:42
+msgid "Use the calendar icon to select a date."
+msgstr "Verwenden Sie das Kalendersymbol um ein Datum auszuwählen."
+
+#: templates/documents/upload_form.html:45
 msgid "Replaces document"
 msgstr "Ersetzt Dokument"
 
-#: templates/documents/upload_form.html:43
+#: templates/documents/upload_form.html:46
 msgid "New Document"
 msgstr "Neues Dokument"
 
-#: templates/documents/upload_form.html:46
+#: templates/documents/upload_form.html:49
 msgid "Upload"
 msgstr "Hochladen"
 
-#: templates/documents/upload_form.html:48
+#: templates/documents/upload_form.html:51
 msgid "Please be patient, the file is being uploaded and processed"
 msgstr ""
 "Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns "
@@ -2854,11 +2858,11 @@ msgstr "Kein Text"
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
 
-#: templates/help/view_page.html:31
+#: templates/help/view_page.html:23
 msgid "last edited"
 msgstr "zuletzt bearbeitet"
 
-#: templates/help/view_page.html:31
+#: templates/help/view_page.html:23
 msgid "ago by"
 msgstr ""
 

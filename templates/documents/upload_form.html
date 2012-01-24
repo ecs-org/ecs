@@ -38,6 +38,9 @@
                         {% include "forms/field.html" %}
                     {% endif %}
                 {% endfor %}
+                <div class="hint">
+                    <span class="icon_comment"></span>{% trans "Use the calendar icon to select a date." %}
+                </div>
                 <li style="display:none;">
                     {% trans "Replaces document" %} <span id="replaced_document_name"></span>
                     <a href="" class="new_document">{% trans "New Document" %}</a>
