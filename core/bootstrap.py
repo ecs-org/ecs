@@ -18,7 +18,7 @@ from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, WaitForMeeting, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
-    has_expedited_recommendation, is_expedited_or_retrospective_thesis, is_acknowledged_and_initial_submission, is_b2, is_still_b2,
+    has_expedited_recommendation, is_acknowledged_and_initial_submission, is_b2, is_still_b2,
     needs_insurance_b2_review, needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
 
@@ -116,7 +116,6 @@ def submission_workflow():
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name=_("Start")),
-            'generic_review': Args(Generic, name=_("Review Split")),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
@@ -189,11 +188,10 @@ def submission_workflow():
             ('localec_recommendation', 'localec_vote_preparation'): Args(guard=needs_localec_vote_preparation),
             ('localec_recommendation', 'categorization_review'): Args(guard=has_localec_recommendation, negated=True),
 
-            ('categorization_review', 'generic_review'): Args(guard=is_expedited_or_retrospective_thesis, negated=True),
-            ('generic_review', 'insurance_review'): Args(guard=needs_insurance_review),
-            ('generic_review', 'statistical_review'): Args(guard=needs_statistical_review),
-            ('generic_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
-            ('generic_review', 'gcp_review'): Args(guard=needs_gcp_review),
+            ('categorization_review', 'insurance_review'): Args(guard=needs_insurance_review),
+            ('categorization_review', 'statistical_review'): Args(guard=needs_statistical_review),
+            ('categorization_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
+            ('categorization_review', 'gcp_review'): Args(guard=needs_gcp_review),
         }
     )
 
