@@ -5,7 +5,7 @@
 <VirtualHost *:443>
     ServerName %(hostname)s
     ServerAlias *.%(hostname)s
-    ServerAdmin admin@%(hostname)s
+    ServerAdmin postmaster@%(hostname)s
 
     SSLEngine on
     SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
@@ -21,24 +21,24 @@
         SSLVerifyDepth 1
     </Location>
     
-    DocumentRoot %(home)s/public_html
-    <Directory "%(home)s/public_html">
+    DocumentRoot %(home)s/empty_html
+    <Directory "%(home)s/empty_html">
         Options FollowSymLinks
         AllowOverride Authconfig FileInfo Indexes Limit Options=Indexes
     </Directory>
-
+    
     Include /etc/apache2/ecs/apache.conf/*.conf
 </VirtualHost>
 
 <VirtualHost %(hostname)s:80>
     ServerName %(hostname)s
-    ServerAdmin admin@%(hostname)s
+    ServerAdmin postmaster@%(hostname)s
 
-    DocumentRoot %(home)s/public_html
-    <Directory "%(home)s/public_html">
+    DocumentRoot %(home)s/empty_html
+    <Directory "%(home)s/empty_html">
         Options FollowSymLinks
         AllowOverride Authconfig FileInfo Indexes Limit Options=Indexes
     </Directory>
-    
+        
     Redirect permanent / https://%(hostname)s/
 </VirtualHost>
