@@ -461,6 +461,7 @@ $myhostname   smtp:[localhost:8823]
         local('sudo cp {0} /etc/default/jetty'.format(source_jetty))
         local('sudo /etc/init.d/jetty stop')
         local('sudo /etc/init.d/jetty start')
+        time.sleep(5) # jetty needs time to startup
 
     def search_update(self):
         local('cd {0}/src/ecs; . {0}/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput '.format(self.homedir))
