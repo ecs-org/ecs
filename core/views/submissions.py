@@ -805,9 +805,10 @@ def all_submissions(request):
 
         submissions_q = Q()
 
-        m = re.match(r'(\d{4})', keyword)
+        m = re.match(r'(\d+)', keyword)
         if m:
-            submissions_q = Q(ec_number__endswith=m.group(1))
+            num = '%04d' %  int(m.group(1))
+            submissions_q = Q(ec_number__endswith=num)
 
         m = re.match(r'(\d+)/(\d+)', keyword)
         if m:

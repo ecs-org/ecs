@@ -23,7 +23,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'sponsor_fax': [u'+430987654345678'], u'substance_p_c_t_final_report': [u'2'], u'substance_registered_in_countries': [u'AT',u'FR'], 
     u'pharma_reference_substance': [u'none'], u'medtech_product_name': [u''], u'study_plan_alpha': [u'0.03'], 
     u'investigatoremployee-0-investigator_index': [u'0'], u'study_plan_secondary_objectives': [u''], u'eudract_number': [u'2020-002323-99'], 
-    u'study_plan_dropout_ratio': [u'0'], u'german_protected_subjects_info': [u'bla bla bla'], u'sponsor_contact_gender': [u''], 
+    u'study_plan_dropout_ratio': [u'0'], u'german_protected_subjects_info': [u'bla bla bla'], u'sponsor_contact_gender': [u'f'], 
     u'study_plan_misc': [u''], u'german_preclinical_results': [u'bla bla bla'], u'study_plan_biometric_planning': [u'Mag. rer.soc.oec. Jane Doe/ Statistikerin'], 
     u'investigatoremployee-0-title': [u''], u'nontesteduseddrug-INITIAL_FORMS': [u'0'], u'submitter_contact_last_name': [u'Doe'], 
     u'investigatoremployee-0-sex': [u''], u'study_plan_stratification': [u''], u'sponsor_agrees_to_publishing': [u'on'], u'german_recruitment_info': [u'bla bla bla'], 
@@ -32,7 +32,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'study_plan_planned_statalgorithm': [u'log rank test'], u'document-date': [u''], u'medtech_reference_substance': [u''], u'measure-MAX_NUM_FORMS': [u''], 
     u'study_plan_statalgorithm': [u'none'], u'foreignparticipatingcenter-TOTAL_FORMS': [u'1'], u'routinemeasure-MAX_NUM_FORMS': [u''], 
     u'invoice_contact_first_name': [u''], u'investigator-0-mobile': [u''], u'submitter_is_coordinator': [u'on'], u'insurance_validity': [u'keine'], 
-    u'sponsor_name': [u'sponsor'], u'sponsor_contact_last_name': [u''], u'sponsor_email': [u'johndoe@example.com'], u'subject_duration': [u'96 months'], 
+    u'sponsor_name': [u'sponsor'], u'sponsor_contact_last_name': [u'last'], u'sponsor_email': [u'johndoe@example.com'], u'subject_duration': [u'96 months'], 
     u'submitter_contact_gender': [u'f'], u'nontesteduseddrug-0-generic_name': [u''], u'medtech_ce_symbol': [u'3'], u'investigator-0-contact_gender': [u'f'], 
     u'investigator-1-contact_gender': [u'm'], u'nontesteduseddrug-MAX_NUM_FORMS': [u''], u'investigatoremployee-INITIAL_FORMS': [u'0'], u'insurance_phone': [u'1234567'], 
     u'investigator-0-email': [u'rofl@copter.com'], u'measure-TOTAL_FORMS': [u'0'], u'medtech_manufacturer': [u''], u'subject_planned_total_duration': [u'10 months'], 
@@ -61,7 +61,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'invoice_fax': [u''], u'investigator-MAX_NUM_FORMS': [u''], u'sponsor_zip_code': [u'2323'], u'subject_duration_active': [u'14 months'], 
     u'measure-INITIAL_FORMS': [u'0'], u'nontesteduseddrug-TOTAL_FORMS': [u'1'], u'already_voted': [u'on'], u'subject_duration_controls': [u'36 months'], 
     u'invoice_phone': [u''], u'submitter_jobtitle': [u'jobtitle'], u'investigator-1-specialist': [u''], u'german_sideeffects_info': [u'bla bla bla'], 
-    u'subject_females': [u'on'], u'investigator-0-organisation': [u'orga'], u'sponsor_contact_first_name': [u''],
+    u'subject_females': [u'on'], u'investigator-0-organisation': [u'orga'], u'sponsor_contact_first_name': [u'first'],
     u'pharma_checked_substance': [u'1'], u'investigator-0-subject_count': [u'1'], u'project_type_misc': [u''], 
     u'foreignparticipatingcenter-0-name': [u''], u'investigator-1-organisation': [u'orga'], u'invoice_city': [u''], u'german_financing_info': [u'bla bla bla'], 
     u'submitter_contact_first_name': [u'Jane'], u'foreignparticipatingcenter-0-investigator_name': [u''], u'german_dataaccess_info': [u'bla bla bla'], 
@@ -202,7 +202,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         response = self.client.get(url, {'keyword': '42'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 2)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
         
         response = self.client.get(url, {'keyword': '2020/42'})
         self.failUnless(response.status_code, 200)
