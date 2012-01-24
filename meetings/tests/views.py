@@ -1,6 +1,9 @@
 import datetime
-from django.core.urlresolvers import reverse
 from urlparse import urlsplit
+
+from django.core.urlresolvers import reverse
+from django.contrib.auth.models import Group
+
 from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
 from ecs.core.tests.submissions import create_submission_form
@@ -22,8 +25,9 @@ class ViewTestCase(EcsTestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.start = datetime.datetime(2020, 2, 20, 20, 20)
-        self.user = self.create_user('unittest-internal', profile_extra={'is_internal': True})
-        self.client.login(email='unittest-internal@example.com', password='password')
+        self.user = self.create_user('unittest-office', profile_extra={'is_internal': True})
+        self.user.groups.add(Group.objects.get(name='EC-Office'))
+        self.client.login(email='unittest-office@example.com', password='password')
 
     def tearDown(self):
         super(ViewTestCase, self).tearDown()
