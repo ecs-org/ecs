@@ -189,7 +189,7 @@ def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
         decrypted = tempfile.NamedTemporaryFile(suffix='.pdf')
         logger.info("decrypting pdf document")
         popen = subprocess.Popen([QPDF_PATH, '--decrypt', tmp.name, decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-        popen.communicate("\n") # send a newline in case origami asks for a password on stdin
+        stdout, stderr = popen.communicate("\n") # send a newline in case origami asks for a password on stdin
         if popen.returncode:
             logger.warn('qpdf error (returncode=%s):\n%s' % (popen.returncode, smart_str(stderr, errors='backslashreplace')))
         else:
