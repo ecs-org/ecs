@@ -14,8 +14,9 @@ from lamson.server import SMTPError
 from django.conf import settings
 from django.contrib.auth.models import User
 
-from ecs.communication.models import Message
+from ecs.communication.models import Thread, Message
 from ecs.ecsmail.utils import deliver_to_recipient, whitewash
+from ecs.users.utils import get_user
 
 @route(".+")
 def SOFT_BOUNCE(message):
@@ -138,7 +139,9 @@ def START(message, address=None, host=None):
     from ecs.ecsmail.lamson_settings import relay
     __checkConstraints(message)
 
-    if host == settings.ECSMAIL['authoritative_domain']: # we acccept mail for this address
+    aut = host == settings.ECSMAIL['authoritative_domain']
+
+    if aut and not address == 'postmaster': # we acccept mail for this address
         ecsmsg,ecshash = __findInitiatingMessage(message)
 
         logging.info('REPLY %s %s %s %s %s' % ( ecshash, ecsmsg, address, host, type(message)))
@@ -170,13 +173,23 @@ def START(message, address=None, host=None):
             except:
                 traceback.print_exc()
 
-    elif message.Peer[0] in settings.ECSMAIL['trusted_sources']:
+    elif message.Peer[0] in settings.ECSMAIL['trusted_sources'] or (aut and address == 'postmaster'):
         host_addr = gethostbyname(host);
         local_addr = gethostbyname("localhost")
 
-        if host_addr == local_addr:
-            pass
-            #FIXME which user to notify?
+        if host_addr == local_addr or address == 'postmaster':
+            body, attachment_count = __prepareBody(message)
+            body = unicode(body)
+            if attachment_count:
+                body += u'\n\n====================\n{0} attachments removed\n'.format(attachment_count)
+            rawmsg = message.to_message().as_string()
+
+            postmaster = get_user(settings.ECSMAIL['postmaster'])
+            subject = message.base['subject'] or '<no subject>'
+            thread = Thread.objects.create(subject=subject, sender=postmaster, receiver=postmaster)
+            thread.add_message(ecsmsg.receiver, unicode(body),
+                rawmsg_msgid=message['Message-ID'], rawmsg=rawmsg, 
+                rawmsg_digest_hex=hashlib.md5(rawmsg).hexdigest())
         else:
             logging.info('RELAYING %s %s %s' % (repr(message), address, host))
             relay.deliver(message)
