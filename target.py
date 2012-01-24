@@ -397,15 +397,17 @@ $myhostname   smtp:[localhost:8823]
         local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s' % self.config)
          
     def db_update(self):
-        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py syncdb --noinput')
-        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py migrate --noinput')
-        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py bootstrap')
+        local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py syncdb --noinput'.format(self.homedir))
+        local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py migrate --noinput'.format(self.homedir))
+        local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py bootstrap'.format(self.homedir))
 
     def db_dump(self):
-        local('pg_dump --create --encoding="utf-8" --file=~/%(postgresql.database)s.sql.dump %(postgresql.database)s' % self.config)
+        cmd = 'pg_dump --create --encoding="utf-8" --file={0}/%(postgresql.database)s.sql.dump %(postgresql.database)s'.format(self.homedir)
+        local(cmd % self.config)
 
     def db_restore(self):
-        local('psql --file=~/%(postgresql.database)s.sql.dump --database=%(postgresql.database)s' % self.config)
+        cmd = 'psql --file={0}/%(postgresql.database)s.sql.dump --database=%(postgresql.database)s'.format(self.homedir)
+        local(cmd % self.config)
                 
     def env_clear(self):
         # todo: implement env_clear
@@ -418,8 +420,8 @@ $myhostname   smtp:[localhost:8823]
         # FIXME implement env_boot
     
     def env_update(self):
-        local('sudo bash -c "cd ~/src/; . ~/environment/bin/activate;  fab appreq:ecs,flavor=system"')
-        local('cd ~/src/; . ~/environment/bin/activate; fab appenv:ecs,flavor=system')
+        local('sudo bash -c "cd {0}/src/; . {0}/environment/bin/activate;  fab appreq:ecs,flavor=system"'.format(self.homedir))
+        local('cd {0}/src/; . {0}/environment/bin/activate; fab appenv:ecs,flavor=system'.format(self.homedir))
         
     def queuing_config(self):
         with settings(warn_only=True):
@@ -449,16 +451,19 @@ $myhostname   smtp:[localhost:8823]
             
         
     def search_config(self):
-        local('cd ~/src/ecs; . ~/environment/bin/activate; ./manage.py build_solr_schema > ~%s/ecs-conf/solr_schema.xml' % self.username)
-        local('sudo cp ~%s/ecs-conf/solr_schema.xml /etc/solr/conf/schema.xml' % self.username)
-        with open(os.path.expanduser('~/ecs-conf/jetty.cnf'), 'w') as f:
+        source_schema = os.path.join(self.homedir, 'ecs-conf', 'solr_schema.xml')
+        source_jetty =  os.path.join(self.homedir, 'ecs-conf', 'jetty.cnf')
+        local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py build_solr_schema > {1}'.format(
+            self.homedir,  source_schema))
+        local('sudo cp {0} /etc/solr/conf/schema.xml'.format(source_schema))
+        with open(source_jetty, 'w') as f:
             f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
-        local('sudo cp ~{0}/ecs-conf/jetty.cnf /etc/default/jetty'.format(self.username))
+        local('sudo cp {0} /etc/default/jetty'.format(source_jetty))
         local('sudo /etc/init.d/jetty stop')
         local('sudo /etc/init.d/jetty start')
 
     def search_update(self):
-        local('cd ~/src/ecs; . ~/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput ')
+        local('cd {0}/src/ecs; . {0}/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput '.format(self.homedir))
 
 
 def custom_check_gettext_runtime(pkgline, checkfilename):
