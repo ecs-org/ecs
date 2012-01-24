@@ -68,6 +68,10 @@ MS_CLIENT = {
     "same_host_as_server": %(mediaserver.client.same_host_as_server)s,
 }
 
+STORAGE_VAULT = '%(storagevault.implementation)s'
+STORAGE_VAULT_OPTIONS = {
+    'LocalFileStorageVault.rootdir': '%(storagevault.options.localfilestorage_root)s',
+    }
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),

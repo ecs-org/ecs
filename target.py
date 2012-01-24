@@ -51,6 +51,8 @@ class SetupTarget(SetupTargetObject):
         self.config.setdefault('mediaserver.storage.signing_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.sec'))
         self.config.setdefault('mediaserver.storage.decrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.sec'))
         self.config.setdefault('mediaserver.storage.verify_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.pub'))
+        self.config.setdefault('storagevault.implementation', 'ecs.mediaserver.storagevault.LocalFileStorageVault')
+        self.config.setdefault('storagevault.options.localfilestorage_root', os.path.join(self.homedir, 'ecs-storage-vault')) 
 
     def random_string(self, length=40, simpleset=False):
         if simpleset:
@@ -85,15 +87,14 @@ class SetupTarget(SetupTargetObject):
 
     def system_setup(self, *args, **kwargs):
         ''' System Setup; Destructive '''
-        self.homedir_config()
+        self.directory_config()
         self.host_config(with_current_ip=True)
         self.servercert_config()
         
         self.backup_config()
         self.mail_config()
         self.queuing_config()
-        # temporary fix until tomorrow
-        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y qpdf"')
+        
         # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
 
         self.db_clear()
@@ -121,7 +122,7 @@ class SetupTarget(SetupTargetObject):
 
     def update(self, *args, **kwargs):
         ''' System Update: Non destructive '''
-        self.homedir_config()
+        self.directory_config()
         self.env_update()
         self.db_update()
         self.search_config()
@@ -141,12 +142,19 @@ class SetupTarget(SetupTargetObject):
             self.daemons_start()
             self.wsgi_reload()        
     
-    def homedir_config(self):
+    def directory_config(self):
         homedir = os.path.expanduser('~')
-        for name in ('public_html', '.python-eggs', 'ecs-conf'):
+        for name in ('empty_html', 'public_html', '.python-eggs', 'ecs-conf'):
             pathname = os.path.join(homedir, name)
             if not os.path.exists(pathname):
                 os.mkdir(pathname)
+        
+        # /opt/ecs directory
+        pathname = os.path.join('/opt', self.appname)
+        if not os.path.exists(pathname):
+            local('sudo mkdir {0}'.format(pathname))
+        local('sudo chown {0}:{0} {1}'.format(self.appname, pathname))
+
                 
     def host_config(self, with_current_ip=False):
         with_current_ip = strbool(with_current_ip)
