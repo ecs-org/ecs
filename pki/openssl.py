@@ -60,7 +60,7 @@ class CA(object):
         return os.path.join(self.basedir, self.serial)
         
     def _gen_crl(self):
-        self._exec_ca(['-gencrl', '-crldays', '1', '-out', self.crl_path])
+        self._exec_ca(['-gencrl', '-crldays', '3650', '-out', self.crl_path])
 
     def setup(self, subject, key_length=2048):
         if not os.path.exists(self.basedir):
