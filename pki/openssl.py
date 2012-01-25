@@ -22,7 +22,7 @@ class CA(object):
         self.crlnumber = 'crlnumber'
         self.crl = 'crl.pem'
         self.private_key = 'private/ca.key.pem'
-        self.default_days = 365
+        self.default_days = 2 * 365
         self.default_bits = 2048
         self.config = 'openssl.cnf'
 
