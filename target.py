@@ -43,6 +43,7 @@ class SetupTarget(SetupTargetObject):
         for attr in ('ip', 'host'):
             setattr(self, attr, self.config[attr])
         self.config['local_hostname'] = self.config['host'].split('.')[0]
+        self.config.setdefault('ssl.chain', '') # chain is optional
         self.config.setdefault('postgresql.username', self.config['user'])
         self.config.setdefault('postgresql.database', self.config['user'])
         self.config.setdefault('rabbitmq.username', self.config['user'])
@@ -255,7 +256,25 @@ class SetupTarget(SetupTargetObject):
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
             local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
-        local('sudo update-ca-certificates') # needed for all in special java that pdf-as knows server cert
+        
+        # copy chain file (if exist, or create empty file instead)
+        ssl_chain = self.config.get_path('ssl.chain')
+        if not ssl_chain:
+            with tempfile.NamedTemporaryFile() as t:
+                t.write("\n")
+                t.flush()
+                local('sudo cp {0} /etc/ssl/certs/{1}.chain.pem'.format(t.name, self.host))
+        else:
+            local('sudo cp {0} /etc/ssl/certs/{0}.chain.pem' % (ssl_chain, self.host))
+        
+        # combine cert plus chain to combined.pem
+        with tempfile.NamedTemporaryFile() as t:
+            shutil.copyfileobj(open('/etc/ssl/certs/{0}.pem'.format(self.host)), t)
+            shutil.copyfileobj(open('/etc/ssl/certs/{0}.chain.pem'.format(self.host)), t)
+            t.flush()
+            local('sudo cp {0} /etc/ssl/certs/{1}.combined.pem'.format(t.name, self.host))
+            
+        local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
         
     def mail_config(self):
         '''
