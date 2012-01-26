@@ -60,7 +60,7 @@ def maintenance(environ, start_response):
     output = StringIO.StringIO()
     print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
     print >> output
-    output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
+    #output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     data = output.getvalue()
     output.close()
     
