@@ -870,7 +870,13 @@ def catalog(request, year=None):
         votes = votes.select_related('submission_form').order_by('published_at')
         years = votes.dates('published_at', 'year')
         if year is None:
-            year = list(years)[-1].year
+            try:
+                year = list(years)[-1].year
+            except IndexError:  # no votes yet
+                today = datetime.today()
+                year = today.year
+                years = [today]
+
             return HttpResponseRedirect(reverse('ecs.core.views.submissions.catalog', kwargs={'year': year}))
         else:
             year = int(year)
