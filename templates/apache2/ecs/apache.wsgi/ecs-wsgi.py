@@ -57,12 +57,13 @@ def maintenance(environ, start_response):
     write = start_response('200 OK', headers)
     input = environ['wsgi.input']
     
-    with StringIO.StringIO() as output:
-        print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
-        print >> output
-        output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
-        data = output.getvalue()
-        
+    output = StringIO.StringIO()
+    print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
+    print >> output
+    output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
+    data = output.getvalue()
+    output.close()
+    
     return [data]
 
 # late import of django, because we needed to mangle python paths first, to include environment
