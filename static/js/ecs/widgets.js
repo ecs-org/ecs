@@ -209,6 +209,7 @@ ecs.widgets.Popup = new Class({
 });
 
 ecs.widgets.enablePopupHandlers = function(context, widget){
+    context = $(context);
     context.getElements('a.open-in-popup').each(function(link){
         if(link.getParent('.ecs-Popup')){
             link.addClass('open-in-widget');
