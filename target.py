@@ -88,6 +88,11 @@ class SetupTarget(SetupTargetObject):
 
     def system_setup(self, *args, **kwargs):
         ''' System Setup; Destructive '''
+        setup(*args, **kwargs)
+        
+    
+    def setup(self, *args,**kwargs):
+            
         self.directory_config()
         self.host_config(with_current_ip=True)
         self.servercert_config()
@@ -124,10 +129,13 @@ class SetupTarget(SetupTargetObject):
     def update(self, *args, **kwargs):
         ''' System Update: Non destructive '''
         self.directory_config()
+        
         self.env_update()
         self.db_update()
+        
         self.search_config()
         self.search_update()
+        
         self.apache_restart()
         self.daemons_start()
 
@@ -245,17 +253,22 @@ class SetupTarget(SetupTargetObject):
                 '/etc/backup.d/20.pgsql', backup=False, use_sudo=True, filemode= '0600')
 
     def servercert_config(self):
+        target_key = '/etc/ssl/private/{0}.key'.format(self.host)
+        target_cert = '/etc/ssl/certs/{0}.pem'.format(self.host)
+        target_chain = '/etc/ssl/certs/{0}.chain.pem'.format(self.host)
+        target_combined = '/etc/ssl/certs/{0}.combined.pem'.format(self.host)
+        
         try:
             ssl_key = self.config.get_path('ssl.key')
             ssl_cert = self.config.get_path('ssl.cert')
-            local('sudo cp %s /etc/ssl/private/%s.key' % (ssl_key, self.host))
-            local('sudo cp %s /etc/ssl/certs/%s.pem' % (ssl_cert, self.host))
-            local('sudo chmod 0600 /etc/ssl/private/%s.key' % self.host)
+            local('sudo cp {0} {1}'.format(ssl_key, target_key))
+            local('sudo cp {0} {1}'.format(ssl_cert, target_cert))
+            local('sudo chmod 0600 {0}'.format(target_key)
         except KeyError:
             warn('Missing SSL key or certificate - a new pair will be generated')
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
-            local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout /etc/ssl/private/{1}.key -out /etc/ssl/certs/{1}.pem'.format(openssl_cnf, self.host))
+            local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout {1} -out {2}'.format(openssl_cnf, target_key, target_cert))
         
         # copy chain file (if exist, or create empty file instead)
         ssl_chain = self.config.get_path('ssl.chain')
@@ -263,16 +276,12 @@ class SetupTarget(SetupTargetObject):
             with tempfile.NamedTemporaryFile() as t:
                 t.write("\n")
                 t.flush()
-                local('sudo cp {0} /etc/ssl/certs/{1}.chain.pem'.format(t.name, self.host))
+                local('sudo cp {0} {1}'.format(t.name, target_chain))
         else:
-            local('sudo cp {0} /etc/ssl/certs/{0}.chain.pem' % (ssl_chain, self.host))
+            local('sudo cp {0} {1}' % (ssl_chain, target_chain))
         
         # combine cert plus chain to combined.pem
-        with tempfile.NamedTemporaryFile() as t:
-            shutil.copyfileobj(open('/etc/ssl/certs/{0}.pem'.format(self.host)), t)
-            shutil.copyfileobj(open('/etc/ssl/certs/{0}.chain.pem'.format(self.host)), t)
-            t.flush()
-            local('sudo cp {0} /etc/ssl/certs/{1}.combined.pem'.format(t.name, self.host))
+        local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
             
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
         
