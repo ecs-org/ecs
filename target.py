@@ -88,10 +88,6 @@ class SetupTarget(SetupTargetObject):
 
     def system_setup(self, *args, **kwargs):
         ''' System Setup; Destructive '''
-        setup(*args, **kwargs)
-        
-    
-    def setup(self, *args,**kwargs):
             
         self.directory_config()
         self.host_config(with_current_ip=True)
