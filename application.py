@@ -246,6 +246,9 @@ libyaml-dev:req:apt:apt-get:libyaml-dev
 pyyaml:inst:!win:pypi:pyyaml==3.10
 pyyaml:instbin:win:http://pypi.python.org/packages/2.6/P/PyYAML/PyYAML-3.10.win32-py2.6.exe
 
+# browser detection
+httpagentparser:inst:all:pypi:httpagentparser
+
 """
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting

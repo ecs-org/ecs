@@ -31,6 +31,8 @@ from ecs.users.utils import user_flag_required, user_group_required
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user, user_group_required
 from ecs.communication.utils import send_system_message_template
+from ecs.utils.browserutils import is_malicious_browser
+from ecs.help.models import Page
 
 
 class TimestampedTokenFactory(object):
@@ -49,13 +51,18 @@ class TimestampedTokenFactory(object):
         
 _password_reset_token_factory = TimestampedTokenFactory(extra_key=settings.REGISTRATION_SECRET)
 _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWORD_RESET_SECRET, ttl=86400)
-    
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='username')
 def login(request, *args, **kwargs):
     if request.is_ajax():
         return HttpResponse('<script type="text/javascript">window.location.href="%s";</script>' % reverse('ecs.users.views.login'))
+    if is_malicious_browser(request.META['HTTP_USER_AGENT']):
+        try:
+            Page.objects.get(slug='html5')
+            return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+        except Page.DoesNotExist:
+            return HttpResponseRedirect(reverse('ecs.help.views.index'))
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
     return auth_views.login(request, *args, **kwargs)

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n %}
+{% load i18n core %}
 
 {% block jshead %} {# enqueue javasript #}
   {{ block.super }}
@@ -25,7 +25,8 @@
     }
     </script>
     <img src="/static/images/logo.png" />
-    <div id="browser_warning" style="display:none">
+    {% if not request|is_supported_browser %}
+    <div id="browser_warning">
         <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser;<br>
         Zur korrekten Darstellung brauchen sie
         <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>,
@@ -34,6 +35,7 @@
         <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.<br>
         <a href="javascript:$('login_button').show()">Ich möchte es trotzdem versuchen.</a>
     </div>
+    {% endif %}
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
       | <a href="" id="help_button" class="help_trigger">{% trans 'Online Help Pages' %}</a>
@@ -45,7 +47,7 @@
             {% if form.username.errors %}{{ form.username.errors}}{% endif %}</p>
         <p>{{ form.password.label_tag }}{{ form.password }}
             {% if form.password.errors %}{{ form.password.errors}}{% endif %}</p>
-        <p><input type="submit" value="login" id="login_button"/></p>
+        <p><input type="submit" value="login" id="login_button"{% if not request|is_supported_browser %} style="display:none;"{% endif %}/></p>
         <input type="hidden" name="next" value="{{ next }}" />
           {% if form.errors %}
           <div class="login_error_msg">
@@ -64,23 +66,6 @@
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function() {
-            function is_browser(regex, num) {
-                if (regex.test(navigator.userAgent)) {
-                    var version = new Number(RegExp.$1);
-                    return (version >= num);
-                }
-                return false;
-            }
-
-            if (!is_browser(/Firefox[\/\s](\d+\.\d+)/, 4) &&
-                !is_browser(/Chrome[\/\s](\d+)/, 12) &&
-                !is_browser(/Version[\/\s](\d+\.\d+).*Safari/, 5) &&
-                !is_browser(/MSIE[\/\s](\d+\.\d+)/, 9)) {
-                $('browser_warning').show();
-                $('login_button').hide();
-            } else {
-                $('login_button').focus();
-            }
             window.openHelpPage = function(e){
                 {% if request.tracking_data.view %}
                 var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
