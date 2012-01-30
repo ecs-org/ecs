@@ -4,7 +4,7 @@ SUPPORTED_BROWSERS = {
     'Firefox': 4,
     'Chrome': 12,
     'Safari': 5,
-    'MSIE': 9,
+    'Microsoft Internet Explorer': 9,
 }
 
 def is_supported_browser(ua):
