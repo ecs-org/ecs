@@ -1,0 +1,44 @@
+{% extends 'shell.html' %}
+{% load i18n %}
+
+{% block htmlbody %}
+    <style>
+        body, html {
+            height: 100%;
+        }
+        h1 {
+            margin-bottom: 10px;
+            color: red;
+        }
+        .logo {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        .outer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .inner {
+            position: absolute;
+            top: 50%;
+            height: 10em;
+            margin-top: -5em;
+            left: 50%;
+            width: 500px;
+            margin-left: -250px;
+            text-align: center;
+        }
+    </style>
+    <div class="outer">
+        <img class="logo" src="/static/images/logo.png" />
+        <div class="inner">
+            <h1>Unterst&uuml;tzung in Arbeit</h1>
+            <p>Wir arbeiten an der Unterst&uuml;tzung ihres Browsers. Bitte benutzen
+            Sie in der Zwischenzeit einen anderen Browser. Die Lister der unterst&uuml;tzten
+            Browser finden Sie
+            <a href="{{ help_url }}">hier</a>.</p>
+        </div>
+    </div>
+{% endblock %}

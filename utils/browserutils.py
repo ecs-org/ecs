@@ -16,7 +16,6 @@ def is_supported_browser(ua):
             if name == n and version >= v:
                 return True
     except Exception:
-        import traceback; traceback.print_exc()
         pass
     return False
 
@@ -29,6 +28,15 @@ def is_malicious_browser(ua):
             if name == n and version < v:
                 return True
     except Exception:
-        import traceback; traceback.print_exc()
+        pass
+    return False
+
+def is_temporarily_unsupported_browser(ua):
+    try:
+        browser = httpagentparser.detect(ua)['browser']
+        version = int(browser['version'].split('.', 1)[0])
+        if name == 'Microsoft Internet Explorer' and version == 9:
+            return True
+    except Exception:
         pass
     return False
