@@ -59,7 +59,7 @@ def login(request, *args, **kwargs):
         return HttpResponse('<script type="text/javascript">window.location.href="%s";</script>' % reverse('ecs.users.views.login'))
     if is_malicious_browser(request.META['HTTP_USER_AGENT']):
         try:
-            Page.objects.get(slug='html5')
+            page = Page.objects.get(slug='html5')
             return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
         except Page.DoesNotExist:
             return HttpResponseRedirect(reverse('ecs.help.views.index'))
