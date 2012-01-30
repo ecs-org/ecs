@@ -7,11 +7,6 @@
     EK-Nr. {{ submission|ec_number }}
 {% endblock %}
 
-{% block htmlcss %}
-  {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}css/ecs/diff.css" />
-{% endblock %}
-
 {% block content %}
 
     {% if diff %}
