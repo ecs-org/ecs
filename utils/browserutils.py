@@ -35,6 +35,7 @@ def is_temporarily_unsupported_browser(ua):
     try:
         browser = httpagentparser.detect(ua)['browser']
         version = int(browser['version'].split('.', 1)[0])
+        name = browser['name']
         if name == 'Microsoft Internet Explorer' and version == 9:
             return True
     except Exception:
