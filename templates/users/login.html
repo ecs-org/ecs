@@ -33,7 +33,7 @@
         <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome</a>,
         <a href="http://www.microsoft.com/austria/windows/ie9/">Explorer 9</a> oder
         <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.<br>
-        <a href="javascript:$('login_button').show()">Ich möchte es trotzdem versuchen.</a>
+        <a id="show_login" href="">Ich möchte es trotzdem versuchen.</a>
     </div>
     {% endif %}
     <div class="public_area">
@@ -83,6 +83,10 @@
                 return false;
             };
             $('help_button').addEvent('click', window.openHelpPage);
+            var show_login = $('show_login');
+            if (show_login) {
+                show_login.addEvent('click', function(){$('login_button').show(); return false;});
+            }
         });
     </script>
 {% endblock %}
