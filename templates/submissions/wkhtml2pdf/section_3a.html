@@ -1,7 +1,9 @@
 {% load core corepdf %}
 
+{% if submission_form.is_amg %}
+
 <p class="pbi_avoid">
-3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries|checkbox }} ja {{ submission_form.substance_registered_in_countries|not|checkbox }} nein.
+3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries.exists|yesno_checkboxes }}.
 Wenn <strong>ja</strong>, geben Sie an, in welchen: <br>(bitte verwenden Sie englische Landesbezeichnungen) </p>
 
 <p class="pbi_avoid">
@@ -9,8 +11,7 @@ Wenn <strong>ja</strong>, geben Sie an, in welchen: <br>(bitte verwenden Sie eng
 
 <p>
 3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
-{{ submission_form.substance_preexisting_clinical_tries|checkbox }} ja 
-{{ submission_form.substance_preexisting_clinical_tries|not|checkbox }} nein </p>
+{{ submission_form.substance_preexisting_clinical_tries|yesno_checkboxes }}</p>
 
 <p> Wenn <strong>ja</strong>, bitte geben Sie folgende Daten
 an: </p>
@@ -31,17 +32,17 @@ die höchste Phase angeben) </p>
 
 <p>
 3.2.5 Wurde(n) die klinische(n) Prüfung(en) gemäß GCP-Richtlinien durchgeführt? 
-{{ submission_form.substance_p_c_t_gcp_rules|checkbox }} ja 
-{{ submission_form.substance_p_c_t_gcp_rules|not|checkbox }} nein </p>
+{{ submission_form.substance_p_c_t_gcp_rules|yesno_checkboxes }}</p>
 
 <p>
  3.2.6 Liegt ein Abschlußbericht vor? 
-{{ submission_form.substance_p_c_t_final_report|checkbox }} ja 
-{{ submission_form.substance_p_c_t_final_report|not|checkbox }} nein </p>
+{{ submission_form.substance_p_c_t_final_report|yesno_checkboxes }}</p>
 
 <p>
  Wenn <strong>ja</strong>, bitte legen
 Sie die <strong>Investigator´s Brochure, relevante Daten</strong> oder ein
 <strong>Gutachten des Arzneimittelbeirates</strong> bei. </p>
 
-
+{% else %}
+<p><i>nicht zutreffend</i></p>
+{% endif %}

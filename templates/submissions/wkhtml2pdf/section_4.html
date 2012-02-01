@@ -1,5 +1,7 @@
 {% load core corepdf %}
 
+{% if submission_form.is_mpg %}
+
 <p>
 4.1 Bezeichnung des Produktes: <strong> {{ submission_form.medtech_product_name }} </strong> </p>
 
@@ -11,18 +13,15 @@
     <tr><td>
         4.3 Zertifiziert für diese Indikation:
     </td><td class="indented">
-        {{ submission_form.medtech_certified_for_exact_indications|checkbox }} ja
-        {{ submission_form.medtech_certified_for_exact_indications|not|checkbox }} nein
+        {{ submission_form.medtech_certified_for_exact_indications|yesno_checkboxes }}
     </td></tr><tr><td>
         4.4 Zertifiziert, aber für eine andere Indikation: 
     </td><td class="indented">
-        {{ submission_form.medtech_certified_for_other_indications|checkbox }} ja 
-        {{ submission_form.medtech_certified_for_other_indications|not|checkbox }} nein
+        {{ submission_form.medtech_certified_for_other_indications|yesno_checkboxes }}
     </td></tr><tr><td>
         4.5 Das Medizinprodukt trägt ein CE-Zeichen 
     </td><td class="indented">
-        {{ submission_form.medtech_ce_symbol|checkbox }} ja
-        {{ submission_form.medtech_ce_symbol|not|checkbox }} nein
+        {{ submission_form.medtech_ce_symbol|yesno_checkboxes }}
     </td></tr>
   </tbody>
 </table>
@@ -38,3 +37,7 @@ herangezogen worden (Technische Sicherheit): </p>
 <p>
  4.8 Allfällige Abweichungen von den o.a. Bestimmungen (Normen): </p>
 <p> <strong>{{ submission_form.medtech_departure_from_regulations|default_if_none:""|linebreaksbr }}</strong> </p>
+
+{% else %}
+<p><i>nicht zutreffend</i></p>
+{% endif %}
