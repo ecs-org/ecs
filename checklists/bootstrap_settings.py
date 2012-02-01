@@ -4,7 +4,7 @@ from ecs.utils import Args
 
 checklist_questions = {
     u'thesis_review': [
-        Args('1', u'Geben Sie eine positive Empfehlung ab?'),  # XXX: dont change this number
+        Args('1', u'Handelt es sich um eine retrospektive Diplomstudie und geben Sie eine positive Empfehlung ab?'),  # XXX: dont change this number
     ],
     u'statistic_review': [
         Args('1', u'Ist das Studienziel ausreichend definiert?'),
