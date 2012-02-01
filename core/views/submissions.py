@@ -820,7 +820,10 @@ def all_submissions(request):
             try:
                 doc = Document.objects.get(uuid=keyword)
                 extra_context['matched_document'] = doc
-                submissions_q |= Q(pk=doc.object_id) | Q(forms__pk=doc.object_id)
+                if doc.content_type_id == ContentType.objects.get_for_model(Submission).id:
+                    submissions_q |= Q(pk=doc.object_id)
+                elif doc.content_type_id == ContentType.objects.get_for_model(SubmissionForm).id:
+                    submissions_q |= Q(forms__pk=doc.object_id)
                 if isinstance(doc.parent_object, SubmissionForm) and not doc.parent_object.is_current:
                     extra_context['warning'] = _('This document is an old version.')
             except Document.DoesNotExist:
