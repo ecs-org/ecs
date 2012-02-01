@@ -25,12 +25,14 @@ def on_study_change(sender, **kwargs):
     else:
         with sudo():
             if not submission.votes.exists():
+                initial_review_tasks = get_obj_tasks((InitialReview, InitialThesisReview), submission)
                 try:
-                    initial_review_task = get_obj_tasks((InitialReview, InitialThesisReview), submission).exclude(closed_at__isnull=True)[0]
+                    initial_review_task = initial_review_tasks.exclude(closed_at__isnull=True).order_by('-created_at')[0]
                 except IndexError:
                     pass
                 else:
-                    initial_review_task.reopen()
+                    if not initial_review_tasks.filter(closed_at__isnull=True, deleted_at__isnull=True).exists():
+                        initial_review_task.reopen()
                     send_submission_message(submission, initial_review_task.assigned_to, _('Changes new study {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
             else:
                 involved_users = new_sf.get_reviewing_parties(active=True).get_users().difference([submission.presenter])
