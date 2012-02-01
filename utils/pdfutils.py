@@ -195,7 +195,8 @@ def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
             decrypted.seek(0)
             return decrypted
         else:
-            logger.warn('qpdf error (returncode=%s):\n%s' % (popen.returncode, smart_str(stderr, errors='backslashreplace')))
+            from ecs.users.utils import get_current_user
+            logger.warn('qpdf error (returncode=%s):\nUser: %s\n%s' % (popen.returncode, get_current_user(), smart_str(stderr, errors='backslashreplace')))
     src.seek(0)
     return src
 
