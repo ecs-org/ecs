@@ -1,6 +1,6 @@
 {% load core corepdf %}
 <p class="border_bottom">
-    2.2 Fachgebiet: <span class="value">{{ submission_form.specialism }}</span>
+    2.2 Fachgebiet: <span class="value">{{ submission_form.specialism|default_if_none:""|linebreaksbr }}</span>
 </p>
 
 <table class="full_width nopadding">
@@ -11,15 +11,15 @@
     </tr>
     <tr>
         <td width="147">2.3.1 Prüfsubstanz(en):</td>
-        <td width="147" class="value">{{ submission_form.pharma_checked_substance }}</td>
+        <td width="147" class="value">{{ submission_form.pharma_checked_substance|default_if_none:""|linebreaksbr }}</td>
         <td width="157">2.4.1 Prüfprodukt(e):</td>
-        <td width="157" class="value">{{ submission_form.medtech_checked_product }}</td>
+        <td width="157" class="value">{{ submission_form.medtech_checked_product|default_if_none:""|linebreaksbr }}</td>
     </tr>
     <tr>
         <td width="147">2.3.2 Referenzsubstanz:</td>
-        <td width="147" class="value">{{ submission_form.pharma_reference_substance }}</td>
+        <td width="147" class="value">{{ submission_form.pharma_reference_substance|default_if_none:""|linebreaksbr }}</td>
         <td width="157">2.4.2 Referenzprodukt:</td>
-        <td width="157" class="value">{{ submission_form.medtech_reference_substance }}</td>
+        <td width="157" class="value">{{ submission_form.medtech_reference_substance|default_if_none:""|linebreaksbr }}</td>
     </tr>
   </tbody>
 </table>

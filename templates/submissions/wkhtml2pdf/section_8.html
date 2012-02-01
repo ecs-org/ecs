@@ -29,30 +29,30 @@
         <td colspan="3">{{ submission_form.study_plan_equivalence_testing|checkbox }} 8.1.14 Äquivalenzprüfung</td>
     </tr>
     <tr>
-        <td colspan="4">{{ submission_form.study_plan_misc|checkbox }} 8.1.15 Sonstiges: {{ submission_form.study_plan_misc|default_if_none:"" }} </td>
+        <td colspan="4">{{ submission_form.study_plan_misc|checkbox }} 8.1.15 Sonstiges: {{ submission_form.study_plan_misc|default_if_none:""|linebreaksbr }} </td>
     </tr>
 </table>
 
 <p class="pbi_avoid">
- 8.1.16 Anzahl der Gruppen: <strong> {{ submission_form.study_plan_number_of_groups|default_if_none:"" }} </strong> </p>
+ 8.1.16 Anzahl der Gruppen: <strong> {{ submission_form.study_plan_number_of_groups|default_if_none:""|linebreaksbr }} </strong> </p>
 
 <p class="pbi_avoid">
- 8.1.17 Stratifizierung: {{ submission_form.study_plan_stratification|not|checkbox }} nein {{ submission_form.study_plan_stratification|checkbox }} ja: Kriterien: <strong> {{ submission_form.study_plan_stratification|default_if_none:"" }} </strong> </p>
+ 8.1.17 Stratifizierung: {{ submission_form.study_plan_stratification|not|checkbox }} nein {{ submission_form.study_plan_stratification|checkbox }} ja: Kriterien: <strong> {{ submission_form.study_plan_stratification|default_if_none:""|linebreaksbr }} </strong> </p>
 
 <p class="pbi_avoid">
- 8.1.18 Messwiederholungen: {{ submission_form.study_plan_sample_frequency|not|checkbox }} nein {{ submission_form.study_plan_sample_frequency|checkbox }} ja: Zeitpunkte: <strong> {{ submission_form.study_plan_sample_frequency|default_if_none:"" }} </strong> </p>
+ 8.1.18 Messwiederholungen: {{ submission_form.study_plan_sample_frequency|not|checkbox }} nein {{ submission_form.study_plan_sample_frequency|checkbox }} ja: Zeitpunkte: <strong> {{ submission_form.study_plan_sample_frequency|default_if_none:""|linebreaksbr }} </strong> </p>
 
 <p class="pbi_avoid">
- 8.1.19 Hauptzielgröße: <strong> {{ submission_form.study_plan_primary_objectives|default_if_none:"" }}  </strong> </p>
+ 8.1.19 Hauptzielgröße: <strong> {{ submission_form.study_plan_primary_objectives|default_if_none:""|linebreaksbr }}  </strong> </p>
 
 <p class="pbi_avoid">
- 8.1.20 Nullhypothese(n): <strong> {{ submission_form.study_plan_null_hypothesis|default_if_none:"" }}</strong> </p>
+ 8.1.20 Nullhypothese(n): <strong> {{ submission_form.study_plan_null_hypothesis|default_if_none:""|linebreaksbr }}</strong> </p>
 
 <p class="pbi_avoid">
- 8.1.21 Alternativhypothese(n): <strong> {{ submission_form.study_plan_alternative_hypothesis|default_if_none:"" }}</strong> </p>
+ 8.1.21 Alternativhypothese(n): <strong> {{ submission_form.study_plan_alternative_hypothesis|default_if_none:""|linebreaksbr }}</strong> </p>
 
 <p class="pbi_avoid border_bottom">
- 8.1.22 Nebenzielgrößen: <strong> {{ submission_form.study_plan_secondary_objectives|default_if_none:"" }} </strong> </p>
+ 8.1.22 Nebenzielgrößen: <strong> {{ submission_form.study_plan_secondary_objectives|default_if_none:""|linebreaksbr }} </strong> </p>
 
 <p>8.2 Studienplanung </p>
 
@@ -87,7 +87,7 @@ Korrekturverfahren.: <strong> {{ submission_form.study_plan_multiple_test_corr
 
 <p class="pbi_avoid border_bottom">
  8.3.4 Geplante statistische Verfahren: 
- <strong> {{ submission_form.study_plan_planned_statalgorithm }}</strong> </p>
+ <strong> {{ submission_form.study_plan_planned_statalgorithm|default_if_none:""|linebreaksbr }}</strong> </p>
 
 <p class="pbi_avoid">
  8.4 Dokumentationsbögen /
@@ -98,14 +98,14 @@ Datenmanagement </p>
 Datenqualitätsprüfung </p>
 
 <p class="pbi_avoid">
-  <strong>{{ submission_form.study_plan_dataquality_checking }}</strong></p>
+  <strong>{{ submission_form.study_plan_dataquality_checking|default_if_none:""|linebreaksbr }}</strong></p>
 
 <p class="pbi_avoid">
 8.4.2 Angaben zum
 Datenmanagement </p>
 
 <p class="pbi_avoid border_bottom">
- <strong>{{ submission_form.study_plan_datamanagement }}</strong></p>
+ <strong>{{ submission_form.study_plan_datamanagement|default_if_none:""|linebreaksbr }}</strong></p>
 
 <p class="pbi_avoid">
  8.5 Verantwortliche und
@@ -155,6 +155,6 @@ Qualifikation)? </p>
 <p>
     8.6.3 Wenn b): Wie erfolgt die Anonymisierung?
     <div class="value">
-        {{ submission_form.study_plan_dataprotection_anonalgoritm }}
+        {{ submission_form.study_plan_dataprotection_anonalgoritm|default_if_none:""|linebreaksbr }}
     </div>
 </p>

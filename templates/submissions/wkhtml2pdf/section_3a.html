@@ -24,7 +24,7 @@ die Prüfungen durchgeführt: <strong> {% for country in submission_form.substan
 die höchste Phase angeben) </p>
 
 <p>
- 3.2.3 Zeitraum: <strong> {{ submission_form.substance_p_c_t_period }} </strong> </p>
+ 3.2.3 Zeitraum: <strong> {{ submission_form.substance_p_c_t_period|default_if_none:""|linebreaksbr }} </strong> </p>
 
 <p>
  3.2.4 Anwendungsart(en): <strong> {{ submission_form.substance_p_c_t_application_type }} </strong> </p>

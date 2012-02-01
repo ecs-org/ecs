@@ -51,5 +51,5 @@
 <p> 6.3. Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>
 
 <div class="value">
-    {{ submission_form.additional_therapy_info }}
+    {{ submission_form.additional_therapy_info|default_if_none:""|linebreaksbr }}
 </div>
