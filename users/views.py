@@ -159,11 +159,20 @@ def request_password_reset(request):
     if form.is_valid():
         email = form.cleaned_data['email']
         if email != 'root@system.local':
-            token = _password_reset_token_factory.generate_token(email)
-            reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
-            htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
-                'reset_url': reset_url,
-            }))
+            try:
+                user = get_user(email)
+            except User.DoesNotExist:
+                register_url = request.build_absolute_uri(reverse('ecs.users.views.register'))
+                htmlmail = unicode(render_html(request, 'users/password_reset/register_email.html', {
+                    'register_url': register_url,
+                    'email': email,
+                }))
+            else:
+                token = _password_reset_token_factory.generate_token(email)
+                reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
+                htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
+                    'reset_url': reset_url,
+                }))
             deliver(email, subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
                 from_email= settings.DEFAULT_FROM_EMAIL)
         return render(request, 'users/password_reset/request_complete.html', {
@@ -182,7 +191,10 @@ def do_password_reset(request, token=None):
     except ValueError, e:
         return render(request, 'users/password_reset/reset_token_invalid.html', {})
 
-    user = get_object_or_404(User, email=email)
+    try:
+        user = get_user(email)
+    except User.DoesNotExist:
+        raise Http404()
     profile = user.get_profile()
     if profile.last_password_change and time.mktime(profile.last_password_change.timetuple()) > timestamp:
         return render(request, 'users/password_reset/token_already_used.html', {})
