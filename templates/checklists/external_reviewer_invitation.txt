@@ -2,8 +2,8 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url %}
-        The Ethics Commission requests, that you review study {{ ec_number }}.
+    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url and submission.project_title_display as project_title %}
+        The Ethics Commission requests, that you review study {{ ec_number }} ("{{ project_title }}").
 
         Click the following link to make the review: {{ ABSOLUTE_URL_PREFIX }}{{ task_url }}
 
