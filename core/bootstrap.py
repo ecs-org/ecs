@@ -7,12 +7,12 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 
 from ecs import bootstrap
-from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission
+from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission, AdvancedSettings
 from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
-from ecs.users.utils import get_or_create_user
+from ecs.users.utils import get_or_create_user, get_user
 from ecs.bootstrap.utils import update_instance
 from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, WaitForMeeting, B2ResubmissionReview, InitialB2ResubmissionReview)
@@ -573,3 +573,8 @@ def ethics_commissions():
         comm = comm.copy()
         ec, created = EthicsCommission.objects.get_or_create(uuid=comm.pop('uuid'), defaults=comm)
         update_instance(ec, comm)
+
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_user_testusers', 'ecs.core.bootstrap.auth_ec_staff_users'))
+def advanced_settings():
+    default_contact = get_user('office1@example.org')
+    AdvancedSettings.objects.get_or_create(pk=1, defaults={'default_contact': default_contact})

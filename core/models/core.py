@@ -50,3 +50,8 @@ class MedicalCategory(models.Model):
     def __unicode__(self):
         return u'%s (%s)' % (self.name, self.abbrev)
 
+class AdvancedSettings(models.Model):
+    default_contact = models.ForeignKey(User)
+
+    class Meta:
+        app_label = 'core'

@@ -9,6 +9,7 @@ from ecs.core.views.submissions import (create_submission_form, copy_submission_
 )
 from ecs.core.views.autocomplete import autocomplete, internal_autocomplete
 from ecs.core.views.fieldhistory import field_history
+from ecs.core.views.administration import advanced_settings
 
 # remove the following lines for the final product
 from ecs.core.views.developer import (developer_test_pdf, test_pdf_html, test_render_pdf,

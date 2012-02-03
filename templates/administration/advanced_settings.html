@@ -1,0 +1,26 @@
+{% extends "core.html" %}
+{% load core i18n %}
+
+{% block menuSelection %}administration{% endblock %}
+
+{% block htmltitle %}{% trans 'Advanced Settings' %} | {{ block.super }}{% endblock %}
+
+{% block headertitle %}
+    {% trans 'Advanced Settings' %}
+{% endblock %}
+
+{% block content %}
+    <form action="" method="post">
+        {{ form.as_p }}
+        <input type="submit" value="{% trans 'Save' %}"/>
+    </form>
+{% endblock %}
+
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        window.addEvent('domready', function(){
+            ecs.setupFormFieldHelpers();
+        });
+    </script>
+{% endblock %}

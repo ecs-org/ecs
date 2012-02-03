@@ -371,9 +371,6 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 # absolute URL prefix w/out trailing slash
 ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
-# default contact person if someone sends message to "EK"
-DEFAULT_CONTACT = 'office1@example.org'
-
 # enable the audit trail
 ENABLE_AUDIT_TRAIL = True
 if any(word in sys.argv for word in set(['syncdb', 'migrate', 'test', 'test_windmill', 'start_windmill'])):

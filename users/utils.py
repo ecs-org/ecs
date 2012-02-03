@@ -147,15 +147,13 @@ def create_phantom_user(email, role=None):
 
 def get_ec_user(submission=None):
     from ecs.tasks.models import Task
+    from ecs.core.models import AdvancedSettings
     if submission is not None:
         with sudo():
             workflow_tokens = submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query
             tasks = Task.objects.filter(workflow_token__in=workflow_tokens, assigned_to__groups__name=u'EC-Office').exclude(assigned_to=get_current_user()).order_by('-closed_at')
-        try:
-            task = tasks[0]
-        except IndexError:
-            return get_user(settings.DEFAULT_CONTACT)
-        else:
-            return task.assigned_to
-    else:
-        return get_user(settings.DEFAULT_CONTACT)
+            try:
+                return tasks[0].assigned_to
+            except IndexError:
+                pass
+    return AdvancedSettings.objects.get(pk=1).default_contact

@@ -9,7 +9,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import transaction
 
-from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, NonTestedUsedDrug, Submission, TemporaryAuthorization
+from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
+    NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings
 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
@@ -433,4 +434,14 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
             'user': _('User'),
             'start': _('Start'),
             'end': _('End'),
+        }
+
+class AdvancedSettingsForm(TranslatedModelForm):
+    class Meta:
+        model = AdvancedSettings
+        widgets = {
+            'default_contact': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
+        }
+        labels = {
+            'default_contact': _('Default Contact'),
         }

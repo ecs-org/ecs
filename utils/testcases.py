@@ -17,12 +17,17 @@ class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):
         get_or_create_user('root@system.local', is_superuser=True)
-        get_or_create_user(settings.DEFAULT_CONTACT)
         
         integration_bootstrap.create_settings_dirs()
         
         core_bootstrap.templates()
         documents_bootstrap.document_types()
+
+        core_bootstrap.auth_groups()
+        core_bootstrap.expedited_review_categories()
+        core_bootstrap.medical_categories()
+        core_bootstrap.auth_user_testusers()
+        core_bootstrap.advanced_settings()
 
         mediaserver_bootstrap.import_encryption_sign_keys()
         mediaserver_bootstrap.import_decryption_verify_keys()
