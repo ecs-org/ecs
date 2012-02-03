@@ -20,6 +20,7 @@
 
 {% block document_list %}
     {{ block.super }}
+    {% block extra_hint %}{% endblock %}
     <div class="form form_main document_upload">
         {% if form.pdf_error %}
         <div class="pdf_warning">
