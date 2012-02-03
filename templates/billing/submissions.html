@@ -13,10 +13,6 @@
     <p><a href="{% url ecs.billing.views.invoice_list %}">{% trans 'Old Invoices' %}</a></p>
 
     <h2>{% trans 'Unbilled Submissions' %}</h2>
-    {% if debug %}
-        <a href="{% url ecs.billing.views.reset_submissions %}" class="button_submit">reset</a>
-    {% endif %}
-
     {% if submissions %}
         <div class="billing_list">
             <form action="" method="post">
