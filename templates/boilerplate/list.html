@@ -15,7 +15,7 @@
            Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr von {{ text.author }} 
             | <a href="{% url ecs.boilerplate.views.delete_boilerplate text_pk=text.pk %}">{% trans 'Delete' %}</a>
         </p>
-        <p class="boilerplate_text">{{ text.text }}</p>
+        <p class="boilerplate_text">{{ text.text|linebreaksbr }}</p>
     </div>
     {% empty %}
     <div class="boilerplate">
