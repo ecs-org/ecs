@@ -158,7 +158,7 @@ class InitialReview(Activity):
 class InitialThesisReview(InitialReview):
     def pre_perform(self, choice):
         super(InitialThesisReview, self).pre_perform(choice)
-        s = self.workflow.data
+        s = Submission.objects.get(pk=self.workflow.data.pk)
         on_initial_thesis_review.send(Submission, submission=s, form=s.newest_submission_form)
 
 class Resubmission(Activity):

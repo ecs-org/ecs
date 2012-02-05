@@ -66,6 +66,8 @@ class TaskManagementData(object):
                 task.done(user=self.request.user, choice=form.get_choice())
             elif action == 'delegate':
                 task.assign(form.cleaned_data['assign_to'])
+
+            task = self.task    # refetch
             try:
                 submission = task.data.get_submission()
             except AttributeError:
