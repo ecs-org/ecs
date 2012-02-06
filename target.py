@@ -438,7 +438,7 @@ $myhostname   smtp:[localhost:8823]
         local(cmd % self.config)
 
     def db_restore(self):
-        cmd = 'psql --file={0}/%(postgresql.database)s.sql.dump --database=%(postgresql.database)s'.format(self.homedir)
+        cmd = 'psql --file={0}/%(postgresql.database)s.sql.dump --dbname=%(postgresql.database)s'.format(self.homedir)
         local(cmd % self.config)
                 
     def env_clear(self):
