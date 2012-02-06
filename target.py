@@ -438,7 +438,12 @@ $myhostname   smtp:[localhost:8823]
         local(cmd % self.config)
 
     def db_restore(self):
-        cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/%(postgresql.database)s.pgdump'.format(self.homedir)
+        with settings(warn_only=True):
+            istext = local('file {0}/%(postgresql.database)s.pgdump | grep text'.format(self.homedir) % self.config, capture=True).succeeded
+        if istext:
+            cmd = 'psql --file={0}/%(postgresql.database)s.pgdump --dbname=%(postgresql.database)s'.format(self.homedir)
+        else:
+            cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/%(postgresql.database)s.pgdump'.format(self.homedir)
         local(cmd % self.config)
                 
     def env_clear(self):
