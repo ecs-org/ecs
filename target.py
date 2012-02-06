@@ -434,11 +434,11 @@ $myhostname   smtp:[localhost:8823]
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py bootstrap'.format(self.homedir))
 
     def db_dump(self):
-        cmd = 'pg_dump --create --encoding="utf-8" --file={0}/%(postgresql.database)s.sql.dump %(postgresql.database)s'.format(self.homedir)
+        cmd = 'pg_dump --encoding="utf-8" --format=custom %(postgresql.database)s --file={0}/%(postgresql.database)s.pgdump'.format(self.homedir)
         local(cmd % self.config)
 
     def db_restore(self):
-        cmd = 'psql --file={0}/%(postgresql.database)s.sql.dump --dbname=%(postgresql.database)s'.format(self.homedir)
+        cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/%(postgresql.database)s.pgdump'.format(self.homedir)
         local(cmd % self.config)
                 
     def env_clear(self):
