@@ -217,7 +217,7 @@ class ModelDiffer(object):
             if not old_val and not new_val:
                 return None
             return self.node_map.get(name, ListDiffNode)(old_val, new_val, **kwargs)
-        elif field.choices:
+        elif field is not None and field.choices:
             old_val = unicode(dict(field.choices)[old_val]) if old_val else _('No Information')
             new_val = unicode(dict(field.choices)[new_val]) if new_val else _('No Information')
             return AtomicDiffNode(old_val, new_val, **kwargs)
