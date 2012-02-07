@@ -238,6 +238,7 @@ class InvitationForm(forms.Form):
         profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
         profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
         profile.is_resident_member = user.groups.filter(name=u'Resident Board Member Group').exists()
+        profile.forward_messages_after_minutes = 5
         for k in ('is_internal', 'is_help_writer'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
