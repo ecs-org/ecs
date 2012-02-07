@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-03 18:08+0100\n"
+"POT-Creation-Date: 2012-02-07 14:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1750,7 +1750,7 @@ msgstr "indirekt personenbezogen"
 
 #: core/models/constants.py:26
 msgid "board"
-msgstr "Normal"
+msgstr "Standard"
 
 #: core/models/constants.py:27 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
@@ -2684,7 +2684,7 @@ msgstr ""
 "geeigneter Gutachter.\n"
 "    "
 
-#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:46
+#: templates/communication/list.html:12 templates/pdfviewer/viewer.html:49
 msgid "Date"
 msgstr "Datum"
 
@@ -2833,23 +2833,23 @@ msgstr "Anmerkungen Teilen"
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: templates/documents/upload_form.html:42
+#: templates/documents/upload_form.html:43
 msgid "Use the calendar icon to select a date."
 msgstr "Verwenden Sie das Kalendersymbol um ein Datum auszuwählen."
 
-#: templates/documents/upload_form.html:45
+#: templates/documents/upload_form.html:46
 msgid "Replaces document"
 msgstr "Ersetzt Dokument"
 
-#: templates/documents/upload_form.html:46
+#: templates/documents/upload_form.html:47
 msgid "New Document"
 msgstr "Neues Dokument"
 
-#: templates/documents/upload_form.html:49
+#: templates/documents/upload_form.html:50
 msgid "Upload"
 msgstr "Hochladen"
 
-#: templates/documents/upload_form.html:51
+#: templates/documents/upload_form.html:52
 msgid "Please be patient, the file is being uploaded and processed"
 msgstr ""
 "Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns "
@@ -2871,11 +2871,11 @@ msgstr "zuletzt bearbeitet"
 msgid "ago by"
 msgstr ""
 
-#: templates/mediaserver/202.html:41 templates/pdfviewer/viewer.html:204
+#: templates/mediaserver/202.html:41 templates/pdfviewer/viewer.html:239
 msgid "Your document is not ready yet."
 msgstr "Das Dokument steht noch nicht bereit."
 
-#: templates/mediaserver/202.html:42
+#: templates/mediaserver/202.html:42 templates/pdfviewer/viewer.html:240
 msgid "The request will be automatically repeated after 10 seconds."
 msgstr "Die Anfrage wird nach 10 Sekunden automatisch wiederholt."
 
@@ -3383,18 +3383,6 @@ msgstr "Anzahl SUSAR"
 #: templates/notifications/view/base.html:46
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
-
-#: templates/pdfviewer/viewer.html:205
-msgid ""
-"\n"
-"        Click <a href=\"\" click=\"window.location.reload; return false;"
-"\">here</a> to reload the page.\n"
-"    "
-msgstr ""
-"\n"
-"        Klicken Sie <a href=\"\" click=\"window.location.reload; return "
-"false;\">hier</a> um die Seite neu zu laden.\n"
-"    "
 
 #: templates/pdfviewer/annotations/sharing/share.html:12
 msgid "Share"
@@ -4307,20 +4295,20 @@ msgstr "Einladungstext"
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
-#: users/forms.py:247
+#: users/forms.py:248
 msgid "is_indisposed"
 msgstr "Verhindert"
 
-#: users/forms.py:248
+#: users/forms.py:249
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
 
-#: users/forms.py:264 users/forms.py:268
+#: users/forms.py:265 users/forms.py:269
 #, fuzzy
 msgid "New password"
 msgstr "Passwort setzen"
 
-#: users/forms.py:265 users/forms.py:269
+#: users/forms.py:266 users/forms.py:270
 #, fuzzy
 msgid "New password confirmation"
 msgstr "Keine Angaben"
@@ -4501,10 +4489,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Review Split"
-#~ msgstr "Review"
-
-#~ msgid "Your PDF document could not be processed."
-#~ msgstr "Das PDF-Dokument konnte nicht verarbeitet werden."
