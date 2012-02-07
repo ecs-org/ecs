@@ -2,6 +2,15 @@
 
 {% block title %}Votum{% endblock %}
 
+{% block inline_css %}
+    {{ block.super }}
+    <style type="text/css">
+        body, #content {
+            width: auto;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <center><p><b>
 {% if vote.top %}
