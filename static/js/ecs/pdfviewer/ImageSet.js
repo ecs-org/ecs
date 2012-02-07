@@ -20,6 +20,9 @@ ecs.pdfviewer.ImageSet = new Class({
                 callback();
             }
         });
+        img.addEvent('error', function(){
+            (function(){img.src = image.url;}).delay(10000);
+        });
         img.src = image.url;
     },
     getSpriteOffset: function(x, y){
