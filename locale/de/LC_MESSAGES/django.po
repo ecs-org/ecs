@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-07 14:43+0100\n"
+"POT-Creation-Date: 2012-02-07 14:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3502,7 +3502,7 @@ msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
 #: templates/submissions/catalog.html:29
 msgid "Catalog of Approved Studies"
-msgstr "Register der Genehmigten Studien"
+msgstr "Register der befürworteten Studien"
 
 #: templates/submissions/change_message.txt:5
 #, python-format
