@@ -20,6 +20,7 @@
         <li>{{ filterform.mpg }} <label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
         <li>{{ filterform.thesis }} <label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
         <li>{{ filterform.expedited }} <label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
+        <li>{{ filterform.local_ec }} <label for="id_local_ec"><span class="task_local_ec"></span>{% trans "local_ec" %}</label></li>
         <li>{{ filterform.other }} <label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
     </ul>
     <div class="task_list_choose task_select">

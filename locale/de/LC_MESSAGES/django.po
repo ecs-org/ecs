@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-07 14:46+0100\n"
+"POT-Creation-Date: 2012-02-07 15:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1506,8 +1506,8 @@ msgstr "AMG"
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:321 templates/tasks/tasks.inc:24
-#: templates/tasks/tasks_full.inc:23
+#: core/forms/forms.py:321 templates/tasks/tasks.inc:25
+#: templates/tasks/tasks_full.inc:24
 msgid "Other"
 msgstr "Andere"
 
@@ -2276,15 +2276,15 @@ msgstr "Sie müssen einen Benutzer auswählen."
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
 
-#: tasks/forms.py:99
+#: tasks/forms.py:100
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:100
+#: tasks/forms.py:101
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:101
+#: tasks/forms.py:102
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
@@ -2883,8 +2883,8 @@ msgstr "Die Anfrage wird nach 10 Sekunden automatisch wiederholt."
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:11 templates/tasks/tasks.inc:78
-#: templates/tasks/tasks_full.inc:80
+#: templates/meetings/details.html:11 templates/tasks/tasks.inc:79
+#: templates/tasks/tasks_full.inc:81
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
@@ -3952,49 +3952,53 @@ msgstr "Vertretung"
 msgid "thesis"
 msgstr "Diplomarbeit"
 
-#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:36
+#: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
+msgid "local_ec"
+msgstr "Lokale EK"
+
+#: templates/tasks/tasks.inc:31 templates/tasks/tasks_full.inc:37
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
-#: templates/tasks/tasks.inc:46 templates/tasks/tasks_full.inc:52
+#: templates/tasks/tasks.inc:47 templates/tasks/tasks_full.inc:53
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
-#: templates/tasks/tasks.inc:52 templates/tasks/tasks.inc.py:84
-#: templates/tasks/tasks.inc:114 templates/tasks/tasks_full.inc:58
-#: templates/tasks/tasks_full.inc.py:86 templates/tasks/tasks_full.inc:112
+#: templates/tasks/tasks.inc:53 templates/tasks/tasks.inc.py:85
+#: templates/tasks/tasks.inc:115 templates/tasks/tasks_full.inc:59
+#: templates/tasks/tasks_full.inc.py:87 templates/tasks/tasks_full.inc:113
 msgid "Accept all"
 msgstr "Alle annehmen"
 
-#: templates/tasks/tasks.inc:62 templates/tasks/tasks.inc.py:95
-#: templates/tasks/tasks.inc:125 templates/tasks/tasks_full.inc:66
-#: templates/tasks/tasks_full.inc.py:94 templates/tasks/tasks_full.inc:120
+#: templates/tasks/tasks.inc:63 templates/tasks/tasks.inc.py:96
+#: templates/tasks/tasks.inc:126 templates/tasks/tasks_full.inc:67
+#: templates/tasks/tasks_full.inc.py:95 templates/tasks/tasks_full.inc:121
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:67 templates/tasks/tasks_full.inc:70
+#: templates/tasks/tasks.inc:68 templates/tasks/tasks_full.inc:71
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:108 templates/tasks/tasks_full.inc:106
+#: templates/tasks/tasks.inc:109 templates/tasks/tasks_full.inc:107
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:137 templates/tasks/tasks_full.inc:131
+#: templates/tasks/tasks.inc:138 templates/tasks/tasks_full.inc:132
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_full.inc:26
+#: templates/tasks/tasks_full.inc:27
 msgid "Task Type"
 msgstr "Aufgabenart"
 
-#: templates/tasks/tasks_full.inc:29
+#: templates/tasks/tasks_full.inc:30
 msgid "Drag the bookmark link to your bookmark bar to save it."
 msgstr ""
 "Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
 "speichern."
 
-#: templates/tasks/tasks_full.inc:30
+#: templates/tasks/tasks_full.inc:31
 msgid "Bookmark"
 msgstr "Lesezeichen"
 

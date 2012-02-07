@@ -88,6 +88,7 @@ class TaskListFilterForm(forms.Form):
     mpg = forms.BooleanField(required=False)
     thesis = forms.BooleanField(required=False)
     expedited = forms.BooleanField(required=False)
+    local_ec = forms.BooleanField(required=False)
     other = forms.BooleanField(required=False)
 
     mine = forms.BooleanField(required=False)

@@ -40,7 +40,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     submission_ct = ContentType.objects.get_for_model(Submission)
 
     filter_defaults = dict(sorting='deadline')
-    for key in ('amg', 'mpg', 'thesis', 'expedited', 'other', 'mine', 'assigned', 'open', 'proxy'):
+    for key in ('amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other', 'mine', 'assigned', 'open', 'proxy'):
         filter_defaults[key] = 'on'
 
     filterdict = request.POST or request.GET or usersettings.task_filter or filter_defaults
@@ -73,8 +73,9 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
         mpg = filterform.cleaned_data['mpg']
         thesis = filterform.cleaned_data['thesis']
         expedited = filterform.cleaned_data['expedited']
+        local_ec = filterform.cleaned_data['local_ec']
         other = filterform.cleaned_data['other']
-        if amg and mpg and thesis and expedited and other:
+        if amg and mpg and thesis and expedited and local_ec and other:
             tasks = all_tasks
         else:
             tasks = all_tasks.exclude(content_type=submission_ct)
@@ -82,6 +83,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
             mpg_q = Q(data_id__in=Submission.objects.mpg().values('pk').query)
             retrospective_thesis_q = Q(data_id__in=Submission.objects.for_thesis_lane().values('pk').query)
             expedited_q = Q(data_id__in=Submission.objects.expedited())
+            local_ec_q = Q(data_id__in=Submission.objects.localec())
             submission_tasks = all_tasks.filter(content_type=submission_ct)
             if amg:
                 tasks |= submission_tasks.filter(amg_q)
@@ -91,8 +93,10 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
                 tasks |= submission_tasks.filter(retrospective_thesis_q)
             if expedited:
                 tasks |= submission_tasks.filter(expedited_q)
+            if local_ec:
+                tasks |= submission_tasks.filter(local_ec_q)
             if other:
-                tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q)
+                tasks |= submission_tasks.filter(~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q & ~local_ec_q)
     
         task_types = filterform.cleaned_data['task_types']
         if task_types:
