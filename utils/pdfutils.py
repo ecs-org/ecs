@@ -187,8 +187,8 @@ def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
         shutil.copyfileobj(src, tmp)
         tmp.seek(0)
         decrypted = tempfile.NamedTemporaryFile(suffix='.pdf')
-        popen = subprocess.Popen([QPDF_PATH, '--decrypt', tmp.name, decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
-        stdout, stderr = popen.communicate("\n") # send a newline in case qpdf asks for a password on stdin
+        popen = subprocess.Popen([QPDF_PATH, '--decrypt', tmp.name, decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        stdout, stderr = popen.communicate()
         if popen.returncode in (0, 3):  # 0 == ok, 3 == warning
             if popen.returncode == 3:
                 logger.warn('qpdf warning:\n%s' % (smart_str(stderr, errors='backslashreplace')))
