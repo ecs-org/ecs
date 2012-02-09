@@ -12,7 +12,13 @@
 
 <body>
 
-  <span class="fb_title">Vielen Dank für {{ type|fb_type_your }} {{ type|fb_type }}!</span>
+  <div class="fb_title" style="text-align:center;margin:20px 10px;">Vielen Dank für die Meldung {{ type|fb_type_of_your }}!</div>
+
+  <p style="margin-bottom:20px;font-size:10pt;">
+    Das Feedback wird von uns schnellstmöglich bearbeitet.<br />
+    Bitte haben sie Verständnis wenn es trotzdem zu Wartezeiten von einigen Tagen kommen kann.<br />
+    Setzen Sie sich bei einer dringlichen Frist mit der Ethikkommission bezüglich des Feedbacks telefonisch in Verbindung.
+  </p>
 
   <ol class="fb_entry">
     <li class="fb_field">
@@ -25,11 +31,11 @@
     </li>
     <li class="fb_field">
       <div class="fb_field_name">Beschreibung</div> 
-      <div class="fb_field_value">{{ description }}</div>
+      <div class="fb_field_value">{{ description|linebreaksbr }}</div>
     </li>
   </ol>
 
-  <span class="fb_link"><a href="{{ fb_url }}">Weiteres Feedback<a/></span>
+  <span class="fb_link" style="margin-top:20px;"><a href="{{ fb_url }}">Weiteres Feedback</a></span>
 
 </body>
 
