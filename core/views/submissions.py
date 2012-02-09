@@ -223,7 +223,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
         profile = request.user.get_profile()
-        if profile.is_internal:
+        if not submission.external_reviewers.filter(pk=request.user.pk).exists():
             context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))

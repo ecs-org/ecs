@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-07 15:08+0100\n"
+"POT-Creation-Date: 2012-02-08 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:111 core/models/submissions.py:88
+#: billing/views.py:111 core/models/submissions.py:89
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -184,7 +184,7 @@ msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
 #: checklists/models.py:45 core/forms/forms.py:316
-#: core/models/submissions.py:154 help/models.py:18
+#: core/models/submissions.py:155 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -1064,7 +1064,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:230 core/models/submissions.py:442
+#: core/paper_forms.py:230 core/models/submissions.py:443
 msgid "open"
 msgstr "offen"
 
@@ -1080,7 +1080,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:234 core/models/submissions.py:442
+#: core/paper_forms.py:234 core/models/submissions.py:443
 msgid "blind"
 msgstr "blind"
 
@@ -1096,7 +1096,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:238 core/models/submissions.py:442
+#: core/paper_forms.py:238 core/models/submissions.py:443
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1732,6 +1732,10 @@ msgstr "Hauptprüfer einladen"
 msgid "external_reviewers"
 msgstr "Gutachter"
 
+#: core/forms/review.py:38
+msgid "executive_comment"
+msgstr "Empfehlungen/Bemerkungen"
+
 #: core/models/constants.py:11
 msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
@@ -1761,33 +1765,33 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
 #: users/models.py:32
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
 #: users/models.py:32
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:149
+#: core/models/submissions.py:150
 msgid "Finished"
 msgstr "Abgeschlossen"
 
-#: core/models/submissions.py:151 templates/users/administration.html:41
+#: core/models/submissions.py:152 templates/users/administration.html:41
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:153
+#: core/models/submissions.py:154
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:819
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:819
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 

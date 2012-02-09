@@ -10,13 +10,14 @@ from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXP
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget, BooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
+from ecs.users.utils import get_current_user
 
 class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',
             'legal_and_patient_review_required', 'statistical_review_required', 'insurance_review_required',
-            'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers')
+            'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers', 'executive_comment')
         widgets = {
             'remission': BooleanWidget,
             'legal_and_patient_review_required': BooleanWidget,
@@ -35,10 +36,21 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
             'gcp_review_required': _('gcp_review_required'),
             'invite_primary_investigator_to_meeting': _('invite_primary_investigator_to_meeting'),
             'external_reviewers': _('external_reviewers'),
+            'executive_comment': _('executive_comment'),
         }
 
     def __init__(self, *args, **kwargs):
         super(CategorizationReviewForm, self).__init__(*args, **kwargs)
+
+        try:
+            submission = self.instance
+            submission_form = submission.current_submission_form
+            user = get_current_user()
+            if not user.get_profile().is_internal or user in submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter]):
+                del self.fields['external_reviewers']
+        except AttributeError:
+            pass        # workaround for old docstashes; remove in 2013 when no old docstashes are left
+
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['medical_categories'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
@@ -46,9 +58,10 @@ class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, Translat
             self.fields['expedited_review_categories'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
             )
-            self.fields['external_reviewers'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
-            )
+            if 'external_reviewers' in self.fields.keys():
+                self.fields['external_reviewers'].widget = MultiselectWidget(
+                    url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
+                )
 
     def clean(self):
         cd = self.cleaned_data

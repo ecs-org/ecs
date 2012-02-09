@@ -39,9 +39,14 @@ class TranslatedModelForm(ModelForm):
 
 def _unpickle(module, cls_name, args, kwargs):
     form_cls = getattr(import_module(module), cls_name)
+    instance_id = kwargs.pop('instance_id', None)
+    if not instance_id is None:
+        kwargs['instance'] = form_cls._meta.model.objects.get(id=instance_id)
     return form_cls(*args, **kwargs)
 
 class ModelFormPickleMixin(object):
     def __reduce__(self):
         kwargs = {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}
+        if not self.instance.id is None:
+            kwargs['instance_id'] = self.instance.id
         return (_unpickle, (self.__class__.__module__, self.__class__.__name__, (), kwargs))

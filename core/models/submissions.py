@@ -41,6 +41,7 @@ class Submission(models.Model):
     befangene = models.ManyToManyField(User, null=True, blank=True, related_name='befangen_for_submissions')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
     valid_until = models.DateField(null=True, blank=True)
+    executive_comment = models.TextField(null=True, blank=True)
 
     legal_and_patient_review_required = models.NullBooleanField(default=False)
     statistical_review_required = models.NullBooleanField(default=False)
