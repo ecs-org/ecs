@@ -403,6 +403,7 @@ def auth_user_testusers():
             profile = user.get_profile()
             flags = flags.copy()
             flags.update({
+                'is_testuser': True,
                 'start_workflow': True,
             })
             if number == 3:
@@ -417,6 +418,7 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         update_instance(profile, {
+            'is_testuser': True,
             'is_board_member': True,
             'start_workflow': True,
         })
@@ -432,6 +434,7 @@ def auth_user_testusers():
 
         profile = user.get_profile()
         update_instance(profile, {
+            'is_testuser': True,
             'is_expedited_reviewer': True,
             'start_workflow': True,
         })
