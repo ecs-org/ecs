@@ -4,11 +4,13 @@ from textwrap import dedent
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+from django.core.urlresolvers import reverse
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash
 from ecs.utils.browserutils import is_supported_browser as isb
+from ecs.help.models import Page
 
 register = template.Library()
 
@@ -174,3 +176,11 @@ class DedentNode(template.Node):
 
     def render(self, context):
         return dedent(self.nodelist.render(context))
+
+@register.filter
+def help_url(slug):
+    try:
+        page = Page.objects.get(slug=slug)
+        return reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
+    except Page.DoesNotExist:
+        return reverse('ecs.help.views.index')

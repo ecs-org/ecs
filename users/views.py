@@ -57,19 +57,19 @@ _registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWOR
 def login(request, *args, **kwargs):
     if request.is_ajax():
         return HttpResponse('<script type="text/javascript">window.location.href="%s";</script>' % reverse('ecs.users.views.login'))
+
+    def _html5_help_url():
+        try:
+            page = Page.objects.get(slug='html5')
+            return reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
+        except Page.DoesNotExist:
+            return reverse('ecs.help.views.index')
+
     if is_malicious_browser(request.META['HTTP_USER_AGENT']):
-        try:
-            page = Page.objects.get(slug='html5')
-            return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
-        except Page.DoesNotExist:
-            return HttpResponseRedirect(reverse('ecs.help.views.index'))
-    if is_temporarily_unsupported_browser(request.META['HTTP_USER_AGENT']):
-        try:
-            page = Page.objects.get(slug='html5')
-            help_url = reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
-        except Page.DoesNotExist:
-            help_url = reverse('ecs.help.views.index')
-        return render(request, 'browser_temporarily_unsupported.html', {'help_url': help_url})
+        return HttpResponseRedirect(_html5_help_url())
+    elif is_temporarily_unsupported_browser(request.META['HTTP_USER_AGENT']):
+        return render(request, 'browser_temporarily_unsupported.html', {'help_url': _html5_help_url()})
+
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
     return auth_views.login(request, *args, **kwargs)

@@ -19,22 +19,30 @@
 {% block htmlbody_class %}login{% endblock %}
 
 {% block content %}
+
     <script type="text/javascript">
     if(top != self){
         top.location.href = '{% url ecs.users.views.login %}';
     }
     </script>
     <img src="/static/images/logo.png" />
+    <noscript>
+        <div id="script_warning" style="font-size:14pt;line-height:1.2em;">
+            <strong style="color:red;">Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.<br />
+            Lesen Sie <a href="{{ 'noscript'|help_url }}">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
+        </div>
+    </noscript>
+    <div id="login_form" style="display:none;">
     {% if not request|is_supported_browser %}
-    <div id="browser_warning">
-        <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser;<br>
-        Zur korrekten Darstellung brauchen sie
-        <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>,
-        <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome</a>,
-        <a href="http://www.microsoft.com/austria/windows/ie9/">Explorer 9</a> oder
-        <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.<br>
-        <a id="show_login" href="">Ich möchte es trotzdem versuchen.</a>
-    </div>
+        <div id="browser_warning">
+            <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser;<br>
+            Zur korrekten Darstellung brauchen sie
+            <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>,
+            <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome</a>,
+            <a href="http://www.microsoft.com/austria/windows/ie9/">Explorer 9</a> oder
+            <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.<br>
+            <a id="show_login" href="">Ich möchte es trotzdem versuchen.</a>
+        </div>
     {% endif %}
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
@@ -59,6 +67,7 @@
     <div class="pw_reg">
       <a href="{% url ecs.users.views.register %}">Registrieren</a> | <a href="{% url ecs.users.views.request_password_reset %}">Passwort vergessen/zurücksetzen</a>
     </div>
+    </div>
 
 {% endblock %}
 
@@ -66,6 +75,7 @@
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function() {
+            $("login_form").show();
             window.openHelpPage = function(e){
                 {% if request.tracking_data.view %}
                 var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
