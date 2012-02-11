@@ -127,6 +127,7 @@ def create_phantom_user(email, role=None):
         user = create_user(email)
         profile = user.get_profile()
         profile.is_phantom = True
+        profile.forward_messages_after_minutes = 5
         profile.save()
 
         invitation = Invitation.objects.create(user=user)

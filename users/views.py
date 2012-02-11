@@ -415,6 +415,7 @@ def accept_invitation(request, invitation_uuid=None):
         profile = user.get_profile()
         profile.last_password_change = datetime.now()
         profile.is_phantom = False
+        profile.forward_messages_after_minutes = 5
         profile.save()
         invitation.is_accepted = True
         invitation.save()
