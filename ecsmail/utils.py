@@ -115,10 +115,15 @@ def deliver(recipient_list, *args, **kwargs):
     return sentids
 
 
-def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, **kwargs):
+def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, nofilter=False, **kwargs):
     if msgid is None:
         msgid = make_msgid()
 
     msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
-    queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback], countdown=3)
+    
+    backend = None
+    if getattr(settings.ECSMAIL, 'filter_outgoing_smtp', False) and not nofilter:
+        backend = getattr(settings, 'LIMITED_EMAIL_BACKEND', settings['DEBUG_EMAIL_BACKEND'])
+    
+    queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback, backend], countdown=3)
     return (msgid, msg.message(),)

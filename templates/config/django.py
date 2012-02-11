@@ -21,6 +21,8 @@ HAYSTACK_SEARCH_ENGINE = '%(haystack.search_engine)s'
 # ecsmail settings
 ECSMAIL['authoritative_domain'] = '%(host)s'
 ECSMAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
+if %(debug.filter_smtp)s:
+    ECSMAIL['filter_outgoing_smtp'] = True
 
 import sys
 if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):

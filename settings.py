@@ -365,6 +365,10 @@ ECSMAIL_DEFAULT = {
     'undeliverable_queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail", "undeliverable"),
     'trusted_sources': ['127.0.0.1'],
     'authoritative_domain': 'localhost',
+    'filter_outgoing_smtp': False,
+    # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND, 
+    # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND  
+    # this is used only for ecs.users.views. register and request_password_reset 
     }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 

@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core import mail
 
 @task() # (max_retries= 3)
-def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs):
+def queued_mail_send(msgid, msg, from_email, recipient, callback=None, backend=None, **kwargs):
     logger = queued_mail_send.get_logger(**kwargs)
     logger.debug("queued mail deliver id %s, from %s, to %s, callback %s, msg %s" %
                 (msgid, from_email, recipient, str(callback), repr(msg)))
@@ -17,7 +17,7 @@ def queued_mail_send(msgid, msg, from_email, recipient, callback=None, **kwargs)
         subtask(callback).delay(msgid, "started")
     
     try:
-        connection = mail.get_connection()
+        connection = mail.get_connection(backend= backend)
         connection.send_messages([msg])
     except Exception as exc:
         logger.error(repr(exc))
