@@ -39,6 +39,7 @@ class SetupTarget(SetupTargetObject):
         self.config = load_config(config_file)
         self.homedir = os.path.expanduser('~')
         self.configdir = os.path.join(self.homedir, 'ecs-conf')
+        self.pythonexedir = os.path.dirname(get_pythonexe())
         # set legacy attributes
         for attr in ('ip', 'host'):
             setattr(self, attr, self.config[attr])
@@ -236,12 +237,16 @@ class SetupTarget(SetupTargetObject):
             self.write_config_template('duplicity.opt.files', '/root/.duply/opt/exclude', use_sudo=True)
 
             self.config['duplicity.duply_conf'] = "root"
+            with settings(warn_only=True): # remove legacy duply script, before it was renamed
+                local('sudo bash -c "if test -f /etc/backup.d/90duply.sh; rm /etc/backup.d/90duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
-                '/etc/backup.d/90duply.sh', backup=False, use_sudo=True, filemode= '0600')
+                '/etc/backup.d/90duply-root.sh', backup=False, use_sudo=True, filemode= '0600')
             
             self.config['duplicity.duply_conf'] = "opt"
+            with settings(warn_only=True): # remove legacy duply script, before it was renamed
+                local('sudo bash -c "if test -f /etc/backup.d/91duply.sh; rm /etc/backup.d/91duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
-                '/etc/backup.d/91duply.sh', backup=False, use_sudo=True, filemode= '0600')
+                '/etc/backup.d/91duply-opt.sh', backup=False, use_sudo=True, filemode= '0600')
             
             self.write_config_template('10.sys', 
                 '/etc/backup.d/10.sys', backup=False, use_sudo=True, filemode= '0600')
@@ -623,6 +628,31 @@ def custom_install_pdftotext(pkgline, filename):
         if pkg_manager.static_install_unzip(filename, tempdir, checkfilename, pkgline):
             try:
                 shutil.copy(os.path.join(tempdir,"xpdfbin-win-3.03", "bin32", checkfilename), 
+                    os.path.join(outputdir, checkfilename))
+            except EnvironmentError:
+                pass
+            else:
+                result = True
+    finally:    
+        shutil.rmtree(tempdir)
+    
+    return result
+
+
+def custom_check_duply(pkgline, checkfilename):
+    return os.path.exists(os.path.join(os.path.dirname(get_pythonexe()), checkfilename))
+
+def custom_install_duply(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    pkg_manager = get_pkg_manager()
+    tempdir = tempfile.mkdtemp()
+    outputdir = os.path.dirname(get_pythonexe())
+    result = False
+    
+    try:
+        if pkg_manager.static_install_untar(filename, tempdir, checkfilename, pkgline):
+            try:
+                shutil.copy(os.path.join(tempdir, 'duply_1.5.5.4', checkfilename), 
                     os.path.join(outputdir, checkfilename))
             except EnvironmentError:
                 pass
