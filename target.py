@@ -206,10 +206,7 @@ class SetupTarget(SetupTargetObject):
                 local('sudo cp {0} /etc/network/interfaces'.format(t.name))
  
     def firewall_config(self):
-        # FIXME: temporary fix until new readyvm is build
-        local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y shorewall"')        
-        write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'),
-            '/', use_sudo=True)
+        write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'), '/', use_sudo=True)
         local('sudo /etc/init.d/shorewall restart')               
         
     def backup_config(self):
