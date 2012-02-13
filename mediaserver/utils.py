@@ -118,7 +118,7 @@ class MediaProvider:
         :raise KeyError: if store to vault fails
         '''
         logger = logging.getLogger()
-        logger.debug("add_blob (%s), filelike is %s" % (identifier, filelike))
+        logger.debug("add_blob (%s), filelike is %s", identifier, filelike)
         try:
             self.vault.add(identifier, filelike)
         except Exception as e:
@@ -136,9 +136,9 @@ class MediaProvider:
             if not success:
                 logger = logging.getLogger()
                 if str(identifier) != str(used_identifier):
-                    logger.error("prime_blob could not get_blob(%s), exception was %r" % (identifier, response))
+                    logger.error("prime_blob could not get_blob(%s), exception was %r", identifier, response)
                 else:
-                    logger.error("prime_blob of blob %s returned an IOError: %r" % (identifier, response))
+                    logger.error("prime_blob of blob %s returned an IOError: %r", identifier, response)
                     
             return success, used_identifier, response
         else:
