@@ -647,7 +647,7 @@ def custom_install_duply(pkgline, filename):
     result = False
     
     try:
-        if pkg_manager.static_install_tar(filename, tempdir, checkfilename, pkgline):
+        if pkg_manager.static_install_untar(filename, tempdir, checkfilename, pkgline):
             try:
                 shutil.copy(os.path.join(tempdir, 'duply_1.5.5.4', checkfilename), 
                     os.path.join(outputdir, checkfilename))
