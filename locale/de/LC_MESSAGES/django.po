@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-13 15:22+0100\n"
+"POT-Creation-Date: 2012-02-13 23:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2867,15 +2867,11 @@ msgstr "Kein Text"
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
 
-#: templates/help/view_page.html:22
-msgid "Chapter"
-msgstr "Kapitel"
-
-#: templates/help/view_page.html:43
+#: templates/help/view_page.html:38
 msgid "last edited"
 msgstr "zuletzt bearbeitet"
 
-#: templates/help/view_page.html:43
+#: templates/help/view_page.html:38
 msgid "ago by"
 msgstr ""
 
@@ -3575,7 +3571,8 @@ msgstr ""
 "Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
 "vorliegenden Form nicht angenommen werden.\n"
 "Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
-"die Studie ggf. neu einreichen.\n"
+"die Studie im System durch einen Klick auf \"Bearbeiten\" ändern und danach "
+"neu einreichen.\n"
 "    "
 
 #: templates/submissions/form.html:28
@@ -4501,3 +4498,6 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "Chapter"
+#~ msgstr "Kapitel"
