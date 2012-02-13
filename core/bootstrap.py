@@ -487,6 +487,7 @@ def auth_external_review_users():
         profile = user.get_profile()
         update_instance(profile, {
             'start_workflow': True,
+            'forward_messages_after_minutes': 5,
             'gender': gender,
         })
 
@@ -511,7 +512,7 @@ def auth_ec_other_users():
         update_instance(profile, {
             'start_workflow': True,
             'gender': gender,
-            #'forward_messages_after_minutes': 360,
+            'forward_messages_after_minutes': 5,
         })
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
@@ -537,7 +538,7 @@ def auth_ec_boardmember_users():
             'is_board_member': True,
             'start_workflow': True,
             'gender': gender,
-            #'forward_messages_after_minutes': 360,
+            'forward_messages_after_minutes': 5,
         }
 
         for medcategory in medcategories:
