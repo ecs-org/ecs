@@ -11,7 +11,10 @@
     </div>
     <span href="" class="help_button icon_help">help</span>
     <div id="help_title">
-      {{ page.title }}
+      {% for p in page.nav.top %}
+        <a href="{% url ecs.help.views.view_help_page page_pk=p.pk %}" class="max_twenty">{{ p.title }}</a> /
+      {% endfor %}
+      <span class="max_twenty">{{ page.title }}</span>
     </div>
     {% if user|has_flag:"is_help_writer" %}
         <span class="help_review_overview"><a href="{% url ecs.help.views.review_overview %}">Review Übersicht</a></span>

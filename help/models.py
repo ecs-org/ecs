@@ -39,6 +39,51 @@ class Page(models.Model):
     def publish_parts(self):
         return publish_parts(self.text)
 
+    @cached_property
+    def nav(self):
+        from ecs.help.utils import parse_index, ParseError
+        def _flatten(tree):
+            for el in tree:
+                if isinstance(el, list):
+                    for sub in _flatten(el):
+                        yield sub
+                else:
+                    yield el
+
+        def _find_top(tree, top=None):
+            top = top or []
+            for i, el in enumerate(tree):
+                prev = None
+                try:
+                    prev = [e for e in tree[:i] if not isinstance(e, list)][-1]
+                except IndexError:
+                    pass
+                if isinstance(el, list):
+                    ret = _find_top(el, top=top + [prev])
+                    if ret:
+                        return ret
+                elif el == self:
+                    return top
+            return None
+
+        try:
+            tree = parse_index()
+        except ParseError:
+            return None
+
+        top = _find_top(tree)
+
+        pages = list(_flatten(tree))
+        prev = next = None
+        if self in pages:
+            pos = pages.index(self)
+            if pos > 0:
+                prev = pages[pos-1]
+            if pos < len(pages)-1:
+                next = pages[pos+1]
+
+        return {'top': top, 'prev': prev, 'next': next}
+
 
 class AttachmentFileStorage(FileSystemStorage):
     def path(self, name):

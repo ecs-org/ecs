@@ -157,6 +157,16 @@
   margin-right: 10px;
 }
 
+.max_twenty {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 20em;
+    display: inline-block;
+    line-height: 105%;
+    vertical-align: bottom;
+}
+
 #help_content {
     h3 {
         display: block;
@@ -236,23 +246,20 @@
     .nav {
         display: block;
         width: 100%;
+        overflow: auto;
         .prev {
-            width: 33%;
-            text-align: left;
-            display: inline-block;
-        }
-        .top {
-            width: 33%;
-            text-align: center;
-            display: inline-block;
+            float: left;
         }
         .next {
-            width: 33%;
-            text-align: right;
-            display: inline-block;
+            float: right;
+        }
+        .title {
+            margin: 0;
+            vertical-align: baseline;
         }
     }
 }
+
 
 #help_overlay {
   z-index: 100000;
