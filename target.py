@@ -31,6 +31,7 @@ class SetupTarget(SetupTargetObject):
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.dirname = dirname
         self.appname = 'ecs'
+        self.destructive = False
         
         if config_file:
             self.configure(config_file)
@@ -89,8 +90,15 @@ class SetupTarget(SetupTargetObject):
         '''.format(self.appname))
 
     def system_setup(self, *args, **kwargs):
-        ''' System Setup; Destructive '''
-            
+        ''' System Setup; Destructive, idempotent '''
+        kwargs['destructive'] = True
+        self.setup(self, *args, **kwargs)
+    
+    def setup(self, *args, **kwargs):
+        ''' Setup; idempotent, tries not to overwrite existing database or eg. ECS-CA , except destructive=True '''
+        destructive = kwargs.pop('destructive', False)
+        self.destructive = destructive
+        
         self.directory_config()
         self.host_config(with_current_ip=True)
         self.servercert_config()
@@ -338,13 +346,16 @@ $myhostname   smtp:[localhost:8823]
                 pass
     
     def ca_config(self):
-        openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
-        from ecs.pki.openssl import CA
-        cadir = os.path.join(self.homedir, 'ecs-ca')
-        if os.path.exists(cadir):
-            local('rm -r %s' % cadir)
-        ca = CA(cadir, config=openssl_cnf)
-        self.write_config_template('openssl-ca.cnf', openssl_cnf, ca.__dict__)
+        if self.destructive:
+            openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
+            from ecs.pki.openssl import CA
+            cadir = os.path.join(self.homedir, 'ecs-ca')
+            if os.path.exists(cadir):
+                local('rm -r %s' % cadir)
+            ca = CA(cadir, config=openssl_cnf)
+            self.write_config_template('openssl-ca.cnf', openssl_cnf, ca.__dict__)
+        else:
+            warn("Not overwriting openssl-ca.cnf, not removing ecs-ca directory because destructive=False")
         
     def ca_update(self):
         try:
@@ -428,9 +439,12 @@ $myhostname   smtp:[localhost:8823]
         
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
-        local('dropdb %(postgresql.database)s | true' % self.config, capture=True)
-        local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s' % self.config)
-         
+        if self.destructive:
+            local('dropdb %(postgresql.database)s | true' % self.config, capture=True)            
+        else:
+            warn("Not dropping/destroying database, because destructive=False")            
+        local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s | true' % self.config)
+             
     def db_update(self):
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py syncdb --noinput'.format(self.homedir))
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py migrate --noinput'.format(self.homedir))
