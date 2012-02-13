@@ -14,7 +14,7 @@
     {% with page|prevtopnext as nav %}
         <span class="prev">
         {% if nav.prev %}
-            <a href="{% url ecs.help.views.view_help_page page_pk=nav.prev.pk %}"><span class="prev_page" style="display: inline-block;"></span>{{ nav.prev.title }}</a>
+            <a href="{% url ecs.help.views.view_help_page page_pk=nav.prev.pk %}"><span class="prev_page"></span>{{ nav.prev.title }}</a>
         {% endif %}
         </span>
         <span class="top">
