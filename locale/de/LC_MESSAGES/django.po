@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 17:50+0100\n"
+"POT-Creation-Date: 2012-02-13 15:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -288,7 +288,7 @@ msgstr "Einreichung Formale Prüfung"
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:127 templates/submissions/readonly_form.html:80
+#: core/bootstrap.py:127 templates/submissions/readonly_form.html:81
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
@@ -344,12 +344,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:153 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:325
+#: templates/submissions/readonly_form.html:323
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:155 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:326
+#: templates/submissions/readonly_form.html:324
 msgid "No"
 msgstr "Nein"
 
@@ -1492,7 +1492,7 @@ msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:319 core/forms/layout.py:98 core/forms/layout.py:100
 #: templates/meetings/tabs/status.html:64
-#: templates/submissions/readonly_form.html:226
+#: templates/submissions/readonly_form.html:225
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
@@ -1500,7 +1500,7 @@ msgstr "AMG"
 
 #: core/forms/forms.py:320 core/forms/layout.py:107 core/forms/layout.py:109
 #: templates/meetings/tabs/status.html:69
-#: templates/submissions/readonly_form.html:228
+#: templates/submissions/readonly_form.html:227
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
@@ -1692,47 +1692,47 @@ msgstr "SAE / SUSAR"
 msgid "Status"
 msgstr "Status"
 
-#: core/forms/review.py:28
+#: core/forms/review.py:29
 msgid "workflow lane"
 msgstr "Arbeitsablauf"
 
-#: core/forms/review.py:29
+#: core/forms/review.py:30
 msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
-#: core/forms/review.py:30
+#: core/forms/review.py:31
 msgid "expedited_review_categories"
 msgstr "Kategorien für Expedited Review"
 
-#: core/forms/review.py:31
+#: core/forms/review.py:32
 msgid "remission"
 msgstr "Gebührenbefreiung"
 
-#: core/forms/review.py:32
+#: core/forms/review.py:33
 msgid "legal_and_patient_review_required"
 msgstr "Überprüfung Pat.info notwendig"
 
-#: core/forms/review.py:33
+#: core/forms/review.py:34
 msgid "statistical_review_required"
 msgstr "Statistische Überprüfung notwendig"
 
-#: core/forms/review.py:34
+#: core/forms/review.py:35
 msgid "insurance_review_required"
 msgstr "Versicherungsüberprüfung notwendig"
 
-#: core/forms/review.py:35
+#: core/forms/review.py:36
 msgid "gcp_review_required"
 msgstr "GCP Überprüfung notwendig"
 
-#: core/forms/review.py:36
+#: core/forms/review.py:37
 msgid "invite_primary_investigator_to_meeting"
 msgstr "Hauptprüfer einladen"
 
-#: core/forms/review.py:37
+#: core/forms/review.py:38
 msgid "external_reviewers"
 msgstr "Gutachter"
 
-#: core/forms/review.py:38
+#: core/forms/review.py:39
 msgid "executive_comment"
 msgstr "Empfehlungen/Bemerkungen"
 
@@ -1766,12 +1766,12 @@ msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
 #: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
-#: users/models.py:32
+#: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
 #: core/models/names.py:37 core/models/submissions.py:784 users/forms.py:56
-#: users/models.py:32
+#: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
 
@@ -1795,15 +1795,15 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:119 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:121 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:121 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:123
+#: core/templatetags/core.py:125
 msgid "Unknown"
 msgstr ""
 
@@ -2256,39 +2256,39 @@ msgstr ""
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: tasks/forms.py:16
+#: tasks/forms.py:17
 msgid "delegate"
 msgstr "abgeben"
 
-#: tasks/forms.py:16
+#: tasks/forms.py:17
 msgid "message"
 msgstr ""
 
-#: tasks/forms.py:24
+#: tasks/forms.py:25
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#: tasks/forms.py:38
+#: tasks/forms.py:39
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:60
+#: tasks/forms.py:61
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:62
+#: tasks/forms.py:63
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
 
-#: tasks/forms.py:100
+#: tasks/forms.py:101
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:101
+#: tasks/forms.py:102
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:102
+#: tasks/forms.py:103
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
@@ -2724,14 +2724,14 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:78 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:283
+#: templates/submissions/readonly_form.html:281
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
 #: templates/meetings/assistant/top.html:134
 #: templates/notifications/answers/form.html:28
-#: templates/submissions/readonly_form.html:286
+#: templates/submissions/readonly_form.html:284
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -2867,11 +2867,15 @@ msgstr "Kein Text"
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
 
-#: templates/help/view_page.html:23
+#: templates/help/view_page.html:22
+msgid "Chapter"
+msgstr "Kapitel"
+
+#: templates/help/view_page.html:43
 msgid "last edited"
 msgstr "zuletzt bearbeitet"
 
-#: templates/help/view_page.html:23
+#: templates/help/view_page.html:43
 msgid "ago by"
 msgstr ""
 
@@ -3332,13 +3336,13 @@ msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:27
 #: templates/submissions/readonly_form.html:200
-#: templates/submissions/readonly_form.html:295
+#: templates/submissions/readonly_form.html:293
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:83
-#: templates/submissions/readonly_form.html:246
+#: templates/submissions/readonly_form.html:244
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:55
 msgid "Download PDF"
@@ -3790,25 +3794,25 @@ msgstr "gültig bis"
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:221
-#: templates/submissions/readonly_form.html:242
+#: templates/submissions/readonly_form.html:220
+#: templates/submissions/readonly_form.html:240
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:230
+#: templates/submissions/readonly_form.html:229
 #: templates/submissions/tabs/status.html:135
 msgid "minors"
 msgstr "Minderjährige"
 
-#: templates/submissions/readonly_form.html:256
+#: templates/submissions/readonly_form.html:254
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:319
+#: templates/submissions/readonly_form.html:317
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:322
+#: templates/submissions/readonly_form.html:320
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
@@ -4099,15 +4103,15 @@ msgstr ""
 msgid "Indisposition"
 msgstr "Abwesenheit"
 
-#: templates/users/login.html:40
+#: templates/users/login.html:48
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
-#: templates/users/login.html:41
+#: templates/users/login.html:49
 msgid "Online Help Pages"
 msgstr "Hilfe/Anleitungen"
 
-#: templates/users/login.html:54
+#: templates/users/login.html:62
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
