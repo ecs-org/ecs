@@ -232,6 +232,26 @@
         color: red;
         font-weight: bolder;
     }
+
+    .nav {
+        display: block;
+        width: 100%;
+        .prev {
+            width: 33%;
+            text-align: left;
+            display: inline-block;
+        }
+        .top {
+            width: 33%;
+            text-align: center;
+            display: inline-block;
+        }
+        .next {
+            width: 33%;
+            text-align: right;
+            display: inline-block;
+        }
+    }
 }
 
 #help_overlay {
