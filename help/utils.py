@@ -1,6 +1,5 @@
 import re
 from django.core.urlresolvers import reverse
-
 from docutils.core import publish_parts as docutils_publish_parts
 
 DEFAULT_DOCUTILS_SETTINGS = {
@@ -11,6 +10,7 @@ DEFAULT_DOCUTILS_SETTINGS = {
 
 DOC_REF_RE = re.compile(r':doc:`([^`<]+)(?:<(\w+)>)?`', re.UNICODE)
 IMAGE_RE = re.compile(r'\.\.\s+(\|(?P<ref>([^|]+))\|\s+)?image::\s+(?P<target>[a-zA-Z0-9._-]+)', re.UNICODE)
+LWHITE_RE = re.compile(r'(\s*).*`', re.UNICODE) # leading whitespace
 
 class Linker(object):
     def __init__(self, image_url=None, page_url=None, doc_roles=True, slugdict = None):
@@ -96,3 +96,58 @@ def publish_parts(source):
     linker = Linker()
     source = linker.link(source)
     return docutils_publish_parts(source=source, writer_name="html4css1", settings_overrides=DEFAULT_DOCUTILS_SETTINGS)
+
+
+class ParseError(Exception): pass
+
+def parse_index():
+    from ecs.help.models import Page
+    try:
+        index_page = Page.objects.get(slug='index')
+    except Page.DoesNotExist:
+        return list(Page.objects.order_by('title'))
+
+    def _get_idepth(line):
+        m = LWHITE_RE.match(line)
+        if m:
+            return len(m.group(1).expandtabs())
+        return 0
+
+    page_cache = dict((p.slug, p) for p in Page.objects.all())
+
+    pages = []
+    for line in index_page.text.splitlines():
+        line = line.rstrip()
+        if not line: continue
+
+        idepth = _get_idepth(line)
+        for m in DOC_REF_RE.finditer(line):
+            slug = m.group(2) or m.group(1)
+            if not slug in page_cache:
+                raise ParseError('page with slug "{0}" not found'.format(slug))
+            page = page_cache[slug]
+            pages.append([idepth, page])
+
+    indents = []
+    def _parse():
+        l = []
+        while pages:
+            idepth, p = pages.pop(0)
+            if not indents or idepth == indents[-1]:
+                if not indents:
+                    indents.append(idepth)
+                l.append(p)
+            elif idepth > indents[-1]:
+                pages.insert(0, [idepth, p])
+                indents.append(idepth)
+                l.append(_parse())
+            elif idepth < indents[-1]:
+                if idepth in indents[:-1]:
+                    pages.insert(0, [idepth, p])
+                    if not indents.pop() == idepth:
+                        break
+                else:
+                    raise ParseError('unexpected dedent')
+        return l
+
+    return _parse()
