@@ -23,9 +23,8 @@ ecs.InlineFormSet = new Class({
             return;
         }
         if(this.forms[0].hasClass(this.options.templateClass)){
-            this.template = this.forms.pop();
+            this.template = this.forms.splice(0, 1)[0];
             this.template.dispose();
-            this.forms.splice(0, 1);
         }
         else{
             this.template = this.forms[0].clone(true, true);
@@ -71,11 +70,12 @@ ecs.InlineFormSet = new Class({
         this.containers.push(container);
     },
     removeContainer: function(container){
-        for(var i=this.forms.length - 1;i>=0;i--){
-            if(container.hasChild(this.forms[i])){
-                this.remove(i);
+        this.forms.slice(0).each(function(form){
+            if(container.hasChild(form)){
+                var index = this.forms.indexOf(form);
+                this.remove(index);
             }
-        }
+        }, this);
         this.containers.erase(container);
     },
     getFormCount: function(){
@@ -123,7 +123,7 @@ ecs.InlineFormSet = new Class({
         this.remove(this.forms.indexOf(form));
     },
     remove: function(index){
-        var f = this.forms[index];
+        var f = this.forms.splice(index, 1)[0];
         if(this.options.canDelete){
             var name = this.options.prefix + '-' + (this.options.offset + index);
             var idField = $(this.options.idPrefix + name + '-id');
@@ -147,11 +147,9 @@ ecs.InlineFormSet = new Class({
             }
         }
         f.dispose();
-        for(var i=index+1;i<this.forms.length;i++){
-            this.updateIndex(this.forms[i], i - 1, i);
-            this.forms[i - 1] = this.forms[i];
+        for(var i = 0; i < this.forms.length; i++){
+            this.updateIndex(this.forms[i], i, i+1);
         }
-        this.forms.pop();
         this.updateTotalForms(-1);
         this.fireEvent('formRemoved', [f, index]);
     },

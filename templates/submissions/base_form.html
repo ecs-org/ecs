@@ -150,14 +150,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        {% for form in investigatoremployee_formset.forms %}
-                                            {% if form|form_value:'investigator_index'|default:0|add:0 == investigator_index %}
-                                                <tr class="form">
-                                                    {% include "forms/tables/row.html" %}
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor%}
-                                        {% if not readonly and forloop.last %}
+                                        {% if not readonly and forloop.first %}
                                         {% with investigatoremployee_formset.empty_form as form %}
                                             <tr class="form template">
                                                 <td>
@@ -177,6 +170,13 @@
                                             </tr>
                                         {% endwith %}
                                         {% endif %}
+                                        {% for form in investigatoremployee_formset.forms %}
+                                            {% if form|form_value:'investigator_index'|default:0|add:0 == investigator_index %}
+                                                <tr class="form">
+                                                    {% include "forms/tables/row.html" %}
+                                                </tr>
+                                            {% endif %}
+                                        {% endfor%}
                                         </tbody>
                                     </table>
                                 </div>
