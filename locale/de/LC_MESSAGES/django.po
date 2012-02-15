@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-13 23:49+0100\n"
+"POT-Creation-Date: 2012-02-15 22:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgstr "Spezialistenbewertung"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:435
+#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:440
 #: notifications/bootstrap.py:83 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
@@ -183,7 +183,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:45 core/forms/forms.py:316
+#: checklists/models.py:45 core/forms/forms.py:321
 #: core/models/submissions.py:155 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
@@ -1482,15 +1482,19 @@ msgstr "Sicherheitsmeldungsersteller"
 msgid "At least one centre is required."
 msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 
-#: core/forms/forms.py:317 templates/core.html:63
+#: core/forms/forms.py:270
+msgid "Please select exactly one primary investigator."
+msgstr "Bitte wählen Sie genau eine/n koordinierende/n Prüfärztin/arzt."
+
+#: core/forms/forms.py:322 templates/core.html:63
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:318
+#: core/forms/forms.py:323
 msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
-#: core/forms/forms.py:319 core/forms/layout.py:98 core/forms/layout.py:100
+#: core/forms/forms.py:324 core/forms/layout.py:98 core/forms/layout.py:100
 #: templates/meetings/tabs/status.html:64
 #: templates/submissions/readonly_form.html:225
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
@@ -1498,7 +1502,7 @@ msgstr "Andere Sitzungen"
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:320 core/forms/layout.py:107 core/forms/layout.py:109
+#: core/forms/forms.py:325 core/forms/layout.py:107 core/forms/layout.py:109
 #: templates/meetings/tabs/status.html:69
 #: templates/submissions/readonly_form.html:227
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
@@ -1506,79 +1510,79 @@ msgstr "AMG"
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:321 templates/tasks/tasks.inc:25
+#: core/forms/forms.py:326 templates/tasks/tasks.inc:25
 #: templates/tasks/tasks_full.inc:24
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:323
+#: core/forms/forms.py:328
 msgid "Board"
 msgstr "Normal"
 
-#: core/forms/forms.py:324
+#: core/forms/forms.py:329
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:325 templates/meetings/tabs/status.html:89
+#: core/forms/forms.py:330 templates/meetings/tabs/status.html:89
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:326 core/models/constants.py:29
+#: core/forms/forms.py:331 core/models/constants.py:29
 #: templates/meetings/tabs/status.html:94
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/forms/forms.py:328
+#: core/forms/forms.py:333
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:329
+#: core/forms/forms.py:334
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:330
+#: core/forms/forms.py:335
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:331
+#: core/forms/forms.py:336
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:332
+#: core/forms/forms.py:337
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:333 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:338 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:334 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:339 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:335
+#: core/forms/forms.py:340
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:405
+#: core/forms/forms.py:410
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:416
+#: core/forms/forms.py:421
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:434 templates/users/administration.html:38
+#: core/forms/forms.py:439 templates/users/administration.html:38
 msgid "User"
 msgstr "Benutzer"
 
-#: core/forms/forms.py:436
+#: core/forms/forms.py:441
 msgid "End"
 msgstr "Ende"
 
-#: core/forms/forms.py:446
+#: core/forms/forms.py:451
 msgid "Default Contact"
 msgstr "Standard-Empfänger"
 

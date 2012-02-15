@@ -264,6 +264,11 @@ class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, 
         if len(changed_forms) < 1:
             raise forms.ValidationError(_('At least one centre is required.'))
 
+        if any(self.errors):
+            return
+        elif not len([f for f in self.forms[:self.total_form_count()] if f.cleaned_data.get('main', False)]) == 1:
+            raise forms.ValidationError(_('Please select exactly one primary investigator.'))
+
 InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1) 
 
 class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
