@@ -45,6 +45,7 @@ class SetupTarget(SetupTargetObject):
         for attr in ('ip', 'host'):
             setattr(self, attr, self.config[attr])
         self.config['local_hostname'] = self.config['host'].split('.')[0]
+        # set default for parameter that are optional
         self.config.setdefault('debug.filter_smtp', False)
         self.config.setdefault('ssl.chain', '') # chain is optional
         self.config.setdefault('postgresql.username', self.config['user'])
@@ -228,6 +229,8 @@ class SetupTarget(SetupTargetObject):
             with settings(warn_only=True):
                 local('sudo mkdir -m 0600 -p /root/.duply/root')
                 local('sudo mkdir -m 0600 -p /root/.duply/opt')
+            
+            self.config['duplicity.duply_path'] = self.pythonexedir
                 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
             self.config['duplicity.include'] = "SOURCE='/'"
