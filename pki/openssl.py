@@ -76,7 +76,7 @@ class CA(object):
         if not os.path.exists(self.ca_key_path):
             self._exec(['genrsa', '-out', self.ca_key_path, str(key_length)])
         if not os.path.exists(self.ca_cert_path):
-            self._exec(['req', '-batch', '-new', '-key', self.ca_key_path, '-x509', '-subj', subject, '-out', self.ca_cert_path])
+            self._exec(['req', '-batch', '-new', '-key', self.ca_key_path, '-x509', '-days', '3650', '-subj', subject, '-out', self.ca_cert_path])
         if not os.path.exists(self.crl_path):
             self._gen_crl()
     
