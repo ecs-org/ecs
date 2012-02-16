@@ -56,7 +56,7 @@
 <p><strong>{% trans 'Gesamt' %}:</strong> {{ cumulative_count }}</p>
 <table>
     <tr>
-        <th>{% trans "Normal" %}</th>
+        <th>{% trans "board" %}</th>
         <td>{{ board_submissions|length }}</td>
         <td>{% with board_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
     </tr>

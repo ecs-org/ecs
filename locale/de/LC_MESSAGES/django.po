@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-15 22:29+0100\n"
+"POT-Creation-Date: 2012-02-16 14:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1515,9 +1515,10 @@ msgstr "MPG"
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:328
-msgid "Board"
-msgstr "Normal"
+#: core/forms/forms.py:328 core/models/constants.py:26
+#: templates/meetings/tabs/status.html:59
+msgid "board"
+msgstr "Standard"
 
 #: core/forms/forms.py:329
 msgid "Thesis"
@@ -1755,10 +1756,6 @@ msgstr "personenbezogen"
 #: core/models/constants.py:17
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
-
-#: core/models/constants.py:26
-msgid "board"
-msgstr "Standard"
 
 #: core/models/constants.py:27 templates/tasks/tasks.inc:23
 #: templates/tasks/tasks_full.inc:22
@@ -3209,10 +3206,6 @@ msgstr "Statistik"
 msgid "Gesamt"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:59
-msgid "Normal"
-msgstr ""
-
 #: templates/meetings/tabs/status.html:74
 msgid "AMG/MPG"
 msgstr ""
@@ -4502,6 +4495,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "Chapter"
-#~ msgstr "Kapitel"

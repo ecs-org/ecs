@@ -325,7 +325,7 @@ _labels = {
     'mpg': _('MPG'),
     'other': _('Other'),
 
-    'board': _('Board'),
+    'board': _('board'),
     'thesis': _('Thesis'),
     'expedited': _('Expedited'),
     'local_ec': _('Local EC'),
