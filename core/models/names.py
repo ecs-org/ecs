@@ -14,7 +14,7 @@ class Name(object):
 
     @property
     def full_name(self):
-        return " ".join(bit for bit in [self.salutation, self.first_name, self.last_name] if bit).strip()
+        return " ".join(bit for bit in [self.salutation, self.title, self.first_name, self.last_name] if bit).strip()
         
     def __unicode__(self):
         return self.full_name
