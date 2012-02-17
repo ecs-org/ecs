@@ -181,8 +181,10 @@ def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspec
         pagenr += 1
         yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
+class PdfBroken(Exception):
+    pass
 
-def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
+def decrypt_pdf(src, logger=pdfutils_logger):
     with tempfile.NamedTemporaryFile(suffix='.pdf') as tmp:
         shutil.copyfileobj(src, tmp)
         tmp.seek(0)
@@ -198,6 +200,7 @@ def sanitize_pdf(src, decrypt=True, logger=pdfutils_logger):
             from ecs.users.utils import get_current_user
             user = get_current_user()
             logger.warn('qpdf error (returncode=%s):\nUser: %s (%s)\n%s', popen.returncode, user, user.email if user else 'anonymous', smart_str(stderr, errors='backslashreplace'))
+            raise PdfBroken('pdf broken')
     src.seek(0)
     return src
 

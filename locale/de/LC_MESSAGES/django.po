@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-16 14:54+0100\n"
+"POT-Creation-Date: 2012-02-17 23:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1796,15 +1796,15 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:121 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:120 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:125
+#: core/templatetags/core.py:124
 msgid "Unknown"
 msgstr ""
 
@@ -1963,41 +1963,45 @@ msgstr "keine Datei"
 msgid "This file is not a PDF document."
 msgstr "Diese Datei ist kein PDF-Dokument."
 
-#: documents/models.py:111 templates/notifications/form.html:46
+#: documents/forms.py:48
+msgid "The PDF-File seems to broken."
+msgstr "Die PDF-Datei scheint beschädigt zu sein."
+
+#: documents/models.py:109 templates/notifications/form.html:46
 #: templates/notifications/view/AmendmentNotificationForm.html:15
 #: templates/submissions/diff/diff.html:17
 msgid "new"
 msgstr "neu"
 
-#: documents/models.py:112
+#: documents/models.py:110
 msgid "uploading"
 msgstr "wird hochgeladen"
 
-#: documents/models.py:113
+#: documents/models.py:111
 msgid "uploaded"
 msgstr "hochgeladen"
 
-#: documents/models.py:114
+#: documents/models.py:112
 msgid "indexing"
 msgstr "wird indiziert"
 
-#: documents/models.py:115
+#: documents/models.py:113
 msgid "indexed"
 msgstr "indiziert"
 
-#: documents/models.py:116
+#: documents/models.py:114
 msgid "prime"
 msgstr ""
 
-#: documents/models.py:117
+#: documents/models.py:115
 msgid "ready"
 msgstr "bereit"
 
-#: documents/models.py:118
+#: documents/models.py:116
 msgid "aborted"
 msgstr "abgebrochen"
 
-#: documents/models.py:119
+#: documents/models.py:117
 msgid "deleted"
 msgstr "gelöscht"
 
@@ -4097,15 +4101,15 @@ msgstr ""
 msgid "Indisposition"
 msgstr "Abwesenheit"
 
-#: templates/users/login.html:48
+#: templates/users/login.html:50
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
-#: templates/users/login.html:49
+#: templates/users/login.html:51
 msgid "Online Help Pages"
 msgstr "Hilfe/Anleitungen"
 
-#: templates/users/login.html:62
+#: templates/users/login.html:64
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
@@ -4327,23 +4331,23 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/views.py:108
+#: users/views.py:111
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:176
+#: users/views.py:179
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort zurücksetzen"
 
-#: users/views.py:254
+#: users/views.py:257
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: users/views.py:289 users/views.py:394
+#: users/views.py:292 users/views.py:397
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:386
+#: users/views.py:389
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 

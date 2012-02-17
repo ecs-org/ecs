@@ -12,7 +12,7 @@ from django.conf import settings
 from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.pdfutils import sanitize_pdf
+from ecs.utils.pdfutils import decrypt_pdf, PdfBroken
 from ecs.utils.formutils import require_fields
 from ecs.utils.pathutils import tempfilecopy
 
@@ -42,7 +42,10 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         pdf.seek(0)
         
         # sanitization
-        f = sanitize_pdf(pdf)
+        try:
+            f = decrypt_pdf(pdf)
+        except PdfBroken:
+            raise ValidationError(_('The PDF-File seems to broken.'))
 
         while f.read(1024):
             pass
