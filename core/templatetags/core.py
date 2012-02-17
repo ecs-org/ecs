@@ -9,7 +9,6 @@ from django.core.urlresolvers import reverse
 from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash
-from ecs.utils.browserutils import is_supported_browser as isb
 from ecs.help.models import Page
 
 register = template.Library()
@@ -146,10 +145,6 @@ def allows_export_by(sf, user):
 @register.filter
 def is_presenting_party(user, sf):
     return user in sf.get_presenting_parties()
-
-@register.filter
-def is_supported_browser(request):
-    return isb(request.META['HTTP_USER_AGENT'])
 
 @register.tag(name='strip')
 def do_strip(parser, token):

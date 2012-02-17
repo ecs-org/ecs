@@ -33,15 +33,17 @@
         </div>
     </noscript>
     <div id="login_form" style="display:none;">
-    {% if not request|is_supported_browser %}
+    {% if not request.ua.is_supported and not request.ua.is_crawler %}
         <div id="browser_warning">
-            <strong>Achtung:</strong> Sie verwenden einen zur Zeit nicht unterstützen Webbrowser;<br>
-            Zur korrekten Darstellung brauchen sie
-            <a href="http://www.mozilla-europe.org/de/firefox/">Firefox</a>,
-            <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome</a>,
-            <a href="http://www.microsoft.com/austria/windows/ie9/">Explorer 9</a> oder
-            <a href="http://www.apple.com/de/safari/download/">Safari</a> in der jeweils neuesten Version.<br>
-            <a id="show_login" href="">Ich möchte es trotzdem versuchen.</a>
+            <strong>Achtung:</strong> Sie verwenden einen nicht unterstützen Webbrowser.<br>
+            Zur korrekten Darstellung brauchen sie einen Browser der HTML5 Generation, wie
+            <a href="http://www.mozilla-europe.org/de/firefox/">Firefox 4+</a>,
+            <a href="http://www.google.com/chrome/intl/de/landing_tv.html">Chrome 12+</a>,
+            <a href="http://www.apple.com/de/safari/download/">Safari 5+</a>,
+            Internet Explorer 10+ oder neuere.<br>
+            Ältere Browser sind nicht geeignet und führen zu Fehlern.<br>
+            Neuere/Unbekannte können funktionieren.<br>
+            <a id="show_login" href="">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a>
         </div>
     {% endif %}
     <div class="public_area">
@@ -55,7 +57,7 @@
             {% if form.username.errors %}{{ form.username.errors}}{% endif %}</p>
         <p>{{ form.password.label_tag }}{{ form.password }}
             {% if form.password.errors %}{{ form.password.errors}}{% endif %}</p>
-        <p><input type="submit" value="login" id="login_button"{% if not request|is_supported_browser %} style="display:none;"{% endif %}/></p>
+        <p><input type="submit" value="login" id="login_button"{% if not request.ua.is_supported or request.ua.is_crawler %} style="display:none;"{% endif %}/></p>
         <input type="hidden" name="next" value="{{ next }}" />
           {% if form.errors %}
           <div class="login_error_msg">

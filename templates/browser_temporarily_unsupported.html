@@ -1,6 +1,10 @@
 {% extends 'shell.html' %}
 {% load i18n %}
 
+{% block htmlmeta %}
+<meta http-equiv="refresh" content="5; url={{ help_url }}" />
+{% endblock %}
+
 {% block htmlbody %}
     <style>
         body, html {

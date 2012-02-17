@@ -31,7 +31,7 @@ from ecs.users.utils import user_flag_required, user_group_required
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user, user_group_required
 from ecs.communication.utils import send_system_message_template
-from ecs.utils.browserutils import is_malicious_browser, is_temporarily_unsupported_browser
+from ecs.utils.browserutils import UA
 from ecs.help.models import Page
 
 
@@ -65,10 +65,13 @@ def login(request, *args, **kwargs):
         except Page.DoesNotExist:
             return reverse('ecs.help.views.index')
 
-    if is_malicious_browser(request.META['HTTP_USER_AGENT']):
-        return HttpResponseRedirect(_html5_help_url())
-    elif is_temporarily_unsupported_browser(request.META['HTTP_USER_AGENT']):
-        return render(request, 'browser_temporarily_unsupported.html', {'help_url': _html5_help_url()})
+    ua_str = request.META.get('HTTP_USER_AGENT')
+    if ua_str:
+        request.ua = UA(ua_str)
+        if request.ua.is_unsupported:
+            return HttpResponseRedirect(_html5_help_url())
+        elif request.ua.is_tmp_unsupported:
+            return render(request, 'browser_temporarily_unsupported.html', {'help_url': _html5_help_url()})
 
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
