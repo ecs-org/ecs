@@ -1,7 +1,8 @@
 {% load core corepdf %}
 <h3>1. Allgemeines</h3>
 
-<div>1.1. Projekttitel: <span class="value">{{ submission_form.project_title }}</span></div>
+<div>7.1. Projekttitel (Deutsch): <span class="value">{{ submission_form.german_project_title|default_if_none:""|linebreaksbr }}</span></div>
+<div>1.1. Projekttitel (Englisch): <span class="value">{{ submission_form.project_title|default_if_none:""|linebreaksbr }}</span></div>
 
 <table class="full_width">
     <tbody>
