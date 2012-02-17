@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-17 23:59+0100\n"
+"POT-Creation-Date: 2012-02-18 00:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3295,7 +3295,7 @@ msgid "after"
 msgstr "Anschließend Anwesende"
 
 #: templates/notifications/form.html:25 templates/submissions/form.html:33
-#: templates/submissions/form.html:111
+#: templates/submissions/form.html:113
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -3463,7 +3463,7 @@ msgstr "Überspringen"
 msgid "Push back"
 msgstr "Zurückwerfen"
 
-#: templates/signature/batch_base.html:14 templates/submissions/form.html:112
+#: templates/signature/batch_base.html:14 templates/submissions/form.html:114
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -3593,27 +3593,31 @@ msgstr "Neue Maßnahme hinzufügen"
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:108
+#: templates/submissions/form.html:109
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:108
+#: templates/submissions/form.html:109
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:111
+#: templates/submissions/form.html:110
+msgid "Your study is being submitted"
+msgstr "Ihre Studie wird eingereicht"
+
+#: templates/submissions/form.html:113
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:112
+#: templates/submissions/form.html:114
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:116
+#: templates/submissions/form.html:118
 msgid "This form can't be submitted at the moment."
 msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
 

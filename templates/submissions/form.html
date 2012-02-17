@@ -106,6 +106,8 @@
             
             {% if valid and allows_edits %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
+                    $('submit-button').hide();
+                    new Element('div', {'class': 'submit_progress', 'html': '<img src="/static/images/loading_small.gif"/><span class="text">{{ _("Your study is being submitted") }}&hellip;</span>'}).MooDialog();
                     ecs.mainForm.submit('submit');
                 }, null, {
                     okText: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
