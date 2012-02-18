@@ -781,7 +781,7 @@ post_save.connect(_post_investigator_save, sender=Investigator)
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')
 
-    sex = models.CharField(max_length=1, choices=[("m", ugettext_lazy("Mr")), ("f", ugettext_lazy("Ms")), ("?", "")])
+    sex = models.CharField(max_length=1, choices=[("m", ugettext_lazy("Mr")), ("f", ugettext_lazy("Ms"))])
     title = models.CharField(max_length=40)
     firstname = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
