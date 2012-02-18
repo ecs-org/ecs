@@ -107,11 +107,15 @@ ecs.InlineFormSet = new Class({
                 el.setProperty(attr, value.replace(/-.+?-/, '-' + (this.options.offset + index) + '-'));
             }
         }).bind(this);
-        form.getElements('input,select,textarea').each(function(field){
+        var fields = form.getElements('input,select,textarea');
+        var excluded_fields = form.getElements('.inline_formset input, .inline_formset select, .inline_formset textarea');
+        fields.filter(function(f){return !excluded_fields.contains(f)}).each(function(field){
             _update(field, 'name');
             _update(field, 'id');
         }, this);
-        form.getElements('label').each(function(label){
+        var labels = form.getElements('label');
+        var excluded_labels = form.getElements('.inline_formset label');
+        labels.filter(function(l){return !excluded_labels.contains(l)}).each(function(label){
             _update(label, 'for');
         });
         if(oldIndex !== null){
