@@ -129,7 +129,10 @@ class MeetingManager(AuthorizationManager):
             raise self.model.DoesNotExist()
 
     def next_schedulable_meeting(self, submission):
-        sf = submission.current_submission_form
+        try:
+            sf = submission.forms.filter(is_acknowledged=True).order_by('created_at')[0]
+        except IndexError:
+            sf = submission.current_submission_form
         is_thesis = submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
 
         meetings = self.filter(deadline__gt=sf.created_at)
