@@ -835,9 +835,15 @@ def all_submissions(request):
             except Document.DoesNotExist:
                 pass
 
-        fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'eudract_number')
+        fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'presenter__last_name', 'eudract_number')
         for field_name in fields:
             submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
+        submissions_q |= Q(presenter__last_name__icontains=keyword)
+
+        if '@' in keyword:
+            for field_name in ('sponsor_email', 'submitter_email', 'presenter__email'):
+                submissions_q |= Q(**{'current_submission_form__{0}__iexact'.format(field_name): keyword})
+            submissions_q |= Q(presenter__email__iexact=keyword)
 
         submissions = submissions.filter(submissions_q)
 
