@@ -63,8 +63,8 @@
     <tr>
         <th>Eingereicht von:</th>
         <td colspan="3">
-            {% with submission.presenter.get_profile.organisation as organisation%}
-                {{ submission.presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% with submission.presenter.get_profile.organisation as organisation %}
+                {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
                 | <a href="{% url ecs.core.views.change_submission_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
@@ -74,8 +74,8 @@
     <tr>
         <th>Sicherheitsmeldungsersteller:</th>
         <td colspan="3">
-            {% with submission.susar_presenter.get_profile.organisation as organisation%}
-                {{ submission.susar_presenter }}{% if organisation %} ({{organisation}}){% endif %}
+            {% with submission.susar_presenter.get_profile.organisation as organisation %}
+                {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}
                 | <a href="{% url ecs.core.views.change_submission_susar_presenter submission_pk=submission.pk %}">{% trans "change" %}</a>
@@ -84,22 +84,22 @@
     </tr>
     <tr>
         <th>Antragsteller:</th>
-        {% with submission_form.submitter_organisation as organisation%}
-            <td colspan="3">{{ submission_form.submitter }}{% if organisation %} ({{organisation}}){% endif %}</td>
+        {% with submission_form.submitter_organisation as organisation %}
+            <td colspan="3">{{ submission_form.submitter }}{% if organisation %} ({{ organisation }}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
         <th>Sponsor:</th>
-        {% with submission_form.sponsor_name as organisation%}
-            <td colspan="3">{{ submission_form.sponsor }}{% if organisation %} ({{organisation}}){% endif %}</td>
+        {% with submission_form.sponsor_name as organisation %}
+            <td colspan="3">{{ submission_form.sponsor }}{% if organisation %} ({{ organisation }}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
         <th>Rechnungsempfänger:</th>
-        {% with submission_form.invoice_name as organisation%}
+        {% with submission_form.invoice_name as organisation %}
             <td colspan="3">
-            {% if submission_form.invoice %}
-                {{ submission_form.invoice }}{% if organisation %} ({{organisation}}){% endif %}
+            {% if organisation %}
+                {{ submission_form.invoice_contact }}{% if organisation %} ({{ organisation }}){% endif %}
             {% else %}
                 <em>{% trans "same as sponsor" %}</em>
             {% endif %}

@@ -64,13 +64,6 @@ def get_presenting_parties(sf):
     parties = PartyList()
     parties += [Party(organization=sf.sponsor_name, name=sf.sponsor_contact.full_name, user=sf.sponsor, email=sf.sponsor_email, involvement=_("Sponsor"))]
 
-    if sf.invoice:
-        parties.append(Party(organization=sf.invoice_name, 
-            name=sf.invoice_contact.full_name, 
-            email=sf.invoice_email, 
-            user=sf.invoice,
-            involvement=_("Invoice")
-        ))
     parties.append(Party(organization=sf.submitter_organisation, 
         name=sf.submitter_contact.full_name, 
         email=sf.submitter_email,

@@ -308,7 +308,6 @@ class SubmissionForm(models.Model):
     sponsor_agrees_to_publishing = models.BooleanField(default=True)
     sponsor_uid = models.CharField(max_length=35, null=True, blank=True)
     
-    invoice = models.ForeignKey(User, null=True, related_name='charged_submission_forms')
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
     invoice_contact = NameField()
     invoice_address = models.CharField(max_length=60, null=True, blank=True)
@@ -504,7 +503,7 @@ class SubmissionForm(models.Model):
     def save(self, **kwargs):
         if not self.presenter_id:
             self.presenter = get_current_user()
-        for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name'), ('invoice', 'invoice_name')):
+        for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name')):
             email = getattr(self, '{0}_email'.format(x))
             if email:
                 try:
@@ -688,7 +687,7 @@ class SubmissionForm(models.Model):
         return additional_investigators
 
 def attach_to_submissions(user):
-    for x in ('submitter', 'sponsor', 'invoice'):
+    for x in ('submitter', 'sponsor'):
         submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): user.email})
         for sf in submission_forms:
             setattr(sf, x, user)

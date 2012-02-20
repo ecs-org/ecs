@@ -128,9 +128,8 @@ class ChecklistQFactory(authorization.QFactory):
             return self.make_q()
         q = self.make_q(user=user)
         q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-        for x in ('sponsor', 'invoice', 'submitter'):
-            kwargs = {'status': 'review_ok', 'submission__current_submission_form__{0}'.format(x): user}
-            q |= self.make_q(**kwargs)
+        q |= self.make_q(status='review_ok', submission__current_submission_form__sponsor=user)
+        q |= self.make_q(status='review_ok', submission__current_submission_form__submitter=user)
         q |= self.make_q(status='review_ok', submission__presenter=user)
         q |= self.make_q(status='review_ok', submission__susar_presenter=user)
         return q

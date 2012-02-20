@@ -45,6 +45,8 @@ CHANGELOG = (
     ('*', '0.8'),
     ('-', SubmissionForm, 'external_reviewer_suggestions', 'nicht zutreffend'),
     ('*', '0.9'),
+    ('-', SubmissionForm, 'invoice', None),
+    ('*', '1.0'),
 )
 
 class FieldDocs(object):
@@ -395,7 +397,7 @@ _serializers = {
         ),
         exclude = (
             'pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 
-            'presenter', 'is_transient', 'is_notification_update', 'invoice',
+            'presenter', 'is_transient', 'is_notification_update',
         ),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
