@@ -805,16 +805,22 @@ def all_submissions(request):
 
         submissions_q = Q()
 
-        m = re.match(r'(\d+)', keyword)
+        m = re.match(r'(\+)?(\d{1,4})(/\d{1,4})?$', keyword)
         if m:
-            num = '%04d' %  int(m.group(1))
-            submissions_q = Q(ec_number__endswith=num)
+            num = int(m.group(2))
+            if m.group(3):
+                year = int(m.group(3)[1:])
+                submissions_q |= Q(ec_number=year*10000+num)
+            else:
+                submissions_q |= Q(ec_number__endswith='{0:04}'.format(num))
 
-        m = re.match(r'(\d+)/(\d+)', keyword)
-        if m:
-            num = int(m.group(1))
-            year = int(m.group(2))
-            submissions_q |= Q(ec_number__in=[num*10000 + year, year*10000 + num])
+            if m.group(1) == '+':
+                try:
+                    submission = submissions.filter(submissions_q).order_by('-ec_number')[0]
+                except IndexError:
+                    pass
+                else:
+                    return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
         if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
             try:
