@@ -88,7 +88,9 @@ class SimpleXLS(object):
         # factor to get the width right (content with a lot of wide glyphs will
         # still get a wrong width)
         for i, width in enumerate(self.widths):
-            self.sheet.col(i).width = int((1 + width) * 256 * 1.1)
+            # the width gets packed as 16 bit unsigned integer into the excel file,
+            # so we limit the width to USHRT_MAX to prevent xlwt from erroring out
+            self.sheet.col(i).width = min(int((1 + width) * 256 * 1.1), 2**16-1)
         self.xls.save(f)
 
 @readonly(methods=['GET'])
