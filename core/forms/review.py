@@ -60,7 +60,7 @@ class CategorizationReviewForm(ModelFormPickleMixin, NewReadonlyFormMixin, Trans
             )
             if 'external_reviewers' in self.fields.keys():
                 self.fields['external_reviewers'].widget = MultiselectWidget(
-                    url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
+                    url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'external-reviewers'})
                 )
 
     def clean(self):

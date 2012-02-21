@@ -218,6 +218,7 @@ def auth_groups():
         u'userswitcher_target',
         u'translators',
         u'sentryusers',
+        u'External Reviewer',
         u'External Review Review Group',
         u'EC-Vote Preparation Group',
         u'Vote Receiver Group',
@@ -365,6 +366,7 @@ def auth_user_testusers():
         ('gcp.reviewer', u'GCP Review Group', {'is_internal': False}),
         ('localec.rev', u'Local-EC Review Group', {'is_internal': True}),
         ('b2.rev', u'EC-B2 Review Group', {'is_internal': True}),
+        ('ext.rev', u'External Reviewer', {}),
         ('ext.rev.rev', u'External Review Review Group', {'is_internal': True}),
         ('paper.rev', u'EC-Paper Submission Review Group', {'is_internal': True}),
         ('safety.rev', u'EC-Safety Report Review Group', {'is_internal': True}),
@@ -483,6 +485,7 @@ def auth_external_review_users():
             user.first_name = first
             user.last_name = last
             user.save()
+        user.groups.add(_get_group('External Reviewer'))
 
         profile = user.get_profile()
         update_instance(profile, {
