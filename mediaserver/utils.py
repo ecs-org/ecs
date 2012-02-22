@@ -99,6 +99,8 @@ class MediaProvider:
                         if MONTAGE_GM:
                             # graphicsmagick does not correctly handle -geometry
                             geometry = (width, height)
+                            if len(sprite_images) < tx: # ugh!
+                                geometry = tuple(x * len(sprite_images) / tx for x in geometry)
                         _run([MONTAGE_PATH] + sprite_images + ['-tile', '%sx%s' % (tx, ty), '-geometry', '%sx%s' % geometry] + ['PNG8:%s' % sprite_path])
                         yield Page(identifier, tx, ty, width, num), open(sprite_path, 'rb')
                     
