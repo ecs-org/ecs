@@ -205,15 +205,6 @@ liblcms1:req:suse:zypper:liblcms1
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
-# deployment: manage.py massimport
-antiword:req:apt:apt-get:antiword
-antiword:req:mac:homebrew:antiword
-antiword:req:mac:macports:antiword
-# antiword has to be built by hand for opensuse
-#antiword:req:suse:zypper:antiword
-antiword:static:win:http://www.informatik.uni-frankfurt.de/~markus/antiword/antiword-0_37-windows.zip:unzipflat:antiword.exe
-# antiword is needed for ecs/core/management/massimport.py (were we load word-doc-type submission documents into the database)
-
 
 # feedback: jsonrpclib for ecs feedback and fab ticket
 jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
