@@ -50,6 +50,8 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
     request = kwargs.get('request')
     if context is None:
         context = {}
+    else:
+        context = context.copy()
 
     context.setdefault('sender', sender)
     context.setdefault('receiver', receiver)
