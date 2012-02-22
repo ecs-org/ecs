@@ -796,68 +796,100 @@ def all_submissions(request):
     keyword = request.GET.get('keyword', None)
 
     submissions = Submission.objects.all()
-    extra_context = {
-        'matched_document': None,
-    }
-    title = _('All Studies')
-    if keyword:
-        title = _('Study Search')
-
-        submissions_q = Q()
-
-        m = re.match(r'(\+)?(\d{1,4})(/\d{1,4})?$', keyword)
-        if m:
-            num = int(m.group(2))
-            if m.group(3):
-                year = int(m.group(3)[1:])
-                submissions_q |= Q(ec_number=year*10000+num)
-            else:
-                submissions_q |= Q(ec_number__endswith='{0:04}'.format(num))
-
-            if m.group(1) == '+':
-                try:
-                    submission = submissions.filter(submissions_q).order_by('-ec_number')[0]
-                except IndexError:
-                    pass
-                else:
-                    return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
-
-        if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
-            try:
-                doc = Document.objects.get(uuid=keyword)
-                extra_context['matched_document'] = doc
-                if doc.content_type_id == ContentType.objects.get_for_model(Submission).id:
-                    submissions_q |= Q(pk=doc.object_id)
-                elif doc.content_type_id == ContentType.objects.get_for_model(SubmissionForm).id:
-                    submissions_q |= Q(forms__pk=doc.object_id)
-                if isinstance(doc.parent_object, SubmissionForm) and not doc.parent_object.is_current:
-                    extra_context['warning'] = _('This document is an old version.')
-            except Document.DoesNotExist:
-                pass
-
-        fields = ('project_title', 'german_project_title', 'sponsor_name', 'submitter_contact_last_name', 'investigators__contact_last_name', 'presenter__last_name', 'eudract_number')
-        for field_name in fields:
-            submissions_q |= Q(**{'current_submission_form__%s__icontains' % field_name: keyword})
-        submissions_q |= Q(presenter__last_name__icontains=keyword)
-
-        if '@' in keyword:
-            for field_name in ('sponsor_email', 'submitter_email', 'presenter__email'):
-                submissions_q |= Q(**{'current_submission_form__{0}__iexact'.format(field_name): keyword})
-            submissions_q |= Q(presenter__email__iexact=keyword)
-
-        submissions = submissions.filter(submissions_q)
 
     if keyword is None:
-        filter_form = AllSubmissionsFilterForm
-        filtername = 'submission_filter_all'
-    else:
-        filter_form = SubmissionMinimalFilterForm
-        filtername = 'submission_filter_search'
+        return submission_list(request, submissions, filtername='submission_filter_all', filter_form=AllSubmissionsFilterForm, title=_('All Studies'))
 
-    kwargs = {'filtername': filtername, 'filter_form': filter_form, 'extra_context': extra_context, 'title': title}
-    if keyword:
-        kwargs['order_by'] = ('-ec_number',)
+    keyword = keyword.strip()
 
+    m = re.match(r'\+(\d{1,4})(/\d{1,4})?$', keyword)
+    if m:
+        num = int(m.group(1))
+        if m.group(2):
+            year = int(m.group(2)[1:])
+            q = Q(ec_number=year*10000+num)
+        else:
+            q = Q(ec_number__endswith='{0:04}'.format(num))
+
+        try:
+            submission = submissions.filter(q).order_by('-ec_number')[0]
+        except IndexError:
+            pass
+        else:
+            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
+
+    submissions_q = None
+    extra_context = {}
+
+    if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
+        try:
+            doc = Document.objects.get(uuid=keyword)
+        except Document.DoesNotExist:
+            pass
+        else:
+            extra_context['matched_document'] = doc
+            if doc.content_type_id == ContentType.objects.get_for_model(Submission).id:
+                submissions_q = Q(pk=doc.object_id)
+            elif doc.content_type_id == ContentType.objects.get_for_model(SubmissionForm).id:
+                submissions_q = Q(forms__pk=doc.object_id)
+            if isinstance(doc.parent_object, SubmissionForm) and not doc.parent_object.is_current:
+                extra_context['warning'] = _('This document is an old version.')
+
+    def _query(f, k, exact=False):
+        return Q(**{'{0}__{1}'.format(f, 'iexact' if exact else 'icontains'): k})
+
+    def _sf_query(f, k, exact=False):
+        return _query('current_submission_form__{0}'.format(f), k, exact=exact)
+
+    if submissions_q is None:
+        submissions_q = Q()
+        for k in keyword.split():
+            q = Q()
+
+            m = re.match(r'(\d{1,4})(/\d{1,4})?$', k)
+            if m:
+                num = int(m.group(1))
+                if m.group(2):
+                    year = int(m.group(2)[1:])
+                    q |= Q(ec_number=year*10000+num)
+                else:
+                    q |= Q(ec_number__endswith='{0:04}'.format(num))
+
+            for f in ('project_title', 'german_project_title', 'sponsor_name', 'eudract_number'):
+                q |= _sf_query(f, k)
+
+            for f in ('presenter', 'susar_presenter'):
+                q |= _query('{0}__first_name'.format(f), k)
+                q |= _query('{0}__last_name'.format(f), k)
+
+            for f in ('submitter', 'sponsor', 'investigators_'):
+                q |= _sf_query('{0}_contact_first_name'.format(f), k)
+                q |= _sf_query('{0}_contact_last_name'.format(f), k)
+
+            for f in ('presenter', 'submitter', 'investigators__user', 'sponsor'):
+                q |= _sf_query('{0}__first_name'.format(f), k)
+                q |= _sf_query('{0}__last_name'.format(f), k)
+
+            if '@' in keyword:
+                for f in ('presenter', 'susar_presenter'):
+                    q |= _query('{0}__email'.format(f), k, exact=True)
+
+                for f in ('submitter', 'sponsor', 'investigators_'):
+                    q |= _sf_query('{0}_email'.format(f), k, exact=True)
+
+                for f in ('presenter', 'submitter', 'investigators__user', 'sponsor'):
+                    q |= _sf_query('{0}__email'.format(f), k, exact=True)
+
+            submissions_q &= q
+
+    submissions = submissions.filter(submissions_q)
+    kwargs = {
+        'filtername': 'submission_filter_search',
+        'filter_form': SubmissionMinimalFilterForm,
+        'extra_context': extra_context,
+        'title': _('Study Search'),
+        'order_by': ('-ec_number',),
+    }
     return submission_list(request, submissions, **kwargs)
 
 
