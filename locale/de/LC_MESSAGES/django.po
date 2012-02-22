@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-22 12:33+0100\n"
+"POT-Creation-Date: 2012-02-22 17:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1804,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:696 templates/meetings/details.html:15
+#: core/views/submissions.py:703 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:802 templates/core.html:40
+#: core/views/submissions.py:821 templates/core.html:40
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:804
-msgid "Study Search"
-msgstr "Studien-Suche"
-
-#: core/views/submissions.py:834
+#: core/views/submissions.py:859
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:867 templates/core.html:43
+#: core/views/submissions.py:913
+msgid "Study Search"
+msgstr "Studien-Suche"
+
+#: core/views/submissions.py:922 templates/core.html:43
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:877 templates/core.html:46
+#: core/views/submissions.py:932 templates/core.html:46
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2618,7 +2618,7 @@ msgstr "Bearbeiten"
 
 #: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
 #: templates/notifications/stashed_notification_list.html:15
-#: templates/submissions/list.html:50 templates/submissions/list.html:212
+#: templates/submissions/list.html:50 templates/submissions/list.html:221
 msgid "Delete"
 msgstr "Löschen"
 
@@ -3678,11 +3678,15 @@ msgstr "Unterlage"
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
-#: templates/submissions/list.html:212
+#: templates/submissions/list.html:161 templates/submissions/widget.html:77
+msgid "Last opened studies"
+msgstr "Zuletzt geöffnete Studien"
+
+#: templates/submissions/list.html:221
 msgid "Do you want to delete the submission draft?"
 msgstr "Wollen Sie den Einreichungsentwurf löschen?"
 
-#: templates/submissions/list.html:212
+#: templates/submissions/list.html:221
 msgid "Don't Delete"
 msgstr "Nicht Löschen"
 

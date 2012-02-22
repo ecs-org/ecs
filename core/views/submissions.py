@@ -12,6 +12,7 @@ from django.utils.translation import ugettext as _
 from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
+from django.core.cache import cache
 
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
@@ -147,6 +148,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     vote = submission_form.current_vote
     submission = submission_form.submission
+
+    crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
+    crumbs = cache.get(crumbs_key, [])
+    if not (crumbs and crumbs[0] == submission.pk):
+        crumbs = ([submission.pk] + crumbs)[:3]
+    cache.set(crumbs_key, crumbs, 60*60*24*30) # store for thirty days
 
     checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(user=request.user)).order_by('blueprint__name')
 
@@ -691,7 +698,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
 
 
 @readonly()
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None, show_breadcrumbs=False):
     if not title:
         title = _('Submissions')
     usersettings = request.user.ecs_settings
@@ -766,6 +773,12 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         'title': title,
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
     }
+
+    if show_breadcrumbs:
+        crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
+        crumbs = [Submission.objects.get(pk=pk) for pk in cache.get(crumbs_key, [])]
+        data['breadcrumbs'] = crumbs
+
     data.update(extra_context or {})
 
     return render(request, template, data)
@@ -776,17 +789,21 @@ def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
     if request.user.get_profile().is_internal:
-        data['submissions'] = Submission.objects.all()
-        data['filtername'] = 'submission_filter_widget_internal'
-        data['filter_form'] = SubmissionWidgetFilterForm
+        data.update({
+            'submissions': Submission.objects.all(),
+            'filtername': 'submission_filter_widget_internal',
+            'filter_form': SubmissionWidgetFilterForm,
+            'show_breadcrumbs': True,
+        })
     else:
         stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
         stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
-
-        data['submissions'] = Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user)
-        data['stashed_submission_forms'] = stashed
-        data['filtername'] = 'submission_filter_widget'
-        data['filter_form'] = SubmissionFilterForm
+        data.update({
+            'submissions': Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user),
+            'stashed_submission_forms': stashed,
+            'filtername': 'submission_filter_widget',
+            'filter_form': SubmissionFilterForm,
+        })
 
     return submission_list(request, **data)
 
@@ -798,7 +815,13 @@ def all_submissions(request):
     submissions = Submission.objects.all()
 
     if keyword is None:
-        return submission_list(request, submissions, filtername='submission_filter_all', filter_form=AllSubmissionsFilterForm, title=_('All Studies'))
+        kwargs = {
+            'filtername': 'submission_filter_all',
+            'filter_form': AllSubmissionsFilterForm,
+            'title': _('All Studies'),
+            'show_breadcrumbs': True,
+        }
+        return submission_list(request, submissions, **kwargs)
 
     keyword = keyword.strip()
 
