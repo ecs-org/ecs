@@ -21,7 +21,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, MedicalCategory
-from ecs.core.models.constants import SUBMISSION_LANE_BOARD
+from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
@@ -740,10 +740,11 @@ def meeting_details(request, meeting_pk=None, active=None):
 
         'dissertation_submissions': submissions.filter(current_submission_form__project_type_education_context=1),
         'diploma_thesis_submissions': submissions.filter(current_submission_form__project_type_education_context=2),
-        'amg_multi_main_submissions': submissions.localec(),
+        'amg_multi_main_submissions': submissions.amg().filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC),
         'remission_submissions': submissions.filter(remission=True),
         'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
         'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
+
         'meeting': meeting,
         'expert_formset': expert_formset,
         'experts_saved': experts_saved,
