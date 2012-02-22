@@ -140,8 +140,14 @@ def outgoing_message_widget(request):
 @tracking_hint(exclude=True)
 @user_flag_required('is_internal')
 def communication_overview_widget(request, submission_pk=None):
+    threads = Thread.objects.filter(submission__pk=submission_pk)
+    show_system_messages = bool(request.REQUEST.get('show_system_messages'))
+    if not show_system_messages:
+        threads = threads.exclude(last_message__sender__email='root@system.local')
+
     return render(request, 'communication/widgets/overview.inc', {
-        'threads': Thread.objects.filter(submission__pk=submission_pk).order_by('-last_message__timestamp'),
+        'threads': threads.order_by('-last_message__timestamp'),
+        'show_system_messages': show_system_messages,
     })
 
 

@@ -16,8 +16,24 @@
         </li>
     {% endfor %}
     </ul>
+
+</div>
+{% empty %}
+<div style="margin:20px;">
+    <em>{% trans 'No messages yet!' %}</em>
 </div>
 {% endfor %}
+
+<div>
+    <span class="icon_comment"></span>
+    {% if show_system_messages %}
+        {% trans 'System messages are shown.' %}
+        <a href="{{ request.path }}" class="open-in-widget">{% trans 'Hide system messages' %}</a>
+    {% else %}
+        {% trans 'System messages are hidden.' %}
+        <a href="{{ request.path }}?show_system_messages=show_system_messages" class="open-in-widget">{% trans 'Show system messages' %}</a>
+    {% endif %}
+</div>
 
 <script type="text/javascript">
     window.addEvent('domready', function(){
