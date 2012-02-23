@@ -19,8 +19,11 @@
         <li><i>{% trans "No scratchpad" %}</i></li>
     {% endfor %}
     </ul>
-
-    <form id="scratchpad_form" action="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
-        {{ form.text }}
-    </form>
 </div>
+
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        var popup = $('scratchpad').getParent('.ecs-Popup').retrieve('ecs.widgets.Popup');
+        popup.clearPreCloseHandlers();
+    });
+</script>

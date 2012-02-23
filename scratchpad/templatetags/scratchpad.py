@@ -22,10 +22,3 @@ def get_scratchpad(parser, token):
     if len(bits) != 3 or bits[1] != 'as':
         raise TemplateSyntaxError('expected {% scratchpad as [var] %}')
     return ScratchpadNode(bits[2])
-
-@register.filter
-def get_current_scratchpad(request, submission):
-    try:
-        return ScratchPad.objects.get(owner=request.user, submission=submission)
-    except ScratchPad.DoesNotExist:
-        return None

@@ -186,6 +186,9 @@ ecs.widgets.Popup = new Class({
         $(window).removeEvent('keyup', this.keypress);
         $(window).removeEvent('resize', this.resize);
     },
+    clearPreCloseHandlers: function(){
+        this.preCloseHandlers = [];
+    },
     addPreCloseHandler: function(handler){
         this.preCloseHandlers.push(handler);
     },
