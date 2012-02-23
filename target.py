@@ -31,7 +31,7 @@ class SetupTarget(SetupTargetObject):
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.dirname = dirname
         self.appname = 'ecs'
-        self.destructive = False
+        self.destructive = kwargs.pop('destructive', False)
         
         if config_file:
             self.configure(config_file)
@@ -92,14 +92,11 @@ class SetupTarget(SetupTargetObject):
 
     def system_setup(self, *args, **kwargs):
         ''' System Setup; Destructive, idempotent '''
-        kwargs['destructive'] = True
+        self.destructive = True
         self.setup(self, *args, **kwargs)
     
     def setup(self, *args, **kwargs):
         ''' Setup; idempotent, tries not to overwrite existing database or eg. ECS-CA , except destructive=True '''
-        destructive = kwargs.pop('destructive', False)
-        self.destructive = destructive
-        
         self.directory_config()
         self.host_config(with_current_ip=True)
         self.servercert_config()
@@ -368,8 +365,8 @@ $myhostname   smtp:[localhost:8823]
         basedir = os.path.join(self.homedir, 'ecs-ca')
         if os.path.exists(basedir):
             warn('CA directory exists (%s), refusing to overwrite.' % basedir)
-            return
-        shutil.copytree(replacement, basedir)
+        else:
+            shutil.copytree(replacement, basedir)
         
     def django_config(self):
         self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
@@ -517,8 +514,9 @@ $myhostname   smtp:[localhost:8823]
             f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
         local('sudo cp {0} /etc/default/jetty'.format(source_jetty))
         local('sudo /etc/init.d/jetty stop')
+        time.sleep(5) 
         local('sudo /etc/init.d/jetty start')
-        time.sleep(5) # jetty needs time to startup
+        time.sleep(10) # jetty needs time to startup
 
     def search_update(self):
         local('cd {0}/src/ecs; . {0}/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput '.format(self.homedir))
