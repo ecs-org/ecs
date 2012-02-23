@@ -43,7 +43,7 @@
 
     Liste der Auslandszentren: <br/>
     {% for pc in submission_form.foreignparticipatingcenter_set.all %}
-        <span class="value">{{ pc.name }}, {{ pc.investigator_name }}</span>
+        <div class="value">{{ pc.name }}, {{ pc.investigator_name }}</div>
     {% endfor %}
 </p>
 
