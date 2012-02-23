@@ -445,117 +445,6 @@ def auth_user_testusers():
             e = _get_expedited_category(expcategory)
             e.users.add(user)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
-def auth_ec_staff_users():
-    try:
-        from ecs.core.bootstrap_settings import staff_users
-    except ImportError:
-        staff_users = ((u'Staff', u'User', u'staff@example.org', ('EC-Office',), {},'f'),)
-
-    for first, last, email, groups, flags, gender in staff_users:
-        user, created = get_or_create_user(email, start_workflow=False)
-        user.first_name = first
-        user.last_name = last
-        user.is_staff = True
-        user.save()
-        for group in groups:
-            user.groups.add(_get_group(group))
-
-        profile = user.get_profile()
-        flags = flags.copy()
-        flags.update({
-            'is_internal': True,
-            'start_workflow': True,
-            'forward_messages_after_minutes': 360,
-            'gender': gender,
-        })
-        update_instance(profile, flags)
-
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
-    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
-def auth_external_review_users():
-    try:
-        from ecs.core.bootstrap_settings import external_review_users
-    except ImportError:
-        other_users = ((u'External', u'Reviewer', u'otherexternal@example.org', 'f'),)
-
-    for first, last, email, gender in external_review_users:
-        user, created = get_or_create_user(email, start_workflow=False)
-        if created:
-            user.first_name = first
-            user.last_name = last
-            user.save()
-        user.groups.add(_get_group('External Reviewer'))
-
-        profile = user.get_profile()
-        update_instance(profile, {
-            'start_workflow': True,
-            'forward_messages_after_minutes': 5,
-            'gender': gender,
-        })
-
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
-    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
-def auth_ec_other_users():
-    try:
-        from ecs.core.bootstrap_settings import other_users
-    except ImportError:
-        other_users = ((u'Other', u'User', u'other@example.org', ('EC-Statistic Group',),'f'),)
-
-    for first, last, email, groups, gender in other_users:
-        user, created = get_or_create_user(email, start_workflow=False)
-        if created:
-            user.first_name = first
-            user.last_name = last
-            user.save()
-        for group in groups:
-            user.groups.add(_get_group(group))
-
-        profile = user.get_profile()
-        update_instance(profile, {
-            'start_workflow': True,
-            'gender': gender,
-            'forward_messages_after_minutes': 5,
-        })
-
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
-    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
-def auth_ec_boardmember_users():
-    try:
-        from ecs.core.bootstrap_settings import board_members
-    except ImportError:
-        board_members = ((u'Board', u'Member', u'boardmember@example.org', ('Pharma',),'f'),)
-
-    board_member_group = _get_group('EC-Board Member')
-    for first, last, email, medcategories, gender in board_members:
-        user, created = get_or_create_user(email, start_workflow=False)
-        if created:
-            user.first_name = first
-            user.last_name = last
-            user.save()
-        user.groups.add(board_member_group)
-
-        profile = user.get_profile()
-
-        profile_data = {
-            'is_board_member': True,
-            'start_workflow': True,
-            'gender': gender,
-            'forward_messages_after_minutes': 5,
-        }
-
-        for medcategory in medcategories:
-            m = _get_medical_category(medcategory)
-            m.users.add(user)
-            try:
-                e = _get_expedited_category(medcategory)
-                e.users.add(user)
-                profile_data['is_expedited_reviewer'] = True
-            except ExpeditedReviewCategory.DoesNotExist:
-                pass
-
-        update_instance(profile, profile_data)
-
 @bootstrap.register()
 def ethics_commissions():
     try:
@@ -581,7 +470,7 @@ def ethics_commissions():
         ec, created = EthicsCommission.objects.get_or_create(uuid=comm.pop('uuid'), defaults=comm)
         update_instance(ec, comm)
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_user_testusers', 'ecs.core.bootstrap.auth_ec_staff_users'))
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_user_testusers',))
 def advanced_settings():
     default_contact = get_user('office1@example.org')
     AdvancedSettings.objects.get_or_create(pk=1, defaults={'default_contact': default_contact})

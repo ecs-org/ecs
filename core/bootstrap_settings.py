@@ -12,10 +12,6 @@ developers = (
     (u'Esther', u'Neumann', 'es_data@yahoo.de', 'f'),
 )
 
-staff_users = ()
-
-board_members = ()
-
 commissions = [{
     'uuid': u'23d805c6b5f14d8b9196a12005fd2961',
     'city': u'Wien',
