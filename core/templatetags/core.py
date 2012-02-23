@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 import re
 from textwrap import dedent
-from django import template
+from django.template import Library, Node, TemplateSyntaxError
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash
 from ecs.help.models import Page
 
-register = template.Library()
+register = Library()
 
 def getitem(obj, name):
     try:
@@ -152,7 +153,7 @@ def do_strip(parser, token):
     parser.delete_first_token()
     return StripNode(nodelist)
 
-class StripNode(template.Node):
+class StripNode(Node):
     def __init__(self, nodelist):
         self.nodelist = nodelist
 
@@ -165,7 +166,7 @@ def do_dedent(parser, token):
     parser.delete_first_token()
     return DedentNode(nodelist)
 
-class DedentNode(template.Node):
+class DedentNode(Node):
     def __init__(self, nodelist):
         self.nodelist = nodelist
 
@@ -179,3 +180,24 @@ def help_url(slug):
         return reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
     except Page.DoesNotExist:
         return reverse('ecs.help.views.index')
+
+class BreadcrumbsNode(Node):
+    def __init__(self, varname):
+        super(BreadcrumbsNode, self).__init__()
+        self.varname = varname
+
+    def render(self, context):
+        user = context['request'].user
+        if not user.is_anonymous():
+            crumbs_key = 'submission_breadcrumbs-user_{0}'.format(user.pk)
+            crumbs = [Submission.objects.get(pk=pk) for pk in cache.get(crumbs_key, [])]
+            context[self.varname] = crumbs
+        return u''
+
+@register.tag
+def get_breadcrumbs(parser, token):
+    try:
+        name, as_, varname = token.split_contents()
+    except ValueError:
+        raise TemplateSyntaxError('{% get_breadcrumbs as VAR %} expected')
+    return BreadcrumbsNode(varname)

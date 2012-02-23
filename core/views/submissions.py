@@ -151,8 +151,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
     crumbs = cache.get(crumbs_key, [])
-    if not (crumbs and crumbs[0] == submission.pk):
-        crumbs = ([submission.pk] + crumbs)[:3]
+    crumbs = ([submission.pk] + [pk for pk in crumbs if not pk == submission.pk])[:3]
     cache.set(crumbs_key, crumbs, 60*60*24*30) # store for thirty days
 
     checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(user=request.user)).order_by('blueprint__name')
@@ -698,7 +697,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
 
 
 @readonly()
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None, show_breadcrumbs=False):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
     if not title:
         title = _('Submissions')
     usersettings = request.user.ecs_settings
@@ -774,11 +773,6 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
     }
 
-    if show_breadcrumbs:
-        crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
-        crumbs = [Submission.objects.get(pk=pk) for pk in cache.get(crumbs_key, [])]
-        data['breadcrumbs'] = crumbs
-
     data.update(extra_context or {})
 
     return render(request, template, data)
@@ -793,7 +787,6 @@ def submission_widget(request, template='submissions/widget.html'):
             'submissions': Submission.objects.all(),
             'filtername': 'submission_filter_widget_internal',
             'filter_form': SubmissionWidgetFilterForm,
-            'show_breadcrumbs': True,
         })
     else:
         stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
@@ -819,7 +812,6 @@ def all_submissions(request):
             'filtername': 'submission_filter_all',
             'filter_form': AllSubmissionsFilterForm,
             'title': _('All Studies'),
-            'show_breadcrumbs': True,
         }
         return submission_list(request, submissions, **kwargs)
 

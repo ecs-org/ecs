@@ -24,6 +24,16 @@
   <a href="" id="feedback_button" class="feedback_trigger icon_feedback" title="{% trans "Compliments, comments or complaints?" %}">feedback</a>
   {% get_scratchpad as scratchpad %}
   <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
+  {% if user|has_flag:"is_internal" %}
+    {% get_breadcrumbs as crumbs %}
+    {% if crumbs %}
+    <div class="breadcrumbs">
+      {% for submission in crumbs %}
+        <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }}{% if not forloop.last %},{% endif %}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endif %}
 {% endblock %}
         
 {% block usermenu %}
