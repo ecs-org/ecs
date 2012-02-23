@@ -45,7 +45,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         try:
             f = decrypt_pdf(pdf)
         except PdfBroken:
-            raise ValidationError(_('The PDF-File seems to broken.'))
+            raise ValidationError(_('The PDF-File seems to broken. For more Information click on the question mark in the sidebar.'))
 
         while f.read(1024):
             pass

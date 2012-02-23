@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-22 17:32+0100\n"
+"POT-Creation-Date: 2012-02-23 20:34+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1482,7 +1482,7 @@ msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 msgid "Please select exactly one primary investigator."
 msgstr "Bitte wählen Sie genau eine/n koordinierende/n Prüfärztin/arzt."
 
-#: core/forms/forms.py:322 templates/core.html:63
+#: core/forms/forms.py:322 templates/core.html:73
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
@@ -1792,40 +1792,40 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:120 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:121 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:124
+#: core/templatetags/core.py:125
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:703 templates/meetings/details.html:15
+#: core/views/submissions.py:702 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:821 templates/core.html:40
+#: core/views/submissions.py:814 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:859
+#: core/views/submissions.py:851
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:913
+#: core/views/submissions.py:905
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:922 templates/core.html:43
+#: core/views/submissions.py:914 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:932 templates/core.html:46
+#: core/views/submissions.py:924 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -1964,8 +1964,12 @@ msgid "This file is not a PDF document."
 msgstr "Diese Datei ist kein PDF-Dokument."
 
 #: documents/forms.py:48
-msgid "The PDF-File seems to broken."
-msgstr "Die PDF-Datei scheint beschädigt zu sein."
+msgid ""
+"The PDF-File seems to broken. For more Information click on the question "
+"mark in the sidebar."
+msgstr ""
+"Die PDF-Datei scheint beschädigt zu sein. Für mehr Information klicken Sie "
+"auf das Fragezeichen-Symbol im Seitenmenü."
 
 #: documents/models.py:109 templates/notifications/form.html:46
 #: templates/notifications/view/AmendmentNotificationForm.html:15
@@ -2082,16 +2086,16 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:56 templates/core.html:61
+#: meetings/views.py:56 templates/core.html:71
 #: templates/submissions/list.html:107
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:70 templates/core.html:65
+#: meetings/views.py:70 templates/core.html:75
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:75 templates/core.html:66
+#: meetings/views.py:75 templates/core.html:76
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
@@ -2205,7 +2209,7 @@ msgstr "Beantwortete Meldungen"
 msgid "All Notifications"
 msgstr "Alle Meldungen"
 
-#: notifications/views.py:48 notifications/views.py:61 templates/core.html:55
+#: notifications/views.py:48 notifications/views.py:61 templates/core.html:65
 #: templates/submissions/readonly_form.html:138
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
@@ -2318,129 +2322,129 @@ msgstr "Notizblock aufschlagen"
 msgid "Empty"
 msgstr "Leer"
 
-#: templates/core.html:31 templates/dashboard/dashboard.html:6
+#: templates/core.html:41 templates/dashboard/dashboard.html:6
 #: templates/dashboard/dashboard.html:8
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: templates/core.html:32 templates/communication/list.html:6
+#: templates/core.html:42 templates/communication/list.html:6
 #: templates/communication/list.html:7
 #: templates/submissions/readonly_form.html:111
 msgid "Communication"
 msgstr "Nachrichten"
 
-#: templates/core.html:34 templates/tasks/list.html:6
+#: templates/core.html:44 templates/tasks/list.html:6
 #: templates/tasks/list.html.py:7 templates/tasks/tasks.inc:5
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: templates/core.html:37 templates/submissions/widget.html:3
+#: templates/core.html:47 templates/submissions/widget.html:3
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:48 templates/submissions/form.html:9
+#: templates/core.html:58 templates/submissions/form.html:9
 msgid "New Submission"
 msgstr "Neuer Antrag"
 
-#: templates/core.html:49 templates/submissions/import.html:4
+#: templates/core.html:59 templates/submissions/import.html:4
 #: templates/submissions/import.html:5
 msgid "Import"
 msgstr "Import"
 
-#: templates/core.html:53
+#: templates/core.html:63
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:56 templates/notifications/form.html:7
+#: templates/core.html:66 templates/notifications/form.html:7
 #: templates/notifications/select_creation_type.html:4
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:68
+#: templates/core.html:78
 msgid "New Meeting"
 msgstr "Neue Sitzung"
 
-#: templates/core.html:76 templates/administration/detail.html:7
+#: templates/core.html:86 templates/administration/detail.html:7
 #: templates/administration/detail.html:17 templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/core.html:80 templates/administration/detail.html:9
+#: templates/core.html:90 templates/administration/detail.html:9
 #: templates/users/administration.html:4 templates/users/details.html:4
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
 
-#: templates/core.html:81
+#: templates/core.html:91
 msgid "Accounting of fees"
 msgstr "Gebührenabrechnung"
 
-#: templates/core.html:83 templates/administration/advanced_settings.html:6
+#: templates/core.html:93 templates/administration/advanced_settings.html:6
 #: templates/administration/advanced_settings.html:9
 msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
-#: templates/core.html:85 templates/boilerplate/list.html:5
+#: templates/core.html:95 templates/boilerplate/list.html:5
 #: templates/boilerplate/list.html.py:6
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
-#: templates/core.html:87
+#: templates/core.html:97
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:90 templates/pki/cert_list.html:4
+#: templates/core.html:100 templates/pki/cert_list.html:4
 #: templates/pki/cert_list.html.py:6 templates/pki/create_cert.html:4
 #: templates/pki/create_cert.html.py:6
 msgid "PKI"
 msgstr ""
 
-#: templates/core.html:94
+#: templates/core.html:104
 msgid "Sentry ErrorLog"
 msgstr "Sentry Fehlerprotokoll"
 
-#: templates/core.html:101
+#: templates/core.html:111
 msgid "Developer"
 msgstr "Entwickler"
 
-#: templates/core.html:103
+#: templates/core.html:113
 #, fuzzy
 msgid "Submission PDF"
 msgstr "Einreichung"
 
-#: templates/core.html:104
+#: templates/core.html:114
 #, fuzzy
 msgid "Checklist PDF"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: templates/core.html:105
+#: templates/core.html:115
 #, fuzzy
 msgid "Notification PDF"
 msgstr "Meldungen"
 
-#: templates/core.html:106
+#: templates/core.html:116
 #, fuzzy
 msgid "Notification Answer PDF"
 msgstr "Meldungsantwort"
 
-#: templates/core.html:107
+#: templates/core.html:117
 #, fuzzy
 msgid "Vote PDF"
 msgstr "Voten"
 
-#: templates/core.html:108
+#: templates/core.html:118
 #, fuzzy
 msgid "Translations"
 msgstr "Organisation"
 
-#: templates/core.html:114
+#: templates/core.html:124
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:135
+#: templates/core.html:145
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
 
-#: templates/core.html:143
+#: templates/core.html:153
 #, python-format
 msgid ""
 "\n"
@@ -2453,15 +2457,15 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:268
+#: templates/core.html:278
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:268
+#: templates/core.html:278
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:284
+#: templates/core.html:294
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -2618,7 +2622,7 @@ msgstr "Bearbeiten"
 
 #: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
 #: templates/notifications/stashed_notification_list.html:15
-#: templates/submissions/list.html:50 templates/submissions/list.html:221
+#: templates/submissions/list.html:50 templates/submissions/list.html:212
 msgid "Delete"
 msgstr "Löschen"
 
@@ -3678,15 +3682,11 @@ msgstr "Unterlage"
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
-#: templates/submissions/list.html:161 templates/submissions/widget.html:77
-msgid "Last opened studies"
-msgstr "Zuletzt geöffnete Studien"
-
-#: templates/submissions/list.html:221
+#: templates/submissions/list.html:212
 msgid "Do you want to delete the submission draft?"
 msgstr "Wollen Sie den Einreichungsentwurf löschen?"
 
-#: templates/submissions/list.html:221
+#: templates/submissions/list.html:212
 msgid "Don't Delete"
 msgstr "Nicht Löschen"
 
