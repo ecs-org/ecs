@@ -313,7 +313,8 @@ a.button_submit:hover,
   background: $white;
 }
 #account {
-  min-height: 80px;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 #usertoolbar {
   min-height: 10px;

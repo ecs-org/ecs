@@ -7,5 +7,3 @@ def ecs_settings(request):
         'use_textboxlist': getattr(settings, 'USE_TEXTBOXLIST', False),
         'debug': settings.DEBUG,
     }
-
-
