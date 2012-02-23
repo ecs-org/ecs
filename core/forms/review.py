@@ -7,12 +7,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
-from ecs.core.forms.utils import ReadonlyFormMixin, NewReadonlyFormMixin
+from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import MultiselectWidget, BooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 from ecs.users.utils import get_current_user
 
-class CategorizationReviewForm(ModelFormPickleMixin, NewReadonlyFormMixin, TranslatedModelForm):
+class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',

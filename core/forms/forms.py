@@ -15,7 +15,7 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, SingleselectWidget, DateTimeField
-from ecs.core.forms.utils import NewReadonlyFormMixin, NewReadonlyFormSetMixin
+from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
 
@@ -55,7 +55,7 @@ INVOICE_REQUIRED_FIELDS = (
     'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email',
 )
 
-class SubmissionFormForm(NewReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
+class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
@@ -168,7 +168,7 @@ class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
             'investigator_name': ReadonlyTextInput(attrs={'cols': 30}),
         }
 
-class BaseForeignParticipatingCenterFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
@@ -184,7 +184,7 @@ class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
             'dosage': ReadonlyTextInput(attrs={'cols': 30}),
         }
 
-class BaseNonTestedUsedDrugFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
@@ -206,7 +206,7 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
         
@@ -254,7 +254,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
         else:
             self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
-class BaseInvestigatorFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
@@ -284,7 +284,7 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
             'organisation': ReadonlyTextInput(attrs={'cols': 50}),
         }
 
-class BaseInvestigatorEmployeeFormSet(NewReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
