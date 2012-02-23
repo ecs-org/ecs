@@ -7,7 +7,7 @@
 Wenn <strong>ja</strong>, geben Sie an, in welchen: <br>(bitte verwenden Sie englische Landesbezeichnungen) </p>
 
 <p class="pbi_avoid">
-<strong> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
+<strong> {% for country in submission_form.substance_registered_in_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
 
 <p>
 3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
