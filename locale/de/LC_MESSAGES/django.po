@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-23 20:34+0100\n"
+"POT-Creation-Date: 2012-02-24 20:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,7 @@ msgid "Board Member Review"
 msgstr "Spezialistenbewertung"
 
 #: checklists/bootstrap.py:28 checklists/bootstrap.py:57
-#: checklists/workflow.py:85
+#: checklists/workflow.py:93
 msgid "External Review"
 msgstr "Gutachten"
 
@@ -209,23 +209,23 @@ msgstr "Fallengelassen"
 msgid "Anonymous"
 msgstr "Anonym"
 
-#: checklists/workflow.py:49
+#: checklists/workflow.py:57
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
 
-#: checklists/workflow.py:73 notifications/workflow.py:128
+#: checklists/workflow.py:81 notifications/workflow.py:128
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: checklists/workflow.py:74
+#: checklists/workflow.py:82
 msgid "Send back to external Reviewer"
 msgstr "Zurück zum Gutachter"
 
-#: checklists/workflow.py:75
+#: checklists/workflow.py:83
 msgid "Drop"
 msgstr "Fallen lassen"
 
-#: checklists/workflow.py:89
+#: checklists/workflow.py:97
 msgid "Query regarding review"
 msgstr "Rückfrage zum Gutachten"
 
@@ -2675,26 +2675,36 @@ msgstr ""
 #, python-format
 msgid ""
 "\n"
-"        The Ethics Commission requests, that you review study %(ec_number)s "
-"(\"%(project_title)s\").\n"
+"        The ethics commission of the Medical University of Vienna requests "
+"that you review study %(ec_number)s (\"%(project_title)s\").\n"
 "\n"
-"        Click the following link to make the review: %(ABSOLUTE_URL_PREFIX)s"
-"%(task_url)s\n"
+"        The study is going to be discussed at the meeting at "
+"%(meeting_day)s.\n"
 "\n"
-"        If you can't make the review, we bid for near-term refusal and "
-"suggesion of another reviewer.\n"
+"        You will get %(price)s reward for your efforts.\n"
+"\n"
+"        Please let us now if you will make the review. In case of your "
+"refusal we ask you to suggest other capable reviewers.\n"
+"\n"
+"        Click the following link to make the review:\n"
+"        %(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
 "    "
 msgstr ""
 "\n"
 "        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten zur "
 "Studie %(ec_number)s (\"%(project_title)s\").\n"
 "\n"
-"        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu erstellen: "
-"%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
+"        Das Projekt wird in der Sitzung vom %(meeting_day)s behandelt.\n"
 "\n"
-"        Sollte es Ihnen nicht möglich sein, die Begutachtung durchzuführen, "
-"bitten wir Sie um möglichst kurzfristige Absage bzw. um Vorschläge anderer "
-"geeigneter Gutachter.\n"
+"        Für ihre Bemühungen erhalten Sie ein Anerkennungshonorar von "
+"%(price)s.\n"
+"\n"
+"        Bitte teilen sie uns so bald wie möglich mit, ob Sie die "
+"Begutachtung durchführen werden. Im Falle Ihrer Absage bitten wir Sie um "
+"Vorschläge anderer geeigneter Gutachter.\n"
+"\n"
+"        Um Ihr Gutachten zu erstellen, klicken Sie auf den folgenden Link:\n"
+"        %(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
 "    "
 
 #: templates/communication/list.html:12 templates/pdfviewer/viewer.html:49
@@ -4527,3 +4537,27 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "        The Ethics Commission requests, that you review study %(ec_number)"
+#~ "s (\"%(project_title)s\").\n"
+#~ "\n"
+#~ "        Click the following link to make the review: "
+#~ "%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
+#~ "\n"
+#~ "        If you can't make the review, we bid for near-term refusal and "
+#~ "suggesion of another reviewer.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten "
+#~ "zur Studie %(ec_number)s (\"%(project_title)s\").\n"
+#~ "\n"
+#~ "        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu "
+#~ "erstellen: %(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
+#~ "\n"
+#~ "        Sollte es Ihnen nicht möglich sein, die Begutachtung "
+#~ "durchzuführen, bitten wir Sie um möglichst kurzfristige Absage bzw. um "
+#~ "Vorschläge anderer geeigneter Gutachter.\n"
+#~ "    "

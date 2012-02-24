@@ -9,7 +9,9 @@ from ecs.workflow import Activity, guard, register
 from ecs.checklists.models import Checklist
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.signals import task_declined
-from ecs.users.utils import get_current_user
+from ecs.users.utils import get_current_user, sudo
+from ecs.meetings.models import Meeting
+from ecs.billing.models import Price
 
 register(Checklist)
 
@@ -46,7 +48,13 @@ class ExternalReview(Activity):
         token = super(ExternalReview, self).receive_token(*args, **kwargs)
         token.task.accept(c.user)
         if c.status == 'new':
-            send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
+            with sudo():
+                try:
+                    meeting = Meeting.objects.filter(pk__in=c.submission.timetable_entries.values('meeting__pk').query, started__isnull=True).order_by('start')[0]
+                except IndexError:
+                    meeting = None
+            price = Price.objects.get_review_price()
+            send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
         return token
 
 def unlock_external_review(sender, **kwargs):

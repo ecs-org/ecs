@@ -2,11 +2,16 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url and submission.project_title_display as project_title %}
-        The Ethics Commission requests, that you review study {{ ec_number }} ("{{ project_title }}").
+    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url and submission.project_title_display as project_title and meeting.start|date:'d.m.Y' as meeting_day and price.price|euro as price %}
+        The ethics commission of the Medical University of Vienna requests that you review study {{ ec_number }} ("{{ project_title }}").
 
-        Click the following link to make the review: {{ ABSOLUTE_URL_PREFIX }}{{ task_url }}
+        The study is going to be discussed at the meeting at {{ meeting_day }}.
 
-        If you can't make the review, we bid for near-term refusal and suggesion of another reviewer.
+        You will get {{ price }} reward for your efforts.
+
+        Please let us now if you will make the review. In case of your refusal we ask you to suggest other capable reviewers.
+
+        Click the following link to make the review:
+        {{ ABSOLUTE_URL_PREFIX }}{{ task_url }}
     {% endblocktrans %}
 {% endblock %}
