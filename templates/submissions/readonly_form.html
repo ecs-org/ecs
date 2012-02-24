@@ -242,7 +242,12 @@
         {% with checklist_review_form as review_form %}
             {% if review_form.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
                 {% if checklist.status == 'review_ok' or user|has_flag:'is_internal' %}
-                    <p><a class="button_submit" href="{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}">{% if checklist.status == 'review_ok' %}{% trans "Download PDF" %}{% else %}{% trans 'Download unpublished Version as PDF' %}{% endif %}</a></p>
+                    <p>
+                        <a class="button_submit" href="{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}">
+                            <span class="icon_pdf" style="vertical-align: middle;"></span>
+                            <span>{% if checklist.status == 'review_ok' %}{% trans "Download PDF" %}{% else %}{% trans 'Download unpublished Version as PDF' %}{% endif %}<span>
+                        </a>
+                    </p>
                 {% endif %}
             {% endif %}
             {% include 'submissions/checklist_review_form.inc' %}
