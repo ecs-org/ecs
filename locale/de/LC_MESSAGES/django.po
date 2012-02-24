@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-24 20:05+0100\n"
+"POT-Creation-Date: 2012-02-24 21:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -183,29 +183,29 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:45 core/forms/forms.py:321
+#: checklists/models.py:46 core/forms/forms.py:321
 #: core/models/submissions.py:155 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
 
-#: checklists/models.py:46
+#: checklists/models.py:47
 msgid "Completed"
 msgstr "Abgeschlossen"
 
-#: checklists/models.py:47 help/models.py:20
+#: checklists/models.py:48 help/models.py:20
 msgid "Review OK"
 msgstr "Überprüfung OK"
 
-#: checklists/models.py:48 help/models.py:21
+#: checklists/models.py:49 help/models.py:21
 msgid "Review Failed"
 msgstr "Überprüfung fehlgeschlagen"
 
-#: checklists/models.py:49
+#: checklists/models.py:50
 msgid "Dropped"
 msgstr "Fallengelassen"
 
-#: checklists/models.py:66
+#: checklists/models.py:67
 msgid "Anonymous"
 msgstr "Anonym"
 
@@ -3839,6 +3839,10 @@ msgstr "Neu öffnen"
 #: templates/submissions/tabs/status.html:135
 msgid "minors"
 msgstr "Minderjährige"
+
+#: templates/submissions/readonly_form.html:244
+msgid "Download unpublished Version as PDF"
+msgstr "Unveröffentlichte Version als PDF herunterladen"
 
 #: templates/submissions/readonly_form.html:254
 msgid "Write a new message"

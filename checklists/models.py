@@ -19,6 +19,7 @@ class ChecklistBlueprint(models.Model):
     multiple = models.BooleanField(default=False)
     billing_required = models.BooleanField(default=False)
     reviewer_is_anonymous = models.BooleanField(default=False)
+    allow_pdf_download = models.BooleanField(default=False)
 
     def __unicode__(self):
         return _(self.name)

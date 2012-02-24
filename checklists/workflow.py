@@ -88,7 +88,8 @@ class ExternalReviewReview(Activity):
         c.status = choice
         c.save()
         if c.status == 'review_ok':
-            c.render_pdf()
+            if not c.pdf_document:
+                c.render_pdf()
             presenting_parties = c.submission.current_submission_form.get_presenting_parties()
             presenting_parties.send_message(_('External Review'), 'checklists/external_review_publish.txt',
                 {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX},
