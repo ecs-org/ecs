@@ -321,7 +321,7 @@
       
       $('help_button').addEvent('click', window.openHelpPage);
       
-      {% if request.user|has_flag:'is_internal' %}
+      {% if request.user|is_member_of:'bugshot' or request.user|has_flag:'is_help_writer' %}
       camera.install();
       new camera.Camera({
           'class': 'bugshot',
