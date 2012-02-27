@@ -13,6 +13,7 @@ from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
+from django.contrib.auth.models import User
 
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
@@ -858,6 +859,17 @@ def all_submissions(request):
     def _sf_query(f, k, exact=False):
         return _query('current_submission_form__{0}'.format(f), k, exact=exact)
 
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
+    with sudo():
+        external_review_tasks = Task.objects.filter(content_type=checklist_ct, task_type__workflow_node__uid='external_review')
+    def _external_reviewer_query(*args, **kwargs):
+        with sudo():
+            user_pks = User.objects.filter(*args, **kwargs).values('pk').query
+            checklist_pks = external_review_tasks.filter(assigned_to__pk__in=user_pks).values('data_id').query
+            checklists = Checklist.objects.filter(pk__in=checklist_pks)
+            pks = list(checklists.values_list('submission__pk', flat=True))
+        return Q(pk__in=pks)
+
     if submissions_q is None:
         submissions_q = Q()
         for k in keyword.split():
@@ -887,6 +899,9 @@ def all_submissions(request):
                 q |= _sf_query('{0}__first_name'.format(f), k)
                 q |= _sf_query('{0}__last_name'.format(f), k)
 
+            if request.user.get_profile().is_internal:
+                q |= _external_reviewer_query(Q(first_name__icontains=k)|Q(last_name__icontains=k))
+
             if '@' in keyword:
                 for f in ('presenter', 'susar_presenter'):
                     q |= _query('{0}__email'.format(f), k, exact=True)
@@ -896,6 +911,9 @@ def all_submissions(request):
 
                 for f in ('presenter', 'submitter', 'investigators__user', 'sponsor'):
                     q |= _sf_query('{0}__email'.format(f), k, exact=True)
+
+                if request.user.get_profile().is_internal:
+                    q |= _external_reviewer_query(Q(email__iexact=k))
 
             submissions_q &= q
 
