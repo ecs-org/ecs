@@ -109,7 +109,7 @@ class Thread(models.Model):
     objects = ThreadManager()
 
     def mark_closed_for_user(self, user):
-        for msg in self.messages.all():
+        for msg in self.messages.filter(receiver=user):
             msg.unread = False
             msg.save()
         
