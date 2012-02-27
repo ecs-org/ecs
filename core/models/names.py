@@ -36,8 +36,8 @@ class NameField(object):
         flist = (
             ('gender', models.CharField, {'max_length': 1, 'choices': (('f', _('Ms')), ('m', _('Mr'))), 'null': True}),
             ('title', models.CharField, {'max_length': 30}),
-            ('first_name', models.CharField, {'max_length': 50}),
-            ('last_name', models.CharField, {'max_length': 50}),
+            ('first_name', models.CharField, {'max_length': 30}),
+            ('last_name', models.CharField, {'max_length': 30}),
         )
 
         for fname, fcls, fkwargs in flist:
