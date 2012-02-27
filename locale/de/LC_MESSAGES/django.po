@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-24 21:07+0100\n"
+"POT-Creation-Date: 2012-02-27 18:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,7 @@ msgid "Board Member Review"
 msgstr "Spezialistenbewertung"
 
 #: checklists/bootstrap.py:28 checklists/bootstrap.py:57
-#: checklists/workflow.py:93
+#: checklists/workflow.py:94
 msgid "External Review"
 msgstr "Gutachten"
 
@@ -225,7 +225,7 @@ msgstr "Zurück zum Gutachter"
 msgid "Drop"
 msgstr "Fallen lassen"
 
-#: checklists/workflow.py:97
+#: checklists/workflow.py:98
 msgid "Query regarding review"
 msgstr "Rückfrage zum Gutachten"
 
@@ -344,12 +344,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:153 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:323
+#: templates/submissions/readonly_form.html:330
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:155 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:324
+#: templates/submissions/readonly_form.html:331
 msgid "No"
 msgstr "Nein"
 
@@ -1804,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:702 templates/meetings/details.html:15
+#: core/views/submissions.py:704 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:814 templates/core.html:50
+#: core/views/submissions.py:816 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:851
+#: core/views/submissions.py:853
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:905
+#: core/views/submissions.py:907
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:914 templates/core.html:53
+#: core/views/submissions.py:916 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:924 templates/core.html:56
+#: core/views/submissions.py:926 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2699,7 +2699,7 @@ msgstr ""
 "        Für ihre Bemühungen erhalten Sie ein Anerkennungshonorar von "
 "%(price)s.\n"
 "\n"
-"        Bitte teilen sie uns so bald wie möglich mit, ob Sie die "
+"        Bitte teilen Sie uns so bald wie möglich mit, ob Sie die "
 "Begutachtung durchführen werden. Im Falle Ihrer Absage bitten wir Sie um "
 "Vorschläge anderer geeigneter Gutachter.\n"
 "\n"
@@ -2743,14 +2743,14 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:78 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:281
+#: templates/submissions/readonly_form.html:288
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
 #: templates/meetings/assistant/top.html:134
 #: templates/notifications/answers/form.html:28
-#: templates/submissions/readonly_form.html:284
+#: templates/submissions/readonly_form.html:291
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -3367,13 +3367,13 @@ msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:27
 #: templates/submissions/readonly_form.html:200
-#: templates/submissions/readonly_form.html:293
+#: templates/submissions/readonly_form.html:300
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:83
-#: templates/submissions/readonly_form.html:244
+#: templates/submissions/readonly_form.html:248
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:55
 msgid "Download PDF"
@@ -3840,19 +3840,19 @@ msgstr "Neu öffnen"
 msgid "minors"
 msgstr "Minderjährige"
 
-#: templates/submissions/readonly_form.html:244
+#: templates/submissions/readonly_form.html:248
 msgid "Download unpublished Version as PDF"
 msgstr "Unveröffentlichte Version als PDF herunterladen"
 
-#: templates/submissions/readonly_form.html:254
+#: templates/submissions/readonly_form.html:261
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:317
+#: templates/submissions/readonly_form.html:324
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:320
+#: templates/submissions/readonly_form.html:327
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"

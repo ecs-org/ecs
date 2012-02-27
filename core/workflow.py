@@ -233,6 +233,7 @@ class CategorizationReview(Activity):
 
     def pre_perform(self, choice):
         s = self.workflow.data
+        on_categorization_review.send(Submission, submission=self.workflow.data)
         # create external review checklists
         blueprint = ChecklistBlueprint.objects.get(slug='external_review')
         for user in s.external_reviewers.all():
@@ -240,8 +241,6 @@ class CategorizationReview(Activity):
             if created:
                 for question in blueprint.questions.order_by('text'):
                     ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
-
-        on_categorization_review.send(Submission, submission=self.workflow.data)
 
 
 class ExpeditedRecommendationSplit(Generic):
