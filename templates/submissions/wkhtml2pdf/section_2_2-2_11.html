@@ -38,7 +38,7 @@
 <p class="border_bottom">
     2.7 Liste der Zentren: <br/>
     {% for investigator in submission_form.investigators.all %}
-        <div class="value">{{ investigator.organisation }}; {{ investigator.ethics_commission.zip_code }} {{ investigator.ethics_commission.city }} </div>
+        <div class="value">{{ investigator.organisation }}</div>
     {% endfor %}
 
     Liste der Auslandszentren: <br/>
