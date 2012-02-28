@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-27 18:43+0100\n"
+"POT-Creation-Date: 2012-02-28 17:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1804,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:704 templates/meetings/details.html:15
+#: core/views/submissions.py:705 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:816 templates/core.html:50
+#: core/views/submissions.py:817 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:853
+#: core/views/submissions.py:854
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:907
+#: core/views/submissions.py:925
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:916 templates/core.html:53
+#: core/views/submissions.py:934 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:926 templates/core.html:56
+#: core/views/submissions.py:944 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2645,7 +2645,7 @@ msgstr ""
 "\"%(project_title)s\" (%(ec_number)s) haben sich Rückfragen seitens der "
 "Ethikkommission ergeben.\n"
 "\n"
-"        Kontrollieren Sie bitte ihren Nachrichteneingang für nähere "
+"        Kontrollieren Sie bitte Ihren Nachrichteneingang für nähere "
 "Angaben.\n"
 "    "
 
@@ -2696,7 +2696,7 @@ msgstr ""
 "\n"
 "        Das Projekt wird in der Sitzung vom %(meeting_day)s behandelt.\n"
 "\n"
-"        Für ihre Bemühungen erhalten Sie ein Anerkennungshonorar von "
+"        Für Ihre Bemühungen erhalten Sie ein Anerkennungshonorar von "
 "%(price)s.\n"
 "\n"
 "        Bitte teilen Sie uns so bald wie möglich mit, ob Sie die "
@@ -3605,7 +3605,7 @@ msgstr ""
 "\n"
 "Ihre Einreichung \"%(project_title)s\" (%(ec_number)s) kann in der "
 "vorliegenden Form nicht angenommen werden.\n"
-"Kontrollieren Sie ihren Nachrichteneingang für nähere Angaben. Sie können "
+"Kontrollieren Sie Ihren Nachrichteneingang für nähere Angaben. Sie können "
 "die Studie im System durch einen Klick auf \"Bearbeiten\" ändern und danach "
 "neu einreichen.\n"
 "    "
@@ -4043,7 +4043,7 @@ msgstr "Aufgabenart"
 #: templates/tasks/tasks_full.inc:30
 msgid "Drag the bookmark link to your bookmark bar to save it."
 msgstr ""
-"Ziehen Sie den Lesezeichen-Link auf ihre Lesezeichen-Leiste um ihn zu "
+"Ziehen Sie den Lesezeichen-Link auf Ihre Lesezeichen-Leiste um ihn zu "
 "speichern."
 
 #: templates/tasks/tasks_full.inc:31
@@ -4541,27 +4541,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "        The Ethics Commission requests, that you review study %(ec_number)"
-#~ "s (\"%(project_title)s\").\n"
-#~ "\n"
-#~ "        Click the following link to make the review: "
-#~ "%(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
-#~ "\n"
-#~ "        If you can't make the review, we bid for near-term refusal and "
-#~ "suggesion of another reviewer.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "        Die Ethik-Kommission der MedUni Wien bittet Sie um ein Gutachten "
-#~ "zur Studie %(ec_number)s (\"%(project_title)s\").\n"
-#~ "\n"
-#~ "        Klicken Sie auf den folgenden Link, um Ihr Gutachten zu "
-#~ "erstellen: %(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
-#~ "\n"
-#~ "        Sollte es Ihnen nicht möglich sein, die Begutachtung "
-#~ "durchzuführen, bitten wir Sie um möglichst kurzfristige Absage bzw. um "
-#~ "Vorschläge anderer geeigneter Gutachter.\n"
-#~ "    "
