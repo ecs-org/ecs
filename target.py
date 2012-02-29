@@ -219,6 +219,7 @@ class SetupTarget(SetupTargetObject):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
         else:
+            local('sudo rm -r /root/.gnupg')
             local('sudo gpg --homedir /root/.gnupg --rebuild-keydb-caches')
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
@@ -243,13 +244,13 @@ class SetupTarget(SetupTargetObject):
 
             self.config['duplicity.duply_conf'] = "root"
             with settings(warn_only=True): # remove legacy duply script, before it was renamed
-                local('sudo bash -c "if test -f /etc/backup.d/90duply.sh; rm /etc/backup.d/90duply.sh; fi"')
+                local('sudo bash -c "if test -f /etc/backup.d/90duply.sh; then rm /etc/backup.d/90duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
                 '/etc/backup.d/90duply-root.sh', backup=False, use_sudo=True, filemode= '0600')
             
             self.config['duplicity.duply_conf'] = "opt"
             with settings(warn_only=True): # remove legacy duply script, before it was renamed
-                local('sudo bash -c "if test -f /etc/backup.d/91duply.sh; rm /etc/backup.d/91duply.sh; fi"')
+                local('sudo bash -c "if test -f /etc/backup.d/91duply.sh; then rm /etc/backup.d/91duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
                 '/etc/backup.d/91duply-opt.sh', backup=False, use_sudo=True, filemode= '0600')
             
