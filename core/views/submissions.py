@@ -237,6 +237,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             if tasks and not [t for t in tasks if not t.closed_at]:
                 context['categorization_task'] = tasks[0]
 
+    if not submission_form == submission.newest_submission_form:
+        context['unacknowledged_forms'] = submission.forms.filter(pk__gt=submission_form.pk).count()
+
     if extra_context:
         context.update(extra_context)
 

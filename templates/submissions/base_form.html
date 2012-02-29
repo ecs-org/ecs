@@ -31,6 +31,16 @@
           {% block tabs %}
             {% for tab in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab">
+                    {% if unacknowledged_forms %}
+                    <div class="unacknowledged_forms">
+                        <span class="icon_comment" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
+                        {% if unacknowledged_forms == 1 %}
+                            Es gibt eine neuere, unbestätigte Version.
+                        {% else %}
+                            Es gibt {{ unacknowledged_forms }} neuere, unbestätigte Versionen.
+                        {% endif %}
+                    </div>
+                    {% endif %}
                     {% if tab.slug == 'measures' %}
                         <div class="field">
                             <h3>Ausschließlich studienbezogene Maßnahmen <span class="paperform_number">6.1</span></h3>
