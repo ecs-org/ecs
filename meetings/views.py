@@ -82,11 +82,18 @@ def reschedule_submission(request, submission_pk=None):
         from_meeting = form.cleaned_data['from_meeting']
         to_meeting = form.cleaned_data['to_meeting']
         old_entries = from_meeting.timetable_entries.filter(submission=submission)
+
         for entry in old_entries:
+            Participation.objects.filter(entry=entry).delete()
             to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=(not entry.timetable_index is None))
             entry.submission = None
             entry.save()
             entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
+            with sudo():
+                new_experts = list(AssignedMedicalCategory.objects.filter(meeting=to_meeting, board_member__isnull=False, category__pk__in=submission.medical_categories.values('pk').query).values_list('board_member__pk', flat=True))
+                tasks = Task.objects.for_data(submission).filter(
+                    task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True).exclude(assigned_to__pk__in=new_experts)
+                tasks.mark_deleted()
         return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,

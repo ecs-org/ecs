@@ -12,8 +12,9 @@ from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBM
 from ecs.utils import cached_property
 from ecs.utils.timedelta import timedelta_to_seconds
 from ecs.utils.viewutils import render_pdf
-from ecs.tasks.models import TaskType
+from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
+from ecs.users.utils import sudo
 
 
 class TimetableMetrics(object):
@@ -230,8 +231,11 @@ class Meeting(models.Model):
                 participation, created = Participation.objects.get_or_create(medical_category=amc.category, entry=entry, user=amc.board_member)
                 if created:
                     # create board member review task
-                    token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
-                    token.task.accept(user=amc.board_member)
+                    with sudo():
+                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type=task_type, closed_at=None, deleted_at__isnull=True, assigned_to=amc.board_member).exists()
+                    if not bm_task_exists:
+                        token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
+                        token.task.accept(user=amc.board_member)
             
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
