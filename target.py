@@ -46,7 +46,6 @@ class SetupTarget(SetupTargetObject):
             setattr(self, attr, self.config[attr])
         self.config['local_hostname'] = self.config['host'].split('.')[0]
         # set default for parameter that are optional
-        self.config.setdefault('debug.filter_smtp', False)
         self.config.setdefault('ssl.chain', '') # chain is optional
         self.config.setdefault('postgresql.username', self.config['user'])
         self.config.setdefault('postgresql.database', self.config['user'])

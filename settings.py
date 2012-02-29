@@ -352,6 +352,7 @@ MS_SERVER = {
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
+LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND # used if ECSMAIL['filter_outgoing_smtp'] == True
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
