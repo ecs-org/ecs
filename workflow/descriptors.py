@@ -46,9 +46,10 @@ class ObjectWorkflow(object):
                     yield node.bind(workflow)
 
     def do(self, activity, data=None, choice=None):
+        token = activity if isinstance(activity, Token) else None
         controllers = list(self.iter_controllers(activity, data=data))
         for a in controllers:
-            a.perform(choice=choice)
+            a.perform(choice=choice, token=token)
         if not controllers:
             raise BadActivity(activity)
 

@@ -166,9 +166,10 @@ class NodeController(object):
 
 
 class Activity(NodeController):
-    def perform(self, choice=None):
+    def perform(self, choice=None, token=None):
         self.pre_perform(choice)
-        token = self.activate()
+        if token is None:
+            token = self.activate()
         self.progress(token)
         self.post_perform(choice, token=token)
         
