@@ -581,7 +581,7 @@ def create_submission_form(request):
                     'notification_type_pk': notification_type.pk,
                 }))
 
-            return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+            return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.submission.current_submission_form.pk}))
 
     context = {
         'form': form,
