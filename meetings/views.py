@@ -706,13 +706,13 @@ def meeting_details(request, meeting_pk=None, active=None):
                 if previous_expert:
                     # remove all participations for a previous selected board member.
                     # XXX: this may delete manually entered data. (FMD2)
-                    Participation.objects.filter(medical_category=amc.category, entry__meeting=meeting).delete()
+                    Participation.objects.filter(medical_category=amc.category, entry__meeting=meeting, user=previous_expert).delete()
 
                     # delete obsolete board member review tasks
                     for entry in entries:
                         with sudo():
                             tasks = Task.objects.for_data(entry.submission).filter(
-                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True)
+                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True, assigned_to=previous_expert)
                             tasks.mark_deleted()
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
