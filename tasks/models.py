@@ -16,6 +16,7 @@ class TaskType(models.Model):
     name = models.CharField(max_length=100)
     workflow_node = models.OneToOneField(Node, null=True)
     groups = models.ManyToManyField(Group, related_name='task_types', blank=True)
+    is_delegatable = models.BooleanField(default=True)
     
     def __unicode__(self):
         if self.name:

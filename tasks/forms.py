@@ -14,14 +14,12 @@ class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
     
 
-TASK_MANAGEMENT_CHOICES = [('delegate', _('delegate')),('message', _('message'))]
-
 class TaskChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, task):
         return u"%s (%s)" % (task.assigned_to, task)
 
 class ManageTaskForm(forms.Form):
-    action = forms.ChoiceField(choices=TASK_MANAGEMENT_CHOICES)
+    action = forms.ChoiceField(choices=[])
     assign_to = forms.ModelChoiceField(queryset=User.objects.exclude(ecs_profile__is_testuser=True).order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
     post_data = forms.CharField(widget=forms.HiddenInput(), required=False)
     
@@ -32,7 +30,12 @@ class ManageTaskForm(forms.Form):
         fs = self.fields
         fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
         fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
-        fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
+        if task.task_type.is_delegatable:
+            fs['action'].choices = [('delegate', _('delegate')),('message', _('message'))]
+            fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
+        else:
+            fs['action'].choices = [('message', _('message'))]
+            del fs['assign_to']
         if task.choices:
             fs['action'].choices += [('complete_%s' % i, choice[0]) for i, choice in enumerate(task.choices)]
         else:

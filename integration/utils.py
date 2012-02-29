@@ -49,11 +49,16 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
         args.setdefault('name', " ".join(camel_split(args[0].__name__)))
         args.setdefault('uid', name)
         group = args.pop('group', None)
+        is_delegatable = args.pop('is_delegatable', None)
         node = args.apply(graph.create_node)
         node_instances[name] = node
         if group:
             task_type = TaskType.objects.get(workflow_node=node)
             task_type.groups.add(Group.objects.get(name=group))
+        if not is_delegatable is None:
+            task_type = TaskType.objects.get(workflow_node=node)
+            task_type.is_delegatable = is_delegatable
+            task_type.save()
     for node_names, args in edges.iteritems():
         if not args:
             args = Args()

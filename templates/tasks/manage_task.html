@@ -27,6 +27,7 @@
             </li>
             {% endfor %}
         {% endif %}
+        {% if form.assign_to %}
         <li>
             <input type="radio" name="task_management-action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
             <label for="id_action_delegate"><span class="task_delegate"></span>{% trans 'Delegate' %}</label>
@@ -37,6 +38,7 @@
                 {% endif %}
             </span>
         </li>
+        {% endif %}
         <li>
           <input type="submit" name="task_management-save" value="Nur Speichern">
           <input type="submit" name="task_management-submit" value="Abschicken">
