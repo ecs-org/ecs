@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-28 17:52+0100\n"
+"POT-Creation-Date: 2012-02-29 15:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,15 +115,15 @@ msgstr "Gutachter"
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:185 users/forms.py:123
+#: billing/views.py:185 users/forms.py:124
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:185 users/forms.py:122
+#: billing/views.py:185 users/forms.py:123
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:185 users/forms.py:130
+#: billing/views.py:185 users/forms.py:131
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -1247,7 +1247,7 @@ msgid "salutation"
 msgstr "Anrede"
 
 #: core/paper_forms.py:279 core/paper_forms.py:317 meetings/forms.py:30
-#: meetings/forms.py:45 users/forms.py:153 users/forms.py:200
+#: meetings/forms.py:45 users/forms.py:154 users/forms.py:208
 msgid "title"
 msgstr "Titel"
 
@@ -1762,12 +1762,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:56
+#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -3172,7 +3172,7 @@ msgstr "Angenommen"
 msgid "Assigend To"
 msgstr "Person"
 
-#: templates/meetings/tabs/status.html:4 users/forms.py:117
+#: templates/meetings/tabs/status.html:4 users/forms.py:118
 msgid "Title"
 msgstr "Titel"
 
@@ -4062,7 +4062,7 @@ msgstr "mehr"
 msgid "List of Users"
 msgstr "Liste der Benutzer"
 
-#: templates/users/administration.html:12 users/forms.py:203
+#: templates/users/administration.html:12 users/forms.py:211
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -4203,164 +4203,168 @@ msgstr "Einladen"
 msgid "Set Password"
 msgstr "Passwort setzen"
 
-#: users/forms.py:19
+#: users/forms.py:20
 msgid "Email"
 msgstr "E-mail"
 
-#: users/forms.py:20 users/forms.py:63
+#: users/forms.py:21 users/forms.py:64
 msgid "Password"
 msgstr "Passwort"
 
-#: users/forms.py:34
+#: users/forms.py:35
 msgid ""
 "Please enter a correct email and password. Note that the password is case-"
 "sensitive."
 msgstr ""
 
-#: users/forms.py:36
+#: users/forms.py:37
 msgid "This account is inactive."
 msgstr "Dieser Zugang ist deaktiviert."
 
-#: users/forms.py:43
+#: users/forms.py:44
 msgid ""
 "Your Web browser doesn't appear to have cookies enabled. Cookies are "
 "required for logging in."
 msgstr ""
 
-#: users/forms.py:56 users/forms.py:152 users/forms.py:199
+#: users/forms.py:57 users/forms.py:153 users/forms.py:207
 msgid "gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:57 users/forms.py:201
+#: users/forms.py:58 users/forms.py:209
 msgid "First name"
 msgstr "Vorname"
 
-#: users/forms.py:58 users/forms.py:202
+#: users/forms.py:59 users/forms.py:210
 msgid "Last name"
 msgstr "Nachname"
 
-#: users/forms.py:59 users/forms.py:198
+#: users/forms.py:60 users/forms.py:206
 msgid "email"
 msgstr "E-Mail"
 
-#: users/forms.py:64
+#: users/forms.py:65
 msgid "Password (again)"
 msgstr "Passwort wiederholen"
 
-#: users/forms.py:69
+#: users/forms.py:70
 msgid "The two password fields didn't match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: users/forms.py:79
+#: users/forms.py:80
 msgid "Never"
 msgstr "nie"
 
-#: users/forms.py:80
+#: users/forms.py:81
 msgid "after 5 minutes"
 msgstr "nach fünf Minuten"
 
-#: users/forms.py:81 users/forms.py:82 users/forms.py:83
+#: users/forms.py:82 users/forms.py:83 users/forms.py:84
 msgid "after {0} hours"
 msgstr "nach {0} Stunden"
 
-#: users/forms.py:116
+#: users/forms.py:117
 msgid "Gender"
 msgstr "Geschlecht"
 
-#: users/forms.py:118
+#: users/forms.py:119
 msgid "First Name"
 msgstr "Vorname"
 
-#: users/forms.py:119
+#: users/forms.py:120
 msgid "Last Name"
 msgstr "Nachname"
 
-#: users/forms.py:120
+#: users/forms.py:121
 msgid "Organisation"
 msgstr "Organisation"
 
-#: users/forms.py:121
+#: users/forms.py:122
 msgid "Job Title"
 msgstr "Berufsbezeichnung"
 
-#: users/forms.py:124
+#: users/forms.py:125
 msgid "Address"
 msgstr "Adresse"
 
-#: users/forms.py:125
+#: users/forms.py:126
 msgid "Additional Address Information"
 msgstr "Zusätzliche Adressinformationen"
 
-#: users/forms.py:126
+#: users/forms.py:127
 msgid "ZIP-Code"
 msgstr "Postleitzahl"
 
-#: users/forms.py:127
+#: users/forms.py:128
 msgid "City"
 msgstr "Ort"
 
-#: users/forms.py:128
+#: users/forms.py:129
 msgid "Phone"
 msgstr "Telefon"
 
-#: users/forms.py:129
+#: users/forms.py:130
 msgid "Fax"
 msgstr "Fax"
 
-#: users/forms.py:131
+#: users/forms.py:132
 msgid "Forwarding of unread messages"
 msgstr "Weiterleitung von ungelesenen Nachrichten"
 
-#: users/forms.py:136
+#: users/forms.py:137
 msgid "Both"
 msgstr "Beide"
 
-#: users/forms.py:137
+#: users/forms.py:138
 msgid "active"
 msgstr "aktiv"
 
-#: users/forms.py:138
+#: users/forms.py:139
 msgid "inactive"
 msgstr "inaktiv"
 
-#: users/forms.py:154 users/forms.py:204
+#: users/forms.py:155 users/forms.py:212
 msgid "Board Member Categories"
 msgstr "Medizinische Kategorien für Board Member Review"
 
-#: users/forms.py:155 users/forms.py:205
+#: users/forms.py:156 users/forms.py:213
 msgid "Expedited Categories"
 msgstr "Fachgebiete für Expedited Review"
 
-#: users/forms.py:156 users/forms.py:206
+#: users/forms.py:157 users/forms.py:214
 msgid "Internal"
 msgstr "Intern"
 
-#: users/forms.py:157 users/forms.py:207
+#: users/forms.py:158 users/forms.py:215
 msgid "Help writer"
 msgstr "Hilfeseiten-Schreiber/in"
 
-#: users/forms.py:208
+#: users/forms.py:182
+msgid "{0} is a specialist in following meetings: {1}"
+msgstr "{0} ist als Spezialist in folgenden Sitzungen zugeteilt: {1}"
+
+#: users/forms.py:216
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
-#: users/forms.py:221
+#: users/forms.py:229
 msgid "There is already a user with this email address."
 msgstr "Es ist bereits ein Benutzer mit dieser Email-Adresse registriert."
 
-#: users/forms.py:248
+#: users/forms.py:256
 msgid "is_indisposed"
 msgstr "Verhindert"
 
-#: users/forms.py:249
+#: users/forms.py:257
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
 
-#: users/forms.py:265 users/forms.py:269
+#: users/forms.py:273 users/forms.py:277
 #, fuzzy
 msgid "New password"
 msgstr "Passwort setzen"
 
-#: users/forms.py:266 users/forms.py:270
+#: users/forms.py:274 users/forms.py:278
 #, fuzzy
 msgid "New password confirmation"
 msgstr "Keine Angaben"

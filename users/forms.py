@@ -13,6 +13,7 @@ from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
+from ecs.meetings.models import AssignedMedicalCategory
 
 class EmailLoginForm(forms.Form):
     # Note: This has to be called "username", so we can use the django login view
@@ -173,6 +174,13 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
         self.fields['is_internal'].initial = profile.is_internal
         self.fields['is_help_writer'].initial = profile.is_help_writer
+
+    def clean_groups(self):
+        groups = self.cleaned_data.get('groups', [])
+        amcs = AssignedMedicalCategory.objects.filter(board_member=self.instance)
+        if amcs.exists() and not 'EC-Board Member' in [g.name for g in groups]:
+            raise forms.ValidationError(_('{0} is a specialist in following meetings: {1}').format(self.instance, ', '.join(amc.meeting.title for amc in amcs)))
+        return groups
 
     def save(self, *args, **kwargs):
         user = super(UserDetailsForm, self).save(*args, **kwargs)
