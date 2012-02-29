@@ -20,23 +20,15 @@ class Version(tuple):
         instance = super(Version, cls).__new__(cls, version)
         return instance
 
-    def __eq__(self, other):
-        if isinstance(other, basestring):
-            other = Version(other)
-        for i in xrange(len(other)):
-            if not self[i] == other[i]:
-                return False
-        return True
-
-    def __gt__(self, other):
+    def __cmp__(self, other):
         if isinstance(other, basestring):
             other = Version(other)
         for i in xrange(len(other)):
             if self[i] > other[i]:
-                return True
+                return +1
             elif self[i] < other[i]:
-                return False
-        return False
+                return -1
+        return 0
 
 def parse_ua(fn):
     @wraps(fn)
