@@ -589,6 +589,7 @@ if 'test' in sys.argv or 'test_windmill' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
     ECS_REQUIRE_CLIENT_CERTS = False
+    ECS_MANDATORY_CLIENT_CERTS = False
 
 
 if any(word in sys.argv for word in set(['runserver','runconcurrentserver'])):
