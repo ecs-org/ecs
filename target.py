@@ -80,6 +80,7 @@ class SetupTarget(SetupTargetObject):
     def write_config_template(self, template, dst, context=None, filemode=None, backup=True, force=False, use_sudo=False):
         if context is None:
             context = self.config
+        print("Writing config template {0} to {1}".format(template, dst))
         write_template(os.path.join(self.dirname, 'templates', 'config', template),
             dst, context=context, filemode=filemode, backup=backup, force=force, use_sudo=use_sudo)
         
@@ -98,8 +99,10 @@ class SetupTarget(SetupTargetObject):
         ''' Setup; idempotent, tries not to overwrite existing database or eg. ECS-CA , except destructive=True '''
         self.directory_config()
         self.host_config(with_current_ip=True)
-        self.servercert_config()
         
+        self.env_update()
+        
+        self.servercert_config()
         self.backup_config()
         self.mail_config()
         self.queuing_config()
@@ -134,6 +137,7 @@ class SetupTarget(SetupTargetObject):
         self.directory_config()
         
         self.env_update()
+        
         self.db_update()
         
         self.search_config()
