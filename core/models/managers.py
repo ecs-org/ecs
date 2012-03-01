@@ -109,7 +109,7 @@ class SubmissionQuerySet(models.query.QuerySet):
             return self.filter(meetings__pk=meeting.pk)
 
     def mine(self, user):
-        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(presenter=user)|Q(susar_presenter=user))
+        return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(presenter=user)|Q(susar_presenter=user)|Q(current_submission_form__primary_investigator__user=user))
 
     def reviewed_by_user(self, user):
         # local import to prevent circular import
