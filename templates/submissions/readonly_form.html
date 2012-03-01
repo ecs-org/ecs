@@ -345,6 +345,7 @@
                 });
             });
             
+            {% if not readonly %}
             var laneSelect = $('id_workflow_lane');
             if(laneSelect && laneSelect.getProperty('disabled') != 'disabled'){
                 function limit(){
@@ -361,6 +362,7 @@
                 laneSelect.addEvent('change', limit);
                 limit();
             }
+            {% endif %}
         });
     </script>
 {% endblock %}

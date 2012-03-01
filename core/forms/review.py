@@ -12,7 +12,7 @@ from ecs.core.forms.fields import MultiselectWidget, BooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 from ecs.users.utils import get_current_user
 
-class CategorizationReviewForm(ModelFormPickleMixin, ReadonlyFormMixin, TranslatedModelForm):
+class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, TranslatedModelForm):
     class Meta:
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',
