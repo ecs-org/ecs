@@ -36,6 +36,7 @@ from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEn
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet)
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
+from ecs.documents.models import Document
 
 
 @user_flag_required('is_internal')
@@ -180,10 +181,12 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     
     filename_bits = [slugify(meeting.title)]
 
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
     def _add(submission):
         sf = submission.current_submission_form
-        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted').order_by('pk')
-        for doc in docs:
+        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted')
+        docs |= Document.objects.filter(content_type=checklist_ct, object_id__in=Checklist.objects.filter(status='review_ok', submission=submission))
+        for doc in docs.order_by('pk'):
             files.add((submission, doc))
         files.add((submission, sf.pdf_document))
 
