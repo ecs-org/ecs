@@ -130,6 +130,7 @@ class ChecklistQFactory(authorization.QFactory):
         q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         q |= self.make_q(status='review_ok', submission__current_submission_form__sponsor=user)
         q |= self.make_q(status='review_ok', submission__current_submission_form__submitter=user)
+        q |= self.make_q(status='review_ok', submission__current_submission_form__primary_investigator__user=user)
         q |= self.make_q(status='review_ok', submission__presenter=user)
         q |= self.make_q(status='review_ok', submission__susar_presenter=user)
         return q
