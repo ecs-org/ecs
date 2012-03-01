@@ -11,9 +11,10 @@
             <span class="top">{{ top }}</span>
             {% if top.submission %}
                 <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk submission_pk=top.submission.pk %}"><span class="icon_download" title="{% trans 'Download documents (zip)' %}"></span></a>
+                {% with top.submission.current_submission_form as sf %}
+                    {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
+                {% endwith %}
                 {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
-                {% if top.submission.current_submission_form.is_amg %}AMG{% endif %}
-                {% if top.submission.current_submission_form.is_mpg %}MPG{% endif %}
             {% else %}
                 {{ top.title }}
             {% endif %}
