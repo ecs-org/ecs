@@ -748,7 +748,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'dissertation_submissions': submissions.filter(current_submission_form__project_type_education_context=1),
         'diploma_thesis_submissions': submissions.filter(current_submission_form__project_type_education_context=2),
         'amg_multi_main_submissions': submissions.amg().filter(current_submission_form__submission_type=SUBMISSION_TYPE_MULTICENTRIC),
-        'remission_submissions': submissions.filter(remission=True),
+        'billable_submissions': submissions.exclude(remission=True),
         'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
         'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
 

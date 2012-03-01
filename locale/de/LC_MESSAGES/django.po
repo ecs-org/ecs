@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-29 15:08+0100\n"
+"POT-Creation-Date: 2012-03-01 12:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1804,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:705 templates/meetings/details.html:15
+#: core/views/submissions.py:708 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:817 templates/core.html:50
+#: core/views/submissions.py:820 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:854
+#: core/views/submissions.py:857
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:925
+#: core/views/submissions.py:928
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:934 templates/core.html:53
+#: core/views/submissions.py:937 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:944 templates/core.html:56
+#: core/views/submissions.py:947 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2078,11 +2078,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:668
+#: meetings/models.py:672
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:669
+#: meetings/models.py:673
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2099,40 +2099,40 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:247
+#: meetings/views.py:254
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:384
+#: meetings/views.py:391
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:393
+#: meetings/views.py:400
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:399
+#: meetings/views.py:406
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:415
+#: meetings/views.py:422
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:569 meetings/views.py:581
+#: meetings/views.py:576 meetings/views.py:588
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:583 meetings/views.py:654
+#: meetings/views.py:590 meetings/views.py:661
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:585
+#: meetings/views.py:592
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:624
+#: meetings/views.py:631
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2265,39 +2265,39 @@ msgstr ""
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: tasks/forms.py:17
-msgid "delegate"
-msgstr "abgeben"
-
-#: tasks/forms.py:17
-msgid "message"
-msgstr ""
-
-#: tasks/forms.py:25
+#: tasks/forms.py:23
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#: tasks/forms.py:39
+#: tasks/forms.py:34
+msgid "delegate"
+msgstr "abgeben"
+
+#: tasks/forms.py:34 tasks/forms.py:37
+msgid "message"
+msgstr ""
+
+#: tasks/forms.py:42
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:61
+#: tasks/forms.py:64
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:63
+#: tasks/forms.py:66
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
 
-#: tasks/forms.py:101
+#: tasks/forms.py:104
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:102
+#: tasks/forms.py:105
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:103
+#: tasks/forms.py:106
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
@@ -3272,8 +3272,8 @@ msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
 #: templates/meetings/tabs/status.html:116
-msgid "Remission"
-msgstr "Gebührenbefreiung"
+msgid "Billable"
+msgstr "Gebührenpflichtig"
 
 #: templates/meetings/tabs/status.html:121
 msgid "B3 (examined)"
@@ -3335,7 +3335,7 @@ msgstr "Einreichen"
 
 #: templates/notifications/form.html:37 templates/signature/batch.html:5
 #: templates/signature/batch_base.html:21
-#: templates/submissions/base_form.html:66
+#: templates/submissions/base_form.html:76
 msgid "Your browser does not support iframes."
 msgstr ""
 
@@ -3531,11 +3531,11 @@ msgstr "Siehe"
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:62
+#: templates/submissions/base_form.html:72
 msgid "At least on protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
-#: templates/submissions/base_form.html:250
+#: templates/submissions/base_form.html:260
 msgid "This tab may only be used when 2.1.2 is selected."
 msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 
@@ -3980,7 +3980,7 @@ msgstr ""
 msgid "Close"
 msgstr "Schließen"
 
-#: templates/tasks/manage_task.html:32
+#: templates/tasks/manage_task.html:33
 msgid "Delegate"
 msgstr "Abgeben"
 
@@ -4545,3 +4545,6 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "Remission"
+#~ msgstr "Gebührenbefreiung"

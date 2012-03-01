@@ -113,9 +113,9 @@
         <td>{% with amg_multi_main_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
     </tr>
     <tr>
-        <th>{% trans "Remission" %}</th>
-        <td>{{ remission_submissions|length }}</td>
-        <td>{% with remission_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
+        <th>{% trans "Billable" %}</th>
+        <td>{{ billable_submissions|length }}</td>
+        <td>{% with billable_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
     </tr>
     <tr>
         <th>{% trans "B3 (examined)" %}</th>
