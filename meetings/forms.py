@@ -89,7 +89,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs['instance']
-        self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category)
+        self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category).order_by('ec_number')
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
         self.fields['board_member'].queryset = User.objects.filter(medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
 
