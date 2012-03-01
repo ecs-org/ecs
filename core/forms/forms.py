@@ -164,8 +164,8 @@ class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
         model = ForeignParticipatingCenter
         exclude = ('submission_form',)
         widgets = {
-            'name': ReadonlyTextInput(attrs={'cols': 30}),
-            'investigator_name': ReadonlyTextInput(attrs={'cols': 30}),
+            'name': ReadonlyTextInput(attrs={'size': 50}),
+            'investigator_name': ReadonlyTextInput(attrs={'size': 40}),
         }
 
 class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
