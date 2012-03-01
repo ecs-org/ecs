@@ -220,7 +220,7 @@ class Task(models.Model):
         new = type(self)()
         for attr in ('task_type', 'content_type', 'data_id'):
             setattr(new, attr, getattr(self, attr))
-        new.workflow_token = self.node_controller.activate()
+        new.workflow_token = self.node_controller.activate(reopen=True)
         user = user or self.assigned_to
         new.created_by = user
         new.accept(user=user, check_authorization=False, commit=False)

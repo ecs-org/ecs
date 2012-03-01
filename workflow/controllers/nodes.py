@@ -173,14 +173,15 @@ class Activity(NodeController):
         self.progress(token)
         self.post_perform(choice, token=token)
         
-    def activate(self):
+    def activate(self, reopen=False):
+        if reopen and self.is_repeatable() and self.has_tokens(consumed=None):
+            return self.receive_token(None, repeated=True)
         token = self.get_token(locked=False)
         if not token:
-            token = self.get_token(locked=True)
-            if token:
-                raise TokenRequired("Activities cannot be activated with locked tokens")
-            elif self.is_repeatable() and self.has_tokens(consumed=None):
+            if self.is_repeatable() and self.has_tokens(consumed=None):
                 token = self.receive_token(None, repeated=True)
+            elif self.get_token(locked=True):
+                raise TokenRequired("Activities cannot be activated with locked tokens")
             else:
                 raise TokenRequired("Activities cannot be activated without a token")
         return token
