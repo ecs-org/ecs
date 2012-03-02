@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_group_required
@@ -61,7 +62,7 @@ def revoke_cert(request, cert_pk=None):
 
 
 def authenticate(request):
-    if request.user.ecs_profile.is_internal:
+    if request.user.ecs_profile.is_internal or getattr(settings, 'ECS_MANDATORY_CLIENT_CERTS', False):
         request.session['ecs_pki_authenticated'] = True
         request.session.modified = True
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
