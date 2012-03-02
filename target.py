@@ -28,7 +28,7 @@ class SetupTarget(SetupTargetObject):
         config_file = kwargs.pop('config', None)
         if config_file is None:
             config_file = os.path.join(dirname, '..', 'ecs.yml')
-        self.destructive = kwargs.pop('destructive', False)
+        self.destructive = strbool(kwargs.pop('destructive', False))
         super(SetupTarget, self).__init__(*args, **kwargs)
         self.dirname = dirname
         self.appname = 'ecs'
