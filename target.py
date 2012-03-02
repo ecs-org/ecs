@@ -113,7 +113,7 @@ class SetupTarget(SetupTargetObject):
         self.django_config()
         self.gpg_config()
         self.ca_config()        
-        self.ca_update()
+        
         self.db_update()
         
         self.search_config()
@@ -350,10 +350,11 @@ $myhostname   smtp:[localhost:8823]
                 pass
     
     def ca_config(self):
+        cadir = os.path.join(self.homedir, 'ecs-ca')
+        
         if self.destructive:
             openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
             from ecs.pki.openssl import CA
-            cadir = os.path.join(self.homedir, 'ecs-ca')
             if os.path.exists(cadir):
                 local('rm -r %s' % cadir)
             ca = CA(cadir, config=openssl_cnf)
@@ -361,16 +362,21 @@ $myhostname   smtp:[localhost:8823]
         else:
             warn("Not overwriting openssl-ca.cnf, not removing ecs-ca directory because destructive=False")
         
-    def ca_update(self):
         try:
             replacement = self.config.get_path('ca.dir')
         except KeyError:
             return
-        basedir = os.path.join(self.homedir, 'ecs-ca')
-        if os.path.exists(basedir):
-            warn('CA directory exists (%s), refusing to overwrite.' % basedir)
+        
+        if os.path.exists(cadir):
+            warn('CA directory exists (%s), refusing to overwrite.' % cadir)
         else:
-            shutil.copytree(replacement, basedir)
+            shutil.copytree(replacement, cadir)
+            
+            for n in ('certs', 'crl', 'newcerts',):
+                t = os.path.join(cadir, n)
+                if not os.path.exists(t):
+                    os.mkdir(t)
+    
         
     def django_config(self):
         self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
