@@ -6,10 +6,12 @@ from django.core.urlresolvers import reverse
 from ecs.core.forms.fields import SingleselectWidget
 from ecs.pki.models import Certificate
 
+user_queryset_name = 'users' if getattr(settings, 'ECS_MANDATORY_CLIENT_CERTS', False) else 'internal-users'
+
 class CertForm(forms.Form):
     user = forms.ModelChoiceField(
         queryset=User.objects.filter(ecs_profile__is_internal=True), 
-        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
+        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': user_queryset_name}))
     )
     cn = forms.CharField(required=False)
     passphrase = forms.CharField(required=True, min_length=8)
