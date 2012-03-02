@@ -86,10 +86,11 @@ def reschedule_submission(request, submission_pk=None):
 
         for entry in old_entries:
             Participation.objects.filter(entry=entry).delete()
-            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=(not entry.timetable_index is None))
+            visible = (not entry.timetable_index is None)
             entry.submission = None
             entry.save()
             entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
+            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=visible)
             with sudo():
                 new_experts = list(AssignedMedicalCategory.objects.filter(meeting=to_meeting, board_member__isnull=False, category__pk__in=submission.medical_categories.values('pk').query).values_list('board_member__pk', flat=True))
                 tasks = Task.objects.for_data(submission).filter(
