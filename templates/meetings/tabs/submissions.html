@@ -7,6 +7,11 @@
     <p><a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk %}" class="button_submit">{% trans 'Download all documents for this meeting (zip)' %}</a></p>
     <ol>
     {% for top in tops %}
+          {% ifchanged top.timetable_index|is_none %}
+            {% if top.timetable_index|is_none %}
+              </ol><h2>Weitere TOPs</h2><ol>
+            {% endif %}
+          {% endifchanged %}
           <li>
             <span class="top">{{ top }}</span>
             {% if top.submission %}

@@ -29,6 +29,7 @@ register.filter('contains', lambda obj, x: x in obj)
 register.filter('not', lambda obj: not obj)
 register.filter('multiply', lambda a, b: a * b)
 register.filter('euro', lambda val: (u"€ %.2f" % float(val)).replace('.', ','))
+register.filter('is_none', lambda obj: obj is None)
 
 @register.filter
 def ec_number(submission):

@@ -166,7 +166,8 @@ def tops(request, meeting_pk=None):
 @user_flag_required('is_internal', 'is_resident_member')
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = meeting.timetable_entries.select_related('submission', 'submission__current_submission_form').order_by('timetable_index', 'submission__ec_number')
+    tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
+    tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
     return render(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,
@@ -211,7 +212,10 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
         try:
             for submission, doc in files:
                 with doc.as_temporary_file() as docfile:
-                    zf.write(docfile.name, '%s/%s' % (submission.get_filename_slice(), doc.get_filename()))
+                    path = [submission.get_filename_slice(), doc.get_filename()]
+                    if not submission_pk:
+                        path.insert(0, submission.get_workflow_lane_display())
+                    zf.write(docfile.name, '/'.join(path))
         finally:
             zf.close()
     else:

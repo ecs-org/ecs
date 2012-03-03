@@ -171,7 +171,7 @@ class Meeting(models.Model):
     agenda_sent_at = models.DateTimeField(null=True)
 
     objects = MeetingManager()
-    
+
     @property
     def retrospective_thesis_entries(self):
         return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
