@@ -11,6 +11,7 @@ from ecs.tasks.models import Task
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
 from ecs.users.utils import sudo
 from ecs.votes.signals import on_vote_creation
+from ecs.core.forms.utils import mark_readonly
 
 def ResultField(**kwargs):
     return Vote._meta.get_field('result').formfield(widget=forms.RadioSelect(), **kwargs)
@@ -34,6 +35,12 @@ class SaveVoteForm(forms.ModelForm):
 
 class VoteForm(SaveVoteForm):
     result = ResultField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.readonly = kwargs.pop('readonly', False)
+        super(VoteForm, self).__init__(*args, **kwargs)
+        if self.readonly:
+            mark_readonly(self)
 
     def save(self, *args, **kwargs):
         instance = super(VoteForm, self).save(*args, **kwargs)

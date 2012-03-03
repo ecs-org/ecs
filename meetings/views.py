@@ -516,8 +516,12 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             form_cls = SaveVoteForm
         else:
             form_cls = VoteForm
-        form = form_cls(request.POST or None, instance=vote)
-        if form.is_valid():
+        if top.is_open:
+            form = form_cls(request.POST or None, instance=vote)
+        else:
+            form = form_cls(None, instance=vote, readonly=True)
+        if top.is_open and form.is_valid():
+            print 'supa'
             vote = form.save(top)
             if autosave:
                 return HttpResponse('OK')
