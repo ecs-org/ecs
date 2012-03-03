@@ -20,7 +20,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory
+from ecs.core.models import Submission, MedicalCategory, ExpeditedReviewCategory
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
@@ -33,7 +33,8 @@ from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_end
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
-    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet)
+    SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
+    ExpeditedReviewerInvitationForm)
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
@@ -629,6 +630,30 @@ def send_agenda_to_board(request, meeting_pk=None):
     
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
+@readonly(methods=['GET'])
+@user_group_required('EC-Office')
+def send_expedited_reviewer_invitations(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    form = ExpeditedReviewerInvitationForm(request.POST or None)
+
+    if request.method == 'POST' and form.is_valid():
+        submission_ct = ContentType.objects.get_for_model(Submission)
+        categories = ExpeditedReviewCategory.objects.filter(submissions__in=meeting.submissions.all())
+        users = User.objects.filter(groups__name='Expedited Review Group', expedited_review_categories__pk__in=categories.values('pk').query)
+        start = form.cleaned_data['start']
+        for user in users:
+            subject = _('Expedited Meeting at {0}').format(start.strftime('%d.%m.%Y'))
+            send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
+        form = ExpeditedReviewerInvitationForm(None)
+
+        meeting.expedited_reviewer_invitation_sent_for = datetime.now()
+        meeting.save()
+
+    return render(request, 'meetings/expedited_reviewer_invitation.html', {
+        'form': form,
+        'meeting': meeting,
+    })
 
 @readonly()
 @user_group_required('EC-Office')

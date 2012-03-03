@@ -1,0 +1,9 @@
+{% extends 'msg_core.txt' %}
+{% load i18n core %}
+
+{% block content %}
+    Ihre Spezialisten Gruppe ist zur Begutachtung von eine oder mehere Studien zur nächsten Expedited Sitzung am {{ start|date:'d.m.Y' }} um {{ start|date:'H:i' }} eingeladen.
+    Diese Nachricht ergeht an alle Mitglieder Ihrer Fachrichtung die normalerweise zu Expedited Sitzungen eingeladen werden.
+    Sie haben daher eine oder mehrere Gruppen Tätigkeiten zu welchen Sie sich untereinander ausmachen können, wer dieses Review übernimmt.
+    Wir bitten um eine kurze Email wenn Sie wissen wer kommen wird.
+{% endblock %}

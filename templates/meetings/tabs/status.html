@@ -36,6 +36,14 @@
             {% endif %}
         </td>
     </tr>
+    {% if user|is_member_of:'EC-Office' %}
+    <tr>
+        <th>{% trans "Expedited Reviewer Invitations" %}:</th>
+        <td>
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.send_expedited_reviewer_invitations meeting_pk=meeting.pk %}"></div>
+        </td>
+    </tr>
+    {% endif %}
     <tr>
         <th>{% trans "Timetable" %}:</th>
         <td><a href="{% url ecs.meetings.views.timetable_pdf meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>

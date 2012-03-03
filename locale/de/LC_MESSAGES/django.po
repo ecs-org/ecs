@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-01 12:19+0100\n"
+"POT-Creation-Date: 2012-03-03 20:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1491,7 +1491,7 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:324 core/forms/layout.py:98 core/forms/layout.py:100
-#: templates/meetings/tabs/status.html:64
+#: templates/meetings/tabs/status.html:72
 #: templates/submissions/readonly_form.html:225
 #: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
@@ -1499,7 +1499,7 @@ msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:325 core/forms/layout.py:107 core/forms/layout.py:109
-#: templates/meetings/tabs/status.html:69
+#: templates/meetings/tabs/status.html:77
 #: templates/submissions/readonly_form.html:227
 #: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
@@ -1512,7 +1512,7 @@ msgid "Other"
 msgstr "Andere"
 
 #: core/forms/forms.py:328 core/models/constants.py:26
-#: templates/meetings/tabs/status.html:59
+#: templates/meetings/tabs/status.html:67
 msgid "board"
 msgstr "Standard"
 
@@ -1520,12 +1520,12 @@ msgstr "Standard"
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:330 templates/meetings/tabs/status.html:89
+#: core/forms/forms.py:330 templates/meetings/tabs/status.html:97
 msgid "Expedited"
 msgstr "Expedited"
 
 #: core/forms/forms.py:331 core/models/constants.py:29
-#: templates/meetings/tabs/status.html:94
+#: templates/meetings/tabs/status.html:102
 msgid "Local EC"
 msgstr "Lokale EK"
 
@@ -1792,15 +1792,15 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:121 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:124 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:125
+#: core/templatetags/core.py:126
 msgid "Unknown"
 msgstr ""
 
@@ -2078,61 +2078,65 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:672
+#: meetings/models.py:673
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:673
+#: meetings/models.py:674
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:56 templates/core.html:71
+#: meetings/views.py:58 templates/core.html:71
 #: templates/submissions/list.html:107
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:70 templates/core.html:75
+#: meetings/views.py:72 templates/core.html:75
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:75 templates/core.html:76
+#: meetings/views.py:77 templates/core.html:76
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:254
+#: meetings/views.py:263
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:391
+#: meetings/views.py:400
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:400
+#: meetings/views.py:409
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:406
+#: meetings/views.py:415
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:422
+#: meetings/views.py:431
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:576 meetings/views.py:588
+#: meetings/views.py:589 meetings/views.py:601
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:590 meetings/views.py:661
+#: meetings/views.py:603 meetings/views.py:697
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:592
+#: meetings/views.py:605
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:631
+#: meetings/views.py:645
+msgid "Expedited Meeting at {0}"
+msgstr "Expedited Sitzung am {0}"
+
+#: meetings/views.py:667
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2257,11 +2261,11 @@ msgstr ""
 msgid "%(user)s shared annotations with you."
 msgstr "%(user)s hat Anmerkungen mit Ihnen geteilt."
 
-#: pki/forms.py:25
+#: pki/forms.py:29
 msgid "A certificate with this CN already exists."
 msgstr ""
 
-#: pki/forms.py:28
+#: pki/forms.py:32
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -2947,7 +2951,7 @@ msgstr "Planung"
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:40
+#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:48
 msgid "Timetable"
 msgstr "Zeitplanung"
 
@@ -2977,6 +2981,14 @@ msgstr "Wollen Sie die E-mails abschicken?"
 #: templates/meetings/details.html:106
 msgid "Don't Send"
 msgstr "Nicht Abschicken"
+
+#: templates/meetings/expedited_reviewer_invitation.html:10
+msgid "Send Invitations"
+msgstr "Einladungen verschicken"
+
+#: templates/meetings/expedited_reviewer_invitation.html:14
+msgid "Last target date"
+msgstr "Letzter Termin"
 
 #: templates/meetings/form.html:5 templates/meetings/form.html.py:6
 #: templates/meetings/timetable/view.html:7
@@ -3221,65 +3233,69 @@ msgid "Last sent"
 msgstr "Zuletzt versendet"
 
 #: templates/meetings/tabs/status.html:41
+msgid "Expedited Reviewer Invitations"
+msgstr "Expedited Sitzung"
+
+#: templates/meetings/tabs/status.html:49
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-#: templates/meetings/tabs/status.html:44
+#: templates/meetings/tabs/status.html:52
 msgid "Protocol"
 msgstr "Protokoll"
 
-#: templates/meetings/tabs/status.html:46
+#: templates/meetings/tabs/status.html:54
 msgid "Protocol PDF"
 msgstr "Protokoll PDF"
 
-#: templates/meetings/tabs/status.html:48
+#: templates/meetings/tabs/status.html:56
 msgid "Send protocol"
 msgstr "Protokoll versenden"
 
-#: templates/meetings/tabs/status.html:54
+#: templates/meetings/tabs/status.html:62
 msgid "Statistics"
 msgstr "Statistik"
 
-#: templates/meetings/tabs/status.html:56
+#: templates/meetings/tabs/status.html:64
 msgid "Gesamt"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:74
+#: templates/meetings/tabs/status.html:82
 msgid "AMG/MPG"
 msgstr ""
 
-#: templates/meetings/tabs/status.html:79
+#: templates/meetings/tabs/status.html:87
 #, fuzzy
 msgid "Andere"
 msgstr "Geschlecht"
 
-#: templates/meetings/tabs/status.html:84
+#: templates/meetings/tabs/status.html:92
 #, fuzzy
 msgid "Retro. Thesis"
 msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
 
-#: templates/meetings/tabs/status.html:101
+#: templates/meetings/tabs/status.html:109
 #, fuzzy
 msgid "Dissertation"
 msgstr "Diplomarbeit / Dissertation"
 
-#: templates/meetings/tabs/status.html:106
+#: templates/meetings/tabs/status.html:114
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
 
-#: templates/meetings/tabs/status.html:111
+#: templates/meetings/tabs/status.html:119
 msgid "Multicentric, Main EC"
 msgstr "Leitethikkommission"
 
-#: templates/meetings/tabs/status.html:116
+#: templates/meetings/tabs/status.html:124
 msgid "Billable"
 msgstr "Gebührenpflichtig"
 
-#: templates/meetings/tabs/status.html:121
+#: templates/meetings/tabs/status.html:129
 msgid "B3 (examined)"
 msgstr "B3 (behandelt)"
 
-#: templates/meetings/tabs/status.html:126
+#: templates/meetings/tabs/status.html:134
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
@@ -3287,7 +3303,7 @@ msgstr "B3 (nicht behandelt)"
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
-#: templates/meetings/tabs/submissions.html:13
+#: templates/meetings/tabs/submissions.html:18
 msgid "Download documents (zip)"
 msgstr "Herunterladen(zip)"
 
@@ -4493,7 +4509,7 @@ msgstr "4 Negativ"
 msgid "5 withdrawn (applicant)"
 msgstr "5 Zurückgezogen (Antragsteller)"
 
-#: votes/forms.py:48
+#: votes/forms.py:55
 msgid "Proofread and valid"
 msgstr "Korrektur gelesen und gültig"
 

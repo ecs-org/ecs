@@ -660,3 +660,14 @@
 .task_back_log {
   margin-bottom: 20px;
 }
+
+#expedited_reviewer_invitation {
+    ol {
+        display: inline-block;
+        list-style: none outside none;
+    }
+    input[type="submit"] {
+        float: right;
+        margin: 0;
+    }
+}

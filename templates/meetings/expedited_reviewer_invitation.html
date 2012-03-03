@@ -1,0 +1,23 @@
+{% load i18n core userutils %}
+
+<div id="expedited_reviewer_invitation">
+    <form class="open-in-widget" action="{{ request.path }}" method="post">
+        <ol>
+        {% for field in form %}
+            {% include 'forms/field.html' %}
+        {% endfor %}
+        </ol>
+        <input type="submit" value="{% trans 'Send Invitations' %}"/>
+    </form>
+    <div>
+        {% if meeting.expedited_reviewer_invitation_sent_for %}
+            ({% trans 'Last target date' %}: {{ meeting.expedited_reviewer_invitation_sent_for|date:'d.m.Y H:i' }})
+        {% endif %}
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        ecs.setupFormFieldHelpers($('expedited_reviewer_invitation'));
+    });
+</script>

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django import forms
 from django.forms.models import BaseModelFormSet, modelformset_factory
@@ -24,7 +24,7 @@ class MeetingForm(TranslatedModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'comments', 'agenda_sent_at')
+        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'comments', 'agenda_sent_at', 'expedited_reviewer_invitation_sent_for')
         labels = {
             'start': _(u'date and time'),
             'title': _(u'title'),
@@ -134,3 +134,6 @@ class BaseExpeditedVoteFormSet(BaseModelFormSet):
         super(BaseExpeditedVoteFormSet, self).__init__(*args, **kwargs)
     
 ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
+
+class ExpeditedReviewerInvitationForm(forms.Form):
+    start = DateTimeField(initial=lambda: datetime.now() + timedelta(days=7))
