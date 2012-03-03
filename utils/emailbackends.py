@@ -1,7 +1,10 @@
 import tempfile
 import subprocess
-from django.core.mail.backends.base import BaseEmailBackend
+import logging
 
+from django.core.mail.backends.base import BaseEmailBackend
+from django.conf import settings
+from sentry.client.handlers import SentryHandler
 
 class EMLEmailBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
@@ -15,3 +18,13 @@ class EMLEmailBackend(BaseEmailBackend):
             if not self.fail_silently:
                 raise
         return len(email_messages)
+
+
+logger = logging.getLogger(__name__)
+logger.addHandler(SentryHandler())
+logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
+
+class SentryEmailBackend(BaseEmailBackend):
+    def send_messages(self, email_messages):
+        for message in email_messages:
+            logger.info(u'Email: {0}\n\n{1}'.format(message.subject, message.message().as_string()))

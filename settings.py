@@ -352,7 +352,7 @@ MS_SERVER = {
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
-LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND # used if ECSMAIL['filter_outgoing_smtp'] == True
+LIMITED_EMAIL_BACKEND = 'ecs.utils.emailbackends.SentryEmailBackend'    # used if ECSMAIL['filter_outgoing_smtp'] == True
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
@@ -370,7 +370,7 @@ ECSMAIL_DEFAULT = {
     # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND, 
     # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND  
     # this is used only for ecs.users.views. register and request_password_reset 
-    }
+}
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
 # absolute URL prefix w/out trailing slash

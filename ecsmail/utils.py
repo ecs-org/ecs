@@ -122,8 +122,8 @@ def deliver_to_recipient(recipient, subject, message, from_email, message_html=N
     msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
     
     backend = None
-    if getattr(settings.ECSMAIL, 'filter_outgoing_smtp', False) and not nofilter:
-        backend = getattr(settings, 'LIMITED_EMAIL_BACKEND', settings['DEBUG_EMAIL_BACKEND'])
+    if settings.ECSMAIL.get('filter_outgoing_smtp') and not nofilter:
+        backend = settings.LIMITED_EMAIL_BACKEND
     
     queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback, backend], countdown=3)
     return (msgid, msg.message(),)
