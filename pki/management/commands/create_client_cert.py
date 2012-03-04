@@ -10,8 +10,8 @@ class Command(BaseCommand):
         #make_option('--submission', '-s', dest='submission_pk', action='store', type='int', help="A submission id"),
     )
 
-    def handle(self, email, pkcs12, passphrase=None, **options):
+    def handle(self, email, pkcs12, passphrase=None, days=1, **options):
         ca = get_ca()
         subject = get_subject_for_user(None, cn=email, email=email)
-        fingerprint = ca.make_cert(subject, pkcs12, passphrase=passphrase if passphrase else raw_input('Passphrase:'), days=1)
+        fingerprint = ca.make_cert(subject, pkcs12, passphrase=passphrase if passphrase else raw_input('Passphrase:'), days=days)
         
