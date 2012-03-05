@@ -766,8 +766,7 @@ def meeting_details(request, meeting_pk=None, active=None):
             vote = votes[0]
         votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
     
-    with sudo():
-        submissions = meeting.submissions.all()
+    submissions = meeting.submissions.order_by('ec_number')
 
     return render(request, 'meetings/details.html', {
         'cumulative_count': submissions.distinct().count(),
