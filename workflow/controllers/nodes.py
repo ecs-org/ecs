@@ -6,7 +6,7 @@ from django.utils.importlib import import_module
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils import cached_property
-from ecs.workflow.signals import token_received, deadline_reached
+from ecs.workflow.signals import token_received
 from ecs.workflow.exceptions import TokenRequired, TokenRejected
 from ecs.workflow.controllers.registry import add_controller
 
@@ -142,10 +142,6 @@ class NodeController(object):
             token.trail = trail
         token_received.send(token)
         return token
-
-    def handle_deadline(self, token):
-        deadline_reached.send(token)
-        self.progress(token, deadline=True)
         
     def get_deadline(self):
         deadline = self.deadline

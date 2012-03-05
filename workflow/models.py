@@ -5,7 +5,7 @@ from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 
 from ecs.workflow.controllers import bind_node, bind_edge, bind_guard, NodeController
-from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_marked_deleted, token_unlocked, deadline_reached
+from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_marked_deleted, token_unlocked
 from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
@@ -271,11 +271,6 @@ class Token(models.Model):
     def is_consumed(self):
         return self.consumed_at is not None
         
-    def handle_deadline(self):
-        if not self.deadline:
-            return
-        self.node.bind(self.workflow).handle_deadline(self)
-    
     @property
     def activity_trail(self):
         act_trail = set()
