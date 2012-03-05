@@ -56,7 +56,8 @@ class SetupTarget(SetupTargetObject):
         self.config.setdefault('mediaserver.storage.decrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.sec'))
         self.config.setdefault('mediaserver.storage.verify_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_authority.pub'))
         self.config.setdefault('storagevault.implementation', 'ecs.mediaserver.storagevault.LocalFileStorageVault')
-        self.config.setdefault('storagevault.options.localfilestorage_root', os.path.join(self.homedir, 'ecs-storage-vault')) 
+        self.config.setdefault('storagevault.options.localfilestorage_root', os.path.join(self.homedir, 'ecs-storage-vault'))
+        self.config.setdefault('debug.logo_border_color', 'white')
 
     def random_string(self, length=40, simpleset=False):
         if simpleset:

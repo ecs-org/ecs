@@ -1,4 +1,4 @@
-{% load compress %}
+{% load compress core %}
 {% block htmltype %}
 <!DOCTYPE html>
 {% endblock %}
@@ -39,6 +39,7 @@
                 {% endif %}
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
                 <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
+                <style type="text/x-scss">{% sitescss %}</style>
             {% endcompress %}
         {% endblock %}         
         {% block jshead %}{% endblock %}

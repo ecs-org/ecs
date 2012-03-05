@@ -6,6 +6,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.conf import settings
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
@@ -173,6 +174,18 @@ class DedentNode(Node):
 
     def render(self, context):
         return dedent(self.nodelist.render(context))
+
+@register.tag(name='sitescss')
+def do_sitescss(parser, token):
+    return SiteSCSSNode()
+
+class SiteSCSSNode(Node):
+    def render(self, context):
+        sitecss = ''
+        logo_border_color = getattr(settings, 'ECS_LOGO_BORDER_COLOR', None)
+        if logo_border_color:
+            sitecss += '#logo {background-color:%s;}\n' % (logo_border_color)
+        return sitecss
 
 @register.filter
 def help_url(slug):

@@ -39,6 +39,7 @@ ECS_MANDATORY_CLIENT_CERTS = %(debug.always_need_certs)s
 
 ECS_USERSWITCHER = %(debug.userswitcher)s
 ECS_DEVELOPER_TAB = %(debug.developer_tab)s
+ECS_LOGO_BORDER_COLOR = '%(debug.logo_border_color)s'
 
 SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
