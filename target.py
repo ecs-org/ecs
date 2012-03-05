@@ -463,8 +463,10 @@ $myhostname   smtp:[localhost:8823]
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py bootstrap'.format(self.homedir))
 
     def db_dump(self):
-        cmd = 'pg_dump --encoding="utf-8" --format=custom %(postgresql.database)s --file={0}/%(postgresql.database)s.pgdump'.format(self.homedir)
+        dumpname = '{0}/%(postgresql.database)s.pgdump'.format(self.homedir) % self.config
+        cmd = 'pg_dump --encoding="utf-8" --format=custom %(postgresql.database)s --file={0}.new'.format(dumpname)
         local(cmd % self.config)
+        shutil.move(dumpname+'.new', dumpname)
 
     def db_restore(self):
         with settings(warn_only=True):
