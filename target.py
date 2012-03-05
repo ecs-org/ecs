@@ -224,8 +224,7 @@ class SetupTarget(SetupTargetObject):
             warn('no backup configuration, skipping backup config')
         else:
             with settings(warn_only=True):
-                if os.path.exists('/root/.gnupg'):
-                    local('sudo rm -r /root/.gnupg')
+                local('sudo bash -c "if test -e /root/.gnupg; then rm -r /root/.gnupg; fi"')
             local('sudo gpg --homedir /root/.gnupg --rebuild-keydb-caches')
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_sec')))
             local('sudo gpg --homedir /root/.gnupg --batch --yes --import {0}'.format(self.config.get_path('backup.encrypt_gpg_pub')))
