@@ -29,7 +29,8 @@
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
                 {% if entry.submission %}
-                    {{ entry.submission|ec_number }} {{ entry.submission.project_title_display|smart_truncate:40 }}
+                    <a class="preview" href="{% url view_submission submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
+                    {{ entry.submission.project_title_display|smart_truncate:40 }}
                 {% endif %}
             </h4>
             {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
