@@ -10,13 +10,15 @@
     Protokoll<br />
     </div>
 
-    Beginn: {{meeting.start|date:'H:i'}}<br />
-    Ende: {{meeting.end|date:'H:i'}}<br />
+    <p>
+        Beginn: {{ meeting.start|date:'H:i' }}<br />
+        Ende: {{ meeting.end|date:'H:i' }}
+    </p>
     
     {% if meeting.comments %}
-    <div>
+    <p>
         {{ meeting.comments|linebreaksbr }}
-    </div>
+    </p>
     {% endif %}
 
     {% for top, vote in tops %}
@@ -36,12 +38,12 @@
                 {% if submission.current_submission_form.sponsor_name %}
                     <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
                 {% endif %}<br />
-                <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+                <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
                 <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
-
                 {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% else %}
-                <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span></br />
+                <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span><br />
+                <br />
             {% endif %}
         {% endwith %}
     {% endfor %}
@@ -64,7 +66,7 @@
             {% if submission.current_submission_form.sponsor_name %}
                 <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
             {% endif %}<br />
-            <span class="bold">Einreichende Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+            <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
             <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
 
             {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
