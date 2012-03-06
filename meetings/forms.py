@@ -82,7 +82,19 @@ class SubmissionReschedulingForm(forms.Form):
         self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings]).order_by('start')
 
 
+class UserChoiceField(forms.ModelChoiceField):
+    def __init__(self, *args, **kwargs):
+        queryset = kwargs.pop('queryset', None)
+        if queryset is None:
+            queryset = User.objects.all()
+        super(UserChoiceField, self).__init__(queryset, *args, **kwargs)
+
+    def label_from_instance(self, user):
+        return u'{0} <{1}>'.format(unicode(user), user.email)
+
 class AssignedMedicalCategoryForm(forms.ModelForm):
+    board_member = UserChoiceField()
+
     class Meta:
         model = AssignedMedicalCategory
         fields = ('board_member',)
