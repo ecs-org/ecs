@@ -440,7 +440,6 @@ CELERY_IMPORTS = (
     'ecs.documents.tasks',
     'ecs.mediaserver.tasks', 
     'ecs.ecsmail.tasks',
-    'ecs.workflow.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',
     'ecs.help.tasks',
