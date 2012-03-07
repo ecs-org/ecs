@@ -88,12 +88,12 @@
           <ul>
           {% for blueprint, checklists in checklist_review_states %}
             {% for task, checklist in checklists %}
-              <li class="{% if checklist %}{{ checklist.is_positive|yesno:'positive,negative' }} {{ checklist.is_complete|yesno:'complete,incomplete' }}{% else %}negative incomplete{% endif %}">
+              <li class="{% if checklist and task.closed_at %}{{ checklist.is_positive|yesno:'positive,negative' }} {{ checklist.is_complete|yesno:'complete,incomplete' }}{% else %}negative incomplete{% endif %}">
                 {{ task.task_type }}
                 {% if task.assigned_to %}
                   ({{ task.assigned_to }})
                 {% endif %}
-                {% if checklist %}
+                {% if checklist and task.closed_at %}
                   {% if checklist.has_positive_comments %}
                     <a class="textblock" href="{% url ecs.checklists.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">{% trans 'copy positive' %}</a>
                   {% endif %}
