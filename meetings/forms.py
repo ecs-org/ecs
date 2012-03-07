@@ -122,6 +122,11 @@ class ExpeditedVoteForm(forms.ModelForm):
     class Meta:
         model = TimetableEntry
         fields = ('accept_prepared_vote',)
+
+    def __init__(self, *args, **kwargs):
+        super(ExpeditedVoteForm, self).__init__(*args, **kwargs)
+        if not self.instance.submission.current_submission_form.current_vote:
+            self.fields['accept_prepared_vote'].initial=False
         
     def has_changed(self):
         # FIXME: this should not be a model form: if no data has_changed(), save() won't be called (#3457)

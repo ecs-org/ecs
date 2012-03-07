@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-03 20:23+0100\n"
+"POT-Creation-Date: 2012-03-07 17:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1792,15 +1792,15 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:124 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:125 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:126
+#: core/templatetags/core.py:127
 msgid "Unknown"
 msgstr ""
 
@@ -2123,7 +2123,7 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:603 meetings/views.py:697
+#: meetings/views.py:603 meetings/views.py:698
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2132,11 +2132,11 @@ msgstr "Zeitfenster"
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:645
+#: meetings/views.py:646
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:667
+#: meetings/views.py:668
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2277,31 +2277,31 @@ msgstr "<Gruppe>"
 msgid "delegate"
 msgstr "abgeben"
 
-#: tasks/forms.py:34 tasks/forms.py:37
+#: tasks/forms.py:34 tasks/forms.py:40
 msgid "message"
 msgstr ""
 
-#: tasks/forms.py:42
+#: tasks/forms.py:45
 msgid "complete"
 msgstr ""
 
-#: tasks/forms.py:64
+#: tasks/forms.py:67
 msgid "You must select a user."
 msgstr "Sie müssen einen Benutzer auswählen."
 
-#: tasks/forms.py:66
+#: tasks/forms.py:69
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
 
-#: tasks/forms.py:104
+#: tasks/forms.py:107
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:105
+#: tasks/forms.py:108
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:106
+#: tasks/forms.py:109
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
@@ -3048,6 +3048,10 @@ msgstr "Nicht Beenden"
 msgid "Prepared Vote"
 msgstr "Vorbereitetes Votum"
 
+#: templates/meetings/assistant/expedited_vote_formset.inc:12
+msgid "No vote!"
+msgstr "Kein Votum!"
+
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:6
 #, fuzzy
 msgid "Retrospective Thesis Submissions"
@@ -3084,21 +3088,21 @@ msgid "Go Back"
 msgstr ""
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:35
+#: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:35
+#: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
-#: templates/meetings/timetable/editor.html:35
+#: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
 #: templates/meetings/wkhtml2pdf/agenda.html:47
 msgid "examined"
@@ -3332,15 +3336,15 @@ msgstr "Abgeschlossene TOPs"
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
-#: templates/meetings/timetable/editor.html:57
+#: templates/meetings/timetable/editor.html:58
 msgid "before"
 msgstr "Vorher Anwesende"
 
-#: templates/meetings/timetable/editor.html:57
+#: templates/meetings/timetable/editor.html:58
 msgid "waiting"
 msgstr "Wartende"
 
-#: templates/meetings/timetable/editor.html:57
+#: templates/meetings/timetable/editor.html:58
 msgid "after"
 msgstr "Anschließend Anwesende"
 
@@ -3438,6 +3442,11 @@ msgstr "Anzahl SUSAR"
 #: templates/notifications/view/base.html:46
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
+
+#: templates/pdfviewer/viewer.html:49
+#, fuzzy
+msgid "Version"
+msgstr "Version"
 
 #: templates/pdfviewer/annotations/sharing/share.html:12
 msgid "Share"
