@@ -18,6 +18,12 @@
 
 <script type="text/javascript">
     window.addEvent('domready', function(){
-        ecs.setupFormFieldHelpers($('expedited_reviewer_invitation'));
+        var container = $('expedited_reviewer_invitation');
+        ecs.setupFormFieldHelpers(container);
+        var form = container.getElement('form');
+        form.getElement('input[type="submit"]').addEvent('click', function(){
+            new MooDialog.Confirm('{% trans 'Do you want to send the E-mails?' %}', function(){form.submit();}, null, {okText: '{{ _("Send")|escapejs }}', cancelText: '{{ _("Don't Send")|escapejs }}'});
+            return false;
+        });
     });
 </script>
