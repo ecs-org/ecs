@@ -64,10 +64,10 @@ class TaskManagementData(object):
                 if getattr(response, 'has_errors', False):
                     return response
                 task.done(user=self.request.user, choice=form.get_choice())
+                task = self.task    # refetch
             elif action == 'delegate':
                 task.assign(form.cleaned_data['assign_to'])
 
-            task = self.task    # refetch
             try:
                 submission = task.data.get_submission()
             except AttributeError:

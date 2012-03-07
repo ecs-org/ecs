@@ -32,7 +32,10 @@ class ManageTaskForm(forms.Form):
         fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
         if task.task_type.is_delegatable:
             fs['action'].choices = [('delegate', _('delegate')),('message', _('message'))]
-            fs['assign_to'].queryset = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
+            assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
+            if task.expedited_review_categories.exists():
+                assign_to_q = assign_to_q.filter(expedited_review_categories__pk__in=task.expedited_review_categories.values('pk').query)
+            fs['assign_to'].queryset = assign_to_q
         else:
             fs['action'].choices = [('message', _('message'))]
             del fs['assign_to']
