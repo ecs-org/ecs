@@ -16,7 +16,7 @@ class CertForm(forms.Form):
         widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': user_queryset_name}))
     )
     cn = forms.CharField(required=False)
-    passphrase = forms.CharField(required=True, widget=forms.PasswordInput(), min_length=8)
+    passphrase = forms.CharField(required=True, widget=forms.PasswordInput(), min_length=12)
     passphrase2 = forms.CharField(required=True, widget=forms.PasswordInput())
     
     def clean(self):
