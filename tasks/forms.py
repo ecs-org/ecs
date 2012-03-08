@@ -20,7 +20,7 @@ class TaskChoiceField(forms.ModelChoiceField):
 
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=[])
-    assign_to = forms.ModelChoiceField(queryset=User.objects.exclude(ecs_profile__is_testuser=True).order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
+    assign_to = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True).exclude(ecs_profile__is_testuser=True).order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
     post_data = forms.CharField(widget=forms.HiddenInput(), required=False)
     
     def __init__(self, *args, **kwargs):

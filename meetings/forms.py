@@ -86,7 +86,7 @@ class UserChoiceField(forms.ModelChoiceField):
     def __init__(self, *args, **kwargs):
         queryset = kwargs.pop('queryset', None)
         if queryset is None:
-            queryset = User.objects.all()
+            queryset = User.objects.filter(is_active=True)
         super(UserChoiceField, self).__init__(queryset, *args, **kwargs)
 
     def label_from_instance(self, user):
@@ -103,7 +103,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         instance = kwargs['instance']
         self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category).order_by('ec_number')
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
+        self.fields['board_member'].queryset = User.objects.filter(is_active=True, medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
 
 AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory, extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
 

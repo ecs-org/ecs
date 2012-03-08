@@ -25,7 +25,7 @@ class DocumentAnnotationForm(forms.ModelForm):
         return page_num
         
 class AnnotationSharingForm(forms.Form):
-    user = forms.ModelChoiceField(User.objects.all())
+    user = forms.ModelChoiceField(User.objects.filter(is_active=True))
 
     def __init__(self, *args, **kwargs):
         super(AnnotationSharingForm, self).__init__(*args, **kwargs)

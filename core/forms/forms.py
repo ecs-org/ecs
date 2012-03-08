@@ -224,7 +224,7 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         }
 
 class PresenterChangeForm(forms.ModelForm):
-    presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
+    presenter = forms.ModelChoiceField(User.objects.filter(is_active=True), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
 
     class Meta:
         model = Submission
@@ -239,7 +239,7 @@ class PresenterChangeForm(forms.ModelForm):
             self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class SusarPresenterChangeForm(forms.ModelForm):
-    susar_presenter = forms.ModelChoiceField(User.objects.all(), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
+    susar_presenter = forms.ModelChoiceField(User.objects.filter(is_active=True), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
 
     class Meta:
         model = Submission

@@ -15,10 +15,10 @@ from ecs.core.forms.fields import SingleselectWidget
 
 
 class BaseMessageForm(forms.ModelForm):
-    receiver_involved = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
-    receiver_person = forms.ModelChoiceField(queryset=User.objects.all(), required=False)
+    receiver_involved = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), required=False)
+    receiver_person = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), required=False)
     receiver_type = forms.ChoiceField(choices=(('ek', _('Ethics Commission')),), widget=forms.RadioSelect(), initial='ek')
-    receiver = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput(), required=False)
+    receiver = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), widget=forms.HiddenInput(), required=False)
     
     class Meta:
         model = Message
@@ -42,18 +42,18 @@ class BaseMessageForm(forms.ModelForm):
             ]
             receiver_type_initial = 'involved'
             involved_parties = list(submission.current_submission_form.get_involved_parties())
-            involved_parties = User.objects.filter(pk__in=[p.user.pk for p in involved_parties if p.user])
+            involved_parties = User.objects.filter(is_active=True, pk__in=[p.user.pk for p in involved_parties if p.user])
             self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
 
         if user.get_profile().is_internal:
             receiver_type_choices += [
                 ('person', _('Person'))
             ]
-            self.fields['receiver_person'].queryset = User.objects.exclude(pk=user.pk)
+            self.fields['receiver_person'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
             if getattr(settings, 'USE_TEXTBOXLIST', False):
                 self.fields['receiver_person'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
-        self.fields['receiver'].queryset = User.objects.exclude(pk=user.pk)
+        self.fields['receiver'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
 
         self.fields['receiver_type'].choices = receiver_type_choices
         self.fields['receiver_type'].initial = receiver_type_initial
@@ -91,7 +91,7 @@ class ReplyDelegateForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.get_profile().is_internal:
-            self.fields['to'] = forms.ModelChoiceField(User.objects.all(), required=False, label=_('Delegate to'))
+            self.fields['to'] = forms.ModelChoiceField(User.objects.filter(is_active=True), required=False, label=_('Delegate to'))
             self.fields.keyOrder = ['to', 'text']
             if getattr(settings, 'USE_TEXTBOXLIST', False):
                 self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
