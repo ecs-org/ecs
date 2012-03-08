@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo
+from ecs.utils.viewutils import render_html
 
 
 def get_obj_tasks(activities, obj, data=None):
@@ -29,14 +30,14 @@ def block_if_task_exists(node_uid, **kwargs):
 def block_duplicate_task(node_uid):
     return block_if_task_exists(node_uid, deleted_at=None, closed_at=None)
 
-
 def task_required(n=1):
     def decorator(view):
         @wraps(view)
         def decorated(request, *args, **kwargs):
             related_tasks = getattr(request, 'related_tasks', [])
             if len(related_tasks) != n:
-                return HttpResponseForbidden()
+                html = render_html(request, '403.html', {})
+                return HttpResponseForbidden(html)
             return view(request, *args, **kwargs)
         return decorated
     return decorator

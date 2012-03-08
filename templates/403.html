@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load compress %}
+
+{% block jshead %}
+{% endblock %}
+
+{% block jsbotom %}
+{% endblock %}
+
+{% block htmlcss %}
+  {{ block.super }}
+  {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/public.scss" />
+  {% endcompress %}
+{% endblock %}
+
+
+{% block header %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+
+{% block content %}
+<div id="header_public">
+  <div class="header_inner">
+    <a href="/"><img src="{{ MEDIA_URL }}/images/logo.png" alt="Ethik-Kommission"></a>
+  </div>
+</div>
+
+<div class="wrapper_404">
+  <div class="wrapper_404_inner">
+    <div class="content">
+      <h1>Fehler 403 - Zugriff verweigert!</h1>
+      <p><img src="{{ MEDIA_URL }}/images/404.jpg" alt="404">Dies kann verschiedene Ursachen haben, wie beispielsweise die Abgabe ihrer Funktion als Einreicher an einen anderen Einreicher oder den Ablauf Ihrer temporären Leseberechtigung.</p> 
+        <p>Falls Sie denken, dass dies ein Irrtum ist, kontaktieren Sie die Ethikkommission unter der Adresse <a href="mailto:ethik-kom@meduniwien.ac.at">ethik-kom@meduniwien.ac.at</a>
+          mit Angabe der EK-Nummer und Ihrer Funktion (falls es sich um eine Studie handelt).</p>
+      <p>Um zur Hauptseite zu wechseln <a href="/">klicken Sie hier</a>.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
