@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User, Group
 
-from ecs.users.utils import sudo
+from ecs.users.utils import sudo, get_current_user
 from ecs.communication.utils import send_system_message_template
+from ecs.tasks.models import Task
 
 
 class Party(object):
@@ -13,30 +13,37 @@ class Party(object):
         self.organization = organization
         self._name = name
         self._email = email
-        self.user = user
+        self._user = user
         self.involvement = involvement
-        self._anonymous = anonymous
-        
+        self.anonymous = anonymous
+
     @property
     def email(self):
-        if self._email:
-            return self._email
-        if self.user:
-            return self.user.email
+        if not self.anonymous:
+            if self._email:
+                return self._email
+            if self.user:
+                return self.user.email
         return None
-    
+
     @property
     def name(self):
         name = self._name or self.user or self._email
-        if self._anonymous or not name:
+        if self.anonymous or not name:
             return u'- anonymous -'
         return unicode(name)
-        
+
+    @property
+    def user(self):
+        if not self.anonymous:
+            return self._user
+        return None
+
     def __eq__(self, other):
         if not isinstance(other, Party):
             return False
-        return all(getattr(self, attr) == getattr(other, attr) for attr in ('organization', '_name', '_email', 'user', 'involvement', '_anonymous'))
-        
+        return all(getattr(self, attr) == getattr(other, attr) for attr in ('organization', '_name', '_email', '_user', 'involvement', 'anonymous'))
+
     def __repr__(self):
         return unicode(self.email)
 
@@ -59,52 +66,40 @@ class PartyList(list):
         for u in users:
             send_system_message_template(u, *args, **kwargs)
 
-@sudo()
+    def add(self, *args, **kwargs):
+        self.append(Party(*args, **kwargs))
+
 def get_presenting_parties(sf):
     parties = PartyList()
-    parties += [Party(organization=sf.sponsor_name, name=sf.sponsor_contact.full_name, user=sf.sponsor, email=sf.sponsor_email, involvement=_("Sponsor"))]
-
-    parties.append(Party(organization=sf.submitter_organisation, 
-        name=sf.submitter_contact.full_name, 
-        email=sf.submitter_email,
-        user=sf.submitter,
-        involvement=_("Submitter"),
-    ))
-    parties.append(Party(user=sf.submission.presenter, involvement=_("Presenter")))
-    parties.append(Party(user=sf.submission.susar_presenter, involvement=_("Susar Presenter")))
-
+    parties.add(organization=sf.submitter_organisation, name=sf.submitter_contact.full_name,
+        email=sf.submitter_email, user=sf.submitter, involvement=_("Submitter"))
+    parties.add(organization=sf.sponsor_name, name=sf.sponsor_contact.full_name,
+        email=sf.sponsor_email, user=sf.sponsor, involvement=_("Sponsor"))
+    parties.add(user=sf.submission.presenter, involvement=_("Presenter"))
+    parties.add(user=sf.submission.susar_presenter, involvement=_("Susar Presenter"))
     for i in sf.investigators.filter(main=True):
-        parties.append(Party(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email, involvement=_("Primary Investigator")))
-
+        parties.add(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email, involvement=_("Primary Investigator"))
     return parties
 
-@sudo()
 def get_reviewing_parties(sf, active=None):
-    from ecs.users.middleware import current_user_store
-    _ = ugettext
-
     parties = PartyList()
 
-    anonymous = current_user_store._previous_user and not current_user_store._previous_user.get_profile().is_internal
-    from ecs.tasks.models import Task
-    external_reviewer_pks = sf.submission.external_reviewers.all().values_list('pk', flat=True)
-    tasks = Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).order_by('created_at').select_related('task_type').distinct()
-    if active:
-        tasks = tasks.open()
+    anonymous = get_current_user() and not get_current_user().get_profile().is_internal
+    with sudo():
+        tasks = Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).exclude(task_type__workflow_node__uid='resubmission').order_by('created_at').select_related('task_type').distinct()
+        if active:
+            tasks = tasks.open()
+        tasks = list(tasks)
     for task in tasks:
-        if task.assigned_to.pk in external_reviewer_pks:
-            parties.append(Party(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous))
+        if task.task_type.workflow_node.uid == 'external_review':
+            parties.add(user=task.assigned_to, involvement=task.task_type.trans_name, anonymous=anonymous)
         else:
             party = Party(user=task.assigned_to, involvement=task.task_type.trans_name)
             if party not in parties:
                 parties.append(party)
     for temp_auth in sf.submission.temp_auth.filter(end__gt=datetime.now()):
-        parties.append(Party(user=temp_auth.user, involvement=_('Temporary Authorization')))
+        parties.add(user=temp_auth.user, involvement=_('Temporary Authorization'))
     return parties
 
-@sudo()
 def get_involved_parties(sf):
-    parties = PartyList()
-    for f in (get_presenting_parties, get_reviewing_parties):
-        parties += f(sf)
-    return parties
+    return get_presenting_parties(sf) + get_reviewing_parties(sf)

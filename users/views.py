@@ -26,7 +26,6 @@ from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
-from ecs.core.models.submissions import attach_to_submissions
 from ecs.users.utils import user_flag_required, user_group_required
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user, user_group_required
