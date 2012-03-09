@@ -102,4 +102,6 @@ def get_reviewing_parties(sf, active=None):
     return parties
 
 def get_involved_parties(sf):
-    return get_presenting_parties(sf) + get_reviewing_parties(sf)
+    p = get_presenting_parties(sf)
+    p += get_reviewing_parties(sf)
+    return p
