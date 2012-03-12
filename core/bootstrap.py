@@ -298,7 +298,7 @@ def medcategories():
         (u'MedPhy', u'Medizinische Physik'),
         (u'Unfall', u'Unfallchirurgie'),
         (u'PubHealth', u'Public Health'),
-        (u'fMRT-psych', u'fMRT Psychologie'),
+        (u'fMRTPsych', u'fMRT Psychologie'),
     )
     return categories
 
