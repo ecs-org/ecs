@@ -479,9 +479,9 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
             localec_vote_formset = ExpeditedVoteFormSet(None, queryset=meeting.localec_entries, prefix='localec')
 
     return render(request, 'meetings/assistant/retrospective_thesis_expedited.html', {
-        'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
-        'expedited_entries': meeting.expedited_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
-        'localec_entries': meeting.localec_entries.filter(vote__result__in=FINAL_VOTE_RESULTS).order_by('submission__ec_number'),
+        'retrospective_thesis_entries': meeting.retrospective_thesis_entries.filter(vote__isnull=False, vote__is_draft=False).order_by('submission__ec_number'),
+        'expedited_entries': meeting.expedited_entries.filter(vote__isnull=False, vote__is_draft=False).order_by('submission__ec_number'),
+        'localec_entries': meeting.localec_entries.filter(vote__isnull=False, vote__is_draft=False).order_by('submission__ec_number'),
         'meeting': meeting,
         'thesis_vote_formset': thesis_vote_formset,
         'expedited_vote_formset': expedited_vote_formset,

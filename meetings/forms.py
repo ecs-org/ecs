@@ -135,7 +135,9 @@ class ExpeditedVoteForm(forms.ModelForm):
     def save(self, commit=True):
         if self.cleaned_data.get('accept_prepared_vote', False):
             submission_form = self.instance.submission.current_submission_form
-            vote, created = Vote.objects.get_or_create(submission_form=submission_form, defaults={'result': '1', 'is_draft': True})
+            vote = submission_form.current_vote
+            if vote is None:
+                vote = Vote.objects.create(submission_form=submission_form, result='3a', is_draft=True)
             vote.top = self.instance
             vote.is_draft = False
             vote.save()
@@ -146,7 +148,7 @@ class ExpeditedVoteForm(forms.ModelForm):
 class BaseExpeditedVoteFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         queryset = kwargs.get('queryset', TimetableEntry.objects.all())
-        queryset = queryset.filter(Q(vote__isnull=True) | ~Q(vote__result__in=FINAL_VOTE_RESULTS)).order_by('submission__ec_number')
+        queryset = queryset.filter(Q(vote__isnull=True) | Q(vote__is_draft=True)).order_by('submission__ec_number')
         kwargs['queryset'] = queryset
         super(BaseExpeditedVoteFormSet, self).__init__(*args, **kwargs)
     
