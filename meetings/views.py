@@ -108,17 +108,11 @@ def open_tasks(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
     open_tasks = SortedDict()
-    no_index_tasks = []
-    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number'):
+    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number').select_related('submission', 'submission__current_submission_form'):
         with sudo():
-            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True))
+            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True).select_related('task_type', 'assigned_to', 'assigned_to__ecs_profile'))
         if len(ts):
-            if top.timetable_index is None:
-                no_index_tasks.append((top, ts))
-            else:
-                open_tasks[top] = ts
-    for top, ts in no_index_tasks:
-        open_tasks[top] = ts
+            open_tasks[top] = ts
     
     return render(request, 'meetings/tabs/open_tasks.html', {
         'meeting': meeting,
@@ -130,10 +124,13 @@ def open_tasks(request, meeting_pk=None):
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    next_tops = meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number')[:3]
+    tops = list(meeting.timetable_entries.order_by('timetable_index', 'submission__ec_number').select_related('submission', 'submission__current_submission_form'))
+
+    next_tops = [t for t in tops if t.is_open][:3]
+    closed_tops = [t for t in tops if not t.is_open]
 
     open_tops = SortedDict()
-    for top in meeting.timetable_entries.filter(is_open=True).order_by('timetable_index', 'submission__ec_number'):
+    for top in [t for t in tops if t.is_open]:
         if top.submission:
             medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
                 category__in=top.submission.medical_categories.values('pk').query)
@@ -154,7 +151,6 @@ def tops(request, meeting_pk=None):
 
     open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
     
-    closed_tops = meeting.timetable_entries.filter(is_open=False).order_by('timetable_index', 'submission__ec_number')
 
     return render(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,
@@ -755,12 +751,11 @@ def meeting_details(request, meeting_pk=None, active=None):
                     meeting.create_boardmember_reviews()
 
     tops = meeting.timetable_entries.all()
-    votes_list = [ ]
+    votes_list = []
+    all_votes = list(Vote.objects.filter(top__meeting=meeting))
     for top in tops:
-        votes = Vote.objects.filter(top=top)
-        c = votes.count()
-        assert(c < 2)
-        if not c:
+        votes = [v for v in all_votes if v.top == top]
+        if not votes:
             vote = None
         else:
             vote = votes[0]

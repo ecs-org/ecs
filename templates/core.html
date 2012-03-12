@@ -49,10 +49,10 @@
           {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
               <li><a href="{% url ecs.core.views.all_submissions %}">{% trans "All Studies" %}</a></li>
           {% endif %}
-          {% if user|assigned_submissions_count %}
+          {% if user|has_assigned_submissions %}
               <li><a href="{% url ecs.core.views.assigned_submissions %}">{% trans "Assigned Studies" %}</a></li>
           {% endif %}
-          {% if user|my_submissions_count %}
+          {% if user|has_submissions %}
               <li><a href="{% url ecs.core.views.my_submissions %}">{% trans "My Studies" %}</a></li>
           {% endif %}
           <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>

@@ -7,10 +7,11 @@ from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.conf import settings
+from django.db.models import F
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
-from ecs.docstash.models import DocStash
+from ecs.docstash.models import DocStash, DocStashData
 from ecs.help.models import Page
 
 register = Library()
@@ -94,16 +95,14 @@ def class_for_field(field):
     return 'wide' if field.field.max_length > 50 else 'narrow'
 
 @register.filter
-def my_submissions_count(user):
-    count = Submission.objects.mine(user).count()
-    count += len([
-        d for d in DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=user) if d.current_value
+def has_submissions(user):
+    return Submission.objects.mine(user).exists() or bool([
+        d for d in DocStashData.objects.filter(stash__group='ecs.core.views.submissions.create_submission_form', stash__owner=user, version=F('stash__current_version')).only('value') if d.value
     ])
-    return count
 
 @register.filter
-def assigned_submissions_count(user):
-    return Submission.objects.reviewed_by_user(user).count()
+def has_assigned_submissions(user):
+    return Submission.objects.reviewed_by_user(user).exists()
 
 @register.filter
 def is_docstash(obj):
@@ -203,8 +202,10 @@ class BreadcrumbsNode(Node):
     def render(self, context):
         user = context['request'].user
         if not user.is_anonymous():
-            crumbs_key = 'submission_breadcrumbs-user_{0}'.format(user.pk)
-            crumbs = [Submission.objects.get(pk=pk) for pk in cache.get(crumbs_key, [])]
+            crumbs_cache_key = 'submission_breadcrumbs-user_{0}'.format(user.pk)
+            crumb_pks = cache.get(crumbs_cache_key, [])
+            crumbs = list(Submission.objects.filter(pk__in=crumb_pks).only('ec_number'))
+            crumbs.sort(key=lambda x: crumb_pks.index(x.pk))
             context[self.varname] = crumbs
         return u''
 

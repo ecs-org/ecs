@@ -13,7 +13,7 @@ def has_flag(user, flag):
 
 @register.filter
 def is_member_of(user, groupname):
-    return bool(user.groups.filter(name=groupname).count())
+    return user.groups.filter(name=groupname).exists()
 
 @register.filter
 def formal_name(user):

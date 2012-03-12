@@ -62,7 +62,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     }
     order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
 
-    all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type')
+    all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type', 'task_type__workflow_node')
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
