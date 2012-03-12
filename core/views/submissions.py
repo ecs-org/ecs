@@ -164,7 +164,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         else:
             reopen_task = None
             tasks = list(get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(assigned_to=request.user, deleted_at__isnull=True).order_by('-closed_at'))
-            if tasks and not [t for t in tasks if not t.closed_at]:
+            if (tasks and not [t for t in tasks if not t.closed_at] and not
+                (t.task_type.workflow_node.uid in ('thesis_recommendation', 'expedited_recommendation', 'localec_recommendation') and not submission.meetings.filter(started__isnull=True).exists())):
                 reopen_task = tasks[0]
             checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
