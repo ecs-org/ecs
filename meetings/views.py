@@ -522,7 +522,6 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         else:
             form = form_cls(None, instance=vote, readonly=True)
         if top.is_open and form.is_valid():
-            print 'supa'
             vote = form.save(top)
             if autosave:
                 return HttpResponse('OK')
