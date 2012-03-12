@@ -162,13 +162,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         if checklist_overwrite and checklist in checklist_overwrite:
             checklist_form = checklist_overwrite[checklist]
         else:
-            try:
-                reopen_tasks = get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(closed_at__isnull=False, assigned_to=request.user)
-                reopen_task = reopen_tasks.order_by('-created_at')[0]
-            except IndexError:
-                checklist_form = make_checklist_form(checklist)(readonly=True)
-            else:
-                checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
+            reopen_task = None
+            tasks = list(get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(assigned_to=request.user, deleted_at__isnull=True).order_by('-closed_at'))
+            if tasks and not [t for t in tasks if not t.closed_at]:
+                reopen_task = tasks[0]
+            checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
 
     checklist_summary = []
