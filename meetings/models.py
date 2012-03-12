@@ -649,14 +649,10 @@ def _timetable_entry_post_delete(sender, **kwargs):
     if not entry.timetable_index is None:
         entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
     entry.meeting.update_assigned_categories()
-    if entry.submission:
-        entry.submission.update_next_meeting()
 
 def _timetable_entry_post_save(sender, **kwargs):
     entry = kwargs['instance']
     entry.meeting.update_assigned_categories()
-    if entry.submission:
-        entry.submission.update_next_meeting()
 
 post_delete.connect(_timetable_entry_post_delete, sender=TimetableEntry)
 post_save.connect(_timetable_entry_post_save, sender=TimetableEntry)

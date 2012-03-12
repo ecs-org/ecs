@@ -239,6 +239,7 @@ class Submission(models.Model):
         def _schedule():
             meeting = Meeting.objects.next_schedulable_meeting(self)
             meeting.add_entry(submission=self, duration=duration, visible=visible)
+            self.update_next_meeting()
             return meeting
 
         try:

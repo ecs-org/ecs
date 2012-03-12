@@ -371,3 +371,4 @@ def on_meeting_end(sender, **kwargs):
     meeting = kwargs['meeting']
     for submission in meeting.submissions.all():
         submission.workflow.unlock(WaitForMeeting)
+        submission.update_next_meeting()
