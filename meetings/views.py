@@ -433,13 +433,16 @@ def meeting_assistant_stop(request, meeting_pk=None):
 
     for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
         submission = top.submission
-        with sudo():
-            Task.objects.for_data(submission).open().mark_deleted()
         vote = Vote.objects.create(top=top, result='3a')
-        if submission.is_expedited:
-            submission.workflow_lane = SUBMISSION_LANE_BOARD
-            submission.save()
+
+    for vote in Vote.objects.filter(top__meeting=meeting, submission_form__isnull=False).recessed():
+        submission = vote.get_submission()
         submission.schedule_to_meeting()
+        if not submission.workflow_lane == SUBMISSION_LANE_BOARD:
+            with sudo():
+                tasks = Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
+                if tasks and not [t for t in tasks if not t.closed_at]:
+                    tasks[0].reopen()
     
     on_meeting_end.send(Meeting, meeting=meeting)
     

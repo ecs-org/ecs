@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS)
+from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import on_vote_extension, on_vote_publication
 
@@ -90,7 +90,7 @@ class Vote(models.Model):
         
     @property
     def is_recessed(self):
-        return self.result in ('3a', '3b')
+        return self.result in RECESSED_VOTE_RESULTS
         
     @property
     def activates(self):

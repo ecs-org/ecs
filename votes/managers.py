@@ -1,7 +1,7 @@
 from django.db import models
 
 from ecs.authorization import AuthorizationManager
-from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 
 class VoteQuerySet(models.query.QuerySet):
     def positive(self):
@@ -12,6 +12,9 @@ class VoteQuerySet(models.query.QuerySet):
         
     def permanent(self):
         return self.filter(result__in=PERMANENT_VOTE_RESULTS)
+
+    def recessed(self):
+        return self.filter(result__in=RECESSED_VOTE_RESULTS)
 
 
 class VoteManager(AuthorizationManager):
@@ -26,3 +29,6 @@ class VoteManager(AuthorizationManager):
 
     def permanent(self):
         return self.all().permanent()
+
+    def recessed(self):
+        return self.all().recessed()
