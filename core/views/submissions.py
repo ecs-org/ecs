@@ -421,8 +421,10 @@ def vote_preparation(request, submission_form_pk=None):
     checklist_answers = ChecklistAnswer.objects.filter(checklist__submission=submission_form.submission,
         question__blueprint__slug=blueprint_slug, question__number='1')
 
-    initial_text = u'\n\n'.join([a.comment for a in checklist_answers if not a.comment is None])
-    form = VotePreparationForm(request.POST or None, instance=vote, initial={'text': initial_text})
+    initial = None
+    if vote is None:
+        initial = {'text': u'\n\n'.join([a.comment for a in checklist_answers if not a.comment is None])}
+    form = VotePreparationForm(request.POST or None, instance=vote, initial=initial)
     
     form.bound_to_task = request.task_management.task
     
