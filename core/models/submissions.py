@@ -215,7 +215,7 @@ class Submission(models.Model):
         on_study_finish.send(sender=Submission, submission=self, expired=expired)
 
     def update_next_meeting(self):
-        next = self.meetings.filter(start__gt=datetime.now()).order_by('start')[:1]
+        next = self.meetings.filter(started__isnull=True).order_by('start')[:1]
         if next:
             if next[0].id != self.next_meeting_id:
                 self.next_meeting = next[0]
