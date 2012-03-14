@@ -468,13 +468,13 @@ $myhostname   smtp:[localhost:8823]
         local(cmd % self.config)
         shutil.move(dumpname+'.new', dumpname)
 
-    def db_restore(self):
+    def db_restore(self, prefix=""):
         with settings(warn_only=True):
-            istext = local('file {0}/%(postgresql.database)s.pgdump | grep text'.format(self.homedir) % self.config, capture=True).succeeded
+            istext = local('file {0}/{1}%(postgresql.database)s.pgdump | grep text'.format(self.homedir, prefix) % self.config, capture=True).succeeded
         if istext:
-            cmd = 'psql --file={0}/%(postgresql.database)s.pgdump --dbname=%(postgresql.database)s'.format(self.homedir)
+            cmd = 'psql --file={0}/{1}%(postgresql.database)s.pgdump --dbname=%(postgresql.database)s'.format(self.homedir, prefix)
         else:
-            cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/%(postgresql.database)s.pgdump'.format(self.homedir)
+            cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/{1}%(postgresql.database)s.pgdump'.format(self.homedir, prefix)
         local(cmd % self.config)
                 
     def env_clear(self):
