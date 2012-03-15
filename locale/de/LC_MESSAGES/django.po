@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-07 17:00+0100\n"
+"POT-Creation-Date: 2012-03-15 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1064,7 +1064,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:230 core/models/submissions.py:442
+#: core/paper_forms.py:230 core/models/submissions.py:443
 msgid "open"
 msgstr "offen"
 
@@ -1080,7 +1080,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:234 core/models/submissions.py:442
+#: core/paper_forms.py:234 core/models/submissions.py:443
 msgid "blind"
 msgstr "blind"
 
@@ -1096,7 +1096,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:238 core/models/submissions.py:442
+#: core/paper_forms.py:238 core/models/submissions.py:443
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1366,27 +1366,27 @@ msgstr "Institution"
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
-#: core/parties.py:65 templates/billing/submissions.html:25
-msgid "Sponsor"
-msgstr ""
-
-#: core/parties.py:71 templates/meetings/assistant/top.html:10
+#: core/parties.py:75 templates/meetings/assistant/top.html:10
 msgid "Submitter"
 msgstr "Antragsteller"
 
-#: core/parties.py:73 core/forms/forms.py:227
+#: core/parties.py:77 templates/billing/submissions.html:25
+msgid "Sponsor"
+msgstr ""
+
+#: core/parties.py:78 core/forms/forms.py:227
 msgid "Presenter"
 msgstr "Einreicher"
 
-#: core/parties.py:74
+#: core/parties.py:79
 msgid "Susar Presenter"
 msgstr "Sicherheitsmeldungsersteller"
 
-#: core/parties.py:77
+#: core/parties.py:81
 msgid "Primary Investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: core/parties.py:102 templates/submissions/tabs/involved_parties.html:35
+#: core/parties.py:101 templates/submissions/tabs/involved_parties.html:35
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
@@ -1762,12 +1762,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:787 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:783 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:787 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1784,48 +1784,48 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:822
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:818
+#: core/models/submissions.py:822
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:123 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:125 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:124 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:127
+#: core/templatetags/core.py:126
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:708 templates/meetings/details.html:15
+#: core/views/submissions.py:709 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:820 templates/core.html:50
+#: core/views/submissions.py:821 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:857
+#: core/views/submissions.py:858
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:928
+#: core/views/submissions.py:929
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:937 templates/core.html:53
+#: core/views/submissions.py:938 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:947 templates/core.html:56
+#: core/views/submissions.py:948 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2078,11 +2078,11 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:673
+#: meetings/models.py:669
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:674
+#: meetings/models.py:670
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2099,44 +2099,44 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:263
+#: meetings/views.py:260
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:400
+#: meetings/views.py:397
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:409
+#: meetings/views.py:406
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:415
+#: meetings/views.py:412
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:431
+#: meetings/views.py:428
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:589 meetings/views.py:601
+#: meetings/views.py:588 meetings/views.py:600
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:603 meetings/views.py:698
+#: meetings/views.py:602 meetings/views.py:697
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:605
+#: meetings/views.py:604
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:646
+#: meetings/views.py:645
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:668
+#: meetings/views.py:667
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2791,6 +2791,7 @@ msgid "Expand all"
 msgstr "Alle ausklappen"
 
 #: templates/communication/thread.html:55 templates/meetings/details.html:106
+#: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Send"
 msgstr "Abschicken"
 
@@ -2975,10 +2976,12 @@ msgstr ""
 "versenden."
 
 #: templates/meetings/details.html:106
+#: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Do you want to send the E-mails?"
 msgstr "Wollen Sie die E-mails abschicken?"
 
 #: templates/meetings/details.html:106
+#: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Don't Send"
 msgstr "Nicht Abschicken"
 
@@ -4402,23 +4405,23 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/views.py:111
+#: users/views.py:110
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:179
+#: users/views.py:178
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort zurücksetzen"
 
-#: users/views.py:257
+#: users/views.py:256
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: users/views.py:292 users/views.py:397
+#: users/views.py:291 users/views.py:396
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:389
+#: users/views.py:388
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
