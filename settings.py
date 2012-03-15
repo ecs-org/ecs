@@ -151,8 +151,8 @@ MIDDLEWARE_CLASSES = (
     #'ecs.TestMiddleware',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
-    'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     #'ecs.utils.security.SecurityReviewMiddleware', # this middleware is not meant to be used in production
 )
