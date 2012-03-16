@@ -532,9 +532,8 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             if form.cleaned_data['close_top']:
                 top.is_open = False
                 top.save()
-            if vote.is_recessed:
-                top.submission.schedule_to_meeting()
-            return next_top_redirect()
+                return next_top_redirect()
+            return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
     elif request.method == 'POST':
         top.is_open = False
         top.save()
