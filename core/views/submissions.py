@@ -294,7 +294,7 @@ def initial_review(request, submission_pk=None):
 @user_flag_required('is_internal', 'is_thesis_reviewer')
 def paper_submission_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    task = submission.paper_submission_review_task_for(request.user)
+    task = submission.paper_submission_review_task
     if not task.assigned_to == request.user:
         task.accept(request.user)
         return HttpResponseRedirect(reverse('ecs.core.views.paper_submission_review', kwargs={'submission_pk': submission_pk}))
@@ -751,7 +751,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
                 s.resubmission_task = task
         for task in paper_submission_tasks:
             if task.data == s:
-                s.paper_submission_review_task = task
+                s.paper_submission_task = task
         for task in b2_resubmission_tasks:
             if task.data.submission_form.submission == s:
                 s.b2_resubmission_task = task

@@ -100,7 +100,8 @@ class Submission(models.Model):
         except IndexError:
             return None
 
-    def paper_submission_review_task_for(self, user):
+    @property
+    def paper_submission_review_task(self):
         try:
             return Task.objects.for_data(self).filter(task_type__workflow_node__uid='paper_submission_review', closed_at=None, deleted_at=None)[0]
         except IndexError:

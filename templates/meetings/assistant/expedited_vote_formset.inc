@@ -1,4 +1,4 @@
-{% load core i18n %}
+{% load core i18n userutils %}
 
 {{ formset.management_form }}
 <table>
@@ -11,6 +11,22 @@
             {% with submission.current_submission_form.current_vote as vote %}
             {% trans 'Prepared Vote' %}: {% if vote %}B{{ vote.result }}{% if vote.text %}<p>{{ vote.text|linebreaksbr }}</p>{% endif %}{% else %}<em>{% trans 'No vote!' %}</em>{% endif %}
             {% endwith %}
+                {% sudo %}
+                {% with submission.paper_submission_review_task as task %}
+                {% if task and not task.closed_at %}
+                <div class="reviews">
+                    <ul>
+                        <li class="negative complete">
+                            {{ task.task_type }}
+                            {% if task.assigned_to %}
+                                ({{ task.assigned_to }})
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+                {% endwith %}
+                {% endsudo %}
             {% endwith %}
         </td>
     </tr>

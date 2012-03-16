@@ -108,7 +108,7 @@
 
           {% if submission %}
               {% sudo %}
-              {% with submission|paper_submission_review:user as task %}
+              {% with submission.paper_submission_review_task as task %}
               {% if task and not task.closed_at %}
                   <li class="negative complete">
                     {{ task.task_type }}
