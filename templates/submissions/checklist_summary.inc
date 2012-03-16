@@ -17,6 +17,6 @@
         </ol>
     </li>
 {% empty %}
-    <li><em>{% trans "No Checklist yet." %}</em></li>
+    <li><em>{% trans "No Checklist with unexpected answers or unexpected comments yet." %}</em></li>
 {% endfor %}
 </ol>

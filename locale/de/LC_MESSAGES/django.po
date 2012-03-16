@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-15 16:26+0100\n"
+"POT-Creation-Date: 2012-03-16 11:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3600,8 +3600,10 @@ msgid "save"
 msgstr "Speichern"
 
 #: templates/submissions/checklist_summary.inc:20
-msgid "No Checklist yet."
-msgstr "Es gibt noch keine Checkliste."
+msgid "No Checklist with unexpected answers or unexpected comments yet."
+msgstr ""
+"Es gibt noch keine Checkliste mit unerwarteten Antworten oder einem nicht "
+"verpflichtenden Kommentar zu einer erwarteten Antwort."
 
 #: templates/submissions/creation_message.txt:5
 #, python-format
@@ -4425,10 +4427,6 @@ msgstr "Neuer Zeichnungsberechtigter"
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
-#: userswitcher/forms.py:12
-msgid "user"
-msgstr "Benutzer"
-
 #: utils/countries/models.py:22
 msgid "ISO alpha-2"
 msgstr ""
@@ -4573,6 +4571,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "Remission"
-#~ msgstr "Gebührenbefreiung"
