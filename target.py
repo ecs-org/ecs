@@ -413,8 +413,8 @@ $myhostname   smtp:[localhost:8823]
             self.local(['sysctl', '-w', '{0}={1}'.format(k, v)])
             conf += '{0} = {1}'.format(k, v)
         tmp_fd, tmp_name = tempfile.mkstemp()
-        tmp_fd.write(conf)
-        tmp_fd.close()
+        os.write(tmp_fd, conf)
+        os.close(tmp_fd)
         cat = subprocess.list2cmdline(['cat', tmp_name])
         tee = subprocess.list2cmdline((['sudo'] if self.use_sudo else []) + ['tee', sysctl_conf])
         os.remove(tmp_name)
@@ -439,8 +439,8 @@ $myhostname   smtp:[localhost:8823]
             'wal_buffers = 1MB',
         ]) + '\n'
         tmp_fd, tmp_name = tempfile.mkstemp()
-        tmp_fd.write(conf)
-        tmp_fd.close()
+        os.write(tmp_fd, conf)
+        os.close(tmp_fd)
         cat = subprocess.list2cmdline(['cat', tmp_name])
         tee = subprocess.list2cmdline((['sudo'] if self.use_sudo else []) + ['tee', postgresql_conf])
         os.remove(tmp_name)
