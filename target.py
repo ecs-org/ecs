@@ -417,8 +417,8 @@ $myhostname   smtp:[localhost:8823]
         os.close(tmp_fd)
         cat = subprocess.list2cmdline(['cat', tmp_name])
         tee = subprocess.list2cmdline((['sudo'] if self.use_sudo else []) + ['tee', sysctl_conf])
-        os.remove(tmp_name)
         local('{0} | {1} > /dev/null'.format(cat, tee))
+        os.remove(tmp_name)
 
     def postgresql_config(self):
         postgresql_conf = '/etc/postgresql/8.4/main/postgresql.conf'
@@ -443,11 +443,11 @@ $myhostname   smtp:[localhost:8823]
         os.close(tmp_fd)
         cat = subprocess.list2cmdline(['cat', tmp_name])
         tee = subprocess.list2cmdline((['sudo'] if self.use_sudo else []) + ['tee', postgresql_conf])
-        os.remove(tmp_name)
         local('{0} | {1} > /dev/null'.format(cat, tee))
+        os.remove(tmp_name)
 
     def postgresql_restart(self):
-        self.local(['/etc/init.d/postgresql restart'])
+        self.local(['/etc/init.d/postgresql', 'restart'])
 
     def catalina_config(self):
         write_regex_replace(
