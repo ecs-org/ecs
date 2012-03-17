@@ -412,6 +412,7 @@ $myhostname   smtp:[localhost:8823]
         for k, v in params.iteritems():
             self.local(['sysctl', '-w', '{0}={1}'.format(k, v)])
             conf += '{0} = {1}'.format(k, v)
+        conf += '\n'
         tmp_fd, tmp_name = tempfile.mkstemp()
         os.write(tmp_fd, conf)
         os.close(tmp_fd)
@@ -447,7 +448,7 @@ $myhostname   smtp:[localhost:8823]
         os.remove(tmp_name)
 
     def postgresql_restart(self):
-        self.local(['/etc/init.d/postgresql', 'restart'])
+        self.local(['/etc/init.d/postgresql-8.4', 'restart'])
 
     def catalina_config(self):
         write_regex_replace(
