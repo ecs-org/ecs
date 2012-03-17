@@ -80,7 +80,7 @@ class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
         rval = super(BefangeneReviewForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['befangene'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})
+                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'board-members'})
             )
         return rval
 
