@@ -29,8 +29,8 @@ if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrents
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
-#PDFAS_SERVICE = 'https://%(host)s/pdf-as/'
+#PDFAS_SERVICE = 'http://%(host)s:4780/pdf-as/'
+PDFAS_SERVICE = 'https://%(host)s/pdf-as/'
 
 ABSOLUTE_URL_PREFIX = "https://%(host)s"
 
