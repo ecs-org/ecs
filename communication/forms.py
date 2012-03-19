@@ -9,13 +9,27 @@ from django.core.urlresolvers import reverse
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
-from ecs.users.utils import get_office_user
-from ecs.users.utils import sudo
+from ecs.users.utils import get_office_user, get_current_user, sudo
 from ecs.core.forms.fields import SingleselectWidget
 
 
-class BaseMessageForm(forms.ModelForm):
-    receiver_involved = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), required=False)
+class InvolvedPartiesChoiceField(forms.ModelChoiceField):
+    def __init__(self, *args, **kwargs):
+        super(InvolvedPartiesChoiceField, self).__init__(User.objects.none(), *args, **kwargs)
+
+    def set_submission(self, submission):
+        self.involved_parties = submission.current_submission_form.get_involved_parties()
+        self.queryset = User.objects.filter(is_active=True, pk__in=[u.pk for u in self.involved_parties.get_users().difference([get_current_user()])])
+
+    def label_from_instance(self, user):
+        for p in self.involved_parties:
+            if p.user == user:
+                return u'{0} ({1})'.format(user, p.involvement)
+        return unicode(user)
+
+class SendMessageForm(forms.ModelForm):
+    subject = Thread._meta.get_field('subject').formfield()
+    receiver_involved = InvolvedPartiesChoiceField(required=False)
     receiver_person = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), required=False)
     receiver_type = forms.ChoiceField(choices=(('ek', _('Ethics Commission')),), widget=forms.RadioSelect(), initial='ek')
     receiver = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), widget=forms.HiddenInput(), required=False)
@@ -24,12 +38,11 @@ class BaseMessageForm(forms.ModelForm):
         model = Message
         fields = ('text',)
 
-    def __init__(self, submission, user, *args, **kwargs):
+    def __init__(self, submission, *args, **kwargs):
         self.to_user = kwargs.pop('to', None)
-        super(BaseMessageForm, self).__init__(*args, **kwargs)
+        super(SendMessageForm, self).__init__(*args, **kwargs)
 
         self.submission = submission
-        self.user = user
 
         receiver_type_choices = [
             ('ec', '{0} ({1})'.format(ugettext('Ethics Commission'), get_office_user(submission=self.submission))),
@@ -41,10 +54,9 @@ class BaseMessageForm(forms.ModelForm):
                 ('involved', _('Involved Party')),
             ]
             receiver_type_initial = 'involved'
-            involved_parties = list(submission.current_submission_form.get_involved_parties())
-            involved_parties = User.objects.filter(is_active=True, pk__in=[p.user.pk for p in involved_parties if p.user])
-            self.fields['receiver_involved'].queryset = involved_parties.exclude(pk=user.pk)
+            self.fields['receiver_involved'].set_submission(submission)
 
+        user = get_current_user()
         if user.get_profile().is_internal:
             receiver_type_choices += [
                 ('person', _('Person'))
@@ -81,9 +93,6 @@ class BaseMessageForm(forms.ModelForm):
             receiver = cd['receiver_person']
 
         return receiver
-
-class SendMessageForm(BaseMessageForm):
-    subject = Thread._meta.get_field('subject').formfield()
 
 class ReplyDelegateForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(), label=_('Answer'))
