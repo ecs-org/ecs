@@ -274,6 +274,7 @@ class SetupTarget(SetupTargetObject):
         target_cert = '/etc/ssl/certs/{0}.pem'.format(self.host)
         target_chain = '/etc/ssl/certs/{0}.chain.pem'.format(self.host)
         target_combined = '/etc/ssl/certs/{0}.combined.pem'.format(self.host)
+        target_combined_crt = '/usr/local/share/ca-certificates/{0}.combined.crt'.format(self.host)
         
         try:
             ssl_key = self.config.get_path('ssl.key')
@@ -295,11 +296,15 @@ class SetupTarget(SetupTargetObject):
                 t.flush()
                 local('sudo cp {0} {1}'.format(t.name, target_chain))
         else:
-            local('sudo cp {0} {1}' % (ssl_chain, target_chain))
+            local('sudo cp {0} {1}'.format(ssl_chain, target_chain))
         
         # combine cert plus chain to combined.pem
         local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
-            
+        
+        # copy combined cert chain to /usr/local/share/ca-certificates
+        local('sudo cp {0} {1}'.format(target_combined, target_combined_crt))
+        
+        # update local and java store (at least the one in /etc/ssl/certs/java)    
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
         
     def mail_config(self):
