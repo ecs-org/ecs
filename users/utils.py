@@ -146,13 +146,12 @@ def create_phantom_user(email, role=None):
 
     return user
 
-def get_ec_user(submission=None):
+def get_office_user(submission=None):
     from ecs.tasks.models import Task
     from ecs.core.models import AdvancedSettings
     if submission is not None:
         with sudo():
-            workflow_tokens = submission.workflow.tokens.filter(consumed_at__isnull=False).values('pk').query
-            tasks = Task.objects.filter(workflow_token__in=workflow_tokens, assigned_to__groups__name=u'EC-Office').exclude(assigned_to=get_current_user()).order_by('-closed_at')
+            tasks = Task.objects.for_submission(submission).filter(task_type__groups__name=u'EC-Office').exclude(assigned_to=get_current_user()).closed().order_by('-closed_at')
             try:
                 return tasks[0].assigned_to
             except IndexError:

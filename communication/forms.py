@@ -4,12 +4,12 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import force_unicode
+from django.utils.translation import ugettext
 from django.core.urlresolvers import reverse
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
-from ecs.users.utils import get_ec_user
+from ecs.users.utils import get_office_user
 from ecs.users.utils import sudo
 from ecs.core.forms.fields import SingleselectWidget
 
@@ -32,7 +32,7 @@ class BaseMessageForm(forms.ModelForm):
         self.user = user
 
         receiver_type_choices = [
-            ('ec', '{0} ({1})'.format(force_unicode(_('Ethics Commission')), get_ec_user(submission=self.submission))),
+            ('ec', '{0} ({1})'.format(ugettext('Ethics Commission'), get_office_user(submission=self.submission))),
         ]
         receiver_type_initial = 'ec'
 
@@ -72,7 +72,7 @@ class BaseMessageForm(forms.ModelForm):
         receiver_type = cd.get('receiver_type', None)
 
         if receiver_type == 'ec':
-            receiver = get_ec_user(submission=self.submission)
+            receiver = get_office_user(submission=self.submission)
         elif receiver_type == 'involved':
             require_fields(self, ['receiver_involved',])
             receiver = cd['receiver_involved']
