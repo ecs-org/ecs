@@ -5,6 +5,7 @@ from django.db import models, transaction
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
@@ -122,10 +123,8 @@ class AssignedMedicalCategory(models.Model):
 
 class MeetingManager(AuthorizationManager):
     def next(self):
-        now = datetime.now()
-        dday = datetime(year=now.year, month=now.month, day=now.day) + timedelta(days=1)
         try:
-            return self.filter(start__gt=dday).order_by('start')[0]
+            return self.filter(ended__isnull=True).order_by('start')[0]
         except IndexError:
             raise self.model.DoesNotExist()
 
@@ -140,23 +139,29 @@ class MeetingManager(AuthorizationManager):
         if is_thesis:
             meetings = self.filter(deadline_diplomathesis__gt=sf.created_at)
 
+        now = datetime.now()
+        month = timedelta(days=30)
         try:
             return meetings.filter(started=None).order_by('start')[0]
         except IndexError:
-            last_meeting = meetings.all().order_by('-start')[0]
-            new_start = last_meeting.start
-            new_deadline = last_meeting.deadline
-            new_deadline_diplomathesis = last_meeting.deadline_diplomathesis
-            while True:
-                new_start += timedelta(days=30)
-                new_deadline += timedelta(days=30)
-                new_deadline_diplomathesis += timedelta(days=30)
-                if (not is_thesis and datetime.now() < new_deadline) or \
-                    (is_thesis and datetime.now() < new_deadline_diplomathesis):
-                    title = new_start.strftime('%B Meeting %Y')
-                    m = Meeting.objects.create(start=new_start, deadline=new_deadline,
-                        deadline_diplomathesis=new_deadline_diplomathesis, title=title)
-                    return m
+            try:
+                last_meeting = meetings.all().order_by('-start')[0]
+            except IndexError:
+                start = now + month*2
+                deadline = now + month
+                deadline_thesis = deadline - timedelta(days=7)
+            else:
+                start = last_meeting.start + month
+                deadline = last_meeting.deadline + month
+                deadline_thesis = last_meeting.deadline_diplomathesis + month
+                while (not is_thesis and sf.created_at >= deadline) or (is_thesis and sf.created_at >= deadline_thesis) or start <= now:
+                    start += month
+                    deadline += month
+                    deadline_thesis += month
+            title = start.strftime(ugettext('%B Meeting %Y (automatically generated)'))
+            m = Meeting.objects.create(start=start, deadline=deadline,
+                deadline_diplomathesis=deadline_thesis, title=title)
+            return m
 
 class Meeting(models.Model):
     start = models.DateTimeField()
