@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-16 11:59+0100\n"
+"POT-Creation-Date: 2012-03-19 12:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -184,7 +184,7 @@ msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
 #: checklists/models.py:46 core/forms/forms.py:321
-#: core/models/submissions.py:155 help/models.py:18
+#: core/models/submissions.py:156 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -1064,7 +1064,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:230 core/models/submissions.py:443
+#: core/paper_forms.py:230 core/models/submissions.py:444
 msgid "open"
 msgstr "offen"
 
@@ -1080,7 +1080,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:234 core/models/submissions.py:443
+#: core/paper_forms.py:234 core/models/submissions.py:444
 msgid "blind"
 msgstr "blind"
 
@@ -1096,7 +1096,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:238 core/models/submissions.py:443
+#: core/paper_forms.py:238 core/models/submissions.py:444
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1762,45 +1762,45 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:787 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:788 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:787 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:788 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:150
+#: core/models/submissions.py:151
 msgid "Finished"
 msgstr "Abgeschlossen"
 
-#: core/models/submissions.py:152 templates/users/administration.html:41
+#: core/models/submissions.py:153 templates/users/administration.html:41
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:154
+#: core/models/submissions.py:155
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:822
+#: core/models/submissions.py:823
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:822
+#: core/models/submissions.py:823
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:122 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:118 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:124 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:120 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:126
+#: core/templatetags/core.py:122
 msgid "Unknown"
 msgstr ""
 
@@ -2078,11 +2078,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:669
+#: meetings/models.py:161
+msgid "%B Meeting %Y (automatically generated)"
+msgstr "%B Sitzung %Y (automatisch generiert)"
+
+#: meetings/models.py:674
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:670
+#: meetings/models.py:675
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2119,24 +2123,24 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:588 meetings/views.py:600
+#: meetings/views.py:587 meetings/views.py:599
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:602 meetings/views.py:697
+#: meetings/views.py:601 meetings/views.py:696
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:604
+#: meetings/views.py:603
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:645
+#: meetings/views.py:644
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:667
+#: meetings/views.py:666
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 

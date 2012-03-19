@@ -69,12 +69,12 @@ def meeting_list(request, meetings, title=None):
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def upcoming_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__gte=datetime.now()).order_by('start'), title=_('Upcoming Meetings'))
+    return meeting_list(request, Meeting.objects.filter(ended__isnull=True).order_by('start'), title=_('Upcoming Meetings'))
 
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def past_meetings(request):
-    return meeting_list(request, Meeting.objects.filter(start__lt=datetime.now()).order_by('-start'), title=_('Past Meetings'))
+    return meeting_list(request, Meeting.objects.filter(ended__isnull=False).order_by('-start'), title=_('Past Meetings'))
 
 @user_flag_required('is_executive_board_member')
 def reschedule_submission(request, submission_pk=None):
