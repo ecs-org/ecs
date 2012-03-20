@@ -165,7 +165,9 @@
                         url: link.href,
                         onSuccess: function(responseText){
                             var textarea = $('id_text');
-                            textarea.value += "\n\n" + responseText;
+                            var selStart = textarea.getSelectionStart();
+                            textarea.value = textarea.value.substring(0, selStart) + responseText + textarea.value.substring(textarea.getSelectionEnd(), textarea.value.length);
+                            textarea.selectRange(selStart, selStart + responseText.length);
                             textarea.retrieve('ecs.textarea.TextArea').updateHeight();
                         }
                     });
