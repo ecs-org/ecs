@@ -42,22 +42,22 @@
         {% include 'meetings/tabs/status.html' %}
     </div>
     {% if user|has_flag:'is_internal' %}
-    <div id="open_tasks_tab">
-        <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
-    </div>
-    <div id="tops_tab">
-        <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
-    </div>
+        <div id="open_tasks_tab">
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
+        </div>
+        <div id="tops_tab">
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
+        </div>
     {% endif %}
     {% if user|has_flag:'is_internal' or user|has_flag:'is_resident_member' %}
-    <div id="submissions_tab">
-        <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"></div>
-    </div>
+        <div id="submissions_tab">
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"></div>
+        </div>
     {% endif %}
     {% if user|is_member_of:"EC-Signing Group" %}
-    <div id="signing_tab">
-        {% include 'meetings/tabs/signing.html' %}
-    </div>
+        <div id="signing_tab">
+            {% include 'meetings/tabs/signing.html' %}
+        </div>
     {% endif %}
 
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
