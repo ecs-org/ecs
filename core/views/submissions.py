@@ -420,7 +420,7 @@ def vote_preparation(request, submission_form_pk=None):
         blueprint_slug = 'thesis_review'
 
     checklist_answers = ChecklistAnswer.objects.filter(checklist__submission=submission_form.submission,
-        question__blueprint__slug=blueprint_slug, question__number='1')
+        question__blueprint__slug=blueprint_slug, question__number='1', checklist__status='completed')
 
     initial = None
     if vote is None:
