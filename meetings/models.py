@@ -6,6 +6,7 @@ from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
+from django.conf import settings
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
@@ -129,15 +130,17 @@ class MeetingManager(AuthorizationManager):
             raise self.model.DoesNotExist()
 
     def next_schedulable_meeting(self, submission):
+        first_sf = submission.forms.order_by('created_at')[0]
         try:
-            sf = submission.forms.filter(is_acknowledged=True).order_by('created_at')[0]
+            accepted_sf = submission.forms.filter(is_acknowledged=True).order_by('created_at')[0]
         except IndexError:
-            sf = submission.current_submission_form
+            accepted_sf = submission.current_submission_form
         is_thesis = submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
 
-        meetings = self.filter(deadline__gt=sf.created_at)
+        grace_period = getattr(settings, 'ECS_MEETING_GRACE_PERIOD', timedelta(0))
+        meetings = self.filter(deadline__gt=first_sf.created_at).filter(deadline__gt=accepted_sf.created_at-grace_period)
         if is_thesis:
-            meetings = self.filter(deadline_diplomathesis__gt=sf.created_at)
+            meetings = self.filter(deadline_diplomathesis__gt=first_sf.created_at).filter(deadline_diplomathesis__gt=accepted_sf.created_at-grace_period)
 
         now = datetime.now()
         month = timedelta(days=30)
@@ -154,7 +157,8 @@ class MeetingManager(AuthorizationManager):
                 start = last_meeting.start + month
                 deadline = last_meeting.deadline + month
                 deadline_thesis = last_meeting.deadline_diplomathesis + month
-                while (not is_thesis and sf.created_at >= deadline) or (is_thesis and sf.created_at >= deadline_thesis) or start <= now:
+                while ((not is_thesis and (first_sf.created_at >= deadline or accepted_sf.created_at-grace_period >= deadline)) or
+                    (is_thesis and (first_sf.created_at >= deadline_thesis or accepted_sf.created_at-grace_period >= deadline_thesis)) or start <= now):
                     start += month
                     deadline += month
                     deadline_thesis += month

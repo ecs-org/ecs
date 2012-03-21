@@ -1,6 +1,7 @@
 # Django settings for ecs project.
 
 import os, sys, platform, logging
+from datetime import timedelta
 from copy import deepcopy
 
 # root dir of project
@@ -252,6 +253,7 @@ ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
 ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
 ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
 
+ECS_MEETING_GRACE_PERIOD = timedelta(days=5)
 
 # authorization
 AUTHORIZATION_CONFIG = 'ecs.auth_conf'
