@@ -4,6 +4,7 @@ from ecs.communication.utils import send_system_message_template
 from ecs.core.workflow import InitialReview, InitialThesisReview
 from ecs.core import signals
 from ecs.core.models import Submission
+from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
@@ -66,6 +67,9 @@ def on_presenter_change(sender, **kwargs):
     if user != old_presenter:
         send_submission_message(submission, old_presenter, _('Studie {ec_number}'), 'submissions/presenter_change_previous.txt')
 
+    with sudo():
+        for task in Task.objects.for_data(submission).filter(task_type__workflow_node__uid__in=['resubmission', 'b2_resubmission'], closed_at=None, deleted_at=None):
+            task.assign(new_presenter)
 
 @connect(signals.on_susar_presenter_change)
 def on_susar_presenter_change(sender, **kwargs):
