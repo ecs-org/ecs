@@ -751,17 +751,6 @@ def meeting_details(request, meeting_pk=None, active=None):
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
 
-    tops = meeting.timetable_entries.all()
-    votes_list = []
-    all_votes = list(Vote.objects.filter(top__meeting=meeting))
-    for top in tops:
-        votes = [v for v in all_votes if v.top == top]
-        if not votes:
-            vote = None
-        else:
-            vote = votes[0]
-        votes_list.append({'top_index': top.index, 'top': str(top), 'vote': vote})
-    
     with sudo():
         submissions = meeting.submissions.order_by('ec_number')
 
@@ -788,7 +777,6 @@ def meeting_details(request, meeting_pk=None, active=None):
         'meeting': meeting,
         'expert_formset': expert_formset,
         'experts_saved': experts_saved,
-        'votes_list': votes_list,
         'active': active,
     })
 
