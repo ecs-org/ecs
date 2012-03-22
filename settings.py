@@ -479,7 +479,7 @@ SENTRY_TESTING = True # log exceptions when DEBUG=True
 
 # ### django-devserver ###
 DEVSERVER_MODULES = (
-    'devserver.modules.sql.SQLRealTimeModule',
+    #'devserver.modules.sql.SQLRealTimeModule',
     'devserver.modules.sql.SQLSummaryModule',
     'devserver.modules.profile.ProfileSummaryModule',
     # Modules not enabled by default

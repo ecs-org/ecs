@@ -24,10 +24,10 @@ AUTOCOMPLETE_QUERYSETS = {
 }
 
 INTERNAL_AUTOCOMPLETE_QUERYSETS = {
-    'users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'email')],
-    'external-reviewers': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name='External Reviewer').order_by('first_name', 'last_name', 'email')],
-    'internal-users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, ecs_profile__is_internal=True).order_by('first_name', 'last_name', 'email')],
-    'board-members': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name__in=['EC-Board Member', 'EC-Executive Board Group']).order_by('first_name', 'last_name', 'email')],
+    'users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'email').select_related('ecs_profile')],
+    'external-reviewers': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name='External Reviewer').order_by('first_name', 'last_name', 'email').select_related('ecs_profile')],
+    'internal-users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, ecs_profile__is_internal=True).order_by('first_name', 'last_name', 'email').select_related('ecs_profile')],
+    'board-members': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name__in=['EC-Board Member', 'EC-Executive Board Group']).order_by('first_name', 'last_name', 'email').select_related('ecs_profile')],
     'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
 }
 
