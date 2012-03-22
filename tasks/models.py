@@ -216,16 +216,22 @@ class Task(models.Model):
                 self.save()
             
     def reopen(self, user=None):
-        assert self.closed_at is not None
+        assert self.closed_at is not None or self.deleted_at is not None
         new = type(self)()
         for attr in ('task_type', 'content_type', 'data_id'):
             setattr(new, attr, getattr(self, attr))
-        new.workflow_token = self.node_controller.activate(reopen=True)
         user = user or self.assigned_to
         new.created_by = user
         new.accept(user=user, check_authorization=False, commit=False)
         new.save()
         new.expedited_review_categories = self.expedited_review_categories.all()
+        def _repeated_token_received(sender, **kwargs):
+            if sender.repeated and sender.node == self.workflow_token.node:
+                new.workflow_token = sender
+                new.save()
+        token_received.connect(_repeated_token_received)
+        new.workflow_token = self.node_controller.activate(reopen=True)
+        token_received.disconnect(_repeated_token_received)
         return new
         
     def assign(self, user, check_authorization=True, commit=True):

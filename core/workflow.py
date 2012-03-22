@@ -233,14 +233,25 @@ class CategorizationReview(Activity):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        on_categorization_review.send(Submission, submission=self.workflow.data)
-        # create external review checklists
+        on_categorization_review.send(Submission, submission=s)
         blueprint = ChecklistBlueprint.objects.get(slug='external_review')
         for user in s.external_reviewers.all():
             checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user)
             if created:
                 for question in blueprint.questions.order_by('text'):
                     ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+            elif checklist.status == 'dropped':
+                checklist.status = 'new'
+                checklist.save()
+                with sudo():
+                    tasks = Task.objects.for_data(checklist).filter(task_type__workflow_node__uid='external_review')
+                    if not any(t for t in tasks if not t.closed_at and not t.deleted_at):
+                        tasks[0].reopen()
+        for checklist in Checklist.objects.filter(blueprint=blueprint, submission=s).exclude(user__in=s.external_reviewers.values('pk').query):
+            checklist.status = 'dropped'
+            checklist.save()
+            with sudo():
+                Task.objects.for_data(checklist).filter(closed_at=None, deleted_at=None).mark_deleted()
 
 
 class ExpeditedRecommendationSplit(Generic):
