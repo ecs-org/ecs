@@ -72,7 +72,7 @@ checklist_questions = {
         Args('3', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
     ],
     u'expedited_review': [
-        Args('1', u'Geben Sie eine positive Empfehlung ab?', requires_comment=True),  # XXX: dont change this number
+        Args('1', u'Kann das Projekt ohne ausführliche Diskussion in der Sitzung positiv beurteilt werden? (Ja=B1 oder B2)', requires_comment=True),    # XXX: dont change this number
         Args('2', u"Ist das Antragsformular korrekt und vollständig ausgefüllt?", requires_comment=True),
         Args('3', u"Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?", requires_comment=True),
         Args('4', u"Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
