@@ -93,7 +93,7 @@ class UserChoiceField(forms.ModelChoiceField):
         return u'{0} <{1}>'.format(unicode(user), user.email)
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
-    board_member = UserChoiceField()
+    board_member = UserChoiceField(required=False)
 
     class Meta:
         model = AssignedMedicalCategory
