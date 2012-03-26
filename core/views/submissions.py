@@ -351,6 +351,9 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         for question in blueprint.questions.order_by('text'):
             answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
         checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
+    if not checklist.user == request.user:
+        checklist.user = request.user
+        checklist.save()
 
     form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
     task = request.task_management.task
