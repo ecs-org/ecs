@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-19 12:29+0100\n"
+"POT-Creation-Date: 2012-03-26 18:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: settings.py:66
+#: settings.py:67
 msgid "German"
 msgstr "Deutsch"
 
@@ -229,23 +229,23 @@ msgstr "Fallen lassen"
 msgid "Query regarding review"
 msgstr "Rückfrage zum Gutachten"
 
-#: communication/forms.py:20 communication/forms.py:35
+#: communication/forms.py:34 communication/forms.py:48
 msgid "Ethics Commission"
 msgstr "Ethik-Kommission"
 
-#: communication/forms.py:41
+#: communication/forms.py:54
 msgid "Involved Party"
 msgstr "Beteiligte Personen"
 
-#: communication/forms.py:50 templates/communication/sort_options.inc:6
+#: communication/forms.py:62 templates/communication/sort_options.inc:6
 msgid "Person"
 msgstr "Person"
 
-#: communication/forms.py:89 templates/notifications/view/base.html:20
+#: communication/forms.py:98 templates/notifications/view/base.html:20
 msgid "Answer"
 msgstr "Antwort"
 
-#: communication/forms.py:94
+#: communication/forms.py:103
 msgid "Delegate to"
 msgstr "Abgeben an"
 
@@ -1390,11 +1390,11 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
-#: core/triggers.py:24
+#: core/triggers.py:25
 msgid "Submission of study EC-Nr. {ec_number}"
 msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:36
+#: core/triggers.py:37
 msgid "Changes new study {ec_number}"
 msgstr "Änderungen Neueinreichung {ec_number}"
 
@@ -1402,20 +1402,20 @@ msgstr "Änderungen Neueinreichung {ec_number}"
 msgid "Changes B2 {ec_number}"
 msgstr "Änderungen B2 {ec_number}"
 
-#: core/triggers.py:66 core/triggers.py:68 core/triggers.py:77
-#: core/triggers.py:79
+#: core/triggers.py:66 core/triggers.py:68 core/triggers.py:80
+#: core/triggers.py:82
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:87
+#: core/triggers.py:89
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:94
+#: core/triggers.py:93
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:96
+#: core/triggers.py:95
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1804,28 +1804,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:709 templates/meetings/details.html:15
+#: core/views/submissions.py:712 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:821 templates/core.html:50
+#: core/views/submissions.py:824 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:858
+#: core/views/submissions.py:861
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:929
+#: core/views/submissions.py:932
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:938 templates/core.html:53
+#: core/views/submissions.py:941 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:948 templates/core.html:56
+#: core/views/submissions.py:951 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -1854,7 +1854,7 @@ msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
 
 #: documents/bootstrap.py:16 documents/bootstrap.py:18
-#: documents/bootstrap.py:22
+#: documents/bootstrap.py:22 documents/bootstrap.py:26
 msgid " "
 msgstr ""
 
@@ -1913,44 +1913,48 @@ msgid "Med Watch report, CIOMS form etc."
 msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
 #: documents/bootstrap.py:26
+msgid "Statement on a review"
+msgstr "Stellungnahme zum Gutachten"
+
+#: documents/bootstrap.py:27
 msgid "other"
 msgstr "Sonstige"
 
-#: documents/bootstrap.py:26
+#: documents/bootstrap.py:27
 msgid ""
 "Patient diaries, patient card, technical information, questionnaires, etc."
 msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
-#: documents/bootstrap.py:29
+#: documents/bootstrap.py:30
 msgid "Submission Form"
 msgstr "Einreichformular"
 
-#: documents/bootstrap.py:30
+#: documents/bootstrap.py:31
 #, fuzzy
 msgid "Checklist"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: documents/bootstrap.py:31 votes/models.py:18
+#: documents/bootstrap.py:32 votes/models.py:18
 msgid "vote"
 msgstr "Votum"
 
-#: documents/bootstrap.py:31
+#: documents/bootstrap.py:32
 msgid "Vote"
 msgstr "Votum"
 
-#: documents/bootstrap.py:32
+#: documents/bootstrap.py:33
 msgid "Notification"
 msgstr "Meldungen"
 
-#: documents/bootstrap.py:33
+#: documents/bootstrap.py:34
 msgid "Notification Answer"
 msgstr "Meldungsantwort"
 
-#: documents/bootstrap.py:34
+#: documents/bootstrap.py:35
 msgid "Invoice"
 msgstr "Rechnung"
 
-#: documents/bootstrap.py:35
+#: documents/bootstrap.py:36
 #, fuzzy
 msgid "Checklist Payment"
 msgstr "Es gibt noch keine Checkliste."
@@ -2078,15 +2082,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:161
+#: meetings/models.py:165
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:674
+#: meetings/models.py:678
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:675
+#: meetings/models.py:679
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2103,44 +2107,44 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:260
+#: meetings/views.py:259
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:397
+#: meetings/views.py:396
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:406
+#: meetings/views.py:405
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:412
+#: meetings/views.py:411
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:428
+#: meetings/views.py:427
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:587 meetings/views.py:599
+#: meetings/views.py:586 meetings/views.py:598
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:601 meetings/views.py:696
+#: meetings/views.py:600 meetings/views.py:695
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:603
+#: meetings/views.py:602
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:644
+#: meetings/views.py:643
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:666
+#: meetings/views.py:665
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2794,7 +2798,7 @@ msgstr "Alle einklappen"
 msgid "Expand all"
 msgstr "Alle ausklappen"
 
-#: templates/communication/thread.html:55 templates/meetings/details.html:106
+#: templates/communication/thread.html:55 templates/meetings/details.html:98
 #: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Send"
 msgstr "Abschicken"
@@ -2944,33 +2948,29 @@ msgstr "Offene Aufgaben"
 msgid "TOPs"
 msgstr ""
 
-#: templates/meetings/details.html:18
-msgid "Signatur der Voten"
-msgstr ""
-
-#: templates/meetings/details.html:24
+#: templates/meetings/details.html:21
 msgid "Planning"
 msgstr "Planung"
 
-#: templates/meetings/details.html:26
+#: templates/meetings/details.html:23
 msgid "Spezialistenzuordnung"
 msgstr ""
 
-#: templates/meetings/details.html:27 templates/meetings/tabs/status.html:48
+#: templates/meetings/details.html:24 templates/meetings/tabs/status.html:48
 msgid "Timetable"
 msgstr "Zeitplanung"
 
-#: templates/meetings/details.html:28
+#: templates/meetings/details.html:25
 msgid "Sitzungsassistent"
 msgstr ""
 
-#: templates/meetings/details.html:100
+#: templates/meetings/details.html:92
 #: templates/meetings/constraints/user_form.html:32
 #: templates/users/details.html:32
 msgid "form saved"
 msgstr "Formular gespeichert"
 
-#: templates/meetings/details.html:100
+#: templates/meetings/details.html:92
 msgid ""
 "The expert assignment has been saved. The experts will be invited to the "
 "meeting when you send the agenda to the board."
@@ -2979,12 +2979,12 @@ msgstr ""
 "Sitzung eingeladen, wenn Sie die Tagesordnung an die Sitzungsmitglieder "
 "versenden."
 
-#: templates/meetings/details.html:106
+#: templates/meetings/details.html:98
 #: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Do you want to send the E-mails?"
 msgstr "Wollen Sie die E-mails abschicken?"
 
-#: templates/meetings/details.html:106
+#: templates/meetings/details.html:98
 #: templates/meetings/expedited_reviewer_invitation.html:25
 msgid "Don't Send"
 msgstr "Nicht Abschicken"

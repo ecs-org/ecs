@@ -23,6 +23,7 @@ def document_types():
         Args(_(u"EudraCT Form"), u"eudract",
             _(u"Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial")),
         Args(_(u"adverse reaction report"), u"adversereaction", _(u"Med Watch report, CIOMS form etc.")),
+        Args(_(u"Statement on a review"), u"reviewstatement", _(u" ")),
         Args(_(u"other"), u"other", _(u"Patient diaries, patient card, technical information, questionnaires, etc.")),
 
         # internal document types; not user visible
