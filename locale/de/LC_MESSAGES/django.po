@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-26 18:05+0200\n"
+"POT-Creation-Date: 2012-03-26 18:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1394,28 +1394,24 @@ msgstr "Befristete Autorisierung"
 msgid "Submission of study EC-Nr. {ec_number}"
 msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:37
-msgid "Changes new study {ec_number}"
-msgstr "Änderungen Neueinreichung {ec_number}"
-
-#: core/triggers.py:40
+#: core/triggers.py:39
 msgid "Changes B2 {ec_number}"
 msgstr "Änderungen B2 {ec_number}"
 
-#: core/triggers.py:66 core/triggers.py:68 core/triggers.py:80
-#: core/triggers.py:82
+#: core/triggers.py:65 core/triggers.py:67 core/triggers.py:79
+#: core/triggers.py:81
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:89
+#: core/triggers.py:88
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:93
+#: core/triggers.py:92
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:95
+#: core/triggers.py:94
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 

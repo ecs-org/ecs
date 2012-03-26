@@ -34,7 +34,6 @@ def on_study_change(sender, **kwargs):
                 else:
                     if not initial_review_tasks.filter(closed_at__isnull=True, deleted_at__isnull=True).exists():
                         initial_review_task.reopen()
-                    send_submission_message(submission, initial_review_task.assigned_to, _('Changes new study {ec_number}'), 'submissions/change_message.txt', reply_receiver=submission.presenter)
             else:
                 for u in new_sf.get_reviewing_parties(active=True).get_users():
                     send_submission_message(submission, u, _('Changes B2 {ec_number}'), 'submissions/change_message.txt', reply_receiver=get_office_user(submission=submission))
