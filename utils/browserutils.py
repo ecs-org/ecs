@@ -1,5 +1,8 @@
-import httpagentparser
+import logging, traceback
 from functools import wraps
+
+import httpagentparser
+from django.conf import settings
 
 __all__ = ['UA']
 
@@ -7,6 +10,9 @@ BROWSER_SUPPORT_OK = 1
 BROWSER_SUPPORT_NO = 2
 BROWSER_SUPPORT_TMP_NO = 3
 BROWSER_SUPPORT_CRAWLER = 4
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
 
 class Version(tuple):
     def __new__(cls, version_str):
@@ -96,8 +102,7 @@ class UA(object):
                     self.support = support
                     break
             except Exception as e:
-                import traceback; traceback.print_exc()
-                pass
+                logger.info('parsing UA string threw an exception\nUA string: %s\n%s', ua_str, traceback.format_exc())
 
     is_supported = property(lambda self: self.support == BROWSER_SUPPORT_OK)
     is_unsupported = property(lambda self: self.support == BROWSER_SUPPORT_NO)
