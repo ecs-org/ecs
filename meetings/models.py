@@ -400,9 +400,7 @@ class Meeting(models.Model):
                 vote = None
             additional_tops.append((top, vote,))
 
-        b2_votes = Vote.objects.filter(result='2', top__in=timetable_entries)
-        submission_forms = [x.submission_form for x in b2_votes]
-        b1ized = Vote.objects.filter(result='1', upgrade_for=b2_votes).order_by('submission_form__submission__ec_number')
+        b1ized = Vote.objects.filter(result='1', upgrade_for__top__in=timetable_entries, upgrade_for__result='2').order_by('submission_form__submission__ec_number')
 
         return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
