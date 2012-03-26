@@ -39,9 +39,9 @@ class ExternalReview(Activity):
 
     def get_url(self):
         checklist = self.workflow.data
-        blueprint = checklist.blueprint
-        submission_form = checklist.submission.current_submission_form
-        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
+        blueprint_id = checklist.blueprint_id
+        submission_form_id = checklist.submission.current_submission_form_id
+        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form_id, 'blueprint_pk': blueprint_id})
 
     def receive_token(self, *args, **kwargs):
         c = self.workflow.data
@@ -73,8 +73,8 @@ class ExternalReviewReview(Activity):
 
     def get_url(self):
         checklist = self.workflow.data
-        submission_form = checklist.submission.current_submission_form
-        return reverse('ecs.core.views.show_checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'checklist_pk': checklist.pk})
+        submission_form_id = checklist.submission.current_submission_form_id
+        return reverse('ecs.core.views.show_checklist_review', kwargs={'submission_form_pk': submission_form_id, 'checklist_pk': checklist.pk})
 
     def get_choices(self):
         return (

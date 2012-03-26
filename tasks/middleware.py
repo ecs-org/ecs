@@ -2,6 +2,7 @@
 
 from django.http import HttpResponseRedirect, QueryDict
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from ecs.tasks.models import Task
 
@@ -79,7 +80,7 @@ class TaskManagementData(object):
 
 class RelatedTasksMiddleware(object):
     def process_request(self, request):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated() or request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
             return
 
         user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True).select_related('task_type')

@@ -166,7 +166,7 @@ class Resubmission(Activity):
         model = Submission
 
     def get_url(self):
-        return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data.pk})
+        return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data_id})
 
     def get_final_urls(self):
         return super(Resubmission, self).get_final_urls() + [
@@ -185,7 +185,7 @@ class B2ResubmissionReview(Activity):
         model = Submission
 
     def get_url(self):
-        return reverse('ecs.core.views.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form.pk})
+        return reverse('ecs.core.views.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form_id})
 
 
 class InitialB2ResubmissionReview(B2ResubmissionReview):
@@ -310,9 +310,9 @@ class ChecklistReview(Activity):
         return not checklist.is_complete
 
     def get_url(self):
-        blueprint = self.node.data
-        submission_form = self.workflow.data.current_submission_form
-        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.pk, 'blueprint_pk': blueprint.pk})
+        blueprint_id = self.node.data_id
+        submission_form_id = self.workflow.data.current_submission_form_id
+        return reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form_id, 'blueprint_pk': blueprint_id})
 
     def pre_perform(self, choice):
         blueprint = self.node.data
