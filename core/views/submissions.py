@@ -271,11 +271,10 @@ def categorization_review(request, submission_form_pk=None):
         form = docstash.get('form')
         if request.method == 'POST' or form is None:
             form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
-        docstash['form'] = form
-
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        docstash.delete()
+            docstash['form'] = form
+        if request.method == 'POST' and form.is_valid():
+            form.save()
+            docstash.delete()
 
     form.bound_to_task = task
 

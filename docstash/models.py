@@ -46,6 +46,9 @@ class DocStash(models.Model):
 
     objects = AuthorizationManager()
 
+    class Meta:
+        unique_together = ('group', 'owner', 'content_type', 'object_id')
+
     def save(self, *args, **kwargs):
         if not self.key:
             self.key = uuid.uuid4().get_hex()
