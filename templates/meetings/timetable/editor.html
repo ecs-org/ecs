@@ -48,6 +48,11 @@
             {% if not entry.is_break%}
                 {% if entry.submission or entry.users %}
                 <span class="users">Teilnehmer: 
+                    {% if entry.submission.invite_primary_investigator_to_meeting %}
+                        {% with entry.submission.current_submission_form.primary_investigator as pi %}
+                        Prüfer ({% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}){% if entry.users %},{% endif %}
+                        {% endwith %}
+                    {% endif %}
                     {% for user, ignored in entry.users %}
                         <a href="{% url ecs.meetings.views.toggle_participation meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
