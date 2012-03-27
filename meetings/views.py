@@ -108,8 +108,11 @@ def reschedule_submission(request, submission_pk=None):
 def open_tasks(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
+    tops = list(meeting.timetable_entries.filter(submission__isnull=False).select_related('submission', 'submission__current_submission_form'))
+    tops.sort(key=lambda e: e.agenda_index)
+
     open_tasks = SortedDict()
-    for top in meeting.timetable_entries.filter(submission__isnull=False).order_by('timetable_index', 'submission__ec_number').select_related('submission', 'submission__current_submission_form'):
+    for top in tops:
         with sudo():
             ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True).select_related('task_type', 'assigned_to', 'assigned_to__ecs_profile'))
         if len(ts):
@@ -124,7 +127,8 @@ def open_tasks(request, meeting_pk=None):
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    tops = list(meeting.timetable_entries.order_by('timetable_index', 'submission__ec_number').select_related('submission', 'submission__current_submission_form'))
+    tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
+    tops.sort(key=lambda e: e.agenda_index)
 
     next_tops = [t for t in tops if t.is_open][:3]
     closed_tops = [t for t in tops if not t.is_open]
