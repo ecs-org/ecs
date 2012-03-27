@@ -68,12 +68,15 @@ def feedback_input(request, type='i', page=1, origin='TODO'):
         else:
             feedback_error = not summary
             if not (feedback_error):
-                ticket = {'type': Feedback.ftdict[type].lower(), 
-                          'summary': summary, 
-                          'component': 'feedback',
-                          'description': description,
-                          'absoluteurl': origin,
-                          'ecsfeedback_creator': user.email}
+                ticket = {
+                    'type': Feedback.ftdict[type].lower(),
+                    'summary': summary,
+                    'component': 'feedback',
+                    'description': description,
+                    'absoluteurl': origin,
+                    'ecsfeedback_creator': user.email,
+                    'feedback_browser_id': request.META.get('HTTP_USER_AGENT', '<unknown>'),
+                }
                 ticket = tracrpc.TracRpc.pad_ticket_w_emptystrings(ticket, settings.FEEDBACK_CONFIG['ticketfieldnames'])
                 feedback = Feedback.init_from_dict(ticket)
                 feedback.save()
