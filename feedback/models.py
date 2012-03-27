@@ -15,6 +15,7 @@ class Feedback(models.Model):
         summary = '' 
         description = ''
         origin = ''
+        browser_id = ''
         user = ''
         pub_date = ''
         me_too_votes = 0
@@ -33,16 +34,18 @@ class Feedback(models.Model):
         if not trac_tickettype:
             trac_tickettype = "1"
         
-        ticket = {'summary': self.summary,
-                  'description': self.description, 
-                  'location': '',#what goes in here? cleaned version of self.origin?
-                  'absoluteurl': self.origin,
-                  'type': self.feedbacktype,
-                  'cc': self.creator_email,
-                  'ecsfeedback_creator': self.creator_email,
-                  'component': settings.FEEDBACK_CONFIG['component'],                  
-                  'milestone': settings.FEEDBACK_CONFIG['milestone'],
-                  }
+        ticket = {
+            'summary': self.summary,
+            'description': self.description,
+            'location': '',#what goes in here? cleaned version of self.origin?
+            'absoluteurl': self.origin,
+            'type': self.feedbacktype,
+            'cc': self.creator_email,
+            'ecsfeedback_creator': self.creator_email,
+            'component': settings.FEEDBACK_CONFIG['component'],
+            'milestone': settings.FEEDBACK_CONFIG['milestone'],
+            'feedback_browser_id': self.browser_id,
+        }
         
         try:        
             success, result = rpc._create_ticket(summary=self.summary, ticket=ticket, description=self.description)
@@ -67,6 +70,7 @@ class Feedback(models.Model):
         fb.summary = ticket['summary'] 
         fb.description = ticket['description']
         fb.origin = ticket['absoluteurl']
+        fb.browser_id = ticket.get('feedback_browser_id')
         #fb.user = user wont work this way - user lookup via email is not unique and waste of time 
         fb.pub_date = ''
         fb.me_too_emails_string = ticket['cc']
