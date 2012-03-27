@@ -1,9 +1,8 @@
 {% load core i18n userutils %}
 
-{% if next_tops %}
-
 <div id="meeting_list" class="form_main">
-  
+
+{% if next_tops %}
 <h2>{% trans 'Next TOPs' %}</h2>
 <ol>
 {% for top in next_tops %}
@@ -26,27 +25,26 @@
 <h2>{% trans "Open TOPs" %}</h2>
 <div>
 {% for board_members, tops in open_tops.iteritems %}
-        {% if board_members %}
-            <h4>{% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}</h4>
-        {% else %}
-            <h4><i>{% trans "No board member." %}</i></h4>
-        {% endif %}
-        <ol>
-        {% for top in tops %}
-            <li>
-                {{ top }} - 
-                {% if top.submission %}
-                    {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
-                    {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
-                    <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
-                    | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
-                {% else %}
-                    {{ top.title }}
-                {% endif %}
-            </li>
-        {% endfor %}
-        </ol>
-    </li>
+    {% if board_members %}
+        <h4>{% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}</h4>
+    {% else %}
+        <h4><i>{% trans "No board member." %}</i></h4>
+    {% endif %}
+    <ol>
+    {% for top in tops %}
+        <li>
+            {{ top }} - 
+            {% if top.submission %}
+                {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
+                {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
+                <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
+                | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
+            {% else %}
+                {{ top.title }}
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ol>
 {% endfor %}
 </div>
 {% endif %}
@@ -67,4 +65,5 @@
 {% endfor %}
 </ol>
 {% endif %}
+
 </div>
