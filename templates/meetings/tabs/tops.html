@@ -10,7 +10,8 @@
     <li>
         {{ top }} - 
         {% if top.submission %}
-            {{ top.submission|ec_number }}: {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+            {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
+            {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
             <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
             | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
         {% else %}
@@ -35,7 +36,8 @@
             <li>
                 {{ top }} - 
                 {% if top.submission %}
-                    {{ top.submission|ec_number }}: {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br>
+                    {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
+                    {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
                     <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
                     | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
                 {% else %}
