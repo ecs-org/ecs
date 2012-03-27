@@ -4,6 +4,7 @@
 {% block content %}
     {% blocktrans with top.meeting.start|date:'d.m.Y' as date and top.start|date:'H:i' as start and submission|ec_number as ec_number and submission.project_title_display as project_title %}
         Your study "{{ project_title }}" ({{ ec_number }}), will be discussed at the meeting on {{ date }} at {{ start }} o'clock.
+        Place: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6.Stock, 1090 Wien
 
         The presence of the primary investigator (or its legal representative) necessary; the Sponsor is entitled to attend the meeting too.
     {% endblocktrans %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-26 18:22+0200\n"
+"POT-Creation-Date: 2012-03-27 14:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1800,28 +1800,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:712 templates/meetings/details.html:15
+#: core/views/submissions.py:711 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:824 templates/core.html:50
+#: core/views/submissions.py:823 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:861
+#: core/views/submissions.py:860
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:932
+#: core/views/submissions.py:931
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:941 templates/core.html:53
+#: core/views/submissions.py:940 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:951 templates/core.html:56
+#: core/views/submissions.py:950 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2082,11 +2082,11 @@ msgstr "Nach Sitzung"
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:678
+#: meetings/models.py:676
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:679
+#: meetings/models.py:677
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2123,24 +2123,24 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:586 meetings/views.py:598
+#: meetings/views.py:585 meetings/views.py:597
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:600 meetings/views.py:695
+#: meetings/views.py:599 meetings/views.py:694
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:602
+#: meetings/views.py:601
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:643
+#: meetings/views.py:642
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:665
+#: meetings/views.py:664
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -3147,6 +3147,8 @@ msgid ""
 "\n"
 "        Your study \"%(project_title)s\" (%(ec_number)s), will be discussed "
 "at the meeting on %(date)s at %(start)s o'clock.\n"
+"        Place: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6.Stock, "
+"1090 Wien\n"
 "\n"
 "        The presence of the primary investigator (or its legal "
 "representative) necessary; the Sponsor is entitled to attend the meeting "
@@ -3156,6 +3158,8 @@ msgstr ""
 "\n"
 "        Ihre Studie \"%(project_title)s\" (%(ec_number)s) wird in der "
 "Sitzung vom %(date)s um %(start)s Uhr behandelt.\n"
+"        Ort: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6.Stock, "
+"1090 Wien\n"
 "\n"
 "        Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt "
 "erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des "
