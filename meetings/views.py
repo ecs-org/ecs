@@ -435,8 +435,10 @@ def meeting_assistant_stop(request, meeting_pk=None):
         vote.save() # trigger post_save for all votes
 
     for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
-        submission = top.submission
         vote = Vote.objects.create(top=top, result='3a')
+        on_vote_creation.send(Vote, vote=vote)
+        top.is_open = False
+        top.save()
 
     for vote in Vote.objects.filter(top__meeting=meeting, submission_form__isnull=False).recessed():
         submission = vote.get_submission()

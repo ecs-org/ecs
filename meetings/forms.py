@@ -142,6 +142,8 @@ class ExpeditedVoteForm(forms.ModelForm):
             vote.is_draft = False
             vote.save()
             on_vote_creation.send(Vote, vote=vote)
+            self.instance.is_open = False
+            self.instance.save()
             return vote
         return None
 
