@@ -691,6 +691,18 @@ class SubmissionForm(models.Model):
             additional_investigators = additional_investigators.exclude(pk=self.primary_investigator.pk)
         return additional_investigators
 
+    def get_type_display(self):
+        bits = []
+        if self.is_amg:
+            bits.append(u'{0}(ECT:{1}, {2})'.format(_(u'AMG'), self.eudract_number, self.get_submission_type_display()))
+        if self.is_mpg:
+            bits.append(_(u'MPG'))
+        if self.is_thesis:
+            bits.append(self.get_project_type_education_context_display())
+        if self.includes_minors:
+            bits.append(_('minors'))
+        return u', '.join(bits)
+
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor'):
         submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): user.email})

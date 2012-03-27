@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 14:44+0200\n"
+"POT-Creation-Date: 2012-03-27 18:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1487,17 +1487,15 @@ msgid "Other Meetings"
 msgstr "Andere Sitzungen"
 
 #: core/forms/forms.py:324 core/forms/layout.py:98 core/forms/layout.py:100
-#: templates/meetings/tabs/status.html:72
-#: templates/submissions/readonly_form.html:225
-#: templates/submissions/tabs/status.html:131 templates/tasks/tasks.inc:20
+#: core/models/submissions.py:697 templates/meetings/tabs/status.html:72
+#: templates/submissions/readonly_form.html:225 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:325 core/forms/layout.py:107 core/forms/layout.py:109
-#: templates/meetings/tabs/status.html:77
-#: templates/submissions/readonly_form.html:227
-#: templates/submissions/tabs/status.html:133 templates/tasks/tasks.inc:21
+#: core/models/submissions.py:699 templates/meetings/tabs/status.html:77
+#: templates/submissions/readonly_form.html:227 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
@@ -1758,12 +1756,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:788 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:800 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:788 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:800 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1780,11 +1778,15 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:823
+#: core/models/submissions.py:703 templates/submissions/readonly_form.html:229
+msgid "minors"
+msgstr "Minderjährige"
+
+#: core/models/submissions.py:835
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:823
+#: core/models/submissions.py:835
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2103,44 +2105,44 @@ msgstr "Kommende Sitzungen"
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:259
+#: meetings/views.py:263
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:396
+#: meetings/views.py:400
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:405
+#: meetings/views.py:409
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:411
+#: meetings/views.py:415
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:427
+#: meetings/views.py:431
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:585 meetings/views.py:597
+#: meetings/views.py:591 meetings/views.py:603
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:599 meetings/views.py:694
+#: meetings/views.py:605 meetings/views.py:700
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:601
+#: meetings/views.py:607
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:642
+#: meetings/views.py:648
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:664
+#: meetings/views.py:670
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -3093,21 +3095,21 @@ msgstr ""
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:47
+#: templates/meetings/wkhtml2pdf/agenda.html:58
 msgid "Recessed"
 msgstr "Vertagt"
 
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:47
+#: templates/meetings/wkhtml2pdf/agenda.html:58
 msgid "not examined"
 msgstr "nicht behandelt"
 
 #: templates/meetings/assistant/top.html:7
 #: templates/meetings/timetable/editor.html:36
 #: templates/meetings/wkhtml2pdf/agenda.html:19
-#: templates/meetings/wkhtml2pdf/agenda.html:47
+#: templates/meetings/wkhtml2pdf/agenda.html:58
 msgid "examined"
 msgstr "behandelt"
 
@@ -3869,11 +3871,6 @@ msgstr "Es existieren derzeit keine veröffentlichten Voten."
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:229
-#: templates/submissions/tabs/status.html:135
-msgid "minors"
-msgstr "Minderjährige"
-
 #: templates/submissions/readonly_form.html:248
 msgid "Download unpublished Version as PDF"
 msgstr "Unveröffentlichte Version als PDF herunterladen"
@@ -3984,19 +3981,19 @@ msgstr "wie Sponsor"
 msgid "No Primary Investigator"
 msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 
-#: templates/submissions/tabs/status.html:157
+#: templates/submissions/tabs/status.html:152
 msgid "New/Undecided"
 msgstr "Neu/Unentschieden"
 
-#: templates/submissions/tabs/status.html:174
+#: templates/submissions/tabs/status.html:169
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:196
+#: templates/submissions/tabs/status.html:191
 msgid "drop"
 msgstr "fallen lassen"
 
-#: templates/submissions/tabs/status.html:212
+#: templates/submissions/tabs/status.html:207
 msgid "Export"
 msgstr "Export"
 
@@ -4564,7 +4561,7 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: votes/triggers.py:31
+#: votes/triggers.py:30
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
 
