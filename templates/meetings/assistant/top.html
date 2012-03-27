@@ -1,5 +1,5 @@
 {% extends 'meetings/assistant/base.html' %}
-{% load core i18n userutils %}
+{% load core i18n userutils meetingutils %}
 
 {% block meeting_assistant_body %}
   <div class="column_main">
@@ -7,7 +7,11 @@
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url view_submission submission_pk=submission.pk %}" target="_blank">preview</a>{% endif %}</h3>
         {% if not top.is_break %}
             {{ submission.project_title_display|default:top.title }}<br />
-            {% trans "Submitter" %}: {{ submission.current_submission_form.submitter }} ({{ submission.current_submission_form.submitter_organisation }})
+            {% if top.submission.invite_primary_investigator_to_meeting %}
+                {% with top.submission.current_submission_form.primary_investigator as pi %}
+                <b>Prüfer ({% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}) eingeladen um {{ top.start|datetimeround:-10|date:'H:i' }} Uhr</b>
+                {% endwith %}
+            {% endif %}
         {% endif %}
         <span class="meta">
             Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
