@@ -701,7 +701,7 @@ class SubmissionForm(models.Model):
             bits.append(self.get_project_type_education_context_display())
         if self.includes_minors:
             bits.append(_('minors'))
-        if self.submission.invite_primary_investigator_to_meeting:
+        if self.submission.invite_primary_investigator_to_meeting and self.submission.timetable_entries.filter(meeting__ended=None).exists():
             bits.append(_('Investigator invited'))
         return u', '.join(bits)
 
