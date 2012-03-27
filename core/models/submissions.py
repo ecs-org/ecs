@@ -694,13 +694,15 @@ class SubmissionForm(models.Model):
     def get_type_display(self):
         bits = []
         if self.is_amg:
-            bits.append(u'{0}(ECT:{1}, {2})'.format(_(u'AMG'), self.eudract_number, self.get_submission_type_display()))
+            bits.append(u'{0}({1})'.format(_(u'AMG'), self.get_submission_type_display()))
         if self.is_mpg:
             bits.append(_(u'MPG'))
         if self.is_thesis:
             bits.append(self.get_project_type_education_context_display())
         if self.includes_minors:
             bits.append(_('minors'))
+        if self.submission.invite_primary_investigator_to_meeting:
+            bits.append(_('Investigator invited'))
         return u', '.join(bits)
 
 def attach_to_submissions(user):

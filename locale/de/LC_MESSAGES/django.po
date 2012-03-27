@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 18:34+0200\n"
+"POT-Creation-Date: 2012-03-27 19:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1366,7 +1366,7 @@ msgstr "Institution"
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
-#: core/parties.py:75 templates/meetings/assistant/top.html:10
+#: core/parties.py:75
 msgid "Submitter"
 msgstr "Antragsteller"
 
@@ -1756,12 +1756,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:800 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:802 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:800 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:802 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1782,11 +1782,15 @@ msgstr "Bestätigt"
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:835
+#: core/models/submissions.py:705
+msgid "Investigator invited"
+msgstr "Prüfer eingeladen"
+
+#: core/models/submissions.py:837
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:835
+#: core/models/submissions.py:837
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2758,7 +2762,7 @@ msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
-#: templates/meetings/assistant/top.html:134
+#: templates/meetings/assistant/top.html:138
 #: templates/notifications/answers/form.html:28
 #: templates/submissions/readonly_form.html:291
 #: templates/users/invitation/invite_user.html:28
@@ -3113,11 +3117,11 @@ msgstr "nicht behandelt"
 msgid "examined"
 msgstr "behandelt"
 
-#: templates/meetings/assistant/top.html:98
+#: templates/meetings/assistant/top.html:102
 msgid "copy positive"
 msgstr "Pos. kopieren"
 
-#: templates/meetings/assistant/top.html:101
+#: templates/meetings/assistant/top.html:105
 msgid "copy negative"
 msgstr "Neg. kopieren"
 
@@ -3324,36 +3328,36 @@ msgstr "Herunterladen(zip)"
 msgid "Next TOPs"
 msgstr "Nächste TOPs"
 
-#: templates/meetings/tabs/tops.html:15 templates/meetings/tabs/tops.html:40
+#: templates/meetings/tabs/tops.html:16 templates/meetings/tabs/tops.html:42
 #: templates/scratchpad/popup.html:7
 msgid "Scratchpad"
 msgstr "Notizblock"
 
-#: templates/meetings/tabs/tops.html:25
+#: templates/meetings/tabs/tops.html:26
 msgid "Open TOPs"
 msgstr "Offene TOPs"
 
-#: templates/meetings/tabs/tops.html:31
+#: templates/meetings/tabs/tops.html:32
 msgid "No board member."
 msgstr ""
 
-#: templates/meetings/tabs/tops.html:54
+#: templates/meetings/tabs/tops.html:56
 msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
-#: templates/meetings/tabs/tops.html:60
+#: templates/meetings/tabs/tops.html:62
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
-#: templates/meetings/timetable/editor.html:58
+#: templates/meetings/timetable/editor.html:63
 msgid "before"
 msgstr "Vorher Anwesende"
 
-#: templates/meetings/timetable/editor.html:58
+#: templates/meetings/timetable/editor.html:63
 msgid "waiting"
 msgstr "Wartende"
 
-#: templates/meetings/timetable/editor.html:58
+#: templates/meetings/timetable/editor.html:63
 msgid "after"
 msgstr "Anschließend Anwesende"
 
