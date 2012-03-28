@@ -27,4 +27,4 @@ logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
 class SentryEmailBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
         for message in email_messages:
-            logger.info(u'Email: {0}\n\n{1}'.format(message.subject, message.message().as_string()))
+            logger.info(u'Email to {0}: {1}\n\n{2}'.format(u','.join(message.to), message.subject, message.message().as_string()))
