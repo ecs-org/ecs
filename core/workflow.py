@@ -185,7 +185,7 @@ class B2ResubmissionReview(Activity):
         model = Submission
 
     def get_url(self):
-        return reverse('ecs.core.views.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form_id})
+        return reverse('ecs.core.views.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form.pk})
 
 
 class InitialB2ResubmissionReview(B2ResubmissionReview):
