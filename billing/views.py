@@ -28,15 +28,9 @@ from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):
-    attrs = ('name', 'contact', 'address1', 'address2', 'zip_code', 'city')
+    attrs = ('name', 'contact', 'address', 'zip_code', 'city')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
-    bits = ['%(name)s' % data, 'zH %s' % data['contact'].full_name]
-    if data['address1']:
-        bits.append('%(address1)s' % data)
-    if data['address2']:
-        bits.append('%(address2)s' % data)
-    bits.append('%(zip_code)s %(city)s' % data)
-    return ", ".join(bits)
+    return u'{name} z.H. {contact.full_name}, {address}, {zip_code} {city}'.format(**data)
 
 def _get_uid_number(submission_form, prefix):
     return getattr(submission_form, '{0}_uid'.format(prefix)) or u'?'
