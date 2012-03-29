@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from datetime import datetime
 
 from django.conf import settings
 from django.db import models
@@ -15,6 +15,7 @@ from ecs.core.parties import get_presenting_parties
 from ecs.utils.viewutils import render_pdf_context
 from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
 from ecs.notifications.managers import NotificationManager
+from ecs.authorization.managers import AuthorizationManager
 
 
 class NotificationType(models.Model):
@@ -76,7 +77,7 @@ class Notification(models.Model):
 
     comments = models.TextField()
     date_of_receipt = models.DateField(null=True, blank=True)
-    timestamp = models.DateTimeField(default=datetime.datetime.now)
+    timestamp = models.DateTimeField(default=datetime.now)
     user = models.ForeignKey('auth.User', null=True)
     
     review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)
@@ -123,7 +124,7 @@ class Notification(models.Model):
             'submission_forms': submission_forms,
             'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })
-        now = datetime.datetime.now()
+        now = datetime.now()
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification', 
@@ -178,7 +179,10 @@ class NotificationAnswer(models.Model):
     is_rejected = models.BooleanField(default=False, verbose_name=_('Reject'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     signed_at = models.DateTimeField(null=True)
+    published_at = models.DateTimeField(null=True)
     
+    objects = AuthorizationManager()
+
     @property
     def needs_further_review(self):
         return not self.is_valid
@@ -195,7 +199,7 @@ class NotificationAnswer(models.Model):
         tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
         pdf = render_pdf_context(tpl, self.get_render_context())
 
-        now = datetime.datetime.now()
+        now = datetime.now()
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification_answer', 
             parent_object=self, 
@@ -209,6 +213,8 @@ class NotificationAnswer(models.Model):
     
     def distribute(self):
         from ecs.core.models.submissions import Submission
+        self.published_at = datetime.now()
+        self.save()
         
         if not self.is_rejected and self.notification.type.includes_diff:
             try:

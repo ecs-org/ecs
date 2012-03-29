@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
+from django.db.models import Q
 
 from ecs.utils.viewutils import render, render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
@@ -34,32 +35,13 @@ def _get_notification_template(notification, pattern):
     return loader.select_template(template_names)
 
 
-def _get_notifications(**lookups):
-    return Notification.objects.filter(**lookups).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+def _get_notifications(*args, **kwargs):
+    return Notification.objects.filter(*args, **kwargs).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
     
-def _notification_list(request, answered=None, stashed=False):
-    if answered:
-        title = _('Answered Notifications')
-        notifications = _get_notifications(answer__isnull=False)
-    elif answered is None:
-        title = _('All Notifications')
-        notifications = _get_notifications()
-    else:
-        title = _('Open Notifications')
-        notifications = _get_notifications(answer__isnull=True)
-    context = {
-        'title': title, 
-        'notifs': notifications,
-    }
-    if stashed:
-        context['stashed_notifications'] = DocStash.objects.filter(group='ecs.notifications.views.create_notification')
-    return render(request, 'notifications/list.html', context)
-
-
 @readonly()
 def open_notifications(request):
     title = _('Open Notifications')
-    notifications = _get_notifications(answer__isnull=True)
+    notifications =  Notification.objects.filter(Q(answer__isnull=True) | Q(answer__published_at__isnull=True)).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
     context = {
         'title': title,
         'notifs': notifications,

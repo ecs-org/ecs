@@ -12,7 +12,7 @@ from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, NotificationAnswer
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.audit.models import AuditTrail
@@ -106,7 +106,7 @@ authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query, assigned_to__isnull=True) | self.make_q(created_by=user) | self.make_q(assigned_to=user) | self.make_q(assigned_to__ecs_profile__is_indisposed=True)
+        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query, assigned_to__isnull=True) | self.make_q(created_by=user) | self.make_q(assigned_to=user) | self.make_q(assigned_to__ecs_profile__is_indisposed=True, task_type__groups__in=user.groups.all().values('pk').query)
         q &= ~(self.make_q(expedited_review_categories__gt=0) & ~self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user)))
         return q
 
@@ -119,7 +119,15 @@ class NotificationQFactory(authorization.QFactory):
 for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
     authorization.register(cls, factory=NotificationQFactory)
 
-#authorization.register(NotificationAnswer, lookup='notification')
+class NotificationAnswerQFactory(authorization.QFactory):
+    def get_q(self, user):
+        profile = user.get_profile()
+        q = self.make_q(notification__in=Notification.objects.values('pk').query)
+        if not profile.is_internal:
+            q &= self.make_q(published_at__isnull=False)
+        return q
+
+authorization.register(NotificationAnswer, factory=NotificationAnswerQFactory)
 
 class ChecklistQFactory(authorization.QFactory):
     def get_q(self, user):

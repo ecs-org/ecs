@@ -576,7 +576,7 @@ class SubmissionForm(models.Model):
     def allows_amendments(self, user):
         s = self.submission
         if s.presenter == user and self.is_current and not s.is_finished:
-            if not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True).unanswered().exists():
+            if not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True).unanswered().exists() and not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True, answer__published_at__isnull=True).answered().exists():
                 return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
 
