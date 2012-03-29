@@ -34,10 +34,6 @@ def _get_notification_template(notification, pattern):
     template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
     return loader.select_template(template_names)
 
-
-def _get_notifications(*args, **kwargs):
-    return Notification.objects.filter(*args, **kwargs).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
-    
 @readonly()
 def open_notifications(request):
     title = _('Open Notifications')
