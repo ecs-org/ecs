@@ -40,7 +40,7 @@
                 {% endif %}<br />
                 <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
                 <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
-                {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
+                {% include 'db/meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% else %}
                 <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span><br />
                 <br />
@@ -69,7 +69,7 @@
             <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
             <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
 
-            {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
+            {% include 'db/meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% endwith %}
         {% endfor %}
     {% endif %}
@@ -79,7 +79,21 @@
         <br />
         {% for b1 in b1ized.all %}
             {% with b1.get_submission as submission %}
-                <span class="bold">EK-Nr.: {{ submission|ec_number }}</span> {{ submission.project_title_display }} ({{ submission.current_submission_form.submitter_organisation }})<br />
+                <span class="bold">EK-Nr.:</span> {{ submission|ec_number }}<br />
+                <span class="bold">Antragsteller:</span>
+                    {% with submission.current_submission_form.submitter as submitter %}
+                        {% if not submitter.first_name or not submitter.last_name %}
+                            {{ submission.current_submission_form.submitter_contact }}
+                        {% else %}
+                            {{ submitter }}
+                        {% endif %}
+                    {% endwith %}
+                    <br />
+                {% if submission.current_submission_form.sponsor_name %}
+                    <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
+                {% endif %}<br />
+                <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
+                <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
                 <br />
             {% endwith %}
         {% endfor %}
