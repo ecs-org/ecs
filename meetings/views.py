@@ -651,7 +651,8 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
             send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
         form = ExpeditedReviewerInvitationForm(None)
 
-        meeting.expedited_reviewer_invitation_sent_for = datetime.now()
+        meeting.expedited_reviewer_invitation_sent_at = datetime.now()
+        meeting.expedited_reviewer_invitation_sent_for = start
         meeting.save()
 
     return render(request, 'meetings/expedited_reviewer_invitation.html', {

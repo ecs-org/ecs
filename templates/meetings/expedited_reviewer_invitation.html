@@ -11,7 +11,11 @@
     </form>
     <div>
         {% if meeting.expedited_reviewer_invitation_sent_for %}
-            ({% trans 'Last target date' %}: {{ meeting.expedited_reviewer_invitation_sent_for|date:'d.m.Y H:i' }})
+            {% with meeting.expedited_reviewer_invitation_sent_for as sent_for %}
+            {% with meeting.expedited_reviewer_invitation_sent_at as sent_at %}
+                Letzter kommunizierter Termin: {{ sent_for|date:'d.m.Y H:i' }} (verschickt am {{ sent_at|date:'d.m.Y' }})
+            {% endwith %}
+            {% endwith %}
         {% endif %}
     </div>
 </div>

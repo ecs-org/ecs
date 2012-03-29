@@ -179,6 +179,7 @@ class Meeting(models.Model):
     deadline_diplomathesis = models.DateTimeField(null=True)
     agenda_sent_at = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
+    expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
 
     objects = MeetingManager()
 
