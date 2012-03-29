@@ -383,30 +383,24 @@ class Meeting(models.Model):
         })
         
     def get_protocol_pdf(self, request):
-        timetable_entries = self.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index')
+        timetable_entries = list(self.timetable_entries.all())
+        timetable_entries.sort(key=lambda e: e.agenda_index)
+
         tops = []
         for top in timetable_entries:
+            vote = None
             try:
-                vote = Vote.objects.filter(top=top)[0]
-            except IndexError:
-                vote = None
+                vote = top.vote
+            except Vote.DoesNotExist:
+                pass
             tops.append((top, vote,))
 
-        additional_tops = []
-        for top in self.additional_entries.all():
-            try:
-                vote = Vote.objects.filter(top=top)[0]
-            except IndexError:
-                vote = None
-            additional_tops.append((top, vote,))
-
-        b1ized = Vote.objects.filter(result='1', upgrade_for__top__in=timetable_entries, upgrade_for__result='2').order_by('submission_form__submission__ec_number')
+        b1ized = Vote.objects.filter(result='1', upgrade_for__top__meeting=self, upgrade_for__result='2', published_at__isnull=False).order_by('submission_form__submission__ec_number')
 
         return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
             'b1ized': b1ized,
-            'additional_tops': additional_tops,
         })
 
     def _get_timeframe_for_user(self, user):

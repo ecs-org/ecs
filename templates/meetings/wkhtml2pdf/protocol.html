@@ -22,6 +22,11 @@
     {% endif %}
 
     {% for top, vote in tops %}
+        {% ifchanged top.timetable_index|is_none %}
+            {% if top.timetable_index|is_none %}
+                <h2>Weitere TOPs</h2>
+            {% endif %}
+        {% endifchanged %}
         {% with top.submission as submission %}
             <span class="bold">#{{ top }}</span>
             {% if submission %}
@@ -47,32 +52,6 @@
             {% endif %}
         {% endwith %}
     {% endfor %}
-
-    {% if additional_tops %}
-        <h2>Weitere TOPs</h2>
-        {% for top, vote in additional_tops %}
-            {% with top.submission as submission %}
-            <span class="bold">#{{ top }}</span>
-            <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
-            <span class="bold">Antragsteller:</span>
-                {% with submission.current_submission_form.submitter as submitter %}
-                    {% if not submitter.first_name or not submitter.last_name %}
-                        {{ submission.current_submission_form.submitter_contact }}
-                    {% else %}
-                        {{ submitter }}
-                    {% endif %}
-                {% endwith %}
-                <br />
-            {% if submission.current_submission_form.sponsor_name %}
-                <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
-            {% endif %}<br />
-            <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
-            <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
-
-            {% include 'db/meetings/wkhtml2pdf/protocol_submission.inc' %}
-            {% endwith %}
-        {% endfor %}
-    {% endif %}
 
     {% if b1ized.exists %}
         <span class="bold">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
