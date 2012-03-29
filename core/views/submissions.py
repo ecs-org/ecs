@@ -99,6 +99,12 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         )
         created = True
     else:
+        for docstash in DocStash.objects.filter(group='ecs.notifications.views.create_notification', owner=request.user):
+            with docstash.transaction():
+                sf = docstash.get('extra', {}).get('old_submission_form')
+                if sf and sf.submission == submission_form.submission and docstash['type_id'] == notification_type_pk:
+                    return HttpResponseRedirect(reverse('ecs.notifications.views.create_notification', kwargs={'docstash_key': docstash.key, 'notification_type_pk': notification_type_pk}))
+
         docstash, created = DocStash.objects.get_or_create(
             group='ecs.core.views.submissions.create_submission_form',
             owner=request.user,
