@@ -9,7 +9,7 @@
 
 {% if vote.text %}
     <span class="bold">Kommentar:</span><br />
-    {{ vote.text|linebreaksbr }}
+    {{ vote.text|linebreaksbr }}<br />
 {% endif %}
 
 {% if submission.current_submission_form.is_amg or submission.current_submission_form.is_mpg %}
