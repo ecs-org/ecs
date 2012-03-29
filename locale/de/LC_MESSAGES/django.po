@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-03-27 19:13+0200\n"
+"POT-Creation-Date: 2012-03-29 16:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,59 +71,59 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
 
-#: billing/views.py:54
+#: billing/views.py:48
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:113 billing/views.py:185
+#: billing/views.py:107 billing/views.py:179
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:113 core/models/submissions.py:89
+#: billing/views.py:107 core/models/submissions.py:89
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:113
+#: billing/views.py:107
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:113
+#: billing/views.py:107
 msgid "UID-Nr."
 msgstr "UID-Nr."
 
-#: billing/views.py:113
+#: billing/views.py:107
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:113 core/forms/layout.py:91 core/forms/layout.py:92
+#: billing/views.py:107 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:113
+#: billing/views.py:107
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:113 billing/views.py:185
+#: billing/views.py:107 billing/views.py:179
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:185
+#: billing/views.py:179
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:185
+#: billing/views.py:179
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:185 users/forms.py:124
+#: billing/views.py:179 users/forms.py:124
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:185 users/forms.py:123
+#: billing/views.py:179 users/forms.py:123
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:185 users/forms.py:131
+#: billing/views.py:179 users/forms.py:131
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -1806,28 +1806,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:711 templates/meetings/details.html:15
+#: core/views/submissions.py:717 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:823 templates/core.html:50
+#: core/views/submissions.py:829 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:860
+#: core/views/submissions.py:866
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:931
+#: core/views/submissions.py:937
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:940 templates/core.html:53
+#: core/views/submissions.py:946 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:950 templates/core.html:56
+#: core/views/submissions.py:956 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2088,65 +2088,65 @@ msgstr "Nach Sitzung"
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:676
+#: meetings/models.py:670
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:677
+#: meetings/models.py:671
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: meetings/views.py:58 templates/core.html:71
+#: meetings/views.py:60 templates/core.html:71
 #: templates/submissions/list.html:107
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: meetings/views.py:72 templates/core.html:75
+#: meetings/views.py:74 templates/core.html:75
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: meetings/views.py:77 templates/core.html:76
+#: meetings/views.py:79 templates/core.html:76
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: meetings/views.py:263
+#: meetings/views.py:265
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: meetings/views.py:400
+#: meetings/views.py:402
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: meetings/views.py:409
+#: meetings/views.py:411
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: meetings/views.py:415
+#: meetings/views.py:417
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:431
+#: meetings/views.py:433
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:591 meetings/views.py:603
+#: meetings/views.py:593 meetings/views.py:605
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:605 meetings/views.py:700
+#: meetings/views.py:607 meetings/views.py:692
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:607
+#: meetings/views.py:609
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:648
+#: meetings/views.py:650
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:670
+#: meetings/views.py:672
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -3025,9 +3025,8 @@ msgid "Comments"
 msgstr "Kommentare"
 
 #: templates/meetings/assistant/base.html:16
-#, fuzzy
 msgid "Ret. Thesis/Expedited"
-msgstr "Expedited"
+msgstr "Weitere TOPs"
 
 #: templates/meetings/assistant/base.html:77
 msgid "Do you want to start the meeting?"
@@ -3062,9 +3061,8 @@ msgid "No vote!"
 msgstr "Kein Votum!"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:6
-#, fuzzy
 msgid "Retrospective Thesis Submissions"
-msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
+msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:9
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:30
@@ -3079,14 +3077,12 @@ msgid "Not Approved"
 msgstr "Nicht Bestätigt"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:27
-#, fuzzy
 msgid "Expedited Submissions"
-msgstr "Einreichungen"
+msgstr "Expedited"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:48
-#, fuzzy
 msgid "Local-EC Submissions"
-msgstr "Keine Einreichung."
+msgstr "Lokale EK"
 
 #: templates/meetings/assistant/retrospective_thesis_expedited.html:69
 msgid "Approve"
@@ -3324,28 +3320,28 @@ msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 msgid "Download documents (zip)"
 msgstr "Herunterladen(zip)"
 
-#: templates/meetings/tabs/tops.html:7
+#: templates/meetings/tabs/tops.html:6
 msgid "Next TOPs"
 msgstr "Nächste TOPs"
 
-#: templates/meetings/tabs/tops.html:16 templates/meetings/tabs/tops.html:42
+#: templates/meetings/tabs/tops.html:15 templates/meetings/tabs/tops.html:41
 #: templates/scratchpad/popup.html:7
 msgid "Scratchpad"
 msgstr "Notizblock"
 
-#: templates/meetings/tabs/tops.html:26
+#: templates/meetings/tabs/tops.html:25
 msgid "Open TOPs"
 msgstr "Offene TOPs"
 
-#: templates/meetings/tabs/tops.html:32
+#: templates/meetings/tabs/tops.html:31
 msgid "No board member."
 msgstr ""
 
-#: templates/meetings/tabs/tops.html:56
+#: templates/meetings/tabs/tops.html:54
 msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
-#: templates/meetings/tabs/tops.html:62
+#: templates/meetings/tabs/tops.html:60
 msgid "No Vote yet!"
 msgstr "Es gibt nocht kein Votum!"
 
