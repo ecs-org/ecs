@@ -31,7 +31,7 @@ from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparati
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
 from ecs.checklists.models import ChecklistBlueprint, ChecklistAnswer
-from ecs.notifications.models import NotificationType
+from ecs.notifications.models import Notification, NotificationType
 
 from ecs.core.workflow import ChecklistReview, RecommendationReview
 
@@ -217,8 +217,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'vote': vote,
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
-        'open_notifications': notifications.unanswered(),
-        'answered_notifications': notifications.answered(),
+        'open_notifications': notifications.pending(),
+        'answered_notifications': notifications.exclude(pk__in=Notification.objects.pending().values('pk').query),
         'stashed_notifications': stashed_notifications,
         'pending_votes': votes.filter(published_at__isnull=True),
         'published_votes': votes.filter(published_at__isnull=False),

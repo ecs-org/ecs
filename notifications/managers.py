@@ -9,6 +9,9 @@ class NotificationQuerySet(models.query.QuerySet):
     def unanswered(self):
         return self.filter(models.Q(answer__isnull=True) & (models.Q(safetynotification__isnull=True) | models.Q(safetynotification__is_acknowledged=False)))
 
+    def pending(self):
+        return self.unanswered() | self.filter(answer__published_at__isnull=True)
+
 
 class NotificationManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -19,3 +22,6 @@ class NotificationManager(AuthorizationManager):
 
     def unanswered(self):
         return self.all().unanswered()
+
+    def pending(self):
+        return self.all().pending()

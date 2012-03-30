@@ -37,7 +37,7 @@ def _get_notification_template(notification, pattern):
 @readonly()
 def open_notifications(request):
     title = _('Open Notifications')
-    notifications =  Notification.objects.filter(Q(answer__isnull=True) | Q(answer__published_at__isnull=True)).annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+    notifications =  Notification.objects.pending().annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
     context = {
         'title': title,
         'notifs': notifications,
