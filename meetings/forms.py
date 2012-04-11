@@ -42,7 +42,7 @@ class MeetingAssistantForm(forms.ModelForm):
         fields = ('comments',)
 
 class FreeTimetableEntryForm(forms.Form):
-    title = forms.CharField(required=True, label=_(u'title'))
+    title = forms.CharField(required=True, label=_(u'title'), max_length=TimetableEntry._meta.get_field('title').max_length)
     duration = TimedeltaField(initial=u'1h 30min', label=_(u"duration"))
     is_break = forms.BooleanField(label=_(u"break"), required=False)
     optimal_start = TimeField(required=False, label=_(u'ideal start time (time)'))
