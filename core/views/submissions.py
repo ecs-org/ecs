@@ -235,7 +235,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
         profile = request.user.get_profile()
-        if not submission.external_reviewers.filter(pk=request.user.pk).exists():
+        if profile.is_executive_board_member or not submission.external_reviewers.filter(pk=request.user.pk).exists():
             context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
             tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
@@ -343,6 +343,8 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 @task_required()
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    if request.method == 'GET' and not submission_form.is_current:
+        return HttpResponseRedirect(reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.submission.current_submission_form.pk, 'blueprint_pk': blueprint_pk}))
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     related_task = request.related_tasks[0]
 
