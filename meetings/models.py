@@ -415,7 +415,7 @@ class Meeting(models.Model):
         })
 
     def _get_timeframe_for_user(self, user):
-        entries = list(self.timetable_entries.filter(participations__user=user).exclude(timetable_index__isnull=True).order_by('timetable_index'))
+        entries = list(self.timetable_entries.filter(participations__pk__in=Participation.objects.filter(user=user, ignored_for_optimization=False).values('pk').query).exclude(timetable_index__isnull=True).order_by('timetable_index'))
         if not entries:
             return None
         start, end = entries[0].start, entries[-1].end
@@ -431,6 +431,8 @@ class Meeting(models.Model):
         timetable = {}
         for entry in self:
             for user, ignored in entry.users:
+                if ignored:
+                    continue
                 if user in timetable:
                     timetable[user].append(entry)
                 else:
