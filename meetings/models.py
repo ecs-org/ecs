@@ -358,9 +358,19 @@ class Meeting(models.Model):
     
     def _apply_permutation(self, permutation):
         assert set(self) == set(permutation)
-        for i, entry in enumerate(permutation):
-            entry.timetable_index = i
-            entry.save()
+        sid = transaction.savepoint()
+        try:
+            for entry in permutation:
+                entry.timetable_index = None
+                entry.save(force_update=True)
+            for i, entry in enumerate(permutation):
+                entry.timetable_index = i
+                entry.save()
+        except:
+            transaction.savepoint_rollback(sid)
+            raise
+        else:
+            transaction.savepoint_commit(sid)
         self._clear_caches()
         
     def sort_timetable(self, func):
@@ -480,6 +490,9 @@ class TimetableEntry(models.Model):
     
     duration = property(_get_duration, _set_duration)
 
+    class Meta:
+        unique_together = (('meeting', 'timetable_index'),)
+
     @property
     def agenda_index(self):
         if not self.timetable_index is None:
@@ -521,16 +534,23 @@ class TimetableEntry(models.Model):
             old_index = self.timetable_index
             if index == old_index:
                 return
+            self.timetable_index = None
+            self.save(force_update=True)
+            entries = self.meeting.timetable_entries.filter(timetable_index__isnull=False)
             if old_index > index:
-                self.meeting.timetable_entries.filter(timetable_index__gte=index, timetable_index__lt=old_index).update(timetable_index=models.F('timetable_index') + 1)
+                for entry in entries.filter(timetable_index__gte=index, timetable_index__lt=old_index).order_by('-timetable_index'):
+                    entry.timetable_index += 1
+                    entry.save(force_update=True)
             elif old_index < index:
-                self.meeting.timetable_entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).update(timetable_index=models.F('timetable_index') - 1)
+                for entry in entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).order_by('timetable_index'):
+                    entry.timetable_index -= 1
+                    entry.save(force_update=True)
             self.timetable_index = index
             self.save(force_update=True)
             self.meeting._clear_caches()
-        except Exception, e:
+        except:
             transaction.savepoint_rollback(sid)
-            raise e
+            raise
         else:
             transaction.savepoint_commit(sid)
     
@@ -638,11 +658,11 @@ class TimetableEntry(models.Model):
             setattr(self, k, v)
         self.save()
         if from_visible:
-            for i, entry in enumerate(self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index')):
-                entry.timetable_index = i
+            for entry in self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index'):
+                entry.timetable_index -= 1
                 entry.save()
-            # invisible tops don't have participations
-            self.participations.delete()
+            # invisible tops don't have participants
+            self.participations.all().delete()
         self.meeting._clear_caches()
         self.meeting.create_boardmember_reviews()
 
