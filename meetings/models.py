@@ -233,7 +233,8 @@ class Meeting(models.Model):
         del self.timetable_entries_which_violate_constraints
 
     def create_boardmember_reviews(self):
-        task_type = TaskType.objects.get(workflow_node__uid='board_member_review', workflow_node__graph__auto_start=True)
+        task_type_uid = 'board_member_review'
+        task_type = TaskType.objects.get(workflow_node__uid=task_type_uid, workflow_node__graph__auto_start=True)
         for amc in self.medical_categories.all():
             if not amc.board_member:
                 continue
@@ -243,7 +244,7 @@ class Meeting(models.Model):
                 if created:
                     # create board member review task
                     with sudo():
-                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type=task_type, closed_at=None, deleted_at__isnull=True, assigned_to=amc.board_member).exists()
+                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid=task_type_uid, closed_at=None, deleted_at__isnull=True, assigned_to=amc.board_member).exists()
                     if not bm_task_exists:
                         token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
                         token.task.accept(user=amc.board_member)
