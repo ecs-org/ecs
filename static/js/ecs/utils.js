@@ -666,18 +666,18 @@ ecs.setupMessagePopup = function(container, prefix) {
 
     function show_selected_receiver() {
         var checked_input = container.getElement('input[name="' + name_prefix + 'receiver_type"][checked]');
+        if (!$defined(checked_input)) return;
         var value = checked_input.value;
         var receiver_prefix = id_prefix + 'receiver_';
 
         ['ec', 'involved', 'person'].each(function(x){
+            var el = container.getElement(receiver_prefix+x);
             if (x == value) {
-                var el = container.getElement(receiver_prefix+x);
                 if (el) {
                     el.removeAttribute('disabled');
                 }
                 container.getElements(receiver_prefix+x+' + .errors').show();
             } else {
-                var el = container.getElement(receiver_prefix+x);
                 if (el) {
                     el.setAttribute('disabled', 'disabled');
                 }
