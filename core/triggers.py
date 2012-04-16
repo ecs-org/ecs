@@ -9,6 +9,7 @@ from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
 from ecs.users.utils import get_office_user
+from ecs.votes.constants import FINAL_VOTE_RESULTS
 
 
 def send_submission_message(submission, user, subject, template, **kwargs):
