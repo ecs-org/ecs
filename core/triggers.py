@@ -25,7 +25,7 @@ def on_study_change(sender, **kwargs):
             send_submission_message(submission, u, _('Submission of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt', reply_receiver=submission.presenter)
     else:
         with sudo():
-            if not submission.votes.exists():
+            if not submission.votes.filter(is_draft=False, result__in=FINAL_VOTE_RESULTS).exists():
                 initial_review_tasks = get_obj_tasks((InitialReview, InitialThesisReview), submission)
                 try:
                     initial_review_task = initial_review_tasks.exclude(closed_at__isnull=True).order_by('-created_at')[0]
