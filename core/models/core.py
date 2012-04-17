@@ -17,6 +17,7 @@ class EthicsCommission(models.Model):
     url = models.URLField(null=True)
     phone = models.CharField(max_length=60, null=True)
     fax = models.CharField(max_length=60, null=True)
+    vote_receiver = models.EmailField(null=True, blank=True)
     
     class Meta:
         app_label = 'core'

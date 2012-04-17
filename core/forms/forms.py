@@ -3,6 +3,7 @@ import logging
 from datetime import datetime, timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
+from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.core.urlresolvers import reverse
@@ -10,7 +11,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
-    NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings
+    NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
@@ -450,3 +451,5 @@ class AdvancedSettingsForm(TranslatedModelForm):
         labels = {
             'default_contact': _('Default Contact'),
         }
+
+EthicsCommissionFormSet = modelformset_factory(EthicsCommission, fields=('vote_receiver',), extra=0)

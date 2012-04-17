@@ -222,7 +222,6 @@ def auth_groups():
         u'External Reviewer',
         u'External Review Review Group',
         u'EC-Vote Preparation Group',
-        u'Vote Receiver Group',
         u'Amendment Receiver Group',
         u'Meeting Protocol Receiver Group',
         u'Resident Board Member Group',

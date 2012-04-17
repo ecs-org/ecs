@@ -12,6 +12,19 @@
 {% block content %}
     <form action="" method="post">
         {{ form.as_p }}
+        <h2>{% trans 'Vote Receivers' %}</h2>
+        {{ ec_formset.management_form }}
+        <table>
+        {% for form in ec_formset.forms %}
+            <tr>
+                <td>{{ form.instance }}</td>
+                <td>
+                    {{ form.id }}{{ form.vote_receiver }}
+                    {{ form.vote_receiver.errors }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
         <input type="submit" value="{% trans 'Save' %}"/>
     </form>
 {% endblock %}

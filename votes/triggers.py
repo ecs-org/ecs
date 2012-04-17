@@ -28,7 +28,7 @@ def on_vote_published(sender, **kwargs):
             except IndexError:
                 pass
         parties.send_message(_('Vote {ec_number}').format(ec_number=vote.get_ec_number()), 'submissions/vote_publish.txt',
-            {'vote': vote}, submission=vote.submission_form.submission, cc_groups=settings.ECS_VOTE_RECEIVER_GROUPS, reply_receiver=reply_receiver)
+            {'vote': vote}, submission=vote.submission_form.submission, reply_receiver=reply_receiver)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):
