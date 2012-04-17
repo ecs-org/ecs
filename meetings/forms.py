@@ -24,7 +24,7 @@ class MeetingForm(TranslatedModelForm):
 
     class Meta:
         model = Meeting
-        exclude = ('optimization_task_id', 'submissions', 'started', 'ended', 'comments', 'agenda_sent_at', 'expedited_reviewer_invitation_sent_for')
+        fields = ('start', 'title', 'deadline', 'deadline_diplomathesis')
         labels = {
             'start': _(u'date and time'),
             'title': _(u'title'),
