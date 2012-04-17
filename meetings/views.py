@@ -567,8 +567,8 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 if blueprint.multiple:
                     lookup_kwargs['user'] = task.assigned_to
                 try:
-                    checklist = top.submission.checklists.exclude(status='dropped').get(**lookup_kwargs)
-                except Checklist.DoesNotExist:
+                    checklist = top.submission.checklists.exclude(status='dropped').filter(**lookup_kwargs)[0]
+                except IndexError:
                     checklist = None
                 if not checklist in [x[1] for x in checklists]:
                     checklists.append((task, checklist))
