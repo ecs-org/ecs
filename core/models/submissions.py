@@ -571,7 +571,7 @@ class SubmissionForm(models.Model):
             if most_recent_vote and most_recent_vote.result == '2':
                 return True # b2 resubmission
             in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
-        return self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not self.current_pending_vote
+        return self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not (self.current_pending_vote and not self.current_pending_vote.is_draft)
         
     def allows_amendments(self, user):
         s = self.submission

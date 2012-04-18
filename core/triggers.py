@@ -88,6 +88,10 @@ def on_initial_review(sender, **kwargs):
     if submission_form.is_acknowledged:
         send_submission_message(submission, submission.presenter, _('Acknowledgement of Receipt'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
+            current_vote = submission.current_submission_form.current_vote
+            if current_vote and current_vote.is_draft:
+                current_vote.submission_form = submission_form
+                current_vote.save()
             submission_form.mark_current()
             for u in submission_form.get_involved_parties().get_users().difference([submission_form.presenter, get_current_user()]):
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=get_office_user(submission=submission))

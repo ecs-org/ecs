@@ -421,6 +421,11 @@ def vote_review(request, submission_form_pk=None):
 @task_required()
 def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+
+    # TODO: prevent race condition where new version is submitted while the
+    # vote preparation is done
+    assert submission_form.is_current
+
     vote = submission_form.current_vote
     if submission_form.submission.is_expedited:
         blueprint_slug = 'expedited_review'
