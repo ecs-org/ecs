@@ -125,6 +125,9 @@ class NotificationAnswerQFactory(authorization.QFactory):
         q = self.make_q(notification__in=Notification.objects.values('pk').query)
         if not profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
+        for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+            ct = ContentType.objects.get_for_model(cls)
+            q |= self.make_q(notification__pk__in=Notification.objects.filter(pk__in=Task.objects.filter(content_type=ct).values('data_id').query).values('pk').query)
         return q
 
 authorization.register(NotificationAnswer, factory=NotificationAnswerQFactory)
