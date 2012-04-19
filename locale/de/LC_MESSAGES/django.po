@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-19 12:50+0200\n"
+"POT-Creation-Date: 2012-04-19 16:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -714,7 +714,9 @@ msgstr "Geplante Anzahl der Prüfungsteilnehmer/innen gesamt"
 
 #: core/paper_forms.py:161
 msgid "all participating centers"
-msgstr "Gesamtanzahl in allen österreichischen Zentren"
+msgstr ""
+"Geplante Gesamtanzahl der Prüfungsteilnehmer/innen in allen weltweit "
+"teilnehmenden Zentren."
 
 #: core/paper_forms.py:163
 msgid "minimum age"
@@ -4559,11 +4561,11 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: votes/triggers.py:34
+#: votes/triggers.py:36
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
 
-#: votes/triggers.py:62
+#: votes/triggers.py:58
 msgid "Attached is the electronically signed vote."
 msgstr "Im Anhang finden Sie das elektonisch signierte Votum."
 
