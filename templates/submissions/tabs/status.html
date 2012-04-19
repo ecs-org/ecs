@@ -153,23 +153,27 @@
             {% endif %}
         </td>
     </tr>
+    {% endif %}
     <tr>
         <th>Sitzungen:</th>
         <td colspan="3">
+            {% sudo %}{# non-internal users aren't allowed to see meetings by default (see auth_conf.py) #}
             {% for meeting in submission.meetings.all %}
                 <div>
                     {% if user|has_flag:'is_internal' %}
                         <a href="{% url ecs.meetings.views.meeting_details meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                     {% else %}
-                        {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}
+                        {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}{% if not forloop.last %}, {% endif %}
                     {% endif %}
                 </div>
             {% endfor %}
+            {% endsudo %}
             {% if user|has_flag:'is_executive_board_member' and submission.is_reschedulable %}
                 <a href="{% url ecs.meetings.views.reschedule_submission submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
     </tr>
+    {% if user|has_flag:'is_internal' %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
