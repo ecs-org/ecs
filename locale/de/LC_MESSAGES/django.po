@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-17 16:43+0200\n"
+"POT-Creation-Date: 2012-04-19 12:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1407,11 +1407,11 @@ msgstr "Studie {ec_number}"
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:93
+#: core/triggers.py:97
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:95
+#: core/triggers.py:99
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1806,28 +1806,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:719 templates/meetings/details.html:15
+#: core/views/submissions.py:724 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:831 templates/core.html:50
+#: core/views/submissions.py:836 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:868
+#: core/views/submissions.py:873
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:939
+#: core/views/submissions.py:944
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:948 templates/core.html:53
+#: core/views/submissions.py:953 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:958 templates/core.html:56
+#: core/views/submissions.py:963 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -4559,9 +4559,13 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: votes/triggers.py:30
+#: votes/triggers.py:34
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
+
+#: votes/triggers.py:62
+msgid "Attached is the electronically signed vote."
+msgstr "Im Anhang finden Sie das elektonisch signierte Votum."
 
 #: votes/workflow.py:80
 msgid "B1"
