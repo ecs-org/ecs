@@ -141,8 +141,6 @@ class ChecklistQFactory(authorization.QFactory):
         q |= self.make_q(status='review_ok', submission__current_submission_form__primary_investigator__user=user)
         q |= self.make_q(status='review_ok', submission__presenter=user)
         q |= self.make_q(status='review_ok', submission__susar_presenter=user)
-        if profile.is_resident_member:
-            q |= self.make_q(status='review_ok')
         return q
 
 authorization.register(Checklist, factory=ChecklistQFactory)
