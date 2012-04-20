@@ -50,9 +50,7 @@ def on_vote_published(sender, **kwargs):
     name = '_'.join(bit for bit in bits if bit is not None)
     vote_ct = ContentType.objects.get_for_model(Vote)
     doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
-    f = doc.get_from_mediaserver()
-    vote_pdf = f.read()
-    f.close()
+    vote_pdf = doc.file.read()
     attachments = ((name + '.pdf', vote_pdf, 'application/pdf'),)
     for receiver in receivers:
         deliver(receiver, subject=name, message=_('Attached is the electronically signed vote.'), from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
