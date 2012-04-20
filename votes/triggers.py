@@ -43,7 +43,7 @@ def on_vote_published(sender, **kwargs):
         receivers |= set(investigators.values_list('ethics_commission__vote_receiver', flat=True))
     bits = (
         'AMG' if sf.is_amg else None,
-        'MPG' if sf.is_amg else None,
+        'MPG' if sf.is_mpg else None,
         sf.eudract_number if sf.is_amg else sf.submission.ec_number,
         'Votum {0}'.format(vote.result),
     )
