@@ -151,24 +151,25 @@ def sign_receive(request, mock=False):
              original_file_name=request.sign_data["document_filename"], date=datetime.now(), 
              version=request.sign_data["document_version"]
         )
-
         parent_model = request.sign_data.get('parent_type')
         if parent_model:
             document.parent_object = parent_model.objects.get(pk=request.sign_data['parent_pk'])
             document.save()
  
+        # called unconditionally, because the function can has side effects
+        url = request.sign_data['success_func'](request, document=document)
+
         if request.sign_session:
             task_pk = request.sign_session.pop_listitem('tasks', 0)
             _get_tasks(request.user).get(pk=task_pk).done(choice=True)
         document = Document.objects.get(pk=document.pk)
- 
+
     except Exception as e:
         # the cake is a lie
         return sign_error(request, pdf_id=request.sign_data.id, error=repr(e), cause=traceback.format_exc())
-    
+
     else:
         request.sign_data.delete()
-        url = request.sign_data['success_func'](request, document=document)
         if request.sign_session:
             url = reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': request.sign_session.id})
         return HttpResponseRedirect(url)

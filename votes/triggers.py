@@ -22,7 +22,6 @@ def on_vote_creation(sender, **kwargs):
 @connect(signals.on_vote_publication)
 def on_vote_published(sender, **kwargs):
     vote = kwargs['vote']
-    assert vote.signed_at is not None
     sf = vote.submission_form
     if sf and not sf.is_categorized_multicentric_and_local:
         parties = vote.submission_form.get_presenting_parties()

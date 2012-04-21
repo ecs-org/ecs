@@ -58,6 +58,7 @@ class Vote(models.Model):
         return super(Vote, self).save(**kwargs)
 
     def publish(self):
+        assert self.signed_at is not None
         now = datetime.now()
         self.published_at = now
         self.valid_until = self.published_at + timedelta(days=365)
