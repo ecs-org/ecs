@@ -47,7 +47,7 @@ def on_vote_published(sender, **kwargs):
         sf.eudract_number if sf.is_amg else sf.submission.ec_number,
         'Votum {0}'.format(vote.result),
     )
-    name = '_'.join(bit for bit in bits if bit is not None)
+    name = '_'.join(str(bit) for bit in bits if bit is not None)
     vote_ct = ContentType.objects.get_for_model(Vote)
     doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
     vote_pdf = doc.file.read()
