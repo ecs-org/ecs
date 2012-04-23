@@ -12,6 +12,7 @@ from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction
 
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render
@@ -133,6 +134,7 @@ def sign_preview(request):
 @with_sign_data()
 def sign_receive(request, mock=False):
     ''' accessed by pdf-as when the pdf has been successfully signed '''
+    sid = transaction.savepoint()
     try:
         if mock:
             pdf_data = request.sign_data['pdf_data']
@@ -156,7 +158,7 @@ def sign_receive(request, mock=False):
             document.parent_object = parent_model.objects.get(pk=request.sign_data['parent_pk'])
             document.save()
  
-        # called unconditionally, because the function can has side effects
+        # called unconditionally, because the function can have side effects
         url = request.sign_data['success_func'](request, document=document)
 
         if request.sign_session:
@@ -166,9 +168,11 @@ def sign_receive(request, mock=False):
 
     except Exception as e:
         # the cake is a lie
+        transaction.savepoint_rollback(sid)
         return sign_error(request, pdf_id=request.sign_data.id, error=repr(e), cause=traceback.format_exc())
 
     else:
+        transaction.savepoint_commit(sid)
         request.sign_data.delete()
         if request.sign_session:
             url = reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': request.sign_session.id})
