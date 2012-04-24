@@ -664,6 +664,9 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def send_protocol(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    assert meeting.protocol_sent_at is None
+    meeting.protocol_sent_at = datetime.now()
+    meeting.save()
     protocol_pdf = meeting.get_protocol_pdf(request)
     protocol_filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
     attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)

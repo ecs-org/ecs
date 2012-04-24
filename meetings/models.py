@@ -178,6 +178,7 @@ class Meeting(models.Model):
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
     agenda_sent_at = models.DateTimeField(null=True)
+    protocol_sent_at = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
 
@@ -407,7 +408,16 @@ class Meeting(models.Model):
                 pass
             tops.append((top, vote,))
 
-        b1ized = Vote.objects.filter(result='1', upgrade_for__top__meeting=self, upgrade_for__result='2', published_at__isnull=False).order_by('submission_form__submission__ec_number')
+        start = Meeting.objects.filter(start__lt=self.start).aggregate(
+            models.Max('protocol_sent_at'))['protocol_sent_at__max']
+        end = self.protocol_sent_at
+
+        b1ized = Vote.objects.filter(result='1', upgrade_for__result='2', published_at__isnull=False)
+        if start:
+            b1ized = b1ized.filter(published_at__gt=start)
+        if end:
+            b1ized = b1ized.filter(published_at__lte=end)
+        b1ized = b1ized.order_by('submission_form__submission__ec_number')
 
         return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
