@@ -326,7 +326,6 @@ def auth_user_developers():
 
     translators_group = _get_group('translators')
     sentry_group = _get_group('sentryusers')
-    bugshot_group = _get_group('bugshot')
 
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
@@ -336,7 +335,6 @@ def auth_user_developers():
         user.is_superuser = False
         user.groups.add(translators_group)
         user.groups.add(sentry_group)
-        user.groups.add(bugshot_group)
         user.save()
         profile = user.get_profile()
         update_instance(profile, {
@@ -396,7 +394,6 @@ def auth_user_testusers():
     )
     
     userswitcher_group = _get_group('userswitcher_target')
-    bugshot_group = _get_group('bugshot')
     boardmember_group = _get_group('EC-Board Member')
     expedited_review_group = _get_group('Expedited Review Group')
 
@@ -406,7 +403,6 @@ def auth_user_testusers():
             if testgroup:
                 user.groups.add(_get_group(testgroup))
             user.groups.add(userswitcher_group)
-            user.groups.add(bugshot_group)
 
             profile = user.get_profile()
             flags = flags.copy()
