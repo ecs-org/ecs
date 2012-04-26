@@ -2,6 +2,7 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
+from django.template import Context, loader
 
 from ecs.communication.utils import send_system_message_template
 from ecs.utils import connect
@@ -52,8 +53,10 @@ def on_vote_published(sender, **kwargs):
     doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
     vote_pdf = doc.file.read()
     attachments = ((name + '.pdf', vote_pdf, 'application/pdf'),)
+    template = loader.get_template('meetings/email/basg.txt')
+    text = unicode(template.render(Context({})))
     for receiver in receivers:
-        deliver(receiver, subject=name, message=_('Attached is the electronically signed vote.'), from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        deliver(receiver, subject=name, message=text, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):

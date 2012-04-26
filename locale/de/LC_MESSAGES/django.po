@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-24 13:13+0200\n"
+"POT-Creation-Date: 2012-04-26 15:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4565,13 +4565,9 @@ msgid ""
 "einer Woche ab.\n"
 msgstr ""
 
-#: votes/triggers.py:36
+#: votes/triggers.py:37
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
-
-#: votes/triggers.py:56
-msgid "Attached is the electronically signed vote."
-msgstr "Im Anhang finden Sie das elektonisch signierte Votum."
 
 #: votes/workflow.py:80
 msgid "B1"
@@ -4580,9 +4576,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "All Notifications"
-#~ msgstr "Alle Meldungen"
-
-#~ msgid "Last target date"
-#~ msgstr "Letzter Termin"
