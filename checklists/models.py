@@ -65,7 +65,7 @@ class Checklist(models.Model):
             u = get_current_user()
             presenting_parties = self.submission.current_submission_form.get_presenting_parties()
             name = _(u'Anonymous') if self.blueprint.reviewer_is_anonymous else unicode(self.user)
-            if u == self.user or (u.get_profile().is_internal and not u in presenting_parties):
+            if u == self.user or (u is not None and u.get_profile().is_internal and not u in presenting_parties):
                 name = unicode(self.user)
             return "%s (%s)" % (self.blueprint, name)
         return unicode(self.blueprint)
