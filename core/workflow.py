@@ -236,10 +236,10 @@ class CategorizationReview(Activity):
         on_categorization_review.send(Submission, submission=s)
         blueprint = ChecklistBlueprint.objects.get(slug='external_review')
         for user in s.external_reviewers.all():
-            checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user)
+            checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user, defaults={'last_edited_by': user})
             if created:
                 for question in blueprint.questions.order_by('text'):
-                    ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+                    checklists.answers.get_or_create(question=question)
             elif checklist.status == 'dropped':
                 checklist.status = 'new'
                 checklist.save()

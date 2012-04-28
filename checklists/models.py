@@ -56,17 +56,21 @@ class Checklist(models.Model):
     user = models.ForeignKey('auth.user')
     status = models.CharField(max_length=15, default='new', choices=CHECKLIST_STATUS_CHOICES)
     pdf_document = models.OneToOneField(Document, related_name="checklist", null=True)
+    last_edited_by = models.ForeignKey('auth.user', related_name='edited_checklists')
 
     objects = AuthorizationManager()
+
+    class Meta:
+        unique_together = (('blueprint', 'submission', 'user'),)
     
     @property
     def short_name(self):
         if self.blueprint.multiple:
             u = get_current_user()
             presenting_parties = self.submission.current_submission_form.get_presenting_parties()
-            name = _(u'Anonymous') if self.blueprint.reviewer_is_anonymous else unicode(self.user)
+            name = _(u'Anonymous') if self.blueprint.reviewer_is_anonymous else unicode(self.last_edited_by)
             if u == self.user or (u is not None and u.get_profile().is_internal and not u in presenting_parties):
-                name = unicode(self.user)
+                name = unicode(self.last_edited_by)
             return "%s (%s)" % (self.blueprint, name)
         return unicode(self.blueprint)
 

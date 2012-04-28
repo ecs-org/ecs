@@ -10,7 +10,6 @@ from ecs.core.forms.fields import NullBooleanField
 def make_checklist_form(checklist):
     fields = SortedDict()
     blueprint = checklist.blueprint
-
     for question in blueprint.questions.all().order_by('index'):
         answer = checklist.answers.get(question=question)
         fullquestion = u'{num}. {text}\n{desc}'.format(num=question.number, text=question.text, desc=question.description)

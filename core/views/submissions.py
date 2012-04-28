@@ -43,7 +43,7 @@ from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.utils.security import readonly
-from ecs.users.utils import sudo, user_flag_required
+from ecs.users.utils import sudo, user_flag_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required
 from ecs.users.utils import user_flag_required, user_group_required
@@ -161,7 +161,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     crumbs = ([submission.pk] + [pk for pk in crumbs if not pk == submission.pk])[:3]
     cache.set(crumbs_key, crumbs, 60*60*24*30) # store for thirty days
 
-    checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(user=request.user)).order_by('blueprint__name')
+    checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(last_edited_by=request.user)).order_by('blueprint__name')
 
     checklist_reviews = []
     for checklist in checklists:
@@ -348,18 +348,15 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     related_task = request.related_tasks[0]
 
-    lookup_kwargs = dict(blueprint=blueprint, submission=submission_form.submission)
-    if blueprint.multiple:
-        lookup_kwargs['user'] = request.user
-    else:
-        lookup_kwargs['defaults'] = {'user': request.user}
-    checklist, created = Checklist.objects.get_or_create(**lookup_kwargs)
+    user = request.user if blueprint.multiple else get_user('root@system.local')
+    with sudo():
+        checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=user, defaults={'last_edited_by': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
-            answer, created = ChecklistAnswer.objects.get_or_create(checklist=checklist, question=question)
+            checklist.answers.get_or_create(question=question)
         checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
-    if not checklist.user == request.user:
-        checklist.user = request.user
+    elif not checklist.last_edited_by == request.user:
+        checklist.last_edited_by = request.user
         checklist.save()
 
     form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)

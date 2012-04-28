@@ -565,7 +565,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             for task in tasks:
                 lookup_kwargs = {'blueprint': blueprint}
                 if blueprint.multiple:
-                    lookup_kwargs['user'] = task.assigned_to
+                    lookup_kwargs['last_edited_by'] = task.assigned_to
                 try:
                     checklist = top.submission.checklists.exclude(status='dropped').filter(**lookup_kwargs)[0]
                 except IndexError:

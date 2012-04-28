@@ -137,7 +137,7 @@ class ChecklistQFactory(authorization.QFactory):
         profile = user.get_profile()
         if profile.is_internal:
             return self.make_q()
-        q = self.make_q(user=user)
+        q = self.make_q(last_edited_by=user)
         q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         q |= self.make_q(status='review_ok', submission__current_submission_form__sponsor=user)
         q |= self.make_q(status='review_ok', submission__current_submission_form__submitter=user)
