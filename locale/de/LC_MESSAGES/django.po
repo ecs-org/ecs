@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 16:49+0200\n"
+"POT-Creation-Date: 2012-04-30 18:39+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1395,24 +1395,20 @@ msgstr "Befristete Autorisierung"
 msgid "Submission of study EC-Nr. {ec_number}"
 msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:40
-msgid "Changes B2 {ec_number}"
-msgstr "Änderungen B2 {ec_number}"
-
-#: core/triggers.py:66 core/triggers.py:68 core/triggers.py:80
-#: core/triggers.py:82
+#: core/triggers.py:63 core/triggers.py:65 core/triggers.py:77
+#: core/triggers.py:79
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:89
+#: core/triggers.py:86
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:97
+#: core/triggers.py:94
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:99
+#: core/triggers.py:96
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1480,37 +1476,41 @@ msgid "Please select exactly one primary investigator."
 msgstr "Bitte wählen Sie genau eine/n koordinierende/n Prüfärztin/arzt."
 
 #: core/forms/forms.py:327 meetings/views.py:79 templates/core.html:76
+#: templates/tasks/tasks.inc:20 templates/tasks/tasks_full.inc:19
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: core/forms/forms.py:328 templates/core.html:73
+#: core/forms/forms.py:328 templates/core.html:73 templates/tasks/tasks.inc:21
+#: templates/tasks/tasks_full.inc:20
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
 #: core/forms/forms.py:329 meetings/views.py:74 templates/core.html:75
+#: templates/tasks/tasks.inc:22 templates/tasks/tasks_full.inc:21
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
 
-#: core/forms/forms.py:330
+#: core/forms/forms.py:330 templates/tasks/tasks.inc:23
+#: templates/tasks/tasks_full.inc:22
 msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
 #: core/models/submissions.py:697 templates/meetings/tabs/status.html:76
-#: templates/submissions/readonly_form.html:225 templates/tasks/tasks.inc:20
-#: templates/tasks/tasks_full.inc:19
+#: templates/submissions/readonly_form.html:225 templates/tasks/tasks.inc:26
+#: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
 #: core/models/submissions.py:699 templates/meetings/tabs/status.html:81
-#: templates/submissions/readonly_form.html:227 templates/tasks/tasks.inc:21
-#: templates/tasks/tasks_full.inc:20
+#: templates/submissions/readonly_form.html:227 templates/tasks/tasks.inc:27
+#: templates/tasks/tasks_full.inc:26
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:334 templates/tasks/tasks.inc:25
-#: templates/tasks/tasks_full.inc:24
+#: core/forms/forms.py:334 templates/tasks/tasks.inc:31
+#: templates/tasks/tasks_full.inc:30
 msgid "Other"
 msgstr "Andere"
 
@@ -1760,8 +1760,8 @@ msgstr "personenbezogen"
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/constants.py:27 templates/tasks/tasks.inc:23
-#: templates/tasks/tasks_full.inc:22
+#: core/models/constants.py:27 templates/tasks/tasks.inc:29
+#: templates/tasks/tasks_full.inc:28
 msgid "expedited"
 msgstr "Expedited"
 
@@ -2299,15 +2299,15 @@ msgstr "Sie müssen einen Benutzer auswählen."
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
 
-#: tasks/forms.py:107
+#: tasks/forms.py:112
 msgid "Deadline"
 msgstr "Stichtag"
 
-#: tasks/forms.py:108
+#: tasks/forms.py:113
 msgid "Oldest"
 msgstr "Alter, ältere zuerst"
 
-#: tasks/forms.py:109
+#: tasks/forms.py:114
 msgid "Newest"
 msgstr "Alter, neuere zuerst"
 
@@ -2943,8 +2943,8 @@ msgstr "Die Anfrage wird nach 10 Sekunden automatisch wiederholt."
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:11 templates/tasks/tasks.inc:79
-#: templates/tasks/tasks_full.inc:81
+#: templates/meetings/details.html:11 templates/tasks/tasks.inc:85
+#: templates/tasks/tasks_full.inc:87
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
@@ -4034,57 +4034,57 @@ msgstr "Offen"
 msgid "Proxy"
 msgstr "Vertretung"
 
-#: templates/tasks/tasks.inc:22 templates/tasks/tasks_full.inc:21
+#: templates/tasks/tasks.inc:28 templates/tasks/tasks_full.inc:27
 msgid "thesis"
 msgstr "Diplomarbeit"
 
-#: templates/tasks/tasks.inc:24 templates/tasks/tasks_full.inc:23
+#: templates/tasks/tasks.inc:30 templates/tasks/tasks_full.inc:29
 msgid "local_ec"
 msgstr "Lokale EK"
 
-#: templates/tasks/tasks.inc:31 templates/tasks/tasks_full.inc:37
+#: templates/tasks/tasks.inc:37 templates/tasks/tasks_full.inc:43
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
-#: templates/tasks/tasks.inc:47 templates/tasks/tasks_full.inc:53
+#: templates/tasks/tasks.inc:53 templates/tasks/tasks_full.inc:59
 msgid "Tasks assigned to me"
 msgstr "Übernommene Aufgaben"
 
-#: templates/tasks/tasks.inc:53 templates/tasks/tasks.inc.py:85
-#: templates/tasks/tasks.inc:115 templates/tasks/tasks_full.inc:59
-#: templates/tasks/tasks_full.inc.py:87 templates/tasks/tasks_full.inc:113
+#: templates/tasks/tasks.inc:59 templates/tasks/tasks.inc.py:91
+#: templates/tasks/tasks.inc:121 templates/tasks/tasks_full.inc:65
+#: templates/tasks/tasks_full.inc.py:93 templates/tasks/tasks_full.inc:119
 msgid "Accept all"
 msgstr "Alle annehmen"
 
-#: templates/tasks/tasks.inc:63 templates/tasks/tasks.inc.py:96
-#: templates/tasks/tasks.inc:126 templates/tasks/tasks_full.inc:67
-#: templates/tasks/tasks_full.inc.py:95 templates/tasks/tasks_full.inc:121
+#: templates/tasks/tasks.inc:69 templates/tasks/tasks.inc.py:102
+#: templates/tasks/tasks.inc:132 templates/tasks/tasks_full.inc:73
+#: templates/tasks/tasks_full.inc.py:101 templates/tasks/tasks_full.inc:127
 msgid "Preview"
 msgstr "Vorschau"
 
-#: templates/tasks/tasks.inc:68 templates/tasks/tasks_full.inc:71
+#: templates/tasks/tasks.inc:74 templates/tasks/tasks_full.inc:77
 msgid "Decline"
 msgstr "Ablehnen"
 
-#: templates/tasks/tasks.inc:109 templates/tasks/tasks_full.inc:107
+#: templates/tasks/tasks.inc:115 templates/tasks/tasks_full.inc:113
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
 
-#: templates/tasks/tasks.inc:138 templates/tasks/tasks_full.inc:132
+#: templates/tasks/tasks.inc:144 templates/tasks/tasks_full.inc:138
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
 
-#: templates/tasks/tasks_full.inc:27
+#: templates/tasks/tasks_full.inc:33
 msgid "Task Type"
 msgstr "Aufgabenart"
 
-#: templates/tasks/tasks_full.inc:30
+#: templates/tasks/tasks_full.inc:36
 msgid "Drag the bookmark link to your bookmark bar to save it."
 msgstr ""
 "Ziehen Sie den Lesezeichen-Link auf Ihre Lesezeichen-Leiste um ihn zu "
 "speichern."
 
-#: templates/tasks/tasks_full.inc:31
+#: templates/tasks/tasks_full.inc:37
 msgid "Bookmark"
 msgstr "Lesezeichen"
 
@@ -4579,6 +4579,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "Other Meetings"
-#~ msgstr "Andere Sitzungen"
