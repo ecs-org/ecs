@@ -239,7 +239,7 @@ class CategorizationReview(Activity):
             checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user, defaults={'last_edited_by': user})
             if created:
                 for question in blueprint.questions.order_by('text'):
-                    checklists.answers.get_or_create(question=question)
+                    checklist.answers.get_or_create(question=question)
             elif checklist.status == 'dropped':
                 checklist.status = 'new'
                 checklist.save()
