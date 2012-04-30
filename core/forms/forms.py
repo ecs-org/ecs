@@ -293,9 +293,13 @@ InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=
 
 
 _queries = {
-    'new':              lambda s,u: s.new(),
+    'past_meetings':    lambda s,u: s.past_meetings(),
     'next_meeting':     lambda s,u: s.next_meeting(),
+    'upcoming_meetings':lambda s,u: s.upcoming_meetings().exclude(pk__in=s.next_meeting().values('pk').query),
+    'no_meeting':       lambda s,u: s.no_meeting(),
+    'new':              lambda s,u: s.new(),
     'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
+
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
     'other':            lambda s,u: s.not_amg_and_not_mpg(),
@@ -320,9 +324,11 @@ _queries = {
 }
 
 _labels = {
-    'new': _('New'),
+    'past_meetings': _('Past Meetings'),
     'next_meeting': _('Next Meeting'),
-    'other_meetings': _('Other Meetings'),
+    'upcoming_meetings': _('Upcoming Meetings'),
+    'no_meeting': _('No Meeting'),
+
     'amg': _('AMG'),
     'mpg': _('MPG'),
     'other': _('Other'),
@@ -385,7 +391,7 @@ class SubmissionFilterForm(forms.Form):
 
         return submissions
 
-FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
+FILTER_MEETINGS = ('past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting')
 FILTER_TYPE = ('amg', 'mpg', 'other')
 FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec', 'not_categorized')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')

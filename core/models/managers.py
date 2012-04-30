@@ -7,6 +7,7 @@ from ecs.core.models.constants import (SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
+from ecs.meetings.models import Meeting
 
 def get_vote_filter_q(prefix, *args, **kwargs):
     accepted_votes = set()
@@ -98,15 +99,23 @@ class SubmissionQuerySet(models.query.QuerySet):
         
     def for_board_lane(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_BOARD)
+
+    def past_meetings(self):
+        return self.filter(meetings__pk__in=Meeting.objects.past().values('pk').query)
+
+    def upcoming_meetings(self):
+        return self.filter(meetings__pk__in=Meeting.objects.upcoming().values('pk').query)
     
     def next_meeting(self):
-        from ecs.meetings.models import Meeting
         try:
-            meeting = Meeting.objects.filter(start__gt=datetime.now()).order_by('start')[0]
-        except IndexError:
+            meeting = Meeting.objects.next()
+        except Meeting.DoesNotExist:
             return self.none()
         else:
             return self.filter(meetings__pk=meeting.pk)
+
+    def no_meeting(self):
+        return self.filter(meetings__isnull=True)
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(presenter=user)|Q(susar_presenter=user)|Q(current_submission_form__primary_investigator__user=user))
@@ -186,8 +195,17 @@ class SubmissionManager(AuthorizationManager):
     def localec(self):
         return self.all().localec()
 
+    def past_meetings(self):
+        return self.all().past_meetings()
+
+    def upcoming_meetings(self):
+        return self.all().upcoming_meetings()
+
     def next_meeting(self):
         return self.all().next_meeting()
+
+    def no_meeting(self):
+        return self.all().no_meeting()
 
     def mine(self, user):
         return self.all().mine(user)

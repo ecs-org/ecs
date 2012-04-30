@@ -91,6 +91,11 @@ class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
         return qs
 
 class TaskListFilterForm(forms.Form):
+    past_meetings = forms.BooleanField(required=False)
+    next_meeting = forms.BooleanField(required=False)
+    upcoming_meetings = forms.BooleanField(required=False)
+    no_meeting = forms.BooleanField(required=False)
+
     amg = forms.BooleanField(required=False)
     mpg = forms.BooleanField(required=False)
     thesis = forms.BooleanField(required=False)

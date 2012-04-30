@@ -16,6 +16,12 @@
         <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
     </ul>
     <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
+        <li>{{ filterform.past_meetings }} <label for="id_past_meetings"><span class="task_past_meetings"></span>{% trans "Past Meetings" %}</label></li>
+        <li>{{ filterform.next_meeting }} <label for="id_next_meeting"><span class="task_next_meeting"></span>{% trans "Next Meeting" %}</label></li>
+        <li>{{ filterform.upcoming_meetings }} <label for="id_upcoming_meetings"><span class="task_upcoming_meetings"></span>{% trans "Upcoming Meetings" %}</label></li>
+        <li>{{ filterform.no_meeting }} <label for="id_no_meeting"><span class="task_no_meeting"></span>{% trans "No Meeting" %}</label></li>
+    </ul>
+    <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
         <li>{{ filterform.amg }} <label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
         <li>{{ filterform.mpg }} <label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
         <li>{{ filterform.thesis }} <label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 16:12+0200\n"
+"POT-Creation-Date: 2012-04-30 16:49+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -170,7 +170,7 @@ msgstr "Spezialistenbewertung"
 msgid "External Review"
 msgstr "Gutachten"
 
-#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:443
+#: checklists/bootstrap.py:56 core/bootstrap.py:118 core/forms/forms.py:449
 #: notifications/bootstrap.py:83 votes/bootstrap.py:25
 msgid "Start"
 msgstr "Start"
@@ -183,8 +183,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:46 core/forms/forms.py:323
-#: core/models/submissions.py:156 help/models.py:18
+#: checklists/models.py:46 core/models/submissions.py:156 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -1480,106 +1479,114 @@ msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 msgid "Please select exactly one primary investigator."
 msgstr "Bitte wählen Sie genau eine/n koordinierende/n Prüfärztin/arzt."
 
-#: core/forms/forms.py:324 templates/core.html:73
+#: core/forms/forms.py:327 meetings/views.py:79 templates/core.html:76
+msgid "Past Meetings"
+msgstr "Vergangene Sitzungen"
+
+#: core/forms/forms.py:328 templates/core.html:73
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: core/forms/forms.py:325
-msgid "Other Meetings"
-msgstr "Andere Sitzungen"
+#: core/forms/forms.py:329 meetings/views.py:74 templates/core.html:75
+msgid "Upcoming Meetings"
+msgstr "Kommende Sitzungen"
 
-#: core/forms/forms.py:326 core/forms/layout.py:98 core/forms/layout.py:100
+#: core/forms/forms.py:330
+msgid "No Meeting"
+msgstr "Keine Sitzung"
+
+#: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
 #: core/models/submissions.py:697 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:225 templates/tasks/tasks.inc:20
 #: templates/tasks/tasks_full.inc:19
 msgid "AMG"
 msgstr "AMG"
 
-#: core/forms/forms.py:327 core/forms/layout.py:107 core/forms/layout.py:109
+#: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
 #: core/models/submissions.py:699 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:227 templates/tasks/tasks.inc:21
 #: templates/tasks/tasks_full.inc:20
 msgid "MPG"
 msgstr "MPG"
 
-#: core/forms/forms.py:328 templates/tasks/tasks.inc:25
+#: core/forms/forms.py:334 templates/tasks/tasks.inc:25
 #: templates/tasks/tasks_full.inc:24
 msgid "Other"
 msgstr "Andere"
 
-#: core/forms/forms.py:330 core/models/constants.py:26
+#: core/forms/forms.py:336
+msgid "Not Categorized"
+msgstr "Nicht Eingestuft"
+
+#: core/forms/forms.py:337 core/models/constants.py:26
 #: templates/meetings/tabs/status.html:71
 msgid "board"
 msgstr "Standard"
 
-#: core/forms/forms.py:331
+#: core/forms/forms.py:338
 msgid "Thesis"
 msgstr "Diplomarbeit"
 
-#: core/forms/forms.py:332 templates/meetings/tabs/status.html:101
+#: core/forms/forms.py:339 templates/meetings/tabs/status.html:101
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:333 core/models/constants.py:29
+#: core/forms/forms.py:340 core/models/constants.py:29
 #: templates/meetings/tabs/status.html:106
 msgid "Local EC"
 msgstr "Lokale EK"
 
-#: core/forms/forms.py:334
-msgid "Not Categorized"
-msgstr "Nicht Eingestuft"
-
-#: core/forms/forms.py:336
+#: core/forms/forms.py:342
 msgid "B2 Votes"
 msgstr "B2 Voten"
 
-#: core/forms/forms.py:337
+#: core/forms/forms.py:343
 msgid "B3 Votes"
 msgstr "B3 Voten"
 
-#: core/forms/forms.py:338
+#: core/forms/forms.py:344
 msgid "B4 Votes"
 msgstr "B4 Voten"
 
-#: core/forms/forms.py:339
+#: core/forms/forms.py:345
 msgid "Other Votes"
 msgstr "Andere Voten"
 
-#: core/forms/forms.py:340
+#: core/forms/forms.py:346
 msgid "No Votes"
 msgstr "Keine Voten"
 
-#: core/forms/forms.py:341 templates/tasks/tasks.inc:14
+#: core/forms/forms.py:347 templates/tasks/tasks.inc:14
 #: templates/tasks/tasks_full.inc:13
 msgid "Mine"
 msgstr "Meine"
 
-#: core/forms/forms.py:342 templates/tasks/tasks.inc:15
+#: core/forms/forms.py:348 templates/tasks/tasks.inc:15
 #: templates/tasks/tasks_full.inc:14
 msgid "Assigned"
 msgstr "Übernommen"
 
-#: core/forms/forms.py:343
+#: core/forms/forms.py:349
 msgid "Other Studies"
 msgstr "Andere Studien"
 
-#: core/forms/forms.py:413
+#: core/forms/forms.py:419
 msgid "file"
 msgstr "Datei"
 
-#: core/forms/forms.py:424
+#: core/forms/forms.py:430
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:442 templates/users/administration.html:38
+#: core/forms/forms.py:448 templates/users/administration.html:38
 msgid "User"
 msgstr "Benutzer"
 
-#: core/forms/forms.py:444
+#: core/forms/forms.py:450
 msgid "End"
 msgstr "Ende"
 
-#: core/forms/forms.py:454
+#: core/forms/forms.py:460
 msgid "Default Contact"
 msgstr "Standard-Empfänger"
 
@@ -2090,15 +2097,15 @@ msgstr "Von Sitzung"
 msgid "To meeting"
 msgstr "Nach Sitzung"
 
-#: meetings/models.py:165
+#: meetings/models.py:171
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:704
+#: meetings/models.py:710
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:705
+#: meetings/models.py:711
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2106,14 +2113,6 @@ msgstr "ungünstig"
 #: templates/submissions/list.html:107
 msgid "Meetings"
 msgstr "Sitzungen"
-
-#: meetings/views.py:74 templates/core.html:75
-msgid "Upcoming Meetings"
-msgstr "Kommende Sitzungen"
-
-#: meetings/views.py:79 templates/core.html:76
-msgid "Past Meetings"
-msgstr "Vergangene Sitzungen"
 
 #: meetings/views.py:265
 msgid "only tops without associated submission can be deleted"
@@ -4580,3 +4579,6 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "Other Meetings"
+#~ msgstr "Andere Sitzungen"

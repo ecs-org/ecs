@@ -129,6 +129,12 @@ class MeetingManager(AuthorizationManager):
         except IndexError:
             raise self.model.DoesNotExist()
 
+    def past(self):
+        return self.filter(ended__isnull=False)
+
+    def upcoming(self):
+        return self.filter(ended__isnull=True)
+
     def next_schedulable_meeting(self, submission):
         first_sf = submission.forms.order_by('created_at')[0]
         try:
