@@ -301,6 +301,7 @@ _queries = {
     'other':            lambda s,u: s.not_amg_and_not_mpg(),
 
     # lane filters
+    'not_categorized':  lambda s,u: s.filter(workflow_lane=None),
     'board':            lambda s,u: s.for_board_lane(),
     'thesis':           lambda s,u: s.for_thesis_lane(),
     'expedited':        lambda s,u: s.expedited(),
@@ -326,6 +327,7 @@ _labels = {
     'mpg': _('MPG'),
     'other': _('Other'),
 
+    'not_categorized': _('Not Categorized'),
     'board': _('board'),
     'thesis': _('Thesis'),
     'expedited': _('Expedited'),
@@ -373,19 +375,19 @@ class SubmissionFilterForm(forms.Form):
 
         for row in self.layout:
             new = submissions.none()
-            if all([self.cleaned_data[fname] for fname in row]):
+            if all(self.cleaned_data[f] for f in row):
                 new = submissions.all()
             else:
-                for fname in row:
-                    if self.cleaned_data[fname]:
-                        new |= _queries[fname](submissions, user)
+                for f in row:
+                    if self.cleaned_data[f]:
+                        new |= _queries[f](submissions, user)
             submissions = new
 
         return submissions
 
 FILTER_MEETINGS = ('new', 'next_meeting', 'other_meetings')
 FILTER_TYPE = ('amg', 'mpg', 'other')
-FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec')
+FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec', 'not_categorized')
 FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 
