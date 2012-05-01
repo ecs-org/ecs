@@ -37,7 +37,6 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
 @readonly()
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
     usersettings = request.user.ecs_settings
-    submission_ct = ContentType.objects.get_for_model(Submission)
 
     filter_defaults = dict(sorting='deadline')
     for key in ('mine', 'assigned', 'open', 'proxy', 'amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other', 'past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting'):
@@ -85,43 +84,60 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
         if amg and mpg and thesis and expedited and local_ec and other and past_meetings and next_meeting and upcoming_meetings and no_meeting:
             tasks = all_tasks
         else:
+            from ecs.votes.models import Vote
+            submission_ct = ContentType.objects.get_for_model(Submission)
+            vote_ct = ContentType.objects.get_for_model(Vote)
             submission_tasks = all_tasks.filter(content_type=submission_ct)
-            tasks = all_tasks.exclude(content_type=submission_ct)
+            vote_tasks = all_tasks.filter(content_type=vote_ct)
+            tasks = all_tasks.exclude(content_type=submission_ct).exclude(content_type=vote_ct)
 
             if not (past_meetings and next_meeting and upcoming_meetings and no_meeting):
-                filtered = submission_tasks.none()
+                qs = []
                 if past_meetings:
-                    filtered |= submission_tasks.filter(data_id__in=Submission.objects.past_meetings().values('pk').query)
+                    qs += [Q(pk__in=Submission.objects.past_meetings().values('pk').query)]
                 if next_meeting:
-                    filtered |= submission_tasks.filter(data_id__in=Submission.objects.next_meeting().values('pk').query)
+                    qs += [Q(pk__in=Submission.objects.next_meeting().values('pk').query)]
                 if upcoming_meetings:
-                    filtered |= submission_tasks.filter(data_id__in=Submission.objects.upcoming_meetings().values('pk').query)
+                    qs += [Q(pk__in=Submission.objects.upcoming_meetings().values('pk').query)]
                 if no_meeting:
-                    filtered |= submission_tasks.filter(data_id__in=Submission.objects.no_meeting().values('pk').query)
-                submission_tasks = filtered
+                    qs += [Q(pk__in=Submission.objects.no_meeting().values('pk').query)]
+                if qs:
+                    q = reduce(lambda x,y: x|y, qs)
+                    submission_tasks = submission_tasks.filter(data_id__in=Submission.objects.filter(q).values('pk').query)
+                    vote_tasks = vote_tasks.filter(data_id__in=Vote.objects.filter(submission_form__submission__pk__in=Submission.objects.filter(q).values('pk').query).values('pk').query)
+                else:
+                    submission_tasks = submission_tasks.none()
+                    vote_tasks = vote_tasks.none()
 
             if not (amg and mpg and thesis and expedited and local_ec and other):
-                filtered = submission_tasks.none()
-                amg_q = Q(data_id__in=Submission.objects.amg().values('pk').query)
-                mpg_q = Q(data_id__in=Submission.objects.mpg().values('pk').query)
-                retrospective_thesis_q = Q(data_id__in=Submission.objects.for_thesis_lane().values('pk').query)
-                expedited_q = Q(data_id__in=Submission.objects.expedited())
-                local_ec_q = Q(data_id__in=Submission.objects.localec())
+                amg_q = Q(pk__in=Submission.objects.amg().values('pk').query)
+                mpg_q = Q(pk__in=Submission.objects.mpg().values('pk').query)
+                retrospective_thesis_q = Q(pk__in=Submission.objects.for_thesis_lane().values('pk').query)
+                expedited_q = Q(pk__in=Submission.objects.expedited())
+                local_ec_q = Q(pk__in=Submission.objects.localec())
+                qs = []
                 if amg:
-                    filtered |= submission_tasks.filter(amg_q)
+                    qs += [amg_q]
                 if mpg:
-                    filtered |= submission_tasks.filter(mpg_q)
+                    qs += [mpg_q]
                 if thesis:
-                    filtered |= submission_tasks.filter(retrospective_thesis_q)
+                    qs += [retrospective_thesis_q]
                 if expedited:
-                    filtered |= submission_tasks.filter(expedited_q)
+                    qs += [expedited_q]
                 if local_ec:
-                    filtered |= submission_tasks.filter(local_ec_q)
+                    qs += [local_ec_q]
                 if other:
-                    filtered |= submission_tasks.filter(~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q & ~local_ec_q)
-                submission_tasks = filtered
+                    qs += [~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q & ~local_ec_q]
+                if qs:
+                    q = reduce(lambda x,y: x|y, qs)
+                    submission_tasks = submission_tasks.filter(data_id__in=Submission.objects.filter(q).values('pk').query)
+                    vote_tasks = vote_tasks.filter(data_id__in=Vote.objects.filter(submission_form__submission__pk__in=Submission.objects.filter(q).values('pk').query).values('pk').query)
+                else:
+                    submission_tasks = submission_tasks.none()
+                    vote_tasks = vote_tasks.none()
 
             tasks |= submission_tasks
+            tasks |= vote_tasks
     
         task_types = filterform.cleaned_data['task_types']
         if task_types:
