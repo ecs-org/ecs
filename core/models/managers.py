@@ -71,7 +71,7 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self._with_explicit_vote('5', include_pending=include_pending)
         
     def without_vote(self, include_pending=True):
-        q = Q(forms__current_published_vote__isnull=True)
+        q = ~Q(forms__current_published_vote__isnull=False)
         if include_pending:
             q &= Q(forms__current_pending_vote__isnull=True)
         return self.filter(q, current_submission_form__isnull=False)
