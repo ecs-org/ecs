@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-30 18:39+0200\n"
+"POT-Creation-Date: 2012-05-02 11:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1416,9 +1416,9 @@ msgstr "Einreichung nicht akzeptiert"
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:148 notifications/models.py:179
+#: core/workflow.py:148
 msgid "Reject"
-msgstr "Negativ beurteilt"
+msgstr "Ablehnen"
 
 #: core/workflow.py:197
 msgid "Finish"
@@ -2210,6 +2210,10 @@ msgstr "Studie"
 #: notifications/models.py:178
 msgid "Proofread"
 msgstr "Korrektur gelesen"
+
+#: notifications/models.py:179
+msgid "rate negative"
+msgstr "Negativ beurteilt"
 
 #: notifications/models.py:242
 msgid "New Notification Answer"

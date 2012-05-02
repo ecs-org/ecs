@@ -176,7 +176,7 @@ class NotificationAnswer(models.Model):
     text = models.TextField()
     is_valid = models.BooleanField(default=True)
     is_final_version = models.BooleanField(default=False, verbose_name=_('Proofread')) # informal
-    is_rejected = models.BooleanField(default=False, verbose_name=_('Reject'))
+    is_rejected = models.BooleanField(default=False, verbose_name=_('rate negative'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
