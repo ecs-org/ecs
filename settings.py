@@ -340,9 +340,9 @@ MS_CLIENT = {
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
     "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
-    "doc_diskcache_maxsize" :     2**34,    # equals 4 Gigabyte
+    "doc_diskcache_maxsize" :     2**32,    # equals 4 Gigabyte
     "render_diskcache":  os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache")),
-    "render_diskcache_maxsize":   2**33,    # equals 2 Gigabyte
+    "render_diskcache_maxsize":   2**31,    # equals 2 Gigabyte
     "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
     "render_memcache_host": "127.0.0.1",    # host= localhost, 
     "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
