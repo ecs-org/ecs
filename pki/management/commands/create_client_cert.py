@@ -1,4 +1,5 @@
 import datetime, sys
+from getpass import getpass
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 
@@ -13,5 +14,7 @@ class Command(BaseCommand):
     def handle(self, email, pkcs12, passphrase=None, days=1, **options):
         ca = get_ca()
         subject = get_subject_for_user(None, cn=email, email=email)
-        fingerprint = ca.make_cert(subject, pkcs12, passphrase=passphrase if passphrase else raw_input('Passphrase:'), days=days)
+        if passphrase is None:
+            passphrase = getpass('Certificate Passphrase: ')
+        fingerprint = ca.make_cert(subject, pkcs12, passphrase=passphrase, days=days)
         
