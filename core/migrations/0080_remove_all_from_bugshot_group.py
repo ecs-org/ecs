@@ -7,9 +7,13 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        bugshot_group = orm['auth.Group'].objects.get(name='bugshot')
-        bugshot_group.user_set = []
-        bugshot_group.save()
+        try:
+            bugshot_group = orm['auth.Group'].objects.get(name='bugshot')
+        except orm['auth.Group'].DoesNotExist:
+            pass
+        else:
+            bugshot_group.user_set = []
+            bugshot_group.save()
 
 
     def backwards(self, orm):
