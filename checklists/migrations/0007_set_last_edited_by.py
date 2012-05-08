@@ -7,8 +7,10 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        "Write your forwards methods here."
-        root = orm['auth.User'].objects.get(email='root@system.local')
+        try:
+            root = orm['auth.User'].objects.get(email='root@system.local')
+        except orm['auth.User'].DoesNotExist:
+            return
         for checklist in orm['checklists.Checklist'].objects.all():
             checklist.last_edited_by = checklist.user
             if not checklist.blueprint.multiple:
