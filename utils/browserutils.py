@@ -71,7 +71,7 @@ def android_quirks(ua):
         return
     if b['name'] == 'Safari' and b['version'] >= '4':
         dist = ua['dist']
-        if dist['name'] == 'Android' and dist['version'] >= '3.2':
+        if dist and dist['name'] == 'Android' and dist['version'] >= '3.2':
             return BROWSER_SUPPORT_OK
 
 def crawler_quirks(ua_str):
