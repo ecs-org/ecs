@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-02 11:01+0200\n"
+"POT-Creation-Date: 2012-05-09 14:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,7 @@ msgid "Board Member Review"
 msgstr "Spezialistenbewertung"
 
 #: checklists/bootstrap.py:28 checklists/bootstrap.py:57
-#: checklists/workflow.py:102
+#: checklists/workflow.py:103
 msgid "External Review"
 msgstr "Gutachten"
 
@@ -208,23 +208,23 @@ msgstr "Fallengelassen"
 msgid "Anonymous"
 msgstr "Anonym"
 
-#: checklists/workflow.py:65
+#: checklists/workflow.py:66
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
 
-#: checklists/workflow.py:89 notifications/workflow.py:128
+#: checklists/workflow.py:90 notifications/workflow.py:128
 msgid "Publish"
 msgstr "Veröffentlichen"
 
-#: checklists/workflow.py:90
+#: checklists/workflow.py:91
 msgid "Send back to external Reviewer"
 msgstr "Zurück zum Gutachter"
 
-#: checklists/workflow.py:91
+#: checklists/workflow.py:92
 msgid "Drop"
 msgstr "Fallen lassen"
 
-#: checklists/workflow.py:106
+#: checklists/workflow.py:107
 msgid "Query regarding review"
 msgstr "Rückfrage zum Gutachten"
 
@@ -287,7 +287,7 @@ msgstr "Einreichung Formale Prüfung"
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: core/bootstrap.py:127 templates/submissions/readonly_form.html:81
+#: core/bootstrap.py:127 templates/submissions/readonly_form.html:88
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
@@ -343,12 +343,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:153 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:330
+#: templates/submissions/readonly_form.html:337
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:155 core/forms/fields.py:54 core/forms/fields.py:59
-#: templates/submissions/readonly_form.html:331
+#: templates/submissions/readonly_form.html:338
 msgid "No"
 msgstr "Nein"
 
@@ -1497,14 +1497,14 @@ msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
 #: core/models/submissions.py:697 templates/meetings/tabs/status.html:76
-#: templates/submissions/readonly_form.html:225 templates/tasks/tasks.inc:26
+#: templates/submissions/readonly_form.html:232 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
 #: core/models/submissions.py:699 templates/meetings/tabs/status.html:81
-#: templates/submissions/readonly_form.html:227 templates/tasks/tasks.inc:27
+#: templates/submissions/readonly_form.html:234 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
 msgstr "MPG"
@@ -1696,7 +1696,7 @@ msgstr "SAE / SUSAR"
 
 #: core/forms/layout.py:221 templates/meetings/details.html:9
 #: templates/meetings/tabs/status.html:9
-#: templates/submissions/readonly_form.html:52
+#: templates/submissions/readonly_form.html:59
 msgid "Status"
 msgstr "Status"
 
@@ -1791,7 +1791,7 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:703 templates/submissions/readonly_form.html:229
+#: core/models/submissions.py:703 templates/submissions/readonly_form.html:236
 msgid "minors"
 msgstr "Minderjährige"
 
@@ -1819,28 +1819,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:721 templates/meetings/details.html:15
+#: core/views/submissions.py:731 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:833 templates/core.html:50
+#: core/views/submissions.py:843 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:870
+#: core/views/submissions.py:880
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:941
+#: core/views/submissions.py:951
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:950 templates/core.html:53
+#: core/views/submissions.py:960 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:960 templates/core.html:56
+#: core/views/submissions.py:970 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2224,7 +2224,7 @@ msgid "Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung."
 msgstr ""
 
 #: notifications/views.py:39 templates/core.html:65
-#: templates/submissions/readonly_form.html:138
+#: templates/submissions/readonly_form.html:145
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -2343,7 +2343,7 @@ msgstr "Übersicht"
 
 #: templates/core.html:42 templates/communication/list.html:6
 #: templates/communication/list.html:7
-#: templates/submissions/readonly_form.html:111
+#: templates/submissions/readonly_form.html:118
 msgid "Communication"
 msgstr "Nachrichten"
 
@@ -2560,7 +2560,7 @@ msgstr "Es gibt noch keine Zahlung."
 #: templates/billing/checklist_payment_list.html:32
 #: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:150
-#: templates/submissions/widget.html:66 templates/users/administration.html:27
+#: templates/submissions/widget.html:62 templates/users/administration.html:27
 #: templates/users/administration.html:77 templates/wkhtml2pdf/footer.html:121
 msgid "Page"
 msgstr "Seite"
@@ -2568,7 +2568,7 @@ msgstr "Seite"
 #: templates/billing/checklist_payment_list.html:32
 #: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:150
-#: templates/submissions/widget.html:66 templates/users/administration.html:27
+#: templates/submissions/widget.html:62 templates/users/administration.html:27
 #: templates/users/administration.html:77
 msgid "of"
 msgstr "von"
@@ -2761,14 +2761,14 @@ msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
 #: templates/communication/send.html:78 templates/communication/thread.html:80
-#: templates/submissions/readonly_form.html:288
+#: templates/submissions/readonly_form.html:295
 msgid "Insert Annotations"
 msgstr "Anmerkungen einfügen"
 
 #: templates/communication/send.html:82 templates/communication/thread.html:84
 #: templates/meetings/assistant/top.html:138
 #: templates/notifications/answers/form.html:25
-#: templates/submissions/readonly_form.html:291
+#: templates/submissions/readonly_form.html:298
 #: templates/users/invitation/invite_user.html:28
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -2878,7 +2878,7 @@ msgid "Show system messages"
 msgstr "Systemnachrichten anzeigen"
 
 #: templates/documents/compact_list.html:18 templates/documents/iframe.html:20
-#: templates/submissions/readonly_form.html:198
+#: templates/submissions/readonly_form.html:205
 #: templates/submissions/diff/document.inc:13
 msgid "Download"
 msgstr "Download"
@@ -3401,14 +3401,14 @@ msgid "Distribute"
 msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:27
-#: templates/submissions/readonly_form.html:200
-#: templates/submissions/readonly_form.html:300
+#: templates/submissions/readonly_form.html:207
+#: templates/submissions/readonly_form.html:307
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:83
-#: templates/submissions/readonly_form.html:248
+#: templates/submissions/readonly_form.html:255
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:55
 msgid "Download PDF"
@@ -3704,11 +3704,11 @@ msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
 msgid "Edit"
 msgstr "Bearbeiten"
 
-#: templates/submissions/list.html:97 templates/submissions/widget.html:43
+#: templates/submissions/list.html:97 templates/submissions/widget.html:39
 msgid "Categories"
 msgstr "Fachgebiete"
 
-#: templates/submissions/list.html:102 templates/submissions/widget.html:48
+#: templates/submissions/list.html:102 templates/submissions/widget.html:44
 msgid "ExpeditedReviewCategories"
 msgstr "Expedited Review Fachgebiete"
 
@@ -3730,7 +3730,7 @@ msgstr ""
 msgid "Document"
 msgstr "Unterlage"
 
-#: templates/submissions/list.html:138 templates/submissions/widget.html:55
+#: templates/submissions/list.html:138 templates/submissions/widget.html:51
 msgid "No Submissions."
 msgstr "Keine Einreichung."
 
@@ -3787,114 +3787,118 @@ msgid "finished"
 msgstr "Abgeschlossene TOPs"
 
 #: templates/submissions/readonly_form.html:32
-#: templates/submissions/readonly_form.html:35
+msgid "Start External Review"
+msgstr "Gutachten starten"
+
+#: templates/submissions/readonly_form.html:39
+#: templates/submissions/readonly_form.html:42
 #, python-format
 msgid "save %(review)s"
 msgstr "%(review)s speichern"
 
-#: templates/submissions/readonly_form.html:33
+#: templates/submissions/readonly_form.html:40
 #, python-format
 msgid "complete %(review)s"
 msgstr "%(review)s abschließen"
 
-#: templates/submissions/readonly_form.html:49
+#: templates/submissions/readonly_form.html:56
 msgid "General"
 msgstr "Generell"
 
-#: templates/submissions/readonly_form.html:56
+#: templates/submissions/readonly_form.html:63
 msgid "Workflow"
 msgstr "Arbeitsablauf"
 
-#: templates/submissions/readonly_form.html:60
+#: templates/submissions/readonly_form.html:67
 msgid "Workflow Log"
 msgstr "Arbeitsablauf Protokoll"
 
-#: templates/submissions/readonly_form.html:65
+#: templates/submissions/readonly_form.html:72
 #: templates/submissions/tabs/involved_parties.html:2
 msgid "Involved Parties"
 msgstr "Beteiligte Parteien"
 
-#: templates/submissions/readonly_form.html:74
+#: templates/submissions/readonly_form.html:81
 msgid "Evaluations"
 msgstr "Beurteilungen"
 
-#: templates/submissions/readonly_form.html:77
+#: templates/submissions/readonly_form.html:84
 msgid "Checklist Summary"
 msgstr "Übersicht"
 
-#: templates/submissions/readonly_form.html:93
+#: templates/submissions/readonly_form.html:100
 msgid "Votes"
 msgstr "Voten"
 
-#: templates/submissions/readonly_form.html:100
-#: templates/submissions/readonly_form.html:192
+#: templates/submissions/readonly_form.html:107
+#: templates/submissions/readonly_form.html:199
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:104
+#: templates/submissions/readonly_form.html:111
 msgid "Notifications"
 msgstr "Meldungen"
 
-#: templates/submissions/readonly_form.html:106
+#: templates/submissions/readonly_form.html:113
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:107
-#: templates/submissions/readonly_form.html:160
+#: templates/submissions/readonly_form.html:114
+#: templates/submissions/readonly_form.html:167
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: templates/submissions/readonly_form.html:113
+#: templates/submissions/readonly_form.html:120
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:115
+#: templates/submissions/readonly_form.html:122
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:149
+#: templates/submissions/readonly_form.html:156
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine offenen Meldungen."
 
-#: templates/submissions/readonly_form.html:156
-#: templates/submissions/readonly_form.html:175
+#: templates/submissions/readonly_form.html:163
+#: templates/submissions/readonly_form.html:182
 msgid "Create a new notification"
 msgstr "Eine neue Meldung erstellen"
 
-#: templates/submissions/readonly_form.html:167
+#: templates/submissions/readonly_form.html:174
 msgid "rejected"
 msgstr "abgelehnt"
 
-#: templates/submissions/readonly_form.html:172
+#: templates/submissions/readonly_form.html:179
 msgid "There are no answered notifications."
 msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 
-#: templates/submissions/readonly_form.html:197
+#: templates/submissions/readonly_form.html:204
 msgid "valid until"
 msgstr "gültig bis"
 
-#: templates/submissions/readonly_form.html:206
+#: templates/submissions/readonly_form.html:213
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:220
-#: templates/submissions/readonly_form.html:240
+#: templates/submissions/readonly_form.html:227
+#: templates/submissions/readonly_form.html:247
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:248
+#: templates/submissions/readonly_form.html:255
 msgid "Download unpublished Version as PDF"
 msgstr "Unveröffentlichte Version als PDF herunterladen"
 
-#: templates/submissions/readonly_form.html:261
+#: templates/submissions/readonly_form.html:268
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:324
+#: templates/submissions/readonly_form.html:331
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
-#: templates/submissions/readonly_form.html:327
+#: templates/submissions/readonly_form.html:334
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"

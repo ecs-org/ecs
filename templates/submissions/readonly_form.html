@@ -26,6 +26,13 @@
         {% endif %}
         
         {% if not request.task_management.form %}
+            {% if not open_checklist %}
+                {% with submission.external_review_task as external_review_task %}
+                    {% if external_review_task %}
+                        <a href="{{ external_review_task.url }}">{% trans 'Start External Review' %}</a>
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
             {% for checklist, checklist_review_form in checklist_reviews %}
                 {% if not checklist_review_form.readonly %}
                     {% if checklist_review_form.related_task %}

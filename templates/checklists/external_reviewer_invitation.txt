@@ -2,7 +2,7 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and task.url as task_url and submission.project_title_display as project_title and meeting.start|date:'d.m.Y' as meeting_day and price.price|euro as price %}
+    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and url as task_url and submission.project_title_display as project_title and meeting.start|date:'d.m.Y' as meeting_day and price.price|euro as price %}
         The ethics commission of the Medical University of Vienna requests that you review study {{ ec_number }} ("{{ project_title }}").
 
         The study is going to be discussed at the meeting at {{ meeting_day }}.

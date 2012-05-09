@@ -62,7 +62,8 @@ class ExternalReview(Activity):
                 except IndexError:
                     meeting = None
             price = Price.objects.get_review_price()
-            send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX}, submission=c.submission)
+            url = reverse('view_submission', kwargs={'submission_pk': c.submission.pk})
+            send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX, 'url': url}, submission=c.submission)
         return token
 
 def unlock_external_review(sender, **kwargs):
