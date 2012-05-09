@@ -170,8 +170,10 @@
                         onSuccess: function(responseText){
                             var textarea = $('id_text');
                             var selStart = textarea.getSelectionStart();
-                            textarea.value = textarea.value.substring(0, selStart) + responseText + textarea.value.substring(textarea.getSelectionEnd(), textarea.value.length);
-                            textarea.selectRange(selStart, selStart + responseText.length);
+                            var text = responseText + "\n";
+                            textarea.value = textarea.value.substring(0, selStart) + text + textarea.value.substring(textarea.getSelectionEnd(), textarea.value.length);
+                            var pos = selStart + text.length;
+                            textarea.selectRange(pos, pos);
                             textarea.retrieve('ecs.textarea.TextArea').updateHeight();
                         }
                     });
