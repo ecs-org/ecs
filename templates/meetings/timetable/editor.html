@@ -50,7 +50,7 @@
                 <span class="users">Teilnehmer: 
                     {% if entry.submission.invite_primary_investigator_to_meeting %}
                         {% with entry.submission.current_submission_form.primary_investigator as pi %}
-                        Prüfer ({% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}){% if entry.users %},{% endif %}
+                        Prüfer ({{ pi.contact.full_name }}){% if entry.users %},{% endif %}
                         {% endwith %}
                     {% endif %}
                     {% for user, ignored in entry.users %}

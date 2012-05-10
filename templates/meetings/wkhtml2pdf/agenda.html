@@ -35,7 +35,7 @@
             {% with entry.submission.current_submission_form.primary_investigator as pi %}
                 {% if pi %}
                     <span class="bold">Prüfer:</span>
-                        {% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}
+                        {{ pi.contact.full_name }}
                         {% if entry.submission.invite_primary_investigator_to_meeting %}
                             <span class="bold">(eingeladen um {{ entry.start|datetimeround:-10|date:'H:i' }} Uhr)</span>
                         {% endif %}

@@ -111,7 +111,7 @@
         {% with submission_form.primary_investigator as pi %}
             <td colspan="3">
             {% if pi %}
-                {% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}{% if pi.organisation %} ({{ pi.organisation }}){% endif %}
+                {{ pi.contact.full_name }}{% if pi.organisation %} ({{ pi.organisation }}){% endif %}
             {% else %}
                 <em>{% trans "No Primary Investigator" %}</em>
             {% endif %}
