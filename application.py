@@ -108,7 +108,7 @@ tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
 tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
 pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
-mocca:static:all:http://egovlabs.gv.at/frs/download.php/312/BKUOnline-1.3.7.war:custom:bkuonline.war
+mocca:static:all:http://egovlabs.gv.at/frs/download.php/370/BKUOnline-1.3.7.war:custom:bkuonline.war
 
 
 # ecs/mediaserver: file encryption, used for storage vault 
