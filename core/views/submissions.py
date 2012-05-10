@@ -441,12 +441,17 @@ def vote_preparation(request, submission_form_pk=None):
     else:
         blueprint_slug = 'thesis_review'
 
-    checklist_answers = ChecklistAnswer.objects.filter(checklist__submission=submission_form.submission,
-        question__blueprint__slug=blueprint_slug, question__number='1', checklist__status='completed')
+    checklists = Checklist.objects.filter(submission=submission_form.submission,
+        blueprint__slug=blueprint_slug, status='completed')
+
+    text = []
+    for checklist in checklists:
+        text += [u'>>> {0}: {1} <<<\n\n'.format(checklist.blueprint.name, checklist.user) + u'\n\n'.join(u'{0}. {1}\n{2} - {3}'.format(a.question.number, a.question.text, _(u'Yes') if a.answer else _(u'No'), a.comment) for a in checklist.answers.all())]
+    text = u'\n\n\n'.join(text)
 
     initial = None
     if vote is None:
-        initial = {'text': u'\n\n'.join([a.comment for a in checklist_answers if not a.comment is None])}
+        initial = {'text': text}
     form = VotePreparationForm(request.POST or None, instance=vote, initial=initial)
     
     form.bound_to_task = request.task_management.task
