@@ -446,7 +446,7 @@ def vote_preparation(request, submission_form_pk=None):
 
     text = []
     for checklist in checklists:
-        text += [u'>>> {0}: {1} <<<\n\n'.format(checklist.blueprint.name, checklist.user) + u'\n\n'.join(u'{0}. {1}\n{2} - {3}'.format(a.question.number, a.question.text, _(u'Yes') if a.answer else _(u'No'), a.comment) for a in checklist.answers.all())]
+        text += [u'>>> {0}: {1} <<<\n\n'.format(checklist.blueprint.name, checklist.last_edited_by) + u'\n\n'.join(u'{0}. {1}\n{2} - {3}'.format(a.question.number, a.question.text, _(u'Yes') if a.answer else _(u'No'), a.comment) for a in checklist.answers.all())]
     text = u'\n\n\n'.join(text)
 
     initial = None

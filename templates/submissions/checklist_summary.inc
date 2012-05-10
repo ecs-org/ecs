@@ -3,7 +3,7 @@
 <ol>
 {% for checklist, answers in checklist_summary %}
     <li>
-        <h4 class="checklist">{{ checklist.blueprint.name }}: {{ checklist.user|formal_name }}</h4>
+        <h4 class="checklist">{{ checklist.blueprint.name }}: {{ checklist.last_edited_by|formal_name }}</h4>
         <ol>
         {% for answer in answers %}
             <li>
