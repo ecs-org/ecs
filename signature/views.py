@@ -2,6 +2,8 @@
 import urllib
 import urllib2
 import traceback
+import logging
+import sys
 
 from datetime import datetime
 from tempfile import NamedTemporaryFile
@@ -23,6 +25,9 @@ from ecs.utils.pdfutils import pdf_barcodestamp
 from ecs.tasks.models import Task
 
 from ecs.signature.utils import SigningData, with_sign_data, get_pdfas_url
+
+
+logger = logging.getLogger(__name__)
 
 
 def _get_tasks(user):
@@ -169,6 +174,7 @@ def sign_receive(request, mock=False):
     except Exception as e:
         # the cake is a lie
         transaction.savepoint_rollback(sid)
+        logger.warn('Signing Error', exc_info=sys.exc_info())
         return sign_error(request, pdf_id=request.sign_data.id, error=repr(e), cause=traceback.format_exc())
 
     else:
