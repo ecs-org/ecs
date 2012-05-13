@@ -32,7 +32,7 @@ class AuditTrail(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     instance = generic.GenericForeignKey()
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(db_index=True)
     description = models.CharField(max_length=100, null=False, blank=False)
     user = models.ForeignKey('auth.User', null=False, blank=False)
     data = models.TextField(null=False, blank=False)
