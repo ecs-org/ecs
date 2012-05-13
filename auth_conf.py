@@ -137,13 +137,19 @@ class ChecklistQFactory(authorization.QFactory):
         profile = user.get_profile()
         if profile.is_internal:
             return self.make_q()
+
+        involved_by_task = self.make_q(submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
+        involved_as_presenting_party = (
+            self.make_q(submission__current_submission_form__sponsor=user) |
+            self.make_q(submission__current_submission_form__submitter=user) |
+            self.make_q(submission__current_submission_form__primary_investigator__user=user) |
+            self.make_q(submission__presenter=user) |
+            self.make_q(submission__susar_presenter=user)
+        )
+
         q = self.make_q(last_edited_by=user)
-        q |= self.make_q(status='review_ok', submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-        q |= self.make_q(status='review_ok', submission__current_submission_form__sponsor=user)
-        q |= self.make_q(status='review_ok', submission__current_submission_form__submitter=user)
-        q |= self.make_q(status='review_ok', submission__current_submission_form__primary_investigator__user=user)
-        q |= self.make_q(status='review_ok', submission__presenter=user)
-        q |= self.make_q(status='review_ok', submission__susar_presenter=user)
+        q |= involved_by_task & ~involved_as_presenting_party
+        q |= involved_as_presenting_party & self.make_q(status='review_ok')
         return q
 
 authorization.register(Checklist, factory=ChecklistQFactory)
