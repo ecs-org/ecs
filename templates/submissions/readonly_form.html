@@ -68,9 +68,11 @@
                         </li>
                     {% endif %}
                 {% endif %}
-                <li>
-                    <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
-                </li>
+                {% if not user|is_presenting_party:submission_form %}
+                    <li>
+                        <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
+                    </li>
+                {% endif %}
             </ul>
         </li>
 
@@ -138,9 +140,11 @@
     <div id="status_tab">
         {% include 'submissions/tabs/status.html' %}
     </div>
-    <div id="involved_parties_tab">
-        {% include 'submissions/tabs/involved_parties.html' %}
-    </div>
+    {% if not user|is_presenting_party:submission_form %}
+        <div id="involved_parties_tab">
+            {% include 'submissions/tabs/involved_parties.html' %}
+        </div>
+    {% endif %}
     <div id="pending_notifications_tab" class="tab">
         <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}

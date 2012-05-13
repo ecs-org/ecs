@@ -49,7 +49,7 @@ class SendMessageForm(forms.ModelForm):
         ]
         receiver_type_initial = 'ec'
 
-        if submission is not None:
+        if submission is not None and not get_current_user() in submission.current_submission_form.get_presenting_parties():
             receiver_type_choices += [
                 ('involved', _('Involved Party')),
             ]
