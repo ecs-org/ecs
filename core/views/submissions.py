@@ -161,7 +161,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     crumbs = ([submission.pk] + [pk for pk in crumbs if not pk == submission.pk])[:3]
     cache.set(crumbs_key, crumbs, 60*60*24*30) # store for thirty days
 
-    checklists = submission.checklists.filter(Q(status__in=('completed', 'review_ok',)) | Q(last_edited_by=request.user)).order_by('blueprint__name')
+    checklists_q = Q(last_edited_by=request.user)
+    if request.user.get_profile().is_internal:
+        checklists_q |= Q(status__in=['completed', 'review_ok']) & ~(Q(blueprint__slug='external_review') & ~Q(status='review_ok'))
+    else:
+        checklists_q |= Q(status__in=['completed', 'review_ok'])
+    checklists = submission.checklists.filter(checklists_q).order_by('blueprint__name')
 
     checklist_reviews = []
     for checklist in checklists:
