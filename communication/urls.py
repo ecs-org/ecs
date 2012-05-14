@@ -4,7 +4,9 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('ecs.communication.views',
     url(r'^list/$', 'list_threads'),
     url(r'^widget/incoming/$', 'incoming_message_widget'),
+    url(r'^widget/incoming/(?P<submission_pk>\d+)/$', 'incoming_message_widget'),
     url(r'^widget/outgoing/$', 'outgoing_message_widget'),
+    url(r'^widget/outgoing/(?P<submission_pk>\d+)/$', 'outgoing_message_widget'),
     url(r'^widget/overview/(?P<submission_pk>\d+)$', 'communication_overview_widget'),
 
     url(r'^new/(?:(?P<submission_pk>\d+)/)?$', 'new_thread'),

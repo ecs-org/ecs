@@ -92,9 +92,8 @@ def close_thread(request, thread_pk=None):
 
 @readonly()
 @tracking_hint(exclude=True)
-def incoming_message_widget(request):
+def incoming_message_widget(request, submission_pk=None):
     qs = Thread.objects.incoming(request.user).open(request.user)
-    submission_pk = request.GET.get('submission', None)
     submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -115,9 +114,8 @@ def incoming_message_widget(request):
 
 @readonly()
 @tracking_hint(exclude=True)
-def outgoing_message_widget(request):
+def outgoing_message_widget(request, submission_pk=None):
     qs = Thread.objects.outgoing(request.user).open(request.user)
-    submission_pk = request.GET.get('submission', None)
     submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
