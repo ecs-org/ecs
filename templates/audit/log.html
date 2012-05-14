@@ -9,7 +9,7 @@ Audit Trail
 
 {% block content %}
 
-<pre>
+<pre style="white-space:pre-wrap;">
 {% for entry in entries %}
 {{ entry.get_log_line }}{% endfor %}
 </pre>
