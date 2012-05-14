@@ -104,7 +104,7 @@ AUTH_PROFILE_MODULE = 'users.UserProfile'
 MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
 
 # Session Settings
-SESSION_COOKIE_AGE = 2700                # logout after 45 minutes of inactivity
+SESSION_COOKIE_AGE = 28800               # logout after 8 hours of inactivity
 SESSION_SAVE_EVERY_REQUEST = True        # so, every "click" on the pages resets the expiry time
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of browser
 
