@@ -240,6 +240,10 @@ pyyaml:instbin:win:http://pypi.python.org/packages/2.6/P/PyYAML/PyYAML-3.10.win3
 # browser detection
 httpagentparser:inst:all:pypi:httpagentparser
 
+# interactive python makes your life easier
+ipython:inst:win:pypi:pyreadline
+ipython:inst:all:pypi:ipython
+
 """
 
 # packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
@@ -285,10 +289,6 @@ django-devserver:inst:all:https://github.com/dcramer/django-devserver/tarball/ma
 
 # cherrypy running django (threaded wsgi server)
 django-wsgiserver:inst:all:pypi:django-wsgiserver
-
-# interactive python makes your life easier
-ipython:inst:win:pypi:pyreadline
-ipython:inst:all:pypi:ipython
 
 # dependency generation for python programs
 sfood:inst:all:pypi:snakefood
