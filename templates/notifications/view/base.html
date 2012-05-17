@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load i18n %}
+{% load i18n userutils %}
 
 {% block htmltitle %}{{ notification }} | {{ block.super }}{% endblock %}
 {% block headertitle %}
@@ -17,7 +17,9 @@ Meldungen zur laufenden Studie(n)
 
     <a href="{% url ecs.notifications.views.notification_pdf notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
     {% if notification.answer %}
-    <a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
+    {% if notification.answer.published_at or user|has_flag:'is_internal' %}
+        <a href="{% url ecs.notifications.views.view_notification_answer notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
+    {% endif %}
     {% endif %}
 </div>
 

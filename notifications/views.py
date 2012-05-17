@@ -197,10 +197,10 @@ def edit_notification_answer(request, notification_pk=None):
 
 @readonly()
 def view_notification_answer(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk, answer__isnull=False)
+    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
     return render(request, 'notifications/answers/view.html', {
-        'notification': notification,
-        'answer': notification.answer,
+        'notification': answer.notification,
+        'answer': answer,
     })
     
 
