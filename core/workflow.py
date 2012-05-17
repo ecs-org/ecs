@@ -123,11 +123,13 @@ def is_still_b2(wf):
 
 @guard(model=Submission)
 def needs_insurance_b2_review(wf):
-    return wf.data.newest_submission_form.current_pending_vote.insurance_review_required
+    vote = wf.data.get_most_recent_vote()
+    return vote.insurance_review_required
 
 @guard(model=Submission)
 def needs_executive_b2_review(wf):
-    return wf.data.newest_submission_form.current_pending_vote.executive_review_required
+    vote = wf.data.get_most_recent_vote()
+    return vote.executive_review_required
 
 ##############
 # Activities #
@@ -200,7 +202,7 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
         )
         
     def pre_perform(self, choice):
-        vote = self.workflow.data.newest_submission_form.current_pending_vote
+        vote = self.workflow.data.get_most_recent_vote()
         if choice == 'insrev':
             vote.executive_review_required = False
             vote.insurance_review_required = True
