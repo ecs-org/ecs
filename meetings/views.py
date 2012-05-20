@@ -166,7 +166,7 @@ def tops(request, meeting_pk=None):
     })
 
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
@@ -177,7 +177,7 @@ def submission_list(request, meeting_pk=None):
     })
 
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     
