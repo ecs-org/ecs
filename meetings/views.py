@@ -125,7 +125,7 @@ def open_tasks(request, meeting_pk=None):
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
