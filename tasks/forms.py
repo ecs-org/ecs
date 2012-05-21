@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from urllib import urlencode
 
 from django import forms
+from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
@@ -91,28 +93,28 @@ class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
         return qs
 
 class TaskListFilterForm(forms.Form):
-    past_meetings = forms.BooleanField(required=False)
-    next_meeting = forms.BooleanField(required=False)
-    upcoming_meetings = forms.BooleanField(required=False)
-    no_meeting = forms.BooleanField(required=False)
+    past_meetings = forms.BooleanField(required=False, initial=True)
+    next_meeting = forms.BooleanField(required=False, initial=True)
+    upcoming_meetings = forms.BooleanField(required=False, initial=True)
+    no_meeting = forms.BooleanField(required=False, initial=True)
 
-    amg = forms.BooleanField(required=False)
-    mpg = forms.BooleanField(required=False)
-    thesis = forms.BooleanField(required=False)
-    expedited = forms.BooleanField(required=False)
-    local_ec = forms.BooleanField(required=False)
-    other = forms.BooleanField(required=False)
+    amg = forms.BooleanField(required=False, initial=True)
+    mpg = forms.BooleanField(required=False, initial=True)
+    thesis = forms.BooleanField(required=False, initial=True)
+    expedited = forms.BooleanField(required=False, initial=True)
+    local_ec = forms.BooleanField(required=False, initial=True)
+    other = forms.BooleanField(required=False, initial=True)
 
-    mine = forms.BooleanField(required=False)
-    assigned = forms.BooleanField(required=False)
-    open = forms.BooleanField(required=False)
-    proxy = forms.BooleanField(required=False)
+    mine = forms.BooleanField(required=False, initial=True)
+    assigned = forms.BooleanField(required=False, initial=True)
+    open = forms.BooleanField(required=False, initial=True)
+    proxy = forms.BooleanField(required=False, initial=True)
 
     sorting = forms.ChoiceField(required=False, choices=(
         ('deadline', _('Deadline')),
         ('oldest', _('Oldest')),
         ('newest', _('Newest')),
-    ))
+    ), initial='deadline')
 
     task_types = TaskTypeMultipleChoiceField(required=False, queryset=TaskType.objects.all())
 
@@ -120,3 +122,20 @@ class TaskListFilterForm(forms.Form):
         super(TaskListFilterForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'task_types'}))
+
+    @property
+    def defaults(self):
+        data = {'sorting': 'deadline'}
+        for name, field in self.fields.items():
+            if isinstance(field, forms.BooleanField):
+                data[name] = u'on'
+        return QueryDict(urlencode(data))
+
+    def get_data(self):
+        if self.is_bound:
+            return self.data
+        else:
+            return self.defaults
+
+    def urlencode(self):
+        return self.get_data().urlencode()

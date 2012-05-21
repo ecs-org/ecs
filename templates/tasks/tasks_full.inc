@@ -32,9 +32,8 @@
     <div class="task_list_choose task_select">
         <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
     </div>
-    <div class="task_bookmark">
-        <span class="icon_comment" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}"></span> 
-        <a href="{{ bookmarklink }}">{% trans "Bookmark" %}</a>
+    <div class="task_bookmark" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}">
+        <a href="{{ bookmarklink }}"><span class="icon_comment"></span>{% trans "Bookmark" %}</a>
     </div>
 </form>
 

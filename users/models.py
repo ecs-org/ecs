@@ -71,7 +71,7 @@ class UserSettings(models.Model):
     submission_filter_widget_internal = JSONField()
     submission_filter_mine = JSONField()
     submission_filter_assigned = JSONField()
-    task_filter = JSONField()
+    task_filter = models.TextField(null=True)
     communication_filter = JSONField()
     useradministration_filter = JSONField()
     pdfviewer_settings = JSONField()

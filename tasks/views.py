@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import random
-from urllib import urlencode
 
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, QueryDict
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext as _
@@ -35,40 +34,40 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
 
 
 @readonly()
-def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
+def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):
     usersettings = request.user.ecs_settings
 
-    filter_defaults = dict(sorting='deadline')
-    for key in ('mine', 'assigned', 'open', 'proxy', 'amg', 'mpg', 'thesis', 'expedited', 'local_ec', 'other', 'past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting'):
-        filter_defaults[key] = 'on'
-
-    filterdict = request.POST or request.GET or usersettings.task_filter or filter_defaults
+    filterdict = request.POST or request.GET or None
+    if filterdict is None and not usersettings.task_filter is None:
+        filterdict = QueryDict(usersettings.task_filter)
     filterform = TaskListFilterForm(filterdict)
     filterform.is_valid() # force clean
 
-    userfilter = filterform.cleaned_data.copy()
-    del userfilter['task_types']
     if request.method == 'POST':
-        usersettings.task_filter = userfilter
+        usersettings.task_filter = filterform.urlencode()
         usersettings.save()
         if len(request.GET.values()) > 0:
             return HttpResponseRedirect(request.path)
-    
+
     sortings = {
         'deadline': 'workflow_token__deadline',
         'oldest': 'created_at',
         'newest': '-created_at',
     }
-    order_by = ['task_type__name', sortings[filterform.cleaned_data['sorting'] or 'deadline'], 'assigned_at']
+    sorting = 'deadline'
+    if filterform.is_valid():
+        sorting = filterform.cleaned_data['sorting']
+    order_by = ['task_type__name', sortings[sorting], 'assigned_at']
 
     all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type', 'task_type__workflow_node')
 
+    submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
         tasks = all_tasks.for_submission(submission)
+    elif not filterform.is_valid():
+        tasks = all_tasks
     else:
-        submission = None
-
         cd = filterform.cleaned_data
         past_meetings = cd['past_meetings']
         next_meeting = cd['next_meeting']
@@ -139,27 +138,29 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
             tasks |= submission_tasks
             tasks |= vote_tasks
     
-        task_types = filterform.cleaned_data['task_types']
-        if task_types:
-            tasks = tasks.filter(task_type__in=task_types)
+        if not ignore_task_types:
+            task_types = filterform.cleaned_data['task_types']
+            if task_types:
+                tasks = tasks.filter(task_type__in=task_types)
 
     data = {
         'submission': submission,
         'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
-        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), urlencode(filterform.data.copy())),
+        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), filterform.urlencode()),
     }
 
     task_flavors = {
-        'mine': lambda tasks: tasks.filter(assigned_to=request.user, accepted=True).order_by(*order_by),
-        'assigned': lambda tasks: tasks.filter(assigned_to=request.user, accepted=False).order_by(*order_by),
-        'open': lambda tasks: tasks.filter(assigned_to=None).order_by(*order_by),
-        'proxy': lambda tasks: tasks.filter(assigned_to__ecs_profile__is_indisposed=True).order_by(*order_by),
+        'mine': Q(assigned_to=request.user, accepted=True),
+        'assigned': Q(assigned_to=request.user, accepted=False),
+        'open': Q(assigned_to=None),
+        'proxy': Q(assigned_to__ecs_profile__is_indisposed=True),
     }
 
-    for k, f in task_flavors.iteritems():
+    for k, q in task_flavors.iteritems():
         ck = '%s_tasks' % k
-        data[ck] = f(tasks) if filterform.cleaned_data[k] else tasks.none()
+        on = not filterform.is_valid() or filterform.cleaned_data[k]
+        data[ck] = tasks.filter(q).order_by(*order_by) if on else tasks.none()
 
     return render(request, template, data)
 
@@ -167,6 +168,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None):
 @readonly()
 def task_list(request, **kwargs):
     kwargs.setdefault('template', 'tasks/list.html')
+    kwargs.setdefault('ignore_task_types', False)
     return my_tasks(request, **kwargs)
 
 
