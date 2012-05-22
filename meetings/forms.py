@@ -71,8 +71,8 @@ ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=T
 
 
 class SubmissionReschedulingForm(forms.Form):
-    from_meeting = forms.ModelChoiceField(Meeting.objects.none(), label=_('From meeting'))
-    to_meeting = forms.ModelChoiceField(Meeting.objects.none(), label=_('To meeting'))
+    from_meeting = forms.ModelChoiceField(Meeting.objects.none(), label=_('From meeting'), initial=0)
+    to_meeting = forms.ModelChoiceField(Meeting.objects.none(), label=_('To meeting'), initial=0)
     
     def __init__(self, *args, **kwargs):
         submission = kwargs.pop('submission')
