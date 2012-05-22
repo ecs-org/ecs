@@ -17,6 +17,7 @@ from ecs.utils.viewutils import render_pdf
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.users.utils import sudo
+from ecs.meetings.signals import on_meeting_top_add, on_meeting_top_delete, on_meeting_top_index_change
 
 
 class TimetableMetrics(object):
@@ -277,12 +278,12 @@ class Meeting(models.Model):
             entry.move_to_optimal_position()
         self._clear_caches()
         self.create_boardmember_reviews()
+        on_meeting_top_add.send(Meeting, meeting=self, timetable_entry=entry)
         return entry
 
     def add_break(self, **kwargs):
         kwargs['is_break'] = True
         entry = self.add_entry(**kwargs)
-        self._clear_caches()
         return entry
         
     def __getitem__(self, index):
@@ -298,6 +299,7 @@ class Meeting(models.Model):
     def __delitem__(self, index):
         self[index].delete()
         self._clear_caches()
+        on_meeting_top_delete.send(Meeting, meeting=self, timetable_entry=entry)
         
     def __len__(self):
         return self.timetable_entries.filter(timetable_index__isnull=False).count()
@@ -517,10 +519,10 @@ class TimetableEntry(models.Model):
         if not self.timetable_index is None:
             return self.timetable_index
         else:
-            index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max'] + 1
             if index is None:
-                index = -1
-            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lte=self.pk).count()
+                index = 0
+            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lt=self.pk).count()
             return index
     
     @cached_property
@@ -567,6 +569,7 @@ class TimetableEntry(models.Model):
             self.timetable_index = index
             self.save(force_update=True)
             self.meeting._clear_caches()
+            on_meeting_top_index_change.send(Meeting, meeting=self, timetable_entry=entry)
         except:
             transaction.savepoint_rollback(sid)
             raise

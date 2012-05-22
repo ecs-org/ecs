@@ -11,10 +11,8 @@
         {% if top.submission %}
             {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
             {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
-            {% if user|has_flag:'is_internal' %}
-                <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
-                | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
-            {% endif %}
+            <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
+            | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
         {% else %}
             {{ top.title }}
         {% endif %}
@@ -39,10 +37,8 @@
             {% if top.submission %}
                 {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
                 {{ top.submission.project_title_display|default:'<i>Unbenannt.</i>' }}<br />
-                {% if user|has_flag:'is_internal' %}
-                    <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
-                    | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
-                {% endif %}
+                <a href="{% url view_submission submission_pk=top.submission.pk %}" target="_blank">Ansehen</a>
+                | <a href="{% url ecs.scratchpad.views.popup %}?submission={{ top.submission.pk }}" class="open-in-popup">{% trans 'Scratchpad' %}</a>
             {% else %}
                 {{ top.title }}
             {% endif %}
@@ -71,3 +67,14 @@
 {% endif %}
 
 </div>
+
+{% if not meeting.ended %}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        var widget = $('tops_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
+        setTimeout(function(){
+            widget.load();
+        }, 10000);
+    });
+</script>
+{% endif %}

@@ -18,7 +18,7 @@
             </span>
             <span>
                 {% if meeting.started %}
-                    {{ form.instance.board_member }}
+                    {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
                 {% else %}
                     {{ form.id }}
                     {{ form.board_member }}

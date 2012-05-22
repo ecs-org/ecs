@@ -17,6 +17,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.servers.basehttp import FileWrapper
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from django.core.cache import cache
 from django.db.models import Q
 
 from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
@@ -31,8 +32,7 @@ from ecs.ecsmail.utils import deliver
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
-from ecs.meetings.signals import on_meeting_end
-from ecs.votes.signals import on_vote_creation
+from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_close
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
@@ -125,56 +125,64 @@ def open_tasks(request, meeting_pk=None):
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
+@user_flag_required('is_internal')
 def tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    cache_key = 'meeting:{0}:tops'.format(meeting.pk)
+    html = cache.get(cache_key)
+    if html is None:
+        tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
+        tops.sort(key=lambda e: e.agenda_index)
 
-    tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
-    tops.sort(key=lambda e: e.agenda_index)
+        next_tops = [t for t in tops if t.is_open][:3]
+        closed_tops = [t for t in tops if not t.is_open]
 
-    next_tops = [t for t in tops if t.is_open][:3]
-    closed_tops = [t for t in tops if not t.is_open]
+        open_tops = SortedDict()
+        for top in [t for t in tops if t.is_open]:
+            if top.submission:
+                medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+                    category__in=top.submission.medical_categories.values('pk').query)
+                bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
+            else:
+                bms = ()
+            if bms in open_tops:
+                open_tops[bms].append(top)
+            else:
+                open_tops[bms] = [top]
 
-    open_tops = SortedDict()
-    for top in [t for t in tops if t.is_open]:
-        if top.submission:
-            medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
-                category__in=top.submission.medical_categories.values('pk').query)
-            bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
-        else:
-            bms = ()
-        if bms in open_tops:
-            open_tops[bms].append(top)
-        else:
-            open_tops[bms] = [top]
-    
-    def board_member_cmp(a, b):
-        if not a:
-            return 1
-        if not b:
-            return -1
-        return a < b
+        def board_member_cmp(a, b):
+            if not a:
+                return 1
+            if not b:
+                return -1
+            return a < b
 
-    open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
-    
+        open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
 
-    return render(request, 'meetings/tabs/tops.html', {
-        'meeting': meeting,
-        'next_tops': next_tops,
-        'open_tops': open_tops,
-        'closed_tops': closed_tops,
-    })
+        html = render(request, 'meetings/tabs/tops.html', {
+            'meeting': meeting,
+            'next_tops': next_tops,
+            'open_tops': open_tops,
+            'closed_tops': closed_tops,
+        })
+        cache.set(cache_key, html, 60*10)
+    return HttpResponse(html)
 
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
-    tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
-    return render(request, 'meetings/tabs/submissions.html', {
-        'meeting': meeting,
-        'tops': tops,
-    })
+    cache_key = 'meeting:{0}:submission_list'.format(meeting.pk)
+    html = cache.get(cache_key)
+    if html is None:
+        tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
+        tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
+        html = render(request, 'meetings/tabs/submissions.html', {
+            'meeting': meeting,
+            'tops': tops,
+        })
+        cache.set(cache_key, html, 60 * 10)
+    return HttpResponse(html)
 
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
@@ -423,6 +431,7 @@ def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     meeting.started = datetime.now()
     meeting.save()
+    on_meeting_start.send(Meeting, meeting=meeting)
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
@@ -433,25 +442,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
         raise Http404(_("unfinished meetings cannot be stopped"))
     meeting.ended = datetime.now()
     meeting.save()
-    for vote in Vote.objects.filter(top__meeting=meeting):
-        vote.save() # trigger post_save for all votes
-
-    for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
-        vote = Vote.objects.create(top=top, result='3a')
-        on_vote_creation.send(Vote, vote=vote)
-        top.is_open = False
-        top.save()
-
-    for vote in Vote.objects.filter(top__meeting=meeting, submission_form__isnull=False).recessed():
-        submission = vote.get_submission()
-        submission.schedule_to_meeting()
-        with sudo():
-            tasks = Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
-            if tasks and not any(t for t in tasks if not t.closed_at):
-                tasks[0].reopen()
-    
     on_meeting_end.send(Meeting, meeting=meeting)
-    
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
@@ -538,11 +529,13 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             if form.cleaned_data['close_top']:
                 top.is_open = False
                 top.save()
+                on_meeting_top_close.send(Meeting, meeting=meeting, timetable_entry=top)
                 return next_top_redirect()
             return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
     elif request.method == 'POST':
         top.is_open = False
         top.save()
+        on_meeting_top_close.send(Meeting, meeting=meeting, timetable_entry=top)
         return next_top_redirect()
 
     last_top_cache_key = 'meetings:%s:assistant:top_pk' % meeting.pk
@@ -788,6 +781,7 @@ def edit_meeting(request, meeting_pk=None):
     form = MeetingForm(request.POST or None, instance=meeting)
     if form.is_valid():
         meeting = form.save()
+        on_meeting_date_changed.send(Meeting, meeting=meeting)
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/form.html', {
         'form': form,

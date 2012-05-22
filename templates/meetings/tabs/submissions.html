@@ -3,7 +3,6 @@
 <h2>{% trans 'Submissions' %}</h2>
 
 <div id="meeting_list" class="form_main">
-
     <p><a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk %}" class="button_submit">{% trans 'Download all documents for this meeting (zip)' %}</a></p>
     <ol>
     {% for top in tops %}
@@ -12,7 +11,7 @@
               </ol><h2>Weitere TOPs</h2><ol>
             {% endif %}
           {% endifchanged %}
-          <li>
+          <li{% if not top.is_open %} style="color:#9a9a9a;"{% endif %}>
             <span class="top">{{ top }}</span>
             {% if top.submission %}
                 <a href="{% url ecs.meetings.views.download_zipped_documents meeting_pk=meeting.pk submission_pk=top.submission.pk %}"><span class="icon_download" title="{% trans 'Download documents (zip)' %}"></span></a>
@@ -27,3 +26,14 @@
     {% endfor %}
     </ol>
 </div>
+
+{% if not meeting.ended %}
+<script type="text/javascript">
+    window.addEvent('domready', function(){
+        var widget = $('submissions_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
+        setTimeout(function(){
+            widget.load();
+        }, 10000);
+    });
+</script>
+{% endif %}

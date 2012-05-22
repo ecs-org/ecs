@@ -9,9 +9,9 @@
                 <li><a href="#status_tab">{% trans "Status" %}</a></li>
                 {% if user|has_flag:'is_internal' %}
                     <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
+                    <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
                 {% endif %}
                 {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
-                    <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
                     <li><a href="#submissions_tab">{% trans "Submissions" %}</a></li>
                 {% endif %}
             </ul>
@@ -42,11 +42,11 @@
         <div id="open_tasks_tab">
             <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
         </div>
-    {% endif %}
-    {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
         <div id="tops_tab">
             <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
         </div>
+    {% endif %}
+    {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
         <div id="submissions_tab">
             <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"></div>
         </div>
