@@ -71,9 +71,10 @@ if settings.DEBUG:
         logger.warn('foo')
         return HttpResponse()
     urlpatterns += patterns('', 
-        url(r'^trigger500/$', lambda request: 1/0), 
+        url(r'^debug/empty/$', lambda request: HttpResponse()),
+        url(r'^debug/404/$', 'ecs.urls.fake404handler'),
+        url(r'^debug/500/$', lambda request: 1/0),
         url(r'^trigger-warning-log/$', __trigger_log),
-        url(r'^trigger404/$', 'ecs.urls.fake404handler'),
     )
 
 if 'ecs.userswitcher' in settings.INSTALLED_APPS:
