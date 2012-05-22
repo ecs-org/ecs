@@ -227,7 +227,7 @@
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab">
             {% block categorization_review_tab_content %}
-                {% if categorization_task and categorization_review_form.readonly %}
+                {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
                     <p><a href="{% url ecs.tasks.views.reopen_task task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
                 {% endif %}
                 <p>

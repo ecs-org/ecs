@@ -265,6 +265,9 @@ class Submission(models.Model):
     def get_filename_slice(self):
         return self.get_ec_number_display(separator='_')
 
+    def allows_categorization(self):
+        return not self.meetings.filter(started__isnull=False, ended__isnull=True).exists() and not self.is_active and not self.is_finished
+
     class Meta:
         app_label = 'core'
 
@@ -570,7 +573,7 @@ class SubmissionForm(models.Model):
             most_recent_vote = s.get_most_recent_vote(is_draft=False)
             if most_recent_vote and most_recent_vote.result == '2':
                 return True # b2 resubmission
-            in_running_meeting = s.timetable_entries.filter(meeting__started__isnull=False, meeting__ended__isnull=True).exists()
+            in_running_meeting = s.meetings.filter(started__isnull=False, ended__isnull=True).exists()
         return self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not (self.current_pending_vote and not self.current_pending_vote.is_draft)
         
     def allows_amendments(self, user):

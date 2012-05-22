@@ -233,6 +233,10 @@ class CategorizationReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
+    def is_locked(self):
+        s = self.workflow.data
+        return not s.allows_categorization()
+
     def pre_perform(self, choice):
         s = self.workflow.data
         on_categorization_review.send(Submission, submission=s)
@@ -255,6 +259,9 @@ class CategorizationReview(Activity):
             with sudo():
                 Task.objects.for_data(checklist).filter(closed_at=None, deleted_at=None).mark_deleted()
 
+def unlock_categorization_review(sender, **kwargs):
+    kwargs['instance'].workflow.unlock(CategorizationReview)
+post_save.connect(unlock_categorization_review, sender=Submission)
 
 class ExpeditedRecommendationSplit(Generic):
     class Meta:
