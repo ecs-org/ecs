@@ -40,6 +40,7 @@ from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEn
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
+from ecs.meetings.cache import cache_meeting_page
 
 
 @user_flag_required('is_internal')
@@ -107,9 +108,8 @@ def reschedule_submission(request, submission_pk=None):
     })
 
 @user_flag_required('is_internal')
-def open_tasks(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-
+@cache_meeting_page(timeout=60)
+def open_tasks(request, meeting=None):
     tops = list(meeting.timetable_entries.filter(submission__isnull=False).select_related('submission', 'submission__current_submission_form'))
     tops.sort(key=lambda e: e.agenda_index)
 
@@ -120,70 +120,58 @@ def open_tasks(request, meeting_pk=None):
         if len(ts):
             open_tasks[top] = ts
     
-    return render(request, 'meetings/tabs/open_tasks.html', {
+    return render_html(request, 'meetings/tabs/open_tasks.html', {
         'meeting': meeting,
         'open_tasks': open_tasks,
     })
 
 @user_flag_required('is_internal')
-def tops(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    cache_key = 'meeting:{0}:tops'.format(meeting.pk)
-    html = cache.get(cache_key)
-    if html is None:
-        tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
-        tops.sort(key=lambda e: e.agenda_index)
+@cache_meeting_page()
+def tops(request, meeting=None):
+    tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
+    tops.sort(key=lambda e: e.agenda_index)
 
-        next_tops = [t for t in tops if t.is_open][:3]
-        closed_tops = [t for t in tops if not t.is_open]
+    next_tops = [t for t in tops if t.is_open][:3]
+    closed_tops = [t for t in tops if not t.is_open]
 
-        open_tops = SortedDict()
-        for top in [t for t in tops if t.is_open]:
-            if top.submission:
-                medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
-                    category__in=top.submission.medical_categories.values('pk').query)
-                bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
-            else:
-                bms = ()
-            if bms in open_tops:
-                open_tops[bms].append(top)
-            else:
-                open_tops[bms] = [top]
+    open_tops = SortedDict()
+    for top in [t for t in tops if t.is_open]:
+        if top.submission:
+            medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+                category__in=top.submission.medical_categories.values('pk').query)
+            bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
+        else:
+            bms = ()
+        if bms in open_tops:
+            open_tops[bms].append(top)
+        else:
+            open_tops[bms] = [top]
 
-        def board_member_cmp(a, b):
-            if not a:
-                return 1
-            if not b:
-                return -1
-            return a < b
+    def board_member_cmp(a, b):
+        if not a:
+            return 1
+        if not b:
+            return -1
+        return a < b
 
-        open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
+    open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
 
-        html = render(request, 'meetings/tabs/tops.html', {
-            'meeting': meeting,
-            'next_tops': next_tops,
-            'open_tops': open_tops,
-            'closed_tops': closed_tops,
-        })
-        cache.set(cache_key, html, 60*10)
-    return HttpResponse(html)
-
+    return render_html(request, 'meetings/tabs/tops.html', {
+        'meeting': meeting,
+        'next_tops': next_tops,
+        'open_tops': open_tops,
+        'closed_tops': closed_tops,
+    })
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
-def submission_list(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    cache_key = 'meeting:{0}:submission_list'.format(meeting.pk)
-    html = cache.get(cache_key)
-    if html is None:
-        tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
-        tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
-        html = render(request, 'meetings/tabs/submissions.html', {
-            'meeting': meeting,
-            'tops': tops,
-        })
-        cache.set(cache_key, html, 60 * 10)
-    return HttpResponse(html)
-
+@cache_meeting_page()
+def submission_list(request, meeting=None):
+    tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
+    tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
+    return render_html(request, 'meetings/tabs/submissions.html', {
+        'meeting': meeting,
+        'tops': tops,
+    })
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
@@ -235,7 +223,6 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/zip')
     response['Content-Disposition'] = 'attachment;filename=%s.zip' % '.'.join(filename_bits)
     return response
-
 
 @user_flag_required('is_internal')
 @user_group_required('EC-Office')
@@ -588,7 +575,6 @@ def agenda_pdf(request, meeting_pk=None):
     pdf = meeting.get_agenda_pdf(request)
     return pdf_response(pdf, filename=filename)
 
-
 #@readonly()
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
@@ -670,7 +656,6 @@ def send_protocol(request, meeting_pk=None):
 
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
-
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def protocol_pdf(request, meeting_pk=None):
@@ -679,7 +664,6 @@ def protocol_pdf(request, meeting_pk=None):
     with sudo():
         pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
-
 
 @readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
@@ -710,7 +694,6 @@ def next(request):
         return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
     else:
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
-
 
 @readonly(methods=['GET'])
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')

@@ -67,14 +67,3 @@
 {% endif %}
 
 </div>
-
-{% if not meeting.ended %}
-<script type="text/javascript">
-    window.addEvent('domready', function(){
-        var widget = $('tops_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
-        setTimeout(function(){
-            widget.load();
-        }, 10000);
-    });
-</script>
-{% endif %}

@@ -1,16 +1,16 @@
-from django.core.cache import cache
-
 from ecs.meetings import signals
 from ecs.utils import connect
 from ecs.votes.models import Vote
 from ecs.votes.signals import on_vote_creation
 from ecs.users.utils import sudo
 from ecs.tasks.models import Task
+from ecs.meetings import views
+from ecs.meetings.cache import flush_meeting_page_cache
 
 
 def _flush_cache(meeting):
-    cache.delete('meeting:{0}:submission_list'.format(meeting.pk))
-    cache.delete('meeting:{0}:tops'.format(meeting.pk))
+    flush_meeting_page_cache(meeting, views.submission_list)
+    flush_meeting_page_cache(meeting, views.tops)
 
 @connect(signals.on_meeting_start)
 def on_meeting_start(sender, **kwargs):

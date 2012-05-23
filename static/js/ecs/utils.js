@@ -534,9 +534,11 @@ ecs.setupForms = function(){
 ecs.setupWidgets = function(context){
     context = $(context || document.body);
     context.getElements('.widget').each(function(w){
-        var widgeturl = w.getAttribute('x-widget-url');
-        if (widgeturl) {
-            new ecs.widgets.Widget(w, {url: widgeturl});
+        var options = {};
+        options.url = w.getAttribute('x-widget-url');
+        if (options.url) {
+            options.reload_interval = parseInt(w.getAttribute('x-widget-reload-interval')) * 1000 || null;
+            new ecs.widgets.Widget(w, options);
         }
     }, this);
 };

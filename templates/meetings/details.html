@@ -43,12 +43,12 @@
             <div class="widget" x-widget-url="{% url ecs.meetings.views.open_tasks meeting_pk=meeting.pk %}"></div>
         </div>
         <div id="tops_tab">
-            <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.tops meeting_pk=meeting.pk %}"{% if not meeting.ended %} x-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
     {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
         <div id="submissions_tab">
-            <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"></div>
+            <div class="widget" x-widget-url="{% url ecs.meetings.views.submission_list meeting_pk=meeting.pk %}"{% if not meeting.ended %} x-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
 

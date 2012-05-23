@@ -28,6 +28,7 @@ ecs.widgets.Widget = new Class({
         this.element = $(el);
         this.element.addClass('ecs-Widget');
         this.element.store('ecs.widgets.Widget', this);
+        this.reload_interval = options.reload_interval;
         this.url = options.url;
         if(this.url){
             this.load();
@@ -60,6 +61,13 @@ ecs.widgets.Widget = new Class({
             }
             this.onSuccess();
         }).bind(this));
+        if (this.reload_interval) {
+            request.addEvent('complete', (function(){
+                setTimeout((function(){
+                    this.load();
+                }).bind(this), this.reload_interval);
+            }).bind(this));
+        }
         request.send();
         this.request = request;
     },
