@@ -168,9 +168,12 @@ def tops(request, meeting=None):
 def submission_list(request, meeting=None):
     tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
     tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
+    active_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
+    active_top_pk = cache.get(active_top_cache_key) or meeting[0].pk
     return render_html(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,
+        'active_top_pk': active_top_pk,
     })
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
@@ -397,7 +400,8 @@ def meeting_assistant(request, meeting_pk=None):
                 'message': _(u'This meeting has ended.'),
             })
         try:
-            top_pk = request.session.get('meetings:%s:assistant:top_pk' % meeting.pk, None) or meeting[0].pk
+            top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
+            top_pk = cache.get(top_cache_key) or meeting[0].pk
             return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top_pk}))
         except IndexError:
             return render(request, 'meetings/assistant/error.html', {
@@ -525,11 +529,12 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         on_meeting_top_close.send(Meeting, meeting=meeting, timetable_entry=top)
         return next_top_redirect()
 
-    last_top_cache_key = 'meetings:%s:assistant:top_pk' % meeting.pk
+    last_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
     last_top = None
-    if last_top_cache_key in request.session:
-        last_top = TimetableEntry.objects.get(pk=request.session[last_top_cache_key])
-    request.session[last_top_cache_key] = top.pk
+    last_top_pk = cache.get(last_top_cache_key)
+    if not last_top_pk is None:
+        last_top = TimetableEntry.objects.get(pk=last_top_pk)
+    cache.set(last_top_cache_key, top.pk, 60*60*24*2)
 
     checklist_review_states = SortedDict()
     blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)
