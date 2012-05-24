@@ -4,13 +4,13 @@ from ecs.votes.models import Vote
 from ecs.votes.signals import on_vote_creation
 from ecs.users.utils import sudo
 from ecs.tasks.models import Task
-from ecs.meetings import views
 from ecs.meetings.cache import flush_meeting_page_cache
 
 
 def _flush_cache(meeting):
-    flush_meeting_page_cache(meeting, views.submission_list)
-    flush_meeting_page_cache(meeting, views.tops)
+    from ecs.meetings.views import submission_list, tops
+    flush_meeting_page_cache(meeting, submission_list)
+    flush_meeting_page_cache(meeting, tops)
 
 @connect(signals.on_meeting_start)
 def on_meeting_start(sender, **kwargs):
