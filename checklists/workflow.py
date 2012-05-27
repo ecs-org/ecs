@@ -51,6 +51,10 @@ class ExternalReview(Activity):
             for sf in self.workflow.data.submission.forms.values_list('pk', flat=True)
         ]
 
+    def get_afterlife_url(self):
+        c = self.workflow.data
+        return '{0}#checklist_{1}_review_form'.format(reverse('view_submission', kwargs={'submission_pk': c.submission.pk}), c.pk)
+
     def receive_token(self, *args, **kwargs):
         c = self.workflow.data
         token = super(ExternalReview, self).receive_token(*args, **kwargs)
@@ -62,7 +66,7 @@ class ExternalReview(Activity):
                 except IndexError:
                     meeting = None
             price = Price.objects.get_review_price()
-            url = reverse('view_submission', kwargs={'submission_pk': c.submission.pk})
+            url = reverse('ecs.tasks.views.do_task', kwargs={'task_pk': token.task.pk})
             send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX, 'url': url}, submission=c.submission)
         return token
 

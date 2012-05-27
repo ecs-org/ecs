@@ -69,13 +69,15 @@ class TaskManagementData(object):
             elif action == 'delegate':
                 task.assign(form.cleaned_data['assign_to'])
 
-            try:
-                submission = task.data.get_submission()
-            except AttributeError:
-                return HttpResponseRedirect(reverse('ecs.tasks.views.task_list'))
-            else:
-                return HttpResponseRedirect(reverse('ecs.core.views.submissions.readonly_submission_form',
-                    kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+            url = task.afterlife_url
+            if url is None:     # FIXME: use afterlife_url for all activities
+                try:
+                    submission = task.data.get_submission()
+                except AttributeError:
+                    url = reverse('ecs.tasks.views.task_list')
+                else:
+                    url = reverse('view_submission', kwargs={'submission_pk': submission.pk})
+            return HttpResponseRedirect(url)
         return response
 
 class RelatedTasksMiddleware(object):

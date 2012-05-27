@@ -14,5 +14,6 @@ urlpatterns = patterns('ecs.tasks.views',
     url(r'^(?P<task_pk>\d+)/decline/$', 'decline_task'),
     url(r'^(?P<task_pk>\d+)/decline/full/$', 'decline_task_full'),
     url(r'^(?P<task_pk>\d+)/reopen/$', 'reopen_task'),
+    url(r'^(?P<task_pk>\d+)/do/$', 'do_task'),
 )
 

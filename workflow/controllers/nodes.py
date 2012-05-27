@@ -160,6 +160,9 @@ class NodeController(object):
     def get_final_urls(self):
         return [self.get_url()]
 
+    def get_afterlife_url(self):
+        return None
+
 
 class Activity(NodeController):
     def perform(self, choice=None, token=None):

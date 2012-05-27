@@ -184,6 +184,12 @@ class Task(models.Model):
         if not self.node_controller:
             return []
         return self.node_controller.get_final_urls()
+
+    @cached_property
+    def afterlife_url(self):
+        if not self.node_controller:
+            return None
+        return self.node_controller.get_afterlife_url()
     
     @property
     def choices(self):

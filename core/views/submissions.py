@@ -400,7 +400,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 if checklist.blueprint.allow_pdf_download:
                     checklist.render_pdf()
                 related_task.done(request.user)
-                return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+                return HttpResponseRedirect(related_task.afterlife_url)
             elif complete_task and checklist.is_complete:
                 extra_context['review_complete'] = checklist.pk
 

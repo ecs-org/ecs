@@ -235,3 +235,12 @@ def reopen_task(request, task_pk=None):
         raise Http404()
     new_task = task.reopen(user=request.user)
     return HttpResponseRedirect(new_task.url)
+
+def do_task(request, task_pk=None):
+    task = get_object_or_404(Task, assigned_to=request.user, pk=task_pk)
+    url = task.url
+    if not task.closed_at is None:
+        url = task.afterlife_url
+        if url is None:
+            raise Http404()
+    return HttpResponseRedirect(url)
