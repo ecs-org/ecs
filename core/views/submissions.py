@@ -374,16 +374,29 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         checklist.last_edited_by = request.user
         checklist.save()
 
-    form = make_checklist_form(checklist)(request.POST or None, related_task=related_task)
-    task = request.task_management.task
-    if task:
-        form.bound_to_task = task
-    extra_context = {}
+    docstash, created = DocStash.objects.get_or_create(
+        group='ecs.core.views.submissions.checklist_review',
+        owner=request.user,
+        content_type=ContentType.objects.get_for_model(related_task.__class__),
+        object_id=related_task.pk,
+    )
 
-    if request.method == 'POST':
-        complete_task = request.POST.get('complete_task') == 'complete_task'
-        really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
-        if form.is_valid():
+    with docstash.transaction():
+        form = docstash.get('form')
+        if request.method == 'POST' or form is None:
+            form = make_checklist_form(checklist)(request.POST or None)
+            docstash['form'] = form
+        form.related_task = related_task
+
+        task = request.task_management.task
+        if task:
+            form.bound_to_task = task
+        extra_context = {}
+
+        if request.method == 'POST' and form.is_valid():
+            complete_task = request.POST.get('complete_task') == 'complete_task'
+            really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
+
             for question in blueprint.questions.all().order_by('index'):
                 answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
                 answer.answer = form.cleaned_data['q%s' % question.index]
@@ -391,6 +404,8 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 answer.save()
 
             checklist.save() # touch the checklist instance to trigger the post_save signal
+
+            docstash.delete()
 
             if (complete_task or really_complete_task) and not checklist.is_complete:
                 extra_context['review_incomplete'] = True
