@@ -56,10 +56,6 @@ def is_expedited_or_retrospective_thesis(wf):
 # recommendation guards #
 #########################
 @guard(model=Submission)
-def has_expedited_recommendation(wf):
-    return bool(get_checklist_answer(wf.data, 'expedited_review', 1))
-
-@guard(model=Submission)
 def has_thesis_recommendation(wf):
     return bool(get_checklist_answer(wf.data, 'thesis_review', 1))
 
@@ -98,7 +94,23 @@ def needs_paper_submission_review(wf):
 @guard(model=Submission)
 @block_duplicate_task('expedited_vote_preparation')
 def needs_expedited_vote_preparation(wf):
-    return has_expedited_recommendation(wf)
+    with sudo():
+        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
+        negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
+        return not unfinished and not negative.exists()
+
+@guard(model=Submission)
+@block_duplicate_task('categorization_review')
+def needs_expedited_recategorization(wf):
+    with sudo():
+        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
+        negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
+        return not unfinished and negative.exists()
+
+@guard(model=Submission)
+def has_expedited_recommendation(wf):
+    ''' legacy: to be removed '''
+    return not needs_expedited_recategorization(wf)
 
 @guard(model=Submission)
 @block_duplicate_task('localec_recommendation')
@@ -270,12 +282,12 @@ class ExpeditedRecommendationSplit(Generic):
     def emit_token(self, *args, **kwargs):
         s = self.workflow.data
         with sudo():
-            open_tasks = Task.objects.for_data(s).filter(
-                deleted_at__isnull=True, closed_at=None, task_type__workflow_node__uid='expedited_recommendation')
-            open_tasks.filter(assigned_to__isnull=True).exclude(
+            tasks = Task.objects.for_data(s).filter(
+                deleted_at__isnull=True, task_type__workflow_node__uid='expedited_recommendation')
+            tasks.filter(assigned_to__isnull=True, closed_at=None).exclude(
                 expedited_review_categories__in=s.expedited_review_categories.values('pk').query).mark_deleted()
             missing_cats = s.expedited_review_categories.all()
-            for task in open_tasks:
+            for task in tasks:
                 missing_cats = missing_cats.exclude(pk__in=task.expedited_review_categories.values('pk').query)
             missing_cats = list(missing_cats)
 
