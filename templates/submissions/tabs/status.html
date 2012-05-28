@@ -42,16 +42,14 @@
                     <td>
                         {% if sf.is_notification_update %}
                             {% with sf.new_for_notification.all.0 as notif %}
-                                {% if notif %}
                                 <a href="{% url ecs.notifications.views.view_notification notification_pk=notif.pk %}">{{ notif }}</a>
-                                {% endif %}
                             {% endwith %}
                         {% else %}
                             –
                         {% endif %}
                     </td>
                     <td>
-                        {% if sf == submission.newest_submission_form %}
+                        {% if forloop.first %}
                             <a href="{% url ecs.core.views.submission_pdf submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
                         {% endif %}
                     </td>

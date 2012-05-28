@@ -189,7 +189,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             answers = checklist.answers.filter(q)
             checklist_summary.append((checklist, answers))
 
-    submission_forms = list(submission.forms.order_by('created_at'))
+    submission_forms = list(submission.forms.exclude(is_notification_update=True, new_for_notification__isnull=True).order_by('created_at'))
     previous_form = None
     for sf in submission_forms:
         sf.previous_form = previous_form
