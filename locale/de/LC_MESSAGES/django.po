@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-27 16:03+0200\n"
+"POT-Creation-Date: 2012-05-30 11:32+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -153,7 +153,7 @@ msgstr "Statistische Bewertung"
 msgid "Legal and Patient Review"
 msgstr "Patienteninformationsbewertung"
 
-#: checklists/bootstrap.py:25 core/bootstrap.py:130 core/workflow.py:200
+#: checklists/bootstrap.py:25 core/bootstrap.py:130 core/workflow.py:212
 msgid "Insurance Review"
 msgstr "Versicherungsbewertung"
 
@@ -1412,19 +1412,19 @@ msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#: core/workflow.py:149
+#: core/workflow.py:161
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:150
+#: core/workflow.py:162
 msgid "Reject"
 msgstr "Ablehnen"
 
-#: core/workflow.py:199
+#: core/workflow.py:211
 msgid "Finish"
 msgstr "Fertig"
 
-#: core/workflow.py:201
+#: core/workflow.py:213
 msgid "Executive Review"
 msgstr "Begutachtung Executive"
 
@@ -3410,7 +3410,7 @@ msgstr ""
 #: templates/submissions/list.html:83
 #: templates/submissions/readonly_form.html:259
 #: templates/submissions/tabs/status.html:12
-#: templates/submissions/tabs/status.html:55
+#: templates/submissions/tabs/status.html:53
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
 
@@ -3991,32 +3991,32 @@ msgstr "Befangene Parteien"
 msgid "This form has not been submitted yet."
 msgstr "Dieses Formular wurde noch nicht eingereicht."
 
-#: templates/submissions/tabs/status.html:70
-#: templates/submissions/tabs/status.html:81
+#: templates/submissions/tabs/status.html:68
+#: templates/submissions/tabs/status.html:79
 msgid "change"
 msgstr "ändern"
 
-#: templates/submissions/tabs/status.html:104
+#: templates/submissions/tabs/status.html:102
 msgid "same as sponsor"
 msgstr "wie Sponsor"
 
-#: templates/submissions/tabs/status.html:116
+#: templates/submissions/tabs/status.html:114
 msgid "No Primary Investigator"
 msgstr "Kein/e koordinierende/r Prüfärztin/arzt"
 
-#: templates/submissions/tabs/status.html:152
+#: templates/submissions/tabs/status.html:150
 msgid "New/Undecided"
 msgstr "Neu/Unentschieden"
 
-#: templates/submissions/tabs/status.html:172
+#: templates/submissions/tabs/status.html:170
 msgid "Reschedule"
 msgstr "Neu planen"
 
-#: templates/submissions/tabs/status.html:195
+#: templates/submissions/tabs/status.html:193
 msgid "drop"
 msgstr "fallen lassen"
 
-#: templates/submissions/tabs/status.html:211
+#: templates/submissions/tabs/status.html:209
 msgid "Export"
 msgstr "Export"
 
