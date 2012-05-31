@@ -492,10 +492,11 @@ def vote_preparation(request, submission_form_pk=None):
 @task_required()
 def b2_vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    submission = submission_form.submission
     try:
-        vote = submission_form.submission.votes.get(is_draft=True, upgrade_for__isnull=False)
+        vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
     except Vote.DoesNotExist:
-        vote = submission_form.submission.votes.order_by('-pk')[:1][0]
+        vote = submission.votes.order_by('-pk')[:1][0]
         vote = Vote.objects.create(
             submission_form=submission_form, 
             result='2', 
@@ -512,7 +513,7 @@ def b2_vote_preparation(request, submission_form_pk=None):
         vote.submission_form = submission_form
         vote.save()
     
-    response = readonly_submission_form(request, submission_form=submission_form, extra_context={
+    response = readonly_submission_form(request, submission_form=submission.current_submission_form, extra_context={
         'vote_review_form': form,
         'vote_version': get_version_number(vote) if vote else 0,
     })
