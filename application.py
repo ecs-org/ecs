@@ -221,9 +221,6 @@ django-sentry:inst:all:pypi:django-sentry==1.11.4
 # ecs.help needs reversion from now on
 django-reversion:inst:all:pypi:django-reversion==1.3.3
 
-# diff_match_patch is used for the submission diff and django-reversion
-diff_match_patch:inst:all:http://github.com/pinax/diff-match-patch/tarball/master
-
 # gettext and companions (msgfmt) are needed for make- and compile-messages which are part of bootstrap
 gettext:req:apt:apt-get:gettext
 gettext_runtime:static:win:http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/gettext-runtime-0.17.zip:custom:intl.dll

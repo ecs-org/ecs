@@ -2,7 +2,7 @@
 import datetime
 import types
 import traceback
-from diff_match_patch import diff_match_patch
+from ecs.utils.diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
@@ -24,9 +24,14 @@ from ecs.users.utils import get_full_name
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
 DATE_FORMAT = '%d.%m.%Y'
 
-ADDED = +1
-REMOVED = -1
 
+def word_diff(a, b):
+    dmp = diff_match_patch()
+    a, b, wordArray = dmp.diff_wordsToChars(a, b)
+    diff = dmp.diff_main(a, b, checklines=False)
+    dmp.diff_cleanupSemantic(diff)
+    dmp.diff_charsToWords(diff, wordArray)
+    return diff
 
 class DiffNode(object):
     def __init__(self, old, new, identity=None, ignore_old=False, ignore_new=False):
@@ -39,13 +44,9 @@ class DiffNode(object):
     def html(self):
         raise NotImplementedError
 
-
 class TextDiffNode(DiffNode):
-    differ = diff_match_patch()
-
     def html(self):
-        diff = self.differ.diff_main(self.old, self.new)
-        self.differ.diff_cleanupSemantic(diff)
+        diff = word_diff(self.old, self.new)
         result = []
         for op, bit in diff:
             if op:

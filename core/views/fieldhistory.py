@@ -1,5 +1,3 @@
-from diff_match_patch import diff_match_patch
-
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.utils import simplejson
@@ -10,6 +8,7 @@ from ecs.utils.viewutils import render
 from ecs.utils.security import readonly
 from ecs.audit.utils import get_versions
 from ecs.users.utils import sudo
+from ecs.core.diff import word_diff
 
 
 ALLOWED_MODEL_FIELDS = {
@@ -26,7 +25,6 @@ def field_history(request, model_name=None, pk=None):
         raise Http404()
     
     obj = get_object_or_404(model, pk=pk)
-    dmp = diff_match_patch()
 
     history = []
     last_value = u""
@@ -36,10 +34,9 @@ def field_history(request, model_name=None, pk=None):
         versions = list(get_versions(obj).order_by('created_at'))
     for change in versions:
         value = simplejson.loads(change.data)[0]['fields'][fieldname]
-        diff = dmp.diff_main(last_value, value)
+        diff = word_diff(last_value, value)
         if len(diff) == 1 and diff[0][0] == 0 and last_change and last_change.user == change.user:
             continue
-        dmp.diff_cleanupSemantic(diff)
         html_diff = []
         for op, line in diff:
             line = line.replace('\n', '<br/>')
