@@ -32,7 +32,7 @@ from ecs.ecsmail.utils import deliver
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
-from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_close
+from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
@@ -497,6 +497,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             try:
                 next_top = meeting.open_tops[0]
             except IndexError:
+                on_meeting_top_jump.send(Meeting, meeting=meeting, timetable_entry=top)
                 return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
 
@@ -520,13 +521,11 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
             if form.cleaned_data['close_top']:
                 top.is_open = False
                 top.save()
-                on_meeting_top_close.send(Meeting, meeting=meeting, timetable_entry=top)
                 return next_top_redirect()
             return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
     elif request.method == 'POST':
         top.is_open = False
         top.save()
-        on_meeting_top_close.send(Meeting, meeting=meeting, timetable_entry=top)
         return next_top_redirect()
 
     last_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
@@ -535,6 +534,8 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     if not last_top_pk is None:
         last_top = TimetableEntry.objects.get(pk=last_top_pk)
     cache.set(last_top_cache_key, top.pk, 60*60*24*2)
+    if not last_top == top:
+        on_meeting_top_jump.send(Meeting, meeting=meeting, timetable_entry=top)
 
     checklist_review_states = SortedDict()
     blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)

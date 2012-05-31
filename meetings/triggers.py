@@ -45,8 +45,8 @@ def on_meeting_date_changed(sender, **kwargs):
     meeting = kwargs['meeting']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_top_close)
-def on_meeting_top_close(sender, **kwargs):
+@connect(signals.on_meeting_top_jump)
+def on_meeting_top_jump(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']
     _flush_cache(meeting)
