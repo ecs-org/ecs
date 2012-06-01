@@ -125,8 +125,12 @@ class ListDiffNode(DiffNode):
     def html(self):
         result = []
         for op, diff in self.diffs:
-            result.append('<div class="item %s">%s %s</div>' % (self.css_map[op], op, diff.html()))
-        return "\n".join(result)
+            html = u''
+            if not op == '~':
+                html = unicode(op) + u' '
+            html += diff.html()
+            result.append('u<div class="item %s">%s</div>' % (self.css_map[op], html))
+        return u'\n'.join(result)
 
 
 class DocumentListDiffNode(ListDiffNode):
