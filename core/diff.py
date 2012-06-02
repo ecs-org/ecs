@@ -129,7 +129,7 @@ class ListDiffNode(DiffNode):
             if not op == '~':
                 html = unicode(op) + u' '
             html += diff.html()
-            result.append('u<div class="item %s">%s</div>' % (self.css_map[op], html))
+            result.append(u'<div class="item %s">%s</div>' % (self.css_map[op], html))
         return u'\n'.join(result)
 
 
