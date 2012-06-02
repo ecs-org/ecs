@@ -286,8 +286,17 @@ class UserDiffer(AtomicModelDiffer):
         return u'{0} <{1}>'.format(get_full_name(user), user.email)
 
 
+class SubmissionFormDiffer(ModelDiffer):
+    def get_field_names(self):
+        names = super(SubmissionFormDiffer, self).get_field_names()
+        if 'documents' in names:
+            names.remove('documents')
+            names.insert(0, 'documents')
+        return names
+
+
 _differs = {
-    SubmissionForm: ModelDiffer(SubmissionForm,
+    SubmissionForm: SubmissionFormDiffer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
             'pdf_document', 'current_pending_vote', 'current_published_vote', 'is_acknowledged',
             'created_at', 'presenter', 'sponsor', 'submitter', 'is_transient',
