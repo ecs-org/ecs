@@ -1,2 +1,12 @@
 {% extends 'db/notifications/answers/wkhtml2pdf/base.html' %}
 {% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>Protokolländerung (Amendment){% endblock %}
+
+{% block study_info %}
+    {{ block.super }}
+    <h4>Liste der Änderungen</h4>
+    {% with notification.amendmentnotification as notification %}
+        <div class="diff">
+            {{ notification.diff|safe }}
+        </div>
+    {% endwith %}
+{% endblock %}
