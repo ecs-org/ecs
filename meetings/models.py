@@ -299,7 +299,6 @@ class Meeting(models.Model):
     def __delitem__(self, index):
         self[index].delete()
         self._clear_caches()
-        on_meeting_top_delete.send(Meeting, meeting=self, timetable_entry=entry)
         
     def __len__(self):
         return self.timetable_entries.filter(timetable_index__isnull=False).count()
@@ -691,8 +690,11 @@ class TimetableEntry(models.Model):
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:
-        entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).update(timetable_index=models.F('timetable_index') - 1)
+        for entry in entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).order_by('timetable_index'):
+            entry.timetable_index -= 1
+            entry.save()
     entry.meeting.update_assigned_categories()
+    on_meeting_top_delete.send(Meeting, meeting=entry.meeting, timetable_entry=entry)
 
 def _timetable_entry_post_save(sender, **kwargs):
     entry = kwargs['instance']
