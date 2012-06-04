@@ -12,7 +12,7 @@ from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, NotificationAnswer
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification, NotificationAnswer
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.audit.models import AuditTrail
@@ -21,9 +21,15 @@ from ecs.scratchpad.models import ScratchPad
 from ecs.boilerplate.models import Text
 from ecs.communication.models import Thread, Message
 
+NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
+
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.get_profile()
+
+        ### internal users can see all submissions
+        if user.is_staff or profile.is_internal:
+            return self.make_q()
             
         ### default policy: only avaiable for the (susar) presenter.
         q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
@@ -50,20 +56,22 @@ class SubmissionQFactory(authorization.QFactory):
         )
 
         ### rules that apply until the end of the submission lifecycle
-        until_eol_q = self.make_q(pk__gt=0)
-        if not (user.is_staff or profile.is_internal):
-            until_eol_q &= self.make_q(
-                current_submission_form__submitter=user
-            ) | self.make_q(
-                current_submission_form__primary_investigator__user=user
-            ) | self.make_q(
-                current_submission_form__sponsor=user
-            ) | self.make_q(
-                pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
-            ) | self.make_q(
-                pk__in=Checklist.objects.values('submission__pk').query
-            )
+        until_eol_q = self.make_q(
+            current_submission_form__submitter=user
+        ) | self.make_q(
+            current_submission_form__primary_investigator__user=user
+        ) | self.make_q(
+            current_submission_form__sponsor=user
+        ) | self.make_q(
+            pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
+        ) | self.make_q(
+            pk__in=Checklist.objects.values('submission__pk').query
+        )
+        for cls in NOTIFICATION_MODELS:
+            until_eol_q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query
+        )
         q |= until_eol_q
+
         return q
 
 authorization.register(Submission, factory=SubmissionQFactory)
@@ -116,7 +124,7 @@ class NotificationQFactory(authorization.QFactory):
     def get_q(self, user):
         return self.make_q(submission_forms__submission__in=Submission.objects.values('pk').query)
 
-for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+for cls in NOTIFICATION_MODELS:
     authorization.register(cls, factory=NotificationQFactory)
 
 class NotificationAnswerQFactory(authorization.QFactory):
