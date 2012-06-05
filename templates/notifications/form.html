@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core i18n %}
+{% load core i18n notifications %}
 
 {% block headernav %}
     <ul class="tab_header_groups">
@@ -40,14 +40,14 @@
                 
                 {% if tab.slug == 'changes' %}
                     <div class="field">
-                        {% if request.docstash.extra.diff %}
+                        {% if notification_type.includes_diff %}
                             <div class="diff_toggles">
                                 <a href="#" id="diff_show_old">{% trans "old" %}</a>
                                 <a href="#" id="diff_show_new">{% trans "new" %}</a>
                                 <a href="#" id="diff_show_all">{% trans "all" %}</a>
                             </div>
                             <div class="diff">
-                                {{ request.docstash.extra.diff|safe }}
+                                {{ request.docstash|diff_from_docstash|safe }}
                             </div>
                         {% else %}
                             <em>{% trans 'No changes.' %}</em>

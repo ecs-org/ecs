@@ -47,7 +47,6 @@ class NotificationType(models.Model):
 class DiffNotification(models.Model):
     old_submission_form = models.ForeignKey('core.SubmissionForm', related_name="old_for_notification")
     new_submission_form = models.ForeignKey('core.SubmissionForm', related_name="new_for_notification")
-    diff = models.TextField()
     
     class Meta:
         abstract = True
@@ -67,6 +66,10 @@ class DiffNotification(models.Model):
             return True
         else:
             return False
+
+    def get_diff(self, plainhtml=False):
+        from ecs.core.diff import diff_submission_forms
+        return diff_submission_forms(self.old_submission_form, self.new_submission_form).html(plain=plainhtml)
 
 
 class Notification(models.Model):

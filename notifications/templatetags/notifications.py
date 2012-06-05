@@ -2,6 +2,7 @@ from django import template
 
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo
+from ecs.core.diff import diff_submission_forms
 
 register = template.Library()
 
@@ -15,3 +16,14 @@ def amendment_reviewer(notification):
             return task.assigned_to
         except IndexError:
             pass
+
+@register.filter
+def diff_from_docstash(docstash):
+    extra = docstash['extra']
+    old_submission_form = extra['old_submission_form']
+    new_submission_form = extra['new_submission_form']
+    return diff_submission_forms(old_submission_form, new_submission_form).html()
+
+@register.filter
+def diff(notification, plainhtml=False):
+    return notification.get_diff(plainhtml=plainhtml)

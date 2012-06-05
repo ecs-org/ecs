@@ -41,11 +41,11 @@ class DiffNode(object):
         self.ignore_old = ignore_old
         self.ignore_new = ignore_new
 
-    def html(self):
+    def html(self, plain=False):
         raise NotImplementedError
 
 class TextDiffNode(DiffNode):
-    def html(self):
+    def html(self, plain=False):
         diff = word_diff(self.old, self.new)
         result = []
         for op, bit in diff:
@@ -60,12 +60,18 @@ class AtomicDiffNode(DiffNode):
     def format(self, val):
         return unicode(val)
 
-    def html(self):
+    def html(self, plain=False):
         result = []
         if not self.ignore_old:
-            result.append('<span class="deleted">- %s</span>' % force_unicode(self.old))
+            old = self.old
+            if callable(old):
+                old = old(plainhtml=plain)
+            result.append('<span class="deleted">- %s</span>' % force_unicode(old))
         if not self.ignore_new:
-            result.append('<span class="inserted">+ %s</span>' % force_unicode(self.new))
+            new = self.new
+            if callable(new):
+                new = new(plainhtml=plain)
+            result.append('<span class="inserted">+ %s</span>' % force_unicode(new))
         return '<span class="atomic">%s</span>' % ''.join(result)
         
 
@@ -81,11 +87,11 @@ class ModelDiffNode(DiffNode):
     def __getitem__(self, label):
         return self.field_diffs[label]
     
-    def html(self):
+    def html(self, plain=False):
         try:
             result = []
             for label, node in self.field_diffs.iteritems():
-                result.append('<div class="field">%s: %s</div>' % (label, node.html()))
+                result.append('<div class="field">%s: %s</div>' % (label, node.html(plain=plain)))
             result = "\n".join(result)
             if self.identity:
                 result = '<span class="title">%s</span>\n%s' % (self.identity, result)
@@ -122,20 +128,20 @@ class ListDiffNode(DiffNode):
     def __nonzero__(self):
         return bool(self.diffs)
     
-    def html(self):
+    def html(self, plain=False):
         result = []
         for op, diff in self.diffs:
             html = u''
             if not op == '~':
                 html = unicode(op) + u' '
-            html += diff.html()
+            html += diff.html(plain=plain)
             result.append(u'<div class="item %s">%s</div>' % (self.css_map[op], html))
         return u'\n'.join(result)
 
 
 class DocumentListDiffNode(ListDiffNode):
     def _prepare(self):
-        self.diffs = []
+        diffs = []
         old_docs = {}
         for doc in self.old:
             old_docs[doc.uuid] = doc
@@ -144,12 +150,13 @@ class DocumentListDiffNode(ListDiffNode):
             if doc.uuid in old_docs:
                 del old_docs[doc.uuid]
             else:
-                self.diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
+                diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
         for doc in old_docs.values():
-            self.diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
+            diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
+        self.diffs = diffs
 
-    def html(self):
-        return "\n".join(d.html() for op, d in self.diffs)
+    def html(self, plain=False):
+        return "\n".join(d.html(plain=plain) for op, d in self.diffs)
 
 def _render_value(val):
     if val is None:
@@ -269,7 +276,10 @@ class DocumentDiffer(AtomicModelDiffer):
     model = Document
 
     def format(self, doc):
-        return render_html(HttpRequest(), 'submissions/diff/document.inc', {'doc': doc})
+        def _render(plainhtml=False):
+            data = {'doc': doc, 'plainhtml': plainhtml}
+            return render_html(HttpRequest(), 'submissions/diff/document.inc', data)
+        return _render
 
 
 class CountryDiffer(AtomicModelDiffer):

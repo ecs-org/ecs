@@ -1,5 +1,5 @@
 {% extends 'db/notifications/wkhtml2pdf/base.html' %}
-{% load core corepdf %}
+{% load core corepdf notifications %}
 
 {% block typeoptions %}<h1>1. Meldung einer Protokolländerung (Amendment) vom {{ notification.timestamp|date:'d.m.Y'}}</h1>{% endblock %}
 
@@ -13,7 +13,7 @@
     <h4>3.1 Liste der Änderungen</h4>
     {% with notification.amendmentnotification as notification %}
         <div class="diff">
-            {{ notification.diff|safe }}
+            {{ notification|diff:1|safe }}
         </div>
     {% endwith %}
 {% endblock %}

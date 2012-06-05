@@ -1,5 +1,5 @@
 {% extends 'notifications/view/base.html' %}
-{% load i18n %}
+{% load i18n notifications %}
 
 {% block table_rows %}
     {{ block.super }}
@@ -9,18 +9,20 @@
             {% with notification.amendmentnotification as notification %}
                 <a href="{% url readonly_submission_form submission_form_pk=notification.old_submission_form.pk %}">{% trans 'Old Version' %}</a>
                 | <a href="{% url readonly_submission_form submission_form_pk=notification.new_submission_form.pk %}">{% trans 'New Version' %}</a>
-                {% if notification.diff %}
+                {% with notification|diff as diff %}
+                {% if diff %}
                     <div class="diff_toggles">
                         <a href="#" id="diff_show_old">{% trans "old" %}</a>
                         <a href="#" id="diff_show_new">{% trans "new" %}</a>
                         <a href="#" id="diff_show_all">{% trans "all" %}</a>
                     </div>
                     <div class="diff">
-                        {{ notification.diff|safe }}
+                        {{ diff|safe }}
                     </div>
                 {% else %}
                     <em>{% trans 'No changes.' %}</em>
                 {% endif %}
+                {% endwith %}
             {% endwith %}
         </td>
     </tr>

@@ -15,7 +15,6 @@ from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
-from ecs.core.diff import diff_submission_forms
 from ecs.core.models import SubmissionForm, Submission
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
@@ -77,8 +76,6 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
     old_submission_form = new_submission_form.submission.current_submission_form
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     
-    diff = diff_submission_forms(old_submission_form, new_submission_form).html()
-    
     docstash = DocStash.objects.create(group='ecs.notifications.views.create_notification', owner=request.user)
     
     with docstash.transaction():
@@ -90,7 +87,6 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
             'extra': {
                 'old_submission_form': old_submission_form,
                 'new_submission_form': new_submission_form,
-                'diff': diff,
             }
         })
         docstash.name = u"%s für %s" % (notification_type.name, old_submission_form)
