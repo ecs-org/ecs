@@ -164,7 +164,7 @@ def reset_external_review_payment(request):
 @readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Group')
 def external_review_payment(request):
-    checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status='new').filter(
+    checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status__in=['new', 'dropped']).filter(
         Q(billing_state__isnull=True)|Q(billing_state__isnull=False, billing_state__billed_at=None))
     price = Price.objects.get_review_price()
 
