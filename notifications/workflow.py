@@ -64,12 +64,18 @@ class InitialAmendmentReview(InitialNotificationReview):
         model = Notification
         
     def get_choices(self):
-        return NOTIFICATION_REVIEW_LANE_CHOICES
+        return ((None, _('Reject')),) + NOTIFICATION_REVIEW_LANE_CHOICES
 
     def pre_perform(self, choice):
         n = self.workflow.data
         n.review_lane = choice
         n.save()
+        if choice is None:
+            answer = n.answer
+            answer.is_valid = True
+            answer.is_rejected = True
+            answer.is_final_version = True
+            answer.save()
 
 
 class EditNotificationAnswer(BaseNotificationReview):
