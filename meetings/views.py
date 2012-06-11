@@ -488,7 +488,11 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     top = get_object_or_404(TimetableEntry, pk=top_pk)
     simple_save = request.POST.get('simple_save', False)
     autosave = request.POST.get('autosave', False)
-    vote, form = None, None
+    try:
+        vote = top.vote
+    except Vote.DoesNotExist:
+        vote = None
+    form = None
 
     def next_top_redirect():
         if top.next_open:
@@ -501,20 +505,11 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
         return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': next_top.pk}))
 
-    if top.submission:
-        try:
-            vote = top.vote
-        except Vote.DoesNotExist:
-            pass
-        if simple_save:
-            form_cls = SaveVoteForm
-        else:
-            form_cls = VoteForm
-        if top.is_open:
-            form = form_cls(request.POST or None, instance=vote)
-        else:
-            form = form_cls(None, instance=vote, readonly=True)
-        if top.is_open and form.is_valid():
+
+    if top.submission and top.is_open:
+        form_cls = SaveVoteForm if simple_save else VoteForm
+        form = form_cls(request.POST or None, instance=vote)
+        if form.is_valid():
             vote = form.save(top)
             if autosave:
                 return HttpResponse('OK')
@@ -522,7 +517,10 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 top.is_open = False
                 top.save()
                 return next_top_redirect()
-            return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
+            return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_assistant_top',
+                kwargs={'meeting_pk': meeting.pk, 'top_pk': top.pk}))
+    elif top.submission and not top.is_open:
+        form = VoteForm(None, instance=vote, readonly=True)
     elif request.method == 'POST':
         top.is_open = False
         top.save()
