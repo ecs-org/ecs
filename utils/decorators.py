@@ -43,13 +43,23 @@ class print_duration(object):
     def __init__(self, name=None):
         self.name = name
         self.args = ()
+        self.kwargs = {}
 
     def __enter__(self):
         self.t1 = datetime.now()
 
     def __exit__(self, *exc):
         self.t2 = datetime.now()
-        print '{0} with arguments {1} duration: {2}'.format(self.name or '<anonymous>', self.args, self.t2-self.t1)
+        d = self.t2 - self.t1
+        s = '{0:.2f}s {1}'.format(d.total_seconds(), self.name or '<anonymous>')
+        if self.args or self.kwargs:
+            bits = []
+            for arg in self.args:
+                bits += [repr(arg)]
+            for k, v in self.kwargs.iteritems():
+                bits += ['{0}={1}'.format(k, repr(v))]
+            s += '(' + ', '.join(bits) + ') '
+        print s
 
     def __call__(self, func):
         if self.name is None:
@@ -57,6 +67,7 @@ class print_duration(object):
         @wraps(func)
         def _inner(*args, **kwargs):
             self.args = args
+            self.kwargs = kwargs
             with self:
                 return func(*args, **kwargs)
         return _inner
