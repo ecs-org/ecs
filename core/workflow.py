@@ -246,7 +246,8 @@ class CategorizationReview(Activity):
         return reverse('ecs.core.views.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
     def is_locked(self):
-        s = self.workflow.data
+        with sudo():
+            s = self.workflow.data
         return not s.allows_categorization()
 
     def pre_perform(self, choice):
