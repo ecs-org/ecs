@@ -155,6 +155,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     vote = submission_form.current_vote
     submission = submission_form.submission
+    profile = request.user.get_profile()
+    if profile.is_internal:
+        try:
+            vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
+        except Vote.DoesNotExist:
+            pass
 
     crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
     crumbs = cache.get(crumbs_key, [])
@@ -249,7 +255,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
             'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
         })
-        profile = request.user.get_profile()
         if profile.is_executive_board_member or not submission.external_reviewers.filter(pk=request.user.pk).exists():
             context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
