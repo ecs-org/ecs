@@ -156,7 +156,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     vote = submission_form.current_vote
     submission = submission_form.submission
     profile = request.user.get_profile()
-    if profile.is_internal:
+    if profile.is_internal or profile.is_insurance_reviewer:
         try:
             vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
         except Vote.DoesNotExist:
