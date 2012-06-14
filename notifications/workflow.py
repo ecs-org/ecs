@@ -39,7 +39,7 @@ def is_amendment(wf):
     
 @guard(model=Notification)
 def is_rejected(wf):
-    return wf.data.is_rejected
+    return wf.data.answer.is_rejected
     
 @guard(model=Notification)
 def needs_further_review(wf):
