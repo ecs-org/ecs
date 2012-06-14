@@ -97,6 +97,9 @@ TEST_RUNNER = 'ecs.utils.ecs_runner.EcsRunner'
 # additional fixture search paths. implicitly used by every app the needs fixtures
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 
+# cache backend, warning, this is seperate for each process, for production use memcache
+CACHE_BACKEND = 'locmem://'
+
 # model that gets connected to contrib.auth model
 AUTH_PROFILE_MODULE = 'users.UserProfile'
 

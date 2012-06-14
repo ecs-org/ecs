@@ -18,6 +18,9 @@ CELERY_ALWAYS_EAGER = False
 # haystack settings
 HAYSTACK_SEARCH_ENGINE = '%(haystack.search_engine)s'
 
+# multiprocess safe cache settings 
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+
 # ecsmail settings
 ECSMAIL['authoritative_domain'] = '%(host)s'
 ECSMAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
@@ -72,6 +75,10 @@ MS_CLIENT = {
     "key_secret": "%(mediaserver.client.key_secret)s",
     "same_host_as_server": %(mediaserver.client.same_host_as_server)s,
 }
+
+MS_SERVER['render_memcache_lib'] = 'memcache'
+MS_SERVER['render_memcache_host'] = "127.0.0.1"
+MS_SERVER['render_memcache_port'] = 11211 
 
 STORAGE_VAULT = '%(storagevault.implementation)s'
 STORAGE_VAULT_OPTIONS = {
