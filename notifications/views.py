@@ -158,7 +158,7 @@ def create_notification(request, notification_type_pk=None):
     })
 
 
-@task_required()
+@task_required
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     kwargs = {}
@@ -214,7 +214,7 @@ def notification_answer_pdf(request, notification_pk=None):
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
-@task_required()
+@task_required
 def notification_answer_sign(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
     return init_batch_sign(request, request.related_tasks[0], get_notification_answer_sign_data)

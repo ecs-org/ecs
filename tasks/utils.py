@@ -30,14 +30,11 @@ def block_if_task_exists(node_uid, **kwargs):
 def block_duplicate_task(node_uid):
     return block_if_task_exists(node_uid, deleted_at=None, closed_at=None)
 
-def task_required(n=1):
-    def decorator(view):
-        @wraps(view)
-        def decorated(request, *args, **kwargs):
-            related_tasks = getattr(request, 'related_tasks', [])
-            if len(related_tasks) != n:
-                html = render_html(request, '403.html', {})
-                return HttpResponseForbidden(html)
-            return view(request, *args, **kwargs)
-        return decorated
-    return decorator
+def task_required(view):
+    @wraps(view)
+    def _inner(request, *args, **kwargs):
+        if not getattr(request, 'related_tasks', None):
+            html = render_html(request, '403.html', {})
+            return HttpResponseForbidden(html)
+        return view(request, *args, **kwargs)
+    return _inner

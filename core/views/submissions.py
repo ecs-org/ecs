@@ -310,7 +310,7 @@ def categorization_review(request, submission_form_pk=None):
     return response
 
 
-@task_required()
+@task_required
 def initial_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
@@ -360,7 +360,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
 
 
-@task_required()
+@task_required
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     if request.method == 'GET' and not submission_form.is_current:
@@ -450,7 +450,7 @@ def vote_review(request, submission_form_pk=None):
     return response
 
 
-@task_required()
+@task_required
 def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
 
@@ -494,7 +494,7 @@ def vote_preparation(request, submission_form_pk=None):
     return response
 
 
-@task_required()
+@task_required
 def b2_vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     submission = submission_form.submission

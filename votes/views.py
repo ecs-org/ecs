@@ -59,7 +59,7 @@ def download_signed_vote(request, vote_pk=None):
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")
-@task_required()
+@task_required
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     return init_batch_sign(request, request.related_tasks[0], get_vote_sign_data)
