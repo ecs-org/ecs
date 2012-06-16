@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-30 11:32+0200\n"
+"POT-Creation-Date: 2012-06-16 19:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -212,7 +212,7 @@ msgstr "Anonym"
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
 
-#: checklists/workflow.py:94 notifications/workflow.py:128
+#: checklists/workflow.py:94 notifications/workflow.py:134
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -337,44 +337,44 @@ msgstr "Begleitende EK Empfehlung"
 msgid "Local EC Vote Preparation"
 msgstr "Begleitende EK Votumsvorbereitung"
 
-#: core/diff.py:151 core/diff.py:221 core/diff.py:222 core/diff.py:258
-#: core/diff.py:259
+#: core/diff.py:163 core/diff.py:233 core/diff.py:234 core/diff.py:270
+#: core/diff.py:271
 msgid "No Information"
 msgstr "Keine Angaben"
 
-#: core/diff.py:153 core/forms/fields.py:54 core/forms/fields.py:59
-#: core/views/submissions.py:469 templates/submissions/readonly_form.html:341
+#: core/diff.py:165 core/forms/fields.py:54 core/forms/fields.py:59
+#: core/views/submissions.py:474 templates/submissions/readonly_form.html:341
 msgid "Yes"
 msgstr "Ja"
 
-#: core/diff.py:155 core/forms/fields.py:54 core/forms/fields.py:59
-#: core/views/submissions.py:469 templates/submissions/readonly_form.html:342
+#: core/diff.py:167 core/forms/fields.py:54 core/forms/fields.py:59
+#: core/views/submissions.py:474 templates/submissions/readonly_form.html:342
 msgid "No"
 msgstr "Nein"
 
-#: core/diff.py:296
+#: core/diff.py:320
 msgid "Auslandszentren"
 msgstr ""
 
-#: core/diff.py:297
+#: core/diff.py:321
 msgid "Zentren"
 msgstr ""
 
-#: core/diff.py:298
+#: core/diff.py:322
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
 
-#: core/diff.py:300
+#: core/diff.py:324
 msgid ""
 "Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder "
 "Sicherheit nicht Gegenstand der Prüfung sind"
 msgstr ""
 
-#: core/diff.py:301
+#: core/diff.py:325
 msgid "Dokumente"
 msgstr ""
 
-#: core/diff.py:309
+#: core/diff.py:333
 msgid "Mitarbeiter"
 msgstr ""
 
@@ -386,7 +386,7 @@ msgstr "Studien"
 msgid "Statement/Conclusion/Notice"
 msgstr "Begründung/Stellungnahme/Mitteilung"
 
-#: core/paper_forms.py:46 notifications/models.py:169
+#: core/paper_forms.py:46 notifications/models.py:172
 #: templates/notifications/view/SafetyNotificationForm.html:5
 msgid "Type"
 msgstr "Typ"
@@ -1065,7 +1065,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:230 core/models/submissions.py:447
+#: core/paper_forms.py:230 core/models/submissions.py:454
 msgid "open"
 msgstr "offen"
 
@@ -1081,7 +1081,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:234 core/models/submissions.py:447
+#: core/paper_forms.py:234 core/models/submissions.py:454
 msgid "blind"
 msgstr "blind"
 
@@ -1097,7 +1097,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:238 core/models/submissions.py:447
+#: core/paper_forms.py:238 core/models/submissions.py:454
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1391,24 +1391,24 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
-#: core/triggers.py:26
+#: core/triggers.py:27
 msgid "Submission of study EC-Nr. {ec_number}"
 msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:63 core/triggers.py:65 core/triggers.py:77
-#: core/triggers.py:79
+#: core/triggers.py:64 core/triggers.py:66 core/triggers.py:78
+#: core/triggers.py:80
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:86
+#: core/triggers.py:87
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:94
+#: core/triggers.py:95
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:96
+#: core/triggers.py:97
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1416,7 +1416,7 @@ msgstr "Einreichung nicht akzeptiert"
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:162
+#: core/workflow.py:162 notifications/workflow.py:67
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1496,14 +1496,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:700 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:707 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:236 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:702 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:709 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:238 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1769,12 +1769,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:805 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:805 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1791,19 +1791,19 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:706 templates/submissions/readonly_form.html:240
+#: core/models/submissions.py:713 templates/submissions/readonly_form.html:240
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:708
+#: core/models/submissions.py:715
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:840
+#: core/models/submissions.py:847
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:840
+#: core/models/submissions.py:847
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1819,28 +1819,28 @@ msgstr "Nein"
 msgid "Unknown"
 msgstr ""
 
-#: core/views/submissions.py:756 templates/meetings/details.html:15
+#: core/views/submissions.py:762 templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:868 templates/core.html:50
+#: core/views/submissions.py:874 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:905
+#: core/views/submissions.py:911
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:976
+#: core/views/submissions.py:982
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:985 templates/core.html:53
+#: core/views/submissions.py:991 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:995 templates/core.html:56
+#: core/views/submissions.py:1001 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -1991,7 +1991,7 @@ msgstr ""
 "auf das Fragezeichen-Symbol im Seitenmenü."
 
 #: documents/models.py:109 templates/notifications/form.html:46
-#: templates/notifications/view/AmendmentNotificationForm.html:15
+#: templates/notifications/view/AmendmentNotificationForm.html:16
 #: templates/submissions/diff/diff.html:17
 msgid "new"
 msgstr "neu"
@@ -2101,11 +2101,11 @@ msgstr "Nach Sitzung"
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:713
+#: meetings/models.py:719
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:714
+#: meetings/models.py:720
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2130,28 +2130,37 @@ msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:433
+#: meetings/views.py:441
+msgid ""
+"There are open vote preparations. You can start the meeting assistan when "
+"all vote preparations are done."
+msgstr ""
+"Es sind noch nicht alle Votumsvorbereitungen fertig abgegeben. Sie können "
+"die Sitzungsplanung erst nach dem erfolgten Abschluss der "
+"Votumsvorbereitungen öffnen."
+
+#: meetings/views.py:454
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:578 meetings/views.py:589
+#: meetings/views.py:598 meetings/views.py:609
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:591 meetings/views.py:678
+#: meetings/views.py:611 meetings/views.py:698
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:593
+#: meetings/views.py:613
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:634
+#: meetings/views.py:654
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:660
+#: meetings/views.py:680
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2207,15 +2216,15 @@ msgstr ""
 msgid "Study"
 msgstr "Studie"
 
-#: notifications/models.py:178
+#: notifications/models.py:181
 msgid "Proofread"
 msgstr "Korrektur gelesen"
 
-#: notifications/models.py:179
+#: notifications/models.py:182
 msgid "rate negative"
 msgstr "Negativ beurteilt"
 
-#: notifications/models.py:242
+#: notifications/models.py:245
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
@@ -2223,25 +2232,25 @@ msgstr "Neue Meldungsantwort"
 msgid "Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung."
 msgstr ""
 
-#: notifications/views.py:39 templates/core.html:65
+#: notifications/views.py:38 templates/core.html:65
 #: templates/submissions/readonly_form.html:149
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
-#: notifications/views.py:139
+#: notifications/views.py:135
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/workflow.py:81 notifications/workflow.py:102
+#: notifications/workflow.py:87 notifications/workflow.py:108
 msgid "Ready"
 msgstr "Fertig"
 
-#: notifications/workflow.py:82 notifications/workflow.py:129
-#: notifications/workflow.py:143
+#: notifications/workflow.py:88 notifications/workflow.py:135
+#: notifications/workflow.py:149
 msgid "Needs further review"
 msgstr "Weitere Begutachtung erforderlich"
 
-#: notifications/workflow.py:142
+#: notifications/workflow.py:148
 msgid "Sign"
 msgstr "Unterzeichnen"
 
@@ -2879,13 +2888,13 @@ msgstr "Systemnachrichten anzeigen"
 
 #: templates/documents/compact_list.html:18 templates/documents/iframe.html:20
 #: templates/submissions/readonly_form.html:209
-#: templates/submissions/diff/document.inc:13
+#: templates/submissions/diff/document.inc:14
 msgid "Download"
 msgstr "Download"
 
 #: templates/documents/compact_list.html:20 templates/documents/iframe.html:22
 #: templates/pdfviewer/annotations/copy.html:7
-#: templates/submissions/diff/document.inc:11
+#: templates/submissions/diff/document.inc:12
 msgid "View"
 msgstr "Ansicht"
 
@@ -3375,19 +3384,19 @@ msgid "Your browser does not support iframes."
 msgstr ""
 
 #: templates/notifications/form.html:45
-#: templates/notifications/view/AmendmentNotificationForm.html:14
+#: templates/notifications/view/AmendmentNotificationForm.html:15
 #: templates/submissions/diff/diff.html:16
 msgid "old"
 msgstr "alt"
 
 #: templates/notifications/form.html:47
-#: templates/notifications/view/AmendmentNotificationForm.html:16
+#: templates/notifications/view/AmendmentNotificationForm.html:17
 #: templates/submissions/diff/diff.html:18
 msgid "all"
 msgstr "alle"
 
 #: templates/notifications/form.html:53
-#: templates/notifications/view/AmendmentNotificationForm.html:22
+#: templates/notifications/view/AmendmentNotificationForm.html:23
 #: templates/submissions/diff/diff.html:25
 msgid "No changes."
 msgstr "Keine Änderungen."

@@ -420,6 +420,25 @@ def meeting_assistant(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
+
+    for top in meeting.timetable_entries.filter(submission__isnull=False):
+        with sudo():
+            recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'expedited_recommendation', 'localec_recommendation']).open().exists()
+        if recommendation_exists:
+            return render(request, 'meetings/assistant/error.html', {
+                'active': 'assistant',
+                'meeting': meeting,
+                'message': _('There are open recommendations. You can start the meeting assistan when all recommendations are done.'),
+            })
+        with sudo():
+            vote_preparation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_vote_preparation', 'expedited_vote_preparation', 'localec_vote_preparation']).open().exists()
+        if vote_preparation_exists:
+            return render(request, 'meetings/assistant/error.html', {
+                'active': 'assistant',
+                'meeting': meeting,
+                'message': _('There are open vote preparations. You can start the meeting assistan when all vote preparations are done.'),
+            })
+
     meeting.started = datetime.now()
     meeting.save()
     on_meeting_start.send(Meeting, meeting=meeting)
