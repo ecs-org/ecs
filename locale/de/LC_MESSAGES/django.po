@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-16 19:36+0200\n"
+"POT-Creation-Date: 2012-06-16 19:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2130,7 +2130,15 @@ msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: meetings/views.py:441
+#: meetings/views.py:431
+msgid ""
+"There are open recommendations. You can start the meeting assistan when all "
+"recommendations are done."
+msgstr ""
+"Es sind noch nicht alle Empfehlungen fertig abgegeben. Sie können die "
+"Sitzungsplanung erst nach dem erfolgten Abschluss der Empfehlungen öffnen."
+
+#: meetings/views.py:439
 msgid ""
 "There are open vote preparations. You can start the meeting assistan when "
 "all vote preparations are done."
@@ -2139,28 +2147,28 @@ msgstr ""
 "die Sitzungsplanung erst nach dem erfolgten Abschluss der "
 "Votumsvorbereitungen öffnen."
 
-#: meetings/views.py:454
+#: meetings/views.py:452
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: meetings/views.py:598 meetings/views.py:609
+#: meetings/views.py:596 meetings/views.py:607
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:611 meetings/views.py:698
+#: meetings/views.py:609 meetings/views.py:696
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: meetings/views.py:613
+#: meetings/views.py:611
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:654
+#: meetings/views.py:652
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:680
+#: meetings/views.py:678
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
