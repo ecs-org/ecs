@@ -235,28 +235,35 @@ class Submission(models.Model):
 
     def schedule_to_meeting(self):
         visible = self.workflow_lane == SUBMISSION_LANE_BOARD
-        duration = timedelta(minutes=7.5 if visible else 0)
 
         def _schedule():
+            duration = timedelta(minutes=7, seconds=30)
+            if not visible:
+                duration = timedelta(minutes=0)
             meeting = Meeting.objects.next_schedulable_meeting(self)
             meeting.add_entry(submission=self, duration=duration, visible=visible)
             self.update_next_meeting()
             return meeting
 
         try:
-            current_top = self.timetable_entries.order_by('-meeting__start')[0]
+            top = self.timetable_entries.order_by('-meeting__start')[0]
         except IndexError:
-            current_top = None
+            top = None
 
-        if current_top is None:
+        if top is None:
             return _schedule()
-        elif current_top.meeting.started is None:
-            current_top.refresh(duration=duration, visible=visible)
+        elif top.meeting.started is None:
+            duration = top.duration
+            if visible and not top.visible:
+                duration = timedelta(minutes=7, seconds=30)
+            elif not visible:
+                duration = timedelta(minutes=0)
+            top.refresh(duration=duration, visible=visible)
         else:
             last_vote = self.get_most_recent_vote()
             if last_vote and last_vote.is_recessed:
                 return _schedule()
-        return current_top.meeting
+        return top.meeting
 
     @property
     def is_reschedulable(self):

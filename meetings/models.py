@@ -659,6 +659,10 @@ class TimetableEntry(models.Model):
         after = self._collect_users(padding_after, xrange(self.index + 1, len(self.meeting))).difference(waiting_users)
         return len(before), len(waiting_users), len(after)
 
+    @property
+    def visible(self):
+        return not self.timetable_index is None
+
     def refresh(self, **kwargs):
         visible = kwargs.pop('visible', True)
         previous_index = self.timetable_index
@@ -674,7 +678,7 @@ class TimetableEntry(models.Model):
             kwargs['timetable_index'] = None
         duration = kwargs.pop('duration', None)
         if duration is not None:
-            kwargs['duration_in_seconds'] = duration.seconds
+            kwargs['duration_in_seconds'] = timedelta_to_seconds(duration)
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
         self.save()
