@@ -218,7 +218,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             pass
 
     checklist_ct = ContentType.objects.get_for_model(Checklist)
-    external_review_tasks = Task.objects.filter(closed_at=None, deleted_at=None,
+    external_review_tasks = Task.objects.open().filter(
         content_type=checklist_ct, task_type__workflow_node__uid='external_review',
         data_id__in=submission.checklists.values('pk').query)
     try:
@@ -784,7 +784,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 
     visible_submission_pks = [s.pk for s in submissions.object_list if not isinstance(s, DocStash)]
 
-    tasks = Task.objects.filter(closed_at=None, deleted_at=None)
+    tasks = Task.objects.open()
 
     # get related tasks for every submission
     submission_ct = ContentType.objects.get_for_model(Submission)

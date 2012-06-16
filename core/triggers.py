@@ -34,7 +34,7 @@ def on_study_change(sender, **kwargs):
                 except IndexError:
                     pass
                 else:
-                    if not initial_review_tasks.filter(closed_at__isnull=True, deleted_at__isnull=True).exists():
+                    if not initial_review_tasks.open().exists():
                         initial_review_task.reopen()
 
 
@@ -66,7 +66,7 @@ def on_presenter_change(sender, **kwargs):
         send_submission_message(submission, old_presenter, _('Studie {ec_number}'), 'submissions/presenter_change_previous.txt')
 
     with sudo():
-        for task in Task.objects.for_data(submission).filter(task_type__workflow_node__uid__in=['resubmission', 'b2_resubmission'], closed_at=None, deleted_at=None):
+        for task in Task.objects.for_data(submission).filter(task_type__workflow_node__uid__in=['resubmission', 'b2_resubmission']).open():
             task.assign(new_presenter)
 
 @connect(signals.on_susar_presenter_change)

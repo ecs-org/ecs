@@ -270,7 +270,7 @@ class CategorizationReview(Activity):
             checklist.status = 'dropped'
             checklist.save()
             with sudo():
-                Task.objects.for_data(checklist).filter(closed_at=None, deleted_at=None).mark_deleted()
+                Task.objects.for_data(checklist).open().mark_deleted()
 
 def unlock_categorization_review(sender, **kwargs):
     kwargs['instance'].workflow.unlock(CategorizationReview)

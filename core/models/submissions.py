@@ -90,20 +90,20 @@ class Submission(models.Model):
 
     def resubmission_task_for(self, user):
         try:
-            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission', closed_at=None, deleted_at=None)[0]
+            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission').open()[0]
         except IndexError:
             return None
 
     def b2_resubmission_task_for(self, user):
         try:
-            return Task.objects.for_user(user).for_submission(self).filter(task_type__workflow_node__uid='b2_resubmission', closed_at=None, deleted_at=None)[0]
+            return Task.objects.for_user(user).for_submission(self).filter(task_type__workflow_node__uid='b2_resubmission').open()[0]
         except IndexError:
             return None
 
     @property
     def paper_submission_review_task(self):
         try:
-            return Task.objects.for_data(self).filter(task_type__workflow_node__uid='paper_submission_review', closed_at=None, deleted_at=None)[0]
+            return Task.objects.for_data(self).filter(task_type__workflow_node__uid='paper_submission_review').open()[0]
         except IndexError:
             return None
 

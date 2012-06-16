@@ -252,7 +252,7 @@ class Meeting(models.Model):
                 if created:
                     # create board member review task
                     with sudo():
-                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid=task_type_uid, closed_at=None, deleted_at__isnull=True, assigned_to=amc.board_member).exists()
+                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid=task_type_uid, assigned_to=amc.board_member).open().exists()
                     if not bm_task_exists:
                         token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
                         token.task.accept(user=amc.board_member)

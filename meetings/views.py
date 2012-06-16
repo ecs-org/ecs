@@ -98,7 +98,7 @@ def reschedule_submission(request, submission_pk=None):
             with sudo():
                 new_experts = list(AssignedMedicalCategory.objects.filter(meeting=to_meeting, board_member__isnull=False, category__pk__in=submission.medical_categories.values('pk').query).values_list('board_member__pk', flat=True))
                 tasks = Task.objects.for_data(submission).filter(
-                    task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True).exclude(assigned_to__pk__in=new_experts)
+                    task_type__workflow_node__uid='board_member_review').exclude(assigned_to__pk__in=new_experts).open()
                 tasks.mark_deleted()
         submission.update_next_meeting()
         return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
@@ -116,7 +116,7 @@ def open_tasks(request, meeting=None):
     open_tasks = SortedDict()
     for top in tops:
         with sudo():
-            ts = list(Task.objects.for_submission(top.submission).filter(closed_at__isnull=True, deleted_at__isnull=True).select_related('task_type', 'assigned_to', 'assigned_to__ecs_profile'))
+            ts = list(Task.objects.for_submission(top.submission).open().select_related('task_type', 'assigned_to', 'assigned_to__ecs_profile'))
         if len(ts):
             open_tasks[top] = ts
     
@@ -727,7 +727,8 @@ def meeting_details(request, meeting_pk=None, active=None):
                     for entry in entries:
                         with sudo():
                             tasks = Task.objects.for_data(entry.submission).filter(
-                                task_type__workflow_node__uid='board_member_review', closed_at=None, deleted_at__isnull=True, assigned_to=previous_expert)
+                                task_type__workflow_node__uid='board_member_review',
+                                assigned_to=previous_expert).open()
                             tasks.mark_deleted()
                 if amc.board_member:
                     meeting.create_boardmember_reviews()
