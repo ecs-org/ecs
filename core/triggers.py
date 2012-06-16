@@ -10,7 +10,8 @@ from ecs.users.utils import sudo, get_current_user
 from ecs.utils import connect
 from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
-
+from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
+    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
 
 def send_submission_message(submission, user, subject, template, **kwargs):
     send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
@@ -104,13 +105,38 @@ def on_initial_thesis_review(sender, **kwargs):
             meeting = submission.schedule_to_meeting()
             meeting.update_assigned_categories()
 
+LANE_TASKS = {
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS : (
+        'initial_thesis_review',
+        'thesis_recommendation',
+        'thesis_recommendation_review',
+        'thesis_vote_preparation',
+    ),
+    SUBMISSION_LANE_EXPEDITED : (
+        'expedited_recommendation',
+        'expedited_vote_preparation',
+    ),
+    SUBMISSION_LANE_BOARD : (),
+    SUBMISSION_LANE_LOCALEC : (
+        'localec_recommendation',
+        'localec_vote_preparation',
+    ),
+}
 
 @connect(signals.on_categorization_review)
 def on_categorization_review(sender, **kwargs):
     submission = kwargs['submission']
+
     meeting = submission.schedule_to_meeting()
     meeting.update_assigned_categories()
 
+    with sudo():
+        tasks = Task.objects.for_submission(submission).open()
+        for lane, uids in LANE_TASKS.iteritems():
+            if not submission.workflow_lane == lane:
+                tasks.filter(task_type__workflow_node__uid__in=uids).mark_deleted()
+        if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
+            tasks.filter(task_type__workflow_node__uid='initial_review').mark_deleted()
 
 @connect(signals.on_b2_upgrade)
 def on_b2_upgrade(sender, **kwargs):
