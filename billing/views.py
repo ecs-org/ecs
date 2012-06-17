@@ -91,9 +91,9 @@ class SimpleXLS(object):
 @user_group_required('EC-Office', 'EC-Executive Board Group')
 def submission_billing(request):
     with sudo():
-        categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization_review', closed_at__isnull=False, deleted_at__isnull=True)
-        categorized_submissions = Submission.objects.filter(pk__in=categorization_tasks.values('data_id').query)
-    unbilled_submissions = list(categorized_submissions.filter(invoice__isnull=True).order_by('ec_number'))
+        categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization_review').closed()
+        submissions = Submission.objects.filter(pk__in=categorization_tasks.values('data_id').query)
+    unbilled_submissions = list(submissions.filter(invoice__isnull=True).distinct().order_by('ec_number'))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 

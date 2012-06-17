@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-16 19:42+0200\n"
+"POT-Creation-Date: 2012-06-17 12:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -43,33 +43,37 @@ msgstr "gebührenbefreit"
 msgid "External Reviewer"
 msgstr "Gutachter"
 
-#: billing/stats.py:12
+#: billing/stats.py:14
 msgid "fees note - local EC"
 msgstr "Gebührennoten - lokale EK"
 
-#: billing/stats.py:17
+#: billing/stats.py:19
 msgid "fees note - AMG"
 msgstr "Gebührennoten - AMG"
 
-#: billing/stats.py:22
+#: billing/stats.py:24
 msgid "fees note - MPG"
 msgstr "Gebührennoten - MPG"
 
-#: billing/stats.py:27
+#: billing/stats.py:29
 msgid "fees note - other"
 msgstr "Gebührennoten - sonstige"
 
-#: billing/stats.py:32
+#: billing/stats.py:34
 msgid "fees note - controlling-EC monocentric"
 msgstr "Gebührennoten - Leit-EK monozentrisch"
 
-#: billing/stats.py:37
+#: billing/stats.py:39
 msgid "fees note - controlling-EC multicentric"
 msgstr "Gebührennoten - Leit-EK multizentrisch"
 
-#: billing/stats.py:43
+#: billing/stats.py:45
 msgid "late filed fees notes"
 msgstr "Gebührennotennachreichungen"
+
+#: billing/stats.py:50
+msgid "fees note - remission"
+msgstr "Gebührennoten - Gebührenbefreit"
 
 #: billing/views.py:48
 msgid "statistical result"

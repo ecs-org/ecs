@@ -4,7 +4,9 @@ from copy import deepcopy
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
-from ecs.billing.models import Price, STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL
+from ecs.billing.models import Price, STUDY_PRICING_OTHER, \
+    STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, \
+    STUDY_PRICING_REMISSION
 
 
 SUBMISSION_STAT_TEMPLATE = SortedDict((
@@ -44,6 +46,11 @@ SUBMISSION_STAT_TEMPLATE = SortedDict((
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
+    ('remission', {
+        'label': _(u'fees note - remission'),
+        'price': STUDY_PRICING_REMISSION,
+        'count': 0,
+    }),
 ))
 
 AMG_KEYS = {
@@ -58,7 +65,9 @@ def collect_submission_billing_stats(submission_list):
     summary = deepcopy(SUBMISSION_STAT_TEMPLATE)
     total = 0
     for submission in submission_list:
-        if submission.current_submission_form.is_amg:
+        if submission.remission:
+            key = 'remission'
+        elif submission.current_submission_form.is_amg:
             key = AMG_KEYS[(submission.is_multicentric, getattr(submission.main_ethics_commission, 'system', False))]
         elif submission.current_submission_form.is_mpg:
             key = 'mpg'
