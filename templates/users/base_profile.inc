@@ -26,5 +26,4 @@
         </div>
     </td></tr>
     <tr><th>Sozialversicherungsnummer:</th><td>{{ profile.social_security_number }}</td></tr>
-    <tr><th>User-ID:</th><td>{{ profile_user.pk }}</td></tr>
 </table>

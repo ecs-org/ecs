@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-18 22:04+0200\n"
+"POT-Creation-Date: 2012-06-18 22:26+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2995,7 +2995,7 @@ msgstr ""
 
 #: templates/meetings/details.html:92
 #: templates/meetings/constraints/user_form.html:32
-#: templates/users/details.html:32
+#: templates/users/details.html:55
 msgid "form saved"
 msgstr "Formular gespeichert"
 
@@ -4193,11 +4193,15 @@ msgstr "Keine Benutzer."
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: templates/users/details.html:12
+#: templates/users/details.html:13
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
-#: templates/users/details.html:32
+#: templates/users/details.html:26
+msgid "Profile"
+msgstr "Profil"
+
+#: templates/users/details.html:55
 msgid "The change of the user has been saved."
 msgstr "Die Änderungen an dem Benutzer wurden gespeichert."
 
