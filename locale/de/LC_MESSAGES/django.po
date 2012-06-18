@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-18 22:26+0200\n"
+"POT-Creation-Date: 2012-06-18 23:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1582,7 +1582,7 @@ msgstr "Datei"
 msgid "This file is not a valid ECX archive."
 msgstr "Diese Datei ist kein gültiges ECX-Archiv."
 
-#: core/forms/forms.py:448 templates/users/administration.html:38
+#: core/forms/forms.py:448
 msgid "User"
 msgstr "Benutzer"
 
@@ -1787,7 +1787,7 @@ msgstr "Herr"
 msgid "Finished"
 msgstr "Abgeschlossen"
 
-#: core/models/submissions.py:153 templates/users/administration.html:41
+#: core/models/submissions.py:153
 msgid "Active"
 msgstr "Aktiv"
 
@@ -2582,7 +2582,7 @@ msgstr "Es gibt noch keine Zahlung."
 #: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:150
 #: templates/submissions/widget.html:62 templates/users/administration.html:27
-#: templates/users/administration.html:77 templates/wkhtml2pdf/footer.html:121
+#: templates/users/administration.html:87 templates/wkhtml2pdf/footer.html:121
 msgid "Page"
 msgstr "Seite"
 
@@ -2590,7 +2590,7 @@ msgstr "Seite"
 #: templates/billing/invoice_list.html:33 templates/meetings/list.html:26
 #: templates/submissions/list.html:22 templates/submissions/list.html:150
 #: templates/submissions/widget.html:62 templates/users/administration.html:27
-#: templates/users/administration.html:77
+#: templates/users/administration.html:87
 msgid "of"
 msgstr "von"
 
@@ -2995,7 +2995,7 @@ msgstr ""
 
 #: templates/meetings/details.html:92
 #: templates/meetings/constraints/user_form.html:32
-#: templates/users/details.html:55
+#: templates/users/details.html:32
 msgid "form saved"
 msgstr "Formular gespeichert"
 
@@ -4149,59 +4149,47 @@ msgstr "Medizinische Kategorien"
 msgid "Name/Email"
 msgstr "Name/Email"
 
-#: templates/users/administration.html:39
-msgid "E-mail"
-msgstr "E-mail"
-
-#: templates/users/administration.html:40
-msgid "If you mark an user indisposed, somone else has to do the users work"
-msgstr ""
-
-#: templates/users/administration.html:40 templates/users/base_profile.inc:21
-msgid "Indisposed"
-msgstr "Verhindert"
-
-#: templates/users/administration.html:41
-msgid "Inactive users are not able to log into the system"
-msgstr "Inaktive Benutzer können das System nicht verwenden"
-
-#: templates/users/administration.html:49
+#: templates/users/administration.html:43
 msgid "phantom"
 msgstr "phantom"
 
-#: templates/users/administration.html:56
+#: templates/users/administration.html:47 templates/users/base_profile.inc:21
+msgid "Indisposed"
+msgstr "Verhindert"
+
+#: templates/users/administration.html:48
+msgid "Inactive"
+msgstr "Inaktiv"
+
+#: templates/users/administration.html:51
+msgid "Edit Details"
+msgstr "Details ändern"
+
+#: templates/users/administration.html:53
 msgid "Unmark Indisposed"
 msgstr "als Anwesend markieren"
 
-#: templates/users/administration.html:56
+#: templates/users/administration.html:53
 msgid "Mark Indisposed"
 msgstr "als Verhindert markieren"
 
-#: templates/users/administration.html:61
+#: templates/users/administration.html:55
 msgid "Deactivate"
 msgstr "Deaktivieren"
 
-#: templates/users/administration.html:61
+#: templates/users/administration.html:55
 msgid "Activate"
 msgstr "Aktivieren"
-
-#: templates/users/administration.html:66
-msgid "No Users."
-msgstr "Keine Benutzer."
 
 #: templates/users/base_profile.inc:24
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: templates/users/details.html:13
+#: templates/users/details.html:12
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
-#: templates/users/details.html:26
-msgid "Profile"
-msgstr "Profil"
-
-#: templates/users/details.html:55
+#: templates/users/details.html:32
 msgid "The change of the user has been saved."
 msgstr "Die Änderungen an dem Benutzer wurden gespeichert."
 
@@ -4624,9 +4612,3 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
-
-#~ msgid "Address"
-#~ msgstr "Adresse"
-
-#~ msgid "late filed fees notes"
-#~ msgstr "Gebührennotennachreichungen"

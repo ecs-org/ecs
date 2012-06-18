@@ -6,7 +6,6 @@
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-
 <div class="administration_detail form_main">
 <h2>{{ form.instance }} ({{ form.instance.email }})</h2>
 
@@ -22,28 +21,6 @@
     <span class="button"><input type="submit" value="Speichern" /></span>
 </form>
 </div>
-
-<h3>{% trans 'Profile' %}</h3>
-{% with form.instance as profile_user %}
-{% with profile_user.get_profile as profile %}
-<div class="profile">
-<table class="profile_data">
-    <tr><th>Organisation:</th><td>{{ profile.organisation }}</td></tr>
-    <tr><th>Position:</th><td>{{ profile.jobtitle }}</td></tr>
-    <tr><th>E-Mail:</th><td>{{ profile_user.email }}</td></tr>
-    <tr><th>Telefon:</th><td>{{ profile.phone }}</td></tr>
-    <tr><th>Fax:</th><td>{{ profile.fax }}</td></tr>
-    <tr><th>Adresse/Privatadresse falls Gutachter:</th><td>
-        {{ profile.address1 }}<br/>
-        {{ profile.address2 }}<br/>
-        {{ profile.zip_code }} {{ profile.city }}
-    </td></tr>
-    <tr><th>Sozialversicherungsnummer:</th><td>{{ profile.social_security_number }}</td></tr>
-</table>
-</div>
-{% endwith %}
-{% endwith %}
-
 {% endblock %}
 
 {% block jsbottom %}

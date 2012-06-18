@@ -33,39 +33,49 @@
     {% endif %}
 </div>
 
-<table class="user_list">
-    <tr>
-        <th>{% trans "User" %}</th>
-        <th>{% trans "E-mail" %}</th>
-        <th title="{% trans "If you mark an user indisposed, somone else has to do the users work" %}">{% trans "Indisposed" %}</th>
-        <th title="{% trans "Inactive users are not able to log into the system" %}">{% trans "Active" %}</th>
-    </tr>
-    {% for profile in users.object_list %}
-        <tr>
-            <td>
-                <a href="{% url ecs.users.views.details user_pk=profile.pk %}">
-                    {{ profile|formal_name }}
-                    {% if profile.ecs_profile.is_phantom %}
-                        ({% trans "phantom" %})
-                    {% endif %}
-                </a>
-            </td>
-            <td>{{ profile.email }}</td>
-            <td>
-                <a href="{% url ecs.users.views.indisposition user_pk=profile.pk %}">
+<ul class="user_list">
+{% for profile in users.object_list %}
+    <li class="user collapsed{% if profile|has_flag:"is_indisposed" %} indisposed{% endif %}{% if not profile.is_active %} inactive{% endif %}">
+        <div class="head">
+            <span class="username">
+                {{ profile|formal_name }}
+                {% if profile.get_profile.is_phantom %}
+                    ({% trans "phantom" %})
+                {% endif %}
+            </span>
+            <span class="email">{{ profile.email }}</span>
+            <span class="indisposed_warning">[{% trans 'Indisposed' %}]</span>
+            <span class="inactive_warning">[{% trans 'Inactive' %}]</span>
+        </div>
+        <div class="body">
+            <a href="{% url ecs.users.views.details user_pk=profile.pk %}">{% trans 'Edit Details' %}</a>
+            | <a href="{% url ecs.users.views.indisposition user_pk=profile.pk %}">
                     {% if profile|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
                 </a>
-            </td>
-            <td>
-                <form action="{% url ecs.users.views.toggle_active user_pk=profile.pk %}" method="post">
-                    <a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>
-                </form>
-            </td>
-        </tr>
-    {% empty %}
-        <tr><td colspan="4"><em>{% trans "No Users." %}</em></td></tr>
-    {% endfor %}
-</table>
+            | <form action="{% url ecs.users.views.toggle_active user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a></form>
+            {% with profile as profile_user %}
+            {% with profile_user.get_profile as profile %}
+            <div class="profile">
+            <table class="profile_data">
+                <tr><th>Organisation:</th><td>{{ profile.organisation }}</td></tr>
+                <tr><th>Position:</th><td>{{ profile.jobtitle }}</td></tr>
+                <tr><th>E-Mail:</th><td>{{ profile_user.email }}</td></tr>
+                <tr><th>Telefon:</th><td>{{ profile.phone }}</td></tr>
+                <tr><th>Fax:</th><td>{{ profile.fax }}</td></tr>
+                <tr><th>Adresse/Privatadresse falls Gutachter:</th><td>
+                    {{ profile.address1 }}<br/>
+                    {{ profile.address2 }}<br/>
+                    {{ profile.zip_code }} {{ profile.city }}
+                </td></tr>
+                <tr><th>Sozialversicherungsnummer:</th><td>{{ profile.social_security_number }}</td></tr>
+            </table>
+            </div>
+            {% endwith %}
+            {% endwith %}
+        </div>
+    </li>
+{% endfor %}
+</ul>
 
 <div class="paginator">
     {% if not users.number == 1 %}
@@ -133,6 +143,18 @@
                 });
 {% endif %}
             });
+            
+            var user_list = $$('ul.user_list')[0];
+            user_list.getElements('.user').each(function(user){
+                user.getElement('.head').addEvent('click', (function(){
+                    if (user.hasClass('collapsed')) {
+                        user.removeClass('collapsed');
+                    } else {
+                        user.addClass('collapsed');
+                    }
+                    return false;
+                }).bind(this));
+            }, this);
         });
     </script>
 {% endblock %}
