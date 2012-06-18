@@ -54,11 +54,7 @@ class SimpleXLS(object):
         
     def write_row(self, r, cells, header=False):
         for i, cell in enumerate(cells):
-            if header:
-                style = xlwt.easyxf('font: bold on; align: horiz center;')
-                self.sheet.write(r, i, cell, style)
-            else:
-                self.sheet.write(r, i, cell)
+            self.write(r, i, cell, header=header)
 
             try:
                 if isinstance(cell, (int, long, float, Decimal)):
@@ -73,8 +69,12 @@ class SimpleXLS(object):
             else:
                 self.widths[i] = max(self.widths[i], width)
             
-    def write(self, *args, **kwargs):
-        self.sheet.write(*args, **kwargs)
+    def write(self, r, i, cell, header=False):
+        args = [r, i, cell]
+        if header:
+            style = xlwt.easyxf('font: bold on; align: horiz center;')
+            args += [style]
+        self.sheet.write(*args)
             
     def save(self, f):
         # HACK: the width of the zero character in the default font is 256
@@ -98,18 +98,22 @@ def submission_billing(request):
         submission.price = Price.objects.get_for_submission(submission)
 
     if request.method == 'POST':
-        selected_for_billing = []
+        selected_fee = []
+        selected_remission = []
         for submission in unbilled_submissions:
             if request.POST.get('bill_%s' % submission.pk, False):
-                selected_for_billing.append(submission)
+                if submission.remission:
+                    selected_remission += [submission]
+                else:
+                    selected_fee += [submission]
                 
         xls = SimpleXLS()
         xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'UID-Nr.'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')), header=True)
-        for i, submission in enumerate(selected_for_billing):
-            r = i + 1
+        for i, submission in enumerate(selected_fee, 1):
+            r = i
             submission_form = submission.current_submission_form
-            xls.write_row(i + 1, [
-                "%s." % r,
+            xls.write_row(r, [
+                "%s." % i,
                 submission.get_ec_number_display(),
                 _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
                 _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
@@ -118,8 +122,22 @@ def submission_billing(request):
                 _get_organizations(submission_form),
                 submission.price.price,
             ])
-        r = len(selected_for_billing) + 1
+        r += 1
         xls.write(r, 7, xlwt.Formula('SUM(H2:H%s)' % r))
+        r += 2
+        xls.write(r, 0, _(u'fee-exempted submissions'), header=True)
+        for i, submission in enumerate(selected_remission, i+1):
+            r += 1
+            submission_form = submission.current_submission_form
+            xls.write_row(r, [
+                "%s." % i,
+                submission.get_ec_number_display(),
+                _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                submission_form.eudract_number or '?',
+                submission_form.submitter_contact.full_name,
+                _get_organizations(submission_form),
+            ])
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
@@ -127,7 +145,7 @@ def submission_billing(request):
         doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
 
         invoice = Invoice.objects.create(document=doc)
-        invoice.submissions = selected_for_billing
+        invoice.submissions = selected_fee + selected_remission
         
         return HttpResponseRedirect(reverse('ecs.billing.views.view_invoice', kwargs={'invoice_pk': invoice.pk}))
 

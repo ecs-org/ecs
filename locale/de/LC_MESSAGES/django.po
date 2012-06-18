@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-17 12:53+0200\n"
+"POT-Creation-Date: 2012-06-18 20:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,11 +67,7 @@ msgstr "Gebührennoten - Leit-EK monozentrisch"
 msgid "fees note - controlling-EC multicentric"
 msgstr "Gebührennoten - Leit-EK multizentrisch"
 
-#: billing/stats.py:45
-msgid "late filed fees notes"
-msgstr "Gebührennotennachreichungen"
-
-#: billing/stats.py:50
+#: billing/stats.py:44
 msgid "fees note - remission"
 msgstr "Gebührennoten - Gebührenbefreit"
 
@@ -79,55 +75,59 @@ msgstr "Gebührennoten - Gebührenbefreit"
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:107 billing/views.py:179
+#: billing/views.py:111 billing/views.py:197
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:107 core/models/submissions.py:89
+#: billing/views.py:111 core/models/submissions.py:89
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:107
+#: billing/views.py:111
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:107
+#: billing/views.py:111
 msgid "UID-Nr."
 msgstr "UID-Nr."
 
-#: billing/views.py:107
+#: billing/views.py:111
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:107 core/forms/layout.py:91 core/forms/layout.py:92
+#: billing/views.py:111 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:107
+#: billing/views.py:111
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:107 billing/views.py:179
+#: billing/views.py:111 billing/views.py:197
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:179
+#: billing/views.py:128
+msgid "fee-exempted submissions"
+msgstr "Gebührenbefreite Einreichungen"
+
+#: billing/views.py:197
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:179
+#: billing/views.py:197
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:179 users/forms.py:124
+#: billing/views.py:197 users/forms.py:124
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:179 users/forms.py:123
+#: billing/views.py:197 users/forms.py:123
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:179 users/forms.py:131
+#: billing/views.py:197 users/forms.py:131
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -4616,3 +4616,6 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "late filed fees notes"
+#~ msgstr "Gebührennotennachreichungen"
