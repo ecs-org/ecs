@@ -49,6 +49,7 @@
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
       | <a href="" id="help_button" class="help_trigger">{% trans 'Online Help Pages' %}</a>
+      | <a href="{{ 'sitenotice'|help_url }}">{% trans 'Site Notice' %}</a>
     </div>
     <div class="form_public">
       <form method="post" action="" class="login_error" id="login_form">

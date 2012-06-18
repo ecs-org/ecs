@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-18 20:43+0200\n"
+"POT-Creation-Date: 2012-06-18 21:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -4226,7 +4226,11 @@ msgstr "Öffentliches Register"
 msgid "Online Help Pages"
 msgstr "Hilfe/Anleitungen"
 
-#: templates/users/login.html:64
+#: templates/users/login.html:52
+msgid "Site Notice"
+msgstr "Impressum"
+
+#: templates/users/login.html:65
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
