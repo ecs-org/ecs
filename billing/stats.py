@@ -40,12 +40,6 @@ SUBMISSION_STAT_TEMPLATE = SortedDict((
         'price': STUDY_PRICING_MULTICENTRIC_AMG_MAIN,
         'count': 0,
     }),
-    # FIXME: what does 
-    ('later', {
-        'label': _(u'late filed fees notes'),
-        'price': STUDY_PRICING_OTHER,
-        'count': 0,
-    }),
     ('remission', {
         'label': _(u'fees note - remission'),
         'price': STUDY_PRICING_REMISSION,
