@@ -10,7 +10,7 @@
     <tr><th>E-Mail:</th><td>{{ profile_user.email }}</td></tr>
     <tr><th>Telefon:</th><td>{{ profile.phone }}</td></tr>
     <tr><th>Fax:</th><td>{{ profile.fax }}</td></tr>
-    <tr><th>Adresse:</th><td>
+    <tr><th>Adresse/Privatadresse falls Gutachter:</th><td>
         {{ profile.address1 }}<br/>
         {{ profile.address2 }}<br/>
         {{ profile.zip_code }} {{ profile.city }}

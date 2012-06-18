@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-18 21:18+0200\n"
+"POT-Creation-Date: 2012-06-18 22:04+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1811,15 +1811,15 @@ msgstr "ausschließlich studienbezogen"
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
-#: core/templatetags/core.py:118 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:116 core/templatetags/corepdf.py:13
 msgid "yes"
 msgstr "Ja"
 
-#: core/templatetags/core.py:120 core/templatetags/corepdf.py:13
+#: core/templatetags/core.py:118 core/templatetags/corepdf.py:13
 msgid "no"
 msgstr "Nein"
 
-#: core/templatetags/core.py:122
+#: core/templatetags/core.py:120
 msgid "Unknown"
 msgstr ""
 
@@ -4363,8 +4363,8 @@ msgid "Job Title"
 msgstr "Berufsbezeichnung"
 
 #: users/forms.py:125
-msgid "Address"
-msgstr "Adresse"
+msgid "Address/Home Address if external reviewer"
+msgstr "Adresse/Privatadresse falls Gutachter"
 
 #: users/forms.py:126
 msgid "Additional Address Information"
@@ -4456,23 +4456,23 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: users/views.py:110
+#: users/views.py:108
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: users/views.py:178
+#: users/views.py:176
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort zurücksetzen"
 
-#: users/views.py:256
+#: users/views.py:254
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: users/views.py:291 users/views.py:396
+#: users/views.py:289 users/views.py:394
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
 
-#: users/views.py:388
+#: users/views.py:386
 msgid "Failed to deliver invitation"
 msgstr "Die Einladung konnte nicht zugestellt werden"
 
@@ -4620,6 +4620,9 @@ msgstr ""
 #: votes/workflow.py:81
 msgid "B3"
 msgstr ""
+
+#~ msgid "Address"
+#~ msgstr "Adresse"
 
 #~ msgid "late filed fees notes"
 #~ msgstr "Gebührennotennachreichungen"

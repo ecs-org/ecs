@@ -122,7 +122,7 @@ class ProfileForm(TranslatedModelForm):
             'jobtitle': _('Job Title'),
             'swift_bic': _('SWIFT-BIC'),
             'iban': _('IBAN'),
-            'address1': _('Address'),
+            'address1': _('Address/Home Address if external reviewer'),
             'address2': _('Additional Address Information'),
             'zip_code': _('ZIP-Code'),
             'city': _('City'),
