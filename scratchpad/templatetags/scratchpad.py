@@ -20,5 +20,5 @@ class ScratchpadNode(Node):
 def get_scratchpad(parser, token):
     bits = token.split_contents()
     if len(bits) != 3 or bits[1] != 'as':
-        raise TemplateSyntaxError('expected {% scratchpad as [var] %}')
+        raise TemplateSyntaxError('expected {% get_scratchpad as [var] %}')
     return ScratchpadNode(bits[2])

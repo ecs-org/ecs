@@ -4,7 +4,6 @@ from textwrap import dedent
 from django.template import Library, Node, TemplateSyntaxError
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.conf import settings
 from django.db.models import F
@@ -12,7 +11,6 @@ from django.db.models import F
 from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash, DocStashData
-from ecs.help.models import Page
 
 register = Library()
 
@@ -181,14 +179,6 @@ class SiteSCSSNode(Node):
         if logo_border_color:
             sitecss += '#logo {background-color:%s;}\n' % (logo_border_color)
         return sitecss
-
-@register.filter
-def help_url(slug):
-    try:
-        page = Page.objects.get(slug=slug)
-        return reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
-    except Page.DoesNotExist:
-        return reverse('ecs.help.views.index')
 
 class BreadcrumbsNode(Node):
     def __init__(self, varname):

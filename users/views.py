@@ -57,20 +57,18 @@ def login(request, *args, **kwargs):
     if request.is_ajax():
         return HttpResponse('<script type="text/javascript">window.location.href="%s";</script>' % reverse('ecs.users.views.login'))
 
-    def _html5_help_url():
-        try:
-            page = Page.objects.get(slug='html5')
-            return reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
-        except Page.DoesNotExist:
-            return reverse('ecs.help.views.index')
-
     ua_str = request.META.get('HTTP_USER_AGENT')
     if ua_str:
         request.ua = UA(ua_str)
         if request.ua.is_unsupported:
-            return HttpResponseRedirect(_html5_help_url())
+            try:
+                page = Page.objects.get(slug='html5')
+                url = reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
+            except Page.DoesNotExist:
+                url = reverse('ecs.help.views.index')
+            return HttpResponseRedirect(url)
         elif request.ua.is_tmp_unsupported:
-            return render(request, 'browser_temporarily_unsupported.html', {'help_url': _html5_help_url()})
+            return render(request, 'browser_temporarily_unsupported.html', {})
 
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm

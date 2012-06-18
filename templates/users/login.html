@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n core %}
+{% load i18n core helputils %}
 
 {% block jshead %} {# enqueue javasript #}
   {{ block.super }}
@@ -29,7 +29,7 @@
     <noscript>
         <div id="script_warning" style="font-size:14pt;line-height:1.2em;">
             <strong style="color:red;">Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.<br />
-            Lesen Sie <a href="{{ 'noscript'|help_url }}">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
+            Lesen Sie <a href="{% help_url 'noscript' %}">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
         </div>
     </noscript>
     <div id="login_form" style="display:none;">
@@ -49,7 +49,7 @@
     <div class="public_area">
       <a href="{% url ecs.core.views.submissions.catalog %}">{% trans 'Public Catalog' %}</a>
       | <a href="" id="help_button" class="help_trigger">{% trans 'Online Help Pages' %}</a>
-      | <a href="{{ 'sitenotice'|help_url }}">{% trans 'Site Notice' %}</a>
+      | <a href="{% help_url 'sitenotice' %}">{% trans 'Site Notice' %}</a>
     </div>
     <div class="form_public">
       <form method="post" action="" class="login_error" id="login_form">
