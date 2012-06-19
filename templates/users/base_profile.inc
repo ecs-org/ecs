@@ -25,5 +25,7 @@
             {% endif %}
         </div>
     </td></tr>
+    <tr><th>IBAN:</th><td>{{ profile.iban }}</td></tr>
+    <tr><th>SWIFT-BIC:</th><td>{{ profile.swift_bic }}</td></tr>
     <tr><th>Sozialversicherungsnummer:</th><td>{{ profile.social_security_number }}</td></tr>
 </table>
