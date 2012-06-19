@@ -36,7 +36,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'submitter_contact_gender': [u'f'], u'nontesteduseddrug-0-generic_name': [u''], u'medtech_ce_symbol': [u'3'], u'investigator-0-contact_gender': [u'f'], 
     u'investigator-1-contact_gender': [u'm'], u'nontesteduseddrug-MAX_NUM_FORMS': [u''], u'investigatoremployee-INITIAL_FORMS': [u'0'], u'insurance_phone': [u'1234567'], 
     u'investigator-0-email': [u'rofl@copter.com'], u'measure-TOTAL_FORMS': [u'0'], u'medtech_manufacturer': [u''], u'subject_planned_total_duration': [u'10 months'], 
-    u'protocol_number': [u''], u'german_summary': [u'Bei diesem Projekt handelt es sich um ein sowieso bla blu'], u'document-doctype': [u''], 
+    u'german_summary': [u'Bei diesem Projekt handelt es sich um ein sowieso bla blu'], u'document-doctype': [u''], 
     u'investigator-0-contact_first_name': [u'Jane'], u'nontesteduseddrug-0-dosage': [u''], u'insurance_contract_number': [u'2323'], u'study_plan_power': [u'0.80'], 
     u'sponsor_phone': [u'+43 1 40170'], u'subject_maxage': [u'21'], u'investigator-1-ethics_commission': [u''], u'subject_noncompetents': [u'on'], 
     u'german_dataprotection_info': [u'bla bla bla'], u'german_risks_info': [u'bla bla bla'], 

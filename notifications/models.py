@@ -119,11 +119,8 @@ class Notification(models.Model):
     def render_pdf(self):
         tpl = self.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = self.submission_forms.select_related('submission').all()
-        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-        protocol_numbers.sort()
         pdf = render_pdf_context(tpl, {
             'notification': self,
-            'protocol_numbers': protocol_numbers,
             'submission_forms': submission_forms,
             'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })

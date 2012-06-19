@@ -87,11 +87,8 @@ def test_notification_pdf_html(request, notification_pk=None):
         bootstrap.templates()
         tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = notification.submission_forms.select_related('submission').all()
-        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-        protocol_numbers.sort()
         html = tpl.render(Context({
             'notification': notification,
-            'protocol_numbers': protocol_numbers,
             'submission_forms': submission_forms,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         }))
@@ -105,11 +102,8 @@ def test_render_notification_pdf(request, notification_pk=None):
         bootstrap.templates()
         tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = notification.submission_forms.select_related('submission').all()
-        protocol_numbers = [sf.protocol_number for sf in submission_forms if sf.protocol_number]
-        protocol_numbers.sort()
         pdf = render_pdf_context(tpl, {
             'notification': notification,
-            'protocol_numbers': protocol_numbers,
             'submission_forms': submission_forms,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })

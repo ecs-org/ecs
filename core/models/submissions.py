@@ -290,7 +290,6 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
-    protocol_number = models.CharField(max_length=60, blank=True)
     submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -649,6 +648,7 @@ class SubmissionForm(models.Model):
         
     @property
     def protocol(self):
+        ''' FIXME: still used? '''
         protocol_doc = self.documents.exclude(status='deleted').filter(doctype__identifier='protocol').order_by('-date', '-version')[:1]
         if protocol_doc:
             return protocol_doc[0]

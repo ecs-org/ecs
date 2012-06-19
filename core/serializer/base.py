@@ -47,6 +47,8 @@ CHANGELOG = (
     ('*', '0.9'),
     ('-', SubmissionForm, 'invoice', None),
     ('*', '1.0'),
+    ('-', SubmissionForm, 'protocol_number', 'unbekannt'),
+    ('*', '1.1'),
 )
 
 class FieldDocs(object):

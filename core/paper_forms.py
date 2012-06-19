@@ -97,7 +97,6 @@ FormInfo(NonTestedUsedDrug, fields=(
 FormInfo(SubmissionForm, fields=(
     # 1. Allgemeines
     FieldInfo('1.1', 'project_title', _(u'project title'), short_label=_('project title (english)')),
-    FieldInfo('1.2', 'protocol_number', _(u'protocol number/-name')),
     FieldInfo('1.3', None, _(u'date of protocol')), #'date_of_protocol'
     FieldInfo('1.2.1', 'eudract_number', _(u'EudraCT-Nr.')),
     FieldInfo('1.3.1', None, _(u'ISRCTN-Nr.')), #'isrctn_number'
