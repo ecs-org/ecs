@@ -5,6 +5,8 @@ from functools import wraps
 from django.http import Http404
 from django.conf import settings
 
+from ecs.utils.timedelta import timedelta_to_seconds
+
 def developer(func):
     """ Wraps a view to raise 404 if settings.DEBUG if False"""
     @wraps(func)
@@ -51,7 +53,7 @@ class print_duration(object):
     def __exit__(self, *exc):
         self.t2 = datetime.now()
         d = self.t2 - self.t1
-        s = '{0:.2f}s {1}'.format(d.total_seconds(), self.name or '<anonymous>')
+        s = '{0:.2f}s {1}'.format(timedelta_to_seconds(d), self.name or '<anonymous>')
         if self.args or self.kwargs:
             bits = []
             for arg in self.args:
