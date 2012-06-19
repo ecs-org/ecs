@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-19 13:00+0200\n"
+"POT-Creation-Date: 2012-06-19 17:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1496,14 +1496,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:706 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:707 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:236 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:708 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:709 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:238 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1769,12 +1769,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:811 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:811 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1791,19 +1791,19 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:712 templates/submissions/readonly_form.html:240
+#: core/models/submissions.py:713 templates/submissions/readonly_form.html:240
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:714
+#: core/models/submissions.py:715
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:847
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:847
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2132,20 +2132,19 @@ msgstr "Diese Sitzung wurde noch nicht begonnen."
 
 #: meetings/views.py:431
 msgid ""
-"There are open recommendations. You can start the meeting assistan when all "
+"There are open recommendations. You can start the meeting assistant when all "
 "recommendations are done."
 msgstr ""
 "Es sind noch nicht alle Empfehlungen fertig abgegeben. Sie können die "
-"Sitzungsplanung erst nach dem erfolgten Abschluss der Empfehlungen öffnen."
+"Sitzung erst nach dem erfolgten Abschluss der Empfehlungen starten."
 
 #: meetings/views.py:439
 msgid ""
-"There are open vote preparations. You can start the meeting assistan when "
+"There are open vote preparations. You can start the meeting assistant when "
 "all vote preparations are done."
 msgstr ""
-"Es sind noch nicht alle Votumsvorbereitungen fertig abgegeben. Sie können "
-"die Sitzungsplanung erst nach dem erfolgten Abschluss der "
-"Votumsvorbereitungen öffnen."
+"Es sind noch nicht alle Votumsvorbereitungen fertig. Sie können die Sitzung "
+"erst nach dem erfolgten Abschluss der Votumsvorbereitungen starten."
 
 #: meetings/views.py:452
 msgid "unfinished meetings cannot be stopped"

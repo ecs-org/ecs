@@ -428,7 +428,7 @@ def meeting_assistant_start(request, meeting_pk=None):
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,
-                'message': _('There are open recommendations. You can start the meeting assistan when all recommendations are done.'),
+                'message': _('There are open recommendations. You can start the meeting assistant when all recommendations are done.'),
             })
         with sudo():
             vote_preparation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_vote_preparation', 'expedited_vote_preparation', 'localec_vote_preparation']).open().exists()
@@ -436,7 +436,7 @@ def meeting_assistant_start(request, meeting_pk=None):
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,
-                'message': _('There are open vote preparations. You can start the meeting assistan when all vote preparations are done.'),
+                'message': _('There are open vote preparations. You can start the meeting assistant when all vote preparations are done.'),
             })
 
     meeting.started = datetime.now()
