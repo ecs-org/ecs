@@ -41,29 +41,15 @@ class SubmissionQFactory(authorization.QFactory):
         now = datetime.now()
         q |= self.make_q(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
 
-        ### rules that apply until a final vote has been published.
-        until_vote_q = self.make_q(external_reviewers=user)
-        if profile.is_thesis_reviewer:
-            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
-        if profile.is_board_member:
-            until_vote_q |= self.make_q(timetable_entries__participations__user=user)
-        if profile.is_expedited_reviewer:
-            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_EXPEDITED)
         if profile.is_insurance_reviewer:
-            until_vote_q |= self.make_q(insurance_review_required=True)
-            q |= self.make_q(forms__notifications__review_lane='insrev')
             q |= self.make_q(forms__votes__insurance_review_required=True)
-        q |= until_vote_q & (
-            self.make_q(current_submission_form__current_published_vote=None)
-            | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)
-        )
 
         q |= self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
         q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
 
         # notification tasks for non-internal users
         for cls in (AmendmentNotification, SafetyNotification):
-            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(SafetyNotification)).values('data_id').query)
+            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query)
 
         return q
 
