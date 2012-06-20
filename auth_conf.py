@@ -31,9 +31,6 @@ class SubmissionQFactory(authorization.QFactory):
         if user.is_staff or profile.is_internal:
             return self.make_q()
             
-        ### default policy: only avaiable for the (susar) presenter.
-        q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
-
         ### presenting parties
         q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
         q |= self.make_q(current_submission_form__submitter=user)
