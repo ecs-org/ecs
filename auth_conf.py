@@ -114,8 +114,9 @@ authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query, assigned_to__isnull=True) | self.make_q(created_by=user) | self.make_q(assigned_to=user) | self.make_q(assigned_to__ecs_profile__is_indisposed=True, task_type__groups__in=user.groups.all().values('pk').query)
-        q &= ~(self.make_q(expedited_review_categories__gt=0) & ~self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user)))
+        q = self.make_q(task_type__groups__in=user.groups.values('pk').query) & (self.make_q(assigned_to=None) | self.make_q(assigned_to__ecs_profile__is_indisposed=True))
+        q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
+        q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user).values('pk').query)
         return q
 
 authorization.register(Task, factory=TaskQFactory)
