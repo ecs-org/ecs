@@ -59,11 +59,11 @@ class SubmissionQFactory(authorization.QFactory):
         )
 
         q |= self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
-
-        ### permission by task
         q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-        for cls in NOTIFICATION_MODELS:
-            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query)
+
+        # notification tasks for non-internal users
+        for cls in (AmendmentNotification, SafetyNotification):
+            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(SafetyNotification)).values('data_id').query)
 
         return q
 
