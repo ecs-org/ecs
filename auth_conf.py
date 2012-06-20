@@ -33,6 +33,12 @@ class SubmissionQFactory(authorization.QFactory):
             
         ### default policy: only avaiable for the (susar) presenter.
         q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
+
+        ### presenting parties
+        q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
+        q |= self.make_q(current_submission_form__submitter=user)
+        q |= self.make_q(current_submission_form__sponsor=user)
+        q |= self.make_q(current_submission_form__primary_investigator__user=user)
         
         ### explicit temporary permissions
         now = datetime.now()
@@ -55,22 +61,12 @@ class SubmissionQFactory(authorization.QFactory):
             | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)
         )
 
-        ### rules that apply until the end of the submission lifecycle
-        until_eol_q = self.make_q(
-            current_submission_form__submitter=user
-        ) | self.make_q(
-            current_submission_form__primary_investigator__user=user
-        ) | self.make_q(
-            current_submission_form__sponsor=user
-        ) | self.make_q(
-            pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
-        ) | self.make_q(
-            pk__in=Checklist.objects.values('submission__pk').query
-        )
+        q |= self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
+
+        ### permission by task
+        q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         for cls in NOTIFICATION_MODELS:
-            until_eol_q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query
-        )
-        q |= until_eol_q
+            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query)
 
         return q
 
@@ -134,7 +130,7 @@ class NotificationAnswerQFactory(authorization.QFactory):
         q = self.make_q(notification__in=Notification.objects.values('pk').query)
         if not profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
-        for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+        for cls in NOTIFICATION_MODELS:
             ct = ContentType.objects.get_for_model(cls)
             q |= self.make_q(notification__pk__in=Notification.objects.filter(pk__in=Task.objects.filter(content_type=ct).values('data_id').query).values('pk').query)
         return q
