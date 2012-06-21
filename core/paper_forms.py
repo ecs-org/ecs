@@ -140,14 +140,14 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.6', 'project_type_genetic_study', _(u'Genetic survey')),
     FieldInfo('2.1.7', 'project_type_misc', _(u'Other, please specify'), help_text=_(u'e.g. Dietetics, epidemiology, etc.')),
     FieldInfo('2.1.8/9', 'project_type_education_context', _(u'Dissertation / Thesis')),
-    FieldInfo('2.1.10', 'project_type_register', _(u'Register')), # new
-    FieldInfo('2.1.11', 'project_type_biobank', _(u'Biobank')), # new
-    FieldInfo('2.1.12', 'project_type_retrospective', _(u'Retrospective data analysis')), # new
-    FieldInfo('2.1.13', 'project_type_questionnaire', _(u'Questionnaire investigation')), # new
-    FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=_(u'Psychological study')), # new
-    FieldInfo('2.1.15', 'project_type_nursing_study', _(u'Nursing Scientific Study')), # new
-    FieldInfo('2.1.16', 'project_type_non_interventional_study', _(u'Non-interventional Study (NIS)')), # new
-    FieldInfo('2.1.17', 'project_type_gender_medicine', _(u'Gender medicine')), # new
+    FieldInfo('2.1.10', 'project_type_register', _(u'Register')),
+    FieldInfo('2.1.11', 'project_type_biobank', _(u'Biobank')),
+    FieldInfo('2.1.12', 'project_type_retrospective', _(u'Retrospective data analysis')),
+    FieldInfo('2.1.13', 'project_type_questionnaire', _(u'Questionnaire investigation')),
+    FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=_(u'Psychological study')),
+    FieldInfo('2.1.15', 'project_type_nursing_study', _(u'Nursing Scientific Study')),
+    FieldInfo('2.1.16', 'project_type_non_interventional_study', _(u'Non-interventional Study (NIS)'), help_text=_(u'as per § 2a Abs. 3 AMG')),
+    FieldInfo('2.1.17', 'project_type_gender_medicine', _(u'Gender medicine')),
     FieldInfo('2.2', 'specialism', _(u'special field')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _(u'Test substances')),
@@ -251,6 +251,7 @@ FormInfo(SubmissionForm, fields=(
     # 8.2 Studienplanung
     # Die Fallzahlberechnung basiert auf (Alpha = Fehler 1. Art, Power = 1 – Beta = 1 – Fehler 2. Art):
     FieldInfo('8.2.1', 'study_plan_alpha', _(u'Alpha'), help_text=_(u'first order error')),
+    FieldInfo(None, 'study_plan_alpha_sided', ' '),
     FieldInfo('8.2.2', 'study_plan_power', _(u'Power'), help_text=_(u'1 - Beta = 1 - second order error')),
     FieldInfo('8.2.3', 'study_plan_statalgorithm', _(u'statistical algorithm')),
     FieldInfo('8.2.4', 'study_plan_multiple_test', _(u'multiple testing')),

@@ -62,6 +62,8 @@ Fehler 2. Art): </p>
 
 <p class="pbi_avoid">
 8.2.1 Alpha:  <strong> {{ submission_form.study_plan_alpha|default_if_none:"" }} </strong> 
+    {{ submission_form.study_plan_alpha_double_sided|checkbox }} zweiseitig
+    {{ submission_form.study_plan_alpha_single_sided|checkbox }} einseitig
 8.2.2 Power: <strong> {{ submission_form.study_plan_power|default_if_none:"" }} </strong> 
 8.2.3 Stat.Verfahren: <strong>  {{ submission_form.study_plan_statalgorithm|default_if_none:"" }}</strong> </p>
 

@@ -43,11 +43,11 @@ class NamedProxy(object):
 SUBMISSION_FORM_TABS = (
     Tab('key_data', _(u'Key data'), [
         (_(u'type of project'), [
-            'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 
+            'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 'project_type_non_interventional_study', 
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_nursing_study',
-            'project_type_non_interventional_study', 'project_type_gender_medicine', 'project_type_misc', 'project_type_education_context',
+            'project_type_gender_medicine', 'project_type_misc', 'project_type_education_context',
             'specialism', 'clinical_phase', 'already_voted',
         ]),
     ]),
@@ -122,7 +122,7 @@ SUBMISSION_FORM_TABS = (
             'study_plan_null_hypothesis', 'study_plan_alternative_hypothesis', 'study_plan_secondary_objectives',
         ]),
         (_(u'study plan'), [
-            'study_plan_alpha', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test', 'study_plan_multiple_test_correction_algorithm',
+            'study_plan_alpha', 'study_plan_alpha_sided', 'study_plan_power', 'study_plan_statalgorithm', 'study_plan_multiple_test', 'study_plan_multiple_test_correction_algorithm',
             'study_plan_dropout_ratio',
         ]),
         (_(u'planned statistical analysis'), [

@@ -18,10 +18,12 @@
     {{ submission_form.project_type_reg_drug|checkbox }} 2.1.2 Klinische Prüfung eines registrierten <strong>Arzneimittels</strong>
     </p>
 
-    <div class="indented border_bottom">
+    <div class="indented">
         {{ submission_form.project_type_reg_drug_within_indication|checkbox }} 2.1.2.1 gemäß der Indikation 
         {{ submission_form.project_type_reg_drug_not_within_indication|checkbox }} 2.1.2.2 nicht gemäß der Indikation
     </div>
+
+    <p class="border_bottom">{{ submission_form.project_type_non_interventional_study|checkbox }} 2.1.16 <strong>Nicht-interventionelle Studie</strong> – nur gem. § 2a Abs. 3 AMG</p>
 
     <p>{{ submission_form.project_type_medical_method|checkbox }} 2.1.3 Klinische Prüfung einer neuen <strong>medizinischen Methode</strong></p>
 
@@ -49,8 +51,6 @@
     <p class="border_bottom">{{ submission_form.project_type_psychological_study|checkbox }} 2.1.14 <strong>Psychologische Studie</strong></p>
 
     <p class="border_bottom">{{ submission_form.project_type_nursing_study|checkbox }} 2.1.15 <strong>Pflegewissenschaftliche Studie</strong></p>
-
-    <p class="border_bottom">{{ submission_form.project_type_non_interventional_study|checkbox }} 2.1.16 <strong>Nicht-interventionelle Studie</strong></p>
 
     <p class="border_bottom">{{ submission_form.project_type_gender_medicine|checkbox }} 2.1.17 <strong>Gendermedizin</strong></p>
 

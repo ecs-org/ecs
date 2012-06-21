@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-19 17:41+0200\n"
+"POT-Creation-Date: 2012-06-21 17:09+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,63 +71,63 @@ msgstr "Gebührennoten - Leit-EK multizentrisch"
 msgid "fees note - remission"
 msgstr "Gebührennoten - Gebührenbefreit"
 
-#: billing/views.py:48
+#: billing/views.py:49
 msgid "statistical result"
 msgstr "Statistikergebnis"
 
-#: billing/views.py:111 billing/views.py:197
+#: billing/views.py:123 billing/views.py:214
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:111 core/models/submissions.py:89
+#: billing/views.py:123 core/models/submissions.py:89
 msgid "EC-Number"
 msgstr "EK-Number"
 
-#: billing/views.py:111
+#: billing/views.py:123
 msgid "company"
 msgstr "Firma"
 
-#: billing/views.py:111
+#: billing/views.py:123
 msgid "UID-Nr."
 msgstr "UID-Nr."
 
-#: billing/views.py:111
+#: billing/views.py:123
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: billing/views.py:111 core/forms/layout.py:91 core/forms/layout.py:92
+#: billing/views.py:123 core/forms/layout.py:91 core/forms/layout.py:92
 msgid "applicant"
 msgstr "Antragsteller"
 
-#: billing/views.py:111
+#: billing/views.py:123
 msgid "clinic"
 msgstr "Klinik"
 
-#: billing/views.py:111 billing/views.py:197
+#: billing/views.py:123 billing/views.py:214
 msgid "sum"
 msgstr "Summe"
 
-#: billing/views.py:128
+#: billing/views.py:145
 msgid "fee-exempted submissions"
 msgstr "Gebührenbefreite Einreichungen"
 
-#: billing/views.py:197
+#: billing/views.py:214
 msgid "reviewer"
 msgstr "Gutachter"
 
-#: billing/views.py:197
+#: billing/views.py:214
 msgid "EC-Nr."
 msgstr "EK-Nr"
 
-#: billing/views.py:197 users/forms.py:124
+#: billing/views.py:214 users/forms.py:124
 msgid "IBAN"
 msgstr "IBAN"
 
-#: billing/views.py:197 users/forms.py:123
+#: billing/views.py:214 users/forms.py:123
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-#: billing/views.py:197 users/forms.py:131
+#: billing/views.py:214 users/forms.py:131
 msgid "Social Security Number"
 msgstr "Sozialversicherungs-Nr."
 
@@ -663,6 +663,10 @@ msgstr "Pflegewissenschaftliche Studie"
 #: core/paper_forms.py:149
 msgid "Non-interventional Study (NIS)"
 msgstr "Nicht-interventionelle Studie (NIS)"
+
+#: core/paper_forms.py:149
+msgid "as per § 2a Abs. 3 AMG"
+msgstr "nur gem. § 2a Abs. 3 AMG"
 
 #: core/paper_forms.py:150
 msgid "Gender medicine"
@@ -1496,14 +1500,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:332 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:707 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:709 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:236 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:333 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:709 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:711 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:238 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1769,12 +1773,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:814 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:812 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:814 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1791,19 +1795,27 @@ msgstr "Aktiv"
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:713 templates/submissions/readonly_form.html:240
+#: core/models/submissions.py:474
+msgid "single-sided"
+msgstr "einseitig"
+
+#: core/models/submissions.py:474
+msgid "double-sided"
+msgstr "zweiseitig"
+
+#: core/models/submissions.py:715 templates/submissions/readonly_form.html:240
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:715
+#: core/models/submissions.py:717
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:847
+#: core/models/submissions.py:849
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:847
+#: core/models/submissions.py:849
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 

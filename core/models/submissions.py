@@ -471,6 +471,7 @@ class SubmissionForm(models.Model):
 
     # 8.2
     study_plan_alpha = models.CharField(max_length=80)
+    study_plan_alpha_sided = models.SmallIntegerField(choices=[(0, ugettext_lazy('single-sided')), (1, ugettext_lazy('double-sided'))], null=True)
     study_plan_power = models.CharField(max_length=80)
     study_plan_statalgorithm = models.CharField(max_length=80)
     study_plan_multiple_test = models.BooleanField()
@@ -637,6 +638,14 @@ class SubmissionForm(models.Model):
     @property
     def study_plan_double_blind(self):
         return self.study_plan_blind == 2
+
+    @property
+    def study_plan_alpha_single_sided(self):
+        return self.study_plan_alpha_sided == 0
+
+    @property
+    def study_plan_alpha_double_sided(self):
+        return self.study_plan_alpha_sided == 1
         
     @property
     def project_type_drug(self):
