@@ -169,7 +169,7 @@ def submission_list(request, meeting=None):
     tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
     tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
     active_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
-    active_top_pk = cache.get(active_top_cache_key) or meeting[0].pk
+    active_top_pk = cache.get(active_top_cache_key)
     return render_html(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,

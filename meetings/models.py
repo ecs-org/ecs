@@ -518,10 +518,10 @@ class TimetableEntry(models.Model):
         if not self.timetable_index is None:
             return self.timetable_index
         else:
-            index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max'] + 1
+            index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
             if index is None:
-                index = 0
-            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lt=self.pk).count()
+                index = -1
+            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lte=self.pk).count()
             return index
     
     @cached_property
