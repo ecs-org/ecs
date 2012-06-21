@@ -72,7 +72,7 @@ def send_reminder_messages(today=None):
     if today is None:
         today = datetime.today().date()
 
-    votes = Vote.objects.filter(Q(_currently_pending_for__isnull=False, _currently_pending_for__current_for_submission__isnull=False)|Q(_currently_published_for__isnull=False, _currently_published_for__current_for_submission__isnull=False), result='2').exclude(published_at__isnull=True, valid_until__isnull=True)
+    votes = Vote.objects.filter(result='1', published_at__isnull=False, valid_until__isnull=False)
     for vote in votes:
         valid_until = vote.valid_until.date()
         if today < valid_until:
