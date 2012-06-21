@@ -116,7 +116,9 @@ LANE_TASKS = {
         'expedited_recommendation',
         'expedited_vote_preparation',
     ),
-    SUBMISSION_LANE_BOARD : (),
+    SUBMISSION_LANE_BOARD : (
+        'board_member_review',
+    ),
     SUBMISSION_LANE_LOCALEC : (
         'localec_recommendation',
         'localec_vote_preparation',
