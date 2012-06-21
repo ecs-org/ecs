@@ -3,6 +3,7 @@ import datetime
 import xlwt
 from decimal import Decimal
 from StringIO import StringIO
+import math
 
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -51,10 +52,11 @@ class SimpleXLS(object):
         self.sheet.panes_frozen = True
         self.sheet.horz_split_pos = 1
         self.widths = []
+        self.characters = []
         
     def write_row(self, r, cells, header=False):
-        for i, cell in enumerate(cells):
-            self.write(r, i, cell, header=header)
+        for c, cell in enumerate(cells):
+            self.write(r, c, cell, header=header)
 
             try:
                 if isinstance(cell, (int, long, float, Decimal)):
@@ -64,17 +66,27 @@ class SimpleXLS(object):
             except TypeError:
                 width = 0
 
-            if i >= len(self.widths):
+            if c >= len(self.widths):
                 self.widths.append(width)
             else:
-                self.widths[i] = max(self.widths[i], width)
+                self.widths[c] = max(self.widths[c], width)
+
+            if r >= len(self.characters):
+                for i in xrange(len(self.characters), r+1):
+                    self.characters.append(0)
+            self.characters[r] = max(self.characters[r], len(unicode(cell)))
             
-    def write(self, r, i, cell, header=False):
-        args = [r, i, cell]
+    def write(self, r, c, cell, header=False):
+        style = xlwt.easyxf('align: wrap on, vert top;')
         if header:
             style = xlwt.easyxf('font: bold on; align: horiz center;')
-            args += [style]
-        self.sheet.write(*args)
+        self.sheet.write(r, c, cell, style)
+
+    def write_merge(self, r1, r2, c1, c2, cell, header=False):
+        style = xlwt.easyxf('align: wrap on, vert top;')
+        if header:
+            style = xlwt.easyxf('font: bold on; align: horiz center;')
+        self.sheet.write_merge(r1, r2, c1, c2, cell, style)
             
     def save(self, f):
         # HACK: the width of the zero character in the default font is 256
@@ -82,9 +94,9 @@ class SimpleXLS(object):
         # factor to get the width right (content with a lot of wide glyphs will
         # still get a wrong width)
         for i, width in enumerate(self.widths):
-            # the width gets packed as 16 bit unsigned integer into the excel file,
-            # so we limit the width to USHRT_MAX to prevent xlwt from erroring out
-            self.sheet.col(i).width = min(int((1 + width) * 256 * 1.1), 2**16-1)
+            self.sheet.col(i).width = min(int((1 + width) * 256 * 1.1), 256*80)
+        for i, characters in enumerate(self.characters):
+            self.sheet.row(i).height = 255 * int(math.ceil(float(characters)/80))
         self.xls.save(f)
 
 @readonly(methods=['GET'])
@@ -109,35 +121,40 @@ def submission_billing(request):
                 
         xls = SimpleXLS()
         xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'UID-Nr.'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')), header=True)
-        for i, submission in enumerate(selected_fee, 1):
-            r = i
-            submission_form = submission.current_submission_form
-            xls.write_row(r, [
-                "%s." % i,
-                submission.get_ec_number_display(),
-                _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
-                _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
-                submission_form.eudract_number or '?',
-                submission_form.submitter_contact.full_name,
-                _get_organizations(submission_form),
-                submission.price.price,
-            ])
-        r += 1
-        xls.write(r, 7, xlwt.Formula('SUM(H2:H%s)' % r))
-        r += 2
-        xls.write(r, 0, _(u'fee-exempted submissions'), header=True)
-        for i, submission in enumerate(selected_remission, i+1):
+        if selected_fee:
+            for i, submission in enumerate(selected_fee, 1):
+                r = i
+                submission_form = submission.current_submission_form
+                xls.write_row(r, [
+                    "%s." % i,
+                    submission.get_ec_number_display(),
+                    _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                    _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                    submission_form.eudract_number or '?',
+                    submission_form.submitter_contact.full_name,
+                    _get_organizations(submission_form),
+                    submission.price.price,
+                ])
             r += 1
-            submission_form = submission.current_submission_form
-            xls.write_row(r, [
-                "%s." % i,
-                submission.get_ec_number_display(),
-                _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
-                _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
-                submission_form.eudract_number or '?',
-                submission_form.submitter_contact.full_name,
-                _get_organizations(submission_form),
-            ])
+            xls.write(r, 7, xlwt.Formula('SUM(H2:H%s)' % r))
+            r += 2
+        else:
+            i = 0
+            r = 1
+        if selected_remission:
+            xls.write_merge(r, r, 0, 2, _(u'fee-exempted submissions'), header=True)
+            for i, submission in enumerate(selected_remission, i+1):
+                r += 1
+                submission_form = submission.current_submission_form
+                xls.write_row(r, [
+                    "%s." % i,
+                    submission.get_ec_number_display(),
+                    _get_address(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                    _get_uid_number(submission_form, submission_form.invoice_name and 'invoice' or 'sponsor'),
+                    submission_form.eudract_number or '?',
+                    submission_form.submitter_contact.full_name,
+                    _get_organizations(submission_form),
+                ])
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
