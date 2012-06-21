@@ -722,6 +722,8 @@ class SubmissionForm(models.Model):
             bits.append(_('minors'))
         if self.submission.invite_primary_investigator_to_meeting and self.submission.timetable_entries.filter(meeting__ended=None).exists():
             bits.append(_('Investigator invited'))
+        if self.project_type_non_interventional_study:
+            bits.append(_('NIS'))
         return u', '.join(bits)
 
 def attach_to_submissions(user):
