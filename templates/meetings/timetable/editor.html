@@ -3,6 +3,11 @@
 {% if running_optimization %}
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}
+{% if recommendations_not_done %}
+    <div style="color: red; font-size: 120%; font-weight: bold; margin: 20px;">
+        Achtung: Es sind noch nicht alle Empfehlungen fertig abgegeben.
+    </div>
+{% endif %}
 <div id="meeting_editor">
     {% if not readonly %}
         <ol class="options">

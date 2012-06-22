@@ -302,11 +302,18 @@ def move_timetable_entry(request, meeting_pk=None):
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     from ecs.meetings.tasks import _eval_timetable
+    recommendations_not_done = False
+    for top in meeting.timetable_entries.filter(submission__isnull=False):
+        with sudo():
+            recommendations_not_done = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'expedited_recommendation', 'localec_recommendation']).open().exists()
+        if recommendations_not_done:
+            break
     return render(request, 'meetings/timetable/editor.html', {
         'meeting': meeting,
         'running_optimization': bool(meeting.optimization_task_id),
         'readonly': bool(meeting.optimization_task_id) or not meeting.started is None,
         'score': _eval_timetable(meeting.metrics),
+        'recommendations_not_done': recommendations_not_done,
     })
 
 @user_flag_required('is_internal')
