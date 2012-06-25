@@ -11,7 +11,6 @@ class LazyList(object):
     @property
     def L(self):
         if self._L is None:
-            import traceback; traceback.print_stack()
             self._L = list(self.fn())
         return self._L
 
