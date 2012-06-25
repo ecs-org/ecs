@@ -114,9 +114,11 @@ class MeetingModelTest(EcsTestCase):
 
         def schedule(i):
             meetings[i].add_entry(submission=s, duration=timedelta(hours=1))
+            s.update_next_meeting()
             
         def unschedule(i):
             meetings[i].timetable_entries.all().delete()
+            s.update_next_meeting()
             
         def check_next(i):
             self.assertEqual(Submission.objects.get(pk=s.pk).next_meeting, None if i is None else meetings[i])

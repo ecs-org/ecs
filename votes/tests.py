@@ -8,6 +8,7 @@ from ecs.votes.tasks import send_reminder_messages
 from ecs.meetings.models import Meeting
 from ecs.votes.models import Vote
 from ecs.communication.models import Message
+from ecs.core.models import AdvancedSettings
 
 class VoteRemindersTest(CommunicationTestCase):
     '''Tests for reminder message sending and vote reminders
@@ -18,8 +19,10 @@ class VoteRemindersTest(CommunicationTestCase):
     def setUp(self, *args, **kwargs):
         super(VoteRemindersTest, self).setUp(*args, **kwargs)
 
-        # alice is the submitter and bob is the postmaster
-        settings.ECSMAIL['postmaster'] = 'bob@example.com'
+        # alice is the submitter and bob is the default contact
+        advanced_settings = AdvancedSettings.objects.get(pk=1)
+        advanced_settings.default_contact = self.bob
+        advanced_settings.save()
         
         # there has to be a test submission
         submission_form = create_submission_form()
@@ -46,9 +49,12 @@ class VoteRemindersTest(CommunicationTestCase):
         meeting.add_entry(submission=submission_form_thesis.submission, duration_in_seconds=60)
 
         self.valid_until = datetime.today().date() + timedelta(days=365)
-        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='2')
+        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1')
+        # publish() checks that the vote is signed, so fake it
+        self.vote.signed_at = datetime.now()
         self.vote.publish()
-        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='2')
+        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='1')
+        self.vote_thesis.signed_at = datetime.now()
         self.vote_thesis.publish()
 
     def test_expiry(self):

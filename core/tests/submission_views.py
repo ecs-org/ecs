@@ -76,7 +76,7 @@ VALID_SUBMISSION_FORM_DATA = {
     u'investigatoremployee-0-firstname': [u''], u'german_consent_info': [u'bla bla bla'], u'document-version': [u''], u'substance_p_c_t_application_type': [u'IV in children'], 
     u'german_project_title': [u'kjkjkjk'], u'submitter_organisation': [u'submitter orga'], u'study_plan_multiple_test_correction_algorithm': [u'Keines'], 
     u'sponsor_address': [u'sponsor address 1'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'], u'submitter_email': [u'submitter@example.com'],
-    u'study_plan_dataprotection_choice': [u'non-personal'],
+    u'study_plan_dataprotection_choice': [u'non-personal'], u'investigator-0-main': [u'on'], u'study_plan_alpha_sided': [u'0'],
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
@@ -202,15 +202,11 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         response = self.client.get(url, {'keyword': '42'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
-        
-        response = self.client.get(url, {'keyword': '2020/42'})
-        self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
 
         response = self.client.get(url, {'keyword': '42/2020'})
         self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 1)
+        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
         
     def test_submission_form_copy(self):
         '''Tests if a submissionform can be copied. Compares initial version against copied version.
