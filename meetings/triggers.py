@@ -32,7 +32,8 @@ def on_meeting_end(sender, **kwargs):
 
     for vote in Vote.objects.filter(top__meeting=meeting, submission_form__isnull=False).recessed():
         submission = vote.get_submission()
-        submission.schedule_to_meeting()
+        meeting = submission.schedule_to_meeting()
+        meeting.update_assigned_categories()
         with sudo():
             tasks = Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
             if tasks and not any(t for t in tasks if not t.closed_at):
