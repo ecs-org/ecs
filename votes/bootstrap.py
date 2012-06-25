@@ -3,7 +3,7 @@
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.votes.models import Vote
-from ecs.votes.workflow import VoteFinalization, VoteReview, VoteSigning
+from ecs.votes.workflow import VoteReview, VoteSigning
 from ecs.votes.workflow import is_executive_vote_review_required, is_final
 from ecs.integration.utils import setup_workflow_graph
 from ecs.workflow.patterns import Generic

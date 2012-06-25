@@ -30,14 +30,6 @@ def is_final(wf):
     return wf.data.is_final_version
 
 
-class VoteFinalization(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
-
-
 class VoteReview(Activity):
     class Meta:
         model = Vote
@@ -68,31 +60,6 @@ class VoteSigning(Activity):
         return reverse('ecs.votes.views.vote_sign', kwargs={'vote_pk': self.workflow.data_id})
 
 
-class VoteB2Review(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        return reverse('readonly_submission_form', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
-
-    def get_choices(self):
-        return (
-            ('1', _('B1')),
-            ('3b', _('B3')),
-        )
-
-    def pre_perform(self, choice):
-        sf = self.workflow.data.submission_form
-        new_vote = Vote.objects.create(submission_form=sf, result=choice)
-        if new_vote.is_permanent:
-            # abort all tasks
-            with sudo():
-                open_tasks = Task.objects.for_data(sf.submission).open()
-                open_tasks.mark_deleted()
-        if choice == '3b':
-            sf.submission.schedule_to_meeting()
-
-
 class B2Resubmission(Activity):
     class Meta:
         model = Vote
@@ -112,3 +79,15 @@ class B2Resubmission(Activity):
         token = super(B2Resubmission, self).receive_token(*args, **kwargs)
         token.task.assign(self.workflow.data.submission_form.submission.presenter)
         return token
+
+
+### to be removed
+class VoteB2Review(Activity):
+    class Meta:
+        model = Vote
+
+
+### to be removed
+class VoteFinalization(Activity):
+    class Meta:
+        model = Vote
