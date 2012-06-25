@@ -12,6 +12,7 @@ from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
+from ecs.votes.constants import RECESSED_VOTE_RESULTS
 
 def send_submission_message(submission, user, subject, template, **kwargs):
     send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
@@ -147,8 +148,10 @@ def on_b2_upgrade(sender, **kwargs):
     vote.submission_form.save()
     vote.submission_form.mark_current()
 
-    if vote.result != '1':
+    if vote.result in RECESSED_VOTE_RESULTS:
         with sudo():
             meeting = submission.schedule_to_meeting()
             meeting.update_assigned_categories()
-
+            tasks = Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
+            if tasks and not any(t for t in tasks if not t.closed_at):
+                tasks[0].reopen()
