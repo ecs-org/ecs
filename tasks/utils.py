@@ -7,7 +7,6 @@ from django.core.urlresolvers import reverse
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo
 from ecs.utils.viewutils import render_html
-from ecs.tasks.forms import ManageTaskForm
 
 
 def get_obj_tasks(activities, obj, data=None):
@@ -87,6 +86,7 @@ class TaskManagementData(object):
             form = None
             task = self.task
             if task:
+                from ecs.tasks.forms import ManageTaskForm
                 form = ManageTaskForm(None, task=task, prefix='task_management')
                 if self.request.method == 'POST' and self.submit:
                     form = ManageTaskForm(self.POST or None, task=task, prefix='task_management')
