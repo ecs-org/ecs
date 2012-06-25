@@ -31,46 +31,25 @@ class SubmissionQFactory(authorization.QFactory):
         if user.is_staff or profile.is_internal:
             return self.make_q()
             
-        ### default policy: only avaiable for the (susar) presenter.
+        ### presenting parties
         q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
+        q |= self.make_q(current_submission_form__submitter=user)
+        q |= self.make_q(current_submission_form__sponsor=user)
+        q |= self.make_q(current_submission_form__primary_investigator__user=user)
         
         ### explicit temporary permissions
         now = datetime.now()
         q |= self.make_q(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
 
-        ### rules that apply until a final vote has been published.
-        until_vote_q = self.make_q(external_reviewers=user)
-        if profile.is_thesis_reviewer:
-            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
-        if profile.is_board_member:
-            until_vote_q |= self.make_q(timetable_entries__participations__user=user)
-        if profile.is_expedited_reviewer:
-            until_vote_q |= self.make_q(workflow_lane=SUBMISSION_LANE_EXPEDITED)
         if profile.is_insurance_reviewer:
-            until_vote_q |= self.make_q(insurance_review_required=True)
-            q |= self.make_q(forms__notifications__review_lane='insrev')
             q |= self.make_q(forms__votes__insurance_review_required=True)
-        q |= until_vote_q & (
-            self.make_q(current_submission_form__current_published_vote=None)
-            | ~self.make_q(current_submission_form__current_published_vote__result__in=FINAL_VOTE_RESULTS)
-        )
 
-        ### rules that apply until the end of the submission lifecycle
-        until_eol_q = self.make_q(
-            current_submission_form__submitter=user
-        ) | self.make_q(
-            current_submission_form__primary_investigator__user=user
-        ) | self.make_q(
-            current_submission_form__sponsor=user
-        ) | self.make_q(
-            pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query
-        ) | self.make_q(
-            pk__in=Checklist.objects.values('submission__pk').query
-        )
-        for cls in NOTIFICATION_MODELS:
-            until_eol_q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query
-        )
-        q |= until_eol_q
+        q |= self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
+        q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
+
+        # notification tasks for non-internal users
+        for cls in (AmendmentNotification, SafetyNotification):
+            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query)
 
         return q
 
@@ -114,8 +93,9 @@ authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.all().values('pk').query, assigned_to__isnull=True) | self.make_q(created_by=user) | self.make_q(assigned_to=user) | self.make_q(assigned_to__ecs_profile__is_indisposed=True, task_type__groups__in=user.groups.all().values('pk').query)
-        q &= ~(self.make_q(expedited_review_categories__gt=0) & ~self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user)))
+        q = self.make_q(task_type__groups__in=user.groups.values('pk').query) & (self.make_q(assigned_to=None) | self.make_q(assigned_to__ecs_profile__is_indisposed=True))
+        q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
+        q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user).values('pk').query)
         return q
 
 authorization.register(Task, factory=TaskQFactory)
@@ -133,7 +113,7 @@ class NotificationAnswerQFactory(authorization.QFactory):
         q = self.make_q(notification__in=Notification.objects.values('pk').query)
         if not profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
-        for cls in (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification):
+        for cls in NOTIFICATION_MODELS:
             ct = ContentType.objects.get_for_model(cls)
             q |= self.make_q(notification__pk__in=Notification.objects.filter(pk__in=Task.objects.filter(content_type=ct).values('data_id').query).values('pk').query)
         return q

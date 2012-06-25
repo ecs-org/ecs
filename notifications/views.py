@@ -25,7 +25,7 @@ from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
 from ecs.audit.utils import get_version_number
 from ecs.users.utils import user_flag_required, user_group_required
-from ecs.tasks.utils import task_required
+from ecs.tasks.utils import task_required, with_task_management
 from ecs.signature.views import init_batch_sign
 
 
@@ -46,6 +46,7 @@ def open_notifications(request):
 
 
 @readonly()
+@with_task_management
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
@@ -159,6 +160,7 @@ def create_notification(request, notification_type_pk=None):
 
 
 @task_required
+@with_task_management
 def edit_notification_answer(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     kwargs = {}
