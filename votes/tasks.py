@@ -14,12 +14,13 @@ from ecs.meetings.models import Meeting
 from ecs.core.models import Submission
 from ecs.utils.common_messages import send_submission_message
 from ecs.votes.signals import on_vote_expiry
+from ecs.users.utils import get_office_user
 
 
 
 def send_vote_expired(vote):
     recipients = vote.submission_form.get_presenting_parties().get_users()
-    recipients.add(User.objects.get(email=settings.ECSMAIL['postmaster']))
+    recipients.add(get_office_user())
 
     url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
@@ -53,7 +54,7 @@ def send_vote_reminder_submitter(vote):
     send_submission_message(vote.submission_form.submission, subject, text, recipients)
     
 def send_vote_reminder_office(vote):
-    recipients = User.objects.filter(email=settings.ECSMAIL['postmaster'])
+    recipients = [get_office_user()]
 
     url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
