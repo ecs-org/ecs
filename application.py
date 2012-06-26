@@ -277,6 +277,8 @@ developer_packages=  """
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 #django-debug-toolbar:inst:all:http://github.com/dcramer/django-debug-toolbar/tarball/master
 
+django-snippetscream:inst:all:pypi:django-snippetscream
+
 # support for django-devserver
 guppy:inst:!win:pypi:guppy
 guppy:instbin:win:http://pypi.python.org/packages/2.6/g/guppy/guppy-0.1.9.win32-py2.6.exe
