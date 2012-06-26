@@ -48,14 +48,11 @@ class VoteRemindersTest(CommunicationTestCase):
         meeting.add_entry(submission=submission_form.submission, duration_in_seconds=60)
         meeting.add_entry(submission=submission_form_thesis.submission, duration_in_seconds=60)
 
+        now = datetime.now()
+        next_year = now + timedelta(days=365)
         self.valid_until = datetime.today().date() + timedelta(days=365)
-        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1')
-        # publish() checks that the vote is signed, so fake it
-        self.vote.signed_at = datetime.now()
-        self.vote.publish()
-        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='1')
-        self.vote_thesis.signed_at = datetime.now()
-        self.vote_thesis.publish()
+        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1', published_at=now, valid_until=next_year)
+        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='1', published_at=now, valid_until=next_year)
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.
