@@ -305,7 +305,7 @@ def timetable_editor(request, meeting_pk=None):
     recommendations_not_done = False
     for top in meeting.timetable_entries.filter(submission__isnull=False):
         with sudo():
-            recommendations_not_done = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'expedited_recommendation', 'localec_recommendation']).open().exists()
+            recommendations_not_done = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'thesis_recommendation_review', 'expedited_recommendation', 'localec_recommendation']).open().exists()
         if recommendations_not_done:
             break
     return render(request, 'meetings/timetable/editor.html', {
@@ -430,7 +430,7 @@ def meeting_assistant_start(request, meeting_pk=None):
 
     for top in meeting.timetable_entries.filter(submission__isnull=False):
         with sudo():
-            recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'expedited_recommendation', 'localec_recommendation']).open().exists()
+            recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'thesis_recommendation_review', 'expedited_recommendation', 'localec_recommendation']).open().exists()
         if recommendation_exists:
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
