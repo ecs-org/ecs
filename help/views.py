@@ -205,12 +205,12 @@ def search_view_factory(view_class=SearchView, *args, **kwargs):
         return view_class(*args, **kwargs)(request, *view_args, **view_kwargs)
     return search_view
 
-search = search_view_factory(
+search = forceauth.exempt(search_view_factory(
     view_class=HelpSearchView,
     template='help/search.html',
     searchqueryset=SearchQuerySet().models(Page).order_by('title'),
     form_class=HighlightedSearchForm,
-)
+))
 
 
 
