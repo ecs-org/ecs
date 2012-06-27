@@ -22,9 +22,9 @@ Usage
 
 import os, subprocess, tempfile, re
 from django.conf import settings
-from ecs.utils.pathutils import which
+from ecs.utils.pathutils import which_path
 
-GPG_EXECUTABLE =  settings.ECS_GNUPG if hasattr(settings,"ECS_GNUPG") else which('gpg').next()
+GPG_EXECUTABLE = which_path('ECS_GNUPG', 'gpg')
 
 
 def reset_keystore(gpghome):

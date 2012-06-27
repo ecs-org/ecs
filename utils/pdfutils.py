@@ -21,12 +21,13 @@ from django.utils.encoding import smart_str
 from pdfminer.pdfparser import PDFParser, PDFDocument
 from pdfminer.pdftypes import PDFException
 
-from ecs.utils.pathutils import which, which_path
+from ecs.utils.pathutils import which_path
 
 MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
 GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
 WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64", "-i386"])
 QPDF_PATH = which_path('ECS_QPDF', 'qpdf')
+PDFTK_PATH = which_path('ECS_PDFTK', 'pdftk')
 
 PDF_MAGIC = r"%PDF-"
 
@@ -65,7 +66,7 @@ def _pdf_stamp(source_filelike, dest_filelike, stamp_filename):
     :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
     '''  
     source_filelike.seek(0)
-    cmd = [which('pdftk').next(), '-', 'stamp', stamp_filename, 'output', '-', 'dont_ask']
+    cmd = [PDFTK_PATH, '-', 'stamp', stamp_filename, 'output', '-', 'dont_ask']
     popen = subprocess.Popen(cmd, bufsize=-1, stdin=source_filelike, stdout=dest_filelike, stderr=subprocess.PIPE)       
     stdout, stderr = popen.communicate()
     source_filelike.seek(0)

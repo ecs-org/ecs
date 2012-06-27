@@ -10,24 +10,21 @@ from urlparse import urlparse, parse_qs
 from django.conf import settings
 
 from ecs.utils.django_signed.signed import base64_hmac
-from ecs.utils.pathutils import tempfilecopy, which
+from ecs.utils.pathutils import tempfilecopy, which_path
 from ecs.utils.pdfutils import Page, pdf_barcodestamp
 
 from ecs.mediaserver.storagevault import getVault
 from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.tasks import do_rendering
 
-MONTAGE_PATH = which('montage').next()
+MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
 def _detect_graphicsmagick():
     global MONTAGE_GM
     popen = subprocess.Popen([MONTAGE_PATH, '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     popen.communicate()
     MONTAGE_GM = popen.returncode != 0  # gm montage does not support -version
 _detect_graphicsmagick()
-try:
-    PDFDRAW_PATH = which('pdfdraw').next()
-except StopIteration:
-    PDFDRAW_PATH = which('mudraw').next()
+PDFDRAW_PATH = which_path('ECS_PDFDRAW', 'pdfdraw')
 
 
 class MediaProvider:

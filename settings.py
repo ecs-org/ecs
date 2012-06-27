@@ -502,11 +502,12 @@ DEVSERVER_MODULES = (
 #ECS_USERSWITCHER = True/False
 # default to True, Userswitcher will be shown so user can switch to testusers quickly 
 
-#ECS_GHOSTSCRIPT = "absolute path to ghostscript executable" # defaults to which('gs') if empty 
-# needs to be overriden in local_settings for eg. windows
-
-#ECS_GNUPG = "absolute path to gpg executable" # defaults to which('gpg') if empty
-# needs to be overriden in local_settings for eg. windows
+# absolut pathes for binaries; defaults to which(binaryname) if None or missing
+#ECS_GHOSTSCRIPT = "/usr/bin/gs"
+#ECS_GNUPG = "/usr/bin/gpg"
+#ECS_MONTAGE = "/usr/bin/montage"
+#ECS_PDFDRAW = "/usr/bin/pdfdraw"       # aka mudraw, for mupdf >= 1.0
+#ECS_PDFTK = "/usr/bin/pdftk"
  
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
 # loads support for django-debug-toolbar

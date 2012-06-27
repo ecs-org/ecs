@@ -34,9 +34,8 @@ def tempfilecopy(filelike, tmp_dir=None, mkdir=False, **kwargs):
         outputfile.write(filelike.read())
     return outputfilename
 
-
 def which_path(setting, *args, **kwargs):
-    if hasattr(settings, setting):
-        return getattr(settings, setting)
-    else:
-        return which(*args, **kwargs).next()
+    path = getattr(settings, setting, None)
+    if path is None:
+        path = which(*args, **kwargs).next()
+    return path
