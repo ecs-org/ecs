@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
-
+from ecs.core.tests.submissions import create_submission_form
 
 class MeetingModelTest(EcsTestCase):
     '''Tests for the Meeting module
@@ -104,8 +104,6 @@ class MeetingModelTest(EcsTestCase):
         and unscheduling meetings and then checking for the next meeting.
         '''
         
-        from ecs.core.tests.submissions import create_submission_form
-        from ecs.core.models import Submission
         s = create_submission_form().submission
 
         step = timedelta(days=1)
@@ -114,14 +112,16 @@ class MeetingModelTest(EcsTestCase):
 
         def schedule(i):
             meetings[i].add_entry(submission=s, duration=timedelta(hours=1))
-            s.update_next_meeting()
             
         def unschedule(i):
             meetings[i].timetable_entries.all().delete()
-            s.update_next_meeting()
             
         def check_next(i):
-            self.assertEqual(Submission.objects.get(pk=s.pk).next_meeting, None if i is None else meetings[i])
+            try:
+                next_meeting = s.meetings.order_by('start')[0]
+            except IndexError:
+                next_meeting = None
+            self.assertEqual(next_meeting, None if i is None else meetings[i])
 
         schedule(1)
         check_next(1)

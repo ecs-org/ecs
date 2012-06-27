@@ -15,7 +15,7 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
 from ecs.bootstrap.utils import update_instance
 from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
-    ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, WaitForMeeting, B2ResubmissionReview, InitialB2ResubmissionReview)
+    ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_b2, is_still_b2,
@@ -121,7 +121,6 @@ def submission_workflow():
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
             'insurance_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=INSURANCE_REVIEW_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
-            'wait_for_meeting': Args(WaitForMeeting, name=_("Wait For Meeting")),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
@@ -154,8 +153,6 @@ def submission_workflow():
             ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
             ('initial_review_barrier', 'categorization_review'): None,
             ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
-            ('categorization_review', 'wait_for_meeting'): Args(guard=is_retrospective_thesis, negated=True),
-            ('wait_for_meeting', 'b2_resubmission'): Args(guard=is_b2),
             ('b2_resubmission', 'b2_review'): None,
             ('b2_review', 'insurance_b2_review'): Args(guard=needs_insurance_b2_review),
             ('b2_review', 'executive_b2_review'): Args(guard=needs_executive_b2_review),
@@ -167,7 +164,6 @@ def submission_workflow():
             ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_thesis_review', 'initial_thesis_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
-            ('initial_thesis_review_barrier', 'wait_for_meeting'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review_barrier', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review_barrier', 'paper_submission_review'): Args(guard=is_retrospective_thesis),
             ('initial_thesis_review_barrier', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
