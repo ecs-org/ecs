@@ -128,8 +128,7 @@ def open_tasks(request, meeting=None):
 @user_flag_required('is_internal')
 @cache_meeting_page()
 def tops(request, meeting=None):
-    tops = list(meeting.timetable_entries.select_related('submission', 'submission__current_submission_form'))
-    tops.sort(key=lambda e: e.agenda_index)
+    tops = list(meeting.timetable_entries.exclude(timetable_index=None).order_by('timetable_index').select_related('submission', 'submission__current_submission_form'))
 
     next_tops = [t for t in tops if t.is_open][:3]
     closed_tops = [t for t in tops if not t.is_open]
