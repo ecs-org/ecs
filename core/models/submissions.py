@@ -566,7 +566,7 @@ class SubmissionForm(models.Model):
         with sudo():
             if not s.meetings.filter(started=None, ended=None).exists():
                 return False
-        return s.presenter == user and s.is_current and not self.current_pending_vote
+        return s.presenter == user and self.is_current and not self.current_pending_vote
         
     def allows_amendments(self, user):
         s = self.submission
