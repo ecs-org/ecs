@@ -91,7 +91,18 @@ def on_initial_review(sender, **kwargs):
                 current_vote.submission_form = submission_form
                 current_vote.save()
             submission_form.mark_current()
-            for u in submission_form.get_involved_parties().get_users().difference([submission_form.presenter, get_current_user()]):
+            vote = submission.get_most_recent_vote(is_draft=False, published_at__isnull=False)
+            if vote and vote.is_recessed:
+                receivers = submission_form.get_presenting_parties().get_users()
+                with sudo():
+                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid__in=['categorization_review', 'internal_vote_review'], assigned_to__isnull=False):
+                        receivers.add(task.assigned_to)
+                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='board_member_review', assigned_to__isnull=False).open():
+                        receivers.add(task.assigned_to)
+            else:
+                receivers = submission_form.get_involved_parties().get_users()
+            receivers = receivers.difference([submission_form.presenter, get_current_user()])
+            for u in receivers:
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=get_office_user(submission=submission))
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
