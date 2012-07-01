@@ -121,7 +121,7 @@
                     <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
-                <h3><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h3>
+                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
