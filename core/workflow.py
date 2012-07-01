@@ -15,10 +15,8 @@ from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task, TaskType
 from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
 from ecs.votes.models import Vote
-from ecs.meetings import signals as meeting_signals
 from ecs.utils import connect
 from ecs.votes.models import Vote
-from ecs.votes.signals import on_vote_creation
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -231,7 +229,6 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
                 vote.is_draft = False
             vote.save()
             if is_upgrade:
-                on_vote_creation.send(Vote, vote=vote)
                 on_b2_upgrade.send(Submission, submission=self.workflow.data, vote=vote)
 
 
@@ -383,25 +380,10 @@ class VotePreparation(Activity):
         return reverse('ecs.core.views.vote_preparation', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
 
 
+### to be deleted
 class WaitForMeeting(Generic):
     class Meta:
         model = Submission
-        
-    def is_reentrant(self):
-        return None # throw away any token after the first
-        
+
     def is_locked(self):
-        next_meeting = self.workflow.data.next_meeting
-        if not next_meeting:
-            return True
-        if not next_meeting.ended:
-            return True
-        return not self.workflow.data.votes.filter(top__meeting=next_meeting).exists()
-
-
-@connect(meeting_signals.on_meeting_end)
-def on_meeting_end(sender, **kwargs):
-    meeting = kwargs['meeting']
-    for submission in meeting.submissions.all():
-        submission.workflow.unlock(WaitForMeeting)
-        submission.update_next_meeting()
+        return True

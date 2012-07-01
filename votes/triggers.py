@@ -8,25 +8,18 @@ from ecs.communication.utils import send_system_message_template
 from ecs.utils import connect
 from ecs.votes import signals
 from ecs.users.utils import sudo
-from ecs.tasks.models import Task
+from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.ecsmail.utils import deliver
 
-
-@connect(signals.on_vote_creation)
-def on_vote_creation(sender, **kwargs):
-    vote = kwargs['vote']
-    if vote.is_permanent:
-        with sudo():
-            Task.objects.for_data(vote.submission_form.submission).exclude(task_type__workflow_node__uid='b2_review').open().mark_deleted()
 
 @connect(signals.on_vote_publication)
 def on_vote_published(sender, **kwargs):
     vote = kwargs['vote']
     sf = vote.submission_form
     if sf and not sf.is_categorized_multicentric_and_local:
-        parties = vote.submission_form.get_presenting_parties()
+        parties = sf.get_presenting_parties()
         reply_receiver = None
         with sudo():
             try:
@@ -35,7 +28,7 @@ def on_vote_published(sender, **kwargs):
             except IndexError:
                 pass
         parties.send_message(_('Vote {ec_number}').format(ec_number=vote.get_ec_number()), 'submissions/vote_publish.txt',
-            {'vote': vote}, submission=vote.submission_form.submission, reply_receiver=reply_receiver)
+            {'vote': vote}, submission=sf.submission, reply_receiver=reply_receiver)
     receivers = set()
     if (sf.is_amg and not sf.is_categorized_multicentric_and_local) or sf.is_mpg:
         receivers |= set(settings.ECS_AMG_MPG_VOTE_RECEIVERS)
@@ -57,6 +50,20 @@ def on_vote_published(sender, **kwargs):
     text = unicode(template.render(Context({})))
     for receiver in receivers:
         deliver(receiver, subject=name, message=text, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+
+    if vote.is_recessed:
+        meeting = sf.submission.schedule_to_meeting()
+        meeting.update_assigned_categories()
+        with sudo():
+            tasks = Task.objects.for_submission(sf.submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
+            if tasks and not any(t for t in tasks if not t.closed_at):
+                tasks[0].reopen()
+    elif vote.is_permanent:
+        with sudo():
+            Task.objects.for_data(sf.submission).exclude(task_type__workflow_node__uid='b2_review').open().mark_deleted()
+    elif vote.result == '2':
+        task_type = TaskType.objects.get(workflow_node__uid='b2_resubmission', workflow_node__graph__auto_start=True)
+        task_type.workflow_node.bind(sf.submission.workflow.workflows[0]).receive_token(None)
 
 @connect(signals.on_vote_expiry)
 def on_vote_expiry(sender, **kwargs):

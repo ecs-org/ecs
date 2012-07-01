@@ -1,9 +1,6 @@
 from ecs.meetings import signals
 from ecs.utils import connect
 from ecs.votes.models import Vote
-from ecs.votes.signals import on_vote_creation
-from ecs.users.utils import sudo
-from ecs.tasks.models import Task
 from ecs.meetings.cache import flush_meeting_page_cache
 
 
@@ -26,18 +23,8 @@ def on_meeting_end(sender, **kwargs):
 
     for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
         vote = Vote.objects.create(top=top, result='3a')
-        on_vote_creation.send(Vote, vote=vote)
         top.is_open = False
         top.save()
-
-    for vote in Vote.objects.filter(top__meeting=meeting, submission_form__isnull=False).recessed():
-        submission = vote.get_submission()
-        meeting = submission.schedule_to_meeting()
-        meeting.update_assigned_categories()
-        with sudo():
-            tasks = Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='categorization_review', deleted_at__isnull=True)
-            if tasks and not any(t for t in tasks if not t.closed_at):
-                tasks[0].reopen()
 
     _flush_cache(meeting)
 

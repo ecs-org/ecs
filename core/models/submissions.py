@@ -215,16 +215,6 @@ class Submission(models.Model):
         self.save()
         on_study_finish.send(sender=Submission, submission=self, expired=expired)
 
-    def update_next_meeting(self):
-        next = self.meetings.filter(started__isnull=True).order_by('start')[:1]
-        if next:
-            if next[0].id != self.next_meeting_id:
-                self.next_meeting = next[0]
-                self.save()
-        elif self.next_meeting_id:
-            self.next_meeting = None
-            self.save()
-
     def get_current_docstash(self):
         return DocStash.objects.get(
             group='ecs.core.views.submissions.create_submission_form',
@@ -242,7 +232,6 @@ class Submission(models.Model):
                 duration = timedelta(minutes=0)
             meeting = Meeting.objects.next_schedulable_meeting(self)
             meeting.add_entry(submission=self, duration=duration, visible=visible)
-            self.update_next_meeting()
             return meeting
 
         try:
@@ -574,14 +563,10 @@ class SubmissionForm(models.Model):
         
     def allows_edits(self, user):
         s = self.submission
-        if s.presenter != user:
-            return False
         with sudo():
-            most_recent_vote = s.get_most_recent_vote(is_draft=False)
-            if most_recent_vote and most_recent_vote.result == '2':
-                return True # b2 resubmission
-            in_running_meeting = s.meetings.filter(started__isnull=False, ended__isnull=True).exists()
-        return self.is_current and not s.has_permanent_vote and not s.is_finished and not in_running_meeting and not (self.current_pending_vote and not self.current_pending_vote.is_draft)
+            if not s.meetings.filter(started=None, ended=None).exists():
+                return False
+        return s.presenter == user and self.is_current and not self.current_pending_vote
         
     def allows_amendments(self, user):
         s = self.submission
