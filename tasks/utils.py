@@ -51,11 +51,12 @@ def with_task_management(view):
 class TaskManagementData(object):
     def __init__(self, request):
         self.request = request
+        self.method = request.method
         self.POST = request.POST
         self.submit = self.POST.get('task_management-submit')
         self.save = self.POST.get('task_management-save')
 
-        if self.request.method == 'POST' and not self.task is None:
+        if request.method == 'POST' and not self.task is None:
             if self.submit or self.save:
                 post_data = self.POST.get('task_management-post_data', '')
                 # QueryDict only reliably works with bytestrings, so we encode `post_data` again (see #2978).
@@ -88,14 +89,14 @@ class TaskManagementData(object):
             if task:
                 from ecs.tasks.forms import ManageTaskForm
                 form = ManageTaskForm(None, task=task, prefix='task_management')
-                if self.request.method == 'POST' and self.submit:
+                if self.method == 'POST' and self.submit:
                     form = ManageTaskForm(self.POST or None, task=task, prefix='task_management')
                     form.is_valid()     # validate form, so errors are displayed
             self._form = form
         return self._form
 
     def process_response(self, response):
-        if self.request.method == 'POST' and self.form and self.form.is_valid() and self.submit:
+        if self.method == 'POST' and self.form and self.form.is_valid() and self.submit:
             task = self.task
             action = self.form.cleaned_data['action']
             if action == 'complete':
