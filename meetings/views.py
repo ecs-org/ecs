@@ -32,7 +32,8 @@ from ecs.ecsmail.utils import deliver
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
-from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump
+from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
+    on_meeting_date_changed
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
