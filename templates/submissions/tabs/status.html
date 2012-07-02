@@ -15,10 +15,11 @@
             {% if docstash %}
                 <tr class="version">
                     <td>{{ submission.forms.count|add:1 }}</td>
-                    <td colspan="2"><i>{% trans "This form has not been submitted yet." %}</i></td>
-                    <td colspan="3"></td>
+                    <td colspan="5"><i>{% trans "This form has not been submitted yet." %}</i></td>
                     <td>
+                    {% if submission_form|allows_edits_by:request.user %}
                         <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
+                    {% endif %}
                     </td>
                 </tr>
             {% endif %}
