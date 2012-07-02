@@ -478,7 +478,7 @@ def vote_preparation(request, submission_form_pk=None):
     if vote is None:
         initial = {'text': text}
     form = VotePreparationForm(request.POST or None, instance=vote, initial=initial)
-    
+    form.is_preparation = True
     form.bound_to_task = request.task_management.task
     
     if form.is_valid():
@@ -511,6 +511,7 @@ def b2_vote_preparation(request, submission_form_pk=None):
         )
 
     form = B2VotePreparationForm(request.POST or None, instance=vote)
+    form.is_preparation = True
     form.bound_to_task = request.task_management.task
 
     if form.is_valid():
