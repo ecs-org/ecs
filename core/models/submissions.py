@@ -169,7 +169,7 @@ class Submission(models.Model):
     
     @property
     def has_permanent_vote(self):
-        return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS).exists()
+        return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS, published_at__isnull=False).exists()
 
     def get_last_recessed_vote(self, top):
         try:
@@ -563,10 +563,16 @@ class SubmissionForm(models.Model):
         
     def allows_edits(self, user):
         s = self.submission
+        return s.presenter == user and self.is_current and not s.has_permanent_vote and not s.is_finished
+
+    def allows_resubmission(self, user):
+        s = self.submission
         with sudo():
-            if not s.meetings.filter(started=None, ended=None).exists():
+            if s.meetings.filter(started__isnull=False, ended=None).exists():
                 return False
-        return s.presenter == user and self.is_current and not self.current_pending_vote
+        pending_vote = self.current_pending_vote
+        has_unpublished_vote = pending_vote and not pending_vote.is_draft
+        return self.allows_edits(user) and not has_unpublished_vote
         
     def allows_amendments(self, user):
         s = self.submission

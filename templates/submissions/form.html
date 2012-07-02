@@ -104,7 +104,7 @@
                 return false;
             });
             
-            {% if valid and allows_edits %}
+            {% if valid and allows_resubmission %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     $('submit-button').hide();
                     new Element('div', {'class': 'submit_progress', 'html': '<img src="/static/images/loading_small.gif"/><span class="text">{% if notification_type %}{{ _("Your are being redirected to the notification form") }}{% else %}{{ _("Your study is being submitted") }}{% endif %}&hellip;</span>'}).MooDialog();
@@ -114,7 +114,7 @@
                     cancelText: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}'
                 });
             {% endif %}
-            {% if valid and not allows_edits %}
+            {% if valid and not allows_resubmission %}
                 new MooDialog.Error('{{ _("This form can't be submitted at the moment.")|escapejs }}');
             {% endif %}
         });
