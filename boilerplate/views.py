@@ -1,9 +1,8 @@
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
-from django.utils import simplejson
 
-from ecs.utils.viewutils import render
+from ecs.utils.viewutils import render, JSONResponse
 from ecs.users.utils import user_flag_required
 from ecs.boilerplate.models import Text
 from ecs.boilerplate.forms import TextForm
@@ -51,4 +50,4 @@ def select_boilerplate(request):
     texts = Text.objects.all()
     if 'q' in request.GET:
         texts = texts.filter(slug__icontains=request.GET['q'].strip())
-    return HttpResponse(simplejson.dumps(list(texts.values('slug', 'text'))), content_type='application/json')
+    return JSONResponse(list(texts.values('slug', 'text')))

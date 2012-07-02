@@ -132,15 +132,17 @@ ecs.setupAutocomplete = function(context){
                 tbl.container.removeClass('textboxlist-loading');
             }
             var labels = [];
-            response.each(function(item){
-                if(currentValues.contains(item[0])){
-                    if(active){
-                        tbl.add(item[1], item[0], item[2]);
-                    } else {
-                        labels.push(item[1]);
+            if (response) {
+                response.each(function(item){
+                    if(currentValues.contains(item[0])){
+                        if(active){
+                            tbl.add(item[1], item[0], item[2]);
+                        } else {
+                            labels.push(item[1]);
+                        }
                     }
-                }
-            });
+                });
+            }
             if(!active){
                 (new Element('span', {html: labels.join(', ')})).replaces(elm);
             }
