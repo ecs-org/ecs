@@ -34,7 +34,7 @@ from ecs.tasks.models import Task
 class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
-    workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES)
+    workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES, db_index=True)
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')

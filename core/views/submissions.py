@@ -45,7 +45,7 @@ from ecs.utils import forceauth
 from ecs.utils.security import readonly
 from ecs.users.utils import sudo, user_flag_required, get_user
 from ecs.tasks.models import Task
-from ecs.tasks.utils import get_obj_tasks, task_required
+from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
 from ecs.users.utils import user_flag_required, user_group_required
 from ecs.audit.utils import get_version_number
 
@@ -282,6 +282,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
 
 
 @user_group_required('EC-Executive Board Group')
+@with_task_management
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     task = request.task_management.task
@@ -311,12 +312,14 @@ def categorization_review(request, submission_form_pk=None):
 
 
 @task_required
+@with_task_management
 def initial_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
 @user_flag_required('is_internal', 'is_thesis_reviewer')
+@with_task_management
 def paper_submission_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     task = submission.paper_submission_review_task
@@ -337,6 +340,7 @@ def befangene_review(request, submission_form_pk=None):
 
 
 @readonly()
+@with_task_management
 def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     checklist = get_object_or_404(Checklist, pk=checklist_pk)
@@ -361,6 +365,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 
 
 @task_required
+@with_task_management
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     if request.method == 'GET' and not submission_form.is_current:
@@ -429,6 +434,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
 
 @user_flag_required('is_internal')
+@with_task_management
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     vote = submission_form.current_vote
@@ -449,8 +455,8 @@ def vote_review(request, submission_form_pk=None):
         response.has_errors = True
     return response
 
-
 @task_required
+@with_task_management
 def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
 
@@ -495,6 +501,7 @@ def vote_preparation(request, submission_form_pk=None):
 
 
 @task_required
+@with_task_management
 def b2_vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     submission = submission_form.submission

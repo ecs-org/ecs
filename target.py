@@ -10,6 +10,7 @@ import random
 import distutils.dir_util
 import time
 import copy
+import getpass
 
 from uuid import uuid4
 from fabric.api import local, env, warn, abort, settings
@@ -17,25 +18,32 @@ from fabric.api import local, env, warn, abort, settings
 from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
 from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template, write_template_dir
 from deployment.pkgmanager import get_pkg_manager, packageline_split
-from deployment.appsupport import SetupTargetObject
 from deployment.conf import load_config
 
-
-class SetupTarget(SetupTargetObject):
-    """ SetupTarget(use_sudo=True, dry=False, hostname=None, ip=None) """ 
+class SetupTarget(object): 
+    """ SetupTargetObject(use_sudo=True, dry=False, hostname=None, ip=None)
+    """
+ 
     def __init__(self, *args, **kwargs):
         dirname = os.path.dirname(__file__)
+        
         config_file = kwargs.pop('config', None)
         if config_file is None:
             config_file = os.path.join(dirname, '..', 'ecs.yml')
+        
+        self.use_sudo = kwargs.pop('use_sudo', True)
+        self.dry = kwargs.pop('dry', False)
+        self.hostname = kwargs.pop('hostname', None)
+        self.ip = kwargs.pop('ip', None)
+        self.username = getpass.getuser()
         self.destructive = strbool(kwargs.pop('destructive', False))
-        super(SetupTarget, self).__init__(*args, **kwargs)
+        
         self.dirname = dirname
         self.appname = 'ecs'
         
-        if config_file:
-            self.configure(config_file)
-        
+        self.configure(config_file)
+        self.extra_kwargs = kwargs
+
     def configure(self, config_file):
         self.config = load_config(config_file)
         self.homedir = os.path.expanduser('~')
@@ -578,8 +586,10 @@ $myhostname   smtp:[localhost:8823]
         time.sleep(10) # jetty needs time to startup
 
     def search_update(self):
-        local('cd {0}/src/ecs; . {0}/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput '.format(self.homedir))
-
+        if strbool(self.extra_kwargs.get('search_reindex', True)):
+            local('cd {0}/src/ecs; . {0}/environment/bin/activate;  if test -d ../../ecs-whoosh; then rm -rf ../../ecs-whoosh; fi; ./manage.py rebuild_index --noinput '.format(self.homedir))
+        else:
+            warn('skipping search_update reindex, because you said so.')
 
 def custom_check_gettext_runtime(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
