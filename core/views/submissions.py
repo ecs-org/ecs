@@ -484,7 +484,7 @@ def vote_preparation(request, submission_form_pk=None):
     if vote is None:
         initial = {'text': text}
     form = VotePreparationForm(request.POST or None, instance=vote, initial=initial)
-    
+    form.is_preparation = True
     form.bound_to_task = request.task_management.task
     
     if form.is_valid():
@@ -518,6 +518,7 @@ def b2_vote_preparation(request, submission_form_pk=None):
         )
 
     form = B2VotePreparationForm(request.POST or None, instance=vote)
+    form.is_preparation = True
     form.bound_to_task = request.task_management.task
 
     if form.is_valid():
@@ -572,7 +573,7 @@ def create_submission_form(request):
 
     notification_type = request.docstash.get('notification_type', None)
     valid = False
-    allows_edits = True
+    allows_resubmission = True
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
@@ -602,9 +603,9 @@ def create_submission_form(request):
         submission = request.docstash.get('submission')
         if submission:   # refetch submission object because it could have changed
             submission = Submission.objects.get(pk=submission.pk)
-            allows_edits = bool(notification_type) or submission.current_submission_form.allows_edits(request.user)
+            allows_resubmission = bool(notification_type) or submission.current_submission_form.allows_resubmission(request.user)
 
-        if submit and valid and allows_edits:
+        if submit and valid and allows_resubmission:
             if not submission:
                 submission = Submission.objects.create()
             submission_form = form.save(commit=False)
@@ -648,7 +649,7 @@ def create_submission_form(request):
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
-        'allows_edits': allows_edits,
+        'allows_resubmission': allows_resubmission,
         'submission': request.docstash.get('submission', None),
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,

@@ -9,8 +9,7 @@ from ecs.utils.formutils import TranslatedModelForm
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
-from ecs.users.utils import sudo
-from ecs.votes.signals import on_vote_creation
+from ecs.users.utils import sudo, get_current_user
 from ecs.core.forms.utils import mark_readonly
 
 def ResultField(**kwargs):
@@ -42,11 +41,6 @@ class VoteForm(SaveVoteForm):
         if self.readonly:
             mark_readonly(self)
 
-    def save(self, *args, **kwargs):
-        instance = super(VoteForm, self).save(*args, **kwargs)
-        on_vote_creation.send(Vote, vote=instance)
-        return instance
-        
 class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     class Meta:
         model = Vote
@@ -54,6 +48,38 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         labels = {
             'is_final_version': _('Proofread and valid'),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(VoteReviewForm, self).__init__(*args, **kwargs)
+        user = get_current_user()
+        if not self.readonly and user.get_profile().is_executive_board_member:
+            self.fields['result'] = ResultField(required=True, initial=self.instance.result)
+
+    def clean(self):
+        cleaned_data = super(VoteReviewForm, self).clean()
+        if 'result' in self.fields:
+            original_result = self.instance.result
+            result = cleaned_data['result']
+            print original_result
+            print result
+            if not result == original_result:
+                print self.data
+                self.data = self.data.copy()
+                del self.data['is_final_version']
+                print self.data
+                cleaned_data['is_final_version'] = False
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance = super(VoteReviewForm, self).save(commit=False)
+        if 'result' in self.fields:
+            original_result = instance.result
+            instance.result = self.cleaned_data['result']
+            if not instance.result == original_result:
+                instance.is_final_version = False
+                instance.changed_after_voting = True
+        if commit:
+            instance.save()
 
 
 class VotePreparationForm(forms.ModelForm):

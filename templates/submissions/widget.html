@@ -25,7 +25,7 @@
         
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}
-            <a href="{% url ecs.core.views.create_submission_form docstash_key=docstash.key %}"> <span class="submission_inprogress"></span> </a>
+            <span class="submission_inprogress"></span>
         {% endif %}
         {% endwith %}
 

@@ -101,7 +101,6 @@ def reschedule_submission(request, submission_pk=None):
                 tasks = Task.objects.for_data(submission).filter(
                     task_type__workflow_node__uid='board_member_review').exclude(assigned_to__pk__in=new_experts).open()
                 tasks.mark_deleted()
-        submission.update_next_meeting()
         return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,

@@ -44,6 +44,12 @@ class SetupTarget(object):
         self.configure(config_file)
         self.extra_kwargs = kwargs
 
+
+    def local(self, cmd):
+        if self.use_sudo:
+            cmd = ['sudo'] + cmd
+        local(subprocess.list2cmdline(cmd))
+
     def configure(self, config_file):
         self.config = load_config(config_file)
         self.homedir = os.path.expanduser('~')
