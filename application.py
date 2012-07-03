@@ -14,7 +14,6 @@ language-pack-de:req:apt:apt-get:language-pack-de
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:req:mac:homebrew:postgresql
 psycopg2:req:mac:macports:postgresql84-server
-psycopg2:req:suse:zypper:postgresql-devel
 psycopg2:inst:!win:pypi:psycopg2==2.4.1
 psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psycopg2-2.4.1.win32-py2.6-pg9.0.4-release.exe
 
@@ -22,7 +21,6 @@ psycopg2:instbin:win:http://www.stickpeople.com/projects/python/win-psycopg/psyc
 pysqlite:req:apt:apt-get:libsqlite3-dev
 pysqlite:req:mac:homebrew:sqlite
 pysqlite:req:mac:macports:sqlite3
-pysqlite:req:suse:zypper:sqlite3-devel
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.6.3.win32-py2.6.exe
                      
@@ -115,7 +113,6 @@ mocca:static:all:http://egovlabs.gv.at/frs/download.php/370/BKUOnline-1.3.7.war:
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
-gnupg:req:suse:zypper:gpg2
 gnupg:req:win:ftp://ftp.gnupg.org/gcrypt/binary/gnupg-w32cli-1.4.10b.exe:exec:gpg.exe
 
 
@@ -132,7 +129,6 @@ django-haystack:inst:all:pypi:django-haystack\>=1.2.5
 pdftotext:req:apt:apt-get:poppler-utils
 #pdftotext:req:mac:homebrew:poppler
 pdftotext:req:mac:macports:poppler
-pdftotext:req:suse:zypper:poppler-tools
 pdftotext:static:win:http://gd.tuwien.ac.at/publishing/xpdf/xpdfbin-win-3.03.zip:custom:pdftotext.exe
 
 # excel generation / xlwt
@@ -140,8 +136,8 @@ xlwt:inst:all:pypi:xlwt
 
 
 # webkit html to pdf
-wkhtmltopdf:static64:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.11.0_rc1-static-amd64.tar.bz2:tar:wkhtmltopdf-amd64
-wkhtmltopdf:static32:apt|suse:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.11.0_rc1-static-i386.tar.bz2:tar:wkhtmltopdf-i386
+wkhtmltopdf:static64:apt:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.11.0_rc1-static-amd64.tar.bz2:tar:wkhtmltopdf-amd64
+wkhtmltopdf:static32:apt:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.11.0_rc1-static-i386.tar.bz2:tar:wkhtmltopdf-i386
 wkhtmltopdf:static:mac:http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-OSX-0.10.0_rc2-static.tar.bz2:tar:wkhtmltopdf
 wkhtmltopdf:req:win:http://wkhtmltopdf.googlecode.com/files/wkhtmltox-0.11.0_rc1-installer.exe:exec:wkhtmltopdf.exe
 
@@ -155,8 +151,6 @@ pdfminer:inst:all:pypi:pdfminer
 # pdf manipulation, barcode stamping
 pdftk:req:apt:apt-get:pdftk
 pdftk:static:win:http://www.pdfhacks.com/pdftk/pdftk-1.41.exe.zip:unzipflat:pdftk.exe
-# Available in: http://packman.mirrors.skynet.be/pub/packman/suse/11.3/Packman.repo
-pdftk:req:suse:zypper:pdftk
 # Mac OS X: get pdftk here: http://www.pdflabs.com/docs/install-pdftk/
 #pdftk:req:mac:dmg:http://fredericiana.com/downloads/pdftk1.41_OSX10.6.dmg
 
@@ -172,12 +166,11 @@ mockcache:inst:all:pypi:mockcache
 ghostscript:req:apt:apt-get:ghostscript
 #ghostscript:req:mac:homebrew:ghostscript
 ghostscript:req:mac:macports:ghostscript
-ghostscript:req:suse:zypper:ghostscript-library
 ghostscript:req:win:http://ghostscript.com/releases/gs871w32.exe:exec:gswin32c.exe
 
 # mediaserver: new rendering may use mupdf
-mupdf:static32:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-i386.tar.gz:tarflat:pdfdraw
-mupdf:static64:apt|suse:http://mupdf.com/download/mupdf-0.9-linux-amd64.tar.gz:tarflat:pdfdraw
+mupdf:static32:apt:http://mupdf.com/download/mupdf-0.9-linux-i386.tar.gz:tarflat:pdfdraw
+mupdf:static64:apt:http://mupdf.com/download/mupdf-0.9-linux-amd64.tar.gz:tarflat:pdfdraw
 mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdraw
 #mupdf 0.8.165 if currently not available for mac, last available is 0.7
 mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
@@ -187,7 +180,6 @@ imagemagick:req:apt:apt-get:graphicsmagick-imagemagick-compat
 # imagemagick up to 6.6 has a bug concerning 8bit png's, graphicsmagick is a fork with more stability 
 #imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
-imagemagick:req:suse:zypper:ImageMagick
 # we check for montage.exe because on windows convert.exe exists already ... :-(
 imagemagick:static:win:ftp://ftp.imagemagick.org/pub/ImageMagick/binaries/ImageMagick-6.7.4-Q16-windows.zip:unzipflatsecond:montage.exe
 
@@ -196,11 +188,6 @@ libjpeg62-dev:req:apt:apt-get:libjpeg62-dev
 zlib1g-dev:req:apt:apt-get:zlib1g-dev
 libfreetype6-dev:req:apt:apt-get:libfreetype6-dev
 liblcms1-dev-devel:req:apt:apt-get:liblcms1-dev
-# PIL requirements for opensuse
-libjpeg62-devel:req:suse:zypper:libjpeg62-devel
-zlib-devel:req:suse:zypper:zlib
-freetype2-devel:req:suse:zypper:freetype2-devel
-liblcms1:req:suse:zypper:liblcms1
 
 python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
@@ -321,14 +308,10 @@ solr-jetty:req:apt:apt-get:solr-jetty
 # rabbitmq is used as AMPQ Broker in production
 rabbitmq-server:req:apt:apt-get:rabbitmq-server
 #rabbitmq-server:req:mac:macports:rabbitmq-server
-# available here: http://www.rabbitmq.com/releases/rabbitmq-server/v2.1.0/rabbitmq-server-2.1.0-1.suse.noarch.rpm
-# uncomment is if there is a possibility to specify repositories for suse
-#rabbitmq-server:req:suse:zypper:rabbitmq-server
 
 # Memcached is used for django caching, and the mediaserver uses memcached for its docshot caching
 memcached:req:apt:apt-get:memcached
 #memcached:req:mac:macports:memcached
-#memcached:req:suse:zypper:memcached
 #memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
 # btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
 
