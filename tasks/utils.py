@@ -1,7 +1,8 @@
 from functools import wraps
 
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect, QueryDict
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo
@@ -38,3 +39,81 @@ def task_required(view):
             return HttpResponseForbidden(html)
         return view(request, *args, **kwargs)
     return _inner
+
+def with_task_management(view):
+    @wraps(view)
+    def _inner(request, *args, **kwargs):
+        request.task_management = TaskManagementData(request)
+        response = view(request, *args, **kwargs)
+        return request.task_management.process_response(response)
+    return _inner
+
+class TaskManagementData(object):
+    def __init__(self, request):
+        self.request = request
+        self.method = request.method
+        self.POST = request.POST
+        self.submit = self.POST.get('task_management-submit')
+        self.save = self.POST.get('task_management-save')
+
+        if request.method == 'POST' and not self.task is None:
+            if self.submit or self.save:
+                post_data = self.POST.get('task_management-post_data', '')
+                # QueryDict only reliably works with bytestrings, so we encode `post_data` again (see #2978).
+                request.POST = QueryDict(post_data.encode('utf-8'), encoding='utf-8')
+                # if there is no post_data, we pretend that the request is a GET request, so
+                # forms in the view don't show errors
+                if not post_data:
+                    request.method = 'GET'
+
+    @property
+    def task(self):
+        if not hasattr(self, '_task_pk'):
+            try:
+                first = self.request.related_tasks[0]
+                self._task_pk = first.pk if not first.managed_transparently else None
+            except IndexError:
+                self._task_pk = None
+
+        task = None
+        if not self._task_pk is None:
+            # refetch
+            task = Task.objects.get(pk=self._task_pk)
+        return task
+
+    @property
+    def form(self):
+        if not hasattr(self, '_form'):
+            form = None
+            task = self.task
+            if task:
+                from ecs.tasks.forms import ManageTaskForm
+                form = ManageTaskForm(None, task=task, prefix='task_management')
+                if self.method == 'POST' and self.submit:
+                    form = ManageTaskForm(self.POST or None, task=task, prefix='task_management')
+                    form.is_valid()     # validate form, so errors are displayed
+            self._form = form
+        return self._form
+
+    def process_response(self, response):
+        if self.method == 'POST' and self.form and self.form.is_valid() and self.submit:
+            task = self.task
+            action = self.form.cleaned_data['action']
+            if action == 'complete':
+                if getattr(response, 'has_errors', False):
+                    return response
+                task.done(user=self.request.user, choice=self.form.get_choice())
+                task = self.task    # refetch
+            elif action == 'delegate':
+                task.assign(self.form.cleaned_data['assign_to'])
+
+            url = task.afterlife_url
+            if url is None:     # FIXME: use afterlife_url for all activities
+                try:
+                    submission = task.data.get_submission()
+                except AttributeError:
+                    url = reverse('ecs.tasks.views.task_list')
+                else:
+                    url = reverse('view_submission', kwargs={'submission_pk': submission.pk})
+            return HttpResponseRedirect(url)
+        return response
