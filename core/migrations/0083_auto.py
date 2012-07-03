@@ -282,6 +282,7 @@ class Migration(SchemaMigration):
             'sponsor_zip_code': ('django.db.models.fields.CharField', [], {'max_length': '10', 'null': 'True'}),
             'study_plan_abort_crit': ('django.db.models.fields.CharField', [], {'max_length': '265', 'null': 'True', 'blank': 'True'}),
             'study_plan_alpha': ('django.db.models.fields.CharField', [], {'max_length': '80'}),
+            'study_plan_alpha_sided': ('django.db.models.fields.SmallIntegerField', [], {'null': 'True'}),
             'study_plan_alternative_hypothesis': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'study_plan_biometric_planning': ('django.db.models.fields.CharField', [], {'max_length': '260'}),
             'study_plan_blind': ('django.db.models.fields.SmallIntegerField', [], {}),
