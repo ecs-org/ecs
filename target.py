@@ -10,6 +10,7 @@ import random
 import distutils.dir_util
 import time
 import copy
+import getpass
 
 from uuid import uuid4
 from fabric.api import local, env, warn, abort, settings
