@@ -20,6 +20,7 @@ from ecs.billing.models import ChecklistBillingState
 from ecs.scratchpad.models import ScratchPad
 from ecs.boilerplate.models import Text
 from ecs.communication.models import Thread, Message
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
 
@@ -41,15 +42,15 @@ class SubmissionQFactory(authorization.QFactory):
         now = datetime.now()
         q |= self.make_q(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
 
+        ### permissions until final vote is published
+        until_vote_q = self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
+        until_vote_q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
         if profile.is_insurance_reviewer:
-            q |= self.make_q(forms__votes__insurance_review_required=True)
+            until_vote_q |= self.make_q(forms__votes__insurance_review_required=True)
+        q |= until_vote_q & ~self.make_q(forms__current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
 
-        q |= self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
-        q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-
-        # notification tasks for non-internal users
         for cls in (AmendmentNotification, SafetyNotification):
-            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).values('data_id').query)
+            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).open().values('data_id').query)
 
         return q
 
