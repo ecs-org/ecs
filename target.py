@@ -33,7 +33,7 @@ class SetupTarget(object):
         
         self.use_sudo = kwargs.pop('use_sudo', True)
         self.dry = kwargs.pop('dry', False)
-        self.hostname = kwargs.pop('hostname', None)
+        self.host = kwargs.pop('hostname', None)
         self.ip = kwargs.pop('ip', None)
         self.username = getpass.getuser()
         self.destructive = strbool(kwargs.pop('destructive', False))
@@ -48,7 +48,7 @@ class SetupTarget(object):
     def local(self, cmd):
         if self.use_sudo:
             cmd = ['sudo'] + cmd
-        local(subprocess.list2cmdline(cmd))
+        return local(subprocess.list2cmdline(cmd))
 
     def configure(self, config_file):
         self.config = load_config(config_file)
