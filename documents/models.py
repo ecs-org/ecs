@@ -207,7 +207,7 @@ class Document(models.Model):
         return False
 
     def save(self, **kwargs):
-        print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid, self.mimetype, self.status, self.retries))
+        #print("uuid: {0}, mimetype: {1}, status: {2}, retries: {3}".format(self.uuid, self.mimetype, self.status, self.retries))
 
         if not self.uuid: 
             self.uuid = uuid4().get_hex() # generate a new random uuid
