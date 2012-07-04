@@ -246,7 +246,7 @@ class TemporaryStorageVault(LocalFileStorageVault):
     
     def __init__(self):
         rootdir = self.__TempStorageDir
-        print("root temporary storagevault dir {0}".format(rootdir))
+        #print("root temporary storagevault dir {0}".format(rootdir))
         self.db = DiskBuckets(rootdir, max_size = 0, allow_mkrootdir=True)
 
     
