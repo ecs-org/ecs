@@ -386,7 +386,7 @@ class SubmissionFilterForm(forms.Form):
             else:
                 for f in row:
                     if self.cleaned_data[f]:
-                        new |= submissions.filter(pk__in=_queries[f](submissions, user).values('pk').query)
+                        new |= _queries[f](submissions, user)
             submissions = new
 
         return submissions
