@@ -22,7 +22,7 @@ Usage
 __all__ = ['BucketError', 'BucketKeyError', 'BucketIOError', 'DiskBuckets', 
            'satisfied_on_less_then', 'satisfied_on_newer_then', 'ignore_all', 'ignore_none', 'onerror_log']
 
-import os, datetime, logging
+import os, datetime, logging, errno
 from operator import itemgetter
 
 
@@ -114,22 +114,28 @@ class DiskBuckets(object):
             else:
                 raise BucketIOError(e)
     
-    def add(self, identifier, filelike):
+    def add(self, identifier, filelike, overwrite_existing=False):
         ''' add (create) new content using identifier as key
     
         :param filelike: filelike.read() is used if exists, else filelike itself for content
+        :param overwrite_existing: False= Raise BucketKeyError if exists, True= Overwrite old data
         :raise BucketKeyError: if entry of identifier already exists
         :raise BucketIOError: if can not create directory of target file or target file
         '''
-        if self.exists(identifier):
+        if self.exists(identifier) and overwrite_existing == False:
             raise BucketKeyError('Entry %s already exists at storage: %s' % (identifier, self._generate_path(identifier)))
         else:
             path = self._generate_path(identifier)
             bucketdir = os.path.dirname(path)
             try:
                 if not os.path.isdir(bucketdir):
-                    os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
-    
+                    try:
+                        os.makedirs(bucketdir, DiskBuckets.DEFAULT_MKDIR_MODE)
+                    except OSError as e:
+                        if e.errno == errno.EEXIST:
+                            pass
+                        else:
+                            raise
                 if hasattr(filelike, "read"):
                     open(path, "wb").write(filelike.read())
                 else:
@@ -144,9 +150,7 @@ class DiskBuckets(object):
         :raise BucketIOError: if content of key identifier could not be stored
         :raise BucketKeyError: if create_or_update was not able to update key identifier
         '''
-        if self.exists(identifier):
-            self.purge(identifier)
-        self.add(identifier, filelike)
+        self.add(identifier, filelike, overwrite_existing= True)
     
     def get(self, identifier, touch_accesstime=False):
         ''' retrieve content of key identifier and return as file object
