@@ -60,8 +60,6 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
         if 'result' in self.fields:
             original_result = self.instance.result
             result = cleaned_data['result']
-            print original_result
-            print result
             if not result == original_result and 'is_final_version' in cleaned_data:
                 del cleaned_data['is_final_version']
         return cleaned_data
