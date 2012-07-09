@@ -224,12 +224,12 @@ class MediaProvider:
             filelike = self.render_memcache.get_or_None(identifier)
         
         if filelike:
-            self.render_diskcache.touch_accesstime(identifier) # update access in page diskcache
+            self.render_diskcache.touch_accesstime(identifier, fail_silent= True) # update access in page diskcache
         else:
             if try_diskcache:
                 filelike = self.render_diskcache.get_or_None(identifier, touch_accesstime=True) 
                 if filelike:
-                    self.doc_diskcache.touch_accesstime(page.id) # but update access in document diskcache
+                    self.doc_diskcache.touch_accesstime(page.id, fail_silent= True) # but update access in document diskcache
                 else: 
                     # still not here, so we need to recache from scratch
                     success, used_identifier, additional_msg = self.prime_blob(page.id, mimetype='application/pdf', wait=True)

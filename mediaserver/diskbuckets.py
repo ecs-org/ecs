@@ -102,14 +102,17 @@ class DiskBuckets(object):
         except EnvironmentError as e:
             raise BucketIOError(e)
         
-    def touch_accesstime(self, identifier):
+    def touch_accesstime(self, identifier, fail_silent=False):
         ''' set last access time of identifier to now
-    
+        :param fail_silent: True: No BucketIOError is raised in case of failure
         :raise BucketIOError: update of access time fails '''
         try:
             os.utime(self._generate_path(identifier), None)
         except EnvironmentError as e:
-            raise BucketIOError(e)
+            if fail_silent:
+                pass
+            else:
+                raise BucketIOError(e)
     
     def add(self, identifier, filelike):
         ''' add (create) new content using identifier as key
@@ -162,10 +165,7 @@ class DiskBuckets(object):
             raise BucketIOError(e)
     
         if touch_accesstime:
-            try:
-                self.touch_accesstime(identifier)
-            except BucketIOError:
-                pass
+            self.touch_accesstime(identifier, fail_silent= True)
     
         return f 
 
