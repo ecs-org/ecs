@@ -62,12 +62,8 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
             result = cleaned_data['result']
             print original_result
             print result
-            if not result == original_result:
-                print self.data
-                self.data = self.data.copy()
-                del self.data['is_final_version']
-                print self.data
-                cleaned_data['is_final_version'] = False
+            if not result == original_result and 'is_final_version' in cleaned_data:
+                del cleaned_data['is_final_version']
         return cleaned_data
 
     def save(self, commit=True):
