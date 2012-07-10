@@ -223,8 +223,8 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     else:
         os.utime(cache_file, None)
 
-    response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename="%s.ZIP"' % '.'.join(filename_bits)
+    response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/octet-stream')
+    response['Content-Disposition'] = 'attachment; filename="%s.ZIP"' % '_'.join(filename_bits)
     response['Content-Length'] = str(os.path.getsize(cache_file))
     return response
 
