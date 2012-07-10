@@ -9,6 +9,7 @@
 
     SSLEngine on
     SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
+    SSLCertificateChainFile "/etc/ssl/certs/%(hostname)s.chain.pem"
     SSLCertificateKeyFile "/etc/ssl/private/%(hostname)s.key"
 
     SSLCACertificateFile "%(ca_certificate_file)s"
