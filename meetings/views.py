@@ -225,7 +225,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
 
     response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename=%s.zip' % '.'.join(filename_bits)
-    response['Content-Length'] = os.path.getsize(cache_file)
+    response['Content-Length'] = str(os.path.getsize(cache_file))
     return response
 
 @user_flag_required('is_internal')
