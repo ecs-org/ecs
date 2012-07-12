@@ -338,6 +338,8 @@ class DocumentSerializer(ModelSerializer):
     def dump(self, obj, zf):
         if not obj.doctype.is_downloadable:
             raise SkipInstance
+        if obj.status != 'ready':
+            raise SkipInstance
         return super(DocumentSerializer, self).dump(obj, zf)
 
     def dump_field(self, fieldname, val, zf, obj):
