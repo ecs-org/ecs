@@ -459,7 +459,7 @@ class SubmissionForm(models.Model):
 
     # 8.2
     study_plan_alpha = models.CharField(max_length=80)
-    study_plan_alpha_sided = models.SmallIntegerField(choices=[(0, ugettext_lazy('single-sided')), (1, ugettext_lazy('double-sided'))], null=True)
+    study_plan_alpha_sided = models.SmallIntegerField(choices=[(0, ugettext_lazy('single-sided')), (1, ugettext_lazy('double-sided'))], null=True, blank=True)
     study_plan_power = models.CharField(max_length=80)
     study_plan_statalgorithm = models.CharField(max_length=80)
     study_plan_multiple_test = models.BooleanField()
