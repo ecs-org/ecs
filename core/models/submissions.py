@@ -503,24 +503,23 @@ class SubmissionForm(models.Model):
     def save(self, **kwargs):
         if not self.presenter_id:
             self.presenter = get_current_user()
-        for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name')):
-            email = getattr(self, '{0}_email'.format(x))
-            if email:
-                try:
-                    user = get_user(email)
-                except User.DoesNotExist:
-                    user = create_phantom_user(email, role=x)
-                    user.first_name = getattr(self, '{0}_contact_first_name'.format(x))
-                    user.last_name = getattr(self, '{0}_contact_last_name'.format(x))
-                    user.save()
-                    profile = user.get_profile()
-                    profile.title = getattr(self, '{0}_contact_title'.format(x))
-                    profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
-                    profile.organisation = getattr(self, org)
-                    profile.save()
-
-                setattr(self, x, user)
-
+        if not self.submission.is_transient:
+            for x, org in (('submitter', 'submitter_organisation'), ('sponsor', 'sponsor_name')):
+                email = getattr(self, '{0}_email'.format(x))
+                if email:
+                    try:
+                        user = get_user(email)
+                    except User.DoesNotExist:
+                        user = create_phantom_user(email, role=x)
+                        user.first_name = getattr(self, '{0}_contact_first_name'.format(x))
+                        user.last_name = getattr(self, '{0}_contact_last_name'.format(x))
+                        user.save()
+                        profile = user.get_profile()
+                        profile.title = getattr(self, '{0}_contact_title'.format(x))
+                        profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
+                        profile.organisation = getattr(self, org)
+                        profile.save()
+                    setattr(self, x, user)
         return super(SubmissionForm, self).save(**kwargs)
 
     def render_pdf(self):
@@ -781,7 +780,7 @@ class Investigator(models.Model):
         ordering = ['id']
 
     def save(self, **kwargs):
-        if self.email:
+        if self.email and not self.submission_form.submission.is_transient:
             try:
                 user = get_user(self.email)
             except User.DoesNotExist:
@@ -795,7 +794,6 @@ class Investigator(models.Model):
                 profile.organisation = self.organisation
                 profile.save()
             self.user = user
-
         return super(Investigator, self).save(**kwargs)
 
 def _post_investigator_save(sender, **kwargs):
