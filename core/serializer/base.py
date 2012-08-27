@@ -49,7 +49,7 @@ CHANGELOG = (
     ('*', '1.0'),
     ('-', SubmissionForm, 'protocol_number', 'unbekannt'),
     ('*', '1.1'),
-    ('-', SubmissionForm, 'study_plan_alpha_sided', None),
+    ('+', SubmissionForm, 'study_plan_alpha_sided', None),
     ('*', '1.2'),
 )
 
