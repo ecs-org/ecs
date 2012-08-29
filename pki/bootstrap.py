@@ -1,4 +1,5 @@
 import os
+import shutil
 from django.conf import settings
 
 from ecs import bootstrap
@@ -8,8 +9,18 @@ from ecs.pki.utils import get_ca
 @bootstrap.register()
 def setup_ca():
     if os.path.exists(settings.ECS_CA_ROOT):
-        if not os.path.exists(settings.ECS_CA_CONFIG):
-            print("Error: ECS_CA_ROOT exists, but ECS_CA_CONFIG (openssl-ca.cnf) not, please copy from old ecs-conf location")
+        oldcnf = os.path.join(settings.ECS_CONFIG_DIR, 'openssl-ca.cnf')
+        newcnf = settings.ECS_CA_CONFIG
+            
+        if not os.path.exists(newcnf):
+            if os.path.exists(oldcnf):
+                print("Warning: Upgrading: Moving openssl-ca.cnf from old to new location")
+                shutil.copy(oldcnf, newcnf)
+                if os.path.exists(oldcnf+ '.old'):
+                    os.remove(oldcnf+ '.old')
+                os.rename(oldcnf, oldcnf+".old")
+            else:
+                print("Error: ECS_CA_ROOT exists, but ECS_CA_CONFIG not found")
         return
 
     subject_bits = (
