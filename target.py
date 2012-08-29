@@ -374,7 +374,7 @@ $myhostname   smtp:[localhost:8823]
         cadir = os.path.join(self.homedir, 'ecs-ca')
         
         if self.destructive:
-            openssl_cnf = os.path.join(self.configdir, 'openssl-ca.cnf')
+            openssl_cnf = os.path.join(cadir, 'openssl-ca.cnf')
             from ecs.pki.openssl import CA
             if os.path.exists(cadir):
                 local('rm -r %s' % cadir)

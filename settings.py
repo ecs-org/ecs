@@ -239,7 +239,7 @@ ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
 
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
-ECS_CA_CONFIG = os.path.join(ECS_CONFIG_DIR, 'openssl-ca.cnf')
+ECS_CA_CONFIG = os.path.join(ECS_CA_ROOT, 'openssl-ca.cnf')
 
 # ecs.utils.pdfutils wkhtmltopdf uses these options to steer pdf generation out of html files
 WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 

@@ -63,7 +63,7 @@ class CA(object):
         self._exec_ca(['-gencrl', '-crldays', '3650', '-out', self.crl_path])
 
     def setup(self, subject, key_length=2048):
-        if not os.path.exists(self.basedir):
+        if not os.path.exists(os.path.join(self.basedir, 'private')):
             for dirname in [self.certs, self.crl_dir, self.new_certs_dir]:
                 os.makedirs(os.path.join(self.basedir, dirname), 0755)
             os.makedirs(os.path.join(self.basedir, 'private'), 0700)
