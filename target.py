@@ -373,18 +373,18 @@ $myhostname   smtp:[localhost:8823]
     def ca_config(self):
         cadir = os.path.join(self.homedir, 'ecs-ca')
         
-        try:
-            replacement = self.config.get_path('ca.dir')
-        except KeyError:
-            warn('ca.dir config settings not found, leaving CA directory as it is')
-            return
-        
         if self.destructive:
             if os.path.exists(cadir):
                 warn('deleting CA directory because destructive=True')
                 local('rm -r %s' % cadir)
         else:
             warn("not removing CA directory because destructive=False")
+        
+        try:
+            replacement = self.config.get_path('ca.dir')
+        except KeyError:
+            warn('ca.dir config settings not found, leaving CA directory as it is')
+            return
         
         if os.path.exists(os.path.join(cadir, 'private')):
             warn('CA directory exists (%s), refusing to overwrite.' % cadir)
