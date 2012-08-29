@@ -373,22 +373,20 @@ $myhostname   smtp:[localhost:8823]
     def ca_config(self):
         cadir = os.path.join(self.homedir, 'ecs-ca')
         
-        if self.destructive:
-            openssl_cnf = os.path.join(cadir, 'openssl-ca.cnf')
-            from ecs.pki.openssl import CA
-            if os.path.exists(cadir):
-                local('rm -r %s' % cadir)
-            ca = CA(cadir, config=openssl_cnf)
-            self.write_config_template('openssl-ca.cnf', openssl_cnf, ca.__dict__)
-        else:
-            warn("Not overwriting openssl-ca.cnf, not removing ecs-ca directory because destructive=False")
-        
         try:
             replacement = self.config.get_path('ca.dir')
         except KeyError:
+            warn('ca.dir config settings not found, leaving CA directory as it is')
             return
         
-        if os.path.exists(cadir):
+        if self.destructive:
+            if os.path.exists(cadir):
+                warn('deleting CA directory because destructive=True')
+                local('rm -r %s' % cadir)
+        else:
+            warn("not removing CA directory because destructive=False")
+        
+        if os.path.exists(os.path.join(cadir, 'private')):
             warn('CA directory exists (%s), refusing to overwrite.' % cadir)
         else:
             shutil.copytree(replacement, cadir)
