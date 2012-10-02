@@ -314,8 +314,9 @@ _queries = {
     # vote filters
     'b2':               lambda s,u: s.b2(include_pending=u.ecs_profile.is_internal),
     'b3':               lambda s,u: s.b3(include_pending=u.ecs_profile.is_internal),
-    'b4':               lambda s,u: s.b4(include_pending=u.ecs_profile.is_internal),
-    'other_votes':      lambda s,u: s.b1(include_pending=u.ecs_profile.is_internal) | s.b5(include_pending=u.ecs_profile.is_internal),
+    'other_votes':      lambda s,u: s.b1(include_pending=u.ecs_profile.is_internal) |
+        s.b4(include_pending=u.ecs_profile.is_internal) | 
+        s.b5(include_pending=u.ecs_profile.is_internal),
     'no_votes':         lambda s,u: s.without_vote(include_pending=u.ecs_profile.is_internal),
 
     'mine':             lambda s,u: s.mine(u),
@@ -341,9 +342,9 @@ _labels = {
 
     'b2': _('B2 Votes'),
     'b3': _('B3 Votes'),
-    'b4': _('B4 Votes'),
     'other_votes': _('Other Votes'),
     'no_votes': _('No Votes'),
+    
     'mine': _('Mine'),
     'assigned': _('Assigned'),
     'other_studies': _('Other Studies'),
@@ -394,7 +395,7 @@ class SubmissionFilterForm(forms.Form):
 FILTER_MEETINGS = ('past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting')
 FILTER_TYPE = ('amg', 'mpg', 'other')
 FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec', 'not_categorized')
-FILTER_VOTES = ('b2', 'b3', 'b4', 'other_votes', 'no_votes')
+FILTER_VOTES = ('b2', 'b3', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 
 class SubmissionMinimalFilterForm(SubmissionFilterForm):

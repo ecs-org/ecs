@@ -50,9 +50,9 @@ class SubmissionQuerySet(models.query.QuerySet):
         return self.filter(get_vote_filter_q('forms', *args, **kwargs))
 
     def _with_explicit_vote(self, *results, **kwargs):
-        q = Q(forms__current_published_vote__isnull=False, forms__current_published_vote__result__in=results)
+        q = Q(current_submission_form__current_published_vote__isnull=False, current_submission_form__current_published_vote__result__in=results)
         if kwargs.get('include_pending', True):
-            q |= Q(forms__current_pending_vote__isnull=False, forms__current_pending_vote__result__in=results)
+            q |= Q(current_submission_form__current_pending_vote__isnull=False, current_submission_form__current_pending_vote__result__in=results)
         return self.filter(q, current_submission_form__isnull=False)
 
     def b1(self, include_pending=True):
