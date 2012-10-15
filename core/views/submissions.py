@@ -622,17 +622,19 @@ def create_submission_form(request):
         
             formsets = formsets.copy()
             investigators = formsets.pop('investigator').save(commit=False)
+            employees = formsets.pop('investigatoremployee').save(commit=False)
             for investigator in investigators:
                 investigator.submission_form = submission_form
                 investigator.save()
-            for i, employee in enumerate(formsets.pop('investigatoremployee').save(commit=False)):
-                employee.investigator = investigators[int(request.POST['investigatoremployee-%s-investigator_index' % i])]
+            for employee in employees:
+                employee.investigator = investigators[employee.investigator_index]
                 employee.save()
 
             for formset in formsets.itervalues():
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
+
             request.docstash.delete()
             
             on_study_submit.send(Submission, submission=submission, form=submission_form, user=request.user)

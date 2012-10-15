@@ -287,7 +287,13 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
 
 class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
+        employees = []
+        for form in self.forms[:self.total_form_count()]:
+            if form.is_valid() and form.has_changed():
+                employee = form.save(commit=commit)
+                employee.investigator_index = form.cleaned_data['investigator_index']
+                employees += [employee]
+        return employees
 
 InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
 
