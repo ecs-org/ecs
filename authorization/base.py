@@ -36,32 +36,31 @@ class QFactoryRegistry(object):
             raise ImproperlyConfigured("The model %s uses an AuthorizationManager with lookup '%s' which resolves to %s, but no matching QFactory was provided." % (
                 model.__name__, self._lookup, target_model.__name__,
             ))
-        return q_factory(lookup)
+        return q_factory(lookup, target_model)
         
 
 class QFactory(object):
-    def __init__(self, lookup):
+    def __init__(self, lookup, model):
         self.lookup = lookup
+        self.model = model
 
     def make_q(self, **lookups):
-        if not self.lookup:
-            return Q(**lookups)
-        return Q(**dict(('%s__%s' % (self.lookup, key), val) for key, val in lookups.iteritems()))
-        
+        return Q(**lookups)
+
     def make_deny_q(self):
         return Q(pk=None)
 
     def make_f(self, lookup):
-        if not self.lookup:
-            return F(lookup)
-        return F('%s__%s' % (self.lookup, lookup))
+        return F(lookup)
 
     def __call__(self, user):
         if not user or user.is_superuser:
             return Q()
-        if user.is_anonymous():
+        elif user.is_anonymous():
             return self.make_deny_q() # exclude all
-        return self.get_q(user)
+        if not self.lookup:
+            return self.get_q(user)
+        return Q(**{'%s__pk__in' % (self.lookup,): self.model.objects.all().values('pk').query})
 
     def get_q(self, user):
         return Q()
