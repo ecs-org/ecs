@@ -18,7 +18,7 @@
 {% block content %}
 <div id="header_public">
   <div class="header_inner">
-    <a href="/"><img src="/static/images/logo.png" /></a>
+    <a href="/"><img src="{{ MEDIA_URL }}images/logo.png" /></a>
   </div>
 </div>
 
@@ -27,7 +27,6 @@
     <div class="content form_main">
       
       <h1>{% trans "Catalog of Approved Studies" %}</h1>
-      
       <div class="years">
       {% for date in years %}
           <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
@@ -47,25 +46,24 @@
             {% if sf.project_type_education_context %}
             <p><strong>{{ sf.get_project_type_education_context_display }}:</strong> {{ sf.submitter_contact }}</p>
             {% endif %}
-            <p><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}<span class="border_right"></span><strong>Sitzung:</strong> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}<span class="border_right"></span><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}</p>
-
-            {% for investigator in sf.investigators.all %}
-            <div class="indented">
-            <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
-            <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>
-            <p><strong>Ethikkomission:</strong> 
-              {{ investigator.ethics_commission }}
-                    {% if investigator.ethics_commission.system and sf.is_amg %}
-                        {% if sf.is_categorized_multicentric_and_local %}
-                            (Lokal)
-                        {% else %}
-                            {% if sf.is_categorized_multicentric_and_main %}
-                                (Leitethikkomission)
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
+            
+            <p><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}
+              <span class="border_right"></span><strong>Sitzung:</strong> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}
+              <span class="border_right"></span><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}
+              {% if sf.is_categorized_multicentric_and_local %}
+                 <span class="border_right"></span> (lokale EK nach §41b AMG)
+              {% endif %}
             </p>
-            </div>
+            
+            {% for investigator in sf.investigators.all %}
+              <div class="indented">
+              {% if investigator.ethics_commission.system or not sf.is_categorized_multicentric_and_local %}
+                <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>      
+                {% if investigator.ethics_commission.system %}
+                  <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
+                {% endif %}
+              {% endif %}
+              </div>
             {% endfor %}
 
           </li>
@@ -78,6 +76,13 @@
           <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
       {% endfor %}
       </div>
+    
+      <h2><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
+            <img alt="CC BY-SA 3.0 AT" src="{{ MEDIA_URL }}images/by-sa-3.0-at-80x15.png" />
+            {% trans "licensed data, Copyright Ethicscommission" %} 
+          </a>
+      </h2>  
+      
     </div>
   </div>
 </div>

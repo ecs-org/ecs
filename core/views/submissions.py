@@ -5,6 +5,7 @@ import re
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.core.urlresolvers import reverse
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
@@ -1042,6 +1043,12 @@ def catalog(request, year=None):
 @forceauth.exempt
 def catalog_json(request):
     data = []
+    meta_dict = {'version': '1.0',
+        'copyright': 'CC BY-SA 3.0', 
+        'copyright_url': 'http://creativecommons.org/licenses/by-sa/3.0/at/'
+    }
+    data.append(meta_dict)
+    
     with sudo():
         votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
         votes = votes.select_related('submission_form').order_by('published_at')
@@ -1065,7 +1072,8 @@ def catalog_json(request):
             for i in sf.investigators.all():
                 investigators.append({
                     'organisation': i.organisation,
-                    'name': unicode(i.contact),
+                    'name': unicode(i.contact) if (i.ethics_commission.uuid == 
+                        settings.ETHICS_COMMISSION_UUID) else "",
                     'ethics_commission': unicode(i.ethics_commission),
                 })
             item['investigators'] = investigators
