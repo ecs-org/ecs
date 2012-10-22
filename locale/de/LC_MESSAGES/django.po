@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-21 20:04+0200\n"
+"POT-Creation-Date: 2012-10-22 20:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -725,24 +725,28 @@ msgid "maximum age"
 msgstr "Höchstalter"
 
 #: core/paper_forms.py:165
-msgid "non competent participants"
-msgstr "Nicht-persönlich-Einwilligungsfähige"
+msgid "male participants"
+msgstr "männliche Teilnehmer"
 
 #: core/paper_forms.py:165
 msgid "The study includes:"
 msgstr "In die Studie eingeschlossen werden:"
 
 #: core/paper_forms.py:166
-msgid "male participants"
-msgstr "männliche Teilnehmer"
-
-#: core/paper_forms.py:167
 msgid "female participants"
 msgstr "weibliche Teilnehmerinnen"
 
-#: core/paper_forms.py:168
+#: core/paper_forms.py:167
 msgid "women of childbearing age"
 msgstr "gebärfähige Frauen"
+
+#: core/paper_forms.py:168
+msgid "non competent participants"
+msgstr "Nicht-persönlich-Einwilligungsfähige"
+
+#: core/paper_forms.py:168
+msgid "non competents explanation"
+msgstr "z.B. Bewusstlose, Besachwaltete, aber NICHT Minderjährige, retrospektive Beobachtungen oder Proben"
 
 #: core/paper_forms.py:170
 msgid ""
@@ -3611,9 +3615,11 @@ msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
 msgid "Catalog of Approved Studies"
 msgstr "Register der befürworteten Studien"
 
-#: templates/submissions/catalog.html:32
+#: templates/submissions/catalog.html:82
 msgid "licensed data, Copyright Ethicscommission"
-msgstr "Inhalt lizensiert unter CC-SA-BY-3.0 Lizenz, (C) Copyright Ethikkommission der Medizinischen Universität Wien"
+msgstr ""
+"Inhalt lizensiert unter CC-SA-BY-3.0 Lizenz, (C) Copyright Ethikkommission "
+"der Medizinischen Universität Wien"
 
 #: templates/submissions/change_message.txt:5
 #, python-format

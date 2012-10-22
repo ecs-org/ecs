@@ -162,10 +162,10 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.10.1', 'subject_minage', _(u'minimum age')),
     FieldInfo('2.10.2', 'subject_maxage', _(u'maximum age')),
     
-    FieldInfo('2.10.3', 'subject_noncompetents', _(u'non competent participants'), help_text=_(u'The study includes:')),
-    FieldInfo('2.10.4', 'subject_males', _(u'male participants')),
+    FieldInfo('2.10.4', 'subject_males', _(u'male participants'), help_text=_(u'The study includes:')),
     FieldInfo('2.10.4', 'subject_females', _(u'female participants')),
     FieldInfo('2.10.5', 'subject_childbearing', _(u'women of childbearing age')),
+    FieldInfo('2.10.3', 'subject_noncompetents', _(u'non competent participants'), help_text=_(u'non competents explanation')),
     
     FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study')),
     FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase')),
