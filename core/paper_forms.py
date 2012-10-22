@@ -289,7 +289,9 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('9.4.3', 'submitter_is_sponsor', _(u'sponsor / representative of the sponsor')),
     FieldInfo('9.4.4', 'submitter_is_authorized_by_sponsor', _(u'person/organization authorized by the sponsor')),
     FieldInfo(None, 'sponsor_agrees_to_publishing', None, short_label=_(u'The sponsor agrees with the publication.')),
-    FieldInfo(None, 'sponsor_agrees_to_publishing', None, short_label=_(u'The sponsor agrees with the publication of following data by the Ethics Commission as appropiate: EC-Number, Submission Date, Project Title, Main Investigator, Sponsor/CRO and the Centres')),
+    FieldInfo(None, 'sponsor_agrees_to_publishing', None, short_label=
+        _(u'The sponsor agrees with the publication of following data by the Ethics Commission as appropiate: EC-Number, Submission Date, Project Title, Main Investigator, Sponsor/CRO and the Centres'),
+        help_text= _(u'(Die Zustimmung zum Register ist verpflichtend, wenn die MUW Sponsor ist.)')),
 ))
 
 
