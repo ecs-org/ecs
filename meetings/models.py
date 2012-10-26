@@ -485,6 +485,11 @@ class Meeting(models.Model):
                 AssignedMedicalCategory.objects.get_or_create(meeting=self, category=cat)
         AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.itervalues()]).delete()
         Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=old_assignments.keys()).delete()
+        
+        # delete Participation entries where med-cat is not inside the referenced study anymore
+        for p in Participation.objects.filter(entry__meeting=self):
+            if not p.entry.submission.medical_categories.filter(id=p.medical_category_id).exists():
+                p.delete()
 
 
 class TimetableEntry(models.Model):
