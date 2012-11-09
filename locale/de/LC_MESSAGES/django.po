@@ -3846,7 +3846,7 @@ msgstr "%(review)s speichern"
 #: templates/submissions/readonly_form.html:40
 #, python-format
 msgid "complete %(review)s"
-msgstr "%(review)s abschließen"
+msgstr "%(review)s abschicken"
 
 #: templates/submissions/readonly_form.html:56
 msgid "General"
