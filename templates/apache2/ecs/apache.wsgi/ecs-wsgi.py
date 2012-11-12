@@ -17,9 +17,10 @@ srcbasedir = '%(source)s'
 appdir = os.path.join(srcbasedir, '%(appname)s')
 basedir = os.path.join(srcbasedir, '..')
 
-# TODO: partly hardcoded path names, and should be replaced
+# TODO: environment dirname is hardcoded
+python_version = "{0}.{1}".format(sys.version_info.major, sys.version_info.minor)
 envdir = os.path.join(basedir, "environment")
-sitedir = os.path.join(envdir, "/lib/python2.6/site-packages")
+sitedir = os.path.join(envdir, "/lib/python{0}/site-packages".format(python_version))
 bindir = os.path.join(envdir, "bin")
 service_indicator  = os.path.join(basedir, 'ecs-conf', 'service.now')
 
