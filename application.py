@@ -8,7 +8,7 @@ from deployment.pkgmanager import package_merge
 # main packages needed for the application
 main_packages = """
 # language support for german locales, eg. needed by postgresql to create a database with de_DE.utf8 locale 
-#language-pack-de:req:apt:apt-get:language-pack-de
+language-pack-de:req:apt:apt-get:language-pack-de
 
 # postgresql database bindings
 psycopg2:req:apt:apt-get:libpq-dev
@@ -101,8 +101,8 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
 # for apt (ubuntu/debian) systems, tomcat 6 is used as a user installation
-#tomcat:req:apt:apt-get:tomcat6-user
-#tomcat_apt_user:static:apt:file:dummy:custom:None
+tomcat:req:apt:apt-get:tomcat6-user
+tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
 tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
 pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
