@@ -286,7 +286,12 @@
     }
     
     input {
+        /* XXX: which inputs do we wan't to hide? */
         display: none;
     }
     
+}
+
+.boilerplate_selector input {
+    display: block !important;
 }
