@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+import os
+import datetime
 
 from django.db.models import Q
+from django.core.files.base import File
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.documents.models import Document, DocumentType
@@ -8,6 +11,16 @@ from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_or_create_user, create_user
+
+TEST_PDF = os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf')
+
+def attach_document(submission_form, filelike, name, doctype_identifier, mimetype='application/pdf', version="1", date=None):
+    doctype = DocumentType.objects.get(identifier=doctype_identifier)
+    date = date or datetime.date.today()
+    doc = Document(version=version, date=date, name = name, doctype=doctype, mimetype= mimetype, file=File(filelike), parent_object= submission_form)
+    doc.save()
+    submission_form.documents.add(doc)
+    return doc
 
 def create_submission_form(ec_number=None, presenter=None):
     presenter = presenter or get_or_create_user('test_presenter@example.com')[0]
@@ -159,14 +172,17 @@ def create_submission_form(ec_number=None, presenter=None):
         presenter=presenter,
         )
     sform.save()
+    
     sform.substance_registered_in_countries = []
     sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
     sform.save()
-    doctype = DocumentType.objects.get(identifier='other')
-    doc = Document.objects.create_from_buffer("foobar", mimetype="text/plain", parent_object=sform, doctype=doctype)
-    sform.documents.add(doc)
+    
+    with open(TEST_PDF, 'rb') as f:
+        attach_document(sform, f, 'protocol.pdf', 'protocol')
+    
     ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
     ek1.save()
+    
     Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
     sform.render_pdf()
     return sform
