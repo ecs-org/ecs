@@ -132,12 +132,10 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
 
 
 @readonly()
-def copy_latest_submission_form(request, submission_pk=None):
+def copy_latest_submission_form(request, submission_pk=None, **kwargs):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    submission_form = submission.newest_submission_form
-    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs={
-        'submission_form_pk': submission_form.pk
-    }))
+    kwargs['submission_form_pk'] = submission.newest_submission_form.pk
+    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs=kwargs))
 
 
 @readonly()

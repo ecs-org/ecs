@@ -88,7 +88,7 @@
             {% endwith %}
             {% if submission_form|allows_amendments_by:request.user and not docstash.current_value.notification_type %}
                 {% for notification_type in diff_notification_types %}
-                    | <a href="{% url ecs.core.views.copy_submission_form submission_form_pk=submission_form.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
+                    | <a href="{% url ecs.core.views.copy_latest_submission_form submission_pk=submission.pk,notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
                 {% endfor %}
             {% endif %}
         </div>

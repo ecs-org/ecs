@@ -21,6 +21,7 @@ urlpatterns += patterns('ecs.core.views',
 
     url(r'^(?P<submission_pk>\d+)/$', 'view_submission', name='view_submission'),
     url(r'^(?P<submission_pk>\d+)/copy/$', 'copy_latest_submission_form'),
+    url(r'^(?P<submission_pk>\d+)/amend/(?P<notification_type_pk>\d+)/$', 'copy_latest_submission_form'),
     url(r'^(?P<submission_pk>\d+)/export/$', 'export_submission'),
     url(r'^(?P<submission_pk>\d+)/presenter/change/$', 'change_submission_presenter'),
     url(r'^(?P<submission_pk>\d+)/susar_presenter/change/$', 'change_submission_susar_presenter'),
