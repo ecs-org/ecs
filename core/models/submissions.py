@@ -15,7 +15,7 @@ from ecs.core.models.constants import (
     SUBMISSION_TYPE_MULTICENTRIC,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
-from ecs.core.models.managers import SubmissionManager, SubmissionFormManager
+from ecs.core.models.managers import SubmissionManager, SubmissionFormManager, TemporaryAuthorizationManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document, DocumentType
 from ecs.users.utils import get_user, create_phantom_user, sudo
@@ -889,6 +889,8 @@ class TemporaryAuthorization(models.Model):
     user = models.ForeignKey(User, related_name='temp_submission_auth')
     start = models.DateTimeField(default=datetime.now)
     end = models.DateTimeField(default=lambda: datetime.now() + timedelta(days=30))
+
+    objects = TemporaryAuthorizationManager()
 
     class Meta:
         app_label = 'core'

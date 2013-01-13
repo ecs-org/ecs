@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
-    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory)
+    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory,
+    TemporaryAuthorization)
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
@@ -39,8 +39,7 @@ class SubmissionQFactory(authorization.QFactory):
         q |= self.make_q(current_submission_form__primary_investigator__user=user)
         
         ### explicit temporary permissions
-        now = datetime.now()
-        q |= self.make_q(temp_auth__user=user, temp_auth__start__lte=now, temp_auth__end__gt=now)
+        q |= self.make_q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)
 
         ### permissions until final vote is published
         until_vote_q = self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
@@ -136,8 +135,10 @@ class ChecklistQFactory(authorization.QFactory):
             self.make_q(submission__susar_presenter=user)
         )
 
+        temporary_authorized = self.make_q(submission__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)
+
         q = self.make_q(last_edited_by=user)
-        q |= involved_by_task & ~involved_as_presenting_party & self.make_q(status__in=['completed', 'review_ok'])
+        q |= (involved_by_task | temporary_authorized) & ~involved_as_presenting_party & self.make_q(status__in=['completed', 'review_ok'])
         q |= involved_as_presenting_party & self.make_q(status='review_ok')
         return q
 
