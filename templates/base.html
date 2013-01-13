@@ -68,6 +68,11 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
+    /* http://stackoverflow.com/questions/14267457 */  
+    String.prototype.contains = function(string, separator){
+    return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : String(this).indexOf(string) > -1;
+    };
+    
     window.addEvent('domready', function() {
         var sidebar = $('sidebar');
         var header = $('header');
