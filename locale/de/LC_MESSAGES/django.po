@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-22 20:13+0200\n"
+"POT-Creation-Date: 2013-01-21 21:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -342,12 +342,12 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: core/diff.py:165 core/forms/fields.py:54 core/forms/fields.py:59
-#: core/views/submissions.py:481 templates/submissions/readonly_form.html:345
+#: core/views/submissions.py:479 templates/submissions/readonly_form.html:345
 msgid "Yes"
 msgstr "Ja"
 
 #: core/diff.py:167 core/forms/fields.py:54 core/forms/fields.py:59
-#: core/views/submissions.py:481 templates/submissions/readonly_form.html:346
+#: core/views/submissions.py:479 templates/submissions/readonly_form.html:346
 msgid "No"
 msgstr "Nein"
 
@@ -558,7 +558,7 @@ msgid "fax"
 msgstr "FAX"
 
 #: core/paper_forms.py:114 core/paper_forms.py:126 core/paper_forms.py:282
-#: core/paper_forms.py:307
+#: core/paper_forms.py:309
 msgid "e-mail"
 msgstr "E-Mail"
 
@@ -746,7 +746,9 @@ msgstr "Nicht-persönlich-Einwilligungsfähige"
 
 #: core/paper_forms.py:168
 msgid "non competents explanation"
-msgstr "z.B. Bewusstlose, Besachwaltete, aber NICHT Minderjährige, retrospektive Beobachtungen oder Proben"
+msgstr ""
+"z.B. Bewusstlose, Besachwaltete, aber NICHT Minderjährige, retrospektive "
+"Beobachtungen oder Proben"
 
 #: core/paper_forms.py:170
 msgid ""
@@ -858,7 +860,7 @@ msgstr "Eine Versicherung ist nicht erforderlich"
 msgid "insurance company"
 msgstr "Versicherungsgesellschaft"
 
-#: core/paper_forms.py:198 core/paper_forms.py:304
+#: core/paper_forms.py:198 core/paper_forms.py:306
 msgid "phone"
 msgstr "Telefon"
 
@@ -1250,16 +1252,16 @@ msgstr "Wie erfolgt die Anonymisierung?"
 msgid "salutation"
 msgstr "Anrede"
 
-#: core/paper_forms.py:279 core/paper_forms.py:317 meetings/forms.py:29
+#: core/paper_forms.py:279 core/paper_forms.py:319 meetings/forms.py:29
 #: meetings/forms.py:44 users/forms.py:154 users/forms.py:208
 msgid "title"
 msgstr "Titel"
 
-#: core/paper_forms.py:280 core/paper_forms.py:318
+#: core/paper_forms.py:280 core/paper_forms.py:320
 msgid "first name"
 msgstr "Vorname"
 
-#: core/paper_forms.py:281 core/paper_forms.py:319
+#: core/paper_forms.py:281 core/paper_forms.py:321
 msgid "last name"
 msgstr "Nachname"
 
@@ -1295,7 +1297,7 @@ msgstr "vom Sponsor autorisierte Person/Organisation"
 msgid "The sponsor agrees with the publication."
 msgstr "Der Sponsor stimmt der Veröffentlichung zu."
 
-#: core/paper_forms.py:292
+#: core/paper_forms.py:293
 msgid ""
 "The sponsor agrees with the publication of following data by the Ethics "
 "Commission as appropiate: EC-Number, Submission Date, Project Title, Main "
@@ -1306,67 +1308,72 @@ msgstr ""
 "transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, "
 "Koordinierende/r Prüfärztin/arzt, Sponsor/CRO und weitere Zentren"
 
-#: core/paper_forms.py:297
+#: core/paper_forms.py:294
+msgid ""
+"(Die Zustimmung zum Register ist verpflichtend, wenn die MUW Sponsor ist.)"
+msgstr ""
+
+#: core/paper_forms.py:299
 msgid "study site"
 msgstr "Prüfzentrum"
 
-#: core/paper_forms.py:298
+#: core/paper_forms.py:300
 msgid "ethics commission"
 msgstr "Ethik-Kommission"
 
-#: core/paper_forms.py:299
+#: core/paper_forms.py:301
 msgid "principal investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: core/paper_forms.py:300
+#: core/paper_forms.py:302
 msgid "salutation of the Investigator"
 msgstr "Anrede des Prüfarztes"
 
-#: core/paper_forms.py:301
+#: core/paper_forms.py:303
 msgid "title of the Investigator"
 msgstr "Titel des Prüfarztes"
 
-#: core/paper_forms.py:302
+#: core/paper_forms.py:304
 msgid "first name of the Investigator"
 msgstr "Vorname des Prüfarztes"
 
-#: core/paper_forms.py:303
+#: core/paper_forms.py:305
 msgid "last name of the Investigator"
 msgstr "Nachname des Prüfarztes"
 
-#: core/paper_forms.py:305
+#: core/paper_forms.py:307
 msgid "mobile"
 msgstr "\"Pieps\"/Mobil"
 
-#: core/paper_forms.py:306
+#: core/paper_forms.py:308
 msgid "FAX"
 msgstr "FAX"
 
-#: core/paper_forms.py:308
+#: core/paper_forms.py:310
 msgid "Jus practicandi"
 msgstr ""
 
-#: core/paper_forms.py:309
+#: core/paper_forms.py:311
 msgid "specialist for"
 msgstr "Facharzt für"
 
-#: core/paper_forms.py:310
+#: core/paper_forms.py:312
 msgid "certified"
 msgstr "Prüfärztekurs"
 
-#: core/paper_forms.py:312
+#: core/paper_forms.py:314
 msgid "number of participants"
 msgstr "Anzahl Teilnehmer/innen"
 
-#: core/paper_forms.py:316
+#: core/paper_forms.py:318
 msgid "Ms/Mr"
 msgstr "Fr/Hr"
 
-#: core/paper_forms.py:320
+#: core/paper_forms.py:322
 msgid "Institution"
 msgstr "Institution"
 
-#: core/paper_forms.py:324
+#: core/paper_forms.py:326
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
@@ -1499,14 +1506,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:339 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:705 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:709 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:240 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:340 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:707 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:711 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:242 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1768,12 +1775,12 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:811 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:815 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:811 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:815 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1798,23 +1805,23 @@ msgstr "einseitig"
 msgid "double-sided"
 msgstr "zweiseitig"
 
-#: core/models/submissions.py:711 templates/submissions/readonly_form.html:244
+#: core/models/submissions.py:715 templates/submissions/readonly_form.html:244
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:713
+#: core/models/submissions.py:717
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:715
+#: core/models/submissions.py:719
 msgid "NIS"
 msgstr ""
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:850
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:846
+#: core/models/submissions.py:850
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -1839,28 +1846,29 @@ msgstr "Votum"
 msgid "Text"
 msgstr ""
 
-#: core/views/submissions.py:773 templates/meetings/details.html:15
+#: core/views/submissions.py:771 statistics/stats.py:40
+#: templates/meetings/details.html:15
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: core/views/submissions.py:885 templates/core.html:50
+#: core/views/submissions.py:883 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: core/views/submissions.py:922
+#: core/views/submissions.py:920
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: core/views/submissions.py:993
+#: core/views/submissions.py:991
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: core/views/submissions.py:1002 templates/core.html:53
+#: core/views/submissions.py:1000 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: core/views/submissions.py:1012 templates/core.html:56
+#: core/views/submissions.py:1010 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2117,11 +2125,11 @@ msgstr "Nach Sitzung"
 msgid "%B Meeting %Y (automatically generated)"
 msgstr "%B Sitzung %Y (automatisch generiert)"
 
-#: meetings/models.py:719
+#: meetings/models.py:724
 msgid "impossible"
 msgstr "unmöglich"
 
-#: meetings/models.py:720
+#: meetings/models.py:725
 msgid "unfavorable"
 msgstr "ungünstig"
 
@@ -2311,6 +2319,70 @@ msgstr ""
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
+#: statistics/stats.py:41
+msgid "Total"
+msgstr "Insgesamt"
+
+#: statistics/stats.py:42
+msgid "Comercially sponsored"
+msgstr "Kommerziell gesponsert"
+
+#: statistics/stats.py:43
+msgid "Multicentric"
+msgstr "Multizentrisch"
+
+#: statistics/stats.py:44 statistics/stats.py:51
+msgid "In accord with AMG"
+msgstr "Studien nach AMG"
+
+#: statistics/stats.py:45 statistics/stats.py:56
+msgid "In accord with MPG"
+msgstr "Studien nach MPG"
+
+#: statistics/stats.py:46
+msgid "B1 on first vote"
+msgstr "B1 als ersted Votum"
+
+#: statistics/stats.py:47
+msgid "B2 on first vote"
+msgstr "B2 als erstes Votum"
+
+#: statistics/stats.py:48
+msgid "B3 on first vote"
+msgstr "B3 als erstes Votum"
+
+#: statistics/stats.py:49
+msgid "Negative overall"
+msgstr "Insgesamt abgelehnt oder zurückgezogen"
+
+#: statistics/stats.py:52
+msgid "Main Ethics Commission"
+msgstr "Leitethikkommission"
+
+#: statistics/stats.py:53
+msgid "Local Ethics Commission"
+msgstr "Lokal zuständige Ethikkommission"
+
+#: statistics/stats.py:54
+msgid "Monocentric AMG studies"
+msgstr "Monozentrische AMG Studien"
+
+#: statistics/stats.py:58
+msgid "CE certified for exact indications"
+msgstr "Mit CE Kennzeichen innerhalb der Zweckbestimmung"
+
+#: statistics/stats.py:60
+msgid "CE certified for other indications"
+msgstr "Mit CE Kennzeichen ausserhalb der Zweckbestimmung"
+
+#: statistics/stats.py:61
+msgid "Without CE marking"
+msgstr "Ohne CE-Kennzeichnung"
+
+#: statistics/stats.py:62
+msgid "Studies in accord with AMG and MPG"
+msgstr "Kombinierte AMG/MPG Studien"
+
 #: tasks/forms.py:25
 msgid "<group>"
 msgstr "<Gruppe>"
@@ -2429,68 +2501,72 @@ msgstr "Gebührenabrechnung"
 msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
-#: templates/core.html:95 templates/boilerplate/list.html:5
+#: templates/core.html:95 templates/meetings/tabs/status.html:66
+msgid "Statistics"
+msgstr "Statistik"
+
+#: templates/core.html:96 templates/boilerplate/list.html:5
 #: templates/boilerplate/list.html.py:6
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
-#: templates/core.html:97
+#: templates/core.html:98
 msgid "Audit Trail"
 msgstr "Kontrollprotokoll"
 
-#: templates/core.html:100 templates/pki/cert_list.html:4
+#: templates/core.html:101 templates/pki/cert_list.html:4
 #: templates/pki/cert_list.html.py:6 templates/pki/create_cert.html:4
 #: templates/pki/create_cert.html.py:6
 msgid "PKI"
 msgstr ""
 
-#: templates/core.html:104
+#: templates/core.html:105
 msgid "Sentry ErrorLog"
 msgstr "Sentry Fehlerprotokoll"
 
-#: templates/core.html:111
+#: templates/core.html:112
 msgid "Developer"
 msgstr "Entwickler"
 
-#: templates/core.html:113
+#: templates/core.html:114
 #, fuzzy
 msgid "Submission PDF"
 msgstr "Einreichung"
 
-#: templates/core.html:114
+#: templates/core.html:115
 #, fuzzy
 msgid "Checklist PDF"
 msgstr "Formale Prüfung Diplomarbeit"
 
-#: templates/core.html:115
+#: templates/core.html:116
 #, fuzzy
 msgid "Notification PDF"
 msgstr "Meldungen"
 
-#: templates/core.html:116
+#: templates/core.html:117
 #, fuzzy
 msgid "Notification Answer PDF"
 msgstr "Meldungsantwort"
 
-#: templates/core.html:117
+#: templates/core.html:118
 #, fuzzy
 msgid "Vote PDF"
 msgstr "Voten"
 
-#: templates/core.html:118
+#: templates/core.html:119
 #, fuzzy
 msgid "Translations"
 msgstr "Organisation"
 
-#: templates/core.html:124
+#: templates/core.html:125
 msgid "Recent Activities"
 msgstr "Letzte Tätigkeiten"
 
-#: templates/core.html:145
+#: templates/core.html:146
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
 
-#: templates/core.html:153
+#: templates/core.html:154
 #, python-format
 msgid ""
 "\n"
@@ -2503,15 +2579,15 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:278
+#: templates/core.html:279
 msgid "Single Login enforced"
 msgstr "Einzelanmeldung erzwungen"
 
-#: templates/core.html:278
+#: templates/core.html:279
 msgid "The old session is now void."
 msgstr "Ihre vorherige Session ist nun ungültig"
 
-#: templates/core.html:294
+#: templates/core.html:295
 msgid "New Messages"
 msgstr "Neue Nachrichten"
 
@@ -3303,10 +3379,6 @@ msgstr "Versendet am"
 msgid "Send protocol"
 msgstr "Protokoll versenden"
 
-#: templates/meetings/tabs/status.html:66
-msgid "Statistics"
-msgstr "Statistik"
-
 #: templates/meetings/tabs/status.html:68
 msgid "Gesamt"
 msgstr ""
@@ -3576,6 +3648,16 @@ msgstr "Abbrechen"
 #: templates/signature/error.html:6
 msgid "Try again"
 msgstr "Nochmal versuchen"
+
+#: templates/statistics/index.html:4
+#, python-format
+msgid "Statistics %(current_year)s"
+msgstr "Statistik %(current_year)s"
+
+#: templates/statistics/index.html:5
+#, python-format
+msgid "Statistics for the year of %(current_year)s"
+msgstr "Statistik für das Jahr %(current_year)s"
 
 #: templates/submissions/acknowledge_message.txt:5
 #, python-format

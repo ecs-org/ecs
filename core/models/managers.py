@@ -141,6 +141,9 @@ class SubmissionQuerySet(models.query.QuerySet):
         """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
         return self.extra(where=['1=0']) 
 
+    def for_year(self, year):
+        return self.filter(ec_number__gte=year*10000, ec_number__lt=(year+1)*10000)
+
 
 class SubmissionManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -220,6 +223,9 @@ class SubmissionManager(AuthorizationManager):
         
     def for_board_lane(self):
         return self.all().for_board_lane()
+
+    def for_year(self, year):
+        return self.all().for_year(year)
 
 
 class SubmissionFormQuerySet(models.query.QuerySet):

@@ -1,0 +1,16 @@
+@import "ecs/variables.scss";
+
+.statistics {
+    .years {
+        margin-bottom: 20px;
+
+        li {
+            clear: both;
+            display: inline-block;
+            list-style-type: none;
+            margin: 0px 5px;
+            &:before { content: "["; }
+            &:after { content: "]"; }
+        }
+    }
+}

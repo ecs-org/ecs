@@ -219,6 +219,7 @@ INSTALLED_APPS = (
     'ecs.boilerplate',
     'ecs.scratchpad',
     'ecs.pki',
+    'ecs.statistics',
 )
 
 # authenticate with email address

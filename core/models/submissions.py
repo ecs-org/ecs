@@ -601,6 +601,10 @@ class SubmissionForm(models.Model):
     @property
     def is_monocentric(self):
         return self.investigators.count() == 1
+
+    @property
+    def is_categorized_monocentric(self):
+        return self.submission_type == SUBMISSION_TYPE_MONOCENTRIC
         
     @property
     def is_categorized_multicentric_and_local(self):
