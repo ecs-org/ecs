@@ -625,7 +625,10 @@ def send_agenda_to_board(request, meeting_pk=None):
             continue
         start, end = timeframe
         time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
-        htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
+        htmlmail = unicode(render_html(request, \
+                   'meetings/messages/boardmember_invitation.html', \
+                   {'meeting': meeting, 'time': time, 'recipient': user, \
+                    'reply_to':settings.DEFAULT_REPLY_TO}))
         deliver(user.email, subject=subject, \
                 message=None, message_html=htmlmail, \
                 from_email=settings.DEFAULT_FROM_EMAIL, \
@@ -634,7 +637,10 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
-        htmlmail = unicode(render_html(request, 'meetings/messages/resident_boardmember_invitation.html', {'meeting': meeting, 'recipient': user}))
+        htmlmail = unicode(render_html(request, \
+                    'meetings/messages/resident_boardmember_invitation.html', \
+                    {'meeting': meeting, 'recipient': user, \
+                    'reply_to':settings.DEFAULT_REPLY_TO}))
         deliver(user.email, subject=subject, \
                 message=None, message_html=htmlmail, \
                 from_email=settings.DEFAULT_FROM_EMAIL, \
