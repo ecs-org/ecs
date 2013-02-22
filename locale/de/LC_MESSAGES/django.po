@@ -1609,8 +1609,8 @@ msgid "test participant"
 msgstr "Prüfungsteilnehmer"
 
 #: core/forms/layout.py:59
-msgid "centers abroad"
-msgstr "Zentren im Ausland"
+msgid "centers abroad respectively non AMG"
+msgstr "Zentren im Ausland bzw. andere Zentren im Inland (wenn nicht AMG)"
 
 #: core/forms/layout.py:61 core/forms/layout.py:62
 msgid "outline"

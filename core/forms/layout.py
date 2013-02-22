@@ -56,7 +56,7 @@ SUBMISSION_FORM_TABS = (
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females', 
             'subject_childbearing', 'subject_noncompetents', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
-        (_(u'centers abroad'), NamedProxy([], 'centers_abroad')),
+        (_(u'centers abroad respectively non AMG'), NamedProxy([], 'centers_abroad')),
     ]),
     Tab('outline', _(u'outline'), [
         (_(u'outline'), [
