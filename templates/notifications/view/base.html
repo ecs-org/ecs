@@ -11,7 +11,7 @@ Meldungen zur laufenden Studie(n)
 {% endblock %}
 
 {% block content %}
-<h2>{{ notification }} vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
+<h2>{{ notification }} vom {{ notification.timestamp|date:'d.m.Y H:i' }}</h2>
 <div class="notification_header">
     <h3>Eingereicht von: {{ notification.user }} <br>{% block notification_header %}{% endblock %}</h3>
 
