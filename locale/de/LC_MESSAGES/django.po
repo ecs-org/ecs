@@ -2337,7 +2337,7 @@ msgstr "Studien nach MPG"
 
 #: statistics/stats.py:46
 msgid "B1 on first vote"
-msgstr "B1 als ersted Votum"
+msgstr "B1 als erstes Votum"
 
 #: statistics/stats.py:47
 msgid "B2 on first vote"
