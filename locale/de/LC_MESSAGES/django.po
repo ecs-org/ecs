@@ -657,11 +657,7 @@ msgstr "Pflegewissenschaftliche Studie"
 
 #: core/paper_forms.py:149
 msgid "Non-interventional Study (NIS)"
-msgstr "Nicht-interventionelle Studie (NIS)"
-
-#: core/paper_forms.py:149
-msgid "as per § 2a Abs. 3 AMG"
-msgstr "nur gem. § 2a Abs. 3 AMG"
+msgstr "Nicht-interventionelle Studie (NIS) nur gem. § 2a Abs. 3 AMG"
 
 #: core/paper_forms.py:150
 msgid "Gender medicine"
