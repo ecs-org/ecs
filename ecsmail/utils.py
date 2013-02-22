@@ -54,13 +54,18 @@ def whitewash(htmltext, puretext=True):
     return string
 
 
-def create_mail(subject, message, from_email, recipient, message_html=None, attachments= None, msgid=None, **kwargs):
+def create_mail(subject, message, from_email, recipient, message_html=None, \
+                attachments= None, msgid=None, rfc2822_headers=None, **kwargs):
     '''
     '''
     if msgid is None:
         msgid = make_msgid()
     headers = {'Message-ID': msgid}
     
+    if type(rfc2822_headers) is dict:
+        for head_key in rfc2822_headers.keys():
+            headers[head_key]=rfc2822_headers[head_key]
+
     if message is None: # make text version out of html if text version is missing
         message = whitewash(message_html)
     
@@ -115,11 +120,15 @@ def deliver(recipient_list, *args, **kwargs):
     return sentids
 
 
-def deliver_to_recipient(recipient, subject, message, from_email, message_html=None, attachments=None, callback=None, msgid=None, nofilter=False, **kwargs):
+def deliver_to_recipient(recipient, subject, message, from_email, \
+                         message_html=None, attachments=None, callback=None, \
+                         msgid=None, nofilter=False, rfc2822_headers=None, \
+                         **kwargs):
     if msgid is None:
         msgid = make_msgid()
 
-    msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
+    msg = create_mail(subject, message, from_email, recipient, message_html, \
+                      attachments, msgid, rfc2822_headers)
     
     backend = None
     if settings.ECSMAIL.get('filter_outgoing_smtp') and not nofilter:

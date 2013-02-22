@@ -626,12 +626,20 @@ def send_agenda_to_board(request, meeting_pk=None):
         start, end = timeframe
         time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = unicode(render_html(request, 'meetings/messages/boardmember_invitation.html', {'meeting': meeting, 'time': time, 'recipient': user}))
-        deliver(user.email, subject=subject, message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        deliver(user.email, subject=subject, \
+                message=None, message_html=htmlmail, \
+                from_email=settings.DEFAULT_FROM_EMAIL, \
+                rfc2822_headers={"Reply-To":settings.DEFAULT_REPLY_TO}, \
+                attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
         htmlmail = unicode(render_html(request, 'meetings/messages/resident_boardmember_invitation.html', {'meeting': meeting, 'recipient': user}))
-        deliver(user.email, subject=subject, message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        deliver(user.email, subject=subject, \
+                message=None, message_html=htmlmail, \
+                from_email=settings.DEFAULT_FROM_EMAIL, \
+                rfc2822_headers={"Reply-To":settings.DEFAULT_REPLY_TO}, \
+                attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
