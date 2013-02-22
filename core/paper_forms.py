@@ -146,7 +146,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.13', 'project_type_questionnaire', _(u'Questionnaire investigation')),
     FieldInfo('2.1.14', 'project_type_psychological_study', None, short_label=_(u'Psychological study')),
     FieldInfo('2.1.15', 'project_type_nursing_study', _(u'Nursing Scientific Study')),
-    FieldInfo('2.1.16', 'project_type_non_interventional_study', _(u'Non-interventional Study (NIS)'), help_text=_(u'as per § 2a Abs. 3 AMG')),
+    FieldInfo('2.1.16', 'project_type_non_interventional_study', _(u'Non-interventional Study (NIS)')),
     FieldInfo('2.1.17', 'project_type_gender_medicine', _(u'Gender medicine')),
     FieldInfo('2.2', 'specialism', _(u'special field')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
