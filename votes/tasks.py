@@ -13,6 +13,7 @@ from django.conf import settings
 from ecs.votes.models import Vote
 from ecs.meetings.models import Meeting
 from ecs.core.models import Submission
+from ecs.core.models.constants import SUBMISSION_LANE_LOCALEC
 from ecs.utils.common_messages import send_submission_message
 from ecs.votes.signals import on_vote_expiry
 from ecs.users.utils import get_office_user
@@ -77,7 +78,7 @@ def send_reminder_messages(today=None):
     if today is None:
         today = datetime.today().date()
 
-    votes = Vote.objects.filter(result='1', published_at__isnull=False, valid_until__isnull=False)
+    votes = Vote.objects.filter(result='1', published_at__isnull=False, valid_until__isnull=False).exclude(submission_form__submission__workflow_lane = SUBMISSION_LANE_LOCALEC)
     for vote in votes:
         valid_until = vote.valid_until.date()
         if today < valid_until:
@@ -95,5 +96,5 @@ def send_reminder_messages(today=None):
 @periodic_task(run_every=timedelta(minutes=30))
 def expire_votes():
     deadline = datetime.now() - relativedelta(months=6)
-    for submission in Submission.objects.filter(is_finished=False).with_vote(positive=True, permanent=True, published=True, valid=None, valid_until__lte=deadline):
+    for submission in Submission.objects.filter(is_finished=False).exclude(workflow_lane=SUBMISSION_LANE_LOCALEC).with_vote(positive=True, permanent=True, published=True, valid=None, valid_until__lte=deadline):
         on_vote_expiry.send(Vote, submission=submission)
