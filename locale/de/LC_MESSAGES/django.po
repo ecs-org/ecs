@@ -1610,7 +1610,7 @@ msgstr "Prüfungsteilnehmer"
 
 #: core/forms/layout.py:59
 msgid "centers abroad respectively non AMG"
-msgstr "Zentren im Ausland bzw. andere Zentren im Inland (wenn nicht AMG)"
+msgstr "Zentren im Ausland bzw. Zentren im Inland die nicht Gegenstand der Einreichung sind"
 
 #: core/forms/layout.py:61 core/forms/layout.py:62
 msgid "outline"
