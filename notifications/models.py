@@ -244,3 +244,9 @@ class NotificationAnswer(models.Model):
                 'answer': self,
                 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             }, submission=submission, cc_groups=cc_groups)
+
+
+NOTIFICATION_MODELS = (
+    Notification, CompletionReportNotification, ProgressReportNotification,
+    AmendmentNotification, SafetyNotification
+)

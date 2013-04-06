@@ -16,6 +16,8 @@ from ecs.core.models import Submission
 from ecs.tasks.models import Task, TaskType
 from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
+from ecs.votes.models import Vote
+from ecs.notifications.models import NOTIFICATION_MODELS, Notification
 
 
 @readonly()
@@ -83,59 +85,69 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         if amg and mpg and thesis and expedited and local_ec and other and past_meetings and next_meeting and upcoming_meetings and no_meeting:
             tasks = all_tasks
         else:
-            from ecs.votes.models import Vote
-            submission_ct = ContentType.objects.get_for_model(Submission)
-            vote_ct = ContentType.objects.get_for_model(Vote)
-            submission_tasks = all_tasks.filter(content_type=submission_ct)
-            vote_tasks = all_tasks.filter(content_type=vote_ct)
-            tasks = all_tasks.exclude(content_type=submission_ct).exclude(content_type=vote_ct)
+            submissions = Submission.objects.all()
 
             if not (past_meetings and next_meeting and upcoming_meetings and no_meeting):
-                qs = []
+                q = Submission.objects.none()
                 if past_meetings:
-                    qs += [Q(pk__in=Submission.objects.past_meetings().values('pk').query)]
+                    q |= Submission.objects.past_meetings()
                 if next_meeting:
-                    qs += [Q(pk__in=Submission.objects.next_meeting().values('pk').query)]
+                    q |= Submission.objects.next_meeting()
                 if upcoming_meetings:
-                    qs += [Q(pk__in=Submission.objects.upcoming_meetings().values('pk').query)]
+                    q |= Submission.objects.upcoming_meetings()
                 if no_meeting:
-                    qs += [Q(pk__in=Submission.objects.no_meeting().values('pk').query)]
-                if qs:
-                    q = reduce(lambda x,y: x|y, qs)
-                    submission_tasks = submission_tasks.filter(data_id__in=Submission.objects.filter(q).values('pk').query)
-                    vote_tasks = vote_tasks.filter(data_id__in=Vote.objects.filter(submission_form__submission__pk__in=Submission.objects.filter(q).values('pk').query).values('pk').query)
-                else:
-                    submission_tasks = submission_tasks.none()
-                    vote_tasks = vote_tasks.none()
+                    q |= Submission.objects.no_meeting()
+                submissions &= q
 
             if not (amg and mpg and thesis and expedited and local_ec and other):
-                amg_q = Q(pk__in=Submission.objects.amg().values('pk').query)
-                mpg_q = Q(pk__in=Submission.objects.mpg().values('pk').query)
-                retrospective_thesis_q = Q(pk__in=Submission.objects.for_thesis_lane().values('pk').query)
-                expedited_q = Q(pk__in=Submission.objects.expedited())
-                local_ec_q = Q(pk__in=Submission.objects.localec())
-                qs = []
-                if amg:
-                    qs += [amg_q]
-                if mpg:
-                    qs += [mpg_q]
-                if thesis:
-                    qs += [retrospective_thesis_q]
-                if expedited:
-                    qs += [expedited_q]
-                if local_ec:
-                    qs += [local_ec_q]
-                if other:
-                    qs += [~amg_q & ~mpg_q & ~retrospective_thesis_q & ~expedited_q & ~local_ec_q]
-                if qs:
-                    q = reduce(lambda x,y: x|y, qs)
-                    submission_tasks = submission_tasks.filter(data_id__in=Submission.objects.filter(q).values('pk').query)
-                    vote_tasks = vote_tasks.filter(data_id__in=Vote.objects.filter(submission_form__submission__pk__in=Submission.objects.filter(q).values('pk').query).values('pk').query)
-                else:
-                    submission_tasks = submission_tasks.none()
-                    vote_tasks = vote_tasks.none()
+                amg_q = Submission.objects.amg()
+                mpg_q = Submission.objects.mpg()
+                thesis_q = Submission.objects.for_thesis_lane()
+                expedited_q = Submission.objects.expedited()
+                local_ec_q = Submission.objects.localec()
+                other_q = Submission.objects.exclude(
+                    pk__in=(amg_q | mpg_q | thesis_q | expedited_q | local_ec_q).values('pk').query)
 
+                q = Submission.objects.none()
+                if amg:
+                    q |= amg_q
+                if mpg:
+                    q |= mpg_q
+                if thesis:
+                    q |= thesis_q
+                if expedited:
+                    q |= expedited_q
+                if local_ec:
+                    q |= local_ec_q
+                if other:
+                    q |= other_q
+                submissions &= q
+
+            submission_q = submissions.values('pk').query
+
+            submission_ct = ContentType.objects.get_for_model(Submission)
+            vote_ct = ContentType.objects.get_for_model(Vote)
+            notification_cts = map(ContentType.objects.get_for_model, NOTIFICATION_MODELS)
+
+            submission_tasks = all_tasks.filter(
+                content_type=submission_ct, data_id__in=submission_q)
+
+            notification_tasks = all_tasks.filter(
+                content_type__in=notification_cts,
+                data_id__in=Notification.objects.filter(
+                    submission_forms__submission__pk__in=submission_q
+                ).values('pk').query)
+
+            vote_tasks = all_tasks.filter(
+                content_type=vote_ct,
+                data_id__in=Vote.objects.filter(
+                    submission_form__submission__pk__in=submission_q
+                ).values('pk').query)
+
+            tasks = all_tasks.exclude(
+                content_type__in=[submission_ct, vote_ct] + notification_cts)
             tasks |= submission_tasks
+            tasks |= notification_tasks
             tasks |= vote_tasks
     
         if not ignore_task_types:
