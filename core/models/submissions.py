@@ -686,7 +686,7 @@ class SubmissionForm(models.Model):
 
     def get_involved_parties(self):
         current_user = get_current_user()
-        if current_user and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at__isnull=True).exists():
+        if current_user and not current_user.get_profile().is_internal and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at__isnull=True).exists():
             return get_reviewing_parties(self)
         return get_involved_parties(self)
 
