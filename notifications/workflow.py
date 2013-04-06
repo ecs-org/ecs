@@ -3,11 +3,10 @@ from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
+from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, SafetyNotification, NOTIFICATION_MODELS
 from ecs.notifications.signals import on_safety_notification_review
 from ecs.notifications.constants import NOTIFICATION_REVIEW_LANE_CHOICES
 
-NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
 
 for cls in NOTIFICATION_MODELS:
     register(cls, autostart_if=lambda n, created: n.submission_forms.exists() and not n.workflow.workflows.exists())

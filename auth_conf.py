@@ -12,7 +12,7 @@ from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification, NotificationAnswer
+from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.audit.models import AuditTrail
@@ -22,7 +22,6 @@ from ecs.boilerplate.models import Text
 from ecs.communication.models import Thread, Message
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
-NOTIFICATION_MODELS = (Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification)
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
