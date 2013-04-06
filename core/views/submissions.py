@@ -903,7 +903,7 @@ def all_submissions(request):
             return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
 
     submissions_q = None
-    extra_context = {}
+    extra_context = {'keyword': keyword}
 
     if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
         try:
