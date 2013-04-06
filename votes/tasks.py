@@ -23,6 +23,7 @@ from ecs.users.utils import get_office_user
 def send_vote_expired(vote):
     recipients = vote.submission_form.get_presenting_parties().get_users()
     recipients.add(get_office_user())
+    submission = vote.get_submission()
 
     url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
@@ -31,15 +32,16 @@ def send_vote_expired(vote):
         vote_date = vote.published_at
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(vote_date)s ist abgelaufen.\n') % {
         'url': url,
-        'ec_number': vote.submission_form.submission.get_ec_number_display(),
+        'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients)
+    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    send_submission_message(submission, subject, text, recipients)
 
 def send_vote_reminder_submitter(vote):
     recipients = vote.submission_form.get_presenting_parties().get_users()
+    submission = vote.get_submission()
 
     url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
@@ -48,15 +50,16 @@ def send_vote_reminder_submitter(vote):
         vote_date = vote.published_at
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(vote_date)s läuft in drei Wochen ab.\n') % {
         'url': url,
-        'ec_number': vote.submission_form.submission.get_ec_number_display(),
+        'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients)
+    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    send_submission_message(submission, subject, text, recipients)
     
 def send_vote_reminder_office(vote):
     recipients = [get_office_user()]
+    submission = vote.get_submission()
 
     url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
@@ -65,12 +68,12 @@ def send_vote_reminder_office(vote):
         vote_date = vote.published_at
     text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(vote_date)s läuft in einer Woche ab.\n') % {
         'url': url,
-        'ec_number': vote.submission_form.submission.get_ec_number_display(),
+        'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % vote.submission_form.submission.get_ec_number_display()
-    send_submission_message(vote.submission_form.submission, subject, text, recipients)
+    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    send_submission_message(submission, subject, text, recipients)
 
 
 @periodic_task(run_every=timedelta(days=1))
@@ -78,7 +81,11 @@ def send_reminder_messages(today=None):
     if today is None:
         today = datetime.today().date()
 
-    votes = Vote.objects.filter(result='1', published_at__isnull=False, valid_until__isnull=False).exclude(submission_form__submission__workflow_lane = SUBMISSION_LANE_LOCALEC)
+    votes = (Vote.objects
+        .filter(result='1', published_at__isnull=False, valid_until__isnull=False)
+        .exclude(
+            submission_form__submission__workflow_lane=SUBMISSION_LANE_LOCALEC,
+            submission_form__submission__is_finished=True))
     for vote in votes:
         valid_until = vote.valid_until.date()
         if today < valid_until:
