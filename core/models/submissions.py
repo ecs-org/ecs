@@ -39,8 +39,6 @@ class Submission(models.Model):
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     befangene = models.ManyToManyField(User, null=True, blank=True, related_name='befangen_for_submissions')
-    billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    valid_until = models.DateField(null=True, blank=True)
     executive_comment = models.TextField(null=True, blank=True)
 
     legal_and_patient_review_required = models.NullBooleanField(default=False)
@@ -57,6 +55,10 @@ class Submission(models.Model):
 
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
+
+    # XXX: are this fields used?
+    billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
+    valid_until = models.DateField(null=True, blank=True)
     
     objects = SubmissionManager()
     
