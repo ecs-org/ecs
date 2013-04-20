@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-21 21:17+0100\n"
+"POT-Creation-Date: 2013-04-20 19:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: billing/views.py:123 core/models/submissions.py:88
+#: billing/views.py:123 core/models/submissions.py:91
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -187,7 +187,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:46 core/models/submissions.py:155 help/models.py:18
+#: checklists/models.py:46 core/models/submissions.py:161 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -216,7 +216,7 @@ msgstr "Anonym"
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
 
-#: checklists/workflow.py:94 notifications/workflow.py:134
+#: checklists/workflow.py:94 notifications/workflow.py:133
 msgid "Publish"
 msgstr "Veröffentlichen"
 
@@ -1066,7 +1066,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:229 core/models/submissions.py:441
+#: core/paper_forms.py:229 core/models/submissions.py:450
 msgid "open"
 msgstr "offen"
 
@@ -1082,7 +1082,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:233 core/models/submissions.py:441
+#: core/paper_forms.py:233 core/models/submissions.py:450
 msgid "blind"
 msgstr "blind"
 
@@ -1098,7 +1098,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:237 core/models/submissions.py:441
+#: core/paper_forms.py:237 core/models/submissions.py:450
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1422,7 +1422,7 @@ msgstr "Einreichung nicht akzeptiert"
 msgid "Acknowledge"
 msgstr "Bestätigen"
 
-#: core/workflow.py:160 notifications/workflow.py:67
+#: core/workflow.py:160 notifications/workflow.py:66
 msgid "Reject"
 msgstr "Ablehnen"
 
@@ -1502,14 +1502,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:339 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:709 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:718 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:240 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:340 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:711 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:720 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:242 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1610,7 +1610,9 @@ msgstr "Prüfungsteilnehmer"
 
 #: core/forms/layout.py:59
 msgid "centers abroad respectively non AMG"
-msgstr "Zentren im Ausland bzw. Zentren im Inland die nicht Gegenstand der Einreichung sind"
+msgstr ""
+"Zentren im Ausland bzw. Zentren im Inland die nicht Gegenstand der "
+"Einreichung sind"
 
 #: core/forms/layout.py:61 core/forms/layout.py:62
 msgid "outline"
@@ -1771,53 +1773,57 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:815 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:824 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:815 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:824 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:150
-msgid "Finished"
-msgstr "Abgeschlossen"
+#: core/models/submissions.py:154
+msgid "Expired"
+msgstr "Abgelaufen"
 
-#: core/models/submissions.py:152
+#: core/models/submissions.py:156
+msgid "Finished"
+msgstr "Beendet"
+
+#: core/models/submissions.py:158
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:154
+#: core/models/submissions.py:160
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:462
+#: core/models/submissions.py:471
 msgid "single-sided"
 msgstr "einseitig"
 
-#: core/models/submissions.py:462
+#: core/models/submissions.py:471
 msgid "double-sided"
 msgstr "zweiseitig"
 
-#: core/models/submissions.py:715 templates/submissions/readonly_form.html:244
+#: core/models/submissions.py:724 templates/submissions/readonly_form.html:244
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:717
+#: core/models/submissions.py:726
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:719
+#: core/models/submissions.py:728
 msgid "NIS"
 msgstr ""
 
-#: core/models/submissions.py:850
+#: core/models/submissions.py:859
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:850
+#: core/models/submissions.py:859
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -2174,7 +2180,7 @@ msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: meetings/views.py:617 meetings/views.py:704
+#: meetings/views.py:617 meetings/views.py:718
 msgid "time slot"
 msgstr "Zeitfenster"
 
@@ -2183,11 +2189,11 @@ msgstr "Zeitfenster"
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: meetings/views.py:660
+#: meetings/views.py:674
 msgid "Expedited Meeting at {0}"
 msgstr "Expedited Sitzung am {0}"
 
-#: meetings/views.py:686
+#: meetings/views.py:700
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
 
@@ -2268,16 +2274,16 @@ msgstr "Offene Meldungen"
 msgid "save successful"
 msgstr "speichern erflogreich"
 
-#: notifications/workflow.py:87 notifications/workflow.py:108
+#: notifications/workflow.py:86 notifications/workflow.py:107
 msgid "Ready"
 msgstr "Fertig"
 
-#: notifications/workflow.py:88 notifications/workflow.py:135
-#: notifications/workflow.py:149
+#: notifications/workflow.py:87 notifications/workflow.py:134
+#: notifications/workflow.py:148
 msgid "Needs further review"
 msgstr "Weitere Begutachtung erforderlich"
 
-#: notifications/workflow.py:148
+#: notifications/workflow.py:147
 msgid "Sign"
 msgstr "Unterzeichnen"
 
@@ -4678,7 +4684,7 @@ msgstr "Kommentar"
 msgid "No Result"
 msgstr ""
 
-#: votes/tasks.py:30
+#: votes/tasks.py:33
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -4686,12 +4692,12 @@ msgid ""
 "abgelaufen.\n"
 msgstr ""
 
-#: votes/tasks.py:36 votes/tasks.py:53 votes/tasks.py:70
+#: votes/tasks.py:39 votes/tasks.py:57 votes/tasks.py:75
 #, python-format
 msgid "Ablauf des Votums für die Studie EK-Nr. %s"
 msgstr ""
 
-#: votes/tasks.py:47
+#: votes/tasks.py:51
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -4699,7 +4705,7 @@ msgid ""
 "Wochen ab.\n"
 msgstr ""
 
-#: votes/tasks.py:64
+#: votes/tasks.py:69
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -4710,6 +4716,3 @@ msgstr ""
 #: votes/triggers.py:30
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
-
-#~ msgid "B4 Votes"
-#~ msgstr "B4 Voten"

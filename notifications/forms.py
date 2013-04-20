@@ -26,24 +26,22 @@ class RejectableNotificationAnswerForm(NotificationAnswerForm):
 
 
 def get_usable_submission_forms():
-    return SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(submission__presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+    submission_forms = (SubmissionForm.objects
+        .current()
+        .with_any_vote(permanent=True, positive=True, published=True, valid=True))
+    return submission_forms.order_by('submission__ec_number')
 
 class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
     class Meta:
         model = Notification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document', 'review_lane')
 
-class MultiNotificationForm(NotificationForm):
-    def __init__(self, *args, **kwargs):
-        super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = get_usable_submission_forms()
-
-class SafetyNotificationForm(MultiNotificationForm):
+class SafetyNotificationForm(NotificationForm):
     comments = forms.CharField(widget=forms.Textarea(), initial=_(u'Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses.'))
 
     def __init__(self, *args, **kwargs):
-        super(MultiNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = SubmissionForm.objects.current().with_any_vote(permanent=True, positive=True, published=True, valid=True).filter(submission__susar_presenter=get_current_user(), submission__is_finished=False).order_by('submission__ec_number')
+        super(SafetyNotificationForm, self).__init__(*args, **kwargs)
+        self.fields['submission_forms'].queryset = get_usable_submission_forms().filter(submission__susar_presenter=get_current_user())
         
     class Meta:
         model = SafetyNotification
@@ -54,7 +52,7 @@ class SingleStudyNotificationForm(NotificationForm):
     
     def __init__(self, *args, **kwargs):
         super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_form'].queryset = get_usable_submission_forms()
+        self.fields['submission_form'].queryset = get_usable_submission_forms().filter(submission__presenter=get_current_user()).exclude(submission__is_finished=True, submission__is_expired=False)
 
     class Meta:
         model = Notification

@@ -49,6 +49,7 @@ class Submission(models.Model):
 
     is_transient = models.BooleanField(default=False)
     is_finished = models.BooleanField(default=False)
+    is_expired = models.BooleanField(default=False)
 
     presenter = models.ForeignKey(User, related_name='presented_submissions')
     susar_presenter = models.ForeignKey(User, related_name='susar_presented_submissions')
@@ -145,10 +146,13 @@ class Submission(models.Model):
     @property
     def is_active(self):
         return self.forms.with_vote(published=True, valid=True, permanent=True, positive=True).exists()
-        
+
+    # XXX: denormalize lifecycle_phase in db
     @property
     def lifecycle_phase(self):
-        if self.is_finished:
+        if self.is_expired:
+            return _('Expired')
+        elif self.is_finished:
             return _('Finished')
         elif self.is_active:
             return _('Active')
@@ -212,8 +216,12 @@ class Submission(models.Model):
         return self.get_ec_number_display()
         
     def finish(self, expired=False):
+        # TODO: separate finish/expire
         self.is_finished = True
+        self.is_expired = expired
         self.save()
+
+        # XXX: this signal doesn't seem to be used
         on_study_finish.send(sender=Submission, submission=self, expired=expired)
 
     def get_current_docstash(self):
@@ -576,7 +584,7 @@ class SubmissionForm(models.Model):
         
     def allows_amendments(self, user):
         s = self.submission
-        if s.presenter == user and self.is_current and not s.is_finished:
+        if s.presenter == user and self.is_current:
             if not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True).unanswered().exists() and not Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True, answer__published_at__isnull=True).answered().exists():
                 return s.forms.with_vote(permanent=True, positive=True, published=True, valid=True).exists()
         return False
