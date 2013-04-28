@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime, timedelta
-from celery.decorators import periodic_task
-from dateutil.relativedelta import relativedelta
 
 from django.db.models import Q
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
-from django.conf import settings
+
+from celery.decorators import periodic_task
+from celery.schedules import crontab
 
 from ecs.votes.models import Vote
-from ecs.meetings.models import Meeting
-from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_LOCALEC
 from ecs.utils.common_messages import send_submission_message
-from ecs.votes.signals import on_vote_expiry
 from ecs.users.utils import get_office_user
-
 
 
 def send_vote_expired(vote):
@@ -100,8 +94,8 @@ def send_reminder_messages(today=None):
         elif days_valid == -1:
             send_vote_expired(vote)
 
-@periodic_task(run_every=timedelta(minutes=30))
+
+@periodic_task(run_every=crontab(hour=3, minute=58))
 def expire_votes():
-    deadline = datetime.now() - relativedelta(months=6)
-    for submission in Submission.objects.filter(is_finished=False).exclude(workflow_lane=SUBMISSION_LANE_LOCALEC).with_vote(positive=True, permanent=True, published=True, valid=None, valid_until__lte=deadline):
-        on_vote_expiry.send(Vote, submission=submission)
+    for vote in Vote.objects.filter(valid_until__lt=datetime.now(), is_expired=False):
+        vote.expire()

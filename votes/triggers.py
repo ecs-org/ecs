@@ -64,9 +64,3 @@ def on_vote_published(sender, **kwargs):
     elif vote.result == '2':
         task_type = TaskType.objects.get(workflow_node__uid='b2_resubmission', workflow_node__graph__auto_start=True)
         task_type.workflow_node.bind(sf.submission.workflow.workflows[0]).receive_token(None)
-
-@connect(signals.on_vote_expiry)
-def on_vote_expiry(sender, **kwargs):
-    print "vote expired", kwargs
-    submission = kwargs['submission']
-    submission.finish(expired=True)

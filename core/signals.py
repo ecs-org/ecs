@@ -1,6 +1,5 @@
 from django.dispatch import Signal
 
-on_study_finish = Signal() # sender=Submission, kwargs: submission
 on_study_change = Signal() # sender=Submission, kwargs: submission, old_form, new_form
 on_study_submit = Signal() # sender=Submission, kwargs: submission, form, user
 on_presenter_change = Signal() # sender=Submission, kwargs: submission, old_presenter, new_presenter

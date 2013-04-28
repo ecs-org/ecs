@@ -7,14 +7,8 @@ from django.db import models
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        for submission in orm.Submission.objects.filter(is_finished=True):
-            completion_notifications = (orm['notifications.Notification'].objects
-                .filter(
-                    submission_forms__submission=submission, type__finishes_study=True,
-                    answer__published_at__isnull=False, answer__is_rejected=False))
-            if not completion_notifications.exists():
-                submission.is_expired = True
-                submission.save()
+        # intentionally do nothing
+        pass
 
 
     def backwards(self, orm):

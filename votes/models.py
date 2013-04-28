@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
-from ecs.votes.signals import on_vote_publication
+from ecs.votes.signals import on_vote_publication, on_vote_expiry
 
 
 class Vote(models.Model):
@@ -21,6 +21,7 @@ class Vote(models.Model):
     text = models.TextField(blank=True, verbose_name=_(u'comment'))
     is_draft = models.BooleanField(default=False)
     is_final_version = models.BooleanField(default=False)
+    is_expired = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
     valid_until = models.DateTimeField(null=True)
@@ -36,6 +37,7 @@ class Vote(models.Model):
     
     @property
     def result_text(self):
+        # FIXME: use get_result_display instead
         if self.result is None:
             return _('No Result')
         return dict(VOTE_RESULT_CHOICES)[self.result]
@@ -67,10 +69,17 @@ class Vote(models.Model):
         if self.submission_form:
             Vote.objects.filter(pk__in=self.submission_form.submission.forms.values('current_published_vote__pk')).exclude(pk=self.pk).update(valid_until=now)
         on_vote_publication.send(sender=Vote, vote=self)
+
+    def expire(self):
+        assert not self.is_expired
+        self.is_expired = True
+        self.save()
+        on_vote_expiry.send(Vote, vote=self)
     
     def extend(self):
         d = self.valid_until
         self.valid_until += timedelta(days=365)
+        self.is_expired = False
         self.save()
     
     @property
@@ -95,10 +104,12 @@ class Vote(models.Model):
         
     @property
     def activates(self):
+        # XXX: is this used anywhere?
         return self.result == '1'
         
     @property
     def is_valid(self):
+        # XXX: is this used anywhere?
         return self.valid_until < datetime.now()
 
     def get_render_context(self):

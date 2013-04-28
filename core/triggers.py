@@ -12,6 +12,8 @@ from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
+from ecs.votes.signals import on_vote_expiry
+
 
 def send_submission_message(submission, user, subject, template, **kwargs):
     send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
@@ -69,6 +71,7 @@ def on_presenter_change(sender, **kwargs):
         for task in Task.objects.for_data(submission).filter(task_type__workflow_node__uid__in=['resubmission', 'b2_resubmission']).open():
             task.assign(new_presenter)
 
+
 @connect(signals.on_susar_presenter_change)
 def on_susar_presenter_change(sender, **kwargs):
     submission = kwargs['submission']
@@ -116,6 +119,7 @@ def on_initial_thesis_review(sender, **kwargs):
             meeting = submission.schedule_to_meeting()
             meeting.update_assigned_categories()
 
+
 LANE_TASKS = {
     SUBMISSION_LANE_RETROSPECTIVE_THESIS : (
         'initial_thesis_review',
@@ -136,6 +140,7 @@ LANE_TASKS = {
     ),
 }
 
+
 @connect(signals.on_categorization_review)
 def on_categorization_review(sender, **kwargs):
     submission = kwargs['submission']
@@ -151,9 +156,18 @@ def on_categorization_review(sender, **kwargs):
         if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
             tasks.filter(task_type__workflow_node__uid='initial_review').mark_deleted()
 
+
 @connect(signals.on_b2_upgrade)
 def on_b2_upgrade(sender, **kwargs):
     submission, vote = kwargs['submission'], kwargs['vote']
     vote.submission_form.is_acknowledged = True
     vote.submission_form.save()
     vote.submission_form.mark_current()
+
+
+@connect(on_vote_expiry)
+def expire_submission(sender, **kwargs):
+    vote = kwargs['vote']
+    submission = vote.get_submission()
+    if submission and not submission.is_localec and vote.is_positive and vote.is_permanent:
+        submission.expire()

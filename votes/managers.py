@@ -3,6 +3,7 @@ from django.db import models
 from ecs.authorization import AuthorizationManager
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 
+
 class VoteQuerySet(models.query.QuerySet):
     def positive(self):
         return self.filter(result__in=POSITIVE_VOTE_RESULTS)

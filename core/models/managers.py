@@ -9,10 +9,9 @@ from ecs.core.models.constants import (SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 from ecs.meetings.models import Meeting
 
-def get_vote_filter_q(prefix, *args, **kwargs):
+def get_vote_filter_q(**kwargs):
     accepted_votes = set()
     f = {}
-    prefix = ('%s__' % prefix) if prefix else ''
     if kwargs.get('positive', False):
         accepted_votes |= set(POSITIVE_VOTE_RESULTS)
     if kwargs.get('negative', False):
@@ -22,14 +21,9 @@ def get_vote_filter_q(prefix, *args, **kwargs):
             accepted_votes &= set(PERMANENT_VOTE_RESULTS)
         else:
             accepted_votes = set(PERMANENT_VOTE_RESULTS)
-    f['%svotes__result__in' % prefix] = accepted_votes
+    f['votes__result__in'] = accepted_votes
     if kwargs.get('published', True):
-        f['%svotes__published_at__isnull' % prefix] = False
-    if kwargs.get('valid', True):
-        f['%svotes__valid_until__gte' % prefix] = datetime.now()
-    for key, value in kwargs.iteritems():
-        if key.startswith('valid_until'):
-            f['%svotes__%s' % (prefix, key)] = value
+        f['votes__published_at__isnull'] = False
     return Q(**f)
 
 
@@ -45,9 +39,10 @@ class SubmissionQuerySet(models.query.QuerySet):
 
     def amg_mpg(self):
         return self.amg() & self.mpg()
-    
-    def with_vote(self, *args, **kwargs):
-        return self.filter(get_vote_filter_q('forms', *args, **kwargs))
+
+    def with_vote(self, **kwargs):
+        from ecs.core.models import SubmissionForm
+        return self.filter(id__in=SubmissionForm.objects.with_vote(**kwargs).values('submission_id').query)
 
     def _with_explicit_vote(self, *results, **kwargs):
         q = Q(current_submission_form__current_published_vote__isnull=False, current_submission_form__current_published_vote__result__in=results)
@@ -161,11 +156,11 @@ class SubmissionManager(AuthorizationManager):
     def not_amg_and_not_mpg(self):
         return self.all().not_amg_and_not_mpg()
 
+    def with_vote(self, **kwargs):
+        return self.all().with_vote(**kwargs)
+
     def new(self):
         return self.all().new()
-
-    def with_vote(self, *args, **kwargs):
-        return self.all().with_vote(*args, **kwargs)
 
     def b1(self):
         return self.all().b1()
@@ -233,10 +228,11 @@ class SubmissionFormQuerySet(models.query.QuerySet):
         return self.filter(submission__current_submission_form__id=models.F('id'))
 
     def with_vote(self, **kwargs):
-        return self.filter(get_vote_filter_q(None, **kwargs))
+        return self.filter(get_vote_filter_q(**kwargs))
 
     def with_any_vote(self, **kwargs):
-        return self.filter(get_vote_filter_q('submission__forms', **kwargs))
+        from ecs.core.models import Submission
+        return self.filter(submission__id__in=Submission.objects.with_vote(**kwargs).values('id').query)
 
 class SubmissionFormManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -245,11 +241,11 @@ class SubmissionFormManager(AuthorizationManager):
     def current(self):
         return self.all().current()
         
-    def with_vote(self, *args, **kwargs):
-        return self.all().with_vote(*args, **kwargs)
+    def with_vote(self, **kwargs):
+        return self.all().with_vote(**kwargs)
         
-    def with_any_vote(self, *args, **kwargs):
-        return self.all().with_any_vote(*args, **kwargs)
+    def with_any_vote(self, **kwargs):
+        return self.all().with_any_vote(**kwargs)
 
 
 class TemporaryAuthorizationManager(models.Manager):
