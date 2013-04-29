@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
-from ecs.votes.signals import on_vote_publication, on_vote_expiry
+from ecs.votes.signals import on_vote_publication, on_vote_expiry, on_vote_extension
 
 
 class Vote(models.Model):
@@ -81,6 +81,7 @@ class Vote(models.Model):
         self.valid_until += timedelta(days=365)
         self.is_expired = False
         self.save()
+        on_vote_extension.send(Vote, vote=self)
     
     @property
     def is_positive(self):

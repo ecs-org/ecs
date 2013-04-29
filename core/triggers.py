@@ -12,7 +12,7 @@ from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
-from ecs.votes.signals import on_vote_expiry
+from ecs.votes.signals import on_vote_expiry, on_vote_extension
 
 
 def send_submission_message(submission, user, subject, template, **kwargs):
@@ -171,3 +171,12 @@ def expire_submission(sender, **kwargs):
     submission = vote.get_submission()
     if submission and not submission.is_localec and vote.is_positive and vote.is_permanent:
         submission.expire()
+
+
+@connect(on_vote_extension)
+def extend_submission(sender, **kwargs):
+    vote = kwargs['vote']
+    submission = vote.get_submission()
+    if submission:
+        submission.is_expired = False
+        submission.save()
