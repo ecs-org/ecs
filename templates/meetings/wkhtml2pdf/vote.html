@@ -101,15 +101,14 @@
 {% endif %}
 </table> 
 
+<h2 class="metadata">Ergänzende Kommentare</h2>
 {% if past_votes %}
-    <h2 class="metadata">Kommentare</h2>
-    <b>Kommentare:</b><br>
     {% for vote in past_votes %}
+        <b>Ergänzende Kommentare {% if vote.top %} der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}:</b><br>
         <p>{{ vote.text|linebreaksbr }}</p>
     {% endfor %}
 {% endif %}
 
-<h2 class="metadata">Ergänzende Kommentare</h2>
 {% if vote.text %}
   <b>Ergänzende Kommentare{% if vote.top %} der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}:</b><br />
   <p>
