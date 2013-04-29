@@ -12,12 +12,6 @@
     {{ vote.text|linebreaksbr }}<br />
 {% endif %}
 
-{% if submission.current_submission_form.is_amg or submission.current_submission_form.is_mpg %}
-<span class="bold">
-    Die Ethik-Kommission geht - rechtlich unverbindlich – davon aus, daß es sich um eine klinische Prüfung gemäß {% if submission.current_submission_form.is_amg %}AMG{% endif %}{% if submission.current_submission_form.is_amg and submission.current_submission_form.is_mpg %}/{% endif %}{% if submission.current_submission_form.is_mpg %}MPG{% endif %} handelt.
-</span><br />
-{% endif %}
-
 
 Mitgliederliste der Ethik-Kommission (aktueller Stand am Sitzungstag) beiliegend.<br />
 {% if submission.befangene.count %}
