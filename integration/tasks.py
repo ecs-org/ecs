@@ -4,7 +4,7 @@ from django.conf import settings
 
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
-from celery.signals import task_failure
+from celery.signals import task_failure, worker_ready
 from sentry.client.handlers import SentryHandler
 
 from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError
@@ -29,6 +29,12 @@ def process_failure_signal(exception, traceback, sender, task_id, signal, args, 
         }
     )
 task_failure.connect(process_failure_signal)
+
+
+def worker_startup(**kwargs):
+    from ecs.integration.startup import startup
+    startup()
+worker_ready.connect(worker_startup)
 
 
 @periodic_task(run_every=crontab(hour=3, minute=58))
