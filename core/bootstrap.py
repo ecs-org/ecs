@@ -294,6 +294,7 @@ def medcategories():
         (u'Unfall', u'Unfallchirurgie'),
         (u'PubHealth', u'Public Health'),
         (u'fMRTPsych', u'fMRT Psychologie'),
+        (u'Wartesaal', u'Wartesaal'),
     )
     return categories
 
