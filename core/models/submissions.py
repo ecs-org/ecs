@@ -446,7 +446,7 @@ class SubmissionForm(models.Model):
     german_additional_info = models.TextField(null=True, blank=True)
     
     # 8.1
-    study_plan_blind = models.SmallIntegerField(choices=[(0, ugettext_lazy('open')), (1, ugettext_lazy('blind')), (2, ugettext_lazy('double-blind'))])
+    study_plan_blind = models.SmallIntegerField(choices=[(0, ugettext_lazy('open')), (1, ugettext_lazy('blind')), (2, ugettext_lazy('double-blind')), (3, ugettext_lazy('not applicable'))])
     study_plan_observer_blinded = models.BooleanField()
     study_plan_randomized = models.BooleanField()
     study_plan_parallelgroups = models.BooleanField()
@@ -640,6 +640,10 @@ class SubmissionForm(models.Model):
     @property
     def study_plan_double_blind(self):
         return self.study_plan_blind == 2
+
+    @property
+    def study_plan_not_applicable(self):
+        return self.study_plan_blind == 3
 
     @property
     def study_plan_alpha_single_sided(self):

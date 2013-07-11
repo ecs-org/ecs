@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-20 19:55+0200\n"
+"POT-Creation-Date: 2013-07-11 15:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -187,7 +187,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: checklists/models.py:46 core/models/submissions.py:161 help/models.py:18
+#: checklists/models.py:46 core/models/submissions.py:160 help/models.py:18
 #: templates/boilerplate/list.html:10 templates/meetings/tabs/status.html:16
 msgid "New"
 msgstr "Neu"
@@ -1066,7 +1066,7 @@ msgstr "Weitere Informationen"
 msgid "Open / Blind / Double-blind"
 msgstr "Offen / Blind / Doppelblind"
 
-#: core/paper_forms.py:229 core/models/submissions.py:450
+#: core/paper_forms.py:229 core/models/submissions.py:449
 msgid "open"
 msgstr "offen"
 
@@ -1082,7 +1082,7 @@ msgstr "Parallelgruppen"
 msgid "monocentric"
 msgstr "monozentrisch"
 
-#: core/paper_forms.py:233 core/models/submissions.py:450
+#: core/paper_forms.py:233 core/models/submissions.py:449
 msgid "blind"
 msgstr "blind"
 
@@ -1098,7 +1098,7 @@ msgstr "cross-over"
 msgid "multicentric"
 msgstr "multizentrisch"
 
-#: core/paper_forms.py:237 core/models/submissions.py:450
+#: core/paper_forms.py:237 core/models/submissions.py:449
 msgid "double-blind"
 msgstr "doppelblind"
 
@@ -1397,24 +1397,24 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
-#: core/triggers.py:27
+#: core/triggers.py:29
 msgid "Submission of study EC-Nr. {ec_number}"
 msgstr "Einreichung der Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:64 core/triggers.py:66 core/triggers.py:78
-#: core/triggers.py:80
+#: core/triggers.py:66 core/triggers.py:68 core/triggers.py:81
+#: core/triggers.py:83
 msgid "Studie {ec_number}"
 msgstr "Studie {ec_number}"
 
-#: core/triggers.py:87
+#: core/triggers.py:90
 msgid "Acknowledgement of Receipt"
 msgstr "Eingangsbestätigung"
 
-#: core/triggers.py:106
+#: core/triggers.py:109
 msgid "Changes to study EC-Nr. {ec_number}"
 msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 
-#: core/triggers.py:108
+#: core/triggers.py:111
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
@@ -1783,27 +1783,31 @@ msgstr "Frau"
 msgid "Mr"
 msgstr "Herr"
 
-#: core/models/submissions.py:154
-msgid "Expired"
-msgstr "Abgelaufen"
-
-#: core/models/submissions.py:156
+#: core/models/submissions.py:153
 msgid "Finished"
 msgstr "Beendet"
 
-#: core/models/submissions.py:158
+#: core/models/submissions.py:155
+msgid "Expired"
+msgstr "Abgelaufen"
+
+#: core/models/submissions.py:157
 msgid "Active"
 msgstr "Aktiv"
 
-#: core/models/submissions.py:160
+#: core/models/submissions.py:159
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: core/models/submissions.py:471
+#: core/models/submissions.py:449
+msgid "not applicable"
+msgstr "nicht zutreffend"
+
+#: core/models/submissions.py:470
 msgid "single-sided"
 msgstr "einseitig"
 
-#: core/models/submissions.py:471
+#: core/models/submissions.py:470
 msgid "double-sided"
 msgstr "zweiseitig"
 
@@ -2245,7 +2249,7 @@ msgid ""
 "Nutzen/Risikoverhältnisses."
 msgstr ""
 
-#: notifications/forms.py:53 templates/billing/external_review_summary.html:19
+#: notifications/forms.py:54 templates/billing/external_review_summary.html:19
 msgid "Study"
 msgstr "Studie"
 
@@ -4680,11 +4684,11 @@ msgstr "Korrektur gelesen und gültig"
 msgid "comment"
 msgstr "Kommentar"
 
-#: votes/models.py:40
+#: votes/models.py:42
 msgid "No Result"
 msgstr ""
 
-#: votes/tasks.py:33
+#: votes/tasks.py:27
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -4692,12 +4696,12 @@ msgid ""
 "abgelaufen.\n"
 msgstr ""
 
-#: votes/tasks.py:39 votes/tasks.py:57 votes/tasks.py:75
+#: votes/tasks.py:33 votes/tasks.py:51 votes/tasks.py:69
 #, python-format
 msgid "Ablauf des Votums für die Studie EK-Nr. %s"
 msgstr ""
 
-#: votes/tasks.py:51
+#: votes/tasks.py:45
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
@@ -4705,7 +4709,7 @@ msgid ""
 "Wochen ab.\n"
 msgstr ""
 
-#: votes/tasks.py:69
+#: votes/tasks.py:63
 #, python-format
 msgid ""
 "Das Votum für die Studie <a href=\"#\" onclick=\"window.parent.location."
