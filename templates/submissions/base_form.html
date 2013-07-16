@@ -297,9 +297,9 @@
             new ecs.FormFieldController(['id_study_plan_dataprotection_anonalgoritm'], {
                 sources: ['id_study_plan_dataprotection_choice'],
                 auto: function(values, initial){
-                    this.setDisabled(values[0] != 'non-personal');
+                    this.setDisabled(values[0] == 'personal');
                     ['id_study_plan_dataprotection_anonalgoritm'].map($).each(function(f){
-                        this.requireField(f, values[0] == 'non-personal');
+                        this.requireField(f, values[0] != 'personal');
                     }, this);
                 }
             });

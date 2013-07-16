@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-11 15:28+0200\n"
+"POT-Creation-Date: 2013-07-12 09:29+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1502,14 +1502,14 @@ msgid "No Meeting"
 msgstr "Keine Sitzung"
 
 #: core/forms/forms.py:339 core/forms/layout.py:98 core/forms/layout.py:100
-#: core/models/submissions.py:718 templates/meetings/tabs/status.html:76
+#: core/models/submissions.py:722 templates/meetings/tabs/status.html:76
 #: templates/submissions/readonly_form.html:240 templates/tasks/tasks.inc:26
 #: templates/tasks/tasks_full.inc:25
 msgid "AMG"
 msgstr "AMG"
 
 #: core/forms/forms.py:340 core/forms/layout.py:107 core/forms/layout.py:109
-#: core/models/submissions.py:720 templates/meetings/tabs/status.html:81
+#: core/models/submissions.py:724 templates/meetings/tabs/status.html:81
 #: templates/submissions/readonly_form.html:242 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "MPG"
@@ -1524,7 +1524,7 @@ msgstr "Andere"
 msgid "Not Categorized"
 msgstr "Nicht Eingestuft"
 
-#: core/forms/forms.py:344 core/models/constants.py:26
+#: core/forms/forms.py:344 core/models/constants.py:27
 #: templates/meetings/tabs/status.html:71
 msgid "board"
 msgstr "Standard"
@@ -1537,7 +1537,7 @@ msgstr "Diplomarbeit"
 msgid "Expedited"
 msgstr "Expedited"
 
-#: core/forms/forms.py:347 core/models/constants.py:29
+#: core/forms/forms.py:347 core/models/constants.py:30
 #: templates/meetings/tabs/status.html:106
 msgid "Local EC"
 msgstr "Lokale EK"
@@ -1764,21 +1764,25 @@ msgstr "personenbezogen"
 msgid "implicit individual-related"
 msgstr "indirekt personenbezogen"
 
-#: core/models/constants.py:27 templates/tasks/tasks.inc:29
+#: core/models/constants.py:18
+msgid "completely anonymous"
+msgstr "vollständig anonymisiert"
+
+#: core/models/constants.py:28 templates/tasks/tasks.inc:29
 #: templates/tasks/tasks_full.inc:28
 msgid "expedited"
 msgstr "Expedited"
 
-#: core/models/constants.py:28
+#: core/models/constants.py:29
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: core/models/names.py:37 core/models/submissions.py:824 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:828 users/forms.py:57
 #: users/models.py:33
 msgid "Ms"
 msgstr "Frau"
 
-#: core/models/names.py:37 core/models/submissions.py:824 users/forms.py:57
+#: core/models/names.py:37 core/models/submissions.py:828 users/forms.py:57
 #: users/models.py:33
 msgid "Mr"
 msgstr "Herr"
@@ -1811,23 +1815,23 @@ msgstr "einseitig"
 msgid "double-sided"
 msgstr "zweiseitig"
 
-#: core/models/submissions.py:724 templates/submissions/readonly_form.html:244
+#: core/models/submissions.py:728 templates/submissions/readonly_form.html:244
 msgid "minors"
 msgstr "Minderjährige"
 
-#: core/models/submissions.py:726
+#: core/models/submissions.py:730
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: core/models/submissions.py:728
+#: core/models/submissions.py:732
 msgid "NIS"
 msgstr ""
 
-#: core/models/submissions.py:859
+#: core/models/submissions.py:863
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: core/models/submissions.py:859
+#: core/models/submissions.py:863
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
