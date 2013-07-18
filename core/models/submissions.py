@@ -731,6 +731,18 @@ class SubmissionForm(models.Model):
         if self.project_type_non_interventional_study:
             bits.append(_('NIS'))
         return u', '.join(bits)
+    
+    @property
+    def study_plan_dataprotection_none(self):
+        return self.study_plan_dataprotection_choice == 'personal'
+
+    @property
+    def study_plan_dataprotection_partial(self):
+        return self.study_plan_dataprotection_choice == 'non-personal'
+
+    @property
+    def study_plan_dataprotection_full(self):
+        return self.study_plan_dataprotection_choice == 'anonymous'
 
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor'):

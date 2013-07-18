@@ -15,6 +15,7 @@ SUBMISSION_TYPE_CHOICES = (
 SUBMISSION_INFORMATION_PRIVACY_CHOICES = (
     ('personal', _('individual-related')), 
     ('non-personal', _('implicit individual-related')),
+    ('anonymous', _('completely anonymous')),
 )
 
 SUBMISSION_LANE_RETROSPECTIVE_THESIS = 1
