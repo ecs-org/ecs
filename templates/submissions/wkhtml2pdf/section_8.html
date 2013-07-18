@@ -131,9 +131,10 @@ Qualifikation)? </p>
 
 <p>8.6 Datenschutz </p>
 <p>
- 8.6.1 Die Datenverarbeitung erfolgt 
- {{ submission_form.study_plan_dataprotection_reason|checkbox }} a) personenbezogen 
- {{ submission_form.study_plan_dataprotection_reason|not|checkbox }} b) indirekt personenbezogen </p>
+ 8.6.1 Die Datenverarbeitung erfolgt <br>
+ {{ submission_form.study_plan_dataprotection_none|checkbox }} a) personenbezogen 
+ {{ submission_form.study_plan_dataprotection_partial|checkbox }} b) indirekt personenbezogen
+ {{ submission_form.study_plan_dataprotection_full|checkbox }} c) vollständig anonymisiert </p>
 
 <table>
     <tr>
@@ -155,7 +156,7 @@ Qualifikation)? </p>
 </table>
 
 <p>
-    8.6.3 Wenn b): Wie erfolgt die Anonymisierung?
+    8.6.3 Wenn b) oder c): Wie erfolgt die Anonymisierung?
     <div class="value">
         {{ submission_form.study_plan_dataprotection_anonalgoritm|default_if_none:""|linebreaksbr }}
     </div>

@@ -734,15 +734,15 @@ class SubmissionForm(models.Model):
     
     @property
     def study_plan_dataprotection_none(self):
-        return self.study_plan_dataprotection_reason == 0
+        return self.study_plan_dataprotection_choice == 'personal'
 
     @property
     def study_plan_dataprotection_partial(self):
-        return self.study_plan_dataprotection_reason == 1
+        return self.study_plan_dataprotection_choice == 'non-personal'
 
     @property
     def study_plan_dataprotection_full(self):
-        return self.study_plan_dataprotection_reason == 2
+        return self.study_plan_dataprotection_choice == 'anonymous'
 
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor'):
