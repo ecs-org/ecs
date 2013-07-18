@@ -310,7 +310,7 @@ FormInfo(Investigator, fields=(
     FieldInfo('10.7', 'jus_practicandi', _(u'Jus practicandi')),
     FieldInfo('10.8', 'specialist', _(u'specialist for')),
     FieldInfo('10.9', 'certified', _(u'certified')),
-    #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9
+    #FieldInfo('10.10', '', u'Präklinische Qualifikation'),  # TODO one is missing, this one or 10.9 - see also Bug #4737
     FieldInfo('11.', 'subject_count', _(u'number of participants')),
 ))
 
