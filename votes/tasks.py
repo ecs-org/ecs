@@ -77,9 +77,9 @@ def send_reminder_messages(today=None):
 
     votes = (Vote.objects
         .filter(result='1', published_at__isnull=False, valid_until__isnull=False)
-        .exclude(
-            submission_form__submission__workflow_lane=SUBMISSION_LANE_LOCALEC,
-            submission_form__submission__is_finished=True))
+        .exclude(submission_form__submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
+        .exclude(submission_form__submission__is_finished=True))
+    
     for vote in votes:
         valid_until = vote.valid_until.date()
         if today < valid_until:
