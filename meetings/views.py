@@ -34,7 +34,7 @@ from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
     on_meeting_date_changed
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory
-from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
+from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet,
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
     ExpeditedReviewerInvitationForm)
 from ecs.communication.utils import send_system_message_template
@@ -275,7 +275,7 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
         if entry.optimal_start:
             entry.move_to_optimal_position()
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
-    
+
 @user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
@@ -625,11 +625,11 @@ def send_agenda_to_board(request, meeting_pk=None):
         htmlmail = unicode(render_html(request, \
                    'meetings/messages/boardmember_invitation.html', \
                    {'meeting': meeting, 'time': time, 'recipient': user, \
-                    'reply_to':settings.DEFAULT_REPLY_TO}))
+                    'reply_to': settings.DEFAULT_REPLY_TO}))
         deliver(user.email, subject=subject, \
                 message=None, message_html=htmlmail, \
                 from_email=settings.DEFAULT_FROM_EMAIL, \
-                rfc2822_headers={"Reply-To":settings.DEFAULT_REPLY_TO}, \
+                rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO}, \
                 attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
@@ -637,22 +637,22 @@ def send_agenda_to_board(request, meeting_pk=None):
         htmlmail = unicode(render_html(request, \
                     'meetings/messages/resident_boardmember_invitation.html', \
                     {'meeting': meeting, 'recipient': user, \
-                    'reply_to':settings.DEFAULT_REPLY_TO}))
+                    'reply_to': settings.DEFAULT_REPLY_TO}))
         deliver(user.email, subject=subject, \
                 message=None, message_html=htmlmail, \
                 from_email=settings.DEFAULT_FROM_EMAIL, \
-                rfc2822_headers={"Reply-To":settings.DEFAULT_REPLY_TO}, \
+                rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO}, \
                 attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
         sf = top.submission.current_submission_form
         for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
-            send_system_message_template(u, subject, 'meetings/messages/primary_investigator_invitation.txt' , {'top': top}, submission=top.submission)
+            send_system_message_template(u, subject, 'meetings/messages/primary_investigator_invitation.txt', {'top': top}, submission=top.submission)
 
     meeting.agenda_sent_at = datetime.now()
     meeting.save()
-    
+
     return HttpResponseRedirect(reverse('ecs.meetings.views.meeting_details', kwargs={'meeting_pk': meeting.pk}))
 
 @readonly(methods=['GET'])
