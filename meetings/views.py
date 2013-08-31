@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
-import tempfile
 import zipfile
 import hashlib
 import os
@@ -10,7 +9,6 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404
-from django.utils import simplejson
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
@@ -21,10 +19,10 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
 from django.db.models import Q
 
-from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.utils.viewutils import render, render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory, ExpeditedReviewCategory
-from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_TYPE_MULTICENTRIC
+from ecs.core.models import Submission, ExpeditedReviewCategory
+from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
@@ -35,11 +33,10 @@ from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
     on_meeting_date_changed
-from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory, Participation
+from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet, 
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
     ExpeditedReviewerInvitationForm)
-from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
 from ecs.meetings.cache import cache_meeting_page
@@ -234,7 +231,7 @@ def add_free_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     form = FreeTimetableEntryForm(request.POST or None)
     if form.is_valid():
-        entry = meeting.add_entry(**form.cleaned_data)
+        meeting.add_entry(**form.cleaned_data)
         return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
     return render(request, 'meetings/timetable/add_free_entry.html', {
         'form': form,
@@ -324,7 +321,7 @@ def optimize_timetable(request, meeting_pk=None, algorithm=None):
     if not meeting.optimization_task_id:
         meeting.optimization_task_id = "xxx:fake"
         meeting.save()
-        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm})
+        optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm})
     return HttpResponseRedirect(reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk}))
 
 @user_flag_required('is_internal')
@@ -334,7 +331,7 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
     if not meeting.optimization_task_id:
         meeting.optimization_task_id = "xxx:fake"
         meeting.save()
-        retval = optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm, 'algorithm_parameters': {
+        optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm, 'algorithm_parameters': {
             'population_size': 400,
             'iterations': 2000,
         }})
@@ -666,7 +663,6 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
     form = ExpeditedReviewerInvitationForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
-        submission_ct = ContentType.objects.get_for_model(Submission)
         categories = ExpeditedReviewCategory.objects.filter(submissions__in=meeting.submissions.all())
         users = User.objects.filter(groups__name='Expedited Review Group', expedited_review_categories__pk__in=categories.values('pk').query)
         start = form.cleaned_data['start']
