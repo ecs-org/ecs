@@ -20,7 +20,7 @@
     Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt. <br/>
     <div style="font-size: small;">
         <span style="text-decoration: underline;">Achtung:</span>
-        Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 3 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht,
+        Werden die geforderten Unterlagen von den Antragstellern nicht innerhalb von 2 Sitzungsperioden (ab Datum dieser Sitzung) nachgereicht,
         gilt der Antrag ohne weitere Benachrichtigung als zurückgezogen und muß gegebenenfalls als Neuantrag eingereicht werden.
     </div>
 {% endif %}
