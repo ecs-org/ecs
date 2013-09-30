@@ -24,7 +24,7 @@ def send_vote_expired(vote):
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
-    text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(vote_date)s ist abgelaufen.\n') % {
+    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist abgelaufen.\n') % {
         'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
@@ -42,7 +42,16 @@ def send_vote_reminder_submitter(vote):
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
-    text = _(u'Das Votum für die Studie <a href="#" onclick="window.parent.location.href=\'%(url)s\';" >EK-Nr. %(ec_number)s</a> vom %(vote_date)s läuft in drei Wochen ab.\n') % {
+    text = _(u'''Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in drei Wochen ab.<br>
+Stellen Sei bitte zeitgerecht den Antrag auf Verlängerung des Votums.<br>
+Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf „Studien Meldungen“ > „Neue Meldung“,<br>
+wählen Sie dann „Verlängerung der Gültigkeit des Votums“ und machen Sie die erforderlichen Angaben.<br>
+<br>
+Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische Arzneimittelprüfung handeln,<br>
+bei der die Ethikkommission der MedUni Wien  nicht als Leit-Ethikkommission,<br>
+sondern als lokale Ethikkommission fungiert, dann können Sie diese Aufforderung ignorieren.<br>
+In solchen Fällen ist die Leit-Ethikkommission für die Votumsverlängerung zuständig.<br>
+    ''') % {
         'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
