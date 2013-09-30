@@ -51,6 +51,10 @@ Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische Arzneimittelpr�
 bei der die Ethikkommission der MedUni Wien  nicht als Leit-Ethikkommission,
 sondern als lokale Ethikkommission fungiert, dann können Sie diese Aufforderung ignorieren.
 In solchen Fällen ist die Leit-Ethikkommission für die Votumsverlängerung zuständig.
+
+Mit freundlichen Grüßen,
+
+das Team der Ethik-Kommission
     ''') % {
         'url': url,
         'ec_number': submission.get_ec_number_display(),
