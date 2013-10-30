@@ -546,7 +546,7 @@ $myhostname   smtp:[localhost:8823]
         shutil.move(dumpname+'.new', dumpname)
 
     def db_restore(self, prefix=""):
-        cmd = 'pg_restore --format=custom --dbname=%(postgresql.database)s {0}/{1}%(postgresql.database)s.pgdump'.format(self.homedir, prefix)
+        cmd = 'pg_restore --format=custom --schema=public --dbname=%(postgresql.database)s {0}/{1}%(postgresql.database)s.pgdump'.format(self.homedir, prefix)
         local(cmd % self.config)
                 
     def env_clear(self):
