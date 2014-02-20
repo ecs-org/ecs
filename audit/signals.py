@@ -34,11 +34,11 @@ def post_save_handler(**kwargs):
     if _ignored_models_rex.match(sender_path):
         return
 
-    description = u'%s %s instance of %s' % (
+    description = u'{0} {1} {2}'.format(
         user,
         'created' if kwargs['created'] else 'modified',
         sender.__name__,
-    )
+    )[:100] # #4792 Some user use very long titels ;-)
 
     a = AuditTrail()
     a.description = description
