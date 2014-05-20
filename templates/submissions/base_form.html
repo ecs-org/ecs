@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load core i18n %} 
+{% load core i18n %}
 
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
@@ -63,7 +63,7 @@
                             {% endwith %}
                         </div>
                     {% endif %}
-                                        
+
                     {% if tab.slug == 'documents' %}
                         {% if not readonly %}
                             {% if not protocol_uploaded %}
@@ -194,7 +194,7 @@
                             {% endwith %}
                         {% endfor%}
                     {% endif %}
-                    
+
                     {% for legend, fields in tab.fieldsets %}
                         <div class="field fieldset_{{ forloop.counter }}">
                             {% if legend %}
@@ -238,7 +238,7 @@
                 disable: true,
                 sourceFieldClass: 'subchoice',
                 sources: [
-                    'id_project_type_medical_device_with_ce', 
+                    'id_project_type_medical_device_with_ce',
                     'id_project_type_medical_device_without_ce',
                     'id_project_type_medical_device_performance_evaluation'
                 ],
@@ -247,22 +247,37 @@
                     message: '% trans "This tab may only be used when 2.1.4 is selected." %}',
                     requiredFields: [
                         'id_medtech_checked_product', 'id_medtech_reference_substance', 'id_medtech_product_name', 'id_medtech_manufacturer',
-                        'id_medtech_certified_for_exact_indications', 'id_medtech_certified_for_other_indications', 'id_medtech_ce_symbol', 
+                        'id_medtech_certified_for_exact_indications', 'id_medtech_certified_for_other_indications', 'id_medtech_ce_symbol',
                         'id_medtech_manual_included', 'id_medtech_technical_safety_regulations', 'id_medtech_departure_from_regulations'
                     ]
                 }
             });
-            
+
             new ecs.FormFieldController(['id_project_type_reg_drug', 'id_project_type_non_reg_drug'], {
                 sources: [],
                 toggleTab: {
                     tab: setup.tabController.getTabForElement($('tabs-6')),
                     message: '{% trans "This tab may only be used when 2.1.2 is selected." %}',
                     requiredFields: [
-                        'id_substance_preexisting_clinical_tries', 'id_substance_p_c_t_phase', 'id_substance_p_c_t_period',
-                        'id_substance_p_c_t_application_type', 'id_substance_p_c_t_gcp_rules', 'id_substance_p_c_t_final_report',
+                        'id_substance_preexisting_clinical_tries',
                         'id_submission_type', 'id_eudract_number', 'id_pharma_checked_substance', 'id_pharma_reference_substance'
                     ]
+                }
+            });
+
+            new ecs.FormFieldController(['id_substance_p_c_t_phase',
+                                         'id_substance_p_c_t_period',
+                                         'id_substance_p_c_t_application_type',
+                                         'id_substance_p_c_t_gcp_rules',
+                                         'id_substance_p_c_t_final_report'],
+            {
+                sources: ['id_substance_preexisting_clinical_tries'],
+                auto: function(values, initial){
+                    ['id_substance_p_c_t_phase', 'id_substance_p_c_t_period',
+                     'id_substance_p_c_t_application_type', 'id_substance_p_c_t_gcp_rules',
+                     'id_substance_p_c_t_final_report'].map($).each(function(f){
+                        this.requireField(f, values[0] != 3);
+                    }, this);
                 }
             });
 
@@ -310,7 +325,7 @@
                     this.setDisabled(values[0]);
                 }
             });
-            
+
             ecs.setupDocumentUploadIframe();
         });
     </script>
