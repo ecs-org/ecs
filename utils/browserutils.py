@@ -40,7 +40,7 @@ def parse_ua(fn):
     @wraps(fn)
     def _inner(ua_str):
         ua = httpagentparser.detect(ua_str)
-        for x in ('browser', 'dist', 'flavor'):
+        for x in ('browser', 'platform', 'flavor'):
             if x in ua and 'version' in ua[x]:
                 ua[x]['version'] = Version(ua[x]['version'])
         return fn(ua)
@@ -70,8 +70,8 @@ def android_quirks(ua):
     if not b:
         return
     if b['name'] == 'Safari' and b['version'] >= '4':
-        dist = ua['dist']
-        if dist and dist['name'] == 'Android' and dist['version'] >= '3.2':
+        platform = ua['platform']
+        if platform and platform['name'] == 'Android' and platform['version'] >= '3.2':
             return BROWSER_SUPPORT_OK
 
 def crawler_quirks(ua_str):
