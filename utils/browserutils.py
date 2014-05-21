@@ -87,8 +87,7 @@ BROWSER_FILTER_RULES = (
     supported_starting('Chrome', '10'),
     android_quirks,
     supported_starting('Safari', '5'),
-    supported_starting('Microsoft Internet Explorer', '9', tmp_unsupported=('9',)),
-    supported_starting('Opera', '11', tmp_unsupported=('11',)),
+    supported_starting('Microsoft Internet Explorer', '10'),
     crawler_quirks,
 )
 
