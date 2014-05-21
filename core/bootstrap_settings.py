@@ -21,7 +21,7 @@ commissions = [{
     'name': u'Ethikkommission der Medizinischen Universit\u00e4t Wien',
     'url': u'ethikkommission.meduniwien.ac.at',
     'email': u'ethik-kom@meduniwien.ac.at',
-    'phone': u'(01) 40400-21470, -2248, -2241',
+    'phone': u'(01) 40400-21470, -22480, -22410',
     'address_1': u'Borschkegasse 8b/E 06',
     'contactname': u'Fr. Dr.Christiane Druml',
     'address_2': u'',
