@@ -16,11 +16,11 @@ class FieldInfo(object):
         self.help_text = help_text
         self.short_label = short_label
         self._db_field = db_field or None
-        
+
     @property
     def label(self):
         return self.short_label or self.paper_label or None
-        
+
     @property
     def db_field(self):
         if self._db_field is True:
@@ -161,17 +161,18 @@ FormInfo(SubmissionForm, fields=(
     # 2.10 Charakterisierung der Prüfungsteilnehmer/innen
     FieldInfo('2.10.1', 'subject_minage', _(u'minimum age')),
     FieldInfo('2.10.2', 'subject_maxage', _(u'maximum age')),
-    
+
     FieldInfo('2.10.4', 'subject_males', _(u'male participants'), help_text=_(u'The study includes:')),
     FieldInfo('2.10.4', 'subject_females', _(u'female participants')),
     FieldInfo('2.10.5', 'subject_childbearing', _(u'women of childbearing age')),
     FieldInfo('2.10.3', 'subject_noncompetents', _(u'non competent participants'), help_text=_(u'non competents explanation')),
-    
+
     FieldInfo('2.11', 'subject_duration', _(u'Duration of participation of the individual test participants in the study')),
     FieldInfo('2.11.1', 'subject_duration_active', _(u'active phase')),
     FieldInfo('2.11.2', 'subject_duration_controls', _(u'Follow-up inspections')),
     FieldInfo('2.12', 'subject_planned_total_duration', _(u'Expected total duration of the study')),
     # 3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert)
+    FieldInfo(None, 'submission_type', _(u'Submit as')),
     FieldInfo('3.1', 'substance_registered_in_countries', _(u'Registration in other states?')),
     FieldInfo('3.2', 'substance_preexisting_clinical_tries', _(u'Are there already results of clinical trials for the tested drug?')),
     FieldInfo('3.2.1', 'substance_p_c_t_countries', _(u'3.2.1 Countries in which the tests were conducted')),
@@ -180,7 +181,6 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('3.2.4', 'substance_p_c_t_application_type', _(u'application type(s)')),
     FieldInfo('3.2.5', 'substance_p_c_t_gcp_rules', _(u'Were the clinical tests made according to GCP guidelines')),
     FieldInfo('3.2.6', 'substance_p_c_t_final_report', _(u'Does a final report exist?'), help_text=_(u"If yes, upload the investigator's brochure, relevant data or a report of the Pharmaceutical Advisory Council using the upload tab")),
-    FieldInfo(None, 'submission_type', _(u'Submit as')),
     # 4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt
     FieldInfo('4.1', 'medtech_product_name', _(u'Name of the product')),
     FieldInfo('4.2', 'medtech_manufacturer', _(u'Manufacturer')),
@@ -226,15 +226,15 @@ FormInfo(SubmissionForm, fields=(
     # 8. Biometrie, Datenschutz
     # 8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)
     FieldInfo(None, 'study_plan_blind', None, short_label=_(u'Open / Blind / Double-blind')),
-    FieldInfo('8.1.1', 'study_plan_open', _(u'open'), db_field=False), 
+    FieldInfo('8.1.1', 'study_plan_open', _(u'open'), db_field=False),
     FieldInfo('8.1.2', 'study_plan_randomized', _(u'randomized')),
     FieldInfo('8.1.3', 'study_plan_parallelgroups', _(u'parallel groups')),
-    FieldInfo('8.1.4', 'is_monocentric', _(u'monocentric'), db_field=False), 
-    FieldInfo('8.1.5', 'study_plan_single_blind', _(u'blind'), db_field=False), 
+    FieldInfo('8.1.4', 'is_monocentric', _(u'monocentric'), db_field=False),
+    FieldInfo('8.1.5', 'study_plan_single_blind', _(u'blind'), db_field=False),
     FieldInfo('8.1.6', 'study_plan_controlled', _(u'controlled')),
     FieldInfo('8.1.7', 'study_plan_cross_over', _(u'cross-over')),
-    FieldInfo('8.1.8', 'is_multicentric', _(u'multicentric'), db_field=False), 
-    FieldInfo('8.1.9', 'study_plan_double_blind', _(u'double-blind'), db_field=False), 
+    FieldInfo('8.1.8', 'is_multicentric', _(u'multicentric'), db_field=False),
+    FieldInfo('8.1.9', 'study_plan_double_blind', _(u'double-blind'), db_field=False),
     FieldInfo('8.1.10', 'study_plan_placebo', _(u'placebo')),
     FieldInfo('8.1.11', 'study_plan_factorized', _(u'factorized')),
     FieldInfo('8.1.12', 'study_plan_pilot_project', _(u'pilot project')),

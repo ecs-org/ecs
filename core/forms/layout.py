@@ -10,7 +10,7 @@ class Tab(object):
         self.slug = slug
         self.label = label
         self.fieldsets = fieldsets
-        
+
     def __getitem__(self, index):
         # tabs used to be tuples, so we provide this for backwards compatibility.
         # string keys are required to make django templates happy.
@@ -27,15 +27,15 @@ class NamedProxy(object):
     def __init__(self, data, name):
         self._data = data
         self._name = name
-    
+
     def __getattr__(self, attr):
         if attr == 'name':
             return self._name
         return getattr(self._data, attr)
-    
+
     def __iter__(self):
         return iter(self._data)
-    
+
     def __len__(self):
         return len(self._data)
 
@@ -43,7 +43,7 @@ class NamedProxy(object):
 SUBMISSION_FORM_TABS = (
     Tab('key_data', _(u'Key data'), [
         (_(u'type of project'), [
-            'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 'project_type_non_interventional_study', 
+            'project_type_non_reg_drug', 'project_type_reg_drug', 'project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication', 'project_type_non_interventional_study',
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_nursing_study',
@@ -53,7 +53,7 @@ SUBMISSION_FORM_TABS = (
     ]),
     Tab('participants', _(u'participant'), [
         (_(u'test participant'), [
-            'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females', 
+            'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females',
             'subject_childbearing', 'subject_noncompetents', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
         (_(u'centers abroad respectively non AMG'), NamedProxy([], 'centers_abroad')),
@@ -61,9 +61,9 @@ SUBMISSION_FORM_TABS = (
     Tab('outline', _(u'outline'), [
         (_(u'outline'), [
             'german_project_title', 'project_title',
-            'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit', 
-            'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info', 
-            'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info', 
+            'german_summary', 'german_preclinical_results', 'german_primary_hypothesis', 'german_inclusion_exclusion_crit',
+            'german_ethical_info', 'german_protected_subjects_info', 'german_recruitment_info', 'german_consent_info', 'german_risks_info',
+            'german_benefits_info', 'german_relationship_info', 'german_concurrent_study_info', 'german_sideeffects_info',
             'german_statistical_info', 'german_dataprotection_info', 'german_aftercare_info', 'german_payment_info', 'german_abort_info', 'german_dataaccess_info',
             'german_financing_info', 'german_additional_info',
         ]),
@@ -81,7 +81,7 @@ SUBMISSION_FORM_TABS = (
             'invoice_differs_from_sponsor',
         ]),
         (_(u'invoice recipient'), [
-            'invoice_name', 
+            'invoice_name',
             'invoice_address', 'invoice_zip_code', 'invoice_city',
             'invoice_contact_gender', 'invoice_contact_title', 'invoice_contact_first_name', 'invoice_contact_last_name',
             'invoice_phone', 'invoice_fax', 'invoice_email',
@@ -92,22 +92,22 @@ SUBMISSION_FORM_TABS = (
         (_(u'applicant'), [
             'submitter_contact_gender', 'submitter_contact_title', 'submitter_contact_first_name', 'submitter_contact_last_name', 'submitter_email',
             'submitter_organisation', 'submitter_jobtitle', 'submitter_is_coordinator', 'submitter_is_main_investigator', 'submitter_is_sponsor',
-            'submitter_is_authorized_by_sponsor', 
+            'submitter_is_authorized_by_sponsor',
         ]),
     ]),
     Tab('amg', _(u'AMG'), [
         (_(u'drug trial'), ['eudract_number', 'pharma_checked_substance', 'pharma_reference_substance']),
         (_(u'AMG'), [
-            'substance_registered_in_countries', 'substance_preexisting_clinical_tries', 
-            'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period', 
+            'submission_type','substance_registered_in_countries', 'substance_preexisting_clinical_tries',
+            'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period',
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
-            'submission_type',
+
         ]),
     ]),
     Tab('mpg', _(u'MPG'), [
-        (_(u'Medical Device Study'), ['medtech_checked_product', 'medtech_reference_substance']),    
+        (_(u'Medical Device Study'), ['medtech_checked_product', 'medtech_reference_substance']),
         (_(u'MPG'), [
-            'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 
+            'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications',
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
     ]),
@@ -136,7 +136,7 @@ SUBMISSION_FORM_TABS = (
             'study_plan_biometric_planning', 'study_plan_statistics_implementation',
         ]),
         (_(u'information privacy'), [
-            'study_plan_dataprotection_choice', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 
+            'study_plan_dataprotection_choice', 'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm',
         ]),
     ]),
     Tab('insurance', _(u'insurance'), [
