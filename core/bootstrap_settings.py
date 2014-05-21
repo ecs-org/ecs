@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# Caution: this file contains CONFIDENTIAL DATA
+# TODO: why are the commissions uuid's one character short compared to uuidgen ?
+# (not counting the "-" dashes)
 
 developers = (
     (u'Felix', u'Erkinger', u'felix@erkinger.at', 'm'),
@@ -363,4 +364,17 @@ commissions = [{
     'contactname': u'Fr. Yvonne Wernig',
     'address_2': u'St.-Veiter-Strasse 45-47',
     'zip_code': u'A-9020',
+}, {
+    'uuid': u'c890205dcb7543c8a76b-324512c5f81',
+    'city': u'Wien',
+    'fax': u'+43 (1) 878 44 - 4050',
+    'chairperson': u'Unknown',
+    'name': u'EK des Krankenhaus St. Josef',
+    'url': u'http://www.sjk-wien.at/ueber-uns/ethik/',
+    'email': u'christian.metz@sjk-wien.at',
+    'phone': u' +43 (1) 878 44 - 0',
+    'address_1': u' St. Josef Krankenhaus GmbH',
+    'contactname': u'Dr. Christian Metz',
+    'address_2': u'Auhofstraße 189',
+    'zip_code': u'A-1130',
 }]
