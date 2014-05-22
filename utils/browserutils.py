@@ -17,12 +17,15 @@ logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
 class Version(tuple):
     def __new__(cls, version_str):
         version = []
-        for bit in version_str.split('.'):
-            try:
-                bit = int(bit)
-            except ValueError:
-                pass
-            version.append(bit)
+        if version_str:
+            for bit in version_str.split('.'):
+                try:
+                    bit = int(bit)
+                except ValueError:
+                    pass
+                version.append(bit)
+        else:
+            version = [0,]
         instance = super(Version, cls).__new__(cls, version)
         return instance
 
@@ -69,7 +72,7 @@ def android_quirks(ua):
     b = ua['browser']
     if not b:
         return
-    if b['name'] == 'Safari' and b['version'] >= '4':
+    if b['name'] == 'AndroidBrowser':
         platform = ua['platform']
         if platform and platform['name'] == 'Android' and platform['version'] >= '3.2':
             return BROWSER_SUPPORT_OK
