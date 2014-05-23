@@ -49,37 +49,45 @@ def parse_ua(fn):
         return fn(ua)
     return _inner
 
+@parse_ua
+def print_ua(ua):
+    print(ua)
+
 def supported_starting(name, version, tmp_unsupported=None):
     version = Version(version)
     tmp_unsupported = tmp_unsupported or []
 
     @parse_ua
     def _fn(ua):
-        b = ua['browser']
-        if not b:
-            return
-        if b['name'] == name:
-            if any(b['version'] == v for v in tmp_unsupported):
-                return BROWSER_SUPPORT_TMP_NO
-            if b['version'] >= version:
-                return BROWSER_SUPPORT_OK
-            else:
-                return BROWSER_SUPPORT_NO
+        if 'browser' in ua and 'name' in ua['browser'] and 'version' in ua['browser']:
+            b = ua['browser']
+            if b['name'] == name:
+                if any(b['version'] == v for v in tmp_unsupported):
+                    return BROWSER_SUPPORT_TMP_NO
+                if b['version'] >= version:
+                    return BROWSER_SUPPORT_OK
+                else:
+                    return BROWSER_SUPPORT_NO
     return _fn
 
 @parse_ua
 def android_quirks(ua):
-    b = ua['browser']
-    if not b:
-        return
-    if b['name'] == 'AndroidBrowser':
-        platform = ua['platform']
-        if platform and platform['name'] == 'Android' and platform['version'] >= '3.2':
-            return BROWSER_SUPPORT_OK
+    if 'browser' in ua and 'platform' in ua:
+        b = ua['browser']
+        if b.get('name', None) == 'AndroidBrowser':
+            platform = ua['platform']
+            if platform.get('name', None) == 'Android' and \
+                platform.get('version',  Version('0')) >= '3.2':
+                return BROWSER_SUPPORT_OK
+
+@parse_ua
+def crawler_detected(ua):
+    if 'bot' in ua and ua['bot'] == True:
+            return BROWSER_SUPPORT_CRAWLER
 
 def crawler_quirks(ua_str):
     ua_str = ua_str.lower()
-    bots = ('googlebot', 'yahoo! slurp', 'msnbot', 'bingbot')
+    bots = ('googlebot', 'yahoo! slurp', 'msnbot', 'bingbot', 'hetzner system monitoring')
 
     if any(bot in ua_str for bot in bots):
         return BROWSER_SUPPORT_CRAWLER
@@ -91,6 +99,7 @@ BROWSER_FILTER_RULES = (
     android_quirks,
     supported_starting('Safari', '5'),
     supported_starting('Microsoft Internet Explorer', '10'),
+    crawler_detected,
     crawler_quirks,
 )
 
@@ -104,7 +113,7 @@ class UA(object):
                     self.support = support
                     break
             except Exception as e:
-                logger.info('parsing UA string threw an exception\nUA string: %s\n%s', ua_str, traceback.format_exc())
+                logger.info('UA string parsing threw an exception\nUA string: %s\n%s', ua_str, traceback.format_exc())
 
     is_supported = property(lambda self: self.support == BROWSER_SUPPORT_OK)
     is_unsupported = property(lambda self: self.support == BROWSER_SUPPORT_NO)
