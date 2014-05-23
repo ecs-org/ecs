@@ -155,7 +155,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         else:
             require_fields(self, ('study_plan_dataprotection_anonalgoritm',))
 
-        if cleaned_data.get('substance_preexisting_clinical_tries') != False:
+        if cleaned_data.get('substance_preexisting_clinical_tries') == True:
             require_fields(self, ('substance_p_c_t_phase', 'substance_p_c_t_period', 'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',))
 
         return cleaned_data
