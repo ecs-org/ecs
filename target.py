@@ -419,7 +419,7 @@ $myhostname   smtp:[localhost:8823]
     def sysctl_config(self):
         sysctl_conf = '/etc/sysctl.d/30-ECS.conf'
         params = {
-            'kernel.shmmax': '134217728',       # 128 MB
+            'kernel.shmmax': '2147483648',       # 2 GB
         }
         conf = ''
         for k, v in params.iteritems():
@@ -453,11 +453,20 @@ $myhostname   smtp:[localhost:8823]
                 conf += line
         conf += '\n'.join([
             _marker,
-            'work_mem = 10MB',
-            'shared_buffers = 115MB',
-            'checkpoint_segments = 16',
+            '# pgtune wizard 2014-06-26: pgtune: -i postgresql.conf -T Web -M 5299503104 -c 40',
             'wal_sync_method = fdatasync',
-            'wal_buffers = 1MB',
+            'max_connections = 40',
+            'effective_cache_size = 3584MB',
+            'work_mem = 120MB',
+            'maintenance_work_mem = 288MB',
+            'shared_buffers = 1152MB',
+            'checkpoint_segments = 8',
+            'checkpoint_completion_target = 0.7',
+            'wal_buffers = 4MB',
+            '# track long running queries',
+            'track_activity_query_size = 4096',
+            'log_min_duration_statement = 3000',
+            "log_line_prefix = 'user=%u,db=%d '",
         ]) + '\n'
         tmp_fd, tmp_name = tempfile.mkstemp()
         os.write(tmp_fd, conf)
