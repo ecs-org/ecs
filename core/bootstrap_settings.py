@@ -16,7 +16,7 @@ developers = (
 commissions = [{
     'uuid': u'23d805c6b5f14d8b9196a12005fd2961',
     'city': u'Wien',
-    'fax': u'(01) 40400-169000',
+    'fax': u'(01) 40400-16900',
     'chairperson': u'Univ.Prof.Dr.Ernst Singer',
     'name': u'Ethikkommission der Medizinischen Universit\u00e4t Wien',
     'url': u'ethikkommission.meduniwien.ac.at',
