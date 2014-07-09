@@ -29,7 +29,7 @@ def get_or_create_user(email, defaults=None, start_workflow=True, **kwargs):
         defaults = {}
 
     user, created = User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
-    
+
     if start_workflow:
         profile = user.get_profile()
         profile.start_workflow = True
@@ -80,7 +80,7 @@ def get_formal_name(user):
         return u'{0}, {1}'.format(user.last_name, user.first_name)
     else:
         return unicode(user.email)
-        
+
 class sudo(object):
     """
     Please note: sudo is not iterator save, so dont yield in a function
@@ -98,11 +98,11 @@ class sudo(object):
             user = user()
         current_user_store._previous_user = self._previous_user
         current_user_store.user = user
-        
+
     def __exit__(self, *exc):
         current_user_store._previous_user = self._previous_previous_user
         current_user_store.user = self._previous_user
-        
+
     def __call__(self, func):
         @wraps(func)
         def decorated(*args, **kwargs):
@@ -130,14 +130,15 @@ def create_phantom_user(email, role=None):
         profile.forward_messages_after_minutes = 5
         profile.save()
 
-        invitation = Invitation.objects.create(user=user)
+        if not role == 'investigator':  # see #4808
+            invitation = Invitation.objects.create(user=user)
 
-        subject = 'Erstellung eines Zugangs zum ECS'
-        link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-        htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
-            'link': link,
-        }))
-        msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
+            subject = 'Erstellung eines Zugangs zum ECS'
+            link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+            htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
+                'link': link,
+            }))
+            msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
     except Exception, e:
         transaction.savepoint_rollback(sid)
         raise e
