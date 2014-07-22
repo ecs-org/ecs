@@ -458,7 +458,7 @@ $myhostname   smtp:[localhost:8823]
             'max_connections = 40',
             'maintenance_work_mem = 256MB',
             'effective_cache_size = 3GB',
-            'work_mem = 96MB',
+            'work_mem = 64MB',
             'wal_buffers = 4MB',
             'shared_buffers = 1GB',
             'checkpoint_segments = 8',
