@@ -295,6 +295,8 @@ def medcategories():
         (u'PubHealth', u'Public Health'),
         (u'fMRTPsych', u'fMRT Psychologie'),
         (u'Wartesaal', u'Wartesaal'),
+        (u'FH-Wien', u'FH-Wien'),
+        (u'St.Anna', u'St. Anna Kinderspital'),
     )
     return categories
 
