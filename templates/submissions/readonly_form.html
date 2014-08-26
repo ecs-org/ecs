@@ -176,6 +176,9 @@
                         <a href="{% url ecs.notifications.views.view_notification notification_pk=notification.pk %}">{{ notification }}</a>
                         von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
                         {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
+                        {% if user|has_flag:'is_internal' %}
+                        | <a href="javascript:void(ecs.fieldhistory.show('{% url ecs.core.views.field_history model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ol>
