@@ -1,5 +1,5 @@
 {% extends 'notifications/answers/base.html' %}
-{% load core i18n %}
+{% load core i18n userutils %}
 
 {% block notification_answer_head %}
     {{ block.super }}
@@ -10,8 +10,16 @@
 {% endblock %}
 
 {% block notification_answer_body %}
+
 <div class="notification_answer">
     {{ answer.text|linebreaksbr }}
 </div>
+
+{% if user|has_flag:'is_internal' %}
+<br/><p>
+    <a href="javascript:void(ecs.fieldhistory.show('{% url ecs.core.views.field_history model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
+</p>
+{% endif %}
+
 {% endblock %}
 
