@@ -28,7 +28,10 @@ class Vote(models.Model):
     changed_after_voting = models.BooleanField(default=False)
     
     objects = VoteManager()
-    
+
+    class Meta:
+        get_latest_by = 'published_at'
+
     def get_submission(self):
         if self.submission_form:
             return self.submission_form.submission

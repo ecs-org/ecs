@@ -25,6 +25,12 @@
 {% block notification_answer_body %}
 {% endblock %}
 
+{% if notification.type.grants_vote_extension %}
+<br />
+<p>Die neue Gültigkeit des Votums endet mit
+    <b>{{ notification.get_submission.votes.positive.permanent.latest.valid_until|date:'d.m.Y'  }} </b></p>
+{% endif %}
+
 </div>
 {% endblock %}
 

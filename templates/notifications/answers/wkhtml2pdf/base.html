@@ -30,9 +30,16 @@
             {% include 'db/wkhtml2pdf/documents.html' %}
         {% endif %}
     {% endblock %}
+
     <p style="height:0.5cm"></p>
     <p>{{ answer.text|linebreaksbr }}</p>
-    
+
+    {% if notification.type.grants_vote_extension %}
+        <br />
+        <p>Die neue Gültigkeit des Votums endet mit
+            <b>{{ notification.get_submission.votes.positive.permanent.latest.valid_until|date:'d.m.Y' }} </b></p>
+    {% endif %}
+
     {% block reviewer %}
         {% if answer.notification.type.name == 'Amendment' %}
             {% with answer.notification|amendment_reviewer as reviewer %}
@@ -42,5 +49,7 @@
             {% endwith %}
         {% endif %}
     {% endblock %}
-    <p>{% now "d.m.Y" %}</p>
+
+
+    <p><b>Datum der Ausfertigung:</b> {% now "d.m.Y" %}</p>
 {% endblock %}
