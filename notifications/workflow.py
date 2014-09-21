@@ -185,6 +185,6 @@ class AutoDistributeNotificationAnswer(Generic):
 
     def handle_token(self, token):
         answer = self.workflow.data.answer
-        answer.render_pdf()
         answer.distribute()
+        answer.render_pdf() # xxx need to render pdf after distribute, to have new vote extension date already set
         super(AutoDistributeNotificationAnswer, self).handle_token(token)
