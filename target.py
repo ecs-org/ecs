@@ -453,20 +453,21 @@ $myhostname   smtp:[localhost:8823]
                 conf += line
         conf += '\n'.join([
             _marker,
-            '# pgtune wizard 2014-07-10: pgtune -i postgresql.conf -M 4294967296 -c 40 -T Web',
+            '# manual tuned settings: 1.10.2014 (similar to pgtune -i postgresql.conf -M 4294967296 -c 40 -T Web)',
             'wal_sync_method = fdatasync',
             'max_connections = 40',
-            'maintenance_work_mem = 256MB',
-            'effective_cache_size = 3GB',
+            'maintenance_work_mem = 192MB',
+            'effective_cache_size = 2304MB',
             'work_mem = 64MB',
             'wal_buffers = 4MB',
-            'shared_buffers = 1GB',
+            'shared_buffers = 768MB',
             'checkpoint_segments = 8',
             'checkpoint_completion_target = 0.7',
             '# track long running queries',
             'track_activity_query_size = 4096',
-            'log_min_duration_statement = 3000',
+            'log_min_duration_statement = 4000',
             "log_line_prefix = 'user=%u,db=%d '",
+            "statement_timeout = 10min",
         ]) + '\n'
         tmp_fd, tmp_name = tempfile.mkstemp()
         os.write(tmp_fd, conf)
