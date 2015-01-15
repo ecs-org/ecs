@@ -44,6 +44,9 @@ def is_rejected(wf):
 def needs_further_review(wf):
     return wf.data.answer.needs_further_review
 
+@guard(model=Notification)
+def is_rejected_and_final(wf):
+    return (wf.data.answer.is_rejected and wf.data.answer.is_final_version)
 
 class BaseNotificationReview(Activity):
     def get_url(self):
