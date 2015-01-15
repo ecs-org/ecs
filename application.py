@@ -301,6 +301,8 @@ modwsgi:req:apt:apt-get:libapache2-mod-wsgi
 
 # postgresql is used as primary database
 postgresql:req:apt:apt-get:postgresql
+# pgbouncer is used for postgres connection pooling, and to make postgres timeout queries without disconnecting django
+pgbouncer:req:apt:apt-get:pgbouncer
 
 # postfix is used as incoming smtp firewall and as smartmx for outgoing mails
 postfix:req:apt:apt-get:postfix
