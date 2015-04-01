@@ -459,7 +459,8 @@ class Meeting(models.Model):
         timetable = sorted([{
             'user': key,
             'entries': sorted(timetable[key], key=lambda x:x.timetable_index),
-        } for key in timetable], key=lambda x:x['user'])
+        } for key in timetable], key=lambda x: x['user'].last_name+ x['user'].first_name)
+
 
         for row in timetable:
             start, end = self._get_timeframe_for_user(row['user'])
