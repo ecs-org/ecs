@@ -142,9 +142,9 @@ class Notification(models.Model):
 class ReportNotification(Notification):
     study_started = models.BooleanField(default=True)
     reason_for_not_started = models.TextField(null=True, blank=True)
-    recruited_subjects = models.IntegerField(null=True, blank=True)
-    finished_subjects = models.IntegerField(null=True, blank=True)
-    aborted_subjects = models.IntegerField(null=True, blank=True)
+    recruited_subjects = models.IntegerField(null=True, blank=False)
+    finished_subjects = models.IntegerField(null=True, blank=False)
+    aborted_subjects = models.IntegerField(null=True, blank=False)
     SAE_count = models.PositiveIntegerField(default=0, blank=False)
     SUSAR_count = models.PositiveIntegerField(default=0, blank=False)
     
