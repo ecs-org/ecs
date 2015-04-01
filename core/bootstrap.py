@@ -294,9 +294,11 @@ def medcategories():
         (u'Unfall', u'Unfallchirurgie'),
         (u'PubHealth', u'Public Health'),
         (u'fMRTPsych', u'fMRT Psychologie'),
+
         (u'Wartesaal', u'Wartesaal'),
         (u'FH-Wien', u'FH-Wien'),
         (u'St.Anna', u'St. Anna Kinderspital'),
+        (u'Med1Phy', u'Medizinische Physik 1'),
     )
     return categories
 
