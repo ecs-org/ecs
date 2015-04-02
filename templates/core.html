@@ -257,21 +257,6 @@
 
       $$('#usermenu .elements').show();
       var AccordionObject = new Accordion(toggles, content, { show: accordionitem , duration: 200});
-
-      // feedback system
-      var feedback_triggers = $(document.body).getElements('a.feedback_trigger');
-      var feedback_handler = function(event) { 
-        event.stop();
-        var url = '/feedback/popup/i/1/' + get_origin() + '/';
-        // TODO: fix for feedback and userswitcher target (should display original_user)
-        new ecs.Dialog(url, {
-          title: 'Feedback von {% if request.original_user %}{{ request.original_user }}{% else %}{{ user }}{% endif %}',
-          size: {
-          width: 700,
-          height: 400 }
-        });
-      };
-      feedback_triggers.addEvent('click', feedback_handler);
       
       // single login popup
       {% if user.get_profile.get_single_login_enforced %}

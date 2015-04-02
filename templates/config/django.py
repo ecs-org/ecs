@@ -49,21 +49,6 @@ SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
-FEEDBACK_CONFIG = {
-    'create_trac_tickets': %(feedback.create_trac_tickets)s, 
-    'store_in_db': %(feedback.store_in_db)s, 
-    'RPC_CONFIG': {
-        'username': '%(feedback.rpc.username)s', 
-        'password': '%(feedback.rpc.password)s', 
-        'proto': '%(feedback.rpc.proto)s', 
-        'host': '%(feedback.rpc.host)s', 
-        'urlpath': '%(feedback.rpc.path)s', 
-    },
-    'milestone': '%(feedback.milestone)s', 
-    'component': '%(feedback.component)s',
-    'ticketfieldnames': ['summary', 'description', 'location', 'absoluteurl', 'type', 'cc', 'ecsfeedback_creator', 'milestone', 'component']
-}
-
 BUGSHOT_CONFIG = {
     'bugshoturl': '%(bugshot.url)s', 
     'milestone': '%(bugshot.milestone)s',
