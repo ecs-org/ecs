@@ -193,6 +193,10 @@ python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
 
+# feedback: jsonrpclib for ecs feedback and fab ticket 
+jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz 
+
+
 # logging: django-sentry; 
 # uuid:inst:all:pypi:uuid uuid is in mainlibs since 2.3 ... and was not thread safe in 2.5...
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
