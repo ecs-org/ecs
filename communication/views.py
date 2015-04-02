@@ -67,8 +67,11 @@ def read_thread(request, thread_pk=None):
         # present thread and create a new one with the message inside
         if delegate_to:
             thread.delegate(request.user, delegate_to)
+            new_subject = format(thread.subject)
+            if not new_subject.startswith(u'Bzgl.:'):
+                new_subject =_(u'Bzgl.: {0}').format(thread.subject)[:100]
             thread = Thread.objects.create(
-                subject=_(u'Bzgl.: {0}').format(thread.subject)[:100],
+                subject=new_subject,
                 sender=request.user,
                 receiver=delegate_to,
                 task=thread.task,
