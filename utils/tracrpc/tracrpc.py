@@ -447,7 +447,6 @@ class TracRpc():
             ticket['cc'] = self._get_field(rawticket, 'cc')
             ticket['location'] = self._get_field(rawticket, 'location')
             ticket['absoluteurl'] = self._get_field(rawticket, 'absoluteurl')
-            ticket['ecsfeedback_creator'] = self._get_field(rawticket, 'ecsfeedback_creator')
             ticket['milestone'] = self._get_field(rawticket, 'milestone')
             ticket['priority'] = self._get_field(rawticket, 'priority')
             ticket['component'] = self._get_field(rawticket, 'component')

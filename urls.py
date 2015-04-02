@@ -38,8 +38,6 @@ urlpatterns = patterns('',
     url(r'^checklist/', include('ecs.checklists.urls')),
     url(r'^vote/', include('ecs.votes.urls')),
     url(r'^dashboard/', include('ecs.dashboard.urls')),
-    url(r'^feedback/', include('ecs.feedback.urls')),
-
     url(r'^pdfviewer/', include('ecs.pdfviewer.urls')),
     url(r'^mediaserver/', include('ecs.mediaserver.urls')),
     url(r'^task/', include('ecs.tasks.urls')),
