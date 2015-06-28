@@ -558,7 +558,7 @@ $myhostname   smtp:[localhost:8823]
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
 
 
-        alter_user='''sudo su - postgres -c "psql -c \\"alter user '''+  self.config['postgresql']['username']+ 'with password \''+ self.config['postgresql']['password']+ '\';\\""'
+        alter_user='''sudo su - postgres -c "psql -c \\"alter user '''+  self.config['postgresql']['username']+ ' with password \''+ self.config['postgresql']['password']+ '\';\\""'
         local(alter_user)
 
         if self.destructive:
