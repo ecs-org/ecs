@@ -20,27 +20,27 @@ from deployment.utils import touch, control_upstart, apache_setup, strbool, stri
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.conf import load_config
 
-class SetupTarget(object): 
+class SetupTarget(object):
     """ SetupTargetObject(use_sudo=True, dry=False, hostname=None, ip=None)
     """
- 
+
     def __init__(self, *args, **kwargs):
         dirname = os.path.dirname(__file__)
-        
+
         config_file = kwargs.pop('config', None)
         if config_file is None:
             config_file = os.path.join(dirname, '..', 'ecs.yml')
-        
+
         self.use_sudo = kwargs.pop('use_sudo', True)
         self.dry = kwargs.pop('dry', False)
         self.host = kwargs.pop('hostname', None)
         self.ip = kwargs.pop('ip', None)
         self.username = getpass.getuser()
         self.destructive = strbool(kwargs.pop('destructive', False))
-        
+
         self.dirname = dirname
         self.appname = 'ecs'
-        
+
         self.configure(config_file)
         self.extra_kwargs = kwargs
 
@@ -63,6 +63,7 @@ class SetupTarget(object):
         self.config.setdefault('ssl.chain', '') # chain is optional
         self.config.setdefault('postgresql.username', self.config['user'])
         self.config.setdefault('postgresql.database', self.config['user'])
+        self.config.setdefault('postgresql.password', self.random_string(14, simpleset=True))
         self.config.setdefault('rabbitmq.username', self.config['user'])
         self.config.setdefault('rabbitmq.password', self.random_string(20))
         self.config.setdefault('mediaserver.storage.encrypt_key', os.path.join(self.homedir, 'src', 'ecs', 'ecs_mediaserver.pub'))
@@ -78,71 +79,85 @@ class SetupTarget(object):
             chars = string.ascii_letters + string.digits
         else:
             chars = string.ascii_letters + string.digits + "_-,.+#!?$%&/()[]{}*;:=<>" # ~6.4 bit/char
-            
+
         return ''.join(random.choice(chars) for i in xrange(length))
-        
+
     def print_random_string(self, length=40, simpleset=False):
         simpleset= strbool(simpleset)
         length = strint(length)
-        
+
         print self.random_string(length=length, simpleset=simpleset)
-    
+
     def get_config_template(self, template):
         with open(os.path.join(self.dirname, 'templates', 'config', template)) as f:
             data = f.read()
         return data
-    
+
     def write_config_template(self, template, dst, context=None, filemode=None, backup=True, force=False, use_sudo=False):
         if context is None:
             context = self.config
         print("Writing config template {0} to {1}".format(template, dst))
         write_template(os.path.join(self.dirname, 'templates', 'config', template),
             dst, context=context, filemode=filemode, backup=backup, force=force, use_sudo=use_sudo)
-        
+
+    def write_config_templatedir(self, srcdir, dstdir, context=None, filemode=None, backup=True, force=False, use_sudo=False):
+        if context is None:
+            context = self.config
+        print("Writing config template dir {0} to {1}".format(srcdir, dstdir))
+        write_template_dir(
+            os.path.join(self.dirname, 'templates', 'config', srcdir),
+            dstdir,
+            context=context,
+            filemode=filemode,
+            backup=backup,
+            force=force,
+            use_sudo=use_sudo)
+
     def help(self, *args, **kwargs):
         print('''fab target:{0},action[,config=path-to-config.yml]
   * actions: system_setup, update, and others
-        
+
         '''.format(self.appname))
 
     def system_setup(self, *args, **kwargs):
         ''' System Setup; Destructive, idempotent '''
         self.destructive = True
         self.setup(self, *args, **kwargs)
-    
+
     def setup(self, *args, **kwargs):
         ''' Setup; idempotent, tries not to overwrite existing database or eg. ECS-CA , except destructive=True '''
         self.directory_config()
         self.host_config(with_current_ip=True)
-        
+
         self.env_update()
-        
+
         self.servercert_config()
         self.backup_config()
         self.mail_config()
         self.queuing_config()
-        
+
         # install_logrotate(appname, use_sudo=use_sudo, dry=dry)
 
         self.sysctl_config()
         self.postgresql_config()
         self.postgresql_restart()
-
+        self.pgbouncer_config()
+        
         self.db_clear()
         self.django_config()
         self.gpg_config()
-        self.ca_config()        
-        
+        self.ca_config()
+
         self.db_update()
-        
+
         self.search_config()
         self.search_update()
-        
+
         self.apache_baseline()
         self.apache_config()
         self.catalina_config()
         self.daemons_install()
-        
+
         self.custom_network_config()
         self.host_config(with_current_ip=False)
         self.firewall_config()
@@ -154,14 +169,13 @@ class SetupTarget(object):
     def update(self, *args, **kwargs):
         ''' System Update: Non destructive '''
         self.directory_config()
-        
+
         self.env_update()
-        
         self.db_update()
-        
+
         self.search_config()
         self.search_update()
-        
+
         self.apache_restart()
         self.daemons_start()
 
@@ -175,25 +189,25 @@ class SetupTarget(object):
         else:
             os.remove(os.path.join(self.configdir, 'service.now'))
             self.daemons_start()
-            self.wsgi_reload()        
-    
+            self.wsgi_reload()
+
     def directory_config(self):
         homedir = os.path.expanduser('~')
         for name in ('empty_html', 'public_html', '.python-eggs', 'ecs-conf'):
             pathname = os.path.join(homedir, name)
             if not os.path.exists(pathname):
                 os.mkdir(pathname)
-        
+
         # /opt/ecs directory
         pathname = os.path.join('/opt', self.appname)
         if not os.path.exists(pathname):
             local('sudo mkdir {0}'.format(pathname))
         local('sudo chown {0}:{0} {1}'.format(self.appname, pathname))
 
-                
+
     def host_config(self, with_current_ip=False):
         with_current_ip = strbool(with_current_ip)
-        
+
         _, tmp = tempfile.mkstemp()
         with tempfile.NamedTemporaryFile() as h:
             h.write(self.config['host'])
@@ -205,7 +219,7 @@ class SetupTarget(object):
         if value != self.config['ip']:
             warn('current ip ({0}) and to be configured ip ({1}) are not the same'.format(value, self.config['ip']))
 
-        if with_current_ip: 
+        if with_current_ip:
             if value.succeeded:
                 self.config['current_ip'] = value
                 if self.config['current_ip'] != self.config['ip']:
@@ -215,28 +229,28 @@ class SetupTarget(object):
                 abort("no ip address ? ip addr grep returned: {0}".format(value))
         else:
             self.config['current_ip'] = self.config['ip']
-        
+
         self.write_config_template('hosts', tmp)
         local('sudo cp %s /etc/hosts' % tmp)
         os.remove(tmp)
-    
+
     def custom_network_config(self):
         if 'network.resolv' in self.config:
             with tempfile.NamedTemporaryFile() as t:
                 t.write(self.config['network.resolv'])
                 t.flush()
                 local('sudo cp {0} /etc/resolv.conf'.format(t.name))
-                
+
         if 'network.interfaces' in self.config:
             with tempfile.NamedTemporaryFile() as t:
                 t.write(self.config['network.interfaces'])
                 t.flush()
                 local('sudo cp {0} /etc/network/interfaces'.format(t.name))
- 
+
     def firewall_config(self):
         write_template_dir(os.path.join(self.dirname, 'templates', 'config', 'shorewall'), '/', use_sudo=True)
-        local('sudo /etc/init.d/shorewall restart')               
-        
+        local('sudo /etc/init.d/shorewall restart')
+
     def backup_config(self):
         if 'backup.host' not in self.config:
             warn('no backup configuration, skipping backup config')
@@ -250,18 +264,18 @@ class SetupTarget(object):
             with settings(warn_only=True):
                 local('sudo mkdir -m 0600 -p /root/.duply/root')
                 local('sudo mkdir -m 0600 -p /root/.duply/opt')
-            
+
             self.config['duplicity.duply_path'] = self.pythonexedir
-                
+
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
             self.config['duplicity.include'] = "SOURCE='/'"
-            self.write_config_template('duply.template', 
+            self.write_config_template('duply.template',
                 '/root/.duply/root/conf', context=self.config, use_sudo=True, filemode= '0600')
             self.write_config_template('duplicity.root.files', '/root/.duply/root/exclude', use_sudo=True)
 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'opt')
             self.config['duplicity.include'] = "SOURCE='/opt'"
-            self.write_config_template('duply.template', 
+            self.write_config_template('duply.template',
                 '/root/.duply/opt/conf', context=self.config, use_sudo=True, filemode= '0600')
             self.write_config_template('duplicity.opt.files', '/root/.duply/opt/exclude', use_sudo=True)
 
@@ -270,17 +284,17 @@ class SetupTarget(object):
                 local('sudo bash -c "if test -f /etc/backup.d/90duply.sh; then rm /etc/backup.d/90duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
                 '/etc/backup.d/90duply-root.sh', backup=False, use_sudo=True, filemode= '0600')
-            
+
             self.config['duplicity.duply_conf'] = "opt"
             with settings(warn_only=True): # remove legacy duply script, before it was renamed
                 local('sudo bash -c "if test -f /etc/backup.d/91duply.sh; then rm /etc/backup.d/91duply.sh; fi"')
             self.write_config_template('duply-backupninja.sh',
                 '/etc/backup.d/91duply-opt.sh', backup=False, use_sudo=True, filemode= '0600')
-            
-            self.write_config_template('10.sys', 
+
+            self.write_config_template('10.sys',
                 '/etc/backup.d/10.sys', backup=False, use_sudo=True, filemode= '0600')
-        
-            self.write_config_template('20.pgsql', 
+
+            self.write_config_template('20.pgsql',
                 '/etc/backup.d/20.pgsql', backup=False, use_sudo=True, filemode= '0600')
 
     def servercert_config(self):
@@ -288,7 +302,7 @@ class SetupTarget(object):
         target_cert = '/usr/local/share/ca-certificates/{0}.crt'.format(self.host)
         target_chain = '/usr/local/share/ca-certificates/{0}.chain.crt'.format(self.host)
         target_combined = '/usr/local/share/ca-certificates/{0}.combined.crt'.format(self.host)
-        
+
         try:
             ssl_key = self.config.get_path('ssl.key')
             ssl_cert = self.config.get_path('ssl.cert')
@@ -300,7 +314,7 @@ class SetupTarget(object):
             openssl_cnf = os.path.join(self.configdir, 'openssl-ssl.cnf')
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
             local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout {1} -out {2}'.format(openssl_cnf, target_key, target_cert))
-        
+
         # copy chain file (if exist, or create empty file instead)
         ssl_chain = self.config.get_path('ssl.chain')
         if not ssl_chain:
@@ -310,26 +324,26 @@ class SetupTarget(object):
                 local('sudo cp {0} {1}'.format(t.name, target_chain))
         else:
             local('sudo cp {0} {1}'.format(ssl_chain, target_chain))
-        
+
         # combine cert plus chain to combined.crt
         local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
-        
-        # update local and java store (at least the one in /etc/ssl/certs/java)    
+
+        # update local and java store (at least the one in /etc/ssl/certs/java)
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
-        
+
     def mail_config(self):
         '''
         with tempfile.NamedTemporaryFile() as h:
             h.write(self.config['host'])
             h.flush()
             local('sudo cp {0} /etc/mailname'.format(h.name))
-    
+
         self.config['postfix.cert'] = '/etc/ssl/private/{0}.pem'.format(self.host)
         self.config['postfix.key'] = '/etc/ssl/private/{0}.key'.format(self.host)
         self.write_config_template('postfix.main.cf', '/etc/postfix/main.cf', use_sudo=True)
-        self.write_config_template('postfix.master.cf', '/etc/postfix/master.cf', use_sudo=True)                                   
+        self.write_config_template('postfix.master.cf', '/etc/postfix/master.cf', use_sudo=True)
         self.write_config_template('aliases', '/etc/aliases', use_sudo=True)
-        
+
 smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
 smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
 myhostname = ecsdev.ep3.at
@@ -349,11 +363,11 @@ relay_domains = $myhostname
   local_recipient_maps =
   local_transport = error:local mail delivery is disabled
   relay_domains = example.com
-  parent_domain_matches_subdomains = 
+  parent_domain_matches_subdomains =
       debug_peer_list smtpd_access_maps
   smtpd_recipient_restrictions =
       permit_mynetworks reject_unauth_destination
-  
+
   relay_recipient_maps = hash:/etc/postfix/relay_recipients
   transport_maps = hash:/etc/postfix/transport
 
@@ -361,7 +375,7 @@ relay_domains = $myhostname
 $myhostname   smtp:[localhost:8823]
         '''
         pass
-        
+
     def gpg_config(self):
         for key, filename in (('encrypt_key', 'ecs_mediaserver.pub'), ('signing_key', 'ecs_authority.sec'), ('decrypt_key', 'ecs_mediaserver.sec'), ('verify_key', 'ecs_authority.pub')):
             try:
@@ -369,49 +383,49 @@ $myhostname   smtp:[localhost:8823]
                 shutil.copy(path, os.path.join(self.configdir, filename))
             except KeyError:
                 pass
-    
+
     def ca_config(self):
         cadir = os.path.join(self.homedir, 'ecs-ca')
-        
+
         if self.destructive:
             if os.path.exists(cadir):
                 warn('deleting CA directory because destructive=True')
                 local('rm -r %s' % cadir)
         else:
             warn("not removing CA directory because destructive=False")
-        
+
         try:
             replacement = self.config.get_path('ca.dir')
         except KeyError:
             warn('ca.dir config settings not found, leaving CA directory as it is')
             return
-        
+
         if os.path.exists(os.path.join(cadir, 'private')):
             warn('CA directory exists (%s), refusing to overwrite.' % cadir)
         else:
             shutil.copytree(replacement, cadir)
-            
+
             for n in ('certs', 'crl', 'newcerts',):
                 t = os.path.join(cadir, n)
                 if not os.path.exists(t):
                     os.mkdir(t)
-    
-        
+
+
     def django_config(self):
         self.write_config_template('django.py', os.path.join(self.configdir, 'django.py'))
-        
+
     def apache_baseline(self):
         baseline_bootstrap = ['sudo'] if self.use_sudo else []
         baseline_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), '--baseline', '/etc/apache2/ecs/wsgibaseline/']
         local(subprocess.list2cmdline(baseline_bootstrap))
- 
+
     def apache_config(self):
         apache_mkdirs = ['sudo'] if self.use_sudo else []
         apache_mkdirs += ['mkdir', '-p', '/etc/apache2/ecs', '/etc/apache2/ecs/apache.wsgi', '/etc/apache2/ecs/apache.conf']
         local(subprocess.list2cmdline(apache_mkdirs))
-        apache_setup(self.appname, use_sudo=self.use_sudo, 
-            hostname=self.host, 
-            ip=self.ip, 
+        apache_setup(self.appname, use_sudo=self.use_sudo,
+            hostname=self.host,
+            ip=self.ip,
             ca_certificate_file=os.path.join(self.homedir, 'ecs-ca', 'ca.cert.pem'),
             ca_revocation_file=os.path.join(self.homedir, 'ecs-ca', 'crl.pem'),
         )
@@ -440,7 +454,7 @@ $myhostname   smtp:[localhost:8823]
             abort("detecting postgresql version failed (pg_config --version): {0} {1}".format(result.stdout, result.stderr))
         pg_version = result.stdout
         return pg_version
-    
+
     def postgresql_config(self):
         postgresql_conf = '/etc/postgresql/{0}/main/postgresql.conf'.format(self.postgresql_version())
         _marker = '# === ECS config below: do not edit, autogenerated ==='
@@ -479,14 +493,18 @@ $myhostname   smtp:[localhost:8823]
 
     def postgresql_restart(self):
         cmd = '/etc/init.d/postgresql'
-        
+
         if not os.path.exists(cmd):
             cmd += "-"+ self.postgresql_version()
-        
+
             if not os.path.exists(cmd):
                 abort('could not determine postgres control command {0}'.format(cmd))
-            
+
         self.local([cmd, 'restart'])
+
+    def pgbouncer_config(self):
+        self.write_config_templatedir('pgbouncer', '/', use_sudo=True, filemode= "0640")
+        self.local('/etc/init.d/pgbouncer restart')
 
     def catalina_config(self):
         write_regex_replace(
@@ -508,42 +526,45 @@ $myhostname   smtp:[localhost:8823]
             r'\2http://{0}:4780\4'.format(self.config['host']))
 
     def catalina_cmd(self, what):
-        TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6') 
+        TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6')
         if sys.platform == 'win32':
             cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as.work-dir={0}\\conf\\pdf-as&cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
         else:
             cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS=-Dpdf-as.work-dir={0}/conf/pdf-as'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
         return cmd
-    
+
     def start_dev_signing(self):
         local(self.catalina_cmd('start'))
-        
+
     def stop_dev_signing(self):
         local(self.catalina_cmd('stop'))
-    
+
     def apache_restart(self):
         local('sudo /etc/init.d/apache2 restart')
-        
+
     def wsgi_reload(self):
         local('sudo touch /etc/apache2/ecs/apache.wsgi/ecs-wsgi.py')
-        
+
     def daemons_install(self):
         control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
 
     def daemons_stop(self):
         control_upstart(self.appname, "stop", use_sudo=self.use_sudo, fail_soft=True, dry=self.dry)
-        
+
     def daemons_start(self):
         control_upstart(self.appname, "start", use_sudo=self.use_sudo, dry=self.dry)
-        
+
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
+
+        local("sudo -u postgres psql -c \"alter user %(postgresql.username)s with password '%(postgresql.username)s';\"".format(self.config))
+
         if self.destructive:
-            local('dropdb %(postgresql.database)s | true' % self.config)            
+            local('dropdb %(postgresql.database)s | true' % self.config)
         else:
-            warn("Not dropping/destroying database, because destructive=False")            
+            warn("Not dropping/destroying database, because destructive=False")
         local('createdb --template=template0 --encoding=utf8 --locale=de_DE.utf8 %(postgresql.database)s | true' % self.config)
-             
+
     def db_update(self):
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py syncdb --noinput'.format(self.homedir))
         local('cd {0}/src/ecs; . {0}/environment/bin/activate; ./manage.py migrate --noinput'.format(self.homedir))
@@ -558,21 +579,21 @@ $myhostname   smtp:[localhost:8823]
     def db_restore(self, prefix=""):
         cmd = 'pg_restore --format=custom --schema=public --dbname=%(postgresql.database)s {0}/{1}%(postgresql.database)s.pgdump'.format(self.homedir, prefix)
         local(cmd % self.config)
-                
+
     def env_clear(self):
         # todo: implement env_clear
         pass
-    
+
     def env_boot(self):
         env_bootstrap = ['sudo'] if self.use_sudo else []
         env_bootstrap += [os.path.join(os.path.dirname(env.real_fabfile), 'bootstrap.py'), 'whereever/sdfkljsd']
         pass
         # FIXME implement env_boot
-    
+
     def env_update(self):
         local('sudo bash -c "cd {0}/src/; . {0}/environment/bin/activate;  fab appreq:ecs,flavor=system"'.format(self.homedir))
         local('cd {0}/src/; . {0}/environment/bin/activate; fab appenv:ecs,flavor=system'.format(self.homedir))
-        
+
     def queuing_config(self):
         with settings(warn_only=True):
             local('sudo killall beam')
@@ -586,20 +607,20 @@ $myhostname   smtp:[localhost:8823]
             local('sudo killall epmd')
             time.sleep(1)
             local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
-            
+
         #local('sudo rabbitmqctl force_reset')
         #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
         #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
-        
+
         local('sudo rabbitmqctl add_vhost %s' % self.username)
-            
+
         if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
             local('sudo rabbitmqctl delete_user %(rabbitmq.username)s ' % self.config)
-        
+
         local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
         local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
-            
-        
+
+
     def search_config(self):
         source_schema = os.path.join(self.homedir, 'ecs-conf', 'solr_schema.xml')
         source_jetty =  os.path.join(self.homedir, 'ecs-conf', 'jetty.cnf')
@@ -610,7 +631,7 @@ $myhostname   smtp:[localhost:8823]
             f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
         local('sudo cp {0} /etc/default/jetty'.format(source_jetty))
         local('sudo /etc/init.d/jetty stop')
-        time.sleep(5) 
+        time.sleep(5)
         local('sudo /etc/init.d/jetty start')
         time.sleep(10) # jetty needs time to startup
 
@@ -622,7 +643,7 @@ $myhostname   smtp:[localhost:8823]
 
 def custom_check_gettext_runtime(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
-    
+
 def custom_install_gettext_runtime(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
@@ -631,29 +652,29 @@ def custom_install_gettext_runtime(pkgline, filename):
 
 def custom_check_gettext_tools(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), 'bin', checkfilename))
-    
+
 def custom_install_gettext_tools(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
     pkg_manager.static_install_unzip(filename, get_pythonenv(), checkfilename, pkgline)
     return True
 
-  
+
 def custom_check_tomcat_apt_user(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
-    
+
 def custom_install_tomcat_apt_user(pkgline, filename):
     tomcatpath = os.path.join(get_pythonenv(), "tomcat-6")
-    
+
     if os.path.exists(os.path.join(tomcatpath)):
         if os.path.exists(tomcatpath+"-old"):
             shutil.rmtree(tomcatpath+"-old")
         shutil.move(tomcatpath, tomcatpath+"-old")
-        
+
     install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(tomcatpath)
     popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
-    stdout, stderr = popen.communicate() 
-    returncode = popen.returncode  
+    stdout, stderr = popen.communicate()
+    returncode = popen.returncode
     if returncode != 0:
         print "Error:", returncode, stdout, stderr
         return False
@@ -662,7 +683,7 @@ def custom_install_tomcat_apt_user(pkgline, filename):
 
 def custom_check_tomcat_other_user(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
-    
+
 def custom_install_tomcat_other_user(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
@@ -670,7 +691,7 @@ def custom_install_tomcat_other_user(pkgline, filename):
     temp_dest = os.path.join(temp_dir, checkfilename)
     final_dest = os.path.join(get_pythonenv(), "tomcat-6")
     result = False
-    
+
     try:
         if os.path.exists(final_dest):
             shutil.rmtree(final_dest)
@@ -680,15 +701,15 @@ def custom_install_tomcat_other_user(pkgline, filename):
                 r'\1\2"4780"\4')
             shutil.copytree(temp_dest, final_dest)
             result = True
-    finally:    
+    finally:
         shutil.rmtree(temp_dir)
-    
+
     return result
 
 
 def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
-   
+
 def custom_install_pdfas(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     pkg_manager = get_pkg_manager()
@@ -696,7 +717,7 @@ def custom_install_pdfas(pkgline, filename):
     temp_dest = os.path.join(temp_dir, "tomcat-6")
     final_dest = os.path.join(get_pythonenv(), "tomcat-6")
     result = False
-    
+
     try:
         pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline)
         if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
@@ -708,12 +729,12 @@ def custom_install_pdfas(pkgline, filename):
                 os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
                 r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
                 r'\2http://localhost:4780\4')
-            
+
             distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
             result = True
-    finally:    
+    finally:
         shutil.rmtree(temp_dir)
-    
+
     return result
 
 
@@ -733,19 +754,19 @@ def custom_install_pdftotext(pkgline, filename):
     tempdir = tempfile.mkdtemp()
     outputdir = os.path.dirname(get_pythonexe())
     result = False
-    
+
     try:
         if pkg_manager.static_install_unzip(filename, tempdir, checkfilename, pkgline):
             try:
-                shutil.copy(os.path.join(tempdir,"xpdfbin-win-3.03", "bin32", checkfilename), 
+                shutil.copy(os.path.join(tempdir,"xpdfbin-win-3.03", "bin32", checkfilename),
                     os.path.join(outputdir, checkfilename))
             except EnvironmentError:
                 pass
             else:
                 result = True
-    finally:    
+    finally:
         shutil.rmtree(tempdir)
-    
+
     return result
 
 
@@ -758,17 +779,17 @@ def custom_install_duply(pkgline, filename):
     tempdir = tempfile.mkdtemp()
     outputdir = os.path.dirname(get_pythonexe())
     result = False
-    
+
     try:
         if pkg_manager.static_install_tar(filename, tempdir, checkfilename, pkgline):
             try:
-                shutil.copy(os.path.join(tempdir, 'duply_1.5.5.4', checkfilename), 
+                shutil.copy(os.path.join(tempdir, 'duply_1.5.5.4', checkfilename),
                     os.path.join(outputdir, checkfilename))
             except EnvironmentError:
                 pass
             else:
                 result = True
-    finally:    
+    finally:
         shutil.rmtree(tempdir)
-    
+
     return result
