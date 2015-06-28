@@ -557,7 +557,7 @@ $myhostname   smtp:[localhost:8823]
     def db_clear(self):
         local("sudo su - postgres -c \'createuser -S -d -R %(postgresql.username)s\' | true" % self.config)
 
-        local("sudo -u postgres psql -c \"alter user %(postgresql.username)s with password '%(postgresql.username)s';\"".format(self.config))
+        local("sudo su - postgres -c \"psql -c alter user %(postgresql.username)s with password '%(postgresql.username)s';\"".format(self.config))
 
         if self.destructive:
             local('dropdb %(postgresql.database)s | true' % self.config)
