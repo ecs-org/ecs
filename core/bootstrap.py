@@ -96,7 +96,7 @@ def submission_workflow():
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
-    
+
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
     EXPEDITED_REVIEW_GROUP = 'Expedited Review Group'
@@ -111,7 +111,7 @@ def submission_workflow():
     PAPER_GROUP = u'EC-Paper Submission Review Group'
     VOTE_PREPARATION_GROUP = u'EC-Vote Preparation Group'
     B2_REVIEW_GROUP = u'EC-B2 Review Group'
-    
+
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
@@ -224,28 +224,28 @@ def auth_groups():
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
-    
+
     try:
         p = Permission.objects.get_by_natural_key("can_view", "sentry", "groupedmessage")
         g = Group.objects.get(name="sentryusers")
         g.permissions.add(p)
     except Permission.DoesNotExist:
         print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
-    
+
 
 def medcategories():
     categories = (
         (u'Stats', u'Statistik'),
-        (u'Pharma', u'Pharmakologie'), 
+        (u'Pharma', u'Pharmakologie'),
         (u'KlPh', u'Klinische Pharmakologie'),
         (u'Onko', u'Onkologie'),
-        (u'Häm', u'Hämatologie'), 
+        (u'Häm', u'Hämatologie'),
         (u'Infektio', u'Infektiologie'),
         (u'Kardio', u'Kardiologie'),
         (u'Angio', u'Angiologie'),
         (u'Pulmo', u'Pulmologie'),
         (u'Endo', u'Endokrinologie'),
-        (u'Nephro', u'Nephrologie'), 
+        (u'Nephro', u'Nephrologie'),
         (u'Gastro', u'Gastroenterologie'),
         (u'Rheuma', u'Rheumatologie'),
         (u'Intensiv', u'Intensivmedizin'),
@@ -264,9 +264,9 @@ def medcategories():
         (u'Radio', u'Radiologie'),
         (u'Transfus', u'Transfusionsmedizin'),
         (u'Ortho', u'Orthopädie'),
-        (u'Uro', u'Urologie'), 
-        (u'Notfall', u'Notfallmedizin'), 
-        (u'PhysMed', u'Physikalische Medizin'),      
+        (u'Uro', u'Urologie'),
+        (u'Notfall', u'Notfallmedizin'),
+        (u'PhysMed', u'Physikalische Medizin'),
         (u'PsychAna', u'Psychoanalyse'),
         (u'Auge', u'Ophthalmologie'),
         (u'Nuklear', u'Nuklearmedizin'),
@@ -280,8 +280,8 @@ def medcategories():
         (u'Pfleger', u'Gesundheits und Krankenpflege'),
         (u'Recht', u'Juristen'),
         (u'Apotheke', u'Pharmazie'),
-        (u'Patient', u'Patientenvertretung'), 
-        (u'BehinOrg', u'Behindertenorganisation'), 
+        (u'Patient', u'Patientenvertretung'),
+        (u'BehinOrg', u'Behindertenorganisation'),
         (u'Seel', u'Seelsorger'),
         (u'techSec', u'technische Sicherheitsbeauftragte'),
 
@@ -299,6 +299,7 @@ def medcategories():
         (u'FH-Wien', u'FH-Wien'),
         (u'St.Anna', u'St. Anna Kinderspital'),
         (u'Med1Phy', u'Medizinische Physik 1'),
+        (u'Datenbank', u'Datenbank'),
     )
     return categories
 
@@ -346,7 +347,7 @@ def auth_user_developers():
         })
 
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups', 
+@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
     'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
@@ -382,18 +383,18 @@ def auth_user_testusers():
          ('b.member3.anästh', ('Anästh',)),
          ('b.member4.chir', ('Chir',)),
          ('b.member5.nephro', ('Nephro',)),
-         ('b.member6.psychol', ('Psychol',)), 
+         ('b.member6.psychol', ('Psychol',)),
          ('b.member7.gastro', ('Gastro',)),
          ('b.member8.neuro', ('Neuro',)),
          ('b.member9.angio', ('Angio',)),
-    )      
+    )
     expeditedtestusers = (
          ('expedited.klph', ('KlPh',)),
          ('expedited.stats', ('Stats',)),
          ('expedited.labor', ('Labor',)),
          ('expedited.recht', ('Recht',)),
     )
-    
+
     userswitcher_group = _get_group('userswitcher_target')
     boardmember_group = _get_group('EC-Board Member')
     expedited_review_group = _get_group('Expedited Review Group')
@@ -427,7 +428,7 @@ def auth_user_testusers():
             'is_board_member': True,
             'start_workflow': True,
         })
-    
+
         for medcategory in medcategories:
             m = _get_medical_category(medcategory)
             m.users.add(user)
@@ -443,7 +444,7 @@ def auth_user_testusers():
             'is_expedited_reviewer': True,
             'start_workflow': True,
         })
-        
+
         for expcategory in expcategories:
             e = _get_expedited_category(expcategory)
             e.users.add(user)
