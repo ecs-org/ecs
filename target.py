@@ -142,7 +142,7 @@ class SetupTarget(object):
         self.postgresql_config()
         self.postgresql_restart()
         self.pgbouncer_config()
-        
+
         self.db_clear()
         self.django_config()
         self.gpg_config()
@@ -504,7 +504,7 @@ $myhostname   smtp:[localhost:8823]
 
     def pgbouncer_config(self):
         self.write_config_templatedir('pgbouncer', '/', use_sudo=True, filemode= "0640")
-        self.local('/etc/init.d/pgbouncer restart')
+        self.local(['/etc/init.d/pgbouncer', 'restart'])
 
     def catalina_config(self):
         write_regex_replace(
