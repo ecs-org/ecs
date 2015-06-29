@@ -725,24 +725,13 @@ def custom_install_pdfasconfig(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     outputdir = os.path.join(get_pythonenv(), "tomcat-6", "conf", checkfilename)
     pkg_manager = get_pkg_manager()
-    tempdir = tempfile.mkdtemp()
 
-    try:
-        result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
-        if result:
-            write_regex_replace(
-                os.path.join(outputdir, 'cfg', 'config.properties'),
-                r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
-                #r'\1https://{0}\3'.format(self.config['host']))
-                r'\1http://{0}:4780\3'.format(self.config['host']))
-            write_regex_replace(
-                os.path.join(outputdir, 'cfg', 'pdf-as-web.properties'),
-                r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
-                #r'\2https://{0}\4'.format(self.config['host']))
-                r'\2http://{0}:4780\4'.format(self.config['host']))
+    result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
 
-    finally:
-        shutil.rmtree(tempdir)
+    if result:
+        self.write_config_template('pdf-as-web.properties',
+            os.path.join(get_pythonenv(), "tomcat-6", "conf"),
+            context=self.config, use_sudo=True, filemode= '0644')
 
     return result
 
