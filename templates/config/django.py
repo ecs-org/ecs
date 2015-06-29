@@ -4,12 +4,15 @@ TEMPLATE_DEBUG = %(debug.template)s
 # database settings
 DATABASES['default'].update({
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'HOST': 'localhost',
     'NAME': '%(postgresql.database)s',
     'USER': '%(postgresql.username)s',
-    'PASSWORD': '%(postgresql.password)s',
-    'PORT': '6432', # use pgbouncer for connection with postgres
 })
+
+'''
+'HOST': 'localhost',
+'PASSWORD': '%(postgresql.password)s',
+'PORT': '6432', # use pgbouncer for connection with postgres
+'''
 
 # rabbitmq/celery settings
 BROKER_USER = '%(rabbitmq.username)s'
