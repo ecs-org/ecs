@@ -252,7 +252,7 @@ class SetupTarget(object):
         local('sudo /etc/init.d/shorewall restart')
 
     def backup_config(self):
-        if not self.config.get('backup.host', default=""):
+        if not self.config.get('backup', default=False):
             warn('no backup configuration, skipping backup config')
         else:
             with settings(warn_only=True):
