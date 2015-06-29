@@ -515,23 +515,13 @@ $myhostname   smtp:[localhost:8823]
             r'([ \t]+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
             r'([ \t]+-->[ \t]*\n|\r\n)?',
             r'\2', multiline=True)
-        write_regex_replace(
-            os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'pdf-as', 'cfg', 'config.properties'),
-            r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
-            #r'\1https://{0}\3'.format(self.config['host']))
-            r'\1http://{0}:4780\3'.format(self.config['host']))
-        write_regex_replace(
-            os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
-            r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
-            #r'\2https://{0}\4'.format(self.config['host']))
-            r'\2http://{0}:4780\4'.format(self.config['host']))
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6')
         if sys.platform == 'win32':
-            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as.work-dir={0}\\conf\\pdf-as&cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
+            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as-web.conf={0}\\conf\\pdf-as-web.properties" &cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
         else:
-            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS=-Dpdf-as.work-dir={0}/conf/pdf-as'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
+            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS=-Dpdf-as-web.conf={0}/conf/pdf-as-web.properties'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
         return cmd
 
     def start_dev_signing(self):
@@ -710,6 +700,15 @@ def custom_install_tomcat_other_user(pkgline, filename):
     return result
 
 
+def custom_check_mocca(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+
+def custom_install_mocca(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
+    pkg_manager = get_pkg_manager()
+    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
+
 def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
 
@@ -724,30 +723,30 @@ def custom_check_pdfasconfig(pkgline, checkfilename):
 
 def custom_install_pdfasconfig(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "conf", checkfilename)
     pkg_manager = get_pkg_manager()
-    '''
+    tempdir = tempfile.mkdtemp()
+
+    try:
+        result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
+        if result:
             write_regex_replace(
-                os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
-                r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
-                r'\1http://localhost:4780\3')
+                os.path.join(outputdir, 'cfg', 'config.properties'),
+                r'(moc.sign.url=)(http[s]?://[^/]+)(/bkuonline/http-security-layer-request)',
+                #r'\1https://{0}\3'.format(self.config['host']))
+                r'\1http://{0}:4780\3'.format(self.config['host']))
             write_regex_replace(
-                os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'pdf-as-web.properties'),
-                r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
-                r'\2http://localhost:4780\4')
+                os.path.join(outputdir, 'cfg', 'pdf-as-web.properties'),
+                r'([#]?)(retrieve_signature_data_url_override=)(http[s]?://[^/]+)(/pdf-as/RetrieveSignatureData)',
+                #r'\2https://{0}\4'.format(self.config['host']))
+                r'\2http://{0}:4780\4'.format(self.config['host']))
+
+    finally:
+        shutil.rmtree(tempdir)
 
 
     return result
-    '''
 
-def custom_check_mocca(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
-
-def custom_install_mocca(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
-    pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
 
 def custom_install_pdftotext(pkgline, filename):
