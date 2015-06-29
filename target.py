@@ -714,10 +714,18 @@ def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
 
 def custom_install_pdfas(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
     outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
     pkg_manager = get_pkg_manager()
     return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
+def custom_check_pdfasconfig(pkgline, checkfilename):
+    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", checkfilename))
+
+def custom_install_pdfasconfig(pkgline, filename):
+    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
+    pkg_manager = get_pkg_manager()
     '''
             write_regex_replace(
                 os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
