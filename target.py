@@ -714,16 +714,11 @@ def custom_check_pdfas(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
 
 def custom_install_pdfas(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
+    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
     pkg_manager = get_pkg_manager()
-    temp_dir = tempfile.mkdtemp()
-    temp_dest = os.path.join(temp_dir, "tomcat-6")
-    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
-    result = False
+    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
 
-    try:
-        pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline)
-        if pkg_manager.static_install_unzip(filename, temp_dir, checkfilename, pkgline):
+    '''
             write_regex_replace(
                 os.path.join(temp_dest, 'conf', 'pdf-as', 'cfg', 'config.properties'),
                 r'(moc.sign.url=)(http://127.0.0.1:8080)(/bkuonline/http-security-layer-request)',
@@ -733,13 +728,9 @@ def custom_install_pdfas(pkgline, filename):
                 r'([#]?)(retrieve_signature_data_url_override=)(http://localhost:8080)(/pdf-as/RetrieveSignatureData)',
                 r'\2http://localhost:4780\4')
 
-            distutils.dir_util.copy_tree(temp_dest, final_dest, verbose=True)
-            result = True
-    finally:
-        shutil.rmtree(temp_dir)
 
     return result
-
+    '''
 
 def custom_check_mocca(pkgline, checkfilename):
     return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))

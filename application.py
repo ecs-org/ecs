@@ -7,7 +7,7 @@ from deployment.pkgmanager import package_merge
 
 # main packages needed for the application
 main_packages = """
-# language support for german locales, eg. needed by postgresql to create a database with de_DE.utf8 locale 
+# language support for german locales, eg. needed by postgresql to create a database with de_DE.utf8 locale
 language-pack-de:req:apt:apt-get:language-pack-de
 
 # postgresql database bindings
@@ -23,7 +23,7 @@ pysqlite:req:mac:homebrew:sqlite
 pysqlite:req:mac:macports:sqlite3
 pysqlite:inst:!win:pypi:pysqlite
 pysqlite:instbin:win:http://pysqlite.googlecode.com/files/pysqlite-2.6.3.win32-py2.6.exe
-                     
+
 # timezone handling
 pytz:inst:all:pypi:pytz
 
@@ -44,7 +44,7 @@ django-dbtemplates:inst:all:pypi:django-dbtemplates==0.7.4
 # django caching uses memcache if available
 python-memcached:inst:all:pypi:python-memcached
 
-# preprocessing, combining, compressing of js and css 
+# preprocessing, combining, compressing of js and css
 #lxml could be used by django_compressor, but we use HtmlParser
 #lxml:req:apt:apt-get:libxslt1-dev,libxml2-dev
 #lxml:inst:!win:pypi:lxml\<2.3
@@ -72,7 +72,7 @@ if not (int(v[0]) == 2 and int(v[1]) >= 7):
     main_packages += "importlib:inst:all:pypi:importlib\n"
 
 main_packages += """
-# queuing: celery 
+# queuing: celery
 python-dateutil:inst:all:pypi:python-dateutil\<2.0.0
 anyjson:inst:all:pypi:anyjson\>=0.3.1
 amqplib:inst:all:pypi:amqplib\>=1.0.2
@@ -105,11 +105,13 @@ tomcat:req:apt:apt-get:tomcat6-user
 tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
 tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
-pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
-mocca:static:all:http://egovlabs.gv.at/frs/download.php/370/BKUOnline-1.3.7.war:custom:bkuonline.war
+pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as.war
+#pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
+mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war
+#mocca:static:all:http://egovlabs.gv.at/frs/download.php/370/BKUOnline-1.3.7.war:custom:bkuonline.war
 
 
-# ecs/mediaserver: file encryption, used for storage vault 
+# ecs/mediaserver: file encryption, used for storage vault
 gnupg:req:apt:apt-get:gnupg
 gnupg:req:mac:macports:gnupg
 gnupg:req:mac:homebrew:gnupg
@@ -158,7 +160,7 @@ qpdf:req:apt:apt-get:qpdf
 qpdf:req:mac:homebrew:qpdf
 qpdf:static:win:http://downloads.sourceforge.net/project/qpdf/qpdf/2.3.1/qpdf-2.3.1-bin-msvc.zip:unzipflat:qpdf.exe
 
-# mediaserver: python-memcached (and mockcache for testing) 
+# mediaserver: python-memcached (and mockcache for testing)
 python-memcached:inst:all:pypi:python-memcached
 mockcache:inst:all:pypi:mockcache
 
@@ -176,8 +178,8 @@ mupdf:static:win:http://mupdf.com/download/mupdf-0.9-windows.zip:unzipflat:pdfdr
 mupdf:static:mac:http://mupdf.com/download/archive/mupdf-0.7-darwin-i386.tar.gz:tarflat:pdfdraw
 
 # mediaserver: image magick is used for rendering tasks as well
-imagemagick:req:apt:apt-get:graphicsmagick-imagemagick-compat 
-# imagemagick up to 6.6 has a bug concerning 8bit png's, graphicsmagick is a fork with more stability 
+imagemagick:req:apt:apt-get:graphicsmagick-imagemagick-compat
+# imagemagick up to 6.6 has a bug concerning 8bit png's, graphicsmagick is a fork with more stability
 #imagemagick:req:mac:homebrew:imagemagick
 imagemagick:req:mac:macports:imagemagick
 # we check for montage.exe because on windows convert.exe exists already ... :-(
@@ -193,11 +195,11 @@ python-pil:inst:!win:pypi:PIL
 python-pil:instbin:win:http://effbot.org/media/downloads/PIL-1.1.7.win32-py2.6.exe
 
 
-# feedback: jsonrpclib for ecs feedback and fab ticket 
-jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz 
+# feedback: jsonrpclib for ecs feedback and fab ticket
+jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
 
 
-# logging: django-sentry; 
+# logging: django-sentry;
 # uuid:inst:all:pypi:uuid uuid is in mainlibs since 2.3 ... and was not thread safe in 2.5...
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar
 django-indexer:inst:all:pypi:django-indexer\>=0.3.0
@@ -318,7 +320,7 @@ rabbitmq-server:req:apt:apt-get:rabbitmq-server
 memcached:req:apt:apt-get:memcached
 #memcached:req:mac:macports:memcached
 #memcached:req:win:http://splinedancer.com/memcached-win32/memcached-1.2.4-Win32-Preview-20080309_bin.zip:unzipflatroot:memcached.exe
-# btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others 
+# btw, we only need debian packages in the system_packages, but it doesnt hurt to fillin for others
 
 # backup stuff
 debconf-utils:req:apt:apt-get:debconf-utils
@@ -326,14 +328,14 @@ hwinfo:req:apt:apt-get:hwinfo
 ncftp:req:apt:apt-get:ncftp
 duplicity:req:apt:apt-get:duplicity
 duply:static:!win:http://sourceforge.net/projects/ftplicity/files/duply%20%28simple%20duplicity%29/1.5.x/duply_1.5.5.4.tgz/download:custom:duply
-backupninja:req:apt:apt-get:backupninja 
+backupninja:req:apt:apt-get:backupninja
 
 # firewall
 shorewall:req:apt:apt-get:shorewall
 
 """
 
- 
+
 
 # target bundles
 ################
@@ -365,9 +367,9 @@ logrotate_targets = {
 }
 
 upstart_targets = {
-    'celeryd': (None, './manage.py celeryd -l warning -f ../../ecs-log/celeryd.log'),    
+    'celeryd': (None, './manage.py celeryd -l warning -f ../../ecs-log/celeryd.log'),
     'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -f ../../ecs-log/celerybeat.log'),
-    'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'), 
+    'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'),
     'signature': ('upstart-tomcat.conf', ''),
 }
 
@@ -377,5 +379,3 @@ test_flavors = {
     'mediaserver': 'false',  # include in the mainapp tests
     'mailserver': 'false', # included in the mainapp tests
 }
-
-
