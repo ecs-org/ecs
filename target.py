@@ -504,8 +504,8 @@ $myhostname   smtp:[localhost:8823]
 
     def pgbouncer_config(self):
         self.write_config_templatedir('pgbouncer', '/', use_sudo=True, filemode= "0640")
-        self.local(['chown postgres:postgres -R /etc/pgbouncer'])
-        self.local(['/etc/init.d/pgbouncer', 'restart'])
+        local('sudo chown postgres:postgres -R /etc/pgbouncer')
+        local('sudo /etc/init.d/pgbouncer restart'])
 
     def catalina_config(self):
         write_regex_replace(
