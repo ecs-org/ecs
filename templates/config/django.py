@@ -6,13 +6,11 @@ DATABASES['default'].update({
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': '%(postgresql.database)s',
     'USER': '%(postgresql.username)s',
+    'HOST': 'localhost',
+    'PASSWORD': '%(postgresql.password)s',
+    'PORT': '6432', # use pgbouncer for connection with postgres
 })
 
-'''
-'HOST': 'localhost',
-'PASSWORD': '%(postgresql.password)s',
-'PORT': '6432', # use pgbouncer for connection with postgres
-'''
 
 # rabbitmq/celery settings
 BROKER_USER = '%(rabbitmq.username)s'
