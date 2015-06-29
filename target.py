@@ -515,6 +515,10 @@ $myhostname   smtp:[localhost:8823]
             r'([ \t]+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
             r'([ \t]+-->[ \t]*\n|\r\n)?',
             r'\2', multiline=True)
+        self.write_config_template('pdf-as-web.properties',
+            os.path.join(get_pythonenv(), "tomcat-6", "conf"),
+            context=self.config, use_sudo=True, filemode= '0644')
+
 
     def catalina_cmd(self, what):
         TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6')
@@ -727,11 +731,6 @@ def custom_install_pdfasconfig(pkgline, filename):
     pkg_manager = get_pkg_manager()
 
     result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
-
-    if result:
-        self.write_config_template('pdf-as-web.properties',
-            os.path.join(get_pythonenv(), "tomcat-6", "conf"),
-            context=self.config, use_sudo=True, filemode= '0644')
 
     return result
 
