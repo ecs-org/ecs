@@ -4,8 +4,10 @@ TEMPLATE_DEBUG = %(debug.template)s
 # database settings
 DATABASES['default'].update({
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'HOST': 'localhost'
     'NAME': '%(postgresql.database)s',
     'USER': '%(postgresql.username)s',
+    'PASSWORD': '%(postgresql.password)s',
     'PORT': '6432', # use pgbouncer for connection with postgres
 })
 
@@ -19,7 +21,7 @@ CELERY_ALWAYS_EAGER = False
 # haystack settings
 HAYSTACK_SEARCH_ENGINE = '%(haystack.search_engine)s'
 
-# multiprocess safe cache settings 
+# multiprocess safe cache settings
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
 
 # ecsmail settings
@@ -50,7 +52,7 @@ REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
 BUGSHOT_CONFIG = {
-    'bugshoturl': '%(bugshot.url)s', 
+    'bugshoturl': '%(bugshot.url)s',
     'milestone': '%(bugshot.milestone)s',
 }
 
@@ -64,7 +66,7 @@ MS_CLIENT = {
 
 MS_SERVER['render_memcache_lib'] = 'memcache'
 MS_SERVER['render_memcache_host'] = "127.0.0.1"
-MS_SERVER['render_memcache_port'] = 11211 
+MS_SERVER['render_memcache_port'] = 11211
 
 STORAGE_VAULT = '%(storagevault.implementation)s'
 STORAGE_VAULT_OPTIONS = {
