@@ -64,18 +64,21 @@ def with_sign_data(data=True, session=False):
 
 def get_pdfas_url(request, sign_data):
     values = {
-        'preview': 'false',
-        'connector': 'moc',     # undocumented feature! selects ONLINE CCE/BKU
-        'mode': 'binary',
-        'sig_type': 'SIGNATURBLOCK_DE',
-        'inline': 'false',
-        'filename': sign_data['document_filename'],
-        'num-bytes': str(len(sign_data['pdf_data'])),
-        'pdf-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_send')),
-        'pdf-id': sign_data.id,
+        'connector': 'onlinebku',
         'invoke-app-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_receive')),
         'invoke-app-error-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_error', kwargs={'pdf_id': sign_data.id})),
-        'locale': 'de_AT',
+        'locale': 'DE',
+        'num-bytes': str(len(sign_data['pdf_data'])),
+        'sig_type': 'SIGNATURBLOCK_DE',
+        'pdf-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_send')),
+
+        'verify-level': 'intOnly', # Dies bedeutet, dass eine Signaturprüfung durchgeführt wird, allerdings ohne Zertifikatsprüfung.
+        'filename': sign_data['document_filename'],
+
+        #'preview': 'false',
+        #'mode': 'binary',
+        #'inline': 'false',
+        'pdf-id': sign_data.id,
     }
     data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
     return '{0}Sign?{1}'.format(settings.PDFAS_SERVICE, data)

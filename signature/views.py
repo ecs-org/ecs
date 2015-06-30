@@ -4,6 +4,7 @@ import urllib2
 import traceback
 import logging
 import sys
+import hashlib
 
 from datetime import datetime
 from tempfile import NamedTemporaryFile
@@ -45,6 +46,7 @@ def _store_sign_data(sign_data, force_mock=False):
                 tmp_out.seek(0)
                 sign_data['pdf_data'] = tmp_out.read()
 
+    sign_data.store(origdigest=hashlib.sha256(sign_data['pdf_data']).hexdigest())
     sign_data.store(minutes=5)
     return sign_data
 
@@ -143,8 +145,11 @@ def sign_receive(request, mock=False):
             pdf_data = request.sign_data['pdf_data']
         else:
             q = dict((k, request.GET[k]) for k in ('pdf-id', 'pdfas-session-id',))
+            q['origdigest'] = request.sign_data['origdigest']
             url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdfurl'], urllib.urlencode(q))
             sock_pdfas = urllib2.urlopen(url)
+            # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
+            # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
         f = ContentFile(pdf_data)
