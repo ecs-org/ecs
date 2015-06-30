@@ -12,19 +12,22 @@ sys.stdout = sys.stderr
 # Remember original sys.path.
 prev_sys_path = list(sys.path)
 
-#  source and environment location. 
+#  source and environment location.
 srcbasedir = '%(source)s'
 appdir = os.path.join(srcbasedir, '%(appname)s')
 basedir = os.path.join(srcbasedir, '..')
 
 # TODO: environment dirname is hardcoded
-python_version = "{0}.{1}".format(sys.version_info.major, sys.version_info.minor)
+if isinstance(sys.version_info, tuple):
+    python_version = "{0}.{1}".format(sys.version_info[0], sys.version_info[1])
+else:
+    python_version = "{0}.{1}".format(sys.version_info.major, sys.version_info.minor)
 envdir = os.path.join(basedir, "environment")
 sitedir = os.path.join(envdir, "/lib/python{0}/site-packages".format(python_version))
 bindir = os.path.join(envdir, "bin")
 service_indicator  = os.path.join(basedir, 'ecs-conf', 'service.now')
 
-# Add each new site-packages directory.. 
+# Add each new site-packages directory..
 site.addsitedir(sitedir)
 
 # Reorder sys.path so new directories at the front.
@@ -57,14 +60,14 @@ def maintenance(environ, start_response):
     headers.append(('Content-Type', 'text/html'))
     write = start_response('200 OK', headers)
     input = environ['wsgi.input']
-    
+
     output = StringIO.StringIO()
     print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
     print >> output
     #output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     data = output.getvalue()
     output.close()
-    
+
     return [data]
 
 # late import of django, because we needed to mangle python paths first, to include environment
@@ -75,4 +78,3 @@ if os.path.exists(service_indicator):
     application = maintenance
 else:
     application = django.core.handlers.wsgi.WSGIHandler()
-
