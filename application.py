@@ -330,6 +330,7 @@ ncftp:req:apt:apt-get:ncftp
 duplicity:req:apt:apt-get:duplicity
 duply:static:!win:http://sourceforge.net/projects/ftplicity/files/duply%20%28simple%20duplicity%29/1.5.x/duply_1.5.5.4.tgz/download:custom:duply
 backupninja:req:apt:apt-get:backupninja
+rsync:req:apt:apt-get:rsync
 
 # firewall
 shorewall:req:apt:apt-get:shorewall
