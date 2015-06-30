@@ -122,19 +122,12 @@ def sign(request, sign_data, force_mock=False, force_fail=False):
     return HttpResponseRedirect(url)
 
 
-@csrf_exempt
-@forceauth.exempt
-@with_sign_data()
-def sign_send(request):
-    return HttpResponse(request.sign_data["pdf_data"], content_type='application/pdf')
-
-
 @user_group_required("EC-Signing Group")
 @with_sign_data()
 def sign_preview(request):
     return HttpResponse(request.sign_data["html_preview"])
 
-
+@user_group_required("EC-Signing Group")
 @csrf_exempt
 @with_sign_data()
 def sign_receive(request, mock=False):
@@ -145,24 +138,24 @@ def sign_receive(request, mock=False):
             pdf_data = request.sign_data['pdf_data']
         else:
             q = dict((k, request.GET[k]) for k in ('pdf-id', 'pdfas-session-id',))
-            url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdf-url'], urllib.urlencode(q))
+            url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdfurl'], urllib.urlencode(q))
             sock_pdfas = urllib2.urlopen(url)
-            pdf_data = sock_pdfas.read(int(request.GET['num-bytes']))
-    
+            pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
+
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
-    
+
         doctype = DocumentType.objects.get(identifier=request.sign_data['document_type'])
         document = Document.objects.create(uuid=request.sign_data["document_uuid"],
              branding='n', doctype=doctype, file=f,
-             original_file_name=request.sign_data["document_filename"], date=datetime.now(), 
+             original_file_name=request.sign_data["document_filename"], date=datetime.now(),
              version=request.sign_data["document_version"]
         )
         parent_model = request.sign_data.get('parent_type')
         if parent_model:
             document.parent_object = parent_model.objects.get(pk=request.sign_data['parent_pk'])
             document.save()
- 
+
         # called unconditionally, because the function can have side effects
         url = request.sign_data['success_func'](request, document=document)
 

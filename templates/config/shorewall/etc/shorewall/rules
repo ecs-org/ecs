@@ -29,4 +29,4 @@ ACCEPT   all     $FW      tcp     25      # smtp
 ACCEPT   all     $FW      tcp     465     # smtps
 
 # ecs signing (temporary)
-ACCEPT   all     $FW      tcp     4780    # signing
+#ACCEPT   all     $FW      tcp     4780    # signing
