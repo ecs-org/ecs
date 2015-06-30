@@ -593,15 +593,16 @@ $myhostname   smtp:[localhost:8823]
 
     def queuing_config(self):
         with settings(warn_only=True):
-            local('sudo killall beam')
+            local('/etc/init.d/rabbitmq-server stop')
+            local('sudo killall beam.smp')
             local('sudo killall epmd')
             time.sleep(1)
-            local('sudo killall beam')
+            local('sudo killall beam.smp')
             local('sudo killall epmd')
             time.sleep(1)
             local('sudo apt-get -y remove --purge rabbitmq-server')
-            local('sudo killall beam')
-            local('sudo killall epmd')
+            local('sudo killall beam.smp')
+            local('sudo killall epmd.smp')
             time.sleep(1)
             local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
 

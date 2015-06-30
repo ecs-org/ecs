@@ -121,6 +121,11 @@ def sign(request, sign_data, force_mock=False, force_fail=False):
     url = get_pdfas_url(request, sign_data)
     return HttpResponseRedirect(url)
 
+@csrf_exempt
+@forceauth.exempt
+@with_sign_data()
+def sign_send(request):
+    return HttpResponse(request.sign_data["pdf_data"], content_type='application/pdf')
 
 @user_group_required("EC-Signing Group")
 @with_sign_data()
