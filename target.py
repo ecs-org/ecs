@@ -600,9 +600,9 @@ $myhostname   smtp:[localhost:8823]
             local('sudo killall beam.smp')
             local('sudo killall epmd')
             time.sleep(1)
-            local('sudo apt-get -y remove --purge rabbitmq-server')
+            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get -y remove --purge rabbitmq-server"')
             local('sudo killall beam.smp')
-            local('sudo killall epmd.smp')
+            local('sudo killall epmd')
             time.sleep(1)
             local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
 
