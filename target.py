@@ -626,7 +626,7 @@ $myhostname   smtp:[localhost:8823]
             self.homedir,  source_schema))
         local('sudo cp {0} /etc/solr/conf/schema.xml'.format(source_schema))
         with open(source_jetty, 'w') as f:
-            f.write("NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\n")
+            f.write('NO_START=0\nVERBOSE=yes\nJETTY_PORT=8983\nfor a in /usr/lib/jvm/java-7-openjdk*; do JAVA_HOME=$a; done')   # jetty version in precise has no default search list for java-7
         local('sudo cp {0} /etc/default/jetty'.format(source_jetty))
         local('sudo /etc/init.d/jetty stop')
         time.sleep(5)
