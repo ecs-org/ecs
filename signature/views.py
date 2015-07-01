@@ -46,7 +46,7 @@ def _store_sign_data(sign_data, force_mock=False):
                 tmp_out.seek(0)
                 sign_data['pdf_data'] = tmp_out.read()
 
-    sign_data.store(origdigest=hashlib.sha256(sign_data['pdf_data']).hexdigest())
+    sign_data['origdigest'] = hashlib.sha256(sign_data['pdf_data']).hexdigest()
     sign_data.store(minutes=5)
     return sign_data
 
