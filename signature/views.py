@@ -123,6 +123,7 @@ def sign(request, sign_data, force_mock=False, force_fail=False):
     url = get_pdfas_url(request, sign_data)
     return HttpResponseRedirect(url)
 
+# FIXME allow only from same host as server
 @csrf_exempt
 @forceauth.exempt
 @with_sign_data()
@@ -149,7 +150,7 @@ def sign_receive(request, mock=False):
             url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdfurl'], urllib.urlencode(q))
             sock_pdfas = urllib2.urlopen(url)
             # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
-            # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error
+            # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
         f = ContentFile(pdf_data)

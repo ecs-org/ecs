@@ -525,7 +525,7 @@ $myhostname   smtp:[localhost:8823]
         if sys.platform == 'win32':
             cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as-web.conf={0}\\conf\\pdf-as-web.properties&cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
         else:
-            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS=-Dpdf-as-web.conf={0}/conf/pdf-as-web.properties'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
+            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS="-Dpdf-as-web.conf={0}/conf/pdf-as-web.properties"'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
         return cmd
 
     def start_dev_signing(self):

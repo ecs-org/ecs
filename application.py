@@ -97,10 +97,11 @@ beautifulsoup:inst:all:http://www.crummy.com/software/BeautifulSoup/download/3.x
 beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
 
 
-# ecs/signature: tomcat, mocca and pdf-as
+# ecs/signature: java, tomcat, mocca and pdf-as
 # needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
-# for apt (ubuntu/debian) systems, tomcat 6 is used as a user installation
+# for apt (ubuntu/debian) systems, openjdk 7 and tomcat ?6 is used as a user installation
+openjdk:req:apt:apt-get:openjdk-7-jre-headless
 tomcat:req:apt:apt-get:tomcat6-user
 tomcat_apt_user:static:apt:file:dummy:custom:None
 # for all others, a custom downloaded tomcat 6 is used
