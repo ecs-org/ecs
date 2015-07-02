@@ -328,7 +328,7 @@ class SetupTarget(object):
             local('sudo cp {0} {1}'.format(target_cert, target_combined))
 
         # delete old java cacerts KeyStore, fixes that old certificate of same host will get stuck
-        local('sudo bash -c "rm /etc/ssl/certs/java/cacerts"')
+        local('sudo bash -c "if test -f /etc/ssl/certs/java/cacerts; then rm /etc/ssl/certs/java/cacerts; fi"')
 
         # update local and java store (at least the one in /etc/ssl/certs/java)
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
