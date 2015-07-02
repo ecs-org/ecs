@@ -9,25 +9,25 @@
 
     SSLEngine on
     SSLCertificateFile "/etc/ssl/certs/%(hostname)s.pem"
-    SSLCertificateChainFile "/etc/ssl/certs/%(hostname)s.chain.pem"
+    SSLCertificateChainFile "/etc/ssl/%(hostname)s.chain.pem"
     SSLCertificateKeyFile "/etc/ssl/private/%(hostname)s.key"
 
     SSLCACertificateFile "%(ca_certificate_file)s"
     SSLCARevocationFile "%(ca_revocation_file)s"
     SSLVerifyClient none
-    
+
     <Location /secure>
         SSLRequireSSL
         SSLVerifyClient require
         SSLVerifyDepth 1
     </Location>
-    
+
     DocumentRoot %(home)s/empty_html
     <Directory "%(home)s/empty_html">
         Options FollowSymLinks
         AllowOverride Authconfig FileInfo Indexes Limit Options=Indexes
     </Directory>
-    
+
     Include /etc/apache2/ecs/apache.conf/*.conf
 </VirtualHost>
 
@@ -40,6 +40,6 @@
         Options FollowSymLinks
         AllowOverride Authconfig FileInfo Indexes Limit Options=Indexes
     </Directory>
-        
+
     Redirect permanent / https://%(hostname)s/
 </VirtualHost>

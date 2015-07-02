@@ -100,17 +100,12 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # ecs/signature: java, tomcat, mocca and pdf-as
 # needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
-# for apt (ubuntu/debian) systems, openjdk 7 and tomcat ?6 is used as a user installation
 openjdk:req:apt:apt-get:openjdk-7-jre-headless
 tomcat:req:apt:apt-get:tomcat6-user
 tomcat_apt_user:static:apt:file:dummy:custom:None
-# for all others, a custom downloaded tomcat 6 is used
-tomcat_other_user:static:!apt:http://mirror.sti2.at/apache/tomcat/tomcat-6/v6.0.33/bin/apache-tomcat-6.0.33.tar.gz:custom:apache-tomcat-6.0.33
 pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war
 pdfasconfig:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/cfg/defaultConfig.zip:custom:pdf-as-web
-#pdfas:static:all:http://egovlabs.gv.at/frs/download.php/276/pdf-as-3.2-webapp.zip:custom:pdf-as.war
 mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war
-#mocca:static:all:http://egovlabs.gv.at/frs/download.php/370/BKUOnline-1.3.7.war:custom:bkuonline.war
 
 
 # ecs/mediaserver: file encryption, used for storage vault
@@ -311,6 +306,9 @@ pgbouncer:req:apt:apt-get:pgbouncer
 # postfix is used as incoming smtp firewall and as smartmx for outgoing mails
 postfix:req:apt:apt-get:postfix
 
+# pdf-as needs java >= 1.7
+openjdk:req:apt:apt-get:openjdk-7-jre-headless
+
 # solr is used for fulltext indexing
 solr-jetty:req:apt:apt-get:solr-jetty
 
@@ -373,7 +371,8 @@ upstart_targets = {
     'celeryd': (None, './manage.py celeryd -l warning -f ../../ecs-log/celeryd.log'),
     'celerybeat': (None, './manage.py celerybeat -S djcelery.schedulers.DatabaseScheduler -l warning -f ../../ecs-log/celerybeat.log'),
     'ecsmail': (None, './manage.py ecsmail server ../../ecs-log/ecsmail.log'),
-    'signature': ('upstart-tomcat.conf', ''),
+    'mocca': ('upstart-tomcat.conf', ''),
+    'pdfas': ('upstart-tomcat.conf', ''),
 }
 
 test_flavors = {

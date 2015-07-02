@@ -155,7 +155,8 @@ class SetupTarget(object):
 
         self.apache_baseline()
         self.apache_config()
-        self.catalina_config()
+
+        self.pdfas_config()
         self.daemons_install()
 
         self.custom_network_config()
@@ -300,8 +301,8 @@ class SetupTarget(object):
     def servercert_config(self):
         target_key = '/etc/ssl/private/{0}.key'.format(self.host)
         target_cert = '/usr/local/share/ca-certificates/{0}.crt'.format(self.host)
-        target_chain = '/usr/local/share/ca-certificates/{0}.chain.crt'.format(self.host)
-        target_combined = '/usr/local/share/ca-certificates/{0}.combined.crt'.format(self.host)
+        target_chain = '/etc/ssl/{0}.chain.pem'.format(self.host)
+        target_combined = '/etc/ssl/{0}.combined.pem'.format(self.host)
 
         try:
             ssl_key = self.config.get_path('ssl.key')
@@ -508,32 +509,10 @@ $myhostname   smtp:[localhost:8823]
         local('sudo chown postgres:postgres -R /etc/pgbouncer')
         local('sudo /etc/init.d/pgbouncer restart')
 
-    def catalina_config(self):
-        write_regex_replace(
-            os.path.join(get_pythonenv(), 'tomcat-6', 'conf', 'server.xml'),
-            r'^'+
-            r'([ \t]+<!--[ \t]*\n|\r\n)?'+
-            r'([ \t]+<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
-            r'([ \t]+-->[ \t]*\n|\r\n)?',
-            r'\2', multiline=True)
-
+    def pdfas_config(self):
         self.write_config_template('pdf-as-web.properties',
-            os.path.join(get_pythonenv(), "tomcat-6", "conf", "pdf-as-web.properties"),
+            os.path.join(get_pythonenv(), "pdfas", "conf", "pdf-as-web.properties"),
             context=self.config, use_sudo=True, filemode= '0644')
-
-    def catalina_cmd(self, what):
-        TOMCAT_DIR = os.path.join(get_pythonenv(), 'tomcat-6')
-        if sys.platform == 'win32':
-            cmd = "set CATALINA_BASE={0}&set CATALINA_OPTS=-Dpdf-as-web.conf={0}\\conf\\pdf-as-web.properties&cd {0}&bin\\catalina.bat {1}".format(TOMCAT_DIR, what)
-        else:
-            cmd = subprocess.list2cmdline(['env', 'CATALINA_BASE={0}'.format(TOMCAT_DIR), 'CATALINA_OPTS="-Dpdf-as-web.conf={0}/conf/pdf-as-web.properties"'.format(TOMCAT_DIR), '{0}/bin/catalina.sh'.format(TOMCAT_DIR), what])
-        return cmd
-
-    def start_dev_signing(self):
-        local(self.catalina_cmd('start'))
-
-    def stop_dev_signing(self):
-        local(self.catalina_cmd('stop'))
 
     def apache_restart(self):
         local('sudo /etc/init.d/apache2 restart')
@@ -659,81 +638,66 @@ def custom_install_gettext_tools(pkgline, filename):
     return True
 
 
-def custom_check_tomcat_apt_user(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
-
-def custom_install_tomcat_apt_user(pkgline, filename):
-    tomcatpath = os.path.join(get_pythonenv(), "tomcat-6")
-
-    if os.path.exists(os.path.join(tomcatpath)):
+def tomcat_user(tomcatpath, control_port, http_port, ajp_port):
+    if os.path.exists(tomcatpath):
         if os.path.exists(tomcatpath+"-old"):
             shutil.rmtree(tomcatpath+"-old")
         shutil.move(tomcatpath, tomcatpath+"-old")
 
-    install = 'tomcat6-instance-create -p 4780 -c 4705 \'{0}\''.format(tomcatpath)
+    install = 'tomcat6-instance-create -p {0} -c {1} \'{2}\''.format(http_port, control_port, tomcatpath)
     popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
     stdout, stderr = popen.communicate()
     returncode = popen.returncode
     if returncode != 0:
         print "Error:", returncode, stdout, stderr
-        return False
+        ret= False
     else:
-        return True
+        ret= True
 
-def custom_check_tomcat_other_user(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", "server.xml"))
+    if ret:
+        write_regex_replace(
+            os.path.join(tomcatpath 'conf', 'server.xml'),
+                r'^'+
+                r'([ \t]+<!--[ \t]*\n|\r\n)?'+
+                r'([ \t]+<Connector port=)"8009"( protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
+                r'([ \t]+-->[ \t]*\n|\r\n)?',
+                r'\2"'+ str(ajp_port)+ r'"\3', multiline=True)
 
-def custom_install_tomcat_other_user(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    temp_dir = tempfile.mkdtemp()
-    temp_dest = os.path.join(temp_dir, checkfilename)
-    final_dest = os.path.join(get_pythonenv(), "tomcat-6")
-    result = False
-
-    try:
-        if os.path.exists(final_dest):
-            shutil.rmtree(final_dest)
-        if pkg_manager.static_install_tar(filename, temp_dir, checkfilename, pkgline):
-            write_regex_replace(os.path.join(temp_dest, 'conf', 'server.xml'),
-                r'([ \t])+(<Connector port=)("[0-9]+")([ ]+protocol="HTTP/1.1")',
-                r'\1\2"4780"\4')
-            shutil.copytree(temp_dest, final_dest)
-            result = True
-    finally:
-        shutil.rmtree(temp_dir)
-
-    return result
+    return ret
 
 
 def custom_check_mocca(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+    return os.path.exists(os.path.join(get_pythonenv(), "mocca", "webapps", checkfilename))
 
 def custom_install_mocca(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
-    pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
+    basedir = os.path.join(get_pythonenv(), "mocca")
+    ret = tomcat_user(basedir, 4750, 4780, 4790)
+    if ret:
+        pkg_manager = get_pkg_manager()
+        ret = pkg_manager.static_install_copy(filename, os.path.join(basedir, "webapps"), checkfilename, pkgline)
+    return ret
 
 def custom_check_pdfas(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "webapps", checkfilename))
+    return os.path.exists(os.path.join(get_pythonenv(), "pdfas", "webapps", checkfilename))
 
 def custom_install_pdfas(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "webapps")
-    pkg_manager = get_pkg_manager()
-    return pkg_manager.static_install_copy(filename, outputdir, checkfilename, pkgline)
+    basedir = os.path.join(get_pythonenv(), "pdfas")
+    ret = tomcat_user(basedir, 4755, 4785, 4795)
+    if ret:
+        pkg_manager = get_pkg_manager()
+        ret = pkg_manager.static_install_copy(filename, os.path.join(basedir, "webapps"), checkfilename, pkgline)
+    return ret
 
 def custom_check_pdfasconfig(pkgline, checkfilename):
-    return os.path.exists(os.path.join(get_pythonenv(), "tomcat-6", "conf", checkfilename))
+    return os.path.exists(os.path.join(get_pythonenv(), "pdfas", "conf", checkfilename))
 
 def custom_install_pdfasconfig(pkgline, filename):
     (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    outputdir = os.path.join(get_pythonenv(), "tomcat-6", "conf", checkfilename)
+    outputdir = os.path.join(get_pythonenv(), "pdfas", "conf", checkfilename)
     pkg_manager = get_pkg_manager()
-
     result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
-
     return result
 
 
