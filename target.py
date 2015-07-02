@@ -656,7 +656,7 @@ def tomcat_user(tomcatpath, control_port, http_port, ajp_port):
 
     if ret:
         write_regex_replace(
-            os.path.join(tomcatpath 'conf', 'server.xml'),
+            os.path.join(tomcatpath, 'conf', 'server.xml'),
                 r'^'+
                 r'([ \t]+<!--[ \t]*\n|\r\n)?'+
                 r'([ \t]+<Connector port=)"8009"( protocol="AJP/1.3" redirectPort="8443" />[ \t]*\n|\r\n)'+
