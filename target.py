@@ -157,6 +157,7 @@ class SetupTarget(object):
         self.apache_config()
 
         self.pdfas_config()
+        self.mocca_config()
         self.daemons_install()
 
         self.custom_network_config()
@@ -508,6 +509,14 @@ $myhostname   smtp:[localhost:8823]
         self.write_config_templatedir('pgbouncer', '/', use_sudo=True, filemode= "0640")
         local('sudo chown postgres:postgres -R /etc/pgbouncer')
         local('sudo /etc/init.d/pgbouncer restart')
+
+    def mocca_config(self):
+        self.write_config_template('bkuonline.xml',
+            os.path.join(get_pythonenv(), "mocca", "conf", "Catalina", "localhost",  "bkuonline.xml"),
+            context=self.config, use_sudo=True, filemode= '0644')
+        self.write_config_template('mocca-configuration.xml',
+            os.path.join(get_pythonenv(), "mocca", "conf", "mocca-configuration.xml"),
+            context=self.config, use_sudo=True, filemode= '0644')
 
     def pdfas_config(self):
         self.write_config_template('pdf-as-web.properties',

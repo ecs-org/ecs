@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+  <Parameter name="configurationResource" value="file:${user.home}/conf/mocca-configuration.xml" override="false"/>
+
+</Context>
