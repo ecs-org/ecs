@@ -328,6 +328,9 @@ class SetupTarget(object):
         # combine cert plus chain to combined.crt
         local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
 
+        # delete old java cacerts KeyStore
+        local('sudo bash -c "rm /etc/ssl/certs/java/cacerts"')
+        
         # update local and java store (at least the one in /etc/ssl/certs/java)
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
 
