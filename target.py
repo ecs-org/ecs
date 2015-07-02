@@ -511,8 +511,10 @@ $myhostname   smtp:[localhost:8823]
         local('sudo /etc/init.d/pgbouncer restart')
 
     def mocca_config(self):
+        bkuonline_path = os.path.join(get_pythonenv(), "mocca", "conf", "Catalina", "localhost")
+        local('if test ! -d {0}; then mkdir -p {0}; fi'.format(bkuonline_path))
         self.write_config_template('bkuonline.xml',
-            os.path.join(get_pythonenv(), "mocca", "conf", "Catalina", "localhost",  "bkuonline.xml"),
+            os.path.join(bkuonline_path, "bkuonline.xml"),
             context=self.config, use_sudo=True, filemode= '0644')
         self.write_config_template('mocca-configuration.xml',
             os.path.join(get_pythonenv(), "mocca", "conf", "mocca-configuration.xml"),
