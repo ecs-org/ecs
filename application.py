@@ -102,7 +102,6 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
 openjdk:req:apt:apt-get:openjdk-7-jre-headless
 tomcat:req:apt:apt-get:tomcat6-user
-tomcat_apt_user:static:apt:file:dummy:custom:None
 pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war
 pdfasconfig:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/cfg/defaultConfig.zip:custom:pdf-as-web
 mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war
