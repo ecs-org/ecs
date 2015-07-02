@@ -65,7 +65,7 @@ def with_sign_data(data=True, session=False):
 def get_pdfas_url(request, sign_data):
     values = {
         'connector': 'onlinebku',
-        'invoke-app-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_receive')),
+        'invoke-app-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_receive', kwargs={'pdf_id': sign_data.id})),
         'invoke-app-url-target': '_top',
         'invoke-app-error-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_error', kwargs={'pdf_id': sign_data.id})),
         'locale': 'DE',
@@ -79,7 +79,7 @@ def get_pdfas_url(request, sign_data):
         #'preview': 'false',
         #'mode': 'binary',
         #'inline': 'false',
-        'pdf-id': sign_data.id,
+        #'pdf-id': sign_data.id,
     }
     data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
     return '{0}Sign?{1}'.format(settings.PDFAS_SERVICE, data)

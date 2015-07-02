@@ -145,8 +145,7 @@ def sign_receive(request, mock=False):
         if mock:
             pdf_data = request.sign_data['pdf_data']
         else:
-            q = dict((k, request.GET[k]) for k in ('pdf-id', 'pdfas-session-id',))
-            q['origdigest'] = request.sign_data['origdigest']
+            q = dict({'origdigest': request.sign_data['origdigest']})
             url = '{0}{1}?{2}'.format(settings.PDFAS_SERVICE, request.GET['pdfurl'], urllib.urlencode(q))
             sock_pdfas = urllib2.urlopen(url)
             # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header

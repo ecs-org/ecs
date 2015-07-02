@@ -7,9 +7,7 @@ urlpatterns = patterns('ecs.signature.views',
     url(r'^error/(?P<pdf_id>\d+)/$', 'sign_error'),
     url(r'^preview/(?P<pdf_id>\d+)/$', 'sign_preview'),
     url(r'^action/(?P<pdf_id>\d+)/(?P<action>[^/]+)/$', 'batch_action'),
-
-    # current version of pdf-as has some bug, to include jsessionid as part of the url
-    url(r'^receive/.*$', 'sign_receive'),
+    url(r'^receive/(?P<pdf_id>\d+)/$', 'sign_receive'),
 )
 
 if 'test' in sys.argv:
