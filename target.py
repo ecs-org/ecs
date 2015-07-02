@@ -319,7 +319,7 @@ class SetupTarget(object):
         ssl_chain = self.config.get_path('ssl.chain')
         if not ssl_chain:
             with tempfile.NamedTemporaryFile() as t:
-                t.write("\n")
+                t.write("")
                 t.flush()
                 local('sudo cp {0} {1}'.format(t.name, target_chain))
         else:
@@ -330,7 +330,7 @@ class SetupTarget(object):
 
         # delete old java cacerts KeyStore
         local('sudo bash -c "rm /etc/ssl/certs/java/cacerts"')
-        
+
         # update local and java store (at least the one in /etc/ssl/certs/java)
         local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
 

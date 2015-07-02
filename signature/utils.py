@@ -71,7 +71,7 @@ def get_pdfas_url(request, sign_data):
         'locale': 'DE',
         'num-bytes': str(len(sign_data['pdf_data'])),
         'sig_type': 'SIGNATURBLOCK_DE',
-        'pdf-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_send')),
+        'pdf-url': request.build_absolute_uri(reverse('ecs.signature.views.sign_send', kwargs={'pdf_id': sign_data.id})),
 
         'verify-level': 'intOnly', # Dies bedeutet, dass eine Signaturprüfung durchgeführt wird, allerdings ohne Zertifikatsprüfung.
         'filename': sign_data['document_filename'],
