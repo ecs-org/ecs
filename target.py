@@ -315,20 +315,18 @@ class SetupTarget(object):
             self.write_config_template('openssl-ssl.cnf', openssl_cnf)
             local('sudo openssl req -config {0} -nodes -new -newkey rsa:2048 -days 365 -x509 -keyout {1} -out {2}'.format(openssl_cnf, target_key, target_cert))
 
-        # copy chain file (if exist, or create empty file instead)
+        # copy and combine chain file (if exist, or create empty file instead)
         ssl_chain = self.config.get_path('ssl.chain')
-        if not ssl_chain:
-            with tempfile.NamedTemporaryFile() as t:
-                t.write("")
-                t.flush()
-                local('sudo cp {0} {1}'.format(t.name, target_chain))
-        else:
+        if ssl_chain:
             local('sudo cp {0} {1}'.format(ssl_chain, target_chain))
+            # combine cert plus chain to combined.crt
+            local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
+        else:
+            # no chain is available, clone cert to chain and combined, so update-ca-certificates will ignore them as duplicates, and other software will find them
+            local('sudo cp {0} {1}'.format(target_cert, target_chain))
+            local('sudo cp {0} {1}'.format(target_cert, target_combined))
 
-        # combine cert plus chain to combined.crt
-        local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
-
-        # delete old java cacerts KeyStore
+        # delete old java cacerts KeyStore, fixes that old certificate of same host will get stuck
         local('sudo bash -c "rm /etc/ssl/certs/java/cacerts"')
 
         # update local and java store (at least the one in /etc/ssl/certs/java)
