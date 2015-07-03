@@ -146,8 +146,7 @@ def sign_receive(request, mock=False):
             pdfurl_str = "mock:"
             pdf_data = request.sign_data['pdf_data']
         else:
-            q = dict({'origdigest': request.sign_data['origdigest']})
-            pdfurl_str = '{0}&{1}'.format(urllib.unquote(request.GET['pdfurl']), urllib.urlencode(q))
+            pdfurl_str = urllib.unquote(request.GET['pdfurl'])
             if not pdfurl_str.startswith(settings.PDFAS_SERVICE):
                 raise RuntimeError("pdfurl does not start with settings.PDFAS_SERVICE: {0} != {1}".format(settings.PDFAS_SERVICE, pdfurl_str))
             sock_pdfas = urllib2.urlopen(pdfurl_str)
@@ -155,11 +154,12 @@ def sign_receive(request, mock=False):
             # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
+        # FIXME: remove /tmp file writes
         with open("/tmp/signed.pdf","wb") as t:
             t.write(pdf_data)
         with open("/tmp/get_urls.txt","ab") as t:
             t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
-            
+
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
 
