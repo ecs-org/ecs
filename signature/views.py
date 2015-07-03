@@ -155,6 +155,9 @@ def sign_receive(request, mock=False):
             # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
+        with Open("/tmp/signed.pdf","wb") as t:
+            t.write(pdf_data)
+
         f = ContentFile(pdf_data)
         f.name = 'vote.pdf'
 
