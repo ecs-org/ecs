@@ -324,12 +324,12 @@ class SetupTarget(object):
             # combine cert plus chain to combined.crt
             local('sudo bash -c "cat {0} {1} > {2}"'.format(target_cert, target_chain, target_combined))
         else:
-            # no chain is available, clone cert to chain and combined, so update-ca-certificates will ignore them as duplicates, and other software will find them
+            # no chain is available, clone cert to chain and combined so other software will find them
             local('sudo cp {0} {1}'.format(target_cert, target_chain))
             local('sudo cp {0} {1}'.format(target_cert, target_combined))
 
         # delete old java cacerts KeyStore, fixes that old certificate of same host will get stuck
-        local('sudo bash -c "if test -f /etc/ssl/certs/java/cacerts; then rm /etc/ssl/certs/java/cacerts; fi"')
+        #local('sudo bash -c "if test -f /etc/ssl/certs/java/cacerts; then rm /etc/ssl/certs/java/cacerts; fi"')
 
         # update local and java store (at least the one in /etc/ssl/certs/java)
         local('sudo update-ca-certificates --verbose') # needed for all in special java that pdf-as knows server cert
