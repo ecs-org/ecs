@@ -332,7 +332,7 @@ class SetupTarget(object):
         local('sudo bash -c "if test -f /etc/ssl/certs/java/cacerts; then rm /etc/ssl/certs/java/cacerts; fi"')
 
         # update local and java store (at least the one in /etc/ssl/certs/java)
-        local('sudo update-ca-certificates --verbose --fresh') # needed for all in special java that pdf-as knows server cert
+        local('sudo update-ca-certificates --verbose') # needed for all in special java that pdf-as knows server cert
 
     def mail_config(self):
         '''

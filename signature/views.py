@@ -148,7 +148,7 @@ def sign_receive(request, mock=False):
         else:
             q = dict({'origdigest': request.sign_data['origdigest']})
             getpdf_url = '{0}&{1}'.format(request.GET['pdfurl'], urllib.urlencode(q))
-            sock_pdfas = urllib2.urlopen(get_pdfurl)
+            sock_pdfas = urllib2.urlopen(getpdf_url)
             # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
             # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
@@ -179,7 +179,7 @@ def sign_receive(request, mock=False):
         # the cake is a lie
         transaction.savepoint_rollback(sid)
         logger.warn('Signing Error', exc_info=sys.exc_info())
-        return sign_error(request, pdf_id=request.sign_data.id, error=repr(e)+ " url: {0}".format(get_pdfas_url), cause=traceback.format_exc())
+        return sign_error(request, pdf_id=request.sign_data.id, error=repr(e)+ " url: {0}".format(getpdf_url), cause=traceback.format_exc())
 
     else:
         transaction.savepoint_commit(sid)
