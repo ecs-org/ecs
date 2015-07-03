@@ -143,12 +143,14 @@ def sign_receive(request, mock=False):
     sid = transaction.savepoint()
     try:
         if mock:
-            getpdf_url = "mock"
+            pdfurl_str = "mock:"
             pdf_data = request.sign_data['pdf_data']
         else:
             q = dict({'origdigest': request.sign_data['origdigest']})
-            getpdf_url = '{0}&{1}'.format(request.GET['pdfurl'], urllib.urlencode(q))
-            sock_pdfas = urllib2.urlopen(getpdf_url)
+            pdfurl_str = '{0}&{1}'.format(urllib.unquote(request.GET['pdfurl']), urllib.urlencode(q))
+            if not pdfurl_str.startswith(settings.PDFAS_SERVICE):
+                raise RuntimeError("pdfurl does not start with settings.PDFAS_SERVICE: {0} != {1}".format(settings.PDFAS_SERVICE, pdfurl_str))
+            sock_pdfas = urllib2.urlopen(pdfurl_str)
             # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
             # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
             pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
@@ -179,7 +181,7 @@ def sign_receive(request, mock=False):
         # the cake is a lie
         transaction.savepoint_rollback(sid)
         logger.warn('Signing Error', exc_info=sys.exc_info())
-        return sign_error(request, pdf_id=request.sign_data.id, error=repr(e)+ " url: {0}".format(getpdf_url), cause=traceback.format_exc())
+        return sign_error(request, pdf_id=request.sign_data.id, error=repr(e)+ " url: {0}".format(pdfurl_str), cause=traceback.format_exc())
 
     else:
         transaction.savepoint_commit(sid)
