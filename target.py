@@ -584,30 +584,21 @@ $myhostname   smtp:[localhost:8823]
 
     def queuing_config(self):
         with settings(warn_only=True):
-            local('/etc/init.d/rabbitmq-server stop')
-            local('sudo killall beam.smp')
-            local('sudo killall epmd')
+            local('sudo rabbitmqctl stop_app')
+            local('sudo rabbitmqctl force_reset')
+            local('sudo rabbitmqctl start_app')
             time.sleep(1)
-            local('sudo killall beam.smp')
-            local('sudo killall epmd')
-            time.sleep(1)
-            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get -y remove --purge rabbitmq-server"')
-            local('sudo killall beam.smp')
-            local('sudo killall epmd')
-            time.sleep(1)
-            local('sudo bash -c  "export DEBIAN_FRONTEND=noninteractive; apt-get install -q -y rabbitmq-server"')
 
-        #local('sudo rabbitmqctl force_reset')
-        #if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
-        #    local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
+            if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
+                local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
 
-        local('sudo rabbitmqctl add_vhost %s' % self.username)
+            local('sudo rabbitmqctl add_vhost %s' % self.username)
 
-        if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
-            local('sudo rabbitmqctl delete_user %(rabbitmq.username)s ' % self.config)
+            if int(local('sudo rabbitmqctl list_users | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
+                local('sudo rabbitmqctl delete_user %(rabbitmq.username)s ' % self.config)
 
-        local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
-        local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
+            local('sudo rabbitmqctl add_user %(rabbitmq.username)s %(rabbitmq.password)s' % self.config)
+            local('sudo rabbitmqctl set_permissions -p %(rabbitmq.username)s %(rabbitmq.username)s ".*" ".*" ".*"' % self.config)
 
 
     def search_config(self):
