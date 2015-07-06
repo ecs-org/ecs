@@ -584,6 +584,14 @@ $myhostname   smtp:[localhost:8823]
 
     def queuing_config(self):
         with settings(warn_only=True):
+            local('sudo /etc/init.d/rabbitmq-server stop')
+            local('sudo killall beam.smp')
+            local('sudo killall epmd')
+            time.sleep(1)
+            local('sudo killall beam.smp')
+            local('sudo killall epmd')
+            local('sudo /etc/init.d/rabbitmq-server start')
+            time.sleep(1)
             local('sudo rabbitmqctl stop_app')
             local('sudo rabbitmqctl force_reset')
             local('sudo rabbitmqctl start_app')
