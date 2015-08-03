@@ -2,9 +2,9 @@
 {% load i18n core %}
 
 {% block content %}
-    Wir teilen Ihnen mit, dass das nächste Expedited Review am {{ start|date:'d.m.Y' }} um {{ start|date:'H:i' }} Uhr stattfindet.
-    Ort: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6.Stock, 1090 Wien
-    Wir bitten Sie um Absprache mit den KollegInnen aus Ihrem Fachgebiet und ehestmögliche Rückmeldung, wer an der Sitzung teilnehmen wird.
-    Wir ersuchen Sie, wenn möglich Ihren Laptop mitzunehmen, da es keine Papierunterlagen mehr gibt. Sie können die Unterlagen bereits vorab unter http://ekmeduniwien.at/ einsehen und kommentieren.
-    WICHTIG: Die Begutachtung aller Projekte für das Expedited Review muss spätestens am Tag nach der Expedited Review-Sitzung abgeschlossen sein. Zu diesem Zeitpunkt noch nicht begutachtete Projekte werden vertagt.
+    Für den nächsten Expedited Review sind Projekte für Sie bzw. Ihre Fachgruppe zugeteilt.
+    Die Frist für die Begutachtung endet am {{ start|date:'d.m.Y' }} um {{ start|date:'H:i' }}. Bitte sprechen Sie sich ggf. mit den KollegInnen aus Ihrem Fachgebiet ab, wer die Begutachtung durchführt.
+    Wir bitten Sie, den Expedited Review ausschließlich schriftlich im ECS durchzuführen: Auf der Übersichtsseite bei den offenen Aufgaben „Expedited Empfehlung“ auf die jeweilige EK-Nummer klicken, die Expedited Bewertung ausfüllen und anschließend auf ''Schließen'' und ''Abschicken'' klicken.
+    Ihre Anwesenheit im Büro der Ethik-Kommission ist nicht erforderlich, Sie können sich aber bei Fragen jederzeit gerne an die Geschäftsstelle wenden.
+    WICHTIG: Die Begutachtung aller Projekte für den Expedited Review muss spätestens am Tag nach Ablauf der Frist abgeschlossen sein. Zu diesem Zeitpunkt noch nicht begutachtete Projekte werden automatisch auf die Tagesordnung der Sitzung gesetzt.
 {% endblock %}

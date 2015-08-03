@@ -2198,8 +2198,8 @@ msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
 #: meetings/views.py:674
-msgid "Expedited Meeting at {0}"
-msgstr "Expedited Sitzung am {0}"
+msgid "Expedited Review at {0}"
+msgstr "Expedited Review am {0}"
 
 #: meetings/views.py:700
 msgid "Meeting Protocol"
@@ -3367,7 +3367,7 @@ msgstr "Zuletzt versendet"
 
 #: templates/meetings/tabs/status.html:41
 msgid "Expedited Reviewer Invitations"
-msgstr "Expedited Sitzung"
+msgstr "Expedited Review bis"
 
 #: templates/meetings/tabs/status.html:49
 msgid "Timetable PDF"

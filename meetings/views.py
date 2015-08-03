@@ -667,7 +667,7 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
         users = User.objects.filter(groups__name='Expedited Review Group', expedited_review_categories__pk__in=categories.values('pk').query)
         start = form.cleaned_data['start']
         for user in users:
-            subject = _('Expedited Meeting at {0}').format(start.strftime('%d.%m.%Y'))
+            subject = _('Expedited Review at {0}').format(start.strftime('%d.%m.%Y'))
             send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
         form = ExpeditedReviewerInvitationForm(None)
 
