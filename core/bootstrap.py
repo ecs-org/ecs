@@ -300,6 +300,7 @@ def medcategories():
         (u'St.Anna', u'St. Anna Kinderspital'),
         (u'Med1Phy', u'Medizinische Physik 1'),
         (u'Datenbank', u'Datenbank'),
+        (u'Strahlentherapie', u'Strahlentherapie'),
     )
     return categories
 
