@@ -322,7 +322,6 @@ memcached:req:apt:apt-get:memcached
 
 # backup stuff
 debconf-utils:req:apt:apt-get:debconf-utils
-hwinfo:req:apt:apt-get:hwinfo
 ncftp:req:apt:apt-get:ncftp
 duplicity:req:apt:apt-get:duplicity
 duply:static:!win:http://sourceforge.net/projects/ftplicity/files/duply%20%28simple%20duplicity%29/1.5.x/duply_1.5.5.4.tgz/download:custom:duply

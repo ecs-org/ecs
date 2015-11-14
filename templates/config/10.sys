@@ -1,7 +1,7 @@
 packages = yes
 partitions = yes
 dosfdisk = yes
-hardware = yes
+hardware = no
 # packagesfile = /var/backups/dpkg-selections.txt
 # selectionsfile = /var/backups/debconfsel.txt
 # partitionsfile = /var/backups/partitions.__star__.txt
