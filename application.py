@@ -100,7 +100,7 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 # ecs/signature: tomcat, mocca and pdf-as, java is not included here but in system dependencies
 # needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
-tomcat:req:apt:apt-get:tomcat6-user
+tomcat:req:apt:apt-get:tomcat7-user
 pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war
 pdfasconfig:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/cfg/defaultConfig.zip:custom:pdf-as-web
 mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war

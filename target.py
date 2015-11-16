@@ -656,7 +656,7 @@ def tomcat_user(tomcatpath, control_port, http_port, ajp_port):
             shutil.rmtree(tomcatpath+"-old")
         shutil.move(tomcatpath, tomcatpath+"-old")
 
-    install = 'tomcat6-instance-create -p {0} -c {1} \'{2}\''.format(http_port, control_port, tomcatpath)
+    install = 'tomcat7-instance-create -p {0} -c {1} \'{2}\''.format(http_port, control_port, tomcatpath)
     popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
     stdout, stderr = popen.communicate()
     returncode = popen.returncode
