@@ -98,13 +98,9 @@ beautifulcleaner:inst:all:http://github.com/downloads/enki/beautifulcleaner/Beau
 
 
 # ecs/signature: tomcat, mocca and pdf-as, java is not included here but in system dependencies
+
 # needed for crossplatform patch support (we patch pdf-as.war for preview of signed pdf)
 python-patch:static:all:http://python-patch.googlecode.com/files/patch-11.01.py:copy:python-patch.py
-tomcat:req:apt:apt-get:tomcat7-user
-pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war
-pdfasconfig:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/cfg/defaultConfig.zip:custom:pdf-as-web
-mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war
-
 
 # ecs/mediaserver: file encryption, used for storage vault
 gnupg:req:apt:apt-get:gnupg
@@ -309,6 +305,14 @@ openjdk:req:apt:apt-get:openjdk-7-jre-headless
 
 # solr is used for fulltext indexing
 solr-jetty:req:apt:apt-get:solr-jetty
+
+# tomcat is used for mocca and pdfas
+tomcat:req:apt:apt-get:tomcat7-user
+
+# pdfas and mocca is used for electronic signing using the austrian citizen card
+pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war
+pdfasconfig:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/cfg/defaultConfig.zip:custom:pdf-as-web
+mocca:static:all:https://joinup.ec.europa.eu/system/files/project/bkuonline-1.3.18.war:custom:bkuonline.war
 
 # rabbitmq is used as AMPQ Broker in production
 rabbitmq-server:req:apt:apt-get:rabbitmq-server
