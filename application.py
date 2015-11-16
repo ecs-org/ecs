@@ -1,6 +1,7 @@
 # ecs main application environment config
 import platform
 from deployment.pkgmanager import package_merge
+from deployment.utils import is_precise_or_older
 
 # packages
 ##########
@@ -307,7 +308,7 @@ openjdk:req:apt:apt-get:openjdk-7-jre-headless
 solr-jetty:req:apt:apt-get:solr-jetty
 
 # tomcat is used for mocca and pdfas
-tomcat:req:apt:apt-get:tomcat7-user
+tomcat:req:apt:apt-get:tomcat-user"""+ ("6" if is_precise_or_older() else "7")+ """
 
 # pdfas and mocca is used for electronic signing using the austrian citizen card
 pdfas:static:all:https://joinup.ec.europa.eu/site/pdf-as/releases/4.0.7/pdf-as-web-4.0.7.war:custom:pdf-as-web.war

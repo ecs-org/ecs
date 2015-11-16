@@ -15,7 +15,7 @@ import getpass
 from uuid import uuid4
 from fabric.api import local, env, warn, abort, settings
 
-from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace
+from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace, is_precise_or_older
 from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template, write_template_dir
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.conf import load_config
@@ -158,7 +158,9 @@ class SetupTarget(object):
 
         self.pdfas_config()
         self.mocca_config()
-        self.daemons_install()
+        tomcatversion = "6" if is_precise_or_older() else "7"
+        extra_env = {'tomcatversion': tomcatversion}
+        self.daemons_install(extra_env= extra_env)
 
         self.custom_network_config()
         self.host_config(with_current_ip=False)
@@ -531,8 +533,8 @@ $myhostname   smtp:[localhost:8823]
     def wsgi_reload(self):
         local('sudo touch /etc/apache2/ecs/apache.wsgi/ecs-wsgi.py')
 
-    def daemons_install(self):
-        control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry)
+    def daemons_install(self, extra_env={}):
+        control_upstart(self.appname, "install", upgrade=True, use_sudo=self.use_sudo, dry=self.dry, extra_env= extra_env)
 
     def daemons_stop(self):
         control_upstart(self.appname, "stop", use_sudo=self.use_sudo, fail_soft=True, dry=self.dry)
@@ -656,7 +658,9 @@ def tomcat_user(tomcatpath, control_port, http_port, ajp_port):
             shutil.rmtree(tomcatpath+"-old")
         shutil.move(tomcatpath, tomcatpath+"-old")
 
-    install = 'tomcat7-instance-create -p {0} -c {1} \'{2}\''.format(http_port, control_port, tomcatpath)
+
+    tomcatversion = "6" if is_precise_or_older() else "7"
+    install = 'tomcat{0}-instance-create -p {1} -c {2} \'{3}\''.format(tomcatversion, http_port, control_port, tomcatpath)
     popen = subprocess.Popen(install, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, shell=True)
     stdout, stderr = popen.communicate()
     returncode = popen.returncode
