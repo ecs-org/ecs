@@ -428,7 +428,7 @@ $myhostname   smtp:[localhost:8823]
         apache_mkdirs = ['sudo'] if self.use_sudo else []
         apache_mkdirs += ['mkdir', '-p', '/etc/apache2/ecs', '/etc/apache2/ecs/apache.wsgi', '/etc/apache2/ecs/apache.conf']
         local(subprocess.list2cmdline(apache_mkdirs))
-        apache_trustycompat = ['sudo', '/bin/bash', '-c', '"if test ! -d /etc/apache2/conf.d; then if test ! -L /etc/apache2/conf.d ; then ln -s /etc/apache2/conf-available/ /etc/apache2/conf.d ; fi; fi"']
+        apache_trustycompat = ['sudo', '/bin/bash', '-c', 'if test ! -d /etc/apache2/conf.d; then if test ! -L /etc/apache2/conf.d ; then ln -s /etc/apache2/conf-available/ /etc/apache2/conf.d ; fi; fi']
         local(subprocess.list2cmdline(apache_trustycompat))
         apache_setup(self.appname, use_sudo=self.use_sudo,
             hostname=self.host,
