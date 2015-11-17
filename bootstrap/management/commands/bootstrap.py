@@ -9,11 +9,9 @@ from django.conf import settings
 from django.utils.importlib import import_module
 from django.contrib.auth.models import User
 
-from ecs.audit.models import AuditTrail
 from ecs.users.utils import get_or_create_user
 
 def _create_root_user():
-    settings.ENABLE_AUDIT_LOG = False
     root, _ = get_or_create_user('root@system.local')
     root.first_name = ''
     root.last_name = 'Ethik-Kommission'
@@ -26,8 +24,6 @@ def _create_root_user():
     profile.forward_messages_after_minutes = 0 # Never forward messages
     profile.gender = 'x'
     profile.save()
-
-    settings.ENABLE_AUDIT_LOG = True
 
 
 class Command(BaseCommand):

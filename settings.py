@@ -382,35 +382,6 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 # absolute URL prefix w/out trailing slash
 ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
-# enable the audit trail
-ENABLE_AUDIT_TRAIL = True
-if any(word in sys.argv for word in set(['syncdb', 'migrate', 'test', 'test_windmill', 'start_windmill'])):
-    # there is no user root at this time, so we cant create a audit log
-    ENABLE_AUDIT_TRAIL = False
-
-AUDIT_TRAIL_IGNORED_MODELS = (  # changes on these models are not logged
-    'django.contrib.sessions.models.Session',
-    'django.contrib.contenttypes.models.ContentType',
-    'django.contrib.sites.models.Site',
-    'django.contrib.admin.models.LogEntry',
-    
-    'sentry.models.*',
-    'south.models.*',
-    'djcelery.models.*',
-    'ghettoq.models.*',
-    'reversion.models.*',
-    'rosetta.models.*',
-    'indexer.models.*',
-    
-    'ecs.utils.countries.models.*',
-    'ecs.tracking.models.*',
-    'ecs.workflow.models.*',
-    'ecs.docstash.models.*',
-    'ecs.pdfviewer.models.*',
-    'ecs.users.models.UserSettings',
-    'ecs.help.models.*',
-)
-
 
 # ecs.bugshot tracrpc settings
 BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 20',}

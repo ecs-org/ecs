@@ -45,8 +45,6 @@ class EcsTestCase(TestCase):
     
     def setUp(self):
         self.logger = logging.getLogger() 
-
-        settings.ENABLE_AUDIT_TRAIL = True
         
         self.create_user('alice', profile_extra={'is_internal': True})
         for name in ('bob', 'unittest',):
@@ -69,7 +67,6 @@ class EcsTestCase(TestCase):
         return user
     
     def tearDown(self):
-        settings.ENABLE_AUDIT_TRAIL = False
         User.objects.all().delete()
         
     @contextmanager
