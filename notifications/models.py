@@ -10,6 +10,8 @@ from django.utils.translation import ugettext
 from django.template import loader
 from django.template.defaultfilters import slugify
 
+import reversion
+
 from ecs.documents.models import Document, DocumentType
 from ecs.core.parties import get_presenting_parties
 from ecs.utils.viewutils import render_pdf_context
@@ -244,6 +246,8 @@ class NotificationAnswer(models.Model):
                 'answer': self,
                 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             }, submission=submission, cc_groups=cc_groups)
+
+reversion.register(NotificationAnswer, fields=('text',))
 
 
 NOTIFICATION_MODELS = (
