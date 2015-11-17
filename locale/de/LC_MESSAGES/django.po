@@ -2520,10 +2520,6 @@ msgstr "Statistik"
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
-#: templates/core.html:98
-msgid "Audit Trail"
-msgstr "Kontrollprotokoll"
-
 #: templates/core.html:101 templates/pki/cert_list.html:4
 #: templates/pki/cert_list.html.py:6 templates/pki/create_cert.html:4
 #: templates/pki/create_cert.html.py:6
@@ -2638,18 +2634,6 @@ msgstr "Speichern"
 #: templates/users/invitation/invite_user.html:9
 msgid "Invite User"
 msgstr "Benutzer einladen"
-
-#: templates/audit/log.html:19
-msgid "Newest Entries"
-msgstr "Neuerste Einträge"
-
-#: templates/audit/log.html:20
-msgid "Newer Entries"
-msgstr "Neuere Einträge"
-
-#: templates/audit/log.html:24
-msgid "Older Entries"
-msgstr "Ältere Einträge"
 
 #: templates/billing/checklist_payment_list.html:13
 #: templates/billing/external_review.html:13

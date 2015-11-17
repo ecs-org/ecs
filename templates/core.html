@@ -93,9 +93,6 @@
                       {% endif %}
                       <li><a href="{% url ecs.statistics.views.stats %}">{% trans 'Statistics' %}</a></li>
                       <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
-                      {% if user|has_flag:"is_executive_board_member" %}
-                          <li><a href="{% url ecs.audit.views.log "html" %}">{% trans "Audit Trail" %}</a></li>
-                      {% endif %}
                       {% if user|is_member_of:'EC-Signing Group' %}
                           <li><a href="{% url ecs.pki.views.cert_list %}">{% trans 'PKI' %}</a></li>
                       {% endif %}

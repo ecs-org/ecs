@@ -33,7 +33,6 @@ urlpatterns = patterns('',
     url(r'^$', 'django.views.generic.simple.redirect_to', {'url': settings.LOGIN_REDIRECT_URL}),
 
     url(r'^', include('ecs.users.urls')),
-    url(r'^audit/', include('ecs.audit.urls')),
     url(r'^core/', include('ecs.core.urls')),
     url(r'^checklist/', include('ecs.checklists.urls')),
     url(r'^vote/', include('ecs.votes.urls')),
