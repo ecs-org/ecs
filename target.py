@@ -588,20 +588,21 @@ $myhostname   smtp:[localhost:8823]
 
     def queuing_config(self):
         with settings(warn_only=True):
-            local('sudo /etc/init.d/rabbitmq-server stop')
-            local('sudo killall beam')
-            local('sudo killall epmd')
-            local('sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q remove --purge rabbitmq-server')
-            time.sleep(1)
-            local('sudo killall beam')
-            local('sudo killall epmd')
-            local('sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q install rabbitmq-server')
-            local('sudo /etc/init.d/rabbitmq-server start')
-            time.sleep(1)
-            local('sudo rabbitmqctl stop_app')
-            local('sudo rabbitmqctl force_reset')
-            local('sudo rabbitmqctl start_app')
-            time.sleep(1)
+            if is_precise_or_older():
+                local('sudo /etc/init.d/rabbitmq-server stop')
+                local('sudo killall beam')
+                local('sudo killall epmd')
+                local('sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q remove --purge rabbitmq-server')
+                time.sleep(1)
+                local('sudo killall beam')
+                local('sudo killall epmd')
+                local('sudo DEBIAN_FRONTEND=noninteractive apt-get -y -q install rabbitmq-server')
+                local('sudo /etc/init.d/rabbitmq-server start')
+                time.sleep(1)
+                local('sudo rabbitmqctl stop_app')
+                local('sudo rabbitmqctl force_reset')
+                local('sudo rabbitmqctl start_app')
+                time.sleep(1)
 
             if int(local('sudo rabbitmqctl list_vhosts | grep %(rabbitmq.username)s | wc -l' % self.config, capture=True)):
                 local('sudo rabbitmqctl delete_vhost %(rabbitmq.username)s' % self.config)
