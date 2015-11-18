@@ -23,7 +23,6 @@ from ecs.notifications.models import Notification, NotificationType, Notificatio
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import upload_document, delete_document
-from ecs.audit.utils import get_version_number
 from ecs.users.utils import user_flag_required, user_group_required
 from ecs.tasks.utils import task_required, with_task_management
 from ecs.signature.views import init_batch_sign
@@ -186,7 +185,7 @@ def edit_notification_answer(request, notification_pk=None):
     response = render(request, 'notifications/answers/form.html', {
         'notification': notification,
         'answer': answer,
-        'answer_version': get_version_number(answer) if answer else 0,
+        'answer_version': answer.version_number if answer else 0,
         'form': form,
     })
     response.has_errors = not form.is_valid()

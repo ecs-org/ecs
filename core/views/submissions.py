@@ -48,7 +48,6 @@ from ecs.users.utils import sudo, user_flag_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
 from ecs.users.utils import user_flag_required, user_group_required
-from ecs.audit.utils import get_version_number
 
 from ecs.documents.views import upload_document, delete_document
 from ecs.core.workflow import CategorizationReview
@@ -448,7 +447,7 @@ def vote_review(request, submission_form_pk=None):
 
     response = readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': vote_review_form,
-        'vote_version': get_version_number(vote),
+        'vote_version': vote.version_number,
     })
     if request.method == 'POST' and not vote_review_form.is_valid():
         response.has_errors = True
@@ -493,7 +492,7 @@ def vote_preparation(request, submission_form_pk=None):
 
     response = readonly_submission_form(request, submission_form=submission_form, extra_context={
         'vote_review_form': form,
-        'vote_version': get_version_number(vote) if vote else 0,
+        'vote_version': vote.version_number if vote else 0,
     })
     response.has_errors = not form.is_valid()
     return response
@@ -527,7 +526,7 @@ def b2_vote_preparation(request, submission_form_pk=None):
     
     response = readonly_submission_form(request, submission_form=submission.current_submission_form, extra_context={
         'vote_review_form': form,
-        'vote_version': get_version_number(vote) if vote else 0,
+        'vote_version': vote.version_number if vote else 0,
     })
     response.has_errors = not form.is_valid()
     return response

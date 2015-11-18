@@ -1,13 +1,13 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils import simplejson
 from django.utils.translation import ugettext_lazy as _
+
+from reversion.models import Version
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils.viewutils import render
 from ecs.utils.security import readonly
-from ecs.audit.utils import get_versions
 from ecs.users.utils import sudo
 from ecs.core.diff import word_diff
 
@@ -31,17 +31,20 @@ def field_history(request, model_name=None, pk=None):
     last_value = dict((fieldname, u'') for fieldname, label in fields)
     last_change = None
     with sudo():
-        versions = list(get_versions(obj).order_by('created_at'))
+        versions = list(
+            Version.objects.get_for_object(obj)
+                .order_by('revision__date_created')
+        )
     for change in versions:
         diffs = []
         for fieldname, label in fields:
-            value = simplejson.loads(change.data)[0]['fields'][fieldname] or None
+            value = change.field_dict[fieldname] or u''
             diffs += [(label, word_diff(last_value[fieldname], value))]
             last_value[fieldname] = value
 
         # Skip duplicate entries.
         if (last_change and
-            last_change.user == change.user and
+            last_change.revision.user == change.revision.user and
             all(len(d) == 1 and d[0][0] == 0 for l,d in diffs)):
             continue
 
@@ -59,8 +62,8 @@ def field_history(request, model_name=None, pk=None):
             html_diffs += [(label, u''.join(html_diff))]
         
         history.append({
-            'timestamp': change.created_at,
-            'user': change.user,
+            'timestamp': change.revision.date_created,
+            'user': change.revision.user,
             'diffs': html_diffs,
         })
         last_change = change

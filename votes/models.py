@@ -7,6 +7,7 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 
 import reversion
+from reversion.models import Version
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
@@ -87,6 +88,10 @@ class Vote(models.Model):
         self.is_expired = False
         self.save()
         on_vote_extension.send(Vote, vote=self)
+
+    @property
+    def version_number(self):
+        return Version.objects.get_for_object(self).count()
     
     @property
     def is_positive(self):

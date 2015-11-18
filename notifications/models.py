@@ -11,6 +11,7 @@ from django.template import loader
 from django.template.defaultfilters import slugify
 
 import reversion
+from reversion.models import Version
 
 from ecs.documents.models import Document, DocumentType
 from ecs.core.parties import get_presenting_parties
@@ -184,6 +185,10 @@ class NotificationAnswer(models.Model):
     published_at = models.DateTimeField(null=True)
     
     objects = AuthorizationManager()
+
+    @property
+    def version_number(self):
+        return Version.objects.get_for_object(self).count()
 
     @property
     def needs_further_review(self):
