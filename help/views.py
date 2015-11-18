@@ -122,7 +122,6 @@ def review_overview(request):
     })
 
 @user_flag_required('is_help_writer')
-@revision.create_on_success
 def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if page_pk:
         page = get_object_or_404(Page, pk=page_pk)
@@ -215,7 +214,6 @@ search = forceauth.exempt(search_view_factory(
 
 
 @user_flag_required('is_help_writer')
-@revision.create_on_success
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
