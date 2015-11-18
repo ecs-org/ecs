@@ -12,7 +12,7 @@ def readonly(methods=('GET', 'POST')):
     return decorator
 
 
-IGNORABLE_MODULES = ('ecs.audit.models', 'sentry.models', 'django.contrib.sessions.models')
+IGNORABLE_MODULES = ('sentry.models', 'django.contrib.sessions.models')
 IGNORABLE_MODELS = ('ecs.users.models.UserSettings', 'ecs.documents.models.DownloadHistory')
 
 def fqn(obj):
@@ -63,4 +63,4 @@ class SecurityReviewMiddleware(threading.local):
     def process_response(self, request, response):
         self._current_view = None
         return response
-    
+

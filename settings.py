@@ -212,7 +212,6 @@ INSTALLED_APPS = (
     'ecs.users',
     'ecs.documents',
     'ecs.meetings',
-    'ecs.audit',
     'ecs.notifications',
     'ecs.authorization',
     'ecs.integration',
