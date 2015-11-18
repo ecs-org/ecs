@@ -28,24 +28,23 @@ def field_history(request, model_name=None, pk=None):
     obj = get_object_or_404(model, pk=pk)
 
     history = []
-    last_value = {}
+    last_value = dict((fieldname, u'') for fieldname, label in fields)
     last_change = None
-    for fieldname, label in fields:
-        last_value[fieldname] = u''
-    last_change = None
-    i = 0
     with sudo():
         versions = list(get_versions(obj).order_by('created_at'))
     for change in versions:
         diffs = []
         for fieldname, label in fields:
-            value = simplejson.loads(change.data)[0]['fields'][fieldname]
-            if value == None:
-                value = "" # fixes #4586
+            value = simplejson.loads(change.data)[0]['fields'][fieldname] or None
             diffs += [(label, word_diff(last_value[fieldname], value))]
             last_value[fieldname] = value
-        if last_change and last_change.user == change.user and all(len(d) == 1 and d[0][0] == 0 for l,d in diffs):
+
+        # Skip duplicate entries.
+        if (last_change and
+            last_change.user == change.user and
+            all(len(d) == 1 and d[0][0] == 0 for l,d in diffs)):
             continue
+
         html_diffs = []
         for label, diff in diffs:
             html_diff = []
@@ -59,14 +58,10 @@ def field_history(request, model_name=None, pk=None):
                 html_diff = []
             html_diffs += [(label, u''.join(html_diff))]
         
-        i += 1
-        
         history.append({
             'timestamp': change.created_at,
             'user': change.user,
-            'value': value,
             'diffs': html_diffs,
-            'version_number': i,
         })
         last_change = change
     
