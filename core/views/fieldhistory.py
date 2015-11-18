@@ -8,7 +8,7 @@ from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils.viewutils import render
 from ecs.utils.security import readonly
-from ecs.users.utils import sudo
+from ecs.users.utils import user_flag_required
 from ecs.core.diff import word_diff
 
 
@@ -19,6 +19,7 @@ ALLOWED_MODEL_FIELDS = {
 
 
 @readonly()
+@user_flag_required('is_internal')
 def field_history(request, model_name=None, pk=None):
     try:
         model, fields = ALLOWED_MODEL_FIELDS[model_name]
@@ -30,11 +31,9 @@ def field_history(request, model_name=None, pk=None):
     history = []
     last_value = dict((fieldname, u'') for fieldname, label in fields)
     last_change = None
-    with sudo():
-        versions = list(
-            Version.objects.get_for_object(obj)
-                .order_by('revision__date_created')
-        )
+    versions = list(
+        Version.objects.get_for_object(obj).order_by('revision__date_created')
+    )
     for change in versions:
         diffs = []
         for fieldname, label in fields:

@@ -1,5 +1,5 @@
 {% extends 'notifications/answers/base.html' %}
-{% load core i18n %}
+{% load core i18n userutils %}
 
 {% block notification_answer_body %}
 
@@ -23,7 +23,7 @@
             ecs.setupFormFieldHelpers();
             var textarea = $('id_text');
             var toolbar_items = [ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}")];
-            {% if answer %}
+            {% if answer and user|has_flag:'is_internal' %}
             toolbar_items.unshift(ecs.textarea.toolbarItems.versionHistory("{% trans 'History' %} ({{ answer_version }})", "{% url ecs.core.views.field_history model_name='notification_answer' pk=answer.pk %}"));
             {% endif %}
             ecs.textarea.installToolbar(textarea, toolbar_items);
