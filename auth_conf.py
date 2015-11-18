@@ -5,11 +5,9 @@ from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
     Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory,
     TemporaryAuthorization)
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document, DocumentPersonalization, Page
-from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
