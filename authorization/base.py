@@ -50,9 +50,6 @@ class QFactory(object):
     def make_deny_q(self):
         return Q(pk=None)
 
-    def make_f(self, lookup):
-        return F(lookup)
-
     def __call__(self, user):
         if not user or user.is_superuser:
             return Q()
