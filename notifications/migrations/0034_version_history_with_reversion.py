@@ -13,7 +13,7 @@ class Migration(DataMigration):
         ContentType = orm['contenttypes.ContentType']
         try:
             ct = ContentType.objects.get(
-                app_label='notifications', model='notificationanswer'))
+                app_label='notifications', model='notificationanswer')
         except ContentType.DoesNotExist:
             return
 
