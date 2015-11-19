@@ -10,8 +10,12 @@ import reversion
 class Migration(DataMigration):
 
     def forwards(self, orm):
-        ct = (orm['contenttypes.ContentType'].objects
-            .get(app_label='votes', model='vote'))
+        ContentType = orm['contenttypes.ContentType']
+        try:
+            ct = ContentType.objects.get(app_label='votes', model='vote')
+        except ContentType.DoesNotExist:
+            return
+
         for at in orm['audit.AuditTrail'].objects.filter(content_type=ct):
             rev = reversion.models.Revision.objects.create(
                 date_created=at.created_at,
