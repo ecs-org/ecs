@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from ecs.workflow.controllers import bind_node, bind_edge, bind_guard, NodeController
 from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_marked_deleted, token_unlocked
-from ecs.workflow.exceptions import WorkflowError, TokenAlreadyConsumed
+from ecs.workflow.exceptions import TokenAlreadyConsumed
 
 NODE_TYPE_CATEGORY_ACTIVITY = 1
 NODE_TYPE_CATEGORY_CONTROL = 2

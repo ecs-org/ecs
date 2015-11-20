@@ -1,10 +1,8 @@
-import datetime, sys
 from getpass import getpass
 from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 from ecs.pki.utils import get_ca, get_subject_for_user
-from ecs.pki.models import Certificate
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (

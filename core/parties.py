@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.utils.translation import ugettext as _
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
 from ecs.users.utils import sudo, get_current_user
 from ecs.communication.utils import send_system_message_template

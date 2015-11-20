@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
-from django.utils import simplejson
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import render
 from ecs.documents.models import Document
 from ecs.core.models import SubmissionForm
 from ecs.communication.utils import send_system_message_template

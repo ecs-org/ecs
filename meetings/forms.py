@@ -10,11 +10,8 @@ from django.db.models import Q
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 from ecs.votes.models import Vote
-from ecs.votes.constants import FINAL_VOTE_RESULTS
-from ecs.tasks.models import Task
 
 from ecs.utils.formutils import TranslatedModelForm
-from ecs.users.utils import sudo
 
 class MeetingForm(TranslatedModelForm):
     start = DateTimeField(initial=datetime.now)

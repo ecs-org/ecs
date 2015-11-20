@@ -3,19 +3,17 @@ from uuid import uuid4
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import Context, loader
+from django.template import loader
 from django.shortcuts import get_object_or_404
-from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext as _
 from django.db import models
-from django.db.models import Q
 
 from ecs.utils.viewutils import render, render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
-from ecs.core.models import SubmissionForm, Submission
+from ecs.core.models import SubmissionForm
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
 from ecs.tracking.decorators import tracking_hint

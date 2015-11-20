@@ -1,5 +1,3 @@
-import re
-
 from django import forms
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _

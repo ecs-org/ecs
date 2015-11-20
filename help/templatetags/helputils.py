@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.template import Library, Node, TemplateSyntaxError
+from django.template import Library
 from django.core.urlresolvers import reverse
 
 from ecs.help.models import Page

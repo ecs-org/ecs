@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from ecs.workflow import Activity, register
 from ecs.workflow.models import Foo
 

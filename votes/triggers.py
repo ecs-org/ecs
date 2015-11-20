@@ -4,7 +4,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.template import Context, loader
 
-from ecs.communication.utils import send_system_message_template
 from ecs.utils import connect
 from ecs.votes import signals
 from ecs.users.utils import sudo

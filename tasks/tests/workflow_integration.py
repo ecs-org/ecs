@@ -1,6 +1,4 @@
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
-from django.core import management
 from ecs.workflow.models import Graph
 from ecs import workflow
 # test only models:

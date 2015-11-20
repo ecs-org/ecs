@@ -1,5 +1,4 @@
 from ecs.utils.viewutils import render
-from ecs.tasks.models import Task
 from django.core.urlresolvers import reverse
 from ecs.utils.security import readonly
 

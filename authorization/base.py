@@ -1,4 +1,4 @@
-from django.db.models import F, Q
+from django.db.models import Q
 from django.conf import settings
 
 class QFactoryRegistry(object):

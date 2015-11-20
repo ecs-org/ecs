@@ -3,8 +3,6 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.utils import simplejson
 from ecs.utils.viewutils import render
 
-from haystack.views import SearchView
-from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 

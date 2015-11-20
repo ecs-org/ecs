@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import uuid
-import shutil
 import hashlib
-import tempfile
 import StringIO
 
-
 from ecs.utils.testcases import EcsTestCase
-from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.storagevault import getVault
 
 

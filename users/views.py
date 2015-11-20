@@ -2,7 +2,6 @@
 import time
 from datetime import datetime
 import random
-from uuid import uuid4
 
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -11,7 +10,6 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django import forms
 from django.contrib import auth
 from django.contrib.auth import views as auth_views
 from django.db.models import Q
@@ -26,7 +24,6 @@ from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation
-from ecs.users.utils import user_flag_required, user_group_required
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user, user_group_required
 from ecs.communication.utils import send_system_message_template

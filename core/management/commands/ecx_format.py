@@ -1,4 +1,3 @@
-import codecs
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
@@ -6,7 +5,6 @@ from django.template.loader import get_template
 from django.template import Context
 
 from ecs.core.serializer import Serializer
-from ecs.utils.viewutils import render_pdf_context
 from ecs.utils.pdfutils import wkhtml2pdf
 
 

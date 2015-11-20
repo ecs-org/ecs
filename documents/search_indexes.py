@@ -1,6 +1,6 @@
 from haystack.indexes import *
 from haystack import site
-from ecs.documents.models import Document, Page
+from ecs.documents.models import Page
 
 class PageIndex(SearchIndex):
     text = CharField(document=True, use_template=True)

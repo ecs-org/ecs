@@ -1,6 +1,5 @@
-import os, subprocess
-from optparse import make_option
-from django.core.management.base import BaseCommand, CommandError
+import os
+from django.core.management.base import BaseCommand
 from django.core.files.uploadedfile import UploadedFile
 from django.db import transaction
 
@@ -8,7 +7,7 @@ from django.db import transaction
 class Command(BaseCommand):
     @transaction.commit_manually
     def handle(self, dirname, **options):
-        from ecs.documents.models import Document, DocumentType
+        from ecs.documents.models import DocumentType
         from ecs.documents.forms import DocumentForm
         dt = DocumentType.objects.order_by('pk')[0:1][0]
         try:

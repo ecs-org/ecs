@@ -1,8 +1,6 @@
 #-*- coding: utf-8 -*-
-from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
-from ecs.communication.utils import send_system_message_template
 from ecs.notifications import signals
 from ecs.notifications.models import NotificationAnswer
 from ecs.utils import connect

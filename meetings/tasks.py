@@ -1,5 +1,4 @@
 import random, itertools, math, os, time
-from datetime import timedelta
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 

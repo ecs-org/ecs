@@ -1,11 +1,9 @@
-import os, sys, datetime
+import sys, datetime
 import importlib
 from xml.dom.minidom import parse
 from optparse import make_option
 
-from django.core.management.base import BaseCommand, CommandError
-
-from StringIO import StringIO
+from django.core.management.base import BaseCommand
 
 from textwrap import wrap
 

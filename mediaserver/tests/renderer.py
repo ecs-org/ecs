@@ -1,7 +1,6 @@
 import os
 import binascii
 import tempfile
-import shutil
 import math
 
 from django.conf import settings

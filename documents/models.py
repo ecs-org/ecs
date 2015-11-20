@@ -16,7 +16,6 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 from django.utils.encoding import smart_str
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey

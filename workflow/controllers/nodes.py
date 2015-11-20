@@ -1,8 +1,5 @@
-import imp
 import datetime
 from django.conf import settings
-from django.db import models
-from django.utils.importlib import import_module
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.utils import cached_property

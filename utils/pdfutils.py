@@ -10,16 +10,14 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, tempfile, logging, copy, shutil, re
+import os, subprocess, tempfile, logging, copy, shutil
 from cStringIO import StringIO
-from tempfile import NamedTemporaryFile
 
 from django.conf import settings
 from django.template import Context, loader
 from django.utils.encoding import smart_str
 
 from pdfminer.pdfparser import PDFParser, PDFDocument
-from pdfminer.pdftypes import PDFException
 
 from ecs.utils.pathutils import which_path
 

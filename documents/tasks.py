@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-
-import logging
-
 from datetime import timedelta
 
 from django.conf import settings
@@ -16,7 +13,7 @@ from ecs.utils.pdfutils import pdf2text, pdf_page_count
 from ecs.documents.models import Document, Page
 
 from ecs.mediaserver.client import prime_mediaserver, add_to_storagevault
-from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError, ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
+from ecs.mediaserver.diskbuckets import DiskBuckets, ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
 
 
 TO_BE_INDEXED = 'new' 

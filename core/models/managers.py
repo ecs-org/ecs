@@ -3,8 +3,9 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
 from ecs.authorization import AuthorizationManager
-from ecs.core.models.constants import (SUBMISSION_TYPE_MULTICENTRIC_LOCAL, 
-    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
+from ecs.core.models.constants import (
+    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 from ecs.meetings.models import Meeting

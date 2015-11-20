@@ -2,12 +2,12 @@ import logging
 
 from django.conf import settings
 
-from celery.decorators import task, periodic_task
+from celery.decorators import periodic_task
 from celery.schedules import crontab
 from celery.signals import task_failure, worker_process_init
 from sentry.client.handlers import SentryHandler
 
-from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError
+from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.diskbuckets import ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
 
 

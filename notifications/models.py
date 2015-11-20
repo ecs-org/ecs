@@ -4,7 +4,6 @@ from datetime import datetime
 from django.conf import settings
 from django.db import models
 from django.utils.importlib import import_module
-from django.contrib.contenttypes.generic import GenericRelation
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import loader
@@ -13,8 +12,7 @@ from django.template.defaultfilters import slugify
 import reversion
 from reversion.models import Version
 
-from ecs.documents.models import Document, DocumentType
-from ecs.core.parties import get_presenting_parties
+from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
 from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
 from ecs.notifications.managers import NotificationManager

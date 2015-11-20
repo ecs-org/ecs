@@ -2,8 +2,6 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
-from django.views.generic.simple import direct_to_template
-from django.core.urlresolvers import reverse
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render
 

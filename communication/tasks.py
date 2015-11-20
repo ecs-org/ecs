@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import traceback
 import hashlib
 from datetime import datetime, timedelta

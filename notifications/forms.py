@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.notifications.models import NotificationAnswer
-from ecs.core.models import SubmissionForm, Submission
+from ecs.core.models import SubmissionForm
 from ecs.users.utils import get_current_user
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification

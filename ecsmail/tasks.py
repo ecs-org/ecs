@@ -1,5 +1,3 @@
-import logging
-
 from celery.decorators import task
 from celery.task.sets import subtask
 from celery.exceptions import MaxRetriesExceededError

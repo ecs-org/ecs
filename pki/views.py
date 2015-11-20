@@ -2,7 +2,6 @@ import tempfile
 import os
 
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse

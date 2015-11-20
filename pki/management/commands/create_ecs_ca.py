@@ -1,6 +1,5 @@
 import os
-import tempfile
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
  
 from ecs.pki.utils import get_ca

@@ -5,7 +5,6 @@
 Middleware that forces Authentication.
 """
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.conf import settings
 
 def exempt(view):

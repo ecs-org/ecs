@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 
-from django.db.models import Q
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 

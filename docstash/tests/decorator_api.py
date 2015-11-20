@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.utils import simplejson
 from ecs.utils.testcases import LoginTestCase
-from ecs.docstash.models import DocStash
 
 class DecoratorApiTest(LoginTestCase):
     '''Tests for the Docstash

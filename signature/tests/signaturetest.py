@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
 
-from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
-from django.utils.http import urlquote
-from django.http import HttpResponse
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.documents.models import Document, DocumentType
 from ecs.signature.views import sign
  
 SIGN_INDICATE_SUCCCES = 'about:sucess'

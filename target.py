@@ -1,21 +1,16 @@
 # ecs main application environment setup
 import os
 import subprocess
-import sys
 import shutil
 import tempfile
-import logging
 import string
 import random
-import distutils.dir_util
 import time
-import copy
 import getpass
 
-from uuid import uuid4
 from fabric.api import local, env, warn, abort, settings
 
-from deployment.utils import get_pythonenv, import_from, get_pythonexe, zipball_create, write_regex_replace, is_precise_or_older
+from deployment.utils import get_pythonenv, get_pythonexe, write_regex_replace, is_precise_or_older
 from deployment.utils import touch, control_upstart, apache_setup, strbool, strint, write_template, write_template_dir
 from deployment.pkgmanager import get_pkg_manager, packageline_split
 from deployment.conf import load_config

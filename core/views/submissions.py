@@ -3,7 +3,7 @@ from datetime import datetime
 import tempfile
 import re
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import get_object_or_404
@@ -31,7 +31,6 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
-from ecs.checklists.models import ChecklistBlueprint, ChecklistAnswer
 from ecs.notifications.models import Notification, NotificationType
 
 from ecs.core.workflow import ChecklistReview, RecommendationReview
@@ -44,10 +43,9 @@ from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
 from ecs.utils.security import readonly
-from ecs.users.utils import sudo, user_flag_required, get_user
+from ecs.users.utils import sudo, user_flag_required, user_group_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
-from ecs.users.utils import user_flag_required, user_group_required
 
 from ecs.documents.views import upload_document, delete_document
 from ecs.core.workflow import CategorizationReview

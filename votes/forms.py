@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.utils.formutils import TranslatedModelForm
 from ecs.votes.models import Vote
-from ecs.tasks.models import Task
-from ecs.votes.constants import PERMANENT_VOTE_RESULTS, VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
-from ecs.users.utils import sudo, get_current_user
+from ecs.votes.constants import VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
+from ecs.users.utils import get_current_user
 from ecs.core.forms.utils import mark_readonly
 
 def ResultField(**kwargs):

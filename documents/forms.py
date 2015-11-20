@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from cStringIO import StringIO
 import os
 import logging
 

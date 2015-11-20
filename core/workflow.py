@@ -12,10 +12,8 @@ from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
 from ecs.core.signals import on_initial_review, on_initial_thesis_review, on_categorization_review, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
-from ecs.tasks.models import Task, TaskType
+from ecs.tasks.models import Task
 from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
-from ecs.votes.models import Vote
-from ecs.utils import connect
 from ecs.votes.models import Vote
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)

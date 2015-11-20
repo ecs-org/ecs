@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import tempfile, shutil, logging
+import tempfile, shutil
 
 from django.conf import settings
 from django.core.cache import cache
@@ -7,7 +7,7 @@ from django.core.cache import cache
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 
-from ecs.mediaserver.diskbuckets import DiskBuckets, BucketError
+from ecs.mediaserver.diskbuckets import DiskBuckets
 from ecs.mediaserver.diskbuckets import ignore_all, ignore_none, onerror_log, satisfied_on_less_then
 
 

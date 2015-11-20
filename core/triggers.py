@@ -3,7 +3,6 @@ from django.utils.translation import ugettext as _
 from ecs.communication.utils import send_system_message_template
 from ecs.core.workflow import InitialReview, InitialThesisReview
 from ecs.core import signals
-from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user

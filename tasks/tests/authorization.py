@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.tasks.models import TaskType, Task

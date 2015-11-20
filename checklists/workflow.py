@@ -9,7 +9,7 @@ from ecs.workflow import Activity, guard, register
 from ecs.checklists.models import Checklist
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.signals import task_declined
-from ecs.users.utils import get_current_user, sudo
+from ecs.users.utils import sudo
 from ecs.meetings.models import Meeting
 from ecs.billing.models import Price
 

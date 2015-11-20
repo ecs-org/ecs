@@ -10,11 +10,10 @@ from datetime import datetime
 from tempfile import NamedTemporaryFile
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 
 from ecs.utils import forceauth

@@ -6,15 +6,14 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404, QueryDict
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
-from django.utils.translation import ugettext as _
 from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
-from ecs.tasks.models import Task, TaskType
-from ecs.tasks.forms import ManageTaskForm, TaskListFilterForm
+from ecs.tasks.models import Task
+from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
 from ecs.votes.models import Vote
 from ecs.notifications.models import NOTIFICATION_MODELS, Notification

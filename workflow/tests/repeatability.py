@@ -1,9 +1,7 @@
-from datetime import timedelta
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.workflow.tests.base import WorkflowTestCase
-from ecs.workflow.models import Graph, Node, NodeType, Guard
+from ecs.workflow.models import Graph
 from ecs.workflow.exceptions import WorkflowError
 # test only models:
 from ecs.workflow.models import Foo

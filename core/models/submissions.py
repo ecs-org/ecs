@@ -26,7 +26,6 @@ from ecs.notifications.models import Notification
 from ecs.users.utils import get_current_user
 from ecs.docstash.models import DocStash
 from ecs.meetings.models import Meeting
-from ecs.votes.models import Vote
 from ecs.utils.viewutils import render_pdf_context
 from ecs.tasks.models import Task
 

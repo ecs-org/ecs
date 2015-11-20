@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
-from ecs.users.utils import get_office_user, get_current_user, sudo
+from ecs.users.utils import get_office_user, get_current_user
 from ecs.core.forms.fields import SingleselectWidget
 
 

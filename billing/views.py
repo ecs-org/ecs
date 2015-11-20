@@ -15,17 +15,15 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.decorators import developer
-from ecs.users.utils import user_flag_required, user_group_required, sudo
+from ecs.users.utils import user_group_required, sudo
 from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.viewutils import render, render_html
-from ecs.ecsmail.utils import deliver, whitewash
+from ecs.utils.viewutils import render
 from ecs.tasks.models import Task
 
 from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistPayment
-from ecs.billing.stats import collect_submission_billing_stats
 
 
 def _get_address(submission_form, prefix):

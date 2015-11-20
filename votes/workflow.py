@@ -1,13 +1,8 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
-from ecs.users.utils import sudo
 from ecs.votes.models import Vote
-from ecs.tasks.models import Task
 
 
 def vote_workflow_start_if(vote, created):

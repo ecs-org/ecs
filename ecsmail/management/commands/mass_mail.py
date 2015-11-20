@@ -1,9 +1,7 @@
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from ecs.users.utils import get_user
-
-from ecs.ecsmail.utils import deliver, deliver_to_recipient
+from ecs.ecsmail.utils import deliver_to_recipient
  
 class Command(BaseCommand):
     help = 'send a mass communication message from system'

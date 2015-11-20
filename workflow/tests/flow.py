@@ -1,9 +1,8 @@
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
 from ecs.workflow.tests.base import WorkflowTestCase
-from ecs.workflow.models import Graph, Node
-from ecs.workflow.exceptions import TokenRequired, BadActivity, WorkflowError
+from ecs.workflow.models import Graph
+from ecs.workflow.exceptions import TokenRequired, WorkflowError
 from ecs import workflow
 # test only models:
 from ecs.workflow.models import Foo, FooReview, Token

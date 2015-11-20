@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
