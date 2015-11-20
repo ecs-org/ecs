@@ -44,8 +44,11 @@ class SubmissionQFactory(authorization.QFactory):
             until_vote_q |= self.make_q(forms__votes__insurance_review_required=True)
         q |= until_vote_q & ~self.make_q(forms__current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
 
-        for cls in (AmendmentNotification, SafetyNotification):
-            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).open().values('data_id').query)
+        notification_cts = map(ContentType.objects.get_for_model,
+            (AmendmentNotification, SafetyNotification))
+        q |= self.make_q(forms__notifications__pk__in=
+            Task.objects.filter(content_type__in=notification_cts).open()
+                .values('data_id'))
 
         return q
 
