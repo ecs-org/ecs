@@ -23,7 +23,7 @@ def getitem(obj, name):
 register.filter('getattr', lambda obj, name: getattr(obj, str(name)))
 register.filter('getitem', getitem)
 register.filter('type_name', lambda obj: type(obj).__name__)
-register.filter('startwith', lambda obj, start: obj.startswith(substr))
+register.filter('startwith', lambda obj, start: obj.startswith(start))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
 register.filter('contains', lambda obj, x: x in obj)
 register.filter('not', lambda obj: not obj)
