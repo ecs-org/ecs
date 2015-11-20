@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
     Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory,
-    TemporaryAuthorization)
+    TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document, DocumentPersonalization, Page
@@ -27,12 +27,9 @@ class SubmissionQFactory(authorization.QFactory):
         ### internal users can see all submissions
         if user.is_staff or profile.is_internal:
             return self.make_q()
-            
-        ### presenting parties
-        q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
-        q |= self.make_q(current_submission_form__submitter=user)
-        q |= self.make_q(current_submission_form__sponsor=user)
-        q |= self.make_q(current_submission_form__primary_investigator__user=user)
+
+        q = self.make_q(id__in=
+            MySubmission.objects.filter(user=user).values('submission_id'))
         
         ### explicit temporary permissions
         q |= self.make_q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)
