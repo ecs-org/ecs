@@ -4,12 +4,10 @@ from django.contrib.contenttypes.models import ContentType
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
     Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory,
-    TemporaryAuthorization)
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
+    TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document, DocumentPersonalization, Page
-from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
@@ -29,12 +27,9 @@ class SubmissionQFactory(authorization.QFactory):
         ### internal users can see all submissions
         if user.is_staff or profile.is_internal:
             return self.make_q()
-            
-        ### presenting parties
-        q = self.make_q(presenter=user) | self.make_q(susar_presenter=user)
-        q |= self.make_q(current_submission_form__submitter=user)
-        q |= self.make_q(current_submission_form__sponsor=user)
-        q |= self.make_q(current_submission_form__primary_investigator__user=user)
+
+        q = self.make_q(id__in=
+            MySubmission.objects.filter(user=user).values('submission_id'))
         
         ### explicit temporary permissions
         q |= self.make_q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)
@@ -46,8 +41,11 @@ class SubmissionQFactory(authorization.QFactory):
             until_vote_q |= self.make_q(forms__votes__insurance_review_required=True)
         q |= until_vote_q & ~self.make_q(forms__current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
 
-        for cls in (AmendmentNotification, SafetyNotification):
-            q |= self.make_q(forms__notifications__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(cls)).open().values('data_id').query)
+        notification_cts = map(ContentType.objects.get_for_model,
+            (AmendmentNotification, SafetyNotification))
+        q |= self.make_q(forms__notifications__pk__in=
+            Task.objects.filter(content_type__in=notification_cts).open()
+                .values('data_id'))
 
         return q
 

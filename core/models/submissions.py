@@ -275,6 +275,16 @@ class Submission(models.Model):
         app_label = 'core'
 
 
+class MySubmission(models.Model):
+    user = models.ForeignKey(User, related_name='+')
+    submission = models.ForeignKey(Submission, related_name='+')
+
+    class Meta:
+        app_label = 'core'
+        db_table = 'core_mysubmission'
+        managed = False
+
+
 class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
