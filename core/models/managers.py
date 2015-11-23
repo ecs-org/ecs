@@ -122,16 +122,16 @@ class SubmissionQuerySet(models.query.QuerySet):
         from ecs.tasks.models import Task
         from ecs.checklists.models import Checklist
 
-        submissions = self.none()
+        q = Q(pk=None)
         for a in user.assigned_medical_categories.all():
-            submissions |= self.filter(pk__in=a.meeting.submissions.filter(medical_categories=a.category).values('pk').query)
+            q |= Q(pk__in=a.meeting.timetable_entries.filter(submission__medical_categories=a.category).values('submission_id'))
 
         submission_ct = ContentType.objects.get_for_model(Submission)
-        submissions |= self.filter(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).exclude(task_type__workflow_node__uid='resubmission').values('data_id').query)
+        q |= Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).exclude(task_type__workflow_node__uid='resubmission').values('data_id'))
         checklist_ct = ContentType.objects.get_for_model(Checklist)
-        submissions |= self.filter(pk__in=Checklist.objects.filter(pk__in=Task.objects.filter(content_type=checklist_ct, assigned_to=user).values('data_id').query).values('submission__pk').query)
-        submissions |= self.filter(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)
-        return submissions.distinct()
+        q |= Q(pk__in=Checklist.objects.filter(pk__in=Task.objects.filter(content_type=checklist_ct, assigned_to=user).values('data_id')).values('submission__pk'))
+        q |= Q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id'))
+        return self.filter(q).distinct()
 
     def none(self):
         """ Ugly hack: per default none returns an EmptyQuerySet instance which does not have our methods """
