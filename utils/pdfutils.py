@@ -11,7 +11,6 @@ pdfutils
 
 '''
 import os, subprocess, tempfile, logging, copy, shutil
-from cStringIO import StringIO
 
 from django.conf import settings
 from django.template import Context, loader
