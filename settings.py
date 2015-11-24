@@ -308,15 +308,6 @@ STORAGE_DECRYPT = {
     "verify_owner": "ecs_authority",
 }
 
-# Mediaserver Shared Settings
-MS_SHARED = {
-    "url_expiration_sec": 6*60*60,
-    "tiles": [(1,1), (5,5)],
-    "resolutions": [800],
-    "aspect_ratio": 1.41428,
-    "dpi": 96,
-    "depth": 8,
-}
 # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
 MS_CLIENT = {
     "server": "http://127.0.0.1:8000",
@@ -325,18 +316,12 @@ MS_CLIENT = {
     "key_id": "b2SpFfUvfD44LUzHDu7w",
     "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
     "same_host_as_server": True,
+    "url_expiration_sec": 6*60*60,
 }
 # Mediaserver Server Config (things needed for a mediaserver to serve)
 MS_SERVER = {
     "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
     "doc_diskcache_maxsize" :     2**32,    # equals 4 Gigabyte
-    "render_diskcache":  os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-rendercache")),
-    "render_diskcache_maxsize":   2**31,    # equals 2 Gigabyte
-    "render_memcache_lib": "mockcache",     # if set to mockcache, HOST & PORT will be ignored
-    "render_memcache_host": "127.0.0.1",    # host= localhost, 
-    "render_memcache_port": 11211,          # standardport of memcache, not used for mockcache
-    "render_memcache_maxsize": 2**29,
-    # WARNING: mockcache data is only visible inside same program, so seperate runner will *NOT* see entries
 }
 
 
@@ -452,8 +437,6 @@ DEVSERVER_MODULES = (
 # absolut pathes for binaries; defaults to which(binaryname) if None or missing
 #ECS_GHOSTSCRIPT = "/usr/bin/gs"
 #ECS_GNUPG = "/usr/bin/gpg"
-#ECS_MONTAGE = "/usr/bin/montage"
-#ECS_PDFDRAW = "/usr/bin/mudraw"
 #ECS_PDFTK = "/usr/bin/pdftk"
  
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty

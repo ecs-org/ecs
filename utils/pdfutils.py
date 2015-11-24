@@ -6,7 +6,7 @@ pdfutils
 
 - identification (is valid pdf, number of pages), 
 - manipulation (barcode stamp)
-- conversion (to PDF/A, to text, to png)
+- conversion (to PDF/A, to text)
 - creation (from html)
 
 '''
@@ -21,7 +21,6 @@ from pdfminer.pdfparser import PDFParser, PDFDocument
 
 from ecs.utils.pathutils import which_path
 
-MONTAGE_PATH = which_path('ECS_MONTAGE', 'montage')
 GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
 WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64", "-i386"])
 QPDF_PATH = which_path('ECS_QPDF', 'qpdf')
@@ -147,38 +146,6 @@ def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
         # but there is an extra form feed at the end of the stream
         return stdout.split('\f')[:-1]
 
-
-def pdf2pngs(id, source_filename, render_dirname, width, tiles_x, tiles_y, aspect_ratio, dpi, depth):
-    ''' renders a pdf to multiple png pictures placed in render_dirname
-    
-    :return: iterator yielding tuples of Page(id, tiles_x, tiles_y, width, pagenr), filelike
-    :raise IOError: ghostscript/montage conversion error 
-    :attention: you should close returned filelike objects if they have a .close() method after usage
-    '''
-    margin_x = 0
-    margin_y = 0   
-    height = width * aspect_ratio
-    tile_width = (width / tiles_x) - margin_x
-    tile_height = (height / tiles_y) - margin_y
-    tmp_dir_prefix = os.path.join(render_dirname, "%s_%sx%s" % (width, tiles_x, tiles_y))
-    os.mkdir(tmp_dir_prefix)
-    tmp_page_prefix = os.path.join(tmp_dir_prefix, '%s_%s_%sx%s_' % (id, width, tiles_x, tiles_y)) + "%04d"
-     
-    args = [MONTAGE_PATH, "-verbose", "-geometry", "%dx%d+%d+%d" % (tile_width, tile_height, margin_x, margin_y),
-        "-tile", "%dx%d" % (tiles_x, tiles_y), "-density", "%d" % dpi, "-depth", "%d" % depth,
-        source_filename, "PNG:%s" % tmp_page_prefix]
-    
-    popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-    stdout, stderr = popen.communicate() 
-    returncode = popen.returncode  
-    if returncode != 0:
-        raise IOError('montage returned error code:%d %s' % (returncode, stdout))
-
-    pagenr = 0
-    for ds in sorted(os.listdir(tmp_dir_prefix)):
-        dspath = os.path.join(tmp_dir_prefix, ds)
-        pagenr += 1
-        yield Page(id, tiles_x, tiles_y, width, pagenr), open(dspath,"rb")
 
 class PdfBroken(Exception):
     pass

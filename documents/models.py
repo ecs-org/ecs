@@ -25,7 +25,7 @@ from django.utils.translation import ugettext
 
 from ecs.authorization import AuthorizationManager
 from ecs.users.utils import get_current_user
-from ecs.mediaserver.client import generate_media_url, generate_pages_urllist, download_from_mediaserver
+from ecs.mediaserver.client import generate_media_url, download_from_mediaserver
 
 
 logger = logging.getLogger(__name__)
@@ -107,10 +107,8 @@ C_BRANDING_CHOICES = (
 C_STATUS_CHOICES = (
     ('new', _('new')),
     ('uploading', _('uploading')),
-    ('uploaded', _('uploaded')),
     ('indexing', _('indexing')),
     ('indexed', _('indexed')),
-    ('prime', _('prime')),
     ('ready', _('ready')),
     ('aborted', _('aborted')),
     ('deleted', _('deleted')),
@@ -190,12 +188,6 @@ class Document(models.Model):
             copyfileobj(self.get_from_mediaserver(), tmp)
             tmp.seek(0)
             yield tmp
-
-    def get_pages_list(self): 
-        ''' returns a list of ('description', 'access-url', 'page', 'tx', 'ty', 'width', 'height') pictures
-        for every supported rendersize options for every page of the document
-        '''
-        return generate_pages_urllist(self.uuid, self.pages)
                
     def get_personalizations(self, user=None):
         ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''

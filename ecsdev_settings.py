@@ -56,13 +56,6 @@ if user in conf_dict.keys():
     ABSOLUTE_URL_PREFIX = "http://{0}".format(domain)
 
 
-# Mediaserver Server Access
-MS_SERVER_OVERRIDE = {
-    'render_memcache_lib': 'memcache',
-    'render_memcache_host': '127.0.0.1',
-    'render_memcache_host': 11211,
-}
-
 if user in ['chipper',]:
     DEBUG = False                               # do not show django debug messages
     TEMPLATE_DEBUG = True                       # but sentry does show template errors

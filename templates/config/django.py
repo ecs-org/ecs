@@ -58,16 +58,13 @@ MS_CLIENT = {
     "key_id": "%(mediaserver.client.key_id)s",
     "key_secret": "%(mediaserver.client.key_secret)s",
     "same_host_as_server": %(mediaserver.client.same_host_as_server)s,
+    "url_expiration_sec": 6*60*60,
 }
-
-MS_SERVER['render_memcache_lib'] = 'memcache'
-MS_SERVER['render_memcache_host'] = "127.0.0.1"
-MS_SERVER['render_memcache_port'] = 11211
 
 STORAGE_VAULT = '%(storagevault.implementation)s'
 STORAGE_VAULT_OPTIONS = {
     'LocalFileStorageVault.rootdir': '%(storagevault.options.localfilestorage_root)s',
-    }
+}
 
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),

@@ -10,8 +10,7 @@ apt-get install apache2-mpm-prefork gettext language-pack-de \
     pgbouncer postfix postgresql rabbitmq-server solr-jetty tomcat7-user
 
 # mediaserver
-apt-get install ghostscript gnupg graphicsmagick-imagemagick-compat \
-    mupdf-tools pdftk poppler-utils qpdf
+apt-get install ghostscript gnupg pdftk poppler-utils qpdf
 
 # deps for PIL
 apt-get install libfreetype6-dev libjpeg62-dev liblcms1-dev
