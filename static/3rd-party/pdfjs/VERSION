@@ -1,1 +1,5 @@
 1.1.469
+
+Local changes:
+ * Added VERSION file (this file)
+ * Removed the example PDF file (web/compressed.tracemonkey-pldi-09.pdf)
