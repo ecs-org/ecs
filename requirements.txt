@@ -54,9 +54,6 @@ django-haystack==1.2.6
 # excel generation / xlwt
 xlwt==0.7.2
 
-# (ecs/utils/pdfutils): pdf validation (is_valid, pages_nr)
-pdfminer==20110515
-
 # logging: django-sentry;
 django-templatetag-sugar==0.1
 django-indexer==0.3.0

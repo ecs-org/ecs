@@ -7,7 +7,7 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
-from ecs.documents.models import Document, DocumentPersonalization, Page
+from ecs.documents.models import Document, DocumentPersonalization
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
@@ -77,7 +77,6 @@ class DocumentQFactory(authorization.QFactory):
 
 authorization.register(Document, factory=DocumentQFactory)
 authorization.register(DocumentPersonalization, lookup='document')
-authorization.register(Page, lookup='doc')
 
 class DocstashQFactory(authorization.QFactory):
     def get_q(self, user):

@@ -1,26 +1,15 @@
-import json
 from urllib import urlencode
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
-from haystack.query import SearchQuerySet
-from haystack.utils import Highlighter
-
 from ecs.utils.viewutils import render
-from ecs.documents.models import Page, Document
+from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
 from ecs.documents.signals import on_document_download
 
-
-HIGHLIGHT_PREFIX_WORD_COUNT = 3
-
-class DocumentHighlighter(Highlighter):
-    def find_window(self, highlight_locations):
-        best_start, best_end = super(DocumentHighlighter, self).find_window(highlight_locations)
-        return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
 
 def upload_document(request, template='documents/upload_form.html'):
     form = DocumentForm(request.POST or None, request.FILES or None, prefix='document')
@@ -71,18 +60,3 @@ def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
     doc = get_object_or_404(Document, pk=document_pk)
     return handle_download(request, doc)
-        
-def document_search_json(request, document_pk=None):
-    q = request.GET.get('q', '')
-    results = []
-    if q:
-        qs = SearchQuerySet().models(Page).order_by('doc_pk', 'page').filter(doc_pk=document_pk).auto_query(q)
-        results = []
-        highlighter = DocumentHighlighter(q, max_length=100)
-        for result in qs:
-            results.append({
-                'page_number': result.page,
-                'highlight': highlighter.highlight(result.text),
-            })
-    return HttpResponse(json.dumps(results), content_type='text/plain')
-    

@@ -107,8 +107,6 @@ C_BRANDING_CHOICES = (
 C_STATUS_CHOICES = (
     ('new', _('new')),
     ('uploading', _('uploading')),
-    ('indexing', _('indexing')),
-    ('indexed', _('indexed')),
     ('ready', _('ready')),
     ('aborted', _('aborted')),
     ('deleted', _('deleted')),
@@ -119,7 +117,6 @@ class Document(models.Model):
     hash = models.SlugField(max_length=32)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
-    pages = models.IntegerField(null=True, blank=True)
     branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
     allow_download = models.BooleanField(default=True)
     status = models.CharField(max_length=15, default='new', choices=C_STATUS_CHOICES)
@@ -229,19 +226,7 @@ def _post_document_save(sender, **kwargs):
     if settings.CELERY_ALWAYS_EAGER:
         from ecs.documents.tasks import document_tamer
         document_tamer.delay().get()
-    
-class Page(models.Model):
-    doc = models.ForeignKey(Document)
-    num = models.PositiveIntegerField()
-    text = models.TextField()        
 
-    objects = AuthorizationManager()
-
-def _post_page_delete(sender, **kwargs):
-    from haystack import site
-    site.get_index(Page).remove_object(kwargs['instance'])
-
-post_delete.connect(_post_page_delete, sender=Page)
 post_save.connect(_post_document_save, sender=Document)
 
 

@@ -3,7 +3,6 @@ import os
 import uuid
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.utils import pdfutils
 
 from ecs.mediaserver.utils import MediaProvider
 from ecs.mediaserver.client import generate_media_url
@@ -24,7 +23,6 @@ class MediaDisplayDownload(EcsTestCase):
         self.identifier = uuid.uuid4().get_hex()
         
         with open(self.pdfdocname, "rb") as input:
-            self.pages = pdfutils.pdf_page_count(input)
             self.pdfdata = input.read()
             input.seek(0)
             self.mediaprovider.add_blob(self.identifier, input)

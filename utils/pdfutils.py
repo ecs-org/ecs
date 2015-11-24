@@ -17,8 +17,6 @@ from django.conf import settings
 from django.template import Context, loader
 from django.utils.encoding import smart_str
 
-from pdfminer.pdfparser import PDFParser, PDFDocument
-
 from ecs.utils.pathutils import which_path
 
 GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
@@ -44,19 +42,6 @@ class Page(object):
         return str("%s_%s_%sx%s_%s" % (self.id, self.width, self.tiles_x, self.tiles_y , self.pagenr))
 
         
-def pdf_page_count(filelike):
-    ''' returns number of pages of an pdf document '''
-    filelike.seek(0)
-    parser = PDFParser(filelike)
-    doc = PDFDocument()
-    parser.set_document(doc)
-    doc.set_parser(parser)
-    doc.initialize('')
-    pages = sum(1 for _ in doc.get_pages())
-    filelike.seek(0)
-    return pages
-
-
 def _pdf_stamp(source_filelike, dest_filelike, stamp_filename):
     ''' takes source pdf, stamps another stamp_filename pdf onto every page of source and output it to dest
     
@@ -125,28 +110,6 @@ def pdf_barcodestamp(source_filelike, dest_filelike, barcode1, barcode2=None, ba
         os.remove(barcode_pdf_name)
     
   
-def pdf2text(pdffilename, pagenr=None, timeoutseconds= 30):
-    ''' Extract Text from an pdf, you can extract the whole text, or only text from one page of an document. 
-    
-    Calls `pdftotext` from the commandline, takes a pdffilename that must exist on the local filesystem and returns extracted text
-    if pagenr is set only Page pagenr is extracted; Raises IOError if something went wrong
-    '''
-    cmd = ["pdftotext", "-raw", "-enc", "UTF-8", "-eol", "unix", "-q"]
-    if pagenr:
-        cmd += ["-nopgbrk", "-f", "%s" % pagenr,  "-l",  "%s" % pagenr]
-    cmd += [pdffilename, "-"]
-    popen = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout, stderr = popen.communicate()
-    if popen.returncode != 0:
-        raise IOError('pdftotext pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-    if pagenr:
-        return stdout
-    else:
-        # pdftotext inserts form feeds between pages,
-        # but there is an extra form feed at the end of the stream
-        return stdout.split('\f')[:-1]
-
-
 class PdfBroken(Exception):
     pass
 
