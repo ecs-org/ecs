@@ -74,7 +74,6 @@ class UserSettings(models.Model):
     task_filter = models.TextField(null=True)
     communication_filter = JSONField()
     useradministration_filter = JSONField()
-    pdfviewer_settings = JSONField()
 
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
