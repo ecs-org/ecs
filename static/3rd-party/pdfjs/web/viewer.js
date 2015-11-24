@@ -6234,10 +6234,10 @@ var PDFViewerApplication = {
       toggleButton: document.getElementById('secondaryToolbarToggle'),
       presentationModeButton:
         document.getElementById('secondaryPresentationMode'),
-      openFile: document.getElementById('secondaryOpenFile'),
+      /* openFile: document.getElementById('secondaryOpenFile'), */
       print: document.getElementById('secondaryPrint'),
       download: document.getElementById('secondaryDownload'),
-      viewBookmark: document.getElementById('secondaryViewBookmark'),
+      /* viewBookmark: document.getElementById('secondaryViewBookmark'), */
       firstPage: document.getElementById('firstPage'),
       lastPage: document.getElementById('lastPage'),
       pageRotateCw: document.getElementById('pageRotateCw'),
@@ -7106,8 +7106,8 @@ function webViewerInitialized() {
   document.body.appendChild(fileInput);
 
   if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
-    document.getElementById('openFile').setAttribute('hidden', 'true');
-    document.getElementById('secondaryOpenFile').setAttribute('hidden', 'true');
+    /* document.getElementById('openFile').setAttribute('hidden', 'true'); */
+    /* document.getElementById('secondaryOpenFile').setAttribute('hidden', 'true'); */
   } else {
     document.getElementById('fileInput').value = null;
   }
@@ -7286,8 +7286,8 @@ function webViewerInitialized() {
   document.getElementById('presentationMode').addEventListener('click',
     SecondaryToolbar.presentationModeClick.bind(SecondaryToolbar));
 
-  document.getElementById('openFile').addEventListener('click',
-    SecondaryToolbar.openFileClick.bind(SecondaryToolbar));
+  /* document.getElementById('openFile').addEventListener('click',
+    SecondaryToolbar.openFileClick.bind(SecondaryToolbar)); */
 
   document.getElementById('print').addEventListener('click',
     SecondaryToolbar.printClick.bind(SecondaryToolbar));
@@ -7429,8 +7429,8 @@ window.addEventListener('updateviewarea', function (evt) {
   });
   var href =
     PDFViewerApplication.pdfLinkService.getAnchorUrl(location.pdfOpenParams);
-  document.getElementById('viewBookmark').href = href;
-  document.getElementById('secondaryViewBookmark').href = href;
+  /* document.getElementById('viewBookmark').href = href; */
+  /* document.getElementById('secondaryViewBookmark').href = href; */
 
   // Update the current bookmark in the browsing history.
   PDFViewerApplication.pdfHistory.updateCurrentBookmark(location.pdfOpenParams,
@@ -7507,9 +7507,9 @@ window.addEventListener('change', function webViewerChange(evt) {
   PDFViewerApplication.setTitleUsingUrl(file.name);
 
   // URL does not reflect proper document location - hiding some icons.
-  document.getElementById('viewBookmark').setAttribute('hidden', 'true');
-  document.getElementById('secondaryViewBookmark').
-    setAttribute('hidden', 'true');
+  /* document.getElementById('viewBookmark').setAttribute('hidden', 'true'); */
+  /* document.getElementById('secondaryViewBookmark').
+    setAttribute('hidden', 'true'); */
   document.getElementById('download').setAttribute('hidden', 'true');
   document.getElementById('secondaryDownload').setAttribute('hidden', 'true');
 }, true);
