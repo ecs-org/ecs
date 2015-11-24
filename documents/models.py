@@ -212,12 +212,7 @@ class Document(models.Model):
             self.file.seek(0)
             self.hash = m.hexdigest()
 
-        rval = super(Document, self).save(**kwargs)
-
-        if self.status == 'deleted':
-            self.page_set.all().delete()
-            
-        return rval
+        return super(Document, self).save(**kwargs)
 
 def _post_document_save(sender, **kwargs):
     # hack for situations where there is no celerybeat
