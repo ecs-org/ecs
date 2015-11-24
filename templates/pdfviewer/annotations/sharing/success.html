@@ -1,8 +1,0 @@
-{% load core i18n %}
-
-{% trans "shared with:" %} {{ target_user }}
-{% for annotation in annotations %}
-    <div>
-        Seite {{ annotation.page_number }}, {{ annotation.human_readable_location }}: {{ annotation.text }}
-    </div>
-{% endfor %}

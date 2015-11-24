@@ -185,7 +185,6 @@ INSTALLED_APPS = (
     'ecs.utils',
     'ecs.docstash',
     'ecs.userswitcher',
-    'ecs.pdfviewer',
     'ecs.mediaserver',
     'ecs.workflow',
     'ecs.tasks',

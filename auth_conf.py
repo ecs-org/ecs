@@ -11,7 +11,6 @@ from ecs.documents.models import Document, DocumentPersonalization, Page
 from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
-from ecs.pdfviewer.models import DocumentAnnotation
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.billing.models import ChecklistBillingState
 from ecs.scratchpad.models import ScratchPad
@@ -140,12 +139,6 @@ class ChecklistQFactory(authorization.QFactory):
 
 authorization.register(Checklist, factory=ChecklistQFactory)
 authorization.register(ChecklistAnswer, lookup='checklist')
-
-class DocumentAnnotationQFactory(authorization.QFactory):
-    def get_q(self, user):
-        return self.make_q(user=user)
-
-authorization.register(DocumentAnnotation, factory=DocumentAnnotationQFactory)
 
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):

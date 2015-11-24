@@ -302,9 +302,8 @@
         window.addEvent('domready', function(){
             ecs.setupWidgets();
 
-            var reviewToolbarItems = [
-                ecs.textarea.toolbarItems.annotations("{% trans 'Insert Annotations' %}", '{% url ecs.pdfviewer.views.copy_annotations %}?submission_form_pk={{ submission_form.pk }}')
-            ];
+            var reviewToolbarItems = [];
+
             {% if user|has_flag:'is_internal' %}
                 reviewToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
             {% endif %}

@@ -75,34 +75,6 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url){
     };
 };
 
-ecs.textarea.toolbarItems.annotations = function(label, url){
-    return function(textarea){
-        var button = new Element('a', {title: label, 'class': 'annotations'});
-        button.addEvent('click', function(){
-            var popup = new ecs.widgets.Popup({url: url});
-            popup.addEvent('load', function(){
-                var copyButton = new Element('input', {type: 'submit', value: "Kopieren"});
-                copyButton.addEvent('click', function(){
-                    var text = "";
-                    popup.element.getElements('input[type=checkbox]').each(function(checkbox){
-                        if(checkbox.checked){
-                            var a = checkbox.getParent('.annotation');
-                            text += a.getElement('.copytext').innerHTML + '\n\n';
-                        }
-                    });
-                    textarea.insertAtCursor(text);
-                    textarea.fireEvent('change');
-                    popup.dispose();
-                    return false;
-                });
-                popup.element.grab(copyButton);
-            });
-            return false;
-        });
-        return button;
-    };
-};
-
 ecs.textarea.toolbarItems.versionHistory = function(label, url){
     return function(textarea){
         var button = new Element('a', {title: label, 'class': 'versions'});

@@ -1,12 +1,15 @@
 import json
+from urllib import urlencode
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from ecs.utils.viewutils import render
+from django.conf import settings
+from django.core.urlresolvers import reverse
 
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
+from ecs.utils.viewutils import render
 from ecs.documents.models import Page, Document
 from ecs.documents.forms import DocumentForm
 from ecs.documents.signals import on_document_download
@@ -47,6 +50,19 @@ def handle_download(request, doc):
         return HttpResponseRedirect(url)
     else:
         return HttpResponseForbidden()
+
+
+def view_document(request, document_pk=None):
+    doc = get_object_or_404(Document, pk=document_pk)
+    params = urlencode({
+        'file': reverse(
+            'ecs.documents.views.download_document',
+            kwargs={'document_pk': doc.pk}
+        )
+    })
+    url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
+        settings.MEDIA_URL, params)
+    return HttpResponseRedirect(url)
 
 
 def download_document(request, document_pk=None):
