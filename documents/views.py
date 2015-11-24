@@ -52,7 +52,7 @@ def handle_download(request, doc):
         return HttpResponseForbidden()
 
 
-def view_document(request, document_pk=None):
+def view_document(request, document_pk=None, page=None):
     doc = get_object_or_404(Document, pk=document_pk)
     params = urlencode({
         'file': reverse(
@@ -62,6 +62,8 @@ def view_document(request, document_pk=None):
     })
     url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
         settings.MEDIA_URL, params)
+    if page:
+        url = '{}#page={}'.format(url, int(page))
     return HttpResponseRedirect(url)
 
 
