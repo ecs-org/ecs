@@ -78,12 +78,13 @@ def download_once(request, ref_key=None):
     cache.delete(cache_key)
 
     doc = get_object_or_404(Document, pk=doc_id)
-    f = doc.retrieve()
+    response = HttpResponse(doc.retrieve())
 
-    response = HttpResponse(f)
-    response['Content-Disposition'] = \
-        'attachment;filename={}'.format(doc.get_filename())
-    # XXX: set cache control http headers
+    # Disable browser caching, so the PDF won't end up on the users hard disk.
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    response['Vary'] = '*'
 
     DownloadHistory.objects.create(document=doc, user=request.user)
     return response
