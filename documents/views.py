@@ -1,9 +1,11 @@
 from urllib import urlencode
+from uuid import uuid4
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
 
 from ecs.utils.viewutils import render
 from ecs.documents.models import Document, DownloadHistory
@@ -49,10 +51,14 @@ def handle_download(request, doc):
 
 def view_document(request, document_pk=None, page=None):
     doc = get_object_or_404(Document, pk=document_pk)
+
+    ref_key = uuid4().get_hex()
+    cache.set('document-ref-{}'.format(ref_key), doc.id, timeout=60)
+
     params = urlencode({
         'file': reverse(
-            'ecs.documents.views.download_document',
-            kwargs={'document_pk': doc.pk}
+            'ecs.documents.views.download_once',
+            kwargs={'ref_key': ref_key}
         )
     })
     url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
@@ -60,6 +66,27 @@ def view_document(request, document_pk=None, page=None):
     if page:
         url = '{}#page={}'.format(url, int(page))
     return HttpResponseRedirect(url)
+
+
+def download_once(request, ref_key=None):
+    cache_key = 'document-ref-{}'.format(ref_key)
+    doc_id = cache.get(cache_key)
+
+    if not doc_id:
+        raise Http404()
+
+    cache.delete(cache_key)
+
+    doc = get_object_or_404(Document, pk=doc_id)
+    f = doc.retrieve()
+
+    response = HttpResponse(f)
+    response['Content-Disposition'] = \
+        'attachment;filename={}'.format(doc.get_filename())
+    # XXX: set cache control http headers
+
+    DownloadHistory.objects.create(document=doc, user=request.user)
+    return response
 
 
 def download_document(request, document_pk=None):
