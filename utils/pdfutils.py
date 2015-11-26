@@ -10,11 +10,12 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, logging, copy, shutil
+import os, subprocess, logging, shutil
+from binascii import hexlify
 from tempfile import TemporaryFile, NamedTemporaryFile, mkdtemp
 
 from django.conf import settings
-from django.template import Context, loader
+from django.template import loader
 from django.utils.encoding import smart_str
 
 from ecs.utils.pathutils import which_path
@@ -42,18 +43,13 @@ def pdf_barcodestamp(source, barcode, text=None):
     """.format(barcode)
 
     if text:
-        # hex encode string for inclusion in postscript
-        text = ''.join('{:02x}'.format(ord(c)) for c in text.encode('ascii'))
-
         barcode_ps += '''
             gsave
-            /text <{}> def
             /Helvetica 6 selectfont
-            32 132 text stringwidth pop add moveto
-            270 rotate
-            text show
+            <{}> dup stringwidth pop 132 add 32 exch moveto
+            270 rotate show
             grestore
-        '''.format(text)
+        '''.format(hexlify(text.encode('ascii')))
 
     with NamedTemporaryFile() as pdf:
         p = subprocess.Popen([

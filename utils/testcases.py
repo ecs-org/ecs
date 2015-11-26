@@ -7,7 +7,6 @@ from django.conf import settings
 
 from ecs.integration import bootstrap as integration_bootstrap
 from ecs.core import bootstrap as core_bootstrap
-from ecs.mediaserver import bootstrap as mediaserver_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
 from ecs.checklists import bootstrap as checklists_bootstrap
 from ecs.users.utils import get_user, get_or_create_user
@@ -29,10 +28,10 @@ class EcsTestCase(TestCase):
         core_bootstrap.auth_user_testusers()
         core_bootstrap.advanced_settings()
 
-        mediaserver_bootstrap.import_encryption_sign_keys()
-        mediaserver_bootstrap.import_decryption_verify_keys()
-        mediaserver_bootstrap.create_disk_caches()
-        mediaserver_bootstrap.create_local_storage_vault()
+        documents_bootstrap.import_encryption_sign_keys()
+        documents_bootstrap.import_decryption_verify_keys()
+        documents_bootstrap.create_disk_caches()
+        documents_bootstrap.create_local_storage_vault()
 
         integration_bootstrap.workflow_sync()
         core_bootstrap.auth_groups()

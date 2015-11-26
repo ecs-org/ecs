@@ -5,7 +5,7 @@ from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 
 from ecs.documents.models import Document
-from ecs.mediaserver.storagevault import getVault
+from ecs.documents.storagevault import getVault
 from ecs.mediaserver.diskbuckets import DiskBuckets, ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
 
 
@@ -24,8 +24,7 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     doc = Document.objects.get(pk=document_pk)
     
     try:
-        vault = getVault()
-        vault.add(doc.uuid, doc.file)
+        getVault()[doc.uuid] = doc.file
     except Exception as e:
         if doc.retries < 5:
             doc.status = 'new'

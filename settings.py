@@ -285,7 +285,7 @@ INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs
 INCOMING_FILESTORE_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
 
 # Storage Vault settings
-STORAGE_VAULT = 'ecs.mediaserver.storagevault.LocalFileStorageVault'
+STORAGE_VAULT = 'ecs.documents.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {
     'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
 }
@@ -303,18 +303,6 @@ STORAGE_DECRYPT = {
     "verify_key":  os.path.join(PROJECT_DIR, "ecs_authority.pub"),
     "verify_owner": "ecs_authority",
 }
-
-# Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-MS_CLIENT = {
-    "server": "http://127.0.0.1:8000",
-    "bucket": "/mediaserver/",
-    # key_id: 20 char long, key_secret: 31 chars, A-Za-z0-9
-    "key_id": "b2SpFfUvfD44LUzHDu7w",
-    "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
-    "same_host_as_server": True,
-    "url_expiration_sec": 6*60*60,
-}
-
 
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
@@ -504,7 +492,7 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 # hack some settings for test and runserver    
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-    STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
+    STORAGE_VAULT = 'ecs.documents.storagevault.TemporaryStorageVault'
     ECS_REQUIRE_CLIENT_CERTS = False
     ECS_MANDATORY_CLIENT_CERTS = False
     INSTALLED_APPS += ('ecs.workflow.tests',)

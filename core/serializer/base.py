@@ -11,6 +11,7 @@ from django.contrib.contenttypes import generic
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.countries.models import Country
+from ecs.documents.storagevault import getVault
 
 CURRENT_SERIALIZER_VERSION = '1.2'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
@@ -349,8 +350,7 @@ class DocumentSerializer(ModelSerializer):
             name, ext = os.path.splitext(val.name)
             zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
             f = obj.get_from_mediaserver()
-            vault = getVault()
-            f = vault.get(self.uuid)
+            f = getVault()[self.uuid]
             zf.writestr(zip_name, f.read())
             f.close()
             return zip_name

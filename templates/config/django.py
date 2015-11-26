@@ -52,15 +52,6 @@ SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
-MS_CLIENT = {
-    "server": "%(mediaserver.client.server)s",
-    "bucket": "%(mediaserver.client.bucket)s",
-    "key_id": "%(mediaserver.client.key_id)s",
-    "key_secret": "%(mediaserver.client.key_secret)s",
-    "same_host_as_server": %(mediaserver.client.same_host_as_server)s,
-    "url_expiration_sec": 6*60*60,
-}
-
 STORAGE_VAULT = '%(storagevault.implementation)s'
 STORAGE_VAULT_OPTIONS = {
     'LocalFileStorageVault.rootdir': '%(storagevault.options.localfilestorage_root)s',
@@ -69,15 +60,15 @@ STORAGE_VAULT_OPTIONS = {
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
     "encrypt_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_mediaserver.pub"),
-    "encrypt_owner": '%(mediaserver.storage.encrypt_owner)s',
+    "encrypt_owner": '%(documents.storage.encrypt_owner)s',
     "signing_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_authority.sec"),
-    "signing_owner": '%(mediaserver.storage.signing_owner)s',
+    "signing_owner": '%(documents.storage.signing_owner)s',
 }
 
 STORAGE_DECRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
     "decrypt_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_mediaserver.sec"),
-    "decrypt_owner": "%(mediaserver.storage.decrypt_owner)s",
+    "decrypt_owner": "%(documents.storage.decrypt_owner)s",
     "verify_key":  os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_authority.pub"),
-    "verify_owner": "%(mediaserver.storage.verify_owner)s",
+    "verify_owner": "%(documents.storage.verify_owner)s",
 }

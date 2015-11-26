@@ -9,7 +9,7 @@ apt-get install apache2-mpm-prefork gettext language-pack-de \
     libapache2-mod-wsgi libyaml-dev libpq-dev memcached openjdk-7-jre-headless \
     pgbouncer postfix postgresql rabbitmq-server solr-jetty tomcat7-user
 
-# mediaserver
+# documents
 apt-get install ghostscript gnupg pdftk qpdf
 
 # deps for PIL

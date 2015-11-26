@@ -41,15 +41,6 @@ if user in conf_dict.keys():
         'trusted_sources': ['127.0.0.1', '78.46.72.188'],
     }
 
-    # Mediaserver Client Access (things needed to access a mediaserver, needed for both Server and Client)
-    MS_CLIENT = {
-        'server': 'http://{0}'.format(domain),
-        'bucket': '/mediaserver/',
-        'key_id': ms_key_id,
-        'key_secret': ms_key_secret,
-        "same_host_as_server": True,
-    }
-    
     if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 

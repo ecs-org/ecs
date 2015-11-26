@@ -24,7 +24,7 @@ from django.utils.translation import ugettext
 
 from ecs.authorization import AuthorizationManager
 from ecs.utils.pdfutils import pdf_barcodestamp
-from ecs.mediaserver.storagevault import getVault
+from ecs.documents.storagevault import getVault
 
 
 logger = logging.getLogger(__name__)
@@ -143,17 +143,9 @@ class Document(models.Model):
 
     def get_from_mediaserver(self):
         ''' load actual data from storage vault including optional stamp ; you rarely use this. '''
-        f = None
-        vault = getVault()
-
+        f = getVault()[self.uuid]
         if self.mimetype == 'application/pdf' and self.stamp_on_download:
-            inputpdf = vault.get(self.uuid)
-            # XXX: stamp personalized uuid
-            f = pdf_barcodestamp(inputpdf, self.uuid)
-            vault.decommission(inputpdf)
-        else:
-            f = vault.get(self.uuid)
-
+            f = pdf_barcodestamp(f, self.uuid)
         return f
     
     def save(self, **kwargs):
