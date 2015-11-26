@@ -6,7 +6,6 @@ from django.core.exceptions import ImproperlyConfigured
 
 from ecs import bootstrap
 from ecs.utils import gpgutils
-from ecs.mediaserver.utils import MediaProvider
 
 @bootstrap.register()
 def import_encryption_sign_keys():
@@ -31,10 +30,6 @@ def import_decryption_verify_keys():
     gpgutils.reset_keystore(settings.STORAGE_DECRYPT ["gpghome"])
     gpgutils.import_key(settings.STORAGE_DECRYPT ["decrypt_key"], settings.STORAGE_DECRYPT ["gpghome"])
     gpgutils.import_key(settings.STORAGE_DECRYPT ["verify_key"], settings.STORAGE_DECRYPT ["gpghome"])
-
-@bootstrap.register()
-def create_disk_caches():
-    m = MediaProvider(allow_mkrootdir=True)
 
 @bootstrap.register()
 def create_local_storage_vault():

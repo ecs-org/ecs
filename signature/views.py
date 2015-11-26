@@ -7,7 +7,7 @@ import sys
 import hashlib
 
 from datetime import datetime
-from tempfile import NamedTemporaryFile
+from tempfile import TemporaryFile
 
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
@@ -37,13 +37,11 @@ def _store_sign_data(sign_data, force_mock=False):
     sign_data = SigningData(sign_data)
 
     if sign_data['document_barcodestamp']:
-        with NamedTemporaryFile(suffix='.pdf') as tmp_in:
-            with NamedTemporaryFile(suffix='.pdf') as tmp_out:
-                tmp_in.write(sign_data['pdf_data'])
-                tmp_in.seek(0)
-                pdf_barcodestamp(tmp_in, tmp_out, sign_data['document_uuid'])
-                tmp_out.seek(0)
-                sign_data['pdf_data'] = tmp_out.read()
+        with TemporaryFile() as tmp_in:
+            tmp_in.write(sign_data['pdf_data'])
+            tmp_in.seek(0)
+            stamped = pdf_barcodestamp(tmp_in, sign_data['document_uuid'])
+            sign_data['pdf_data'] = stamped.read()
 
     sign_data['origdigest'] = hashlib.sha256(sign_data['pdf_data']).hexdigest()
     sign_data.store(minutes=5)
@@ -164,7 +162,7 @@ def sign_receive(request, mock=False):
 
         doctype = DocumentType.objects.get(identifier=request.sign_data['document_type'])
         document = Document.objects.create(uuid=request.sign_data["document_uuid"],
-             branding='n', doctype=doctype, file=f,
+             stamp_on_download=False, doctype=doctype, file=f,
              original_file_name=request.sign_data["document_filename"], date=datetime.now(),
              version=request.sign_data["document_version"]
         )

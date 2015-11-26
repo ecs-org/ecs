@@ -11,9 +11,8 @@ from contextlib import contextmanager
 from shutil import copyfileobj
 
 from django.db import models
-from django.db.models.signals import post_save, post_delete
 from django.core.files.storage import FileSystemStorage
-from django.core.files import File
+from django.core.files.base import File
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django.template.defaultfilters import slugify
@@ -24,22 +23,11 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
 from ecs.authorization import AuthorizationManager
-from ecs.users.utils import get_current_user
-from ecs.mediaserver.client import generate_media_url, download_from_mediaserver
+from ecs.utils.pdfutils import pdf_barcodestamp
+from ecs.mediaserver.storagevault import getVault
 
 
 logger = logging.getLogger(__name__)
-
-
-class DocumentPersonalization(models.Model):
-    id = models.SlugField(max_length=36, primary_key=True, default=lambda: uuid4().get_hex())
-    document = models.ForeignKey('Document', db_index=True)
-    user = models.ForeignKey(User, db_index=True)
-
-    objects = AuthorizationManager()
-
-    def __unicode__(self):
-        return "%s - %s - %s - %s" % (self.id, str(self.document), self.document.get_filename(), self.user.get_full_name())
 
 
 class DocumentType(models.Model):
@@ -88,7 +76,7 @@ class DocumentManager(AuthorizationManager):
         tmp.write(buf)
         tmp.flush()
         tmp.seek(0)
-        
+
         if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
             kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
 
@@ -97,12 +85,6 @@ class DocumentManager(AuthorizationManager):
         tmp.close()
         return doc
 
-
-C_BRANDING_CHOICES = (
-    ('b', 'brand id'),
-    ('p', 'personalize'),
-    ('n', 'never brand'),
-)
 
 C_STATUS_CHOICES = (
     ('new', _('new')),
@@ -113,12 +95,11 @@ C_STATUS_CHOICES = (
 )
 
 class Document(models.Model):
-    uuid = models.SlugField(max_length=36, unique=True)
+    uuid = models.SlugField(max_length=36, unique=True, default=lambda: uuid4().get_hex())
     hash = models.SlugField(max_length=32)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
-    branding = models.CharField(max_length=1, default='b', choices=C_BRANDING_CHOICES)
-    allow_download = models.BooleanField(default=True)
+    stamp_on_download = models.BooleanField(default=True)
     status = models.CharField(max_length=15, default='new', choices=C_STATUS_CHOICES)
     retries = models.IntegerField(default=0, editable=False)
 
@@ -159,49 +140,23 @@ class Document(models.Model):
             name_slices.insert(0, self.parent_object.get_filename_slice())
         name = slugify('-'.join(name_slices))
         return ''.join([name, ext])
-    
-    def get_downloadurl(self):
-        if (not self.allow_download) or (self.branding not in [c[0] for c in C_BRANDING_CHOICES]):
-            return None
-    
-        if self.mimetype != 'application/pdf' or self.branding == 'n':
-            personalization = None
-            brand = False
-        else:
-            personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-            brand = self.branding in ('p', 'b')
-
-        return generate_media_url(self.uuid, self.get_filename(), mimetype=self.mimetype, personalization=personalization, brand=brand)
 
     def get_from_mediaserver(self):
-        ''' load actual data from mediaserver including optional branding ; you rarely use this. '''
-        personalization = self.add_personalization(get_current_user()).id if self.branding == 'p' else None
-        brand = self.branding in ('p', 'b')
-        return download_from_mediaserver(self.uuid, self.get_filename(), personalization=personalization, brand=brand)
+        ''' load actual data from storage vault including optional stamp ; you rarely use this. '''
+        f = None
+        vault = getVault()
+
+        if self.mimetype == 'application/pdf' and self.stamp_on_download:
+            inputpdf = vault.get(self.uuid)
+            # XXX: stamp personalized uuid
+            f = pdf_barcodestamp(inputpdf, self.uuid)
+            vault.decommission(inputpdf)
+        else:
+            f = vault.get(self.uuid)
+
+        return f
     
-    @contextmanager
-    def as_temporary_file(self):
-        with tempfile.NamedTemporaryFile() as tmp:
-            copyfileobj(self.get_from_mediaserver(), tmp)
-            tmp.seek(0)
-            yield tmp
-               
-    def get_personalizations(self, user=None):
-        ''' Get a list of (id, user) tuples of personalizations for this document, or None if none exist '''
-        return None
-        
-    def add_personalization(self, user):
-        ''' Add unique id connected to a user and document download ''' 
-        return False
-
     def save(self, **kwargs):
-        if not self.uuid: 
-            self.uuid = uuid4().get_hex() # generate a new random uuid
-            content_type = None
-            if self.file.name or self.original_file_name:
-                filename_to_check = self.file.name if self.file.name else self.original_file_name
-                content_type, encoding = mimetypes.guess_type(filename_to_check) # look what kind of mimetype we would guess
-
         if not self.hash:
             m = hashlib.md5() # calculate hash sum
             self.file.seek(0)
@@ -213,14 +168,6 @@ class Document(models.Model):
             self.hash = m.hexdigest()
 
         return super(Document, self).save(**kwargs)
-
-def _post_document_save(sender, **kwargs):
-    # hack for situations where there is no celerybeat
-    if settings.CELERY_ALWAYS_EAGER:
-        from ecs.documents.tasks import document_tamer
-        document_tamer.delay().get()
-
-post_save.connect(_post_document_save, sender=Document)
 
 
 class DownloadHistory(models.Model):

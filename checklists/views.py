@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse
+
 from ecs.checklists.models import Checklist
 from ecs.utils.security import readonly
+from ecs.documents.views import handle_download
 
 
 def yesno(flag):
@@ -19,7 +21,4 @@ def checklist_comments(request, checklist_pk=None, flavour='negative'):
 @readonly()
 def checklist_pdf(request, checklist_pk=None):
     checklist = get_object_or_404(Checklist, pk=checklist_pk, pdf_document__isnull=False)
-    url = checklist.pdf_document.get_downloadurl()
-    if not url:
-        raise Http404()
-    return HttpResponseRedirect(url)
+    return handle_download(request, checklist.pdf_document)

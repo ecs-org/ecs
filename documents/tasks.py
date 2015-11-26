@@ -1,30 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
-
 from django.conf import settings
 
 from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 
 from ecs.documents.models import Document
-from ecs.mediaserver.client import add_to_storagevault
+from ecs.mediaserver.storagevault import getVault
 from ecs.mediaserver.diskbuckets import DiskBuckets, ignore_all, ignore_none, onerror_log, satisfied_on_newer_then
-
-
-@periodic_task(run_every=timedelta(seconds=10))
-def document_tamer(**kwargs):
-    logger = document_tamer.get_logger(**kwargs)
-
-    to_be_uploaded_documents = Document.objects.filter(status='new').values('pk')
-    if len(to_be_uploaded_documents):
-        logger.info('{0} documents to be uploaded'.format(len(to_be_uploaded_documents)))
-    for doc in to_be_uploaded_documents:
-        upload_to_storagevault.delay(doc['pk'])
-
-    #filename = t.file.name
-    #t.file = None
-    #DocumentFileStorage().delete(filename)
-    #t.save()        
 
 
 @task()
@@ -42,7 +24,8 @@ def upload_to_storagevault(document_pk=None, **kwargs):
     doc = Document.objects.get(pk=document_pk)
     
     try:
-        add_to_storagevault(doc.uuid, doc.file)
+        vault = getVault()
+        vault.add(doc.uuid, doc.file)
     except Exception as e:
         if doc.retries < 5:
             doc.status = 'new'

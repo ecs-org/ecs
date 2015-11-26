@@ -349,6 +349,8 @@ class DocumentSerializer(ModelSerializer):
             name, ext = os.path.splitext(val.name)
             zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
             f = obj.get_from_mediaserver()
+            vault = getVault()
+            f = vault.get(self.uuid)
             zf.writestr(zip_name, f.read())
             f.close()
             return zip_name

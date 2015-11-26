@@ -26,7 +26,6 @@ def startup():
     import ecs.core.triggers
     import ecs.votes.triggers
     import ecs.notifications.triggers
-    import ecs.documents.triggers
     import ecs.meetings.triggers
 
     # configure logging

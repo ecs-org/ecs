@@ -210,11 +210,10 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
         zf = zipfile.ZipFile(cache_file, 'w')
         try:
             for submission, doc in files:
-                with doc.as_temporary_file() as docfile:
-                    path = [submission.get_filename_slice(), doc.get_filename()]
-                    if not submission_pk:
-                        path.insert(0, submission.get_workflow_lane_display())
-                    zf.write(docfile.name, '/'.join(path))
+                path = [submission.get_filename_slice(), doc.get_filename()]
+                if not submission_pk:
+                    path.insert(0, submission.get_workflow_lane_display())
+                zf.writestr('/'.join(path), doc.get_from_mediaserver().read())
         finally:
             zf.close()
     else:

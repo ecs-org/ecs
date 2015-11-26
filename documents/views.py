@@ -1,14 +1,13 @@
 from urllib import urlencode
 
 from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
 from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from ecs.utils.viewutils import render
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DownloadHistory
 from ecs.documents.forms import DocumentForm
-from ecs.documents.signals import on_document_download
 
 
 def upload_document(request, template='documents/upload_form.html'):
@@ -33,12 +32,19 @@ def delete_document(request, document_pk):
     
 
 def handle_download(request, doc):
-    url = doc.get_downloadurl()
-    if url and doc.doctype.is_downloadable or request.user.ecs_profile.is_internal:
-        on_document_download.send(Document, document=doc, user=request.user)
-        return HttpResponseRedirect(url)
-    else:
+    if (not doc.doctype.is_downloadable and
+        not request.user.get_profile().is_internal):
         return HttpResponseForbidden()
+
+    f = doc.get_from_mediaserver()
+
+    response = HttpResponse(f)
+    response['Content-Disposition'] = \
+        'attachment;filename={}'.format(doc.get_filename())
+    # XXX: set cache control http headers
+
+    DownloadHistory.objects.create(document=doc, user=request.user)
+    return response
 
 
 def view_document(request, document_pk=None, page=None):

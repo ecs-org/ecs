@@ -288,10 +288,6 @@ INCOMING_FILESTORE_MAXAGE = 14 # Value in Days (everything older gets wiped peri
 STORAGE_VAULT = 'ecs.mediaserver.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {
     'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
-    'read_authid': 'bli',
-    'read_authkey': 'ble',
-    'write_authid': 'blu',
-    'write_authkey': 'bla',
 }
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
@@ -317,11 +313,6 @@ MS_CLIENT = {
     "key_secret": "SksXrbHMQyTBAKdb9NNeqOFu8TSwxXN",
     "same_host_as_server": True,
     "url_expiration_sec": 6*60*60,
-}
-# Mediaserver Server Config (things needed for a mediaserver to serve)
-MS_SERVER = {
-    "doc_diskcache": os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-doccache")),
-    "doc_diskcache_maxsize" :     2**32,    # equals 4 Gigabyte
 }
 
 
@@ -376,7 +367,6 @@ CELERY_IMPORTS = (
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
     'ecs.documents.tasks',
-    'ecs.mediaserver.tasks', 
     'ecs.ecsmail.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',

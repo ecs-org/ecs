@@ -46,7 +46,7 @@ from ecs.utils import gpgutils
 from ecs.mediaserver.diskbuckets import DiskBuckets
 
 
-__all__ = ['getVault', 'StorageVault', 'LocalFileStorageVault', 'TemporaryStorageVault', 'S3StorageVault',
+__all__ = ['getVault', 'StorageVault', 'LocalFileStorageVault', 'TemporaryStorageVault',
     'VaultError', 'VaultKeyError', 'VaultIOError', 'VaultEncryptionError', ]
 
 def _agressiv_mkdtemp(dir):
@@ -164,7 +164,8 @@ class StorageVault(object):
         filelike = None
         tmp_name = None
         try:
-            tmp_oshandle, tmp_name = tempfile.mkstemp(); os.close(tmp_oshandle)
+            tmp_oshandle, tmp_name = tempfile.mkstemp()
+            os.close(tmp_oshandle)
             filelike = self._get_from_vault(identifier)
             
             if not hasattr(filelike, 'fileno'):
@@ -248,21 +249,3 @@ class TemporaryStorageVault(LocalFileStorageVault):
         rootdir = self.__TempStorageDir
         #print("root temporary storagevault dir {0}".format(rootdir))
         self.db = DiskBuckets(rootdir, max_size = 0, allow_mkrootdir=True)
-
-    
-class S3StorageVault(StorageVault):
-    ''' a s3 (based on boto) file storage implementation of StorageVault
-    '''
-    
-    def __init__(self):
-        self.read_key_id = settings.STORAGE_VAULT_OPTIONS['read_auth_id']
-        self.read_key_secret = settings.STORAGE_VAULT_OPTIONS['read_auth_secret']
-        self.write_key_id  = settings.STORAGE_VAULT_OPTIONS['write_auth_id']
-        self.write_key_secret = settings.STORAGE_VAULT_OPTIONS['write_auth_secret']
-        raise NotImplementedError
-
-    def _add_to_vault(self, identifier, filelike):
-        raise NotImplementedError
-        
-    def _get_from_vault(self, identifier):
-        raise NotImplementedError
