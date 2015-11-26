@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import zipfile, os, datetime
+from tempfile import TemporaryFile
 from uuid import uuid4
 
 from django.db import models
@@ -354,6 +355,29 @@ class DocumentSerializer(ModelSerializer):
 
         return super(DocumentSerializer, self).dump_field(fieldname, val, zf, obj)
 
+    def dump(self, obj, zf):
+        d = super(DocumentSerializer, self).dump(obj, zf)
+
+        zip_name = 'attachments/{0}'.format(uuid4())
+        if obj.mimetype == 'application/pdf':
+            zip_name += '.pdf'
+        f = getVault()[obj.uuid]
+        zf.writestr(zip_name, f.read())
+        f.close()
+        d['file'] = zip_name
+
+        return d
+
+    def load(self, data, zf, version, commit=True):
+        obj = super(DocumentSerializer, self).load(data, zf, version, commit=commit)
+        if commit:
+            with TemporaryFile() as f:
+                f.write(zf.read(data['file']))
+                f.flush()
+                f.seek(0)
+                obj.store(f)
+        return obj
+
 
 class EthicsCommissionSerializer(object):
     def load(self, data, zf, version, commit=False):
@@ -420,7 +444,7 @@ _serializers = {
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
     NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    Document: DocumentSerializer(Document, fields=('doctype', 'file', 'name', 'original_file_name', 'date', 'version', 'mimetype')),
+    Document: DocumentSerializer(Document, fields=('doctype', 'name', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
     Country: CountrySerializer(),
