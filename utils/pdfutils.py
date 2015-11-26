@@ -63,7 +63,7 @@ def pdf_barcodestamp(source, barcode, text=None):
         ], stdin=subprocess.PIPE, stdout=pdf)
         p.stdin.write(barcode_ps)
         p.stdin.close()
-        if not p.wait() == 0:
+        if p.wait():
             raise subprocess.CalledProcessError(p.returncode, 'ghostscript')
 
         stamped = TemporaryFile()
