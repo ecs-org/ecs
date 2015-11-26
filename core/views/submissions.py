@@ -16,7 +16,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-from ecs.documents.models import Document, DownloadHistory
+from ecs.documents.models import Document
 from ecs.documents.views import handle_download
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization

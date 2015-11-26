@@ -1,6 +1,5 @@
 import os, datetime, uuid
 from StringIO import StringIO
-from django.core.files.base import File
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.serializer import Serializer

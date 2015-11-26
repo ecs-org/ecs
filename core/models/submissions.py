@@ -17,7 +17,7 @@ from ecs.core.models.constants import (
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import SubmissionManager, SubmissionFormManager, TemporaryAuthorizationManager
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
-from ecs.documents.models import Document, DocumentType
+from ecs.documents.models import Document
 from ecs.users.utils import get_user, create_phantom_user, sudo
 from ecs.authorization import AuthorizationManager
 from ecs.core.signals import on_study_change
@@ -541,7 +541,6 @@ class SubmissionForm(models.Model):
 
     def render_pdf(self):
         from ecs.core import paper_forms
-        doctype = DocumentType.objects.get(identifier='submissionform')
         name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
         filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
         pdfdata = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {

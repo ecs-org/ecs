@@ -6,7 +6,6 @@ import logging
 from uuid import uuid4
 
 from django.db import models
-from django.core.files.base import File
 from django.template.defaultfilters import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
