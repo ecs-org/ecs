@@ -45,10 +45,11 @@ def pdf_barcodestamp(source, barcode, text=None):
         # XXX: quote text for postscript
         barcode_ps += '''
             gsave
+            /text ({}) def
             /Helvetica 6 selectfont
-            14 130 moveto
+            32 132 text stringwidth pop add moveto
             270 rotate
-            ({}) show
+            text show
             grestore
         '''.format(text)
 
