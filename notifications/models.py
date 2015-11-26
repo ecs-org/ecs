@@ -128,12 +128,8 @@ class Notification(models.Model):
         now = datetime.now()
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
-            doctype='notification', 
-            parent_object=self, 
-            name=unicode(self), 
-            original_file_name=self.get_filename(),
-            version=str(now),
-            date=now,
+            doctype='notification', parent_object=self, name=unicode(self),
+            original_file_name=self.get_filename(), version=str(now), date=now
         )
         self.save()
         
@@ -206,12 +202,9 @@ class NotificationAnswer(models.Model):
 
         now = datetime.now()
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
-            doctype='notification_answer', 
-            parent_object=self, 
-            name=unicode(self), 
-            original_file_name=notification.get_filename('-answer.pdf'),
-            version=str(now),
-            date=now,
+            doctype='notification_answer', parent_object=self,
+            name=unicode(self), version=str(now), date=now,
+            original_file_name=notification.get_filename('-answer.pdf')
         )
         self.save()
         return self.pdf_document

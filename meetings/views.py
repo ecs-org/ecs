@@ -213,7 +213,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
                 path = [submission.get_filename_slice(), doc.get_filename()]
                 if not submission_pk:
                     path.insert(0, submission.get_workflow_lane_display())
-                zf.writestr('/'.join(path), doc.get_from_mediaserver().read())
+                zf.writestr('/'.join(path), doc.retrieve().read())
         finally:
             zf.close()
     else:

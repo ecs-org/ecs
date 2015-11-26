@@ -110,7 +110,6 @@ class Checklist(models.Model):
         return self.get_answers_with_comments(False).exists()
 
     def render_pdf(self):
-        doctype = DocumentType.objects.get(identifier='checklist')
         if self.blueprint.reviewer_is_anonymous:
             if self.submission:
                 name = u'{0} für {1}'.format(self.blueprint, self.submission)
@@ -125,9 +124,10 @@ class Checklist(models.Model):
             'checklist': self,
         })
 
-        self.pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype,
-            parent_object=self, name=name, original_file_name=filename, version='1',
-            date=datetime.now())
+        self.pdf_document = Document.objects.create_from_buffer(pdfdata,
+            doctype='checklist', parent_object=self, name=name,
+            original_file_name=filename, version='1', date=datetime.now()
+        )
         self.save()
 
     def get_submission(self):

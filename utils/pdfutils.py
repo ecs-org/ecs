@@ -72,28 +72,21 @@ def pdf_barcodestamp(source, barcode, text=None):
     return stamped
     
   
-class PdfBroken(Exception):
-    pass
-
 def decrypt_pdf(src, logger=pdfutils_logger):
-    with NamedTemporaryFile(suffix='.pdf') as tmp:
-        shutil.copyfileobj(src, tmp)
-        tmp.seek(0)
-        decrypted = NamedTemporaryFile(suffix='.pdf')
-        popen = subprocess.Popen([QPDF_PATH, '--decrypt', tmp.name, decrypted.name], stderr=subprocess.PIPE, stdout=subprocess.PIPE)
-        stdout, stderr = popen.communicate()
-        if popen.returncode in (0, 3):  # 0 == ok, 3 == warning
-            if popen.returncode == 3:
-                logger.warn(u'qpdf warning:\n%s', smart_str(stderr, errors='backslashreplace'))
-            decrypted.seek(0)
-            return decrypted
-        else:
-            from ecs.users.utils import get_current_user
-            user = get_current_user()
-            logger.warn(u'qpdf error (returncode=%s):\nUser: %s (%s)\n%s', popen.returncode, user, user.email if user else 'anonymous', smart_str(stderr, errors='backslashreplace'))
-            raise PdfBroken('pdf broken')
-    src.seek(0)
-    return src
+    decrypted = TemporaryFile()
+    popen = subprocess.Popen([QPDF_PATH, '--decrypt', '/dev/stdin', '-'],
+        stdin=src, stdout=decrypted, stderr=subprocess.PIPE)
+    stdout, stderr = popen.communicate()
+    if popen.returncode in (0, 3):  # 0 == ok, 3 == warning
+        if popen.returncode == 3:
+            logger.warn(u'qpdf warning:\n%s', smart_str(stderr, errors='backslashreplace'))
+    else:
+        from ecs.users.utils import get_current_user
+        user = get_current_user()
+        logger.warn(u'qpdf error (returncode=%s):\nUser: %s (%s)\n%s', popen.returncode, user, user.email if user else 'anonymous', smart_str(stderr, errors='backslashreplace'))
+        raise ValueError('pdf broken')
+    decrypted.seek(0)
+    return decrypted
 
 
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):

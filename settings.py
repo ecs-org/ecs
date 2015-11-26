@@ -280,10 +280,6 @@ TEMPFILE_DIR_MAXAGE = 14 # Value in Days (everything older gets wiped periodical
 # ecs.help system export path
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
-# incoming filestore of user uploaded documents 
-INCOMING_FILESTORE = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-incoming"))
-INCOMING_FILESTORE_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
-
 # Storage Vault settings
 STORAGE_VAULT = 'ecs.documents.storagevault.LocalFileStorageVault'
 STORAGE_VAULT_OPTIONS = {
@@ -354,7 +350,6 @@ BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',
-    'ecs.documents.tasks',
     'ecs.ecsmail.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',

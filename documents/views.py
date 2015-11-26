@@ -36,7 +36,7 @@ def handle_download(request, doc):
         not request.user.get_profile().is_internal):
         return HttpResponseForbidden()
 
-    f = doc.get_from_mediaserver()
+    f = doc.retrieve()
 
     response = HttpResponse(f)
     response['Content-Disposition'] = \

@@ -1,39 +1,26 @@
 # -*- coding: utf-8 -*-
-import os
-import logging
-
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import UploadedFile
-from django.conf import settings
 
 from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.pdfutils import decrypt_pdf, PdfBroken
+from ecs.utils.pdfutils import decrypt_pdf
 from ecs.utils.formutils import require_fields
-from ecs.utils.pathutils import tempfilecopy
 
 PDF_MAGIC = '%PDF'
 
-logger = logging.getLogger(__name__)
-
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
-    date = DateField(required=True)
+    file = forms.FileField(required=True)
     doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(is_hidden=True), required=False)
+    date = DateField(required=True)
 
     def clean_file(self):
         pdf = self.cleaned_data['file']
         if not pdf:
             raise ValidationError(_(u'no file'))
-
-        # TODO: remove me later: make a copy for introspection on user errors (or system errors)
-        tmp_dir = os.path.join(settings.TEMPFILE_DIR, 'incoming-copy')
-        tempfilecopy(pdf, tmp_dir=tmp_dir, mkdir=True, suffix='.pdf')
-        pdf.seek(0)
-        
-        self.pdf_error = False
 
         # pdf magic check
         if pdf.read(4) != PDF_MAGIC:
@@ -43,7 +30,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         # sanitization
         try:
             f = decrypt_pdf(pdf)
-        except PdfBroken:
+        except ValueError:
             raise ValidationError(_('The PDF-File seems to broken. For more Information click on the question mark in the sidebar.'))
 
         while f.read(1024):
@@ -72,9 +59,10 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         obj.original_file_name = self.cleaned_data.get('original_file_name')
         if commit:
             obj.save()
+            obj.store(self.cleaned_data.get('file'))
         return obj
 
     class Meta:
         model = Document
-        fields = ('file', 'name', 'doctype', 'version', 'date', 'replaces_document')
+        fields = ('name', 'doctype', 'version', 'date', 'replaces_document')
         widgets = {'replaces_document': forms.HiddenInput()}

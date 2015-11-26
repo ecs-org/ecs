@@ -156,8 +156,8 @@ def submission_billing(request):
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
-        doctype = DocumentType.objects.get(identifier='invoice')
-        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
+        doc = Document.objects.create_from_buffer(xls_buf.getvalue(),
+            mimetype='application/vnd.ms-excel', date=now, doctype='invoice')
 
         invoice = Invoice.objects.create(document=doc)
         invoice.submissions = selected_fee + selected_remission
@@ -232,8 +232,9 @@ def external_review_payment(request):
         xls_buf = StringIO()
         xls.save(xls_buf)
         now = datetime.datetime.now()
-        doctype = DocumentType.objects.get(identifier='checklist_payment')
-        doc = Document.objects.create_from_buffer(xls_buf.getvalue(), mimetype='application/vnd.ms-excel', date=now, doctype=doctype)
+        doc = Document.objects.create_from_buffer(xls_buf.getvalue(),
+            mimetype='application/vnd.ms-excel', date=now,
+            doctype='checklist_payment')
 
         for checklist in selected_for_payment:
             state, created = ChecklistBillingState.objects.get_or_create(checklist=checklist, defaults={'billed_at': now})

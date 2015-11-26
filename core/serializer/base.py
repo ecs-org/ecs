@@ -339,8 +339,6 @@ class DocumentSerializer(ModelSerializer):
     def dump(self, obj, zf):
         if not obj.doctype.is_downloadable:
             raise SkipInstance
-        if obj.status != 'ready':
-            raise SkipInstance
         return super(DocumentSerializer, self).dump(obj, zf)
 
     def dump_field(self, fieldname, val, zf, obj):
@@ -349,8 +347,7 @@ class DocumentSerializer(ModelSerializer):
         if isinstance(field, models.FileField):
             name, ext = os.path.splitext(val.name)
             zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
-            f = obj.get_from_mediaserver()
-            f = getVault()[self.uuid]
+            f = getVault()[obj.uuid]
             zf.writestr(zip_name, f.read())
             f.close()
             return zip_name

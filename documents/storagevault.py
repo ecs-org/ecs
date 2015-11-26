@@ -20,10 +20,10 @@ Usage
 
     vault = getVault() # get configured vault
 
-    vault.add(identifier, filelike)
+    vault[identifier] = filelike
     # adds the contents of filelike using identifier as key to the vault
 
-    filelike = vault.get(identifier)
+    filelike = vault[identifier]
     # get a temporary copy of content using identifier as key accessible using filelike
 '''
 
@@ -71,20 +71,7 @@ class StorageVault(object):
         subdir = os.path.join(*identifier[:self.max_depth-1])
         return os.path.join(self.root_dir, subdir, identifier)
 
-    def _add_to_vault(self, identifier, filelike):
-        if os.path.exists(self._gen_path(identifier)):
-            raise BucketKeyError('Entry %s already exists at storage: %s' % (identifier, self._gen_path(identifier)))
-        else:
-            path = self._gen_path(identifier)
-            bucketdir = os.path.dirname(path)
-            try:
-                os.makedirs(bucketdir)
-            except OSError as e:
-                if not e.errno == errno.EEXIST:
-                    raise
-            open(path, "wb").write(filelike.read())
-
-    def __setitem__(self, identifier, filelike):
+    def __setitem__(self, identifier, f):
         path = self._gen_path(identifier)
         assert not os.path.exists(path)
 
@@ -95,7 +82,7 @@ class StorageVault(object):
                 raise
 
         gpgutils.encrypt_sign(
-            filelike.name, path,
+            f, path,
             settings.STORAGE_ENCRYPT['gpghome'],
             settings.STORAGE_ENCRYPT['encrypt_owner'],
             settings.STORAGE_ENCRYPT['signing_owner']
@@ -132,7 +119,7 @@ class TemporaryStorageVault(LocalFileStorageVault):
     __TempStorageDir = _aggressive_mkdtemp(dir=settings.TEMPFILE_DIR)
 
     def __init__(self):
-        rootdir = self.__TempStorageDir
+        root_dir = self.__TempStorageDir
         if not os.path.isdir(root_dir):
-            os.makedirs(self.root_dir)
-        super(TemporaryStorageVault, self).__init__(rootdir)
+            os.makedirs(root_dir)
+        super(TemporaryStorageVault, self).__init__(root_dir)

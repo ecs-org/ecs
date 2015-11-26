@@ -547,13 +547,13 @@ class SubmissionForm(models.Model):
         pdfdata = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
             'submission_form': self,
-            'documents': self.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            'documents': self.documents.order_by('doctype__name', '-date'),
         })
 
-        pdf_document = Document.objects.create_from_buffer(pdfdata, doctype=doctype, 
-            parent_object=self, name=name, original_file_name=filename,
-            version=str(self.version),
-            date= datetime.now())
+        pdf_document = Document.objects.create_from_buffer(pdfdata,
+            doctype='submissionform', parent_object=self, name=name,
+            original_file_name=filename, version=str(self.version),
+            date=datetime.now())
         self.pdf_document = pdf_document
         self.save()
 
@@ -673,7 +673,7 @@ class SubmissionForm(models.Model):
     @property
     def protocol(self):
         ''' FIXME: still used? '''
-        protocol_doc = self.documents.exclude(status='deleted').filter(doctype__identifier='protocol').order_by('-date', '-version')[:1]
+        protocol_doc = self.documents.filter(doctype__identifier='protocol').order_by('-date', '-version')[:1]
         if protocol_doc:
             return protocol_doc[0]
         else:

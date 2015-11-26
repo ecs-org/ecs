@@ -157,14 +157,11 @@ def sign_receive(request, mock=False):
         with open("/tmp/get_urls.txt","ab") as t:
             t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
 
-        f = ContentFile(pdf_data)
-        f.name = 'vote.pdf'
-
-        doctype = DocumentType.objects.get(identifier=request.sign_data['document_type'])
-        document = Document.objects.create(uuid=request.sign_data["document_uuid"],
-             stamp_on_download=False, doctype=doctype, file=f,
-             original_file_name=request.sign_data["document_filename"], date=datetime.now(),
-             version=request.sign_data["document_version"]
+        document = Document.objects.create_from_buffer(pdf_data,
+            uuid=request.sign_data["document_uuid"],
+            stamp_on_download=False, doctype=request.sign_data['document_type'],
+            original_file_name=request.sign_data["document_filename"],
+            date=datetime.now(), version=request.sign_data["document_version"]
         )
         parent_model = request.sign_data.get('parent_type')
         if parent_model:

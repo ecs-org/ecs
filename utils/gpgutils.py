@@ -64,7 +64,6 @@ def import_key(keyfile, gpghome):
 def encrypt_sign(sourcefile, destfile, gpghome, encrypt_owner, signer_owner=None):
     ''' read sourcefile, encrypt and optional sign and write destfile
 
-    :note: booth sourcefile and destfile should already exist (destfile should be zero length)
     :param gpghome: directory where the .gpg files are
     :param encrypt_owner: owner name of key for encryption using his/her public key
     :param signer_owner: if not None: owner name of key for signing using his/her secret key
@@ -75,9 +74,9 @@ def encrypt_sign(sourcefile, destfile, gpghome, encrypt_owner, signer_owner=None
     ]
     if signer_owner:
         cmd += ['--local-user', signer_owner, '--sign']
-    cmd += ['--encrypt', sourcefile]
+    cmd += ['--encrypt']
 
-    subprocess.check_call(cmd)
+    subprocess.check_call(cmd, stdin=sourcefile)
 
 
 def decrypt_verify(sourcefile, gpghome, decrypt_owner, verify_owner=None):
