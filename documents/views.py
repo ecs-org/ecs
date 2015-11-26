@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
 from ecs.utils.viewutils import render
-from ecs.documents.models import Document, DownloadHistory
+from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
 
 
@@ -38,14 +38,9 @@ def handle_download(request, doc):
         not request.user.get_profile().is_internal):
         return HttpResponseForbidden()
 
-    f = doc.retrieve()
-
-    response = HttpResponse(f)
+    response = HttpResponse(doc.retrieve(request.user, 'download'))
     response['Content-Disposition'] = \
         'attachment;filename={}'.format(doc.get_filename())
-    # XXX: set cache control http headers
-
-    DownloadHistory.objects.create(document=doc, user=request.user)
     return response
 
 
@@ -78,15 +73,13 @@ def download_once(request, ref_key=None):
     cache.delete(cache_key)
 
     doc = get_object_or_404(Document, pk=doc_id)
-    response = HttpResponse(doc.retrieve())
+    response = HttpResponse(doc.retrieve(request.user, 'view'))
 
     # Disable browser caching, so the PDF won't end up on the users hard disk.
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response['Pragma'] = 'no-cache'
     response['Expires'] = '0'
     response['Vary'] = '*'
-
-    DownloadHistory.objects.create(document=doc, user=request.user)
     return response
 
 

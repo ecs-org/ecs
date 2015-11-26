@@ -87,10 +87,13 @@ class Document(models.Model):
     def store(self, f):
         getVault()[self.uuid] = f
 
-    def retrieve(self):
+    def retrieve(self, user, context):
+        hist = DownloadHistory.objects.create(document=self, user=user,
+            context=context)
+
         f = getVault()[self.uuid]
         if self.mimetype == 'application/pdf' and self.stamp_on_download:
-            f = pdf_barcodestamp(f, self.uuid)
+            f = pdf_barcodestamp(f, hist.uuid, unicode(user))
         return f
 
 
@@ -98,6 +101,8 @@ class DownloadHistory(models.Model):
     document = models.ForeignKey(Document, db_index=True)
     user = models.ForeignKey(User)
     downloaded_at = models.DateTimeField(auto_now_add=True)
+    uuid = models.SlugField(max_length=36, default=lambda: uuid4().get_hex())
+    context = models.CharField(max_length=15)
 
     class Meta:
         ordering = ['downloaded_at']

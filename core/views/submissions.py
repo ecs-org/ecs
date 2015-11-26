@@ -16,7 +16,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
 from django.contrib.auth.models import User
 
-from ecs.documents.models import Document
+from ecs.documents.models import Document, DownloadHistory
 from ecs.documents.views import handle_download
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
@@ -904,7 +904,7 @@ def all_submissions(request):
 
     if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
         try:
-            doc = Document.objects.get(uuid=keyword)
+            doc = Document.objects.get(downloadhistory__uuid=keyword)
         except Document.DoesNotExist:
             pass
         else:
