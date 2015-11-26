@@ -42,10 +42,12 @@ def pdf_barcodestamp(source, barcode, text=None):
     """.format(barcode)
 
     if text:
-        # XXX: quote text for postscript
+        # hex encode string for inclusion in postscript
+        text = ''.join('{:02x}'.format(ord(c)) for c in text.encode('ascii'))
+
         barcode_ps += '''
             gsave
-            /text ({}) def
+            /text <{}> def
             /Helvetica 6 selectfont
             32 132 text stringwidth pop add moveto
             270 rotate
