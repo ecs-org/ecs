@@ -107,7 +107,7 @@ class LocalFileStorageVault(StorageVault):
             settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir'])
 
 
-class TemporaryStorageVault(LocalFileStorageVault):
+class TemporaryStorageVault(StorageVault):
     ''' StorageVault implementation using a temporary storage inside tempdir (for unittests only)
 
     makes a temporary storagevault under a subdir of settings.TEMPFILE_DIR

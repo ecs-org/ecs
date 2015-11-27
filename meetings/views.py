@@ -185,7 +185,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     checklist_ct = ContentType.objects.get_for_model(Checklist)
     def _add(submission):
         sf = submission.current_submission_form
-        docs = sf.documents.filter(doctype__identifier__in=doctypes).exclude(status='deleted')
+        docs = sf.documents.filter(doctype__identifier__in=doctypes)
         docs |= Document.objects.filter(content_type=checklist_ct, object_id__in=Checklist.objects.filter(status='review_ok', submission=submission))
         for doc in docs.order_by('pk'):
             files.add((submission, doc))

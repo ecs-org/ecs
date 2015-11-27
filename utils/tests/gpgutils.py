@@ -65,24 +65,22 @@ class Gpgutilstest(EcsTestCase):
         # self.fresh_temporary_entities()
         self.testdata="im very happy to be testdata"
 
-        inputfilename = encryptedfilename = decryptedfilename = None
+        osdescriptor, encryptedfilename = tempfile.mkstemp()
+        os.close(osdescriptor)
+
         try:
-            
-            with tempfile.NamedTemporaryFile(delete=False) as inputfile:
-                inputfilename = inputfile.name
+            with tempfile.TemporaryFile() as inputfile:
                 inputfile.write(self.testdata)
-            osdescriptor, encryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
-            osdescriptor, decryptedfilename = tempfile.mkstemp(); os.close(osdescriptor)
-                
-            encrypt_sign(inputfilename, encryptedfilename, self.encrypt_gpghome, self.encrypt_owner, self.signing_owner)
-            decrypt_verify(encryptedfilename, decryptedfilename, self.decrypt_gpghome, self.decrypt_owner, self.verify_owner)
-            
-            self.assertEqual(self.testdata, open(inputfilename).read())
+                inputfile.seek(0)
+
+            encrypt_sign(inputfile, encryptedfilename, self.encrypt_gpghome, self.encrypt_owner, self.signing_owner)
+            inputfile.seek(0)
+
+            decryptedfile = decrypt_verify(encryptedfilename, self.decrypt_gpghome, self.decrypt_owner, self.verify_owner)
+
+            self.assertEqual(self.testdata, inputfile.read())
             self.assertNotEqual(self.testdata, open(encryptedfilename).read())
-            self.assertEqual(self.testdata, open(decryptedfilename).read())
-        
+            self.assertEqual(self.testdata, decryptedfile.read())
         finally:
-            for i in inputfilename, encryptedfilename, decryptedfilename:
-                if i is not None and os.path.exists(i):
-                    os.remove(i)
-    
+            if os.path.exists(encryptedfilename):
+                os.remove(encryptedfilename)

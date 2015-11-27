@@ -20,7 +20,6 @@ class EcsTestCase(TestCase):
         integration_bootstrap.create_settings_dirs()
         
         core_bootstrap.templates()
-        documents_bootstrap.document_types()
 
         core_bootstrap.auth_groups()
         core_bootstrap.expedited_review_categories()
@@ -28,9 +27,9 @@ class EcsTestCase(TestCase):
         core_bootstrap.auth_user_testusers()
         core_bootstrap.advanced_settings()
 
+        documents_bootstrap.document_types()
         documents_bootstrap.import_encryption_sign_keys()
         documents_bootstrap.import_decryption_verify_keys()
-        documents_bootstrap.create_disk_caches()
         documents_bootstrap.create_local_storage_vault()
 
         integration_bootstrap.workflow_sync()

@@ -25,9 +25,7 @@ WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64
 QPDF_PATH = which_path('ECS_QPDF', 'qpdf')
 PDFTK_PATH = which_path('ECS_PDFTK', 'pdftk')
 
-PDF_MAGIC = r"%PDF-"
-
-pdfutils_logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def pdf_barcodestamp(source, barcode, text=None):
@@ -72,7 +70,7 @@ def pdf_barcodestamp(source, barcode, text=None):
     return stamped
     
   
-def decrypt_pdf(src, logger=pdfutils_logger):
+def decrypt_pdf(src):
     decrypted = TemporaryFile()
     popen = subprocess.Popen([QPDF_PATH, '--decrypt', '/dev/stdin', '-'],
         stdin=src, stdout=decrypted, stderr=subprocess.PIPE)

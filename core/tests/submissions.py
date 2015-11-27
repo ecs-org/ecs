@@ -3,7 +3,6 @@ import os
 import datetime
 
 from django.db.models import Q
-from django.core.files.base import File
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.documents.models import Document, DocumentType
@@ -17,8 +16,9 @@ TEST_PDF = os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklae
 def attach_document(submission_form, filelike, name, doctype_identifier, mimetype='application/pdf', version="1", date=None):
     doctype = DocumentType.objects.get(identifier=doctype_identifier)
     date = date or datetime.date.today()
-    doc = Document(version=version, date=date, name = name, doctype=doctype, mimetype= mimetype, file=File(filelike), parent_object= submission_form)
-    doc.save()
+    doc = Document.objects.create(version=version, date=date, name=name,
+        doctype=doctype, mimetype=mimetype, parent_object=submission_form)
+    doc.store(filelike)
     submission_form.documents.add(doc)
     return doc
 

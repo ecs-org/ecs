@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from tempfile import TemporaryFile
+from shutil import copyfileobj
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
@@ -26,6 +29,15 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         if pdf.read(4) != PDF_MAGIC:
             raise ValidationError(_(u'This file is not a PDF document.'))
         pdf.seek(0)
+
+        # XXX: Depending on the upload handler, pdf might not be backed by a
+        # real file. If not, we must create one for usage by decrypt_pdf().
+        if not hasattr(pdf, 'fileno'):
+            f = TemporaryFile()
+            copyfileobj(pdf, f)
+            f.seek(0)
+            pdf.close()
+            pdf = f
         
         # sanitization
         try:
@@ -33,12 +45,8 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
         except ValueError:
             raise ValidationError(_('The PDF-File seems to broken. For more Information click on the question mark in the sidebar.'))
 
-        while f.read(1024):
-            pass
-        size = f.tell()
         f.seek(0)
-
-        return UploadedFile(f, pdf.name, 'application/pdf', size, pdf.charset)
+        return UploadedFile(f, content_type='application/pdf')
 
     def clean(self):
         cd = super(DocumentForm, self).clean()

@@ -26,7 +26,7 @@ def test_pdf_html(request, submission_pk=None):
         html = template.render(Context({
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
-            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            'documents': submission_form.documents.order_by('doctype__name', '-date'),
         }))
     return HttpResponse(html)
 
@@ -40,7 +40,7 @@ def test_render_pdf(request, submission_pk=None):
         pdf = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
-            'documents': submission_form.documents.exclude(status='deleted').order_by('doctype__name', '-date'),
+            'documents': submission_form.documents.order_by('doctype__name', '-date'),
         })
     return pdf_response(pdf, filename='test.pdf')
 

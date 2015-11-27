@@ -191,7 +191,7 @@ class NotificationAnswer(models.Model):
     def get_render_context(self):
         return {
             'notification': self.notification,
-            'documents': self.notification.documents.exclude(status='deleted').select_related('doctype').order_by('doctype__name', '-date'),
+            'documents': self.notification.documents.select_related('doctype').order_by('doctype__name', '-date'),
             'answer': self,
         }
 
