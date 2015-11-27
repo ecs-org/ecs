@@ -10,7 +10,6 @@ from django.template.defaultfilters import slugify
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
-from ecs.documents.models import DocumentType
 from ecs.users.utils import get_current_user
 
 class ChecklistBlueprint(models.Model):

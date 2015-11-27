@@ -15,7 +15,6 @@ from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.models import SubmissionForm
 from ecs.documents.models import Document
-from ecs.documents.views import handle_download
 from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
@@ -198,18 +197,6 @@ def view_notification_answer(request, notification_pk=None):
         'answer': answer,
     })
     
-
-@readonly()
-def notification_pdf(request, notification_pk=None):
-    notification = get_object_or_404(Notification, pk=notification_pk, pdf_document__isnull=False)
-    return handle_download(request, notification.pdf_document)
-
-
-@readonly()
-def notification_answer_pdf(request, notification_pk=None):
-    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk, pdf_document__isnull=False)
-    return handle_download(request, answer.pdf_document)
-
 
 @user_flag_required('is_internal')
 @user_group_required("EC-Signing Group")

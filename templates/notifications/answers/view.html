@@ -5,7 +5,7 @@
     {{ block.super }}
     <br />
     {% if answer.pdf_document_id %}
-        <a href="{% url ecs.notifications.views.notification_answer_pdf notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
+        <a href="{% url ecs.documents.views.download_document document_pk=answer.pdf_document_id %}" class="button_submit">{% trans 'Download PDF' %}</a>
     {% endif %}
 {% endblock %}
 

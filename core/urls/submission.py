@@ -32,7 +32,6 @@ urlpatterns += patterns('ecs.core.views',
     url(r'^(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', 'submissions.delete_task'),
 
     url(r'^form/(?P<submission_form_pk>\d+)/$', 'readonly_submission_form', name='readonly_submission_form'),
-    url(r'^form/(?P<submission_form_pk>\d+)/pdf/$', 'submission_pdf'),
     url(r'^form/(?P<submission_form_pk>\d+)/copy/$', 'copy_submission_form'),
     url(r'^form/(?P<submission_form_pk>\d+)/amend/(?P<notification_type_pk>\d+)/$', 'copy_submission_form'),
     url(r'^form/(?P<submission_form_pk>\d+)/review/checklist/(?P<blueprint_pk>\d+)/$', 'checklist_review'),

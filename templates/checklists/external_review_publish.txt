@@ -9,5 +9,5 @@
 
         Please click the following link to download the review as PDF file:
     {% endblocktrans %}
-        {{ ABSOLUTE_URL_PREFIX }}{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}
+        {{ ABSOLUTE_URL_PREFIX }}{% url ecs.documents.views.download_document document_pk=checklist.pdf_document_id %}
 {% endblock %}

@@ -1,4 +1,4 @@
-from ecs.core.views.submissions import (create_submission_form, copy_submission_form, submission_pdf,
+from ecs.core.views.submissions import (create_submission_form, copy_submission_form,
     readonly_submission_form, categorization_review, checklist_review, copy_latest_submission_form,
     vote_review, export_submission, import_submission_form, befangene_review, diff, submission_widget,
     submission_list, upload_document_for_submission, delete_document_from_submission,

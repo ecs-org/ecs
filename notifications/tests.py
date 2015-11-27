@@ -88,19 +88,6 @@ class NotificationFormTest(LoginTestCase):
         response = self.client.get(reverse('ecs.notifications.views.submission_data_for_notification'), {'submission_form': submission_form.pk})
         self.failUnlessEqual(response.status_code, 200)
 
-    def test_notification_pdf(self):
-        '''Tests if a pdf is produced if a Notification is created.
-        '''
-        
-        notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
-        notification = Notification.objects.create(type=notification_type)
-        notification.render_pdf()
-        response = self.client.get(reverse('ecs.notifications.views.notification_pdf', kwargs={'notification_pk': notification.pk}))
-        self.failUnlessEqual(response.status_code, 302)
-        response = self.client.get(response['Location'])
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(response['Content-Type'], 'application/pdf')
-
     def _setup_POST_url(self):
         notification_type = NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': notification_type.pk}))

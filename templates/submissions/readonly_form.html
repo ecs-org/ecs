@@ -261,7 +261,7 @@
             {% if review_form.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
                 {% if checklist.status == 'review_ok' or user|has_flag:'is_internal' %}
                     <p>
-                        <a class="button_submit" href="{% url ecs.checklists.views.checklist_pdf checklist_pk=checklist.pk %}">
+                        <a class="button_submit" href="{% url ecs.documents.views.download_document document_pk=checklist.pdf_document_id %}">
                             <span class="icon_pdf" style="vertical-align: middle;"></span>
                             <span>{% if checklist.status == 'review_ok' %}{% trans "Download PDF" %}{% else %}{% trans 'Download unpublished Version as PDF' %}{% endif %}<span>
                         </a>

@@ -17,7 +17,6 @@ from django.core.cache import cache
 from django.contrib.auth.models import User
 
 from ecs.documents.models import Document
-from ecs.documents.views import handle_download
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
@@ -717,12 +716,6 @@ def change_submission_susar_presenter(request, submission_pk=None):
 def delete_docstash_entry(request):
     request.docstash.delete()
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
-
-
-@readonly()
-def submission_pdf(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    return handle_download(request, submission_form.pdf_document)
 
 
 @readonly()
