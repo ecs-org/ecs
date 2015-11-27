@@ -3,3 +3,5 @@
 Local changes:
  * Added VERSION file (this file)
  * Removed the example PDF file (web/compressed.tracemonkey-pldi-09.pdf)
+ * Removed the download, print, bookmark and open file buttons
+ * Moved the hand toggle button to the toolbar
