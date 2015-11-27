@@ -10,6 +10,7 @@ from django.core.cache import cache
 from ecs.utils.viewutils import render
 from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
+from ecs.utils.security import readonly
 
 
 def upload_document(request, template='documents/upload_form.html'):
@@ -44,6 +45,7 @@ def handle_download(request, doc):
     return response
 
 
+@readonly()
 def view_document(request, document_pk=None, page=None):
     doc = get_object_or_404(Document, pk=document_pk)
 
@@ -63,6 +65,7 @@ def view_document(request, document_pk=None, page=None):
     return HttpResponseRedirect(url)
 
 
+@readonly()
 def download_once(request, ref_key=None):
     cache_key = 'document-ref-{}'.format(ref_key)
     doc_id = cache.get(cache_key)
@@ -83,6 +86,7 @@ def download_once(request, ref_key=None):
     return response
 
 
+@readonly()
 def download_document(request, document_pk=None):
     # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
     doc = get_object_or_404(Document, pk=document_pk)
