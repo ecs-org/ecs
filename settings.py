@@ -263,11 +263,6 @@ PDFAS_SERVICE = 'mock:'
 # directory where to store logfiles, used by every daemon and apache
 LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 
-# directory where generated files are stored, either on bootstrap or on demand, eg. django_compressor
-GENFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-generated"))
-# url where in the url tree the files under this directory are served
-GENFILE_URL = MEDIA_URL+ 'generated/'
-
 # directory where to store zipped submission patientinformation and submission form pdfs
 ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-cache"))
 ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
