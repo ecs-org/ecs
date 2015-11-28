@@ -4,9 +4,8 @@ from ecs.workflow.tests.base import WorkflowTestCase
 from ecs.workflow.models import Graph
 from ecs.workflow.exceptions import TokenRequired, WorkflowError
 from ecs import workflow
-# test only models:
-from ecs.workflow.models import Foo, FooReview, Token
-
+from ecs.workflow.models import Token
+from ecs.workflow.tests.models import Foo, FooReview
 from ecs.workflow.tests import flow_declarations as decl
 
 class FlowTest(WorkflowTestCase):

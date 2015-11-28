@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs.workflow.models import Graph
 from ecs import workflow
 # test only models:
-from ecs.workflow.models import Foo
+from ecs.workflow.tests.models import Foo
 from ecs.workflow.tests import flow_declarations as decl
 from ecs.workflow.tests import WorkflowTestCase
 

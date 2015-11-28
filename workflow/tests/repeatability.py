@@ -4,7 +4,7 @@ from ecs.workflow.tests.base import WorkflowTestCase
 from ecs.workflow.models import Graph
 from ecs.workflow.exceptions import WorkflowError
 # test only models:
-from ecs.workflow.models import Foo
+from ecs.workflow.tests.models import Foo
 
 from ecs.workflow.tests import repeatability_declarations as decl
 

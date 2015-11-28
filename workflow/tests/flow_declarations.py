@@ -1,6 +1,6 @@
 from ecs.workflow import register, Activity, guard
 
-from ecs.workflow.models import Foo, FooReview
+from ecs.workflow.tests.models import Foo, FooReview
 from ecs.workflow.patterns import Generic
 from django.dispatch import Signal
 

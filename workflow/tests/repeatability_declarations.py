@@ -1,5 +1,5 @@
 from ecs.workflow import Activity, register
-from ecs.workflow.models import Foo
+from ecs.workflow.tests.models import Foo
 
 register(Foo)
 

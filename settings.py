@@ -386,10 +386,6 @@ USE_TEXTBOXLIST = True
 # thirdparty settings
 ######################
 
-# ### South ### dont migrate in testing, this needs to be in main settings.py it doesnt work if set in utils/ecs_runner.py
-SOUTH_TESTS_MIGRATE = False
-
-
 # ### celery ### configuration defaults, uses memory transport and always eager
 # production environments should:
 #   clear BROKER_BACKEND (which defaults to "kombu.transport.pyamqplib.Transport"), 
@@ -555,6 +551,7 @@ if 'test' in sys.argv:
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
     ECS_REQUIRE_CLIENT_CERTS = False
     ECS_MANDATORY_CLIENT_CERTS = False
+    INSTALLED_APPS += ('ecs.workflow.tests',)
 
 
 if any(word in sys.argv for word in set(['runserver','runconcurrentserver'])):

@@ -286,18 +286,3 @@ class Token(models.Model):
         
     def __unicode__(self):
         return u"%sToken at %s, deadline=%s, locked=%s" % (self.is_consumed and 'Consumed ' or '', self.node, self.deadline, self.locked)
-
-
-import sys
-if 'test' in sys.argv:
-    class Foo(models.Model):
-        flag = models.BooleanField(default=False)
-
-        class Meta:
-            app_label = 'workflow'
-            
-    class FooReview(models.Model):
-        name = models.CharField(max_length=30)
-        
-        class Meta:
-            app_label = 'workflow'
