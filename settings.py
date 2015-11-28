@@ -83,8 +83,8 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # start of url matching
 ROOT_URLCONF = 'ecs.urls'
 
-# use our ecs.utils.ecs_runner as default test runner 
-TEST_RUNNER = 'ecs.utils.ecs_runner.EcsRunner'
+# use nose for unit tests
+TEST_RUNNER = 'django_nose.runner.NoseTestSuiteRunner'
 
 # additional fixture search paths. implicitly used by every app the needs fixtures
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
