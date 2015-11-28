@@ -30,14 +30,6 @@ DATABASES['default'] = {
     'HOST': '',
     'PORT': '',
 }
-DATABASES['windmill'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(PROJECT_DIR, 'test_windmill.db'),
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '',
-    'PORT': '',
-}
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
 # although not all choices may be available on all operating systems.
@@ -387,7 +379,7 @@ ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 20',}
 
 # if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
-# set USE_TEXTBOXLIST to false (eg. in local_settings.py) to enable windmill gui testing (windmill does not work with textboxlist)  
+# set USE_TEXTBOXLIST to false (eg. in local_settings.py) e.g. for gui testing
 USE_TEXTBOXLIST = True
 
 
@@ -517,12 +509,6 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domai
 # TODO: get this from bootstrap_settings.py
 DEFAULT_REPLY_TO   = 'ethik-kom@meduniwien.ac.at'
 
-if 'test_windmill' in sys.argv:
-    DATABASES['default'] = DATABASES['windmill']
-
-if 'test_windmill' in sys.argv or 'start_windmill' in sys.argv:
-    USE_TEXTBOXLIST = False
-
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
     from version import *
@@ -564,7 +550,7 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
     INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
 
 # hack some settings for test and runserver    
-if 'test' in sys.argv or 'test_windmill' in sys.argv:
+if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     STORAGE_VAULT = 'ecs.mediaserver.storagevault.TemporaryStorageVault'
     ECS_REQUIRE_CLIENT_CERTS = False

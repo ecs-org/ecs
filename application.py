@@ -224,16 +224,6 @@ ipython:inst:all:pypi:ipython
 
 """
 
-# packages that are needed to run guitests using windmill, not strictly needed, except you do guitesting
-guitest_packages = """
-windmill:inst:all:pypi:windmill\>=1.6
-# for random text generation in windmill tests
-cicero:inst:all:pypi:cicero
-# Firefox and a vncserver is needed for headless gui testing
-firefox:req:apt:apt-get:firefox
-vncserver:req:apt:apt-get:vnc4server
-"""
-
 
 # software quality testing packages, not strictly needed, except you do coverage analysis
 quality_packages= """
@@ -252,8 +242,7 @@ unittest2:inst:all:pypi:unittest2
 
 
 # packages needed or nice to have for development
-developer_packages=  """
-
+developer_packages = """
 # debugging toolbar, switched back to robhudson original tree
 django-debug-toolbar:inst:all:http://github.com/robhudson/django-debug-toolbar/tarball/master
 #django-debug-toolbar:inst:all:http://github.com/dcramer/django-debug-toolbar/tarball/master
@@ -360,7 +349,6 @@ package_bundles = {
     'developer': developer_bundle,
     'quality': quality_bundle,
     'qualityaddon': quality_packages,
-    'guitestaddon': guitest_packages,
     'developeraddon': developer_packages,
     'system': system_bundle,
 }
