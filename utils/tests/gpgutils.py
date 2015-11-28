@@ -72,13 +72,12 @@ class Gpgutilstest(EcsTestCase):
             with tempfile.TemporaryFile() as inputfile:
                 inputfile.write(self.testdata)
                 inputfile.seek(0)
+                encrypt_sign(inputfile, encryptedfilename, self.encrypt_gpghome,
+                    self.encrypt_owner, self.signing_owner)
 
-            encrypt_sign(inputfile, encryptedfilename, self.encrypt_gpghome, self.encrypt_owner, self.signing_owner)
-            inputfile.seek(0)
+            decryptedfile = decrypt_verify(encryptedfilename,
+                self.decrypt_gpghome, self.decrypt_owner, self.verify_owner)
 
-            decryptedfile = decrypt_verify(encryptedfilename, self.decrypt_gpghome, self.decrypt_owner, self.verify_owner)
-
-            self.assertEqual(self.testdata, inputfile.read())
             self.assertNotEqual(self.testdata, open(encryptedfilename).read())
             self.assertEqual(self.testdata, decryptedfile.read())
         finally:

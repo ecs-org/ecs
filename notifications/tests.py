@@ -117,7 +117,6 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(len(documents), 1)
         doc = documents[0]
         self.failUnlessEqual(doc.version, '3.1415')
-        self.failUnless(doc.file)
         
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
         while response.status_code == 302:
