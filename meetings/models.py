@@ -382,10 +382,6 @@ class Meeting(models.Model):
             transaction.savepoint_commit(sid)
         self._clear_caches()
         
-    def sort_timetable(self, func):
-        perm = func(tuple(self))
-        self._apply_permutation(perm)
-    
     @property
     def open_tops(self):
         return self.timetable_entries.filter(timetable_index__isnull=False, is_open=True)
