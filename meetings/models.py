@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import math
 from datetime import timedelta, datetime
-from django.db import models, transaction
+from django.db import models
+from django.db.models import F
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -261,7 +262,8 @@ class Meeting(models.Model):
         visible = kwargs.pop('visible', True)
         index = kwargs.pop('index', None)
         if visible:
-            last_index = self.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
+            last_index = self.timetable_entries.aggregate(
+                models.Max('timetable_index'))['timetable_index__max']
             if last_index is None:
                 kwargs['timetable_index'] = 0
             else:
@@ -367,19 +369,9 @@ class Meeting(models.Model):
     
     def _apply_permutation(self, permutation):
         assert set(self) == set(permutation)
-        sid = transaction.savepoint()
-        try:
-            for entry in permutation:
-                entry.timetable_index = None
-                entry.save(force_update=True)
-            for i, entry in enumerate(permutation):
-                entry.timetable_index = i
-                entry.save()
-        except:
-            transaction.savepoint_rollback(sid)
-            raise
-        else:
-            transaction.savepoint_commit(sid)
+        for i, entry in enumerate(permutation):
+            entry.timetable_index = i
+            entry.save(force_update=True)
         self._clear_caches()
         
     @property
@@ -513,7 +505,10 @@ class TimetableEntry(models.Model):
     duration = property(_get_duration, _set_duration)
 
     class Meta:
-        unique_together = (('meeting', 'timetable_index'),)
+        unique_together = (
+            # XXX: modified in migration to be DEFERRABLE INITIALLY DEFERRED
+            ('meeting', 'timetable_index'),
+        )
 
     @property
     def agenda_index(self):
@@ -549,33 +544,24 @@ class TimetableEntry(models.Model):
         return self.timetable_index
         
     def _set_index(self, index):
-        sid = transaction.savepoint()
-        try:
-            if index < 0 or index >= len(self.meeting):
-                raise IndexError()
-            old_index = self.timetable_index
-            if index == old_index:
-                return
-            self.timetable_index = None
-            self.save(force_update=True)
-            entries = self.meeting.timetable_entries.filter(timetable_index__isnull=False)
-            if old_index > index:
-                for entry in entries.filter(timetable_index__gte=index, timetable_index__lt=old_index).order_by('-timetable_index'):
-                    entry.timetable_index += 1
-                    entry.save(force_update=True)
-            elif old_index < index:
-                for entry in entries.filter(timetable_index__gt=old_index, timetable_index__lte=index).order_by('timetable_index'):
-                    entry.timetable_index -= 1
-                    entry.save(force_update=True)
-            self.timetable_index = index
-            self.save(force_update=True)
-            self.meeting._clear_caches()
-            on_meeting_top_index_change.send(Meeting, meeting=self, timetable_entry=entry)
-        except:
-            transaction.savepoint_rollback(sid)
-            raise
-        else:
-            transaction.savepoint_commit(sid)
+        if index < 0 or index >= len(self.meeting):
+            raise IndexError()
+        old_index = self.timetable_index
+        if index == old_index:
+            return
+        entries = self.meeting.timetable_entries.filter(timetable_index__isnull=False)
+        if old_index > index:
+            changed = entries.filter(
+                timetable_index__gte=index, timetable_index__lt=old_index)
+            changed.update(timetable_index=F('timetable_index') + 1)
+        elif old_index < index:
+            changed = entries.filter(
+                timetable_index__gt=old_index, timetable_index__lte=index)
+            changed.update(timetable_index=F('timetable_index') - 1)
+        self.timetable_index = index
+        self.save(force_update=True)
+        self.meeting._clear_caches()
+        on_meeting_top_index_change.send(Meeting, meeting=self, timetable_entry=entry)
     
     index = property(_get_index, _set_index)
     
