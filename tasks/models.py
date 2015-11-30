@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
@@ -45,10 +46,10 @@ class TaskQuerySet(models.query.QuerySet):
             t.mark_deleted()
 
     def acceptable_for_user(self, user):
-        return self.filter(models.Q(assigned_to=None) | models.Q(assigned_to=user, accepted=False) | models.Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
+        return self.filter(Q(assigned_to=None) | Q(assigned_to=user, accepted=False) | Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
 
     def for_user(self, user, activity=None, data=None):
-        qs = self.filter(models.Q(task_type__groups__user=user) | models.Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)
+        qs = self.filter(Q(task_type__groups__user=user) | Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)
         if activity:
             qs = qs.filter(workflow_token__node__node_type=activity._meta.node_type)
         if data:
@@ -60,32 +61,43 @@ class TaskQuerySet(models.query.QuerySet):
         not_for_widget = ['resubmission', 'b2_resubmission', 'external_review', 'paper_submission_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
-    def for_submission(self, submission, related=True):
+    def for_submissions(self, submissions, related=True):
         # local import to prevent circular import
         from ecs.core.models import Submission
         from ecs.votes.models import Vote
-        from ecs.meetings.models import Meeting
+        from ecs.meetings.models import Meeting, TimetableEntry
         from ecs.checklists.models import Checklist
-        from ecs.notifications.models import NOTIFICATION_MODELS
+        from ecs.notifications.models import Notification, NOTIFICATION_MODELS
 
-        tasks = self.all()
         submission_ct = ContentType.objects.get_for_model(Submission)
-        q = models.Q(content_type=submission_ct, data_id=submission.pk)
+        q = Q(content_type=submission_ct, data_id__in=submissions)
+
         if related:
             vote_ct = ContentType.objects.get_for_model(Vote)
-            q |= models.Q(content_type=vote_ct, data_id__in=Vote.objects.filter(submission_form__submission=submission).values('pk').query)
+            votes = Vote.objects.filter(submission_form__submission__in=submissions)
+            q |= Q(content_type=vote_ct, data_id__in=votes.values('pk'))
 
             meeting_ct = ContentType.objects.get_for_model(Meeting)
-            q |= models.Q(content_type=meeting_ct, data_id__in=submission.meetings.values('pk').query)
+            entries = TimetableEntry.objects.filter(submission__in=submissions)
+            q |= Q(content_type=meeting_ct,
+                data_id__in=entries.values('meeting_id'))
 
-            for notification_model in NOTIFICATION_MODELS:
-                notification_ct = ContentType.objects.get_for_model(notification_model)
-                q |= models.Q(content_type=notification_ct, data_id__in=notification_model.objects.filter(submission_forms__submission=submission).values('pk').query)
-            
+            notification_cts = map(
+                ContentType.objects.get_for_model, NOTIFICATION_MODELS)
+            notifications = Notification.objects.filter(
+                submission_forms__submission__in=submissions)
+            q |= Q(content_type__in=notification_cts,
+                data_id__in=notifications.values('pk'))
+
             checklist_ct = ContentType.objects.get_for_model(Checklist)
-            q |= models.Q(content_type=checklist_ct, data_id__in=Checklist.objects.filter(submission=submission).values('pk').query)
+            checklists = Checklist.objects.filter(submission__in=submissions)
+            q |= Q(content_type=checklist_ct,
+                data_id__in=checklists.values('pk'))
             
         return self.filter(q).distinct()
+
+    def for_submission(self, submission, related=True):
+        return self.for_submissions([submission.id], related=related)
 
 class TaskManager(AuthorizationManager):
     def get_base_query_set(self):
@@ -102,6 +114,9 @@ class TaskManager(AuthorizationManager):
 
     def for_widget(self, user):
         return self.all().for_widget(user)
+
+    def for_submissions(self, submissions, related=True):
+        return self.all().for_submissions(submissions, related=related)
 
     def for_submission(self, submission, related=True):
         return self.all().for_submission(submission, related=related)
