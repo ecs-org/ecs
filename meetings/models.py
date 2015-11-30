@@ -561,7 +561,7 @@ class TimetableEntry(models.Model):
         self.timetable_index = index
         self.save(force_update=True)
         self.meeting._clear_caches()
-        on_meeting_top_index_change.send(Meeting, meeting=self, timetable_entry=entry)
+        on_meeting_top_index_change.send(Meeting, meeting=self, timetable_entry=self)
     
     index = property(_get_index, _set_index)
     
