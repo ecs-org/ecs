@@ -3,6 +3,8 @@ from celery.decorators import task, periodic_task
 from celery.schedules import crontab
 
 from django.conf import settings
+from django.db import transaction
+
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation, random_replacement_mutation
 from ecs.meetings.models import Meeting
@@ -48,6 +50,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
     logger = optimize_timetable_task.get_logger(**kwargs)
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
+    transaction.managed()
     try:
         algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
         entries, users = meeting.timetable
@@ -76,7 +79,9 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         f = meeting.create_evaluation_func(_eval_timetable)
         meeting._apply_permutation(head + algo(tuple(body), f, algorithm_parameters) + tail + tuple(batch_entries))
         retval = True
+        transaction.commit()
     except Exception, e:
+        transaction.rollback()
         logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
     finally:
         print Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
