@@ -1,0 +1,40 @@
+			  UPDATE INSTRUCTIONS
+
+This file contains update instructions which will have to be performed
+in addition to the usual steps. In chronological order:
+
+--- Production state Nov. 2015 ---
+
+* 2015-11-26: Full backup required
+
+  Due to heavy refactoring of the document storage, modification and
+  retrieval facilities it is of uttermost importance to perform a full
+  backup _before_ upgrading production to the newest version.
+
+	$ cp -R ~/ecs-storage-vault ~/ecs-storage-vault.bak
+	$ pg_dump -Fc -Ox ecs > ~/`date +F`.pgdump
+
+  Better backup too much, than not enough!
+
+* 2015-11-26: Mediaserver removal
+
+  The mediaserver has been removed. The caching and rendering
+  directories can be removed.
+
+	$ rm -rf ~/ecs-rendercache ~/ecs-doccache
+
+* 2015-11-26: Handling of incominng files
+
+  Due to refactoring of the document upload pipeline, the incoming file
+  directory is not used anymore.
+
+	$ rm -rf ~/ecs-incoming ~/ecs-temp/incoming-copy
+
+* 2015-11-27: Removal of the genfile directory
+
+  The genfile directory has not been used for quite some time now. The
+  related settings in settings.py have been removed.
+
+	$ rm -rf ~/ecs-generated
+
+--- Next release ---
