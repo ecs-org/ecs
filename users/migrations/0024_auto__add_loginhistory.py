@@ -14,6 +14,7 @@ class Migration(SchemaMigration):
             ('type', self.gf('django.db.models.fields.CharField')(max_length=32)),
             ('timestamp', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
+            ('ip', self.gf('django.db.models.fields.IPAddressField')(max_length=15)),
         ))
         db.send_create_signal('users', ['LoginHistory'])
 
@@ -66,11 +67,12 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'is_accepted': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'ecs_invitations'", 'to': "orm['auth.User']"}),
-            'uuid': ('django.db.models.fields.CharField', [], {'default': "'e91fea12fbb74ce8b2d472a1979d8a61'", 'unique': 'True', 'max_length': '32'})
+            'uuid': ('django.db.models.fields.CharField', [], {'default': "'0884c2ca6eab42e98225c8799cbdc24b'", 'unique': 'True', 'max_length': '32'})
         },
         'users.loginhistory': {
             'Meta': {'object_name': 'LoginHistory'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'ip': ('django.db.models.fields.IPAddressField', [], {'max_length': '15'}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['auth.User']"})

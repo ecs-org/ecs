@@ -37,6 +37,7 @@
 {% for event in page.object_list %}
     <li>
         {{ event.timestamp|date:"d.m.Y H:i" }} -
+        {{ event.ip }} -
         {{ event.get_type_display|upper }} -
         {{ event.user }}
     </li>

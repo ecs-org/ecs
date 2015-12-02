@@ -113,3 +113,4 @@ class LoginHistory(models.Model):
     type = models.CharField(max_length=32, choices=LOGIN_HISTORY_TYPES)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
+    ip = models.IPAddressField()
