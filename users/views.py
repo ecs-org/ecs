@@ -23,7 +23,7 @@ from ecs.utils.security import readonly
 from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
-from ecs.users.models import UserProfile, Invitation
+from ecs.users.models import UserProfile, Invitation, LoginHistory
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
 from ecs.users.utils import get_user, create_user, user_group_required
 from ecs.communication.utils import send_system_message_template
@@ -69,13 +69,20 @@ def login(request, *args, **kwargs):
 
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm
-    return auth_views.login(request, *args, **kwargs)
+    response = auth_views.login(request, *args, **kwargs)
+    if request.user.is_authenticated():
+        LoginHistory.objects.create(type='login', user=request.user)
+    return response
 
 
 @readonly()
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
-    return auth_views.logout(request, *args, **kwargs)
+    user = getattr(request, 'original_user', request.user)
+    response = auth_views.logout(request, *args, **kwargs)
+    if not request.user.is_authenticated():
+        LoginHistory.objects.create(type='logout', user=user)
+    return response
 
 
 @readonly(methods=['GET'])

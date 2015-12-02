@@ -12,7 +12,10 @@ def readonly(methods=('GET', 'POST')):
 
 
 IGNORABLE_MODULES = ('sentry.models', 'django.contrib.sessions.models')
-IGNORABLE_MODELS = ('ecs.users.models.UserSettings', 'ecs.documents.models.DownloadHistory')
+IGNORABLE_MODELS = (
+    'ecs.users.models.UserSettings', 'ecs.users.models.LoginHistory',
+    'ecs.documents.models.DownloadHistory',
+)
 
 def fqn(obj):
     return "%s.%s" % (obj.__module__, obj.__name__)

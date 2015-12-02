@@ -102,3 +102,14 @@ class Invitation(models.Model):
     is_accepted = models.BooleanField(default=False)
 
     objects = InvitationManager()
+
+
+LOGIN_HISTORY_TYPES = (
+    ('login', _('login')),
+    ('logout', _('logout')),
+)
+
+class LoginHistory(models.Model):
+    type = models.CharField(max_length=32, choices=LOGIN_HISTORY_TYPES)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User)
