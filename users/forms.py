@@ -10,10 +10,12 @@ from django.conf import settings
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
-from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget
+from ecs.core.forms.fields import MultiselectWidget, SingleselectWidget, DateTimeField
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
+from ecs.users.models import LOGIN_HISTORY_TYPES
 from ecs.meetings.models import AssignedMedicalCategory
+
 
 class EmailLoginForm(forms.Form):
     # Note: This has to be called "username", so we can use the django login view
@@ -276,3 +278,18 @@ class SetPasswordForm(DjangoSetPasswordForm):
 class PasswordChangeForm(DjangoPasswordChangeForm):
     new_password1 = forms.CharField(label=_("New password"), widget=forms.PasswordInput, min_length=8)
     new_password2 = forms.CharField(label=_("New password confirmation"), widget=forms.PasswordInput, min_length=8)
+
+
+class LoginHistoryFilterForm(forms.Form):
+    type = forms.ChoiceField(choices=(('', '---'),) + LOGIN_HISTORY_TYPES, required=False)
+    start = DateTimeField()
+    end = DateTimeField()
+    page = forms.IntegerField(initial=1, widget=forms.HiddenInput())
+
+    def clean(self):
+        super(LoginHistoryFilterForm, self).clean()
+        start = self.cleaned_data.get('start')
+        end = self.cleaned_data.get('end')
+        if start and end and start >= end:
+            raise forms.ValidationError(_('Start must be before end.'))
+        return self.cleaned_data

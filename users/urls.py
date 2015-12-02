@@ -17,6 +17,7 @@ urlpatterns = patterns('ecs.users.views',
     url(r'^users/(?P<user_pk>\d+)/details/', 'details'),
     url(r'^users/administration/$', 'administration'),
     url(r'^users/invite/$', 'invite'),
+    url(r'^users/login_history/$', 'login_history'),
     url(r'^accept_invitation/(?P<invitation_uuid>[\da-zA-Z]{32})/$', 'accept_invitation'),
 )
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import random
 
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -24,8 +24,8 @@ from ecs.ecsmail.utils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation, LoginHistory
-from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm
-from ecs.users.utils import get_user, create_user, user_group_required
+from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm, LoginHistoryFilterForm
+from ecs.users.utils import get_user, create_user, user_flag_required, user_group_required
 from ecs.communication.utils import send_system_message_template
 from ecs.utils.browserutils import UA
 from ecs.help.models import Page
@@ -431,3 +431,35 @@ def accept_invitation(request, invitation_uuid=None):
         'form': form,
     })
 
+@readonly()
+@user_flag_required('is_executive_board_member')
+def login_history(request):
+    end = datetime.now()
+    start = end - timedelta(days=1)
+    type = None
+    page = 1
+
+    form = LoginHistoryFilterForm(request.POST or None,
+        initial={'start': start, 'end': end})
+    if request.method == 'POST' and form.is_valid():
+        start = form.cleaned_data['start']
+        end = form.cleaned_data['end']
+        type = form.cleaned_data.get('type')
+        page = form.cleaned_data.get('page')
+
+    events = LoginHistory.objects.filter(
+        timestamp__gte=start, timestamp__lte=end).order_by('-timestamp')
+    if type:
+        events = events.filter(type=type)
+
+    paginator = Paginator(events, 50)
+    try:
+        page = paginator.page(page)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+
+    return render(request, 'users/login_history.html', {
+        'form': form,
+        'page': page,
+        'active': 'login_history',
+    })
