@@ -1,6 +1,7 @@
+import json
+
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
-from django.utils import simplejson
 from ecs.utils.viewutils import render
 
 from haystack.query import SearchQuerySet
@@ -65,5 +66,5 @@ def document_search_json(request, document_pk=None):
                 'page_number': result.page,
                 'highlight': highlighter.highlight(result.text),
             })
-    return HttpResponse(simplejson.dumps(results), content_type='text/plain')
+    return HttpResponse(json.dumps(results), content_type='text/plain')
     

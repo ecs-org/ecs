@@ -222,9 +222,6 @@ sfood:inst:all:pypi:snakefood
 
 # autopep8: A tool that automatically formats Python code to conform to the PEP 8 style guide
 autopep8:inst:all:pypi:autopep8
-
-# FIXME: who needs simplejson, and why is it in developer packages
-simplejson:inst:all:pypi:simplejson
 """
 
 # required for django_extensions unittests:

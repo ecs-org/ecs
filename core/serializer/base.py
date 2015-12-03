@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+import json
 import zipfile, os, datetime
 from uuid import uuid4
 
-from django.utils import simplejson
 from django.db import models
 from django.core.files.base import ContentFile
 from django.utils.datastructures import SortedDict
@@ -437,7 +437,7 @@ def dump_model_instance(obj, zf):
         raise ValueError("cannot serialize objecs of type {0}".format(obj.__class__))
     return _serializers[obj.__class__].dump(obj, zf)
     
-class _JsonEncoder(simplejson.JSONEncoder):
+class _JsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
             return obj.strftime(DATETIME_FORMAT)
@@ -450,7 +450,7 @@ class Serializer(object):
 
     def read(self, file_like):
         zf = zipfile.ZipFile(file_like, 'r')
-        data = simplejson.loads(zf.read(DATA_JSON_NAME))
+        data = json.loads(zf.read(DATA_JSON_NAME))
         submission_form = _serializers[SubmissionForm].load(data['data'], zf, data['version'])
         return submission_form
     
@@ -462,8 +462,8 @@ class Serializer(object):
             'type': 'SubmissionForm',
             'data': dump_model_instance(submission_form, zf),
         }
-        json = simplejson.dumps(data, cls=_JsonEncoder, indent=2)
-        zf.writestr(DATA_JSON_NAME, json)
+        zf.writestr(DATA_JSON_NAME,
+            json.dumps(data, cls=_JsonEncoder, indent=2))
     
     def docs(self):
         return _serializers[SubmissionForm].docs()

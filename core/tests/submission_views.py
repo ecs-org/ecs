@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
+import json
 from urlparse import urlsplit
 
 from django.core.urlresolvers import reverse
-from django.utils import simplejson
 from django.contrib.auth.models import Group
 
 from ecs.utils.testcases import LoginTestCase
@@ -232,7 +232,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         medical_categories_count = MedicalCategory.objects.all().count()
         response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
         self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len(simplejson.loads(response.content)), medical_categories_count)
+        self.failUnlessEqual(len(json.loads(response.content)), medical_categories_count)
 
     def test_initial_review(self):
         submission_form = create_submission_form(presenter=self.user)

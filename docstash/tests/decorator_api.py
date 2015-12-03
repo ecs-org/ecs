@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-from django.utils import simplejson
+import json
+
 from ecs.utils.testcases import LoginTestCase
+
 
 class DecoratorApiTest(LoginTestCase):
     '''Tests for the Docstash
@@ -26,20 +28,20 @@ class DecoratorApiTest(LoginTestCase):
         # post test data
         response = self.client.post(key_url, test_post_data)
         self.failUnlessEqual(response.status_code, 200)
-        data = simplejson.loads(response.content)
+        data = json.loads(response.content)
         self.failUnlessEqual(data, test_post_data)
         
         # get test data
         response = self.client.get(key_url)
         self.failUnlessEqual(response.status_code, 200)
-        data = simplejson.loads(response.content)
+        data = json.loads(response.content)
         self.failUnlessEqual(data, test_post_data)
         
         # post test data again
         test_post_data = {'baz': '42'}
         response = self.client.post(key_url, test_post_data)
         self.failUnlessEqual(response.status_code, 200)
-        data = simplejson.loads(response.content)
+        data = json.loads(response.content)
         self.failUnlessEqual(data, test_post_data)
 
 

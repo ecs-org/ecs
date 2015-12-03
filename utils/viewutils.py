@@ -1,6 +1,7 @@
+import json
+
 from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
-from django.utils import simplejson
 from piston.handler import BaseHandler
 
 from ecs.utils.pdfutils import wkhtml2pdf
@@ -48,4 +49,4 @@ def render_pdf_context(template, context):
     return wkhtml2pdf(html, footer_html=footer_html)
 
 def JSONResponse(data):
-    return HttpResponse(simplejson.dumps(data), content_type='application/json')
+    return HttpResponse(json.dumps(data), content_type='application/json')

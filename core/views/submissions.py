@@ -2,6 +2,7 @@
 from datetime import datetime
 import tempfile
 import re
+import json
 
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
@@ -10,7 +11,6 @@ from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from django.utils import simplejson
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
@@ -1074,7 +1074,7 @@ def catalog_json(request):
             item['investigators'] = investigators
             data.append(item)
             
-    return HttpResponse(simplejson.dumps(data, indent=4), content_type='application/json')
+    return HttpResponse(json.dumps(data, indent=4), content_type='application/json')
 
 
 @user_flag_required('is_executive_board_member')

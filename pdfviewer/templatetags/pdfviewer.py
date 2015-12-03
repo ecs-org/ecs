@@ -1,5 +1,6 @@
+import json
+
 from django.template import Library, TemplateSyntaxError, Node
-from django.utils import simplejson
 from django.utils.safestring import mark_safe
 
 register = Library()
@@ -24,14 +25,14 @@ def get_annotations(parser, token):
     
 @register.filter
 def images(document):
-    data = simplejson.dumps(document.get_pages_list())
+    data = json.dumps(document.get_pages_list())
     return mark_safe(data)
 
 @register.filter
 def annotations_for_user(document, user):
     annotations = list(document.annotations.filter(user=user).values(
         'pk', 'page_number', 'x', 'y', 'width', 'height', 'text', 'author__id', 'author__username', 'author__email'))
-    data = simplejson.dumps(annotations)
+    data = json.dumps(annotations)
     return mark_safe(data)
 
 @register.filter

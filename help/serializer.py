@@ -1,6 +1,6 @@
+import json
 import zipfile
 
-from django.utils import simplejson
 from django.core.files.base import ContentFile
 
 from ecs.help.models import Page, Attachment
@@ -118,11 +118,11 @@ def export(file_like):
     for p in Page.objects.all():
         data['pages'][str(p.pk)] = page_serializer.serialize(zf, p)
     
-    zf.writestr('data.json', simplejson.dumps(data))
+    zf.writestr('data.json', json.dumps(data))
 
 def load(file_like):
     zf = zipfile.ZipFile(file_like, 'r')
-    data = simplejson.loads(zf.read('data.json'))
+    data = json.loads(zf.read('data.json'))
 
     page_pks = {}
     page_serializer = PageSerializer()
