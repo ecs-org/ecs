@@ -13,7 +13,7 @@ from ecs.meetings.models import Meeting
 def optimize_random(timetable, func, params):
     p = list(timetable)
     random.shuffle(p)
-    return p
+    return tuple(p)
     
 def optimize_brute_force(timetable, func, params):
     value, p = max((func(p), p) for p in itertools.permutations(timetable))
