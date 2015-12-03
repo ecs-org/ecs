@@ -253,14 +253,6 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
         if popen.returncode != 0: 
             raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
 
-        '''
-        pdfa = StringIO() 
-        with open(pdf_file.name, 'rb') as pdf:
-            pdf2pdfa(pdf, pdfa)
-        pdfa.seek(0)
-        ret = pdfa.getvalue()
-        pdfa.close()
-        '''
         with open(pdf_file.name, 'rb') as pdf:
             ret = pdf.read()
 
