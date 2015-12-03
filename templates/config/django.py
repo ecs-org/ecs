@@ -52,11 +52,6 @@ SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
-BUGSHOT_CONFIG = {
-    'bugshoturl': '%(bugshot.url)s',
-    'milestone': '%(bugshot.milestone)s',
-}
-
 MS_CLIENT = {
     "server": "%(mediaserver.client.server)s",
     "bucket": "%(mediaserver.client.bucket)s",

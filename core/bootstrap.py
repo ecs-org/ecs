@@ -214,7 +214,6 @@ def auth_groups():
         u'userswitcher_target',
         u'translators',
         u'sentryusers',
-        u'bugshot',
         u'External Reviewer',
         u'External Review Review Group',
         u'EC-Vote Preparation Group',

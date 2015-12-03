@@ -37,7 +37,6 @@
     <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Annotation.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/DocumentViewer.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/pdfviewer/Popup.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}camera/camera.js"></script>
 {% endcompress %}
 
 <script type="text/javascript">
@@ -158,19 +157,6 @@
         {% else %}
             $(document.body).addClass('pdfviewer');
         {% endif %}
-    });
-    
-    window.addEvent('domready', function(){
-    {% comment %}
-    TODO: Warning, this duplicates get_origin,camera.Camera & camera.install from core.html to get bugshot in pdfviewer
-    {% endcomment %}
-
-    function get_origin() {
-        var re_id_axe = /[0-9a-f]{32}/;
-        var x = encodeURIComponent(window.location.href).replace(/-/g, "--").replace(/%/g, "-").replace(re_id_axe, 'id');
-        return x;
-     }
-
     });
 </script>
 

@@ -151,10 +151,6 @@ liblcms1-dev-devel:req:apt:apt-get:liblcms1-dev
 python-pil:inst:!win:pypi:PIL
 
 
-# feedback: jsonrpclib for ecs feedback and fab ticket
-jsonrpclib:inst:all:file:externals/joshmarshall-jsonrpclib-283a2a9-ssl_patched.tar.gz
-
-
 # logging: django-sentry;
 # uuid:inst:all:pypi:uuid uuid is in mainlibs since 2.3 ... and was not thread safe in 2.5...
 django-templatetag-sugar:inst:all:pypi:django-templatetag-sugar

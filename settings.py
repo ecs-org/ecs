@@ -370,9 +370,6 @@ ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
 
-# ecs.bugshot tracrpc settings
-BUGSHOT_CONFIG = {'bugshoturl': 'https://sharing:uehkdkDijepo833@ecsdev.ep3.at/project/ecs/login/rpc', 'milestone': 'Milestone 20',}
-
 # if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
 # set USE_TEXTBOXLIST to false (eg. in local_settings.py) e.g. for gui testing
 USE_TEXTBOXLIST = True
