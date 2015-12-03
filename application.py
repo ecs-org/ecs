@@ -15,10 +15,6 @@ language-pack-de:req:apt:apt-get:language-pack-de
 psycopg2:req:apt:apt-get:libpq-dev
 psycopg2:inst:!win:pypi:psycopg2==2.4.1
 
-# sqlite database bindings
-pysqlite:req:apt:apt-get:libsqlite3-dev
-pysqlite:inst:!win:pypi:pysqlite
-
 # timezone handling
 pytz:inst:all:pypi:pytz
 

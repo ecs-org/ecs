@@ -23,12 +23,8 @@ TEMPLATE_DEBUG = DEBUG
 # database configuration defaults, may get overwritten in ecsdev_settings and local_settings
 DATABASES = {}
 DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(PROJECT_DIR, 'ecs.db'),
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '',
-    'PORT': '',
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'ecs',
 }
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
