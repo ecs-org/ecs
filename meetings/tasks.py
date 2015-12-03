@@ -46,11 +46,11 @@ def _eval_timetable(metrics):
     return math.log(1 + 1.0 / (1 + v)) / _log2
 
 @task()
+@transaction.commit_manually
 def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None, **kwargs):
     logger = optimize_timetable_task.get_logger(**kwargs)
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
-    transaction.managed()
     try:
         algo = _OPTIMIZATION_ALGORITHMS.get(algorithm)
         entries, users = meeting.timetable
@@ -84,7 +84,8 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         transaction.rollback()
         logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
     finally:
-        print Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
+        Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
+        transaction.commit()
 
     return retval
 
