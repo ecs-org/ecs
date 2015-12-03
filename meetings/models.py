@@ -671,9 +671,9 @@ class TimetableEntry(models.Model):
             setattr(self, k, v)
         self.save()
         if from_visible:
-            for entry in self.meeting.timetable_entries.filter(timetable_index__gt=previous_index).order_by('timetable_index'):
-                entry.timetable_index -= 1
-                entry.save()
+            changed = self.meeting.timetable_entries.filter(
+                timetable_index__gt=previous_index)
+            changed.update(timetable_index=F('timetable_index') - 1)
             # invisible tops don't have participants
             self.participations.all().delete()
         self.meeting._clear_caches()
@@ -682,9 +682,9 @@ class TimetableEntry(models.Model):
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:
-        for entry in entry.meeting.timetable_entries.filter(timetable_index__gt=entry.index).order_by('timetable_index'):
-            entry.timetable_index -= 1
-            entry.save()
+        changed = entry.meeting.timetable_entries.filter(
+            timetable_index__gt=entry.index)
+        changed.update(timetable_index=F('timetable_index') - 1)
     entry.meeting.update_assigned_categories()
     on_meeting_top_delete.send(Meeting, meeting=entry.meeting, timetable_entry=entry)
 
