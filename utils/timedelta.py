@@ -1,9 +1,6 @@
 import re
 from datetime import timedelta
 
-def timedelta_to_seconds(td):
-    return td.seconds + td.days * 3600 * 24 + td.microseconds * 0.000001
-
 _timedelta_format_re = re.compile(r''''(?P<h1>\d{1,2})h
     |(?P<m1>\d{1,2})m(?:in)?
     |(?P<s1>\d{1,2})s(?:ec)?
@@ -37,5 +34,3 @@ def parse_timedelta(s):
             if s:
                 secs += int(s)
     return timedelta(seconds=secs)
-            
-            

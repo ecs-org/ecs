@@ -13,7 +13,6 @@ from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
 from ecs.utils import cached_property
-from ecs.utils.timedelta import timedelta_to_seconds
 from ecs.utils.viewutils import render_pdf
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
@@ -103,10 +102,10 @@ class TimetableMetrics(object):
     def waiting_time_variance(self):
         if not self.waiting_time_per_user:
             return timedelta(seconds=0)
-        avg = timedelta_to_seconds(self.waiting_time_avg)
+        avg = self.waiting_time_avg.total_seconds()
         var = 0
         for time in self.waiting_time_per_user.itervalues():
-            d = avg - timedelta_to_seconds(time)
+            d = avg - time.total_seconds()
             var += d*d
         return timedelta(seconds=math.sqrt(var / len(self.waiting_time_per_user)))
         
@@ -315,7 +314,7 @@ class Meeting(models.Model):
         start_date = self.start.date()
         for constraint in self.constraints.order_by('start_time'):
             start = datetime.combine(start_date, constraint.start_time)
-            constraint.offset_in_seconds = timedelta_to_seconds(start - self.start)
+            constraint.offset_in_seconds = (start - self.start).total_seconds()
             constraints_by_user_id.setdefault(constraint.user_id, []).append(constraint)
         users = []
         for user in self.users:
@@ -500,7 +499,7 @@ class TimetableEntry(models.Model):
         return timedelta(seconds=self.duration_in_seconds)
         
     def _set_duration(self, d):
-        self.duration_in_seconds = int(timedelta_to_seconds(d))
+        self.duration_in_seconds = int(d.total_seconds())
     
     duration = property(_get_duration, _set_duration)
 
@@ -525,7 +524,7 @@ class TimetableEntry(models.Model):
     def optimal_start_offset(self):
         if self.optimal_start is None:
             return None
-        return timedelta_to_seconds(datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start)
+        return (datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start).total_seconds()
     
     @cached_property
     def users(self):
@@ -568,7 +567,7 @@ class TimetableEntry(models.Model):
     def move_to_optimal_position(self):
         i = 0
         offset = 0
-        start = timedelta_to_seconds(datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start)
+        start = (datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start).total_seconds()
         for entry in self.meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index').exclude(pk=self.pk):
             if offset >= start:
                 break
@@ -666,7 +665,7 @@ class TimetableEntry(models.Model):
             kwargs['timetable_index'] = None
         duration = kwargs.pop('duration', None)
         if duration is not None:
-            kwargs['duration_in_seconds'] = timedelta_to_seconds(duration)
+            kwargs['duration_in_seconds'] = duration.total_seconds()
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
         self.save()
@@ -724,4 +723,4 @@ class Constraint(models.Model):
 
     @cached_property
     def duration_in_seconds(self):
-        return timedelta_to_seconds(self.duration)
+        return self.duration.total_seconds()

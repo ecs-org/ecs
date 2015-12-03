@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from ecs.meetings.models import Meeting
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation
-from ecs.utils.timedelta import timedelta_to_seconds
 
 
 class Command(BaseCommand):
@@ -62,10 +61,10 @@ class Command(BaseCommand):
                         )
                     print "%4d %8d %8d %8d %8d %8d %8d %4d %10.4f" % (
                         sorter.generation_count, 
-                        int(timedelta_to_seconds(metrics.waiting_time_total) / 60),
-                        int(timedelta_to_seconds(metrics.waiting_time_avg) / 60), 
-                        int(timedelta_to_seconds(metrics.waiting_time_min) / 60),
-                        int(timedelta_to_seconds(metrics.waiting_time_max) / 60),
+                        int(metrics.waiting_time_total.total_seconds() / 60),
+                        int(metrics.waiting_time_avg.total_seconds() / 60),
+                        int(metrics.waiting_time_min.total_seconds() / 60),
+                        int(metrics.waiting_time_max.total_seconds() / 60),
                         int(evalf(entries)), 
                         int(evalf(result)), 
                         len(sorter.population),
