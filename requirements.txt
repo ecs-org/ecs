@@ -7,7 +7,7 @@ docutils==0.8.1
 
 # django main
 Django==1.2.3
-south==0.7.2
+South==0.7.2
 django-piston==0.2.3
 django-extensions==0.8
 django-picklefield==0.1.9	# for docstash
@@ -47,7 +47,7 @@ BeautifulCleaner==2.0dev
 Whoosh==2.3.2
 # pysolr uses beautiful soup optional for solr error support
 # pysolr uses httplib2 with fallback to httplib
-httplib2==0.7.2
+httplib2==0.7.3
 # we use == for pysolr because we dont want 2.1beta
 pysolr==2.0.15
 django-haystack==1.2.6
@@ -72,7 +72,7 @@ django-reversion==1.3.3
 django-rosetta==0.6.2
 
 # yaml is used for vm branding configuration
-pyyaml==3.10
+PyYAML==3.10
 
 # browser detection
 httpagentparser==1.7.0
