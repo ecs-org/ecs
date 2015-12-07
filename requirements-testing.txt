@@ -1,0 +1,11 @@
+nose==1.1.2
+django-nose==0.1.2
+
+# for testing the export we need concurrent requests
+django-concurrent-test-server==0.1
+
+# software quality testing packages, not strictly needed, except you do coverage analysis
+unittest-xml-reporting==1.3.1
+coverage==3.5.1
+nosexcover==1.0.7
+unittest2==0.5.1

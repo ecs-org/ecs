@@ -24,7 +24,7 @@ def _detect_graphicsmagick():
     popen.communicate()
     MONTAGE_GM = popen.returncode != 0  # gm montage does not support -version
 _detect_graphicsmagick()
-PDFDRAW_PATH = which_path('ECS_PDFDRAW', 'pdfdraw')
+PDFDRAW_PATH = which_path('ECS_PDFDRAW', 'mudraw')
 
 
 class MediaProvider:

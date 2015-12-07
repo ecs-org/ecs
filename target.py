@@ -49,7 +49,6 @@ class SetupTarget(object):
         self.config = load_config(config_file)
         self.homedir = os.path.expanduser('~')
         self.configdir = os.path.join(self.homedir, 'ecs-conf')
-        self.pythonexedir = os.path.dirname(get_pythonexe())
         # set legacy attributes
         for attr in ('ip', 'host'):
             setattr(self, attr, self.config[attr])
@@ -263,8 +262,6 @@ class SetupTarget(object):
             with settings(warn_only=True):
                 local('sudo mkdir -m 0600 -p /root/.duply/root')
                 local('sudo mkdir -m 0600 -p /root/.duply/opt')
-
-            self.config['duplicity.duply_path'] = self.pythonexedir
 
             self.config['duplicity.root'] = os.path.join(self.config['backup.hostdir'], 'root')
             self.config['duplicity.include'] = "SOURCE='/'"
@@ -712,51 +709,4 @@ def custom_install_pdfasconfig(pkgline, filename):
     outputdir = os.path.join(get_pythonenv(), "pdfas", "conf", checkfilename)
     pkg_manager = get_pkg_manager()
     result = pkg_manager.static_install_unzip(filename, outputdir, checkfilename, pkgline)
-    return result
-
-
-def custom_install_pdftotext(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    tempdir = tempfile.mkdtemp()
-    outputdir = os.path.dirname(get_pythonexe())
-    result = False
-
-    try:
-        if pkg_manager.static_install_unzip(filename, tempdir, checkfilename, pkgline):
-            try:
-                shutil.copy(os.path.join(tempdir,"xpdfbin-win-3.03", "bin32", checkfilename),
-                    os.path.join(outputdir, checkfilename))
-            except EnvironmentError:
-                pass
-            else:
-                result = True
-    finally:
-        shutil.rmtree(tempdir)
-
-    return result
-
-
-def custom_check_duply(pkgline, checkfilename):
-    return os.path.exists(os.path.join(os.path.dirname(get_pythonexe()), checkfilename))
-
-def custom_install_duply(pkgline, filename):
-    (name, pkgtype, platform, resource, url, behavior, checkfilename) = packageline_split(pkgline)
-    pkg_manager = get_pkg_manager()
-    tempdir = tempfile.mkdtemp()
-    outputdir = os.path.dirname(get_pythonexe())
-    result = False
-
-    try:
-        if pkg_manager.static_install_tar(filename, tempdir, checkfilename, pkgline):
-            try:
-                shutil.copy(os.path.join(tempdir, 'duply_1.5.5.4', checkfilename),
-                    os.path.join(outputdir, checkfilename))
-            except EnvironmentError:
-                pass
-            else:
-                result = True
-    finally:
-        shutil.rmtree(tempdir)
-
     return result

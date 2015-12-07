@@ -454,7 +454,7 @@ DEVSERVER_MODULES = (
 #ECS_GHOSTSCRIPT = "/usr/bin/gs"
 #ECS_GNUPG = "/usr/bin/gpg"
 #ECS_MONTAGE = "/usr/bin/montage"
-#ECS_PDFDRAW = "/usr/bin/pdfdraw"       # aka mudraw, for mupdf >= 1.0
+#ECS_PDFDRAW = "/usr/bin/mudraw"
 #ECS_PDFTK = "/usr/bin/pdftk"
  
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
@@ -502,14 +502,6 @@ try:
     from version import *
 except ImportError:
     ECS_VERSION = 'unknown'
-
-# django_wsgiserver activation
-try:
-    import django_wsgiserver
-except ImportError:
-    pass
-else:
-    INSTALLED_APPS += ('django_wsgiserver',) # anywhere
 
 # user switcher
 if 'ECS_USERSWITCHER' not in locals():
