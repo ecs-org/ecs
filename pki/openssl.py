@@ -5,11 +5,6 @@ import shutil
 import re
 
 
-OPENSSL_PATH = 'openssl'
-
-class OpenSSLError(Exception): pass
-
-
 class CA(object):
     def __init__(self, basedir, **kwargs):
         self.basedir = basedir
@@ -29,16 +24,8 @@ class CA(object):
         for key, value in kwargs.items():
             setattr(self, key, value)
         
-    def _exec(self, cmd, env_vars=None):
-        cmd = [OPENSSL_PATH] + cmd
-        print ' '.join(cmd)
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env_vars)
-        stdout, stderr = popen.communicate()
-        if popen.returncode != 0:
-            if stderr:
-                print stderr
-            raise OpenSSLError()
-        return stdout
+    def _exec(self, cmd):
+        return subprocess.check_output(['openssl'] + cmd)
         
     def _exec_ca(self, cmd):
         return self._exec(['ca', '-config', self.config, '-batch'] + cmd)
