@@ -42,10 +42,6 @@ class CA(object):
     def ca_cert_path(self):
         return os.path.join(self.basedir, self.certificate)
         
-    @property
-    def ca_serial_path(self):
-        return os.path.join(self.basedir, self.serial)
-        
     def _gen_crl(self):
         self._exec_ca(['-gencrl', '-crldays', '3650', '-out', self.crl_path])
 
@@ -102,16 +98,6 @@ class CA(object):
             
             fingerprint = self.get_fingerprint(cert_file)
             shutil.copyfile(cert_file, self.get_cert_path_for_fingerprint(fingerprint))
-            #cmd = ['x509', '-req', 
-            #    '-in', csr_file, 
-            #    '-CA', self.ca_cert_path, 
-            #    '-CAkey', self.ca_key_path, 
-            #    '-CAserial', self.ca_serial_path, '-CAcreateserial', 
-            #    '-out', cert_file,
-            #]
-            #if days:
-            #    cmd += ['-days', str(days)]
-            #self._exec(cmd)
             
             # create a browser compatible certificate
             self._exec(['pkcs12', '-export', '-clcerts', '-in', cert_file, '-inkey', key_file, '-out', pkcs12_file, '-passout', 'pass:%s' % passphrase])
