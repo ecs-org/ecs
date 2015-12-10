@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-
 import os
-import tempfile
 
 from django.conf import settings
 
@@ -23,14 +21,6 @@ def which(file, mode=os.F_OK | os.X_OK, path=None, extlist=[]):
             full_ext = full_path + ext
             if os.path.exists(full_ext) and os.access(full_ext, mode):
                 yield full_ext
-
-def tempfilecopy(filelike, tmp_dir=None, mkdir=False, **kwargs):
-    if mkdir and not os.path.isdir(tmp_dir):
-        os.makedirs(tmp_dir)
-    with tempfile.NamedTemporaryFile(delete=False, dir=tmp_dir, **kwargs) as outputfile:
-        outputfilename = outputfile.name
-        outputfile.write(filelike.read())
-    return outputfilename
 
 def which_path(setting, *args, **kwargs):
     path = getattr(settings, setting, None)
