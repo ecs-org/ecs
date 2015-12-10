@@ -369,9 +369,8 @@ COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 COMPRESS_JS_FILTERS = []
 #COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter']
 #COMPRESS_OUTPUT_DIR = "django_compressor"
-pyscss = 'pyscss.exe' if sys.platform == 'win32' else 'pyscss'
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', '{0} -I {1} {2}'.format(pyscss, os.path.join(MEDIA_ROOT, 'css'), "-o {outfile} {infile}")),
+    ('text/x-scss', 'pyscss -I {} {}'.format(os.path.join(MEDIA_ROOT, 'css'), "-o {outfile} {infile}")),
 )
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
@@ -400,11 +399,6 @@ DEVSERVER_MODULES = (
 
 #ECS_USERSWITCHER = True/False
 # default to True, Userswitcher will be shown so user can switch to testusers quickly 
-
-# absolut pathes for binaries; defaults to which(binaryname) if None or missing
-#ECS_GHOSTSCRIPT = "/usr/bin/gs"
-#ECS_GNUPG = "/usr/bin/gpg"
-#ECS_PDFTK = "/usr/bin/pdftk"
  
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
 # loads support for django-debug-toolbar

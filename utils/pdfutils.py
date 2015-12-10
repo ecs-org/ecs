@@ -18,12 +18,6 @@ from django.conf import settings
 from django.template import loader
 from django.utils.encoding import smart_str
 
-from ecs.utils.pathutils import which_path
-
-GHOSTSCRIPT_PATH = which_path('ECS_GHOSTSCRIPT', 'gs')
-WKHTMLTOPDF_PATH = which_path('ECS_WKHTMLTOPDF', 'wkhtmltopdf', extlist=["-amd64", "-i386"])
-QPDF_PATH = which_path('ECS_QPDF', 'qpdf')
-PDFTK_PATH = which_path('ECS_PDFTK', 'pdftk')
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +57,7 @@ def pdf_barcodestamp(source, barcode, text=None):
 
     with NamedTemporaryFile() as pdf:
         p = subprocess.Popen([
-            GHOSTSCRIPT_PATH, '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite',
+            'gs', '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite',
             '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', '-sOutputFile=-', '-c',
             '<</Orientation 0>> setpagedevice', '-'
         ], stdin=subprocess.PIPE, stdout=pdf)
@@ -74,7 +68,7 @@ def pdf_barcodestamp(source, barcode, text=None):
 
         stamped = TemporaryFile()
         p = subprocess.check_call(
-            [PDFTK_PATH, '-', 'stamp', pdf.name, 'output', '-', 'dont_ask'],
+            ['pdftk', '-', 'stamp', pdf.name, 'output', '-', 'dont_ask'],
             stdin=source, stdout=stamped
         )
 
@@ -84,7 +78,7 @@ def pdf_barcodestamp(source, barcode, text=None):
   
 def decrypt_pdf(src):
     decrypted = TemporaryFile()
-    popen = subprocess.Popen([QPDF_PATH, '--decrypt', '/dev/stdin', '-'],
+    popen = subprocess.Popen(['qpdf', '--decrypt', '/dev/stdin', '-'],
         stdin=src, stdout=decrypted, stderr=subprocess.PIPE)
     stdout, stderr = popen.communicate()
     if popen.returncode in (0, 3):  # 0 == ok, 3 == warning
@@ -109,7 +103,7 @@ def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     if isinstance(footer_html, unicode):
         footer_html = footer_html.encode('utf-8')
     
-    cmd = [WKHTMLTOPDF_PATH,
+    cmd = ['wkhtmltopdf-amd64',
         '--margin-left', '2cm',
         '--margin-top', '2cm',
         '--margin-right', '2cm',
