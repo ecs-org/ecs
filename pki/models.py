@@ -7,7 +7,7 @@ class Certificate(models.Model):
     cn = models.CharField(max_length=100)
     subject = models.TextField()
     fingerprint = models.CharField(max_length=60)
-    serial = models.IntegerField()
+    serial = models.IntegerField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
     revoked_at = models.DateTimeField(null=True)
