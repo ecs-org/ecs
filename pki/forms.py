@@ -25,7 +25,7 @@ class CertForm(forms.Form):
         user = cd.get('user')
         if user:
             cn = cd.get('cn')
-            if Certificate.objects.filter(cn=cn, is_revoked=False).exists():
+            if Certificate.objects.filter(cn=cn, revoked_at=None).exists():
                 self._errors['cn'] = self.error_class([_('A certificate with this CN already exists.')])
 
         if cd.get('passphrase') != cd.get('passphrase2'):

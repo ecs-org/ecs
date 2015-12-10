@@ -17,12 +17,12 @@
         <th></th>
     </tr>
     {% for cert in certs %}
-        <tr class="{% if cert.is_revoked %}revoked{% endif %}">
+        <tr class="{% if cert.revoked_at %}revoked{% endif %}">
             <td>{{ cert.user }}</td>
             <td style="font-family:monospace">{{ cert.fingerprint }}</td>
             <td>{{ cert.cn }}</td>
             <td>
-                {% if not cert.is_revoked %}
+                {% if not cert.revoked_at %}
                 <form action="{% url ecs.pki.views.revoke_cert cert_pk=cert.pk %}" method="post">
                     <a class="submit_parent">{% trans 'Revoke' %}</a>
                 </form>

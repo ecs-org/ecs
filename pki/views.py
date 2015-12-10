@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.db.models import Count
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_group_required
@@ -18,7 +19,12 @@ from ecs.pki.models import Certificate
 @user_group_required('EC-Signing Group')
 def cert_list(request, user_pk=None):
     return render(request, 'pki/cert_list.html', {
-        'certs': Certificate.objects.select_related('user').order_by('is_revoked', 'user__email', 'cn'),
+        'certs': (
+            Certificate.objects
+                .select_related('user')
+                .annotate(is_revoked=Count('revoked_at'))
+                .order_by('is_revoked', 'user__email', 'cn')
+        ),
     })
 
 
@@ -53,10 +59,7 @@ def create_cert(request, user_pk=None):
 @user_group_required('EC-Signing Group')
 def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
-    ca = get_ca()
-    ca.revoke_by_fingerprint(cert.fingerprint)
-    cert.is_revoked = True
-    cert.save()
+    cert.revoke()
     return HttpResponseRedirect(reverse('ecs.pki.views.cert_list'))
 
 
