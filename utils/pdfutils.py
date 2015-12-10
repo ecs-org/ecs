@@ -43,11 +43,23 @@ def pdf_barcodestamp(source, barcode, text=None):
     if text:
         barcode_ps += '''
             gsave
-            /Helvetica 6 selectfont
+
+            % Define the HelveticaLatin1 font, which is like Helvetica, but
+            % using the ISOLatin1Encoding encoding vector.
+            /Helvetica findfont
+            dup length dict
+            begin
+                {{def}} forall
+                /Encoding ISOLatin1Encoding def
+                currentdict
+            end
+            /HelveticaLatin1 exch definefont
+
+            /HelveticaLatin1 6 selectfont
             <{}> dup stringwidth pop 132 add 32 exch moveto
             270 rotate show
             grestore
-        '''.format(hexlify(text.encode('ascii')))
+        '''.format(hexlify(text.encode('latin-1', 'replace')))
 
     with NamedTemporaryFile() as pdf:
         p = subprocess.Popen([
