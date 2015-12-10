@@ -1,7 +1,6 @@
 + /tmp
 - /tmp/**
 - /home/ecs/ecs-cache/**
-- /home/ecs/ecs-temp/**
 - /home/ecs/src/ecs/static/CACHE/**
 + /var/cache/apt/archives/partial/
 - /var/cache/apt/*

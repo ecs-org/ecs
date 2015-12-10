@@ -55,4 +55,11 @@ in addition to the usual steps. In chronological order:
 
 	STORAGE_VAULT_DIR = '/home/ecs/ecs-storage-vault'
 
+* 2015-12-10: ecs-temp unused
+
+  The ~/ecs-temp directory, the TEMPFILE_DIR setting and the TEMPFILE_DIR_MAXAGE
+  setting are not used anymore. The ~/ecs-temp directory can be removed.
+
+	$ rm -rf ~/ecs-temp
+
 --- Next release ---

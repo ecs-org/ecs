@@ -267,10 +267,6 @@ LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
 ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-cache"))
 ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 
-# directory where to store temporary files, used mostly with external utilities
-TEMPFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-temp"))
-TEMPFILE_DIR_MAXAGE = 14 # Value in Days (everything older gets wiped periodically)
-
 # ecs.help system export path
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 

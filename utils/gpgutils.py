@@ -14,7 +14,7 @@ Encryption/Signing, Decryption/Verifying modul.
 """
 
 import os, subprocess, tempfile, re
-from django.conf import settings
+import shutil
 
 
 def reset_keystore(gpghome):
@@ -33,7 +33,7 @@ def reset_keystore(gpghome):
 def gen_keypair(ownername, secretkey_filename, publickey_filename):
     ''' writes a pair of ascii armored key files, first is secret key, second is publickey, minimum ownername length is five'''
 
-    gpghome = tempfile.mkdtemp(dir= settings.TEMPFILE_DIR)
+    gpghome = tempfile.mkdtemp()
 
     batch_args = "Key-Type: 1\nKey-Length: 2048\nExpire-Date: 0\nName-Real: {0}\n".format(ownername)
     batch_args += "%secring {0}\n%pubring {1}\n".format(secretkey_filename, publickey_filename)
@@ -43,9 +43,9 @@ def gen_keypair(ownername, secretkey_filename, publickey_filename):
     popen = subprocess.Popen(args, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, stdin=subprocess.PIPE)
     stdout, empty = popen.communicate(batch_args)
     popen.stdin.close()
-    returncode = popen.returncode
-    if returncode != 0:
-        raise IOError('gpg --gen-key returned error code: %d , cmd line was: %s , output was: %s' % (returncode, str(args), stdout))
+    shutil.rmtree(gpghome)
+    if popen.returncode != 0:
+        raise IOError('gpg --gen-key returned error code: %d , cmd line was: %s , output was: %s' % (popen.returncode, str(args), stdout))
 
 
 def import_key(keyfile, gpghome):
