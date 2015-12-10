@@ -24,10 +24,5 @@ class DocumentsTest(LoginTestCase):
         self.doc.store(self.pdf_file)
             
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': self.doc.pk}))
-        self.assertEqual(response.status_code, 302)
-        url = response['Location']
-        self.assertTrue(url.startswith(settings.MS_CLIENT["server"]))
-        url = url [len(settings.MS_CLIENT["server"]):]
-        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content[:5], '%PDF-')
