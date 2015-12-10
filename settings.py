@@ -275,10 +275,7 @@ TEMPFILE_DIR_MAXAGE = 14 # Value in Days (everything older gets wiped periodical
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
 
 # Storage Vault settings
-STORAGE_VAULT = 'ecs.documents.storagevault.LocalFileStorageVault'
-STORAGE_VAULT_OPTIONS = {
-    'LocalFileStorageVault.rootdir': os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault'),
-}
+STORAGE_VAULT_DIR = os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault')
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
     "encrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.pub"),
@@ -475,7 +472,6 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 # hack some settings for test and runserver    
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-    STORAGE_VAULT = 'ecs.documents.storagevault.TemporaryStorageVault'
     ECS_REQUIRE_CLIENT_CERTS = False
     ECS_MANDATORY_CLIENT_CERTS = False
     INSTALLED_APPS += ('ecs.workflow.tests',)

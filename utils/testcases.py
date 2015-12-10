@@ -1,4 +1,6 @@
 import logging
+import tempfile
+import shutil
 from contextlib import contextmanager
 
 from django.test import TestCase
@@ -16,6 +18,8 @@ class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):
         get_or_create_user('root@system.local', is_superuser=True)
+
+        settings.STORAGE_VAULT_DIR = tempfile.mkdtemp()
         
         integration_bootstrap.create_settings_dirs()
         
@@ -39,7 +43,7 @@ class EcsTestCase(TestCase):
         
     @classmethod
     def teardownClass(self):
-        pass
+        shutil.rmtree(settings.STORAGE_VAULT_DIR)
     
     def setUp(self):
         self.logger = logging.getLogger() 

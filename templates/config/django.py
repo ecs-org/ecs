@@ -52,11 +52,7 @@ SECRET_KEY = '%(auth.SECRET_KEY)s'
 REGISTRATION_SECRET = '%(auth.REGISTRATION_SECRET)s'
 PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
-STORAGE_VAULT = '%(storagevault.implementation)s'
-STORAGE_VAULT_OPTIONS = {
-    'LocalFileStorageVault.rootdir': '%(storagevault.options.localfilestorage_root)s',
-}
-
+STORAGE_VAULT_DIR = '%(storagevault.options.localfilestorage_root)s'
 STORAGE_ENCRYPT = {
     "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
     "encrypt_key": os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_mediaserver.pub"),

@@ -6,12 +6,12 @@ StorageVault
 
 A Write Once, read many times key/value store featuring
 
-* transparent encryption+signing for storing data, decryption+verify support for retrieving data
-* easy to extent base class (StorageVault) for writing other StorageVault backend connectors
-* simple local machine implementation (LocalFileStorageVault) using diskbuckets
+* transparent encryption+signing for storing data, decryption+verify support for
+  retrieving data
 
 .. warning::
-    TODO: because its not checked where potential all value data is read in memory, usage should be limited to something memory can support (eg. 500mb)
+    TODO: because its not checked where potential all value data is read in
+    memory, usage should be limited to something memory can support (eg. 500mb)
 
 Usage
 =====
@@ -29,32 +29,14 @@ Usage
 
 import os
 import errno
-import tempfile
 
-from django.utils.importlib import import_module
-from django.core.exceptions import ImproperlyConfigured
 from django.conf import settings
 
 from ecs.utils import gpgutils
 
 
-def _aggressive_mkdtemp(dir):
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
-    return tempfile.mkdtemp(dir=dir)
-
-
 def getVault():
-    ''' get the default vault implementation
-
-    :raise ImproperlyConfigured: if settings.STORAGE_VAULT contains invalid storagevault implementation
-    '''
-    module, class_name = settings.STORAGE_VAULT.rsplit('.', 1)
-    try:
-        vault = getattr(import_module(module), class_name)
-    except ImportError:
-        raise ImproperlyConfigured("No Vault implementation for name: %s" % (settings.STORAGE_VAULT))
-    return vault()
+    return StorageVault(settings.STORAGE_VAULT_DIR)
 
 
 class StorageVault(object):
@@ -95,31 +77,3 @@ class StorageVault(object):
             settings.STORAGE_DECRYPT['decrypt_owner'],
             settings.STORAGE_DECRYPT['verify_owner']
         )
-
-
-class LocalFileStorageVault(StorageVault):
-    ''' StorageVault implementation using a local file storage
-
-    :requires: settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir']
-    '''
-    def __init__(self):
-        super(LocalFileStorageVault, self).__init__(
-            settings.STORAGE_VAULT_OPTIONS['LocalFileStorageVault.rootdir'])
-
-
-class TemporaryStorageVault(StorageVault):
-    ''' StorageVault implementation using a temporary storage inside tempdir (for unittests only)
-
-    makes a temporary storagevault under a subdir of settings.TEMPFILE_DIR
-
-    :requirements: to be used, settings.STORAGE_VAULT need to be set to "ecs.documents.storagevault.TemporaryStorageVault"
-    '''
-
-    # we initialize _TempStorageDir here, so we should become the same directory on each instantiation
-    __TempStorageDir = _aggressive_mkdtemp(dir=settings.TEMPFILE_DIR)
-
-    def __init__(self):
-        root_dir = self.__TempStorageDir
-        if not os.path.isdir(root_dir):
-            os.makedirs(root_dir)
-        super(TemporaryStorageVault, self).__init__(root_dir)

@@ -37,4 +37,22 @@ in addition to the usual steps. In chronological order:
 
 	$ rm -rf ~/ecs-generated
 
+* 2015-12-10: Storage vault options changed
+
+  The deployment specific django configuration files need to be adapted
+  for the changed settings.
+
+  The STORAGE_VAULT and STORAGE_VAULT_OPTIONS have been removed. Use the
+  STORAGE_VAULT_DIR option instead to set the working directory of the
+  storage valt. e.g.:
+
+	STORAGE_VAULT = 'ecs.documents.storagevault.LocalFileStorageVault'
+	STORAGE_VAULT_OPTIONS = {
+	    'LocalFileStorageVault.rootdir': '/home/ecs/ecs-storage-vault',
+	}
+
+  needs to be replaced with
+
+	STORAGE_VAULT_DIR = '/home/ecs/ecs-storage-vault'
+
 --- Next release ---
