@@ -62,4 +62,13 @@ in addition to the usual steps. In chronological order:
 
 	$ rm -rf ~/ecs-temp
 
+* 2015-12-11: pki file layout
+
+  The pki file layout has been changed. The following manual steps have
+  to be performed after the upgrade.
+
+	$ mv ~/ecs-ca ~/ecs-ca.bak
+	$ mkdir ~/ecs-ca
+	$ cp ~/ecs-ca.bak/{ca.cert.pem,private/ca.key.pem,crl.pem} ~/ecs-ca/
+
 --- Next release ---

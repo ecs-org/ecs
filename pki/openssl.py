@@ -2,130 +2,156 @@ import subprocess
 import os
 import tempfile
 import shutil
-import re
+from datetime import datetime
+from contextlib import contextmanager
+
+from django.conf import settings
+
+from ecs.pki.models import Certificate
 
 
-class CA(object):
-    def __init__(self, basedir, **kwargs):
-        self.basedir = basedir
-        self.certs = 'certs'
-        self.crl_dir = 'crl'
-        self.database = 'index.txt'
-        self.new_certs_dir = 'newcerts'
-        self.certificate = 'ca.cert.pem'
-        self.serial = 'serial'
-        self.crlnumber = 'crlnumber'
-        self.crl = 'crl.pem'
-        self.private_key = 'private/ca.key.pem'
-        self.default_days = 2 * 365
-        self.default_bits = 2048
-        self.config = 'openssl.cnf'
+CONF_TEMPLATE = '''
+[ ca ]
+default_ca  = CA_default
 
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        
-    def _exec(self, cmd):
-        return subprocess.check_output(['openssl'] + cmd)
-        
-    def _exec_ca(self, cmd):
-        return self._exec(['ca', '-config', self.config, '-batch'] + cmd)
+[ CA_default ]
+private_key = {ca_root}/ca.key.pem
+certificate = {ca_root}/ca.cert.pem
 
-    @property
-    def ca_key_path(self):
-        return os.path.join(self.basedir, self.private_key)
-        
-    @property
-    def crl_path(self):
-        return os.path.join(self.basedir, self.crl)
-        
-    @property
-    def ca_cert_path(self):
-        return os.path.join(self.basedir, self.certificate)
-        
-    def _gen_crl(self):
-        self._exec_ca(['-gencrl', '-crldays', '3650', '-out', self.crl_path])
+database    = {workdir}/index.txt
+serial      = {workdir}/serial
+crlnumber   = {workdir}/crlnumber
+new_certs_dir = {workdir}
 
-    def setup(self, subject, key_length=2048):
-        if not os.path.exists(os.path.join(self.basedir, 'private')):
-            for dirname in [self.certs, self.crl_dir, self.new_certs_dir]:
-                os.makedirs(os.path.join(self.basedir, dirname), 0755)
-            os.makedirs(os.path.join(self.basedir, 'private'), 0700)
-            open(os.path.join(self.basedir, self.database), 'a').close()
-            with open(os.path.join(self.basedir, self.crlnumber), 'w') as f:
-                f.write('01')
-            with open(os.path.join(self.basedir, self.serial), 'w') as f:
-                f.write('01')
-                
-        if not os.path.exists(self.ca_key_path):
-            self._exec(['genrsa', '-out', self.ca_key_path, str(key_length)])
-        if not os.path.exists(self.ca_cert_path):
-            self._exec(['req', '-batch', '-new', '-key', self.ca_key_path, '-x509', '-days', '3650', '-subj', subject, '-out', self.ca_cert_path])
-        if not os.path.exists(self.crl_path):
-            self._gen_crl()
-    
-    def get_fingerprint(self, cert):
-        return self._exec(['x509', '-noout', '-fingerprint', '-in', cert]).split('=')[1].strip()
-        
-    def get_serial(self, cert):
-        return self._exec(['x509', '-noout', '-serial', '-in', cert]).split('=')[1].strip()
-        
-    def get_hash(self, cert):
-        return self._exec(['x509', '-noout', '-hash', '-in', cert]).strip()
+default_md   = sha1
+preserve     = no
+policy       = policy_any
+default_days = 730
+default_bits = 2048
 
-    @property
-    def ca_fingerprint(self):
-        return self.get_fingerprint(self.ca_cert_path)
-        
-    def get_cert_path_for_fingerprint(self, fingerprint):
-        return os.path.join(self.basedir, self.certs, '%s.pem' % fingerprint.replace(':', ''))
-        
-    def make_cert(self, subject, pkcs12_file, key_length=None, days=None, passphrase=''):
-        workdir = tempfile.mkdtemp()
-        try:
-            key_file = os.path.join(workdir, 'key.pem')
-            csr_file = os.path.join(workdir, 'x.csr')
-            cert_file = os.path.join(workdir, 'cert.pem')
-            
-            # generate a key and a certificate signing request
-            self._exec(['genrsa', '-out', key_file])
-            self._exec(['req', '-batch', '-new', '-key', key_file, '-out', csr_file, '-subj', subject])
-            
-            # sign the request
-            to_be_signed = ['-in', csr_file, '-out', cert_file] 
-            if days:
-                to_be_signed += ['-days', str(days)]
-            self._exec_ca(to_be_signed)
-            
-            fingerprint = self.get_fingerprint(cert_file)
-            shutil.copyfile(cert_file, self.get_cert_path_for_fingerprint(fingerprint))
-            
-            # create a browser compatible certificate
-            self._exec(['pkcs12', '-export', '-clcerts', '-in', cert_file, '-inkey', key_file, '-out', pkcs12_file, '-passout', 'pass:%s' % passphrase])
-            return fingerprint
+[ policy_any ]
+countryName            = supplied
+stateOrProvinceName    = optional
+organizationName       = optional
+organizationalUnitName = optional
+commonName             = supplied
+emailAddress           = optional
+'''
 
-        finally:
-            shutil.rmtree(workdir)
 
-    def is_revoked(self, cert):
-        output = self._exec(['crl', '-text', '-noout', '-in', self.crl_path])
+@contextmanager
+def _workdir():
+    workdir = tempfile.mkdtemp()
+    try:
+        with open(os.path.join(workdir, 'openssl-ca.cnf'), 'w') as f:
+            f.write(CONF_TEMPLATE.format(
+                ca_root=settings.ECS_CA_ROOT, workdir=workdir))
 
-        serial_re = re.compile('^\s+Serial\sNumber\:\s+(\w+)')
-        lines = output.split('\n')
-        serial = self.get_serial(cert)
+        with open(os.path.join(workdir, 'index.txt'), 'w') as f:
+            now = datetime.now()
+            for cert in Certificate.objects.order_by('serial'):
+                status = 'V'
+                exp_ts = cert.expires_at.strftime('%y%m%d%H%M%SZ')
+                rev_ts = ''
+                serial = '{:02x}'.format(cert.serial)
+                if cert.revoked_at:
+                    status = 'R'
+                    rev_ts = cert.revoked_at.strftime('%y%m%d%H%M%SZ')
+                elif cert.expires_at < now:
+                    status = 'E'
 
-        for line in lines:
-            match = serial_re.match(line)
-            if match and match.group(1) == serial:
-                return True
-        return False
+                f.write('\t'.join([
+                    status, exp_ts, rev_ts, serial, 'unknown', cert.subject,
+                ]))
+                f.write('\n')
 
-    def revoke(self, cert):
-        if self.is_revoked(cert):
-            return False
-        self._exec_ca(['-revoke', cert])
-        self._gen_crl()
-        return True
+        yield workdir
+    finally:
+        shutil.rmtree(workdir)
 
-    def revoke_by_fingerprint(self, fingerprint):
-        return self.revoke(self.get_cert_path_for_fingerprint(fingerprint))
 
+def _exec(cmd):
+    return subprocess.check_output(['openssl'] + cmd)
+
+
+def _get_cert_data(cert):
+    out = _exec([
+        'x509', '-noout', '-in', cert,
+        '-fingerprint', '-serial', '-dates', '-subject',
+    ])
+    data = dict(line.split('=', 1) for line in out.rstrip('\n').split('\n'))
+    return {
+        'fingerprint': data.pop('SHA1 Fingerprint'),
+        'serial': int(data['serial'], 16),
+        'created_at': datetime.strptime(
+            data.pop('notBefore'), '%b %d %H:%M:%S %Y %Z'),
+        'expires_at': datetime.strptime(
+            data.pop('notAfter'), '%b %d %H:%M:%S %Y %Z'),
+        'subject': data['subject'].strip(),
+    }
+
+
+def setup(subject):
+    os.mkdir(settings.ECS_CA_ROOT)
+
+    ca_key_path = os.path.join(settings.ECS_CA_ROOT, 'ca.key.pem')
+    ca_cert_path = os.path.join(settings.ECS_CA_ROOT, 'ca.cert.pem')
+
+    _exec(['genrsa', '-out', ca_key_path, '2048'])
+    _exec([
+        'req', '-batch', '-new', '-key', ca_key_path, '-x509',
+        '-days', '3650', '-subj', subject, '-out', ca_cert_path,
+    ])
+    gen_crl()
+
+    fingerprint = _exec(
+        ['x509', '-noout', '-fingerprint', '-in', ca_cert_path]
+    ).split('=')[1].strip()
+    return fingerprint
+
+
+def make_cert(subject, pkcs12_file, days=None, passphrase=''):
+    with _workdir() as workdir:
+        with open(os.path.join(workdir, 'serial'), 'w') as f:
+            f.write('{:02x}'.format(Certificate.get_serial()))
+
+        key_file = os.path.join(workdir, 'key.pem')
+        csr_file = os.path.join(workdir, 'x.csr')
+        cert_file = os.path.join(workdir, 'cert.pem')
+
+        # generate a key and a certificate signing request
+        _exec(['genrsa', '-out', key_file])
+        _exec([
+            'req', '-batch', '-new', '-key', key_file, '-out', csr_file,
+            '-subj', subject,
+        ])
+
+        # sign the request
+        to_be_signed = [
+            'ca', '-batch', '-config', os.path.join(workdir, 'openssl-ca.cnf'),
+            '-in', csr_file, '-out', cert_file,
+        ]
+        if days:
+            to_be_signed += ['-days', str(days)]
+        _exec(to_be_signed)
+
+        # create a browser compatible certificate
+        _exec([
+            'pkcs12', '-export', '-clcerts', '-in', cert_file,
+            '-inkey', key_file, '-out', pkcs12_file,
+            '-passout', 'pass:{}'.format(passphrase),
+        ])
+        return _get_cert_data(cert_file)
+
+
+def gen_crl():
+    with _workdir() as workdir:
+        with open(os.path.join(workdir, 'crlnumber'), 'w') as f:
+            f.write('{:02x}'.format(Certificate.get_crlnumber()))
+
+        crl_path = os.path.join(settings.ECS_CA_ROOT, 'crl.pem')
+
+        _exec([
+            'ca', '-batch', '-config', os.path.join(workdir, 'openssl-ca.cnf'),
+            '-gencrl', '-crldays', '3650', '-out', crl_path,
+        ])
