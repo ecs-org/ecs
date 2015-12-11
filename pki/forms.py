@@ -15,9 +15,9 @@ class CertForm(forms.Form):
         queryset=User.objects.filter(is_active=True) if mandatory else User.objects.filter(is_active=True, ecs_profile__is_internal=True),
         widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': user_queryset_name}))
     )
-    cn = forms.CharField(required=False)
-    passphrase = forms.CharField(required=True, widget=forms.PasswordInput(), min_length=12)
-    passphrase2 = forms.CharField(required=True, widget=forms.PasswordInput())
+    cn = forms.CharField()
+    passphrase = forms.CharField(widget=forms.PasswordInput(), min_length=12)
+    passphrase2 = forms.CharField(widget=forms.PasswordInput())
     
     def clean(self):
         cd = super(CertForm, self).clean()
@@ -25,7 +25,7 @@ class CertForm(forms.Form):
         user = cd.get('user')
         if user:
             cn = cd.get('cn')
-            if Certificate.objects.filter(cn=cn, revoked_at=None).exists():
+            if Certificate.objects.filter(cn=cn).exists():
                 self._errors['cn'] = self.error_class([_('A certificate with this CN already exists.')])
 
         if cd.get('passphrase') != cd.get('passphrase2'):
