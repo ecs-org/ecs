@@ -80,12 +80,10 @@ def _exec(cmd):
 
 def _get_cert_data(cert):
     out = _exec([
-        'x509', '-noout', '-in', cert,
-        '-fingerprint', '-serial', '-dates', '-subject',
+        'x509', '-noout', '-in', cert, '-serial', '-dates', '-subject',
     ])
     data = dict(line.split('=', 1) for line in out.rstrip('\n').split('\n'))
     return {
-        'fingerprint': data.pop('SHA1 Fingerprint'),
         'serial': int(data['serial'], 16),
         'created_at': datetime.strptime(
             data.pop('notBefore'), '%b %d %H:%M:%S %Y %Z'),

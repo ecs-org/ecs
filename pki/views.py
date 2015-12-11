@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db.models import Count
+from django.template.defaultfilters import slugify
 
 from ecs.utils.viewutils import render, redirect_to_next_url
 from ecs.users.utils import user_group_required
@@ -40,7 +41,7 @@ def create_cert(request, user_pk=None):
             pkcs12 = tmp.read()
 
         response = HttpResponse(pkcs12, content_type='application/x-pkcs12')
-        filename = '{}.p12'.format(cert.fingerprint.replace(':', '-'))
+        filename = '{}.p12'.format(slugify(cert.cn))
         response['Content-Disposition'] = 'attachment;filename={}'.format(filename)
         return response
         

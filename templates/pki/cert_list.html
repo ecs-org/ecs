@@ -12,14 +12,12 @@
 <table class="cert_list">
     <tr>
         <th>User</th>
-        <th>Fingerprint</th>
         <th>CN</th>
         <th></th>
     </tr>
     {% for cert in certs %}
         <tr class="{% if cert.revoked_at %}revoked{% endif %}">
             <td>{{ cert.user }}</td>
-            <td style="font-family:monospace">{{ cert.fingerprint }}</td>
             <td>{{ cert.cn }}</td>
             <td>
                 {% if not cert.revoked_at %}
