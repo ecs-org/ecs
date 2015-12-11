@@ -23,7 +23,7 @@ serial      = {workdir}/serial
 crlnumber   = {workdir}/crlnumber
 new_certs_dir = {workdir}
 
-default_md   = sha1
+default_md   = sha256
 preserve     = no
 policy       = policy_any
 default_days = 730
