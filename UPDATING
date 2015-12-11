@@ -69,6 +69,6 @@ in addition to the usual steps. In chronological order:
 
 	$ mv ~/ecs-ca ~/ecs-ca.bak
 	$ mkdir ~/ecs-ca
-	$ cp ~/ecs-ca.bak/{ca.cert.pem,private/ca.key.pem,crl.pem} ~/ecs-ca/
+	$ cp ~/ecs-ca.bak/{ca.cert.pem,crl.pem} ~/ecs-ca/
 
 --- Next release ---

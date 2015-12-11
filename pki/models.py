@@ -44,3 +44,8 @@ class Certificate(models.Model):
 
         from ecs.pki import openssl
         openssl.gen_crl()
+
+
+class CertificateAuthority(models.Model):
+    key = models.TextField()
+    cert = models.TextField()

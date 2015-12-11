@@ -7,7 +7,7 @@ from contextlib import contextmanager
 
 from django.conf import settings
 
-from ecs.pki.models import Certificate
+from ecs.pki.models import Certificate, CertificateAuthority
 
 
 CONF_TEMPLATE = '''
@@ -15,7 +15,7 @@ CONF_TEMPLATE = '''
 default_ca  = CA_default
 
 [ CA_default ]
-private_key = {ca_root}/ca.key.pem
+private_key = {workdir}/ca.key.pem
 certificate = {ca_root}/ca.cert.pem
 
 database    = {workdir}/index.txt
@@ -65,6 +65,10 @@ def _workdir():
                 ]))
                 f.write('\n')
 
+        ca = CertificateAuthority.objects.get()
+        with open(os.path.join(workdir, 'ca.key.pem'), 'w') as f:
+            f.write(ca.key)
+
         yield workdir
     finally:
         shutil.rmtree(workdir)
@@ -92,22 +96,20 @@ def _get_cert_data(cert):
 
 
 def setup(subject):
-    os.mkdir(settings.ECS_CA_ROOT)
+    assert not CertificateAuthority.objects.exists()
 
-    ca_key_path = os.path.join(settings.ECS_CA_ROOT, 'ca.key.pem')
-    ca_cert_path = os.path.join(settings.ECS_CA_ROOT, 'ca.cert.pem')
+    key = _exec(['genrsa', '2048'])
 
-    _exec(['genrsa', '-out', ca_key_path, '2048'])
-    _exec([
-        'req', '-batch', '-new', '-key', ca_key_path, '-x509',
-        '-days', '3650', '-subj', subject, '-out', ca_cert_path,
-    ])
-    gen_crl()
+    p = subprocess.Popen([
+        'openssl', 'req', '-batch', '-new', '-key', '/dev/stdin', '-x509',
+        '-days', '3650', '-subj', subject,
+    ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
-    fingerprint = _exec(
-        ['x509', '-noout', '-fingerprint', '-in', ca_cert_path]
-    ).split('=')[1].strip()
-    return fingerprint
+    cert, err = p.communicate(key)
+    if p.returncode != 0:
+        raise subprocess.CalledProcessError(p.returncode, 'openssl')
+
+    CertificateAuthority.objects.create(key=key, cert=cert)
 
 
 def make_cert(subject, pkcs12_file, days=None, passphrase=''):

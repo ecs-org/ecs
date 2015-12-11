@@ -1,4 +1,5 @@
 def get_subject(cn, email):
+    # XXX: use sane data from settings instead
     subject_bits = (
         ('CN', cn),
         ('C', 'AT'),
