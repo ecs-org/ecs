@@ -40,6 +40,7 @@ def handle_download(request, doc):
         return HttpResponseForbidden()
 
     response = HttpResponse(doc.retrieve(request.user, 'download'))
+    response['Content-Type'] = doc.mimetype
     response['Content-Disposition'] = \
         'attachment;filename={}'.format(doc.get_filename())
     return response
@@ -77,6 +78,7 @@ def download_once(request, ref_key=None):
 
     doc = get_object_or_404(Document, pk=doc_id)
     response = HttpResponse(doc.retrieve(request.user, 'view'))
+    response['Content-Type'] = doc.mimetype
 
     # Disable browser caching, so the PDF won't end up on the users hard disk.
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
