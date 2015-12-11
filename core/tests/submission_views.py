@@ -174,6 +174,16 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
         self.failUnlessEqual(response.status_code, 200)
         
+    def test_submission_pdf(self):
+        '''Tests if a pdf can be produced out of a pre existing submissionform.
+        '''
+
+        submission_form = create_submission_form()
+        response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': submission_form.pdf_document.pk}))
+        self.failUnlessEqual(response.status_code, 200)
+        self.failUnlessEqual(response['Content-Type'], 'application/pdf')
+        self.failUnlessEqual(response.content[:4], '%PDF')
+
     def test_submission_form_search(self):
         '''Tests if all submissions are searchable via the keyword argument.
         Tests that the correct count of submissions is returned by the search function.
