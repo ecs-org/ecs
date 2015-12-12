@@ -3,7 +3,7 @@ BeautifulSoup==3.0.8
 Django==1.2.3
 Jinja2==2.6
 PyYAML==3.10
-South==0.7.2
+South==1.0.2
 Werkzeug==0.8.1
 Whoosh==2.3.2
 amqplib==1.0.2

@@ -7,7 +7,7 @@ docutils==0.8.1
 
 # django main
 Django==1.2.3
-South==0.7.2
+South<2.0
 django-piston==0.2.3
 django-extensions==0.8
 django-picklefield==0.1.9	# for docstash
