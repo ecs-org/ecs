@@ -26,6 +26,7 @@ class UserProfile(models.Model):
     is_resident_member = models.BooleanField(default=False)
     is_help_writer = models.BooleanField(default=False)
     is_testuser = models.BooleanField(default=False)
+    is_developer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
@@ -61,7 +62,7 @@ class UserProfile(models.Model):
             return False
 
     def has_explicit_workflow(self):
-        return self.user.groups.exclude(name__in=[u'External Reviewer', u'userswitcher_target', u'translators', u'sentryusers']).count() > 0
+        return self.user.groups.exclude(name__in=[u'External Reviewer', u'userswitcher_target', u'translators']).count() > 0
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')

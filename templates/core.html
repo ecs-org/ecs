@@ -80,7 +80,7 @@
           </ul>
         </li>
     {% endif %}
-    {% if user|has_flag:"is_internal" or user|has_perm:"sentry.can_view" %}
+    {% if user|has_flag:"is_internal" or user|has_flag:"is_developer" %}
         <li>
           <span class="togglers">{% trans "Administration" %}</span>
           <ul class="elements">
@@ -97,13 +97,10 @@
                           <li><a href="{% url ecs.pki.views.cert_list %}">{% trans 'PKI' %}</a></li>
                       {% endif %}
                 {% endif %}   
-                {% if user|has_perm:"sentry.can_view" %}
-                    <li><a href="/sentry">{% trans "Sentry ErrorLog" %}</a></li>
-                {% endif %}
           </ul>
         </li>
     {% endif %}
-    {% if debug and user|has_perm:"sentry.can_view" %}
+    {% if debug and user|has_flag:"is_developer" %}
       <li>
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">

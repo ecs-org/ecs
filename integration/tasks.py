@@ -1,11 +1,9 @@
 import logging
 
 from celery.signals import task_failure, worker_process_init
-from sentry.client.handlers import SentryHandler
 
 
 logger = logging.getLogger('task')
-logger.addHandler(SentryHandler())
 
 def process_failure_signal(exception, traceback, sender, task_id, signal, args, kwargs, einfo, **kw):
     exc_info = (type(exception), exception, traceback)

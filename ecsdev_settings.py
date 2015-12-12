@@ -47,7 +47,4 @@ if user in conf_dict.keys():
 
 if user in ['chipper',]:
     DEBUG = False                               # do not show django debug messages
-    TEMPLATE_DEBUG = True                       # but sentry does show template errors
     CELERY_SEND_TASK_ERROR_EMAILS = True        # send errors of tasks via email to admins
-
-

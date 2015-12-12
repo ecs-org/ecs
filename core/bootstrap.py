@@ -213,7 +213,6 @@ def auth_groups():
         u'GCP Review Group',
         u'userswitcher_target',
         u'translators',
-        u'sentryusers',
         u'External Reviewer',
         u'External Review Review Group',
         u'EC-Vote Preparation Group',
@@ -223,13 +222,6 @@ def auth_groups():
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
-
-    try:
-        p = Permission.objects.get_by_natural_key("can_view", "sentry", "groupedmessage")
-        g = Group.objects.get(name="sentryusers")
-        g.permissions.add(p)
-    except Permission.DoesNotExist:
-        print ("Warning: Sentry not active, therefore we can not add Permission to sentryusers")
 
 
 def medcategories():
@@ -327,7 +319,6 @@ def auth_user_developers():
         developers = ((u'John', u'Doe', u'developer@example.org', 'f'),)
 
     translators_group = _get_group('translators')
-    sentry_group = _get_group('sentryusers')
 
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
@@ -336,10 +327,10 @@ def auth_user_developers():
         user.is_staff = False
         user.is_superuser = False
         user.groups.add(translators_group)
-        user.groups.add(sentry_group)
         user.save()
         profile = user.get_profile()
         update_instance(profile, {
+            'is_developer': True,
             'is_help_writer': True,
             'forward_messages_after_minutes': 360,
             'gender': gender,

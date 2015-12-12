@@ -11,7 +11,7 @@ def readonly(methods=('GET', 'POST')):
     return decorator
 
 
-IGNORABLE_MODULES = ('sentry.models', 'django.contrib.sessions.models')
+IGNORABLE_MODULES = ('django.contrib.sessions.models')
 IGNORABLE_MODELS = (
     'ecs.users.models.UserSettings', 'ecs.users.models.LoginHistory',
     'ecs.documents.models.DownloadHistory',

@@ -74,12 +74,7 @@ if 'ecs.userswitcher' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^userswitcher/', include('ecs.userswitcher.urls')),
     )
-        
-if 'sentry' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
-        url(r'^sentry/', include('sentry.web.urls')),
-    )
-    
+
 if 'rosetta' in settings.INSTALLED_APPS:
     urlpatterns += patterns('',
         url(r'^rosetta/', include('rosetta.urls')),

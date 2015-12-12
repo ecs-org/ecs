@@ -165,17 +165,10 @@ INSTALLED_APPS = (
     'south',
     'django_nose',
     'djcelery',
-
     'ecs.utils.countries',
     'compressor',
     'dbtemplates',
     'haystack',
-
-    'paging',
-    'indexer',
-    'sentry',
-    'sentry.client',
-
     'reversion',
     'django_concurrent_test_server',
 
@@ -290,7 +283,7 @@ STORAGE_DECRYPT = {
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
-LIMITED_EMAIL_BACKEND = 'ecs.utils.emailbackends.SentryEmailBackend'    # used if ECSMAIL['filter_outgoing_smtp'] == True
+LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND     # used if ECSMAIL['filter_outgoing_smtp'] == True
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
@@ -360,9 +353,6 @@ COMPRESS_PRECOMPILERS = (
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
-# ### django-sentry ###
-SENTRY_TESTING = True # log exceptions when DEBUG=True
-
 
 # ### django-devserver ###
 DEVSERVER_MODULES = (
@@ -378,9 +368,6 @@ DEVSERVER_MODULES = (
 # settings override 
 ###################
 #these are local fixes, they default to a sane value if unset
-
-#ECS_DEVELOPER_TAB = True/False
-# default to True, Developer tab will be shown if user has sentry view permissions
 
 #ECS_USERSWITCHER = True/False
 # default to True, Userswitcher will be shown so user can switch to testusers quickly 
@@ -437,10 +424,6 @@ if 'ECS_USERSWITCHER' not in locals():
 
 if not ECS_USERSWITCHER:
     MIDDLEWARE_CLASSES = tuple(item for item in MIDDLEWARE_CLASSES if item != 'ecs.userswitcher.middleware.UserSwitcherMiddleware')
-
-# developer tab
-if 'ECS_DEVELOPER_TAB' not in locals():
-    ECS_DEVELOPER_TAB = True
 
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:
