@@ -1,5 +1,5 @@
 import random, itertools, math, os, time
-from celery.decorators import task, periodic_task
+from celery.task import task, periodic_task
 from celery.schedules import crontab
 
 from django.conf import settings
@@ -47,8 +47,8 @@ def _eval_timetable(metrics):
 
 @task()
 @transaction.commit_manually
-def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None, **kwargs):
-    logger = optimize_timetable_task.get_logger(**kwargs)
+def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None):
+    logger = optimize_timetable_task.get_logger()
     meeting = Meeting.objects.get(id=meeting_id)
     retval = False
     try:

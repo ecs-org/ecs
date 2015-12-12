@@ -1,4 +1,4 @@
-from celery.decorators import task
+from celery.task import task
 from celery.task.sets import subtask
 from celery.exceptions import MaxRetriesExceededError
 
@@ -6,8 +6,8 @@ from django.conf import settings
 from django.core import mail
 
 @task() # (max_retries= 3)
-def queued_mail_send(msgid, msg, from_email, recipient, callback=None, backend=None, **kwargs):
-    logger = queued_mail_send.get_logger(**kwargs)
+def queued_mail_send(msgid, msg, from_email, recipient, callback=None, backend=None):
+    logger = queued_mail_send.get_logger()
     logger.debug("queued mail deliver id %s, from %s, to %s, callback %s, msg %s" %
                 (msgid, from_email, recipient, str(callback), repr(msg)))
 

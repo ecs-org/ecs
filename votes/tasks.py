@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
 
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from celery.schedules import crontab
 
 from ecs.votes.models import Vote

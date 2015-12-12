@@ -3,7 +3,7 @@ import traceback
 import hashlib
 from datetime import datetime, timedelta
 
-from celery.decorators import task, periodic_task
+from celery.task import task, periodic_task
 from celery.task.sets import subtask
 from django.utils.translation import ugettext as _
 from django.core.mail import make_msgid
@@ -15,8 +15,8 @@ from ecs.utils.celeryutils import translate
 
 
 @task()
-def update_smtp_delivery(msgid, state, **kwargs):
-    logger = update_smtp_delivery.get_logger(**kwargs)
+def update_smtp_delivery(msgid, state):
+    logger = update_smtp_delivery.get_logger()
     logger.info('updating status of msg {0} to {1}'.format(msgid, state))
 
     updated = Message.objects.filter(rawmsg_msgid=msgid).update(smtp_delivery_state=state)
@@ -26,8 +26,8 @@ def update_smtp_delivery(msgid, state, **kwargs):
 
 @periodic_task(run_every=timedelta(minutes=1))
 @translate
-def forward_messages(**kwargs):
-    logger = forward_messages.get_logger(**kwargs)
+def forward_messages():
+    logger = forward_messages.get_logger()
     messages = Message.objects.filter(
         unread=True,
         smtp_delivery_state='new',

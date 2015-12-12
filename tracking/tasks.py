@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime
-from celery.decorators import periodic_task
+from celery.task import periodic_task
 from django.db.models import Count
 from django.contrib.auth.models import User
 from ecs.tracking.models import Request
@@ -16,4 +16,3 @@ def cleanup_requests():
     for user in User.objects.annotate(request_count=Count('requests')).filter(request_count__gt=MAX_REQUESTS_PER_USER):
         pivot = user.requests.order_by('-timestamp')[MAX_REQUESTS_PER_USER - 1]
         user.requests.filter(timestamp__lt=pivot.timestamp).delete()
-        

@@ -1,11 +1,11 @@
 from django.conf import settings
-from celery.decorators import task
+from celery.task import task
 
 from ecs.utils.testcases import EcsTestCase
 
 @task()
-def basic_test(**kwargs):
-    logger = basic_test.get_logger(**kwargs)
+def basic_test():
+    logger = basic_test.get_logger()
     logger.info("celery is running task, we write to the celery logger, and by the way, CELERY_ALWAYS_EAGER is %s" % str(settings.CELERY_ALWAYS_EAGER))
     return 'success'
 
