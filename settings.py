@@ -282,7 +282,7 @@ STORAGE_DECRYPT = {
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # used for devserver
+DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND     # used if ECSMAIL['filter_outgoing_smtp'] == True
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
@@ -354,17 +354,6 @@ COMPRESS_PRECOMPILERS = (
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
 
-# ### django-devserver ###
-DEVSERVER_MODULES = (
-    #'devserver.modules.sql.SQLRealTimeModule',
-    'devserver.modules.sql.SQLSummaryModule',
-    'devserver.modules.profile.ProfileSummaryModule',
-    # Modules not enabled by default
-    #'devserver.modules.ajax.AjaxDumpModule',
-    #'devserver.modules.profile.MemoryUseModule',
-    #'devserver.modules.cache.CacheSummaryModule',
-)
-
 # settings override 
 ###################
 #these are local fixes, they default to a sane value if unset
@@ -377,9 +366,6 @@ DEVSERVER_MODULES = (
 
 #ECS_WORDING = True/False defaults to False if empty
 # activates django-rosetta 
-
-#ECS_DEVSERVER = True/False defaults to False if empty
-# activates django-devserver replacement for manage.py runserver
 
 
 # use ecsdev settings if on node ecsdev.ep3.at
@@ -428,10 +414,6 @@ if not ECS_USERSWITCHER:
 # django rosetta activation
 if 'ECS_WORDING' in locals() and ECS_WORDING:
     INSTALLED_APPS +=('rosetta',) # anywhere
-
-# django-devserver activation
-if 'ECS_DEVSERVER' in locals() and ECS_DEVSERVER:
-    INSTALLED_APPS +=('devserver',) # anywhere
 
 # django-debug-toolbar activation
 if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
