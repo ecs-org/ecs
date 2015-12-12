@@ -15,11 +15,8 @@ django-dbtemplates==0.7.4
 python-memcached==1.48		# for caching
 
 # preprocessing, combining, compressing of js and css
-cssmin==0.1.4
-versiontools==1.8.2
-django-appconf==0.4.1
-django_compressor==1.1.1
-pyScss==1.0.8
+django_compressor<1.2
+pyScss
 
 # queuing: celery
 python-dateutil==1.5

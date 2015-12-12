@@ -356,12 +356,8 @@ HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only us
 
 # ### django_compressor ### 
 COMPRESS_ENABLED = True
-COMPRESS_PARSER = 'compressor.parser.HtmlParser'
-COMPRESS_JS_FILTERS = []
-#COMPRESS_CSS_FILTERS = ['compressor.filters.cssmin.CSSMinFilter']
-#COMPRESS_OUTPUT_DIR = "django_compressor"
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'pyscss -I {} {}'.format(os.path.join(MEDIA_ROOT, 'css'), "-o {outfile} {infile}")),
+    ('text/x-scss', 'pyscss -I {} -o {{outfile}} {{infile}}'.format(os.path.join(MEDIA_ROOT, 'css'))),
 )
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'

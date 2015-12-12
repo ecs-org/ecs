@@ -119,11 +119,11 @@
         }
 
         &.violates_constraint {
-            background-color: #ff0000 * 0.4 + 0.6 * #fff;
+            background-color: #ff0000 * 0.4 + #fff * 0.6;
         }
         
         &.has_ignored_participations{
-            background-color: #ff00ff * 0.4 + 0.6 * #fff;
+            background-color: #ff00ff * 0.4 + #fff * 0.6;
         }
 
         a.remove {
