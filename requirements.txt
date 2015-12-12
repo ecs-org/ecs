@@ -60,4 +60,4 @@ django-rosetta==0.6.2
 PyYAML==3.10
 
 # browser detection
-httpagentparser==1.7.0
+httpagentparser

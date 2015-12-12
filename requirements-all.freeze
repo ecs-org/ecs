@@ -34,7 +34,7 @@ django-templatetag-sugar==0.1
 docutils==0.12
 enum34==1.1.1
 guppy==0.1.9
-httpagentparser==1.7.0
+httpagentparser==1.7.8
 httplib2==0.7.3
 ipython==0.11
 kombu==1.5.1
