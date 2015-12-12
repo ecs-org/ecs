@@ -1,4 +1,4 @@
-psycopg2==2.4.1
+psycopg2<2.4.2
 pytz==2011n
 
 # python docutils, needed by django, ecs, and others
