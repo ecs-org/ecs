@@ -1,9 +1,8 @@
 psycopg2<2.4.2
-pytz==2011n
+pytz
 
 # python docutils, needed by django, ecs, and others
-roman==1.4.0
-docutils==0.8.1
+docutils
 
 # django main
 Django==1.2.3

@@ -31,7 +31,7 @@ django-reversion==1.3.3
 django-rosetta==0.6.2
 django-sentry==1.11.4
 django-templatetag-sugar==0.1
-docutils==0.8.1
+docutils==0.12
 enum34==1.1.1
 guppy==0.1.9
 httpagentparser==1.7.0
@@ -54,7 +54,7 @@ pysolr==2.0.15
 python-daemon==1.5.5
 python-dateutil==1.5
 python-memcached==1.48
-pytz==2011n
+pytz==2015.7
 roman==1.4.0
 six==1.10.0
 snakefood==1.4
