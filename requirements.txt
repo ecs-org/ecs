@@ -51,8 +51,7 @@ httplib2==0.7.3
 pysolr==2.0.15
 django-haystack==1.2.6
 
-# excel generation / xlwt
-xlwt==0.7.2
+xlwt	# excel generation
 
 # logging: django-sentry;
 django-templatetag-sugar==0.1
