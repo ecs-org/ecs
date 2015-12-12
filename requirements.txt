@@ -18,14 +18,8 @@ django_compressor<1.2
 pyScss
 
 # queuing: celery
-python-dateutil==1.5
-anyjson==0.3.1
-amqplib==1.0.2
-kombu==1.5.1
-pyparsing==1.5.6
-ordereddict==1.1
-celery==2.3.3
-django-celery==2.3.3
+celery<2.4
+django-celery<2.4
 
 # mail: ecsmail, communication: lamson mail server
 chardet==1.0.1

@@ -1,4 +1,3 @@
-import anyjson
 from functools import wraps
 
 from django.conf import settings

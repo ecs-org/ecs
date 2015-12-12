@@ -325,14 +325,12 @@ USE_TEXTBOXLIST = True
 
 # ### celery ### configuration defaults, uses memory transport and always eager
 # production environments should:
-#   clear BROKER_BACKEND (which defaults to "kombu.transport.pyamqplib.Transport"), 
 #   set BROKER_USER, PASSWORD, VHOST 
 BROKER_HOST = 'localhost'
 BROKER_PORT = 5672
 BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
-BROKER_BACKEND = 'kombu.transport.memory.Transport'
 CELERY_IMPORTS = (
     'ecs.core.tests.tasks',
     'ecs.meetings.tasks',

@@ -16,7 +16,6 @@ DATABASES['default'].update({
 BROKER_USER = '%(rabbitmq.username)s'
 BROKER_PASSWORD = '%(rabbitmq.password)s'
 BROKER_VHOST = '%(rabbitmq.username)s'
-BROKER_BACKEND = ''
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings

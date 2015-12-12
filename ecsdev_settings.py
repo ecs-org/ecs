@@ -21,8 +21,6 @@ if user in DBPWD_DICT:
     BROKER_USER = user
     BROKER_PASSWORD = DBPWD_DICT[user]
     BROKER_VHOST = user
-    BROKER_BACKEND = ''
-    CARROT_BACKEND = ''
     # use queueing 
     CELERY_ALWAYS_EAGER = False
 
