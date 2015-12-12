@@ -31,7 +31,7 @@ if %(debug.filter_smtp)s:
     ECSMAIL['filter_outgoing_smtp'] = True
 
 import sys
-if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
+if not any(word in sys.argv for word in set(['test', 'runserver'])):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 

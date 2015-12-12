@@ -39,7 +39,7 @@ if user in conf_dict.keys():
         'trusted_sources': ['127.0.0.1', '78.46.72.188'],
     }
 
-    if not any(word in sys.argv for word in set(['test', 'runserver','runconcurrentserver',])):
+    if not any(word in sys.argv for word in set(['test', 'runserver'])):
         EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
     ABSOLUTE_URL_PREFIX = "http://{0}".format(domain)

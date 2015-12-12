@@ -170,7 +170,6 @@ INSTALLED_APPS = (
     'dbtemplates',
     'haystack',
     'reversion',
-    'django_concurrent_test_server',
 
     'ecs.core',
     'ecs.checklists',
@@ -429,14 +428,13 @@ if 'test' in sys.argv:
     ECS_MANDATORY_CLIENT_CERTS = False
     INSTALLED_APPS += ('ecs.workflow.tests',)
 
-
-if any(word in sys.argv for word in set(['runserver','runconcurrentserver'])):
+if 'runserver' in sys.argv:
     EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
     
     logging.basicConfig(
-            level = logging.DEBUG,
-            format = '%(asctime)s %(levelname)s %(message)s',
-            )
+        level = logging.DEBUG,
+        format = '%(asctime)s %(levelname)s %(message)s',
+    )
 
 import djcelery
 djcelery.setup_loader()
