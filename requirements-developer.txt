@@ -1,8 +1,4 @@
-ipython==0.11
+ipython
+pyflakes
+pep8
 django-debug-toolbar==0.9.4
-
-# dependency generation for python programs
-snakefood==1.4
-
-# autopep8: A tool that automatically formats Python code to conform to the PEP 8 style guide
-autopep8==1.2.1
