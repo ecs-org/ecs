@@ -1,7 +1,6 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
 from ecs.utils.security import readonly
-from ecs.utils.viewutils import render
 from ecs.scratchpad.forms import ScratchPadForm
 from ecs.scratchpad.models import ScratchPad
 from ecs.core.models.submissions import Submission

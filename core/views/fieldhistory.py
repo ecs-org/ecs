@@ -1,12 +1,11 @@
 from django.http import Http404
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from reversion.models import Version
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
-from ecs.utils.viewutils import render
 from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required
 from ecs.core.diff import word_diff

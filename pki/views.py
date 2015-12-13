@@ -1,6 +1,6 @@
 import tempfile
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db.models import Count
 from django.template.defaultfilters import slugify
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_group_required
 
 from ecs.pki.forms import CertForm

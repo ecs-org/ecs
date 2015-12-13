@@ -15,9 +15,9 @@ from django.core.urlresolvers import reverse
 from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
+from django.shortcuts import render
 
 from ecs.utils import forceauth
-from ecs.utils.viewutils import render
 
 from ecs.users.utils import sudo, user_group_required
 from ecs.documents.models import Document, DocumentType

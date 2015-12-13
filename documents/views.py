@@ -1,13 +1,12 @@
 from urllib import urlencode
 from uuid import uuid4
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 
-from ecs.utils.viewutils import render
 from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
 from ecs.utils.security import readonly

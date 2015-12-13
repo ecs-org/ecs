@@ -1,7 +1,8 @@
 from datetime import datetime
 
+from django.shortcuts import render
+
 from ecs.users.utils import user_flag_required
-from ecs.utils.viewutils import render
 from ecs.core.models import SubmissionForm
 from ecs.statistics.stats import collect_submission_stats_for_year
 

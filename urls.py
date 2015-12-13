@@ -2,8 +2,9 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
+from django.shortcuts import render
+
 from ecs.utils import forceauth
-from ecs.utils.viewutils import render
 
 # stuff that needs called at the beginning, but not in settings.py
 admin.autodiscover()

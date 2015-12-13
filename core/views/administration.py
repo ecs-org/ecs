@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django.shortcuts import render
+
 from ecs.core.models import AdvancedSettings, EthicsCommission
 from ecs.core.forms import AdvancedSettingsForm, EthicsCommissionFormSet
-from ecs.utils.viewutils import render
 from ecs.users.utils import user_flag_required, user_group_required
 
 

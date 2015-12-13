@@ -11,7 +11,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.decorators import developer
@@ -20,7 +20,6 @@ from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.viewutils import render
 from ecs.tasks.models import Task
 
 from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistPayment

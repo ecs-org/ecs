@@ -12,9 +12,6 @@ def render_html(request, template, context):
         template = loader.get_template(template)
     return template.render(RequestContext(request, context))
 
-def render(request, template, context, mimetype=None):
-    return HttpResponse(render_html(request, template, context), mimetype=mimetype)
-
 def redirect_to_next_url(request, default_url=None):
     next = request.REQUEST.get('next')
     if not next or '//' in next:

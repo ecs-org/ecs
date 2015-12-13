@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
-from ecs.utils.viewutils import render, JSONResponse
+from ecs.utils.viewutils import JSONResponse
 from ecs.users.utils import user_flag_required
 from ecs.boilerplate.models import Text
 from ecs.boilerplate.forms import TextForm

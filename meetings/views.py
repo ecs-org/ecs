@@ -8,7 +8,7 @@ import os.path
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.core.urlresolvers import reverse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
@@ -19,7 +19,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
 from django.db.models import Q
 
-from ecs.utils.viewutils import render, render_html, pdf_response
+from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, ExpeditedReviewCategory
 from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC

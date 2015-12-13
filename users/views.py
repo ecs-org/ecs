@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import random
 
 from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -17,7 +17,7 @@ from django.views.decorators.http import require_POST
 
 from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
-from ecs.utils.viewutils import render, render_html
+from ecs.utils.viewutils import render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.utils.security import readonly
 from ecs.ecsmail.utils import deliver

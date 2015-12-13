@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
@@ -14,7 +14,7 @@ from ecs.users.utils import user_group_required, user_flag_required
 from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.utils.viewutils import render, render_html, render_pdf, pdf_response
+from ecs.utils.viewutils import render_html, render_pdf, pdf_response
 from ecs.utils.security import readonly
 
 

@@ -1,5 +1,6 @@
-from ecs.utils.viewutils import render
+from django.shortcuts import render
 from django.core.urlresolvers import reverse
+
 from ecs.utils.security import readonly
 
 

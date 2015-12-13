@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.template import Context, loader
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
@@ -8,7 +8,7 @@ from django.utils.translation import ugettext as _
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.core import paper_forms
-from ecs.utils.viewutils import render, render_pdf_context, pdf_response
+from ecs.utils.viewutils import render_pdf_context, pdf_response
 from ecs.core import bootstrap
 from ecs.users.utils import sudo
 from ecs.notifications.models import Notification, NotificationAnswer

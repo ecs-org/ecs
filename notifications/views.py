@@ -3,12 +3,12 @@ from uuid import uuid4
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.template import loader
-from django.shortcuts import get_object_or_404
+from django.template import loader, RequestContext
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.db import models
 
-from ecs.utils.viewutils import render, render_html, render_pdf, redirect_to_next_url
+from ecs.utils.viewutils import render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash_transaction
 from ecs.docstash.models import DocStash
@@ -46,10 +46,10 @@ def open_notifications(request):
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
-    return render(request, tpl, {
+    return HttpResponse(tpl.render(RequestContext(request, {
         'documents': notification.documents.order_by('doctype__identifier', 'version', 'date'),
         'notification': notification,
-    })
+    })))
 
 
 @readonly()

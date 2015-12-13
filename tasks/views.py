@@ -4,11 +4,11 @@ import random
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import HttpResponseRedirect, Http404, QueryDict
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.http import require_POST
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission

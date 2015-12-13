@@ -3,7 +3,7 @@ import tempfile
 from datetime import datetime
 from base64 import b64decode
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.core.files import File
@@ -16,7 +16,7 @@ from haystack.utils import Highlighter
 
 from reversion import revision
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import redirect_to_next_url
 from ecs.tracking.models import View
 from ecs.users.utils import user_flag_required
 from ecs.help.models import Page, Attachment

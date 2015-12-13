@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
-from ecs.utils.viewutils import render, redirect_to_next_url
+from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.communication.models import Thread
