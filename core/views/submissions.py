@@ -4,10 +4,10 @@ import tempfile
 import re
 import json
 
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q
 from django.utils.translation import ugettext as _
@@ -100,7 +100,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
             with docstash.transaction():
                 sf = docstash.get('extra', {}).get('old_submission_form')
                 if sf and sf.submission == submission_form.submission and docstash['type_id'] == notification_type_pk:
-                    return HttpResponseRedirect(reverse('ecs.notifications.views.create_notification', kwargs={'docstash_key': docstash.key, 'notification_type_pk': notification_type_pk}))
+                    return redirect('ecs.notifications.views.create_notification', docstash_key=docstash.key, notification_type_pk=notification_type_pk)
 
         docstash, created = DocStash.objects.get_or_create(
             group='ecs.core.views.submissions.create_submission_form',
@@ -124,20 +124,20 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         if delete:
             submission_form.submission.delete()
 
-    return HttpResponseRedirect(reverse('ecs.core.views.create_submission_form', kwargs={'docstash_key': docstash.key}))
+    return redirect('ecs.core.views.create_submission_form', docstash_key=docstash.key)
 
 
 @readonly()
 def copy_latest_submission_form(request, submission_pk=None, **kwargs):
     submission = get_object_or_404(Submission, pk=submission_pk)
     kwargs['submission_form_pk'] = submission.newest_submission_form.pk
-    return HttpResponseRedirect(reverse('ecs.core.views.copy_submission_form', kwargs=kwargs))
+    return redirect('ecs.core.views.copy_submission_form', **kwargs)
 
 
 @readonly()
 def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission.current_submission_form.pk}))
+    return redirect('readonly_submission_form', submission_form_pk=submission.current_submission_form.pk)
 
 CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview)
 
@@ -273,7 +273,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     with sudo():
         task = get_object_or_404(Task, pk=task_pk)
     task.mark_deleted()
-    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return redirect('readonly_submission_form', submission_form_pk=submission_form_pk)
 
 
 @user_group_required('EC-Executive Board Group')
@@ -320,7 +320,7 @@ def paper_submission_review(request, submission_pk=None):
     task = submission.paper_submission_review_task
     if not task.assigned_to == request.user:
         task.accept(request.user)
-        return HttpResponseRedirect(reverse('ecs.core.views.paper_submission_review', kwargs={'submission_pk': submission_pk}))
+        return redirect('ecs.core.views.paper_submission_review', submission_pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
@@ -330,7 +330,7 @@ def befangene_review(request, submission_form_pk=None):
     form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
     if request.method == 'POST' and form.is_valid():
         form.save()
-        return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
+        return redirect('readonly_submission_form', submission_form_pk=submission_form.pk)
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
 
@@ -356,7 +356,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     checklist.save()
     with sudo():
         Task.objects.for_data(checklist).exclude(closed_at__isnull=False).mark_deleted()
-    return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form_pk}))
+    return redirect('readonly_submission_form', submission_form_pk=submission_form_pk)
 
 
 @task_required
@@ -364,7 +364,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     if request.method == 'GET' and not submission_form.is_current:
-        return HttpResponseRedirect(reverse('ecs.core.views.checklist_review', kwargs={'submission_form_pk': submission_form.submission.current_submission_form.pk, 'blueprint_pk': blueprint_pk}))
+        return redirect('ecs.core.views.checklist_review', submission_form_pk=submission_form.submission.current_submission_form.pk, blueprint_pk=blueprint_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     related_task = request.related_tasks[0]
 
@@ -420,7 +420,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 if checklist.blueprint.allow_pdf_download:
                     checklist.render_pdf()
                 related_task.done(request.user)
-                return HttpResponseRedirect(related_task.afterlife_url)
+                return redirect(related_task.afterlife_url)
             elif complete_task and checklist.is_complete:
                 extra_context['review_complete'] = checklist.pk
 
@@ -536,7 +536,7 @@ def upload_document_for_submission(request):
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def delete_document_from_submission(request):
     delete_document(request, int(request.GET['document_pk']))
-    return HttpResponseRedirect(reverse('ecs.core.views.upload_document_for_submission', kwargs={'docstash_key': request.docstash.key}))
+    return redirect('ecs.core.views.upload_document_for_submission', docstash_key=request.docstash.key)
 
 @with_docstash_transaction
 def create_submission_form(request):
@@ -635,12 +635,11 @@ def create_submission_form(request):
             on_study_submit.send(Submission, submission=submission, form=submission_form, user=request.user)
 
             if notification_type:
-                return HttpResponseRedirect(reverse('ecs.notifications.views.create_diff_notification', kwargs={
-                    'submission_form_pk': submission_form.pk,
-                    'notification_type_pk': notification_type.pk,
-                }))
+                return redirect('ecs.notifications.views.create_diff_notification',
+                    submission_form_pk=submission_form.pk,
+                    notification_type_pk=notification_type.pk)
 
-            return HttpResponseRedirect(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.submission.current_submission_form.pk}))
+            return redirect('readonly_submission_form', submission_form_pk=submission_form.submission.current_submission_form.pk)
 
     context = {
         'form': form,
@@ -677,9 +676,9 @@ def change_submission_presenter(request, submission_pk=None):
             user=request.user,
         )
         if request.user == previous_presenter:
-            return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
+            return redirect('ecs.dashboard.views.view_dashboard')
         else:
-            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
+            return redirect('view_submission', submission_pk=submission.pk)
 
     return render(request, 'submissions/change_presenter.html', {'form': form, 'submission': submission})
 
@@ -705,9 +704,9 @@ def change_submission_susar_presenter(request, submission_pk=None):
             user=request.user,
         )
         if request.user == previous_susar_presenter:
-            return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
+            return redirect('ecs.dashboard.views.view_dashboard')
         else:
-            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
+            return redirect('view_submission', submission_pk=submission.pk)
 
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission})
 
@@ -890,7 +889,7 @@ def all_submissions(request):
         except IndexError:
             pass
         else:
-            return HttpResponseRedirect(reverse('view_submission', kwargs={'submission_pk': submission.pk}))
+            return redirect('view_submission', submission_pk=submission.pk)
 
     submissions_q = None
     extra_context = {'keyword': keyword}
@@ -1015,7 +1014,7 @@ def catalog(request, year=None):
                 year = today.year
                 years = [today]
 
-            return HttpResponseRedirect(reverse('ecs.core.views.submissions.catalog', kwargs={'year': year}))
+            return redirect('ecs.core.views.submissions.catalog', year=year)
         else:
             year = int(year)
         votes = votes.filter(published_at__year=int(year))
@@ -1078,7 +1077,7 @@ def grant_temporary_access(request, submission_pk=None):
         temp_auth = form.save(commit=False)
         temp_auth.submission = submission
         temp_auth.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
+    return redirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
 
 
 @user_flag_required('is_executive_board_member')
@@ -1086,4 +1085,4 @@ def revoke_temporary_access(request, submission_pk=None, temp_auth_pk=None):
     temp_auth = get_object_or_404(TemporaryAuthorization, pk=temp_auth_pk)
     temp_auth.end = datetime.now()
     temp_auth.save()
-    return HttpResponseRedirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
+    return redirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')

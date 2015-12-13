@@ -1,8 +1,8 @@
 from urllib import urlencode
 from uuid import uuid4
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, Http404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -62,7 +62,7 @@ def view_document(request, document_pk=None, page=None):
         settings.STATIC_URL, params)
     if page:
         url = '{}#page={}'.format(url, int(page))
-    return HttpResponseRedirect(url)
+    return redirect(url)
 
 
 @readonly()

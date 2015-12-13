@@ -1,7 +1,6 @@
 from django.utils.functional import wraps
-from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import get_object_or_404
+from django.http import Http404
+from django.shortcuts import redirect, get_object_or_404
 
 from ecs.docstash.models import DocStash
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
@@ -15,7 +14,7 @@ def with_docstash_transaction(*args, **kwargs):
             if not docstash_key:
                 docstash = DocStash.objects.create(group=view_name, owner=request.user)
                 kwargs['docstash_key'] = docstash.key
-                response = HttpResponseRedirect(reverse(view_name, kwargs=kwargs))
+                response = redirect(view_name, **kwargs)
             else:
                 docstash = get_object_or_404(DocStash, group=view_name, owner=request.user, key=docstash_key)
                 request.docstash = docstash

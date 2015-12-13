@@ -3,8 +3,8 @@ import random
 
 from django.core.urlresolvers import reverse
 from django.db.models import Q
-from django.http import HttpResponseRedirect, Http404, QueryDict
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, QueryDict
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.http import require_POST
 
@@ -48,7 +48,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         usersettings.task_filter = filterform.urlencode()
         usersettings.save()
         if len(request.GET.values()) > 0:
-            return HttpResponseRedirect(request.path)
+            return redirect(request.path)
 
     sortings = {
         'deadline': 'workflow_token__deadline',
@@ -245,7 +245,7 @@ def reopen_task(request, task_pk=None):
     if not task.node_controller.is_repeatable():
         raise Http404()
     new_task = task.reopen(user=request.user)
-    return HttpResponseRedirect(new_task.url)
+    return redirect(new_task.url)
 
 def do_task(request, task_pk=None):
     task = get_object_or_404(Task, assigned_to=request.user, pk=task_pk)
@@ -254,4 +254,4 @@ def do_task(request, task_pk=None):
         url = task.afterlife_url
         if url is None:
             raise Http404()
-    return HttpResponseRedirect(url)
+    return redirect(url)

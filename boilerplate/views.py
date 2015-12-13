@@ -1,6 +1,4 @@
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 
 from ecs.utils.viewutils import JSONResponse
 from ecs.users.utils import user_flag_required
@@ -29,7 +27,7 @@ def edit_boilerplate(request, text_pk=None):
         text = form.save(commit=False)
         text.author = request.user
         text.save()
-        return HttpResponseRedirect(reverse('ecs.boilerplate.views.list_boilerplate'))
+        return redirect('ecs.boilerplate.views.list_boilerplate')
     
     return render(request, 'boilerplate/form.html', {
         'text': text,
@@ -41,7 +39,7 @@ def edit_boilerplate(request, text_pk=None):
 def delete_boilerplate(request, text_pk=None):
     text = get_object_or_404(Text, pk=text_pk)
     text.delete()
-    return HttpResponseRedirect(reverse('ecs.boilerplate.views.list_boilerplate'))
+    return redirect('ecs.boilerplate.views.list_boilerplate')
     
 
 @readonly()

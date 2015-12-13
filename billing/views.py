@@ -5,13 +5,10 @@ from decimal import Decimal
 from StringIO import StringIO
 import math
 
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.db.models import Q
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.utils.decorators import developer
@@ -19,7 +16,7 @@ from ecs.users.utils import user_group_required, sudo
 from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
-from ecs.documents.models import Document, DocumentType
+from ecs.documents.models import Document
 from ecs.tasks.models import Task
 
 from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistPayment
@@ -161,7 +158,7 @@ def submission_billing(request):
         invoice = Invoice.objects.create(document=doc)
         invoice.submissions = selected_fee + selected_remission
         
-        return HttpResponseRedirect(reverse('ecs.billing.views.view_invoice', kwargs={'invoice_pk': invoice.pk}))
+        return redirect('ecs.billing.views.view_invoice', invoice_pk=invoice.pk)
 
     return render(request, 'billing/submissions.html', {
         'submissions': unbilled_submissions,
@@ -191,7 +188,7 @@ def invoice_list(request):
 @developer
 def reset_external_review_payment(request):
     ChecklistBillingState.objects.update(billed_at=None)
-    return HttpResponseRedirect(reverse('ecs.billing.views.external_review_payment'))
+    return redirect('ecs.billing.views.external_review_payment')
 
 @readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Group')
@@ -244,7 +241,7 @@ def external_review_payment(request):
         payment = ChecklistPayment.objects.create(document=doc)
         payment.checklists = selected_for_payment
 
-        return HttpResponseRedirect(reverse('ecs.billing.views.view_checklist_payment', kwargs={'payment_pk': payment.pk}))
+        return redirect('ecs.billing.views.view_checklist_payment', payment_pk=payment.pk)
 
     return render(request, 'billing/external_review.html', {
         'checklists': checklists,

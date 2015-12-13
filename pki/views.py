@@ -1,8 +1,8 @@
 import tempfile
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db.models import Count
@@ -55,7 +55,7 @@ def create_cert(request, user_pk=None):
 def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
     cert.revoke()
-    return HttpResponseRedirect(reverse('ecs.pki.views.cert_list'))
+    return redirect('ecs.pki.views.cert_list')
 
 
 def authenticate(request):

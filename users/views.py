@@ -3,8 +3,8 @@ import time
 from datetime import datetime, timedelta
 import random
 
-from django.http import Http404, HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.http import Http404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.conf import settings
@@ -63,7 +63,7 @@ def login(request, *args, **kwargs):
                 url = reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
             except Page.DoesNotExist:
                 url = reverse('ecs.help.views.index')
-            return HttpResponseRedirect(url)
+            return redirect(url)
         elif request.ua.is_tmp_unsupported:
             return render(request, 'browser_temporarily_unsupported.html', {})
 
@@ -229,7 +229,7 @@ def edit_profile(request):
     
     if form.is_valid():
         form.save()
-        return HttpResponseRedirect(reverse('ecs.users.views.profile'))
+        return redirect('ecs.users.views.profile')
         
     return render(request, 'users/profile_form.html', {
         'form': form,
@@ -244,7 +244,7 @@ def notify_return(request):
     profile = request.user.get_profile()
     profile.is_indisposed = False
     profile.save()
-    return HttpResponseRedirect(reverse('ecs.users.views.profile'))
+    return redirect('ecs.users.views.profile')
 
 
 @readonly(methods=['GET'])
@@ -258,7 +258,7 @@ def indisposition(request, user_pk=None):
         profile = user.get_profile()
         if profile.is_indisposed:
             send_system_message_template(profile.communication_proxy, _('{user} indisposed').format(user=user), 'users/indisposed_proxy.txt', {'user': user})
-        return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+        return redirect('ecs.users.views.administration')
 
     return render(request, 'users/indisposition.html', {
         'profile_user': user,
@@ -276,7 +276,7 @@ def toggle_active(request, user_pk=None):
         user.is_active = True
 
     user.save()
-    return HttpResponseRedirect(reverse('ecs.users.views.administration'))
+    return redirect('ecs.users.views.administration')
 
 
 @readonly(methods=['GET'])
@@ -345,7 +345,7 @@ def administration(request, limit=20):
     paginator = Paginator(users, limit, allow_empty_first_page=True)
     try:
         users = paginator.page(int(filterform.cleaned_data['page']))
-    except EmptyPage, InvalidPage:
+    except (EmptyPage, InvalidPage):
         users = paginator.page(1)
         filterform.cleaned_data['page'] = 1
         filterform = AdministrationFilterForm(filterform.cleaned_data)
@@ -398,7 +398,7 @@ def invite(request):
             if user.groups.filter(name=u'EC-Signing Group').exists():
                 for u in User.objects.filter(groups__name=u'EC-Signing Group'):
                     send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
-            return HttpResponseRedirect(reverse('ecs.users.views.details', kwargs={'user_pk': user.pk}))
+            return redirect('ecs.users.views.details', user_pk=user.pk)
 
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,
@@ -427,7 +427,7 @@ def accept_invitation(request, invitation_uuid=None):
         invitation.save()
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)
-        return HttpResponseRedirect(reverse('ecs.users.views.edit_profile'))
+        return redirect('ecs.users.views.edit_profile')
 
     return render(request, 'users/invitation/set_password_form.html', {
         'form': form,

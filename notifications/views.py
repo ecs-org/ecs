@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from uuid import uuid4
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import loader, RequestContext
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.db import models
 
@@ -87,7 +87,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
             }
         })
         docstash.name = u"%s für %s" % (notification_type.name, old_submission_form)
-    return HttpResponseRedirect(reverse('ecs.notifications.views.create_notification', kwargs={'docstash_key': docstash.key, 'notification_type_pk': notification_type.pk}))
+    return redirect('ecs.notifications.views.create_notification', docstash_key=docstash.key, notification_type_pk=notification_type.pk)
 
 
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
@@ -105,7 +105,7 @@ def upload_document_for_notification(request):
 @with_docstash_transaction(group='ecs.notifications.views.create_notification')
 def delete_document_from_notification(request):
     delete_document(request, int(request.GET['document_pk']))
-    return HttpResponseRedirect(reverse('ecs.notifications.views.upload_document_for_notification', kwargs={'docstash_key': request.docstash.key}))
+    return redirect('ecs.notifications.views.upload_document_for_notification', docstash_key=request.docstash.key)
 
 @tracking_hint(vary_on=['notification_type_pk'])
 @with_docstash_transaction
@@ -145,7 +145,7 @@ def create_notification(request, notification_type_pk=None):
             
             on_notification_submit.send(type(notification), notification=notification)
 
-            return HttpResponseRedirect(reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': notification.pk}))
+            return redirect('ecs.notifications.views.view_notification', notification_pk=notification.pk)
             
 
     return render(request, 'notifications/form.html', {

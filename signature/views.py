@@ -10,17 +10,16 @@ from datetime import datetime
 from tempfile import TemporaryFile
 
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.core.files.base import ContentFile
 from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from ecs.utils import forceauth
 
 from ecs.users.utils import sudo, user_group_required
-from ecs.documents.models import Document, DocumentType
+from ecs.documents.models import Document
 from ecs.utils.pdfutils import pdf_barcodestamp
 from ecs.tasks.models import Task
 
@@ -59,7 +58,7 @@ def init_batch_sign(request, task, data_func):
     tasks += list(_get_tasks(request.user).filter(task_type__workflow_node__uid=task.task_type.workflow_node.uid).exclude(pk=task.pk).order_by('created_at').values_list('pk', flat=True))
     sign_session = SigningData(tasks=tasks, data_func=data_func)
     sign_session.store(hours=1)
-    return HttpResponseRedirect(reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': sign_session.id}))
+    return redirect('ecs.signature.views.batch_sign', sign_session_id=sign_session.id)
 
 
 @user_group_required("EC-Signing Group")
@@ -67,7 +66,7 @@ def init_batch_sign(request, task, data_func):
 def batch_sign(request):
     tasks = request.sign_session['tasks']
     if not tasks:
-        return HttpResponseRedirect(reverse('ecs.dashboard.views.view_dashboard'))
+        return redirect('ecs.dashboard.views.view_dashboard')
 
     task = _get_tasks(request.user).get(pk=tasks[0])
     data = request.sign_session['data_func'](request, task)
@@ -102,7 +101,7 @@ def batch_action(request, action=None):
     url = reverse('ecs.dashboard.views.view_dashboard')
     if action in ['retry', 'skip', 'pushback']:
         url = reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': request.sign_session.id})
-    return HttpResponseRedirect(url)
+    return redirect(url)
 
 
 @user_group_required("EC-Signing Group")
@@ -118,7 +117,7 @@ def sign(request, sign_data, force_mock=False, force_fail=False):
         return sign_receive(request, pdf_id=sign_data.id, mock=mock)
 
     url = get_pdfas_url(request, sign_data)
-    return HttpResponseRedirect(url)
+    return redirect(url)
 
 # FIXME allow only from same host as server
 @csrf_exempt
@@ -187,7 +186,7 @@ def sign_receive(request, mock=False):
         request.sign_data.delete()
         if request.sign_session:
             url = reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': request.sign_session.id})
-        return HttpResponseRedirect(url)
+        return redirect(url)
 
 
 @user_group_required("EC-Signing Group")

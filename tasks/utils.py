@@ -1,6 +1,7 @@
 from functools import wraps
 
-from django.http import HttpResponseForbidden, HttpResponseRedirect, QueryDict
+from django.shortcuts import redirect
+from django.http import HttpResponseForbidden, QueryDict
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 
@@ -120,5 +121,5 @@ class TaskManagementData(object):
                         url = reverse('ecs.tasks.views.task_list')
                     else:
                         url = reverse('ecs.dashboard.views.view_dashboard')
-            return HttpResponseRedirect(url)
+            return redirect(url)
         return response

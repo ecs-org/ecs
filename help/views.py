@@ -3,8 +3,8 @@ import tempfile
 from datetime import datetime
 from base64 import b64decode
 
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
@@ -27,7 +27,7 @@ from ecs.utils import forceauth
 
 
 def redirect_to_page(page):
-    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+    return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
 
 @forceauth.exempt
@@ -59,14 +59,14 @@ def find_help(request, view_pk=None, anchor=''):
                 'anchor': anchor,
                 'pages': pages,
             })
-    return HttpResponseRedirect(reverse('ecs.help.views.index'))
+    return redirect('ecs.help.views.index')
 
 
 @forceauth.exempt
 def index(request):
     try:
         page = Page.objects.get(slug='index')
-        return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+        return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
     except Page.DoesNotExist:
         pass
     return render(request, 'help/index.html', {
@@ -92,21 +92,21 @@ def ready_for_review(request, page_pk=None):
     page.review_status = 'ready_for_review'
     page.save()
     # TODO: create trac testing ticket
-    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+    return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
 @user_flag_required('is_help_writer')
 def review_ok(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
     page.review_status = 'review_ok'
     page.save()
-    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+    return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
 @user_flag_required('is_help_writer')
 def review_fail(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
     page.review_status = 'review_fail'
     page.save()
-    return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+    return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
 @user_flag_required('is_help_writer')
 def review_overview(request):
@@ -151,7 +151,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
                 index.save()
             except Page.DoesNotExist:
                 pass
-        return HttpResponseRedirect(reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk}))
+        return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
     return render(request, 'help/edit_page.html', {
         'page': page,
@@ -218,7 +218,7 @@ def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
     revision.user = request.original_user if hasattr(request, "original_user") else request.user
-    return HttpResponseRedirect(reverse('ecs.help.views.index'))
+    return redirect('ecs.help.views.index')
 
 
 @user_flag_required('is_help_writer')
