@@ -28,7 +28,7 @@ class SubmissionQFactory(authorization.QFactory):
             return self.make_q()
 
         q = self.make_q(id__in=
-            MySubmission.objects.filter(user=user).values('submission_id'))
+            MySubmission.objects.filter(user_id=user.id).values('submission_id'))
         
         ### explicit temporary permissions
         q |= self.make_q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id').query)

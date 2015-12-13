@@ -275,8 +275,8 @@ class Submission(models.Model):
 
 
 class MySubmission(models.Model):
-    user = models.ForeignKey(User, related_name='+')
-    submission = models.ForeignKey(Submission, related_name='+')
+    user_id = models.IntegerField()
+    submission_id = models.IntegerField()
 
     class Meta:
         app_label = 'core'
