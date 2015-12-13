@@ -15,7 +15,8 @@ class RelatedTasksMiddleware(object):
                 yield t
 
     def process_request(self, request):
-        if not request.user.is_authenticated() or request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
+        if not request.user.is_authenticated() or request.is_ajax() or \
+            request.path.startswith(settings.STATIC_URL):
             return
 
         request.related_tasks = LazyList(self._get_related_tasks, request)

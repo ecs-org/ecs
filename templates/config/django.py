@@ -1,5 +1,4 @@
 DEBUG = %(debug.enable)s
-TEMPLATE_DEBUG = %(debug.template)s
 
 # database settings
 DATABASES['default'].update({
@@ -19,7 +18,7 @@ BROKER_VHOST = '%(rabbitmq.username)s'
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings
-HAYSTACK_SEARCH_ENGINE = '%(haystack.search_engine)s'
+HAYSTACK_CONNECTIONS['default']['ENGINE'] = '%(haystack.search_engine)s'
 
 # multiprocess safe cache settings
 CACHE_BACKEND = 'memcached://127.0.0.1:11211/'

@@ -125,8 +125,8 @@ import reversion
 reversion.register(Page)
 
 def _post_page_delete(sender, **kwargs):
-    from haystack import site
-    site.get_index(Page).remove_object(kwargs['instance'])
+    from ecs.help.search_indexes import HelpPageIndex
+    HelpPageIndex.remove_object(kwargs['instance'])
     
 def _post_page_save(sender, **kwargs):
     from ecs.help.tasks import index_help_page

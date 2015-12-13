@@ -10,34 +10,34 @@
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
             {% compress css %}
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/base.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/core.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/forms.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/readonly.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/notification.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/icons.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/diff.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/meetings.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/communication.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/dashboard.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/search.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/billing.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/help.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/widgets.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/tasks.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/submission.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/administration.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/boilerplate.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/autocomplete.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/signature.scss" />
-                <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/statistics.scss" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/MooDialog/css/MooDialog.css" />
-                 {% if use_textboxlist %}
-                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.css" />
-                    <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/base.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/core.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/forms.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/readonly.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/notification.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/icons.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/diff.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/meetings.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/communication.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/dashboard.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/search.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/billing.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/help.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/widgets.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/tasks.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/submission.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/administration.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/boilerplate.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/autocomplete.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/signature.scss" />
+                <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/statistics.scss" />
+                <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}3rd-party/MooDialog/css/MooDialog.css" />
+                {% if use_textboxlist %}
+                    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}3rd-party/TextboxList/TextboxList.css" />
+                    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.css" />
                 {% endif %}
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/datepicker.css" />
-                <link rel="stylesheet" type="text/css" href="{{ MEDIA_URL }}3rd-party/Roar/Roar.css" />
+                <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}3rd-party/datepicker.css" />
+                <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}3rd-party/Roar/Roar.css" />
                 <style type="text/x-scss">{% sitescss %}</style>
             {% endcompress %}
         {% endblock %}         
@@ -47,36 +47,36 @@
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
             {% compress js %}
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.5-core-nc.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooTools/mootools-1.2.5.1-more.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/datepicker.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/Roar/Roar.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/GrowingInput.js"></script>
-                 {% if use_textboxlist %}
-                     <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.js"></script>
-                     <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
-                 {% endif %}
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/dbug.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/Overlay.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Iframe.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Confirm.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}3rd-party/MooDialog/MooDialog.Error.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooTools/mootools-1.2.5-core-nc.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooTools/mootools-1.2.5.1-more.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/datepicker.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/Roar/Roar.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/GrowingInput.js"></script>
+                {% if use_textboxlist %}
+                    <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/TextboxList/TextboxList.js"></script>
+                    <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/TextboxList/TextboxList.Autocomplete.js"></script>
+                {% endif %}
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/dbug.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooDialog/Overlay.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooDialog/MooDialog.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooDialog/MooDialog.Iframe.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooDialog/MooDialog.Confirm.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}3rd-party/MooDialog/MooDialog.Error.js"></script>
 
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/__init__.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/autocomplete.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabController.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/TabbedForm.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/InlineFormset.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/fieldhistory.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/textarea.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/textarea.toolbarItems.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/utils.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/dragdrop.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/widgets.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/tasks.js"></script>
-                 <script type="text/javascript" src="{{ MEDIA_URL }}js/ecs/communication.js"></script>
-             {% endcompress %}
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/__init__.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/autocomplete.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/TabController.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/TabbedForm.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/InlineFormset.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/fieldhistory.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/textarea.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/textarea.toolbarItems.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/utils.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/dragdrop.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/widgets.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/tasks.js"></script>
+                <script type="text/javascript" src="{{ STATIC_URL }}js/ecs/communication.js"></script>
+            {% endcompress %}
         {% endblock %}
     </body>
 </html>

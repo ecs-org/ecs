@@ -1,11 +1,11 @@
-from haystack.indexes import *
-from haystack import site
+from haystack import indexes
 from ecs.help.models import Page
 
-class HelpPageIndex(SearchIndex):
-    text = CharField(document=True, use_template=True)
-    title = CharField(model_attr='title')
-    anchor = CharField(model_attr='anchor')
-    slug = CharField(model_attr='slug')
+class HelpPageIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    title = indexes.CharField(model_attr='title')
+    anchor = indexes.CharField(model_attr='anchor')
+    slug = indexes.CharField(model_attr='slug')
 
-site.register(Page, HelpPageIndex)
+    def get_model(self):
+        return Page

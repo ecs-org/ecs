@@ -5,7 +5,7 @@
 {% block htmlcss %}
   {{ block.super }}
   {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/public.scss" />
+    <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/public.scss" />
   {% endcompress %}
 {% endblock %}
 
@@ -18,7 +18,7 @@
 {% block content %}
 <div id="header_public">
   <div class="header_inner">
-    <a href="/"><img src="{{ MEDIA_URL }}images/logo.png" /></a>
+    <a href="/"><img src="{{ STATIC_URL }}images/logo.png" /></a>
   </div>
 </div>
 
@@ -78,7 +78,7 @@
       </div>
     
       <h2><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
-            <img alt="CC BY-SA 3.0 AT" src="{{ MEDIA_URL }}images/by-sa-3.0-at-80x15.png" />
+            <img alt="CC BY-SA 3.0 AT" src="{{ STATIC_URL }}images/by-sa-3.0-at-80x15.png" />
             {% trans "licensed data, Copyright Ethicscommission" %} 
           </a>
       </h2>  

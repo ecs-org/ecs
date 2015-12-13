@@ -60,7 +60,7 @@ def view_document(request, document_pk=None, page=None):
         )
     })
     url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
-        settings.MEDIA_URL, params)
+        settings.STATIC_URL, params)
     if page:
         url = '{}#page={}'.format(url, int(page))
     return HttpResponseRedirect(url)

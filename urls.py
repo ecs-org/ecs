@@ -50,7 +50,7 @@ urlpatterns = patterns('',
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.STATIC_ROOT}),
 
     url(r'^search/', include('haystack.urls')),
 )

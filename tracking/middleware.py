@@ -7,7 +7,8 @@ HTML_TITLE_MAX_OFFSET = 1000
 
 class TrackingMiddleware(object):
     def process_view(self, request, view, args, kwargs):
-        if request.is_ajax() or request.path.startswith(settings.MEDIA_URL):
+        if request.is_ajax() or \
+            request.path.startswith(settings.STATIC_URL):
             request.tracking_data = None
         else:
             view, created = View.objects.get_or_create_for_url(request.path)

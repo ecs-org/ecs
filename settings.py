@@ -18,7 +18,6 @@ MAIL_ADMINS = False
 
 # Default is DEBUG, others may override it later
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 # database configuration defaults, may get overwritten in ecsdev_settings and local_settings
 DATABASES = {}
@@ -54,21 +53,11 @@ LANGUAGES = (
     ('de', gettext('German')),
 )
 
-#this should be default, but to be sure (charset related)
-DEFAULT_CHARSET = "utf-8"
-FILE_CHARSET = "utf-8"
-
 # default site id, some thirdparty libraries expect it to be set
 SITE_ID = 1
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = os.path.join(PROJECT_DIR, 'static')
-
-# URL that handles the media served from MEDIA_ROOT. Make sure to use a
-# trailing slash if there is a path component (optional in other cases).
-# Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = '/static/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
@@ -106,10 +95,9 @@ SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 #DBTEMPLATES_ADD_DEFAULT_SITE = False
 
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-    'dbtemplates.loader.load_template_source',
-    #'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    'dbtemplates.loader.Loader',
 )
 
 TEMPLATE_DIRS = (
@@ -120,7 +108,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "django.core.context_processors.debug",
     "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
+    "django.core.context_processors.static",
     "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
     "ecs.core.context_processors.ecs_settings",
@@ -338,16 +326,26 @@ CELERY_ALWAYS_EAGER = True
 
 
 # ### haystack ### fulltext search engine
-HAYSTACK_SITECONF = 'ecs.search_sites'
-HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_DIR, "..", "..", "ecs-whoosh")
-HAYSTACK_SOLR_URL = 'http://localhost:8983/solr/' # example solr url, is only used if HAYSTACK_SEARCH_ENGINE = 'solr'
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(PROJECT_DIR, "..", "..", "ecs-whoosh"),
+
+        # example solr url, is only used if
+        # ENGINE == 'haystack.backends.solr_backend.SolrEngine'
+        'URL': 'http://localhost:8983/solr/',
+    },
+}
 
 
 # ### django_compressor ### 
 COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'pyscss -I {} -o {{outfile}} {{infile}}'.format(os.path.join(MEDIA_ROOT, 'css'))),
+    (
+        'text/x-scss',
+        'pyscss -I {} -o {{outfile}} {{infile}}'.format(
+            os.path.join(PROJECT_DIR, 'static', 'css'))
+    ),
 )
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'

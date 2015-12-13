@@ -4,7 +4,7 @@
 {% block htmlcss %}
   {{ block.super }}
   {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{{ MEDIA_URL }}css/ecs/public.scss" />
+    <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/public.scss" />
   {% endcompress %}
 {% endblock %}
 
