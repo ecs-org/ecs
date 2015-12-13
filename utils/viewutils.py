@@ -2,7 +2,6 @@ import json
 
 from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
-from piston.handler import BaseHandler
 
 from ecs.utils.pdfutils import wkhtml2pdf
 
@@ -21,13 +20,6 @@ def redirect_to_next_url(request, default_url=None):
     if not next or '//' in next:
         next = default_url or '/'
     return HttpResponseRedirect(next)
-
-class CsrfExemptBaseHandler(BaseHandler):
-    def flatten_dict(self, dct):
-        if 'csrfmiddlewaretoken' in dct:
-            dct = dct.copy()
-            del dct['csrfmiddlewaretoken']
-        return super(CsrfExemptBaseHandler, self).flatten_dict(dct)
 
 def pdf_response(pdf, filename='Unnamed.pdf'):
     assert len(pdf) > 0
