@@ -11,7 +11,7 @@ django-piston==0.2.3
 django-extensions==0.8
 django-picklefield==0.1.9	# for docstash
 django-dbtemplates==0.7.4
-python-memcached==1.48		# for caching
+python-memcached		# for caching
 
 # preprocessing, combining, compressing of js and css
 django_compressor<1.2
