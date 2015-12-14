@@ -74,7 +74,11 @@ TEST_RUNNER = 'django_nose.runner.NoseTestSuiteRunner'
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 
 # cache backend, warning, this is seperate for each process, for production use memcache
-CACHE_BACKEND = 'locmem://'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}
 
 # model that gets connected to contrib.auth model
 AUTH_PROFILE_MODULE = 'users.UserProfile'

@@ -21,7 +21,12 @@ CELERY_ALWAYS_EAGER = False
 HAYSTACK_CONNECTIONS['default']['ENGINE'] = '%(haystack.search_engine)s'
 
 # multiprocess safe cache settings
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+    },
+}
 
 # ecsmail settings
 ECSMAIL['authoritative_domain'] = '%(host)s'

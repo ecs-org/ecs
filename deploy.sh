@@ -6,8 +6,9 @@ EOF
 
 # main application
 apt-get install apache2-mpm-prefork gettext language-pack-de \
-    libapache2-mod-wsgi libpq-dev memcached openjdk-7-jre-headless \
-    pgbouncer postfix postgresql rabbitmq-server solr-jetty tomcat7-user
+    libapache2-mod-wsgi libpq-dev libmemcached-dev memcached \
+    openjdk-7-jre-headless pgbouncer postfix postgresql rabbitmq-server \
+    solr-jetty tomcat7-user
 
 # documents
 apt-get install ghostscript gnupg pdftk qpdf

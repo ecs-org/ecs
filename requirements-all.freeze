@@ -47,11 +47,11 @@ psycopg2==2.4.1
 ptyprocess==0.5
 pyScss==1.3.4
 pyflakes==1.0.0
+pylibmc==1.5.0
 pyparsing==1.5.7
 pysolr==3.3.3
 python-daemon==2.1.0
 python-dateutil==1.5
-python-memcached==1.57
 python-modargs==1.7
 pytz==2015.7
 requests==2.8.1

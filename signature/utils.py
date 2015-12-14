@@ -33,7 +33,7 @@ class SigningData(dict):
             self.id = self._gen_id()
         timeout = None
         if kwargs:
-            timeout = _total_seconds(timedelta(**kwargs))
+            timeout = int(_total_seconds(timedelta(**kwargs)))
         cache.set(self.id, dict(self), timeout)
 
     def delete(self):
