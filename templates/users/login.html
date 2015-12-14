@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n core helputils %}
+{% load i18n core helputils staticfiles %}
 
 {% block jshead %} {# enqueue javasript #}
   {{ block.super }}
@@ -7,7 +7,7 @@
 
 {% block htmlcss %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ecs/public.css" />
+  <link rel="stylesheet" type="text/css" href={% static 'css/ecs/public.css' %} />
 {% endblock %}
 
 
@@ -25,7 +25,7 @@
         top.location.href = '{% url ecs.users.views.login %}';
     }
     </script>
-    <img src="/static/images/logo.png" />
+    <img src="{% static 'images/logo.png' %}" />
     <noscript>
         <div id="script_warning" style="font-size:14pt;line-height:1.2em;">
             <strong style="color:red;">Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.<br />

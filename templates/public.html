@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
- {% load compress %}
+ {% load compress staticfiles %}
 
 {% block htmlcss %}
   {{ block.super }}
   {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{{ STATIC_URL }}css/ecs/public.scss" />
+    <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/public.scss' %} />
   {% endcompress %}
 {% endblock %}
 
@@ -18,7 +18,7 @@
 
 {% block content_prefix %}
 <div id="wrapper" style="overflow:auto;">
-  <a href="/"><img src="/static/images/logo.png" alt="Ethik-Kommission" /></a>
+  <a href="/"><img src="{% static 'images/logo.png' %}" alt="Ethik-Kommission" /></a>
 </div>
 {% endblock %}
 

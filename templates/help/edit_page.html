@@ -1,4 +1,5 @@
 {% extends "help/base.html" %}
+{% load staticfiles %}
 
 {% block upload_params %}{% if page.view_id %}&amp;view={{ page.view_id }}{% endif %}&amp;page={{ page.id }}{% endblock %}
 
@@ -31,7 +32,7 @@
 
 {% block jsbottom %}
 {{ block.super }}
-<script type="text/javascript" src="{{ STATIC_URL }}js/restructuredtext.js"></script>
+<script type="text/javascript" src={% static 'js/restructuredtext.js' %}></script>
 <script type="text/javascript">
     window.addEvent('domready', function(){
         var textarea = $('id_text');

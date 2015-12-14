@@ -1,6 +1,5 @@
 {% extends 'core.html' %}
-{% load core %}
-{% load i18n %}
+{% load core i18n %}
 
 {% block htmltitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %} | {{ block.super }}{% endblock %}
 {% block headertitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %}{% endblock %}

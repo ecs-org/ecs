@@ -1,5 +1,5 @@
 {% extends "communication/list.html" %}
-{% load i18n %}
+{% load i18n userutils %}
 
 {% block content %}
 <div class="messages_overview">
@@ -28,7 +28,6 @@
 {% endblock %}
 
 {% block extra_message_table_cells %}
-    {% load userutils %}
     {% if thread.last_message.sender == request.user %}
         <td>{% trans "an" %} {{ thread.last_message.receiver }}</td>
     {% else %}

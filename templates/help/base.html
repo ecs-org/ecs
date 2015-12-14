@@ -1,5 +1,5 @@
 {% extends "shell.html" %}
-{% load userutils %}
+{% load userutils staticfiles %}
 
 {% block htmltitle %}Online Hilfe | {{ block.super }}{% endblock %}
 
@@ -7,7 +7,7 @@
 <div id="help">
   <div id="help_top">
     <div id="help_logo">
-      <a href="{% url ecs.help.views.index %}"><img src="{{ STATIC_URL }}/images/logo_small.png" alt="EC-Meduni Wien Hilfe"/></a>
+      <a href="{% url ecs.help.views.index %}"><img src={% static 'images/logo_small.png' %} alt="EC-Meduni Wien Hilfe"/></a>
     </div>
     <span href="" class="help_button icon_help">help</span>
     <div id="help_title">

@@ -1,9 +1,9 @@
 {% extends "core.html" %}
-{% load core %}
+{% load core staticfiles %}
 
 {% block htmlcss %}
     {{ block.super }}
-    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}tasks/css/tasks.css" />
+    <link rel="stylesheet" type="text/css" href={% static 'tasks/css/tasks.css' %} />
 {% endblock %}
 
 {% block content %}

@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load i18n helputils %}
+{% load i18n helputils staticfiles %}
 
 {% block htmlmeta %}
 <meta http-equiv="refresh" content="5; url={% help_url 'html5' %}" />
@@ -36,7 +36,7 @@
         }
     </style>
     <div class="outer">
-        <img class="logo" src="/static/images/logo.png" />
+        <img class="logo" src="{% static 'images/logo.png' %}" />
         <div class="inner">
             <h1>Unterst&uuml;tzung in Arbeit</h1>
             <p>Wir arbeiten an der Unterst&uuml;tzung ihres Browsers. Bitte benutzen

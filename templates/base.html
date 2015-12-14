@@ -1,6 +1,5 @@
 {% extends 'shell.html' %}
-
-{% load version_tag %}
+{% load version_tag staticfiles %}
 
 {% block htmlbody %}
 <div id="container">
@@ -38,7 +37,7 @@
         {% block sidebar %}
             <div id="logo">
                 {% block logo %}
-                    <img src="{{ STATIC_URL }}/images/logo.png" alt="EC- Meduni Wien"/>
+                    <img src={% static 'images/logo.png' %} alt="EC- Meduni Wien"/>
                     <small>{% current_version %}</small>
                 {% endblock %}
             </div>
