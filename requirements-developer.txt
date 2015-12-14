@@ -1,4 +1,4 @@
 ipython
 pyflakes
 pep8
-django-debug-toolbar==0.9.4
+django-debug-toolbar

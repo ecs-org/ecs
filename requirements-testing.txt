@@ -1,5 +1,5 @@
 nose
-django-nose==1.2
+django-nose
 
 # software quality testing packages, not strictly needed, except you do coverage analysis
 unittest-xml-reporting==1.3.1

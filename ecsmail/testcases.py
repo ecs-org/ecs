@@ -44,7 +44,7 @@ class MailTestCase(EcsTestCase):
         
     @staticmethod
     def _entry_transform(entry):
-        return unicode(entry.message())
+        return entry.message().as_string()
     
     @staticmethod
     def convert_raw2message(data):
