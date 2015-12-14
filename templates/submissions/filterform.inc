@@ -1,6 +1,7 @@
 {% load i18n core %}
 
 <form id="submission_list_filter" action="{{ request.path }}{% if keyword %}?keyword={{ keyword|urlencode }}{% endif %}" method="post" class="open-in-widget">
+    {% csrf_token %}
     {% for row in filterform.layout %}
     <ul class="submission_list_choose">
         {% for name in row %}

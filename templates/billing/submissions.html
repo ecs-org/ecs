@@ -16,6 +16,7 @@
     {% if submissions %}
         <div class="billing_list">
             <form action="" method="post">
+                {% csrf_token %}
                 <ol>
                 {% for submission in submissions %}
                     <li>

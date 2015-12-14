@@ -4,6 +4,7 @@
 {% block notification_answer_body %}
 
 <form action="" method="post" enctype="multipart/form-data" class="form_main{% if form.bound_to_task %} bound_to_task{% endif %}">
+    {% csrf_token %}
     <ol>
     {% for field in form %}
         {% include 'forms/field.html' %}

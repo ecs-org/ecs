@@ -13,6 +13,7 @@ Edit {{ submission }}
     {{ submission.german_project_title }}
 </div>
 <form action="" method="post">
+    {% csrf_token %}
     <table>
         {{ form }}
     </table>

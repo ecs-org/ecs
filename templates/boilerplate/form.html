@@ -9,6 +9,7 @@
 {% block content %}
 <div id="boilerplate">
   <form action="" method="post">
+      {% csrf_token %}
       <table>
       {{ form }}
       </table>

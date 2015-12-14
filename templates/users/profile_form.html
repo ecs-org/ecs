@@ -6,7 +6,7 @@
 <h2>{% blocktrans with request.user as user %}Profile of {{ user }}{% endblocktrans %}</h2>
 
 <form action="" method="post">
-
+    {% csrf_token %}
     <h3>{% trans "Personal details" %}</h3>
     <table>
         {% for field in form %}

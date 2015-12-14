@@ -6,6 +6,7 @@
 
 {% if not review_form.readonly %}
     <form action="" method="post" class="review{% if review_form.bound_to_task %} bound_to_task{% endif %}">
+    {% csrf_token %}
 {% endif %}
 
 <ol>

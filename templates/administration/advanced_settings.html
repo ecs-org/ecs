@@ -11,6 +11,7 @@
 
 {% block content %}
     <form action="" method="post">
+        {% csrf_token %}
         {{ form.as_p }}
         <h2>{% trans 'Vote Receivers' %}</h2>
         {{ ec_formset.management_form }}

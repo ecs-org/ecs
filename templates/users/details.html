@@ -11,6 +11,7 @@
 
 <p><a href="{% url ecs.users.views.administration %}">{% trans "Back to the List of Users" %}</a></p>
 <form action="" method="post">
+    {% csrf_token %}
     <div>
     <ol>
         {% for field in form %}

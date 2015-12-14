@@ -126,27 +126,31 @@ ecs.setupAutocomplete = function(context){
             tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true, placeholder: 'Tippen Sie um Vorschläge zu erhalten.'}}});
             tbl.container.addClass('textboxlist-loading');
         }
-        new Request.JSON({url: elm.getProperty('x-autocomplete-url'), onSuccess: function(response){
-            if(active){
-                tbl.plugins['autocomplete'].setValues(response);
-                tbl.container.removeClass('textboxlist-loading');
-            }
-            var labels = [];
-            if (response) {
-                response.each(function(item){
-                    if(currentValues.contains(item[0])){
-                        if(active){
-                            tbl.add(item[1], item[0], item[2]);
-                        } else {
-                            labels.push(item[1]);
+        new Request.JSON({
+            url: elm.getProperty('x-autocomplete-url'),
+            headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
+            onSuccess: function(response){
+                if(active){
+                    tbl.plugins['autocomplete'].setValues(response);
+                    tbl.container.removeClass('textboxlist-loading');
+                }
+                var labels = [];
+                if (response) {
+                    response.each(function(item){
+                        if(currentValues.contains(item[0])){
+                            if(active){
+                                tbl.add(item[1], item[0], item[2]);
+                            } else {
+                                labels.push(item[1]);
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                if(!active){
+                    (new Element('span', {html: labels.join(', ')})).replaces(elm);
+                }
             }
-            if(!active){
-                (new Element('span', {html: labels.join(', ')})).replaces(elm);
-            }
-        }}).send();
+        }).send();
         return tbl;
     };
 

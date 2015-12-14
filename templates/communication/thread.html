@@ -49,6 +49,7 @@
 </div>
 
 <form class="send" method="post">
+    {% csrf_token %}
     <table>
         {{ form.as_p }}
     </table>

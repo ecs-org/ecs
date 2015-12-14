@@ -17,44 +17,45 @@
       <a href="{% url view_submission submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
   {% endif %}
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
-          {% if submission %}
-              <h4>Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
-          {% endif %}
+      {% csrf_token %}
+      {% if submission %}
+          <h4>Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
+      {% endif %}
 
-          {% if task %}
+      {% if task %}
+      <p>
+          <label>Task</label>
+          <span>{{ task }}</span>
+      </p>
+      {% endif %}
+
+      {% if form.subject %}
+      <p>
+          <label for="{{ form.subject.auto_id }}">Betreff</label>
+          {{ form.subject }}
+          {% if form.subject.errors %}
+              <span class="errors">{{ form.subject.errors }}</span>
+          {% endif %}
+      </p>
+      {% endif %}
+
+      {% if form.instance.thread %}
+        <p>
+        <label for="id_participants">antworten an:</label><br />
+        </p>
+        {% for user in thread.get_participants %}
           <p>
-              <label>Task</label>
-              <span>{{ task }}</span>
+          <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
+          {% if user|has_flag:'is_internal' %}
+            <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
+          {% else %}
+            <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
+          {% endif %}
           </p>
-          {% endif %}
+        {% endfor %}
+      {% endif %}
 
-          {% if form.subject %}
-          <p>
-              <label for="{{ form.subject.auto_id }}">Betreff</label>
-              {{ form.subject }}
-              {% if form.subject.errors %}
-                  <span class="errors">{{ form.subject.errors }}</span>
-              {% endif %}
-          </p>
-          {% endif %}
-
-          {% if form.instance.thread %}
-            <p>
-            <label for="id_participants">antworten an:</label><br />
-            </p>
-            {% for user in thread.get_participants %}
-              <p>
-              <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
-              {% if user|has_flag:'is_internal' %}
-                <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
-              {% else %}
-                <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
-              {% endif %}
-              </p>
-            {% endfor %}
-          {% endif %}
-          
-          {% include 'communication/send_base.inc' %}
+      {% include 'communication/send_base.inc' %}
       <input type="submit" value="Nachricht abschicken" />
   </form>
   <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>

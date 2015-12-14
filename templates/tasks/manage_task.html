@@ -2,6 +2,7 @@
 
 <div id="task_main">
 <form action="{{ request.path }}" method="post" id="task_form">
+    {% csrf_token %}
     <h4>{% trans 'Task' %}: {{ form.task }}</h4>
     {% if form.errors|contains:'locked' %}
     <span class="lockInfo">

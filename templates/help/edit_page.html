@@ -5,6 +5,7 @@
 {% block content %}
     {{ form.errors }}
     <form action="" method="post" id="helpform">
+        {% csrf_token %}
         <div class="dir">
             Slug: {{ form.slug }}
             View: {{ form.view }}

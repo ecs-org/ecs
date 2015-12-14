@@ -114,6 +114,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.i18n",
     "django.core.context_processors.static",
     "django.core.context_processors.request",
+    'django.core.context_processors.csrf',
     "django.contrib.messages.context_processors.messages",
     "ecs.core.context_processors.ecs_settings",
 )
@@ -123,7 +124,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.csrf.CsrfMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.middleware.ConsoleExceptionMiddleware',
     'ecs.utils.forceauth.ForceAuth',

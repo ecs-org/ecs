@@ -7,6 +7,7 @@
 {% block content %}
 <div class="change_presenter">
     <form action="{{ request.path }}" method="POST">
+        {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="{% trans 'Change Susar Presenter' %}" />
     </form>

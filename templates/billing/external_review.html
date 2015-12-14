@@ -20,6 +20,7 @@
     {% if checklists %}
         <div class="billing_list">
             <form action="" method="post">
+                {% csrf_token %}
                 <ol>
                 {% for checklist in checklists %}
                     {% with checklist.submission as submission %}

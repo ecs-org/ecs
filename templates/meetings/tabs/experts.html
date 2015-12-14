@@ -4,6 +4,7 @@
   
 {% if expert_formset.total_form_count %}
     <form method="post">
+    {% csrf_token %}
     {{ expert_formset.management_form }}
     <ol>
     {% for form in expert_formset.forms %}

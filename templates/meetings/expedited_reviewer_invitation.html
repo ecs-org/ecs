@@ -2,6 +2,7 @@
 
 <div id="expedited_reviewer_invitation">
     <form class="open-in-widget" action="{{ request.path }}" method="post">
+        {% csrf_token %}
         <ol>
         {% for field in form %}
             {% include 'forms/field.html' %}

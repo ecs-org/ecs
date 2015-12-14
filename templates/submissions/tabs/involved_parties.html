@@ -69,6 +69,7 @@
 {% if user|has_flag:'is_executive_board_member' %}
     <div>
         <form class="authorize" action="{% url ecs.core.views.grant_temporary_access submission_pk=submission.pk %}" method="post">
+            {% csrf_token %}
             <ol>
             {% for field in temporary_auth_form %}
                 {% include 'forms/field.html' %}

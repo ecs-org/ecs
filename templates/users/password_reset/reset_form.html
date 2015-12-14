@@ -3,11 +3,12 @@
 
 {% block content %}
 
-	<form action="" method="post">
-	    <table>
-	        {{ form.as_p }}
-	    </table>
-	    <input type="submit" value="Passwort Ändern" />
-	</form>
+    <form action="" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_p }}
+        </table>
+        <input type="submit" value="Passwort Ändern" />
+    </form>
 
 {% endblock %}

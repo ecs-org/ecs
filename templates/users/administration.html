@@ -7,6 +7,7 @@
 <h2>{% trans "List of Users" %} ({{ users.paginator.count }})</h2>
 
 <form id="{{ form_id }}" action="" method="post">
+    {% csrf_token %}
     <ul class="useradministration_choose">
         <li><label for="id_activity">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
         <li><label for="id_groups">{% trans "Groups" %}:</label> {{ filterform.groups }}</li>
@@ -52,7 +53,7 @@
             | <a href="{% url ecs.users.views.indisposition user_pk=profile.pk %}">
                     {% if profile|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
                 </a>
-            | <form action="{% url ecs.users.views.toggle_active user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a></form>
+            | <form action="{% url ecs.users.views.toggle_active user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>{% csrf_token %}</form>
             {% with profile as profile_user %}
             {% with profile_user.get_profile as profile %}
             <div class="profile">

@@ -9,6 +9,7 @@
     <h2>{% trans "Invite User" %}</h2>
 
     <form action="" method="post">
+        {% csrf_token %}
         <div>
             <ol>
                 {% for field in form %}

@@ -5,6 +5,7 @@
 <div class="messages_overview">
   <div class="messages_header">
     <form id="thread_list_filter" action="" method="post">
+        {% csrf_token %}
         <div class="thread_list_choose">
             {{ filterform.incoming }} <label for="id_incoming" class="thread_incoming"><span class="icon_in"></span>{% trans "Incoming" %}</label>
             {{ filterform.outgoing }} <label for="id_outgoing" class="thread_outgoing"><span class="icon_out"></span>{% trans "Outgoing" %}</label>

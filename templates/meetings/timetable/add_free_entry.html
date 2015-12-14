@@ -1,7 +1,8 @@
 {% load core %}
 
 <form action="{{ request.path }}" method="post" class="form_main open-in-widget">
-<h3>Neuer TOP</h3>
+    {% csrf_token %}
+    <h3>Neuer TOP</h3>
     <ol>
         {% for field in form %}
             {% include "forms/field.html" %}

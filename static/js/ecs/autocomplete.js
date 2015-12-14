@@ -26,6 +26,7 @@ ecs.autocomplete.Autocompleter = new Class({
         if(this.url){
             var request = new Request.JSON({
                 url: this.url,
+                headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
                 onSuccess: (function(result){
                     this.setChoices(result);
                     this.setValue(input.value);

@@ -31,6 +31,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url){
             var update = function(q, initial){
                 var request = new Request.JSON({
                     url: url + '?q=' + encodeURIComponent(q),
+                    headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
                     onSuccess: function(results){
                         if(initial){
                             if(results.length == 1){

@@ -1,4 +1,5 @@
 <form id="userswitcher_form" method="post" action="{% url ecs.userswitcher.views.switch %}?url={{ url }}">
+    {% csrf_token %}
     {{ form.user }}
     <script type="text/javascript">
         document.getElementById('userswitcher_input').onchange = function(){

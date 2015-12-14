@@ -8,6 +8,7 @@
 {% block content %}
 <div>
 <form action="" method="post" class="form_main" id="cert_form" autocomplete="off">
+    {% csrf_token %}
     <div>
     <ol>
         {% for field in form %}

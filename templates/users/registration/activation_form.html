@@ -4,6 +4,7 @@
 {% block content %}
 
 	<form action="" method="post">
+            {% csrf_token %}
 	    
     <p class="reg_detail"><label>Anrede</label> {% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</p>
 	  <p class="reg_detail"><label>Vorname</label> {{ data.first_name }}</p>

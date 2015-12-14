@@ -3,6 +3,7 @@
 
 {% block meeting_assistant_body %}
     <form action="{% url ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
+        {% csrf_token %}
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         {% if retrospective_thesis_entries %}
           <div class="inline_element odd">
