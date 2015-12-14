@@ -11,7 +11,7 @@ from ecs.meetings.models import Meeting
 def cache_key_for_meeting_page(meeting, fn):
     return 'meeting:{0}:{1}'.format(meeting.pk, fn.func_name)
 
-def cache_meeting_page(timeout=60*10, render_timeout=5):
+def cache_meeting_page(timeout=60*10, render_timeout=15):
     def _decorator(fn):
         @wraps(fn)
         def _inner(*args, **kwargs):
