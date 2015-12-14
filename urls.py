@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
 from django.shortcuts import render
+from django.views.generic.base import RedirectView
 
 from ecs.utils import forceauth
 
@@ -29,7 +30,7 @@ def fake404handler(request):
 
 urlpatterns = patterns('',
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
-    url(r'^$', 'django.views.generic.simple.redirect_to', {'url': settings.LOGIN_REDIRECT_URL}),
+    url(r'^$', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL)),
 
     url(r'^', include('ecs.users.urls')),
     url(r'^core/', include('ecs.core.urls')),
