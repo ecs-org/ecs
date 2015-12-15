@@ -20,7 +20,8 @@ class MeetingModelTest(EcsTestCase):
         and that start and end times of meeting items are correct.
         '''
         
-        start = datetime(2010, 4, 8, 0)
+        start = timezone.make_aware(
+            datetime(2010, 4, 8, 0), timezone.get_current_timezone())
         m = Meeting.objects.create(start=start, title="Test")
         a = m.add_entry(duration=timedelta(minutes=30), title="A")
         b = m.add_entry(duration=timedelta(hours=1), title="B")

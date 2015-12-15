@@ -8,6 +8,7 @@ from django.db import models
 from django.core.files.base import ContentFile
 from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes import generic
+from django.utils import timezone
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
@@ -226,7 +227,9 @@ class ModelSerializer(object):
         deferr = False
         if field:
             if isinstance(field, models.DateTimeField):
-                val = datetime.datetime.strptime(val, DATETIME_FORMAT)
+                val = timezone.make_aware(
+                    datetime.datetime.strptime(val, DATETIME_FORMAT),
+                    timezone.utc)
             elif isinstance(field, models.DateField):
                 val = datetime.date.strptime(val, DATE_FORMAT)
             elif isinstance(field, models.ManyToManyField):
@@ -448,7 +451,7 @@ def dump_model_instance(obj, zf):
 class _JsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.datetime):
-            return obj.strftime(DATETIME_FORMAT)
+            return obj.astimezone(timezone.utc).strftime(DATETIME_FORMAT)
         elif isinstance(obj, datetime.date):
             return obj.strftime(DATE_FORMAT)
         return super(Encoder, self).default(obj)

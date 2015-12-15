@@ -3,6 +3,7 @@ import os
 from datetime import datetime
 from dbtemplates.models import Template
 
+from django.conf import settings
 from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
 from django.utils import timezone
@@ -63,7 +64,7 @@ def sites():
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
 def templates():
-    basedir = os.path.join(os.path.dirname(__file__), '..', 'templates')
+    basedir = os.path.join(settings.PROJECT_DIR, 'templates')
 
     sites = list(Site.objects.all())
 
@@ -349,15 +350,15 @@ def auth_user_testusers():
         ('investigator', None, {}),
         ('office', u'EC-Office', {'is_internal': True,}),
         ('internal.rev', u'EC-Internal Review Group', {'is_internal': True,}),
-        ('executive', u'EC-Executive Board Group', {'is_internal': True, 'is_executive_board_member': True),
-        ('thesis.executive', u'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False),
+        ('executive', u'EC-Executive Board Group', {'is_internal': True, 'is_executive_board_member': True, }),
+        ('thesis.executive', u'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False, }),
         ('signing', u'EC-Signing Group', {'is_internal': True, }),
         ('signing_fail', u'EC-Signing Group', {'is_internal': True }),
         ('signing_mock', u'EC-Signing Group', {'is_internal': True }),
         ('statistic.rev', u'EC-Statistic Group', {'is_internal': False}),
         ('notification.rev', u'EC-Notification Review Group', {'is_internal': True, }),
         ('insurance.rev', u'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
-        ('thesis.rev', u'EC-Thesis Review Group', {'is_internal': False, 'is_thesis_reviewer': True),
+        ('thesis.rev', u'EC-Thesis Review Group', {'is_internal': False, 'is_thesis_reviewer': True, }),
         ('external.reviewer', None, {}),
         ('gcp.reviewer', u'GCP Review Group', {'is_internal': False}),
         ('localec.rev', u'Local-EC Review Group', {'is_internal': True}),

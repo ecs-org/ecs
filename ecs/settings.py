@@ -5,7 +5,7 @@ from datetime import timedelta
 from copy import deepcopy
 
 # root dir of project
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__)) 
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # standard django settings
 ##########################
@@ -72,6 +72,9 @@ ADMIN_MEDIA_PREFIX = '/media/'
 
 # start of url matching
 ROOT_URLCONF = 'ecs.urls'
+
+# Python dotted path to the WSGI application used by Django's runserver.
+WSGI_APPLICATION = 'ecs.wsgi.application'
 
 # use nose for unit tests
 TEST_RUNNER = 'django_nose.runner.NoseTestSuiteRunner'

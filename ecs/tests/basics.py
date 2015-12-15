@@ -15,7 +15,5 @@ class BasicImportTests(EcsTestCase):
         """Tests if settings and urls modules are importable. Simple but quite useful.
         """
     
-        import settings
-        import urls
-
-
+        from ecs import settings
+        from ecs import urls

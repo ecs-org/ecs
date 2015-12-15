@@ -68,7 +68,7 @@ class ecsmailOutgoingTest(MailTestCase):
         that data attached is not altered.
         '''
         
-        attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
+        attachment_name = os.path.join(settings.PROJECT_DIR, "ecs", "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()
         
         # make two attachments, first attachment via a filename, second attachment via data supplied inline
@@ -89,7 +89,7 @@ class ecsmailOutgoingTest(MailTestCase):
         Further checks that attached data is not altered during sending.
         '''
         
-        attachment_name = os.path.join(settings.PROJECT_DIR, "core", "tests", "data", "menschenrechtserklaerung.pdf")
+        attachment_name = os.path.join(settings.PROJECT_DIR, "ecs", "core", "tests", "data", "menschenrechtserklaerung.pdf")
         attachment_data = open(attachment_name, "rb").read()
         
         self.deliver("another subject", "another attachment", 
