@@ -14,8 +14,8 @@ from django.contrib import auth
 from django.contrib.auth import views as auth_views
 from django.db.models import Q
 from django.views.decorators.http import require_POST
+from django.core import signing
 
-from ecs.utils.django_signed import signed
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
 from ecs.utils.ratelimitcache import ratelimit_post
@@ -32,21 +32,22 @@ from ecs.help.models import Page
 
 
 class TimestampedTokenFactory(object):
-    def __init__(self, extra_key=None, ttl=3600):
-        self.extra_key = extra_key
+    def __init__(self, key, salt, ttl=3600):
+        self.key = key
+        self.salt = salt
         self.ttl = ttl
         
     def generate_token(self, data):
-        return signed.dumps((data, time.time()), extra_key=self.extra_key)
+        return signing.dumps(data, key=self.key, salt=self.salt)
         
     def parse_token(self, token):
-        data, timestamp = signed.loads(token, extra_key=self.extra_key)
-        if time.time() - timestamp > self.ttl:
-            raise ValueError("token expired")
-        return data, timestamp
-        
-_password_reset_token_factory = TimestampedTokenFactory(extra_key=settings.REGISTRATION_SECRET)
-_registration_token_factory = TimestampedTokenFactory(extra_key=settings.PASSWORD_RESET_SECRET, ttl=86400)
+        return signing.loads(token, key=self.key, salt=self.salt,
+            max_age=self.ttl)
+
+_password_reset_token_factory = TimestampedTokenFactory(
+    settings.PASSWORD_RESET_SECRET, 'ecs.users.password_reset')
+_registration_token_factory = TimestampedTokenFactory(
+    settings.REGISTRATION_SECRET, 'ecs.users.registration', ttl=86400)
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='username')
@@ -124,8 +125,8 @@ def register(request):
 @readonly(methods=['GET'])
 def activate(request, token=None):
     try:
-        data, timestamp = _registration_token_factory.parse_token(token)
-    except ValueError, e:
+        data = _registration_token_factory.parse_token(token)
+    except (signing.BadSignature, signing.SignatureExpired):
         return render(request, 'users/registration/registration_token_invalid.html', {})
 
     try:
@@ -174,7 +175,7 @@ def request_password_reset(request):
                     'email': email,
                 }))
             else:
-                token = _password_reset_token_factory.generate_token(email)
+                token = _password_reset_token_factory.generate_token([email, time.time()])
                 reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
                 htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
                     'reset_url': reset_url,
@@ -194,7 +195,7 @@ def request_password_reset(request):
 def do_password_reset(request, token=None):
     try:
         email, timestamp = _password_reset_token_factory.parse_token(token)
-    except ValueError, e:
+    except (signing.BadSignature, signing.SignatureExpired):
         return render(request, 'users/password_reset/reset_token_invalid.html', {})
 
     try:
