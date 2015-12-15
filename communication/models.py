@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime, uuid
+import uuid
 
 from django.conf import settings
 from django.db import models
@@ -99,7 +99,7 @@ class Thread(models.Model):
     # sender, receiver and timestamp are denormalized intentionally
     sender = models.ForeignKey(User, related_name='outgoing_threads')
     receiver = models.ForeignKey(User, related_name='incoming_threads')
-    timestamp = models.DateTimeField(default=datetime.datetime.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     last_message = models.OneToOneField('Message', null=True, related_name='head')
     related_thread = models.ForeignKey('self', null=True)
 
@@ -202,7 +202,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, related_name='outgoing_messages')
     receiver = models.ForeignKey(User, related_name='incoming_messages')
     reply_to = models.ForeignKey('self', null=True, related_name='replies')
-    timestamp = models.DateTimeField(default=datetime.datetime.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     unread = models.BooleanField(default=True)
     soft_bounced = models.BooleanField(default=False)
     text = models.TextField()

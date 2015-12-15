@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.urlresolvers import resolve, Resolver404
@@ -34,7 +33,7 @@ class View(models.Model):
 
 
 class Request(models.Model):
-    timestamp = models.DateTimeField(default=datetime.datetime.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     ip = models.IPAddressField(db_index=True)
     user = models.ForeignKey(User, related_name='requests')
     url = models.TextField()

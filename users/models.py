@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
 from uuid import uuid4
 
 from django.db import models
@@ -11,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='ecs_profile')
-    last_password_change = models.DateTimeField(default=datetime.datetime.now)
+    last_password_change = models.DateTimeField(auto_now_add=True)
     is_phantom = models.BooleanField(default=False)
     is_indisposed = models.BooleanField(default=False)
     communication_proxy = models.ForeignKey(User, null=True)

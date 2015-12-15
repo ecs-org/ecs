@@ -81,7 +81,7 @@ class Notification(models.Model):
 
     comments = models.TextField()
     date_of_receipt = models.DateField(null=True, blank=True)
-    timestamp = models.DateTimeField(default=datetime.now)
+    timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True)
     
     review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)

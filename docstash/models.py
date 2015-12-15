@@ -1,4 +1,4 @@
-import uuid, datetime
+import uuid
 from django.db import models
 from django.http import QueryDict
 from django.utils.functional import wraps
@@ -149,7 +149,7 @@ class DocStashData(models.Model):
     version = models.IntegerField()
     stash = models.ForeignKey(DocStash, related_name='data')
     value = PickledObjectField(compress=True)
-    modtime = models.DateTimeField(default=datetime.datetime.now)
+    modtime = models.DateTimeField(auto_now_add=True)
     name = models.TextField(blank=True)
     
     objects = AuthorizationManager()
