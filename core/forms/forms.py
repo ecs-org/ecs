@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.models import modelformset_factory
@@ -9,6 +9,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils import timezone
 
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
@@ -445,8 +446,8 @@ class SubmissionImportForm(forms.Form):
         return f
 
 class TemporaryAuthorizationForm(TranslatedModelForm):
-    start = DateTimeField(initial=datetime.now)
-    end = DateTimeField(initial=lambda: datetime.now() + timedelta(days=30))
+    start = DateTimeField(initial=timezone.now)
+    end = DateTimeField(initial=lambda: timezone.now() + timedelta(days=30))
 
     class Meta:
         model = TemporaryAuthorization

@@ -1,7 +1,6 @@
-import datetime
-
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
+from django.utils import timezone
 
 from ecs.tasks.models import Task, TaskType
 
@@ -20,7 +19,7 @@ class FetchTasksNode(Node):
             tasks = Task.objects.filter(assigned_to=user, accepted=False, assigned_at__gt=last_pull)
         else:
             tasks = Task.objects.none()
-        cache.set(cache_key, datetime.datetime.now(), 7*24*3600)
+        cache.set(cache_key, timezone.now(), 7*24*3600)
         context[self.varname] = tasks
         return u''
 

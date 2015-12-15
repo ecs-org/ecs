@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django import forms
 from django.forms.models import BaseModelFormSet, modelformset_factory
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
+from django.utils import timezone
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
@@ -14,9 +15,9 @@ from ecs.votes.models import Vote
 from ecs.utils.formutils import TranslatedModelForm
 
 class MeetingForm(TranslatedModelForm):
-    start = DateTimeField(initial=datetime.now)
-    deadline = DateTimeField(initial=datetime.now)
-    deadline_diplomathesis = DateTimeField(initial=datetime.now)
+    start = DateTimeField(initial=timezone.now)
+    deadline = DateTimeField(initial=timezone.now)
+    deadline_diplomathesis = DateTimeField(initial=timezone.now)
 
     class Meta:
         model = Meeting
@@ -152,4 +153,4 @@ class BaseExpeditedVoteFormSet(BaseModelFormSet):
 ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
 
 class ExpeditedReviewerInvitationForm(forms.Form):
-    start = DateTimeField(initial=lambda: datetime.now() + timedelta(days=7))
+    start = DateTimeField(initial=lambda: timezone.now() + timedelta(days=7))

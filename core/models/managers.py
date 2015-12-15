@@ -1,7 +1,8 @@
-from datetime import datetime
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
+from django.utils import timezone
+
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.constants import (
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
@@ -251,5 +252,5 @@ class SubmissionFormManager(AuthorizationManager):
 
 class TemporaryAuthorizationManager(models.Manager):
     def active(self, **kwargs):
-        now = datetime.now()
+        now = timezone.now()
         return self.filter(start__lte=now, end__gt=now).filter(**kwargs)

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import threading
-from datetime import datetime
 
 from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 
 class SingleLoginMiddleware(object):
@@ -26,7 +26,7 @@ class SingleLoginMiddleware(object):
         profile.save()
 
         if old_session_key:
-            if Session.objects.filter(session_key=old_session_key).update(expire_date=datetime.now()):
+            if Session.objects.filter(session_key=old_session_key).update(expire_date=timezone.now()):
                 profile.single_login_enforced = True
                 profile.save()
 

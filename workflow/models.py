@@ -1,8 +1,8 @@
-from datetime import datetime
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from ecs.workflow.controllers import bind_node, bind_edge, bind_guard, NodeController
 from ecs.workflow.signals import workflow_started, workflow_finished, token_consumed, token_marked_deleted, token_unlocked
@@ -240,14 +240,14 @@ class Token(models.Model):
     def consume(self, timestamp=None):
         if self.consumed_at:
             raise TokenAlreadyConsumed()
-        self.consumed_at = timestamp or datetime.now()
+        self.consumed_at = timestamp or timezone.now()
         self.save()
         token_consumed.send(self)
 
     def mark_deleted(self, timestamp=None):
         if self.consumed_at:
             raise TokenAlreadyConsumed()
-        self.consumed_at = timestamp or datetime.now()
+        self.consumed_at = timestamp or timezone.now()
         self.save()
         token_marked_deleted.send(self)
 

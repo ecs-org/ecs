@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
-
 from django.conf import settings
 from django.db import models
 from django.utils.importlib import import_module
@@ -8,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import loader
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 
 import reversion
 from reversion.models import Version
@@ -208,7 +207,7 @@ class NotificationAnswer(models.Model):
     
     def distribute(self):
         from ecs.core.models.submissions import Submission
-        self.published_at = datetime.now()
+        self.published_at = timezone.now()
         self.save()
         
         if not self.is_rejected and self.notification.type.includes_diff:

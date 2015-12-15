@@ -29,6 +29,7 @@ DATABASES['default'] = {
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
 # although not all choices may be available on all operating systems.
 TIME_ZONE = 'Europe/Vienna'
+USE_TZ = True
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html

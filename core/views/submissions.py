@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 import tempfile
 import re
 import json
@@ -15,6 +14,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import redirect_to_next_url
@@ -1003,14 +1003,14 @@ def my_submissions(request):
 @forceauth.exempt
 def catalog(request, year=None):
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=timezone.now())
         votes = votes.select_related('submission_form').order_by('published_at')
         years = votes.dates('published_at', 'year')
         if year is None:
             try:
                 year = list(years)[-1].year
             except IndexError:  # no votes yet
-                today = datetime.today()
+                today = timezone.now()
                 year = today.year
                 years = [today]
 
@@ -1037,7 +1037,7 @@ def catalog_json(request):
     data.append(meta_dict)
     
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=datetime.now())
+        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=timezone.now())
         votes = votes.select_related('submission_form').order_by('published_at')
         for vote in votes:
             sf = vote.submission_form
@@ -1083,6 +1083,6 @@ def grant_temporary_access(request, submission_pk=None):
 @user_flag_required('is_executive_board_member')
 def revoke_temporary_access(request, submission_pk=None, temp_auth_pk=None):
     temp_auth = get_object_or_404(TemporaryAuthorization, pk=temp_auth_pk)
-    temp_auth.end = datetime.now()
+    temp_auth.end = timezone.now()
     temp_auth.save()
     return redirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')

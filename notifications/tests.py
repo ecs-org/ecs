@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-import datetime
+from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
@@ -160,7 +161,7 @@ class NotificationFormTest(LoginTestCase):
         
         call_command('bootstrap')
         
-        now = datetime.datetime.now()
+        now = timezone.now()
         nt = NotificationType.objects.get(form='ecs.notifications.forms.ProgressReportNotificationForm')
 
         presenter = self.create_user('test_presenter')
@@ -231,7 +232,7 @@ class NotificationFormTest(LoginTestCase):
         notification = ProgressReportNotification.objects.get(pk=notification.pk)
         old_valid_until = vote.valid_until
         vote = Vote.objects.get(pk=vote.pk)
-        self.assertEqual(vote.valid_until, old_valid_until + datetime.timedelta(365))
+        self.assertEqual(vote.valid_until, old_valid_until + timedelta(365))
         
         
         

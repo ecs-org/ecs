@@ -1,6 +1,8 @@
 import datetime, os, binascii
+
 from django.core.urlresolvers import reverse
 from django.conf import settings
+
 from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import Document, DocumentType
 

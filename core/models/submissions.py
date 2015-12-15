@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
@@ -83,7 +84,7 @@ class Submission(models.Model):
 
     def get_ec_number_display(self, short=False, separator=u'/'):
         year, num = divmod(self.ec_number, 10000)
-        if short and datetime.now().year == int(year):
+        if short and timezone.now().year == int(year):
             return unicode(num)
         return u"%s%s%s" % (num, separator, year)
         
@@ -199,7 +200,7 @@ class Submission(models.Model):
             self.susar_presenter = get_current_user()
         if not self.ec_number:
             with sudo():
-                year = datetime.now().year
+                year = timezone.now().year
                 max_num = Submission.objects.filter(ec_number__range=(year * 10000, (year + 1) * 10000 - 1)).aggregate(models.Max('ec_number'))['ec_number__max']
                 if max_num is None:
                     max_num = 10000 * year + MIN_EC_NUMBER
@@ -923,8 +924,8 @@ class ForeignParticipatingCenter(models.Model):
 class TemporaryAuthorization(models.Model):
     submission = models.ForeignKey(Submission, related_name='temp_auth')
     user = models.ForeignKey(User, related_name='temp_submission_auth')
-    start = models.DateTimeField(default=datetime.now)
-    end = models.DateTimeField(default=lambda: datetime.now() + timedelta(days=30))
+    start = models.DateTimeField(default=timezone.now)
+    end = models.DateTimeField(default=lambda: timezone.now() + timedelta(days=30))
 
     objects = TemporaryAuthorizationManager()
 
@@ -933,6 +934,6 @@ class TemporaryAuthorization(models.Model):
         
     @property
     def is_active(self):
-        return self.start <= datetime.now() < self.end
+        return self.start <= timezone.now() < self.end
         
 

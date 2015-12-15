@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import traceback
 import hashlib
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from celery.task import task, periodic_task
 from celery.task.sets import subtask
 from django.utils.translation import ugettext as _
 from django.core.mail import make_msgid
+from django.utils import timezone
 
 from ecs.communication.models import Message
 from ecs.ecsmail.utils import deliver_to_recipient
@@ -34,7 +35,7 @@ def forward_messages():
         receiver__ecs_profile__forward_messages_after_minutes__gt=0
     ).select_related('receiver')
 
-    now = datetime.now()
+    now = timezone.now()
     messages = [m for m in messages if m.timestamp + timedelta(minutes=m.receiver.get_profile().forward_messages_after_minutes) <= now]
     if len(messages) == 0:
         return

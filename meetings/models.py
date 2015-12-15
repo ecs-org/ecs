@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.conf import settings
+from django.utils import timezone
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
@@ -149,7 +150,7 @@ class MeetingManager(AuthorizationManager):
         if is_thesis:
             meetings = self.filter(deadline_diplomathesis__gt=first_sf.created_at).filter(deadline_diplomathesis__gt=accepted_sf.created_at-grace_period)
 
-        now = datetime.now()
+        now = timezone.now()
         month = timedelta(days=30)
         try:
             return meetings.filter(started=None).order_by('start')[0]
@@ -313,7 +314,9 @@ class Meeting(models.Model):
         constraints_by_user_id = {}
         start_date = self.start.date()
         for constraint in self.constraints.order_by('start_time'):
-            start = datetime.combine(start_date, constraint.start_time)
+            start = timezone.make_aware(
+                datetime.combine(start_date, constraint.start_time),
+                timezone.get_current_timezone())
             constraint.offset_in_seconds = (start - self.start).total_seconds()
             constraints_by_user_id.setdefault(constraint.user_id, []).append(constraint)
         users = []
@@ -325,11 +328,14 @@ class Meeting(models.Model):
     @cached_property
     def timetable_entries_which_violate_constraints(self):
         start_date = self.start.date()
-        start_data = self.start.date()
         entries_which_violate_constraints = []
         for constraint in self.constraints.all():
-            constraint_start = datetime.combine(start_date, constraint.start_time)
-            constraint_end = datetime.combine(start_date, constraint.end_time)
+            constraint_start = timezone.make_aware(
+                datetime.combine(start_date, constraint.start_time),
+                timezone.get_current_timezone())
+            constraint_end = timezone.make_aware(
+                datetime.combine(start_date, constraint.end_time),
+                timezone.get_current_timezone())
             for participation in Participation.objects.filter(entry__meeting=self, user=constraint.user, ignored_for_optimization=False):
                 start = participation.entry.start
                 end = participation.entry.end
@@ -524,7 +530,10 @@ class TimetableEntry(models.Model):
     def optimal_start_offset(self):
         if self.optimal_start is None:
             return None
-        return (datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start).total_seconds()
+        return (timezone.make_aware(
+            datetime.combine(self.meeting.start.date(), self.optimal_start),
+            timezone.get_current_timezone()) - self.meeting.start
+        ).total_seconds()
     
     @cached_property
     def users(self):
@@ -567,7 +576,7 @@ class TimetableEntry(models.Model):
     def move_to_optimal_position(self):
         i = 0
         offset = 0
-        start = (datetime.combine(self.meeting.start.date(), self.optimal_start) - self.meeting.start).total_seconds()
+        start = (timezone.make_aware(datetime.combine(self.meeting.start.date(), self.optimal_start), timezone.get_current_timezone()) - self.meeting.start).total_seconds()
         for entry in self.meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index').exclude(pk=self.pk):
             if offset >= start:
                 break
@@ -718,7 +727,7 @@ class Constraint(models.Model):
 
     @property
     def duration(self):
-        d = datetime.now().date()
+        d = timezone.now().date()
         return datetime.combine(d, self.end_time) - datetime.combine(d, self.start_time)
 
     @cached_property

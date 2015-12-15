@@ -1,6 +1,8 @@
 import datetime
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from ecs.utils import cached_property
 from ecs.workflow.signals import token_received
@@ -143,7 +145,7 @@ class NodeController(object):
         if deadline is None:
             return None
         if isinstance(deadline, datetime.timedelta):
-            return datetime.datetime.now() + self.deadline
+            return timezone.now() + self.deadline
         elif isinstance(deadline, datetime.datetime):
             return deadline
         else:

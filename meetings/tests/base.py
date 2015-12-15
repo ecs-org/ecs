@@ -1,7 +1,9 @@
 import math
 from datetime import datetime, timedelta
+
 from django.db.models import connection
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
@@ -107,7 +109,7 @@ class MeetingModelTest(EcsTestCase):
         s = create_submission_form().submission
 
         step = timedelta(days=1)
-        start = datetime.now() + step
+        start = timezone.now() + step
         meetings = [Meeting.objects.create(start=start + step * i, title="M%s" % i) for i in range(3)]
 
         def schedule(i):

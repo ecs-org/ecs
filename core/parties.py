@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from ecs.users.utils import sudo, get_current_user
 from ecs.communication.utils import send_system_message_template
@@ -97,7 +96,7 @@ def get_reviewing_parties(sf, active=None):
             party = Party(user=task.assigned_to, involvement=task.task_type.trans_name)
             if party not in parties:
                 parties.append(party)
-    for temp_auth in sf.submission.temp_auth.filter(end__gt=datetime.now()):
+    for temp_auth in sf.submission.temp_auth.filter(end__gt=timezone.now()):
         parties.add(user=temp_auth.user, involvement=_('Temporary Authorization'))
     return parties
 

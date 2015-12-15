@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 import reversion
 from reversion.models import Version
@@ -68,7 +69,7 @@ class Vote(models.Model):
 
     def publish(self):
         assert self.signed_at is not None
-        now = datetime.now()
+        now = timezone.now()
         self.published_at = now
         self.valid_until = self.published_at + timedelta(days=365)
         self.save()
@@ -121,7 +122,7 @@ class Vote(models.Model):
     @property
     def is_valid(self):
         # XXX: is this used anywhere?
-        return self.valid_until < datetime.now()
+        return self.valid_until < timezone.now()
 
     def get_render_context(self):
         past_votes = Vote.objects.filter(published_at__isnull=False, submission_form__submission=self.submission_form.submission).exclude(pk=self.pk).order_by('published_at')

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from celery.task import periodic_task
 from celery.schedules import crontab
@@ -85,7 +86,7 @@ def send_vote_reminder_office(vote):
 @periodic_task(run_every=timedelta(days=1))
 def send_reminder_messages(today=None):
     if today is None:
-        today = datetime.today().date()
+        today = timezone.now().date()
 
     votes = (Vote.objects
         .filter(result='1', published_at__isnull=False, valid_until__isnull=False)
@@ -109,5 +110,5 @@ def send_reminder_messages(today=None):
 
 @periodic_task(run_every=crontab(hour=3, minute=58))
 def expire_votes():
-    for vote in Vote.objects.filter(valid_until__lt=datetime.now(), is_expired=False):
+    for vote in Vote.objects.filter(valid_until__lt=timezone.now(), is_expired=False):
         vote.expire()

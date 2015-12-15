@@ -1,6 +1,7 @@
-import datetime
 from django.template import Library, Node, TemplateSyntaxError
 from django.core.cache import cache
+from django.utils import timezone
+
 from ecs.communication.models import Message
 
 register = Library()
@@ -20,7 +21,7 @@ class FetchMessagesNode(Node):
         if last_pull:
             messages = messages.filter(timestamp__gt=last_pull)
 
-        cache.set(cache_key, datetime.datetime.now(), 7*24*3600)
+        cache.set(cache_key, timezone.now(), 7*24*3600)
         context[self.varname] = messages
         return u''
 

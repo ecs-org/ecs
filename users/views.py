@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-from datetime import datetime, timedelta
+from datetime import timedelta
 import random
 
 from django.http import Http404, HttpResponse
@@ -15,6 +15,7 @@ from django.contrib.auth import views as auth_views
 from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.core import signing
+from django.utils import timezone
 
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
@@ -93,7 +94,7 @@ def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
         form.save()
-        UserProfile.objects.filter(user=request.user).update(last_password_change=datetime.now())
+        UserProfile.objects.filter(user=request.user).update(last_password_change=timezone.now())
         return render(request, 'users/change_password_complete.html', {})
     return render(request, 'users/change_password_form.html', {
         'form': form,
@@ -209,7 +210,7 @@ def do_password_reset(request, token=None):
     form = SetPasswordForm(user, request.POST or None)
     if form.is_valid():
         form.save()
-        profile.last_password_change = datetime.now()
+        profile.last_password_change = timezone.now()
         profile.save()
         return render(request, 'users/password_reset/reset_complete.html', {})
     return render(request, 'users/password_reset/reset_form.html', {
@@ -420,7 +421,7 @@ def accept_invitation(request, invitation_uuid=None):
     if form.is_valid():
         form.save()
         profile = user.get_profile()
-        profile.last_password_change = datetime.now()
+        profile.last_password_change = timezone.now()
         profile.is_phantom = False
         profile.forward_messages_after_minutes = 5
         profile.save()
@@ -437,7 +438,7 @@ def accept_invitation(request, invitation_uuid=None):
 @readonly()
 @user_flag_required('is_executive_board_member')
 def login_history(request):
-    end = datetime.now()
+    end = timezone.now()
     start = end - timedelta(days=1)
     type = None
     page = 1

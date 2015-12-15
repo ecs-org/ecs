@@ -1,6 +1,5 @@
 import re
 import tempfile
-from datetime import datetime
 from base64 import b64decode
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,6 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.core.urlresolvers import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
@@ -299,7 +299,7 @@ def screenshot(request):
         
         slug = request.POST.get('slug', '')
         if not slug:
-            slug = 'screenshot_%s.%s' % (datetime.now().strftime('%y%m%d%H%I%S'), mimetype[-3:])
+            slug = 'screenshot_%s.%s' % (timezone.now().strftime('%y%m%d%H%I%S'), mimetype[-3:])
         
         tmp = tempfile.NamedTemporaryFile() 
         tmp.write(data) 
@@ -316,7 +316,7 @@ def export(request):
         serializer.export(tmpfile)
         tmpfile.seek(0)
         response = HttpResponse(tmpfile.read(), mimetype='application/ech')
-    response['Content-Disposition'] = 'attachment;filename=help-{0}.ech'.format(datetime.now().strftime('%Y-%m-%d'))
+    response['Content-Disposition'] = 'attachment;filename=help-{0}.ech'.format(timezone.now().strftime('%Y-%m-%d'))
     return response
 
 @user_flag_required('is_help_writer')

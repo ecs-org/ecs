@@ -5,6 +5,7 @@ from dbtemplates.models import Template
 
 from django.contrib.auth.models import Group, Permission
 from django.contrib.sites.models import Site
+from django.utils import timezone
 
 from ecs import bootstrap
 from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission, AdvancedSettings
@@ -77,7 +78,7 @@ def templates():
                 path = os.path.join(dirpath, filename)
                 name = "db%s" % path.replace(basedir, '').replace('\\', '/')
                 tpl, created = Template.objects.get_or_create(name=name)
-                if created or tpl.last_changed < datetime.fromtimestamp(os.path.getmtime(path)):
+                if created or tpl.last_changed < timezone.make_aware(datetime.fromtimestamp(os.path.getmtime(path)), timezone.get_current_timezone()):
                     # only read the file if we really have to
                     with open(path, 'r') as f:
                         content = f.read()

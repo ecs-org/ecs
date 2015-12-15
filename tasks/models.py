@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
@@ -7,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 
 from ecs.utils import cached_property
 from ecs.workflow.models import Token, Node
@@ -151,7 +153,7 @@ class Task(models.Model):
     def save(self, *args, **kwargs):
         rval = super(Task, self).save(*args, **kwargs)
         if self.workflow_token and not self.workflow_token.deadline:
-            self.workflow_token.deadline = datetime.now() + timedelta(days=30)
+            self.workflow_token.deadline = timezone.now() + timedelta(days=30)
             self.workflow_token.save()
         return rval
 
@@ -213,7 +215,7 @@ class Task(models.Model):
         return self.node_controller.get_choices()
     
     def close(self, commit=True):
-        self.closed_at = datetime.now()
+        self.closed_at = timezone.now()
         if commit:
             self.save()
         
@@ -232,7 +234,7 @@ class Task(models.Model):
         if token:
             token.mark_deleted()
         else:
-            self.deleted_at = datetime.now()
+            self.deleted_at = timezone.now()
             if commit:
                 self.save()
             
@@ -267,7 +269,7 @@ class Task(models.Model):
         self.assigned_to = user
         self.accepted = False
         if user:
-            self.assigned_at = datetime.now()
+            self.assigned_at = timezone.now()
         else:
             self.assigned_at = None
         if commit:
@@ -311,7 +313,7 @@ def workflow_token_consumed(sender, **kwargs):
 
 def workflow_token_marked_deleted(sender, **kwargs):
     for task in Task.objects.filter(workflow_token=sender, deleted_at__isnull=True):
-        task.deleted_at = datetime.now()
+        task.deleted_at = timezone.now()
         task.save()
 
 def node_saved(sender, **kwargs):

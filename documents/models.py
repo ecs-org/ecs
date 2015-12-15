@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import tempfile
-import datetime
 import mimetypes
 import logging
 from uuid import uuid4
@@ -11,6 +10,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.generic import GenericForeignKey
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext
+from django.utils import timezone
 
 from ecs.authorization import AuthorizationManager
 from ecs.utils.pdfutils import pdf_barcodestamp
@@ -36,7 +36,7 @@ class DocumentManager(AuthorizationManager):
         if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
             kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
 
-        now = datetime.datetime.now()
+        now = timezone.now()
         kwargs.setdefault('date', now)
         kwargs.setdefault('version', str(now))
 

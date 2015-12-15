@@ -1,6 +1,6 @@
-import datetime
 from contextlib import contextmanager
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.tests.submissions import create_submission_form
@@ -58,7 +58,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         sf.submission.ec_number = self.EC_NUMBER
         sf.submission.external_reviewers.add(self.external_review_user)
 
-        meeting = Meeting.objects.create(start=datetime.datetime.now())
+        meeting = Meeting.objects.create(start=timezone.now())
         entry = meeting.add_entry(submission=sf.submission, duration_in_seconds=60)
         entry.add_user(self.board_member_user)
         sf.submission.next_meeting = meeting

@@ -1,11 +1,14 @@
 # http://github.com/simonw/ratelimitcache/blob/master/ratelimitcache.py
 # http://simonwillison.net/2009/Jan/7/ratelimitcache/
 
-from django.http import HttpResponseForbidden
-from django.core.cache import cache
-from datetime import datetime, timedelta
+from datetime import timedelta
 import functools
 from hashlib import sha1
+
+from django.http import HttpResponseForbidden
+from django.core.cache import cache
+from django.utils import timezone
+
 
 class ratelimit(object):
     "Instances of this class can be used as decorators"
@@ -61,7 +64,7 @@ class ratelimit(object):
     
     def keys_to_check(self, request):
         extra = self.key_extra(request)
-        now = datetime.now()
+        now = timezone.now()
         return [
             '%s%s-%s' % (
                 self.prefix,
@@ -74,7 +77,7 @@ class ratelimit(object):
         return '%s%s-%s' % (
             self.prefix,
             self.key_extra(request),
-            datetime.now().strftime('%Y%m%d%H%M')
+            timezone.now().strftime('%Y%m%d%H%M')
         )
     
     def key_extra(self, request):

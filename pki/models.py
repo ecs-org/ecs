@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from ecs.users.utils import get_full_name
 from ecs.pki.utils import get_subject
@@ -38,7 +37,7 @@ class Certificate(models.Model):
 
     def revoke(self):
         assert self.revoked_at is None
-        self.revoked_at = datetime.now()
+        self.revoked_at = timezone.now()
         self.save()
 
         from ecs.pki import openssl

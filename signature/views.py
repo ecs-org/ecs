@@ -6,7 +6,6 @@ import logging
 import sys
 import hashlib
 
-from datetime import datetime
 from tempfile import TemporaryFile
 
 from django.conf import settings
@@ -160,7 +159,7 @@ def sign_receive(request, mock=False):
             uuid=request.sign_data["document_uuid"],
             stamp_on_download=False, doctype=request.sign_data['document_type'],
             original_file_name=request.sign_data["document_filename"],
-            date=datetime.now(), version=request.sign_data["document_version"]
+            version=request.sign_data["document_version"]
         )
         parent_model = request.sign_data.get('parent_type')
         if parent_model:

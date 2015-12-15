@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import timedelta
 import zipfile
 import hashlib
 import os
@@ -17,6 +17,7 @@ from django.core.servers.basehttp import FileWrapper
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
 from django.db.models import Q
+from django.utils import timezone
 
 from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
@@ -446,7 +447,7 @@ def meeting_assistant_start(request, meeting_pk=None):
                 'message': _('There are open vote preparations. You can start the meeting assistant when all vote preparations are done.'),
             })
 
-    meeting.started = datetime.now()
+    meeting.started = timezone.now()
     meeting.save()
     on_meeting_start.send(Meeting, meeting=meeting)
     return redirect('ecs.meetings.views.meeting_assistant', meeting_pk=meeting.pk)
@@ -457,7 +458,7 @@ def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     if meeting.open_tops.exists():
         raise Http404(_("unfinished meetings cannot be stopped"))
-    meeting.ended = datetime.now()
+    meeting.ended = timezone.now()
     meeting.save()
     on_meeting_end.send(Meeting, meeting=meeting)
     return redirect('ecs.meetings.views.meeting_assistant', meeting_pk=meeting.pk)
@@ -652,7 +653,7 @@ def send_agenda_to_board(request, meeting_pk=None):
         for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
             send_system_message_template(u, subject, 'meetings/messages/primary_investigator_invitation.txt', {'top': top}, submission=top.submission)
 
-    meeting.agenda_sent_at = datetime.now()
+    meeting.agenda_sent_at = timezone.now()
     meeting.save()
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
@@ -673,7 +674,7 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
             send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
         form = ExpeditedReviewerInvitationForm(None)
 
-        meeting.expedited_reviewer_invitation_sent_at = datetime.now()
+        meeting.expedited_reviewer_invitation_sent_at = timezone.now()
         meeting.expedited_reviewer_invitation_sent_for = start
         meeting.save()
 
@@ -687,7 +688,7 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
 def send_protocol(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     assert meeting.protocol_sent_at is None
-    meeting.protocol_sent_at = datetime.now()
+    meeting.protocol_sent_at = timezone.now()
     meeting.save()
     protocol_pdf = meeting.get_protocol_pdf(request)
     protocol_filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))

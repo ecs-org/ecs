@@ -6,6 +6,7 @@ from datetime import datetime
 from contextlib import contextmanager
 
 from django.conf import settings
+from django.utils import timezone
 
 from ecs.pki.models import Certificate, CertificateAuthority
 
@@ -48,7 +49,7 @@ def _workdir():
                 ca_root=settings.ECS_CA_ROOT, workdir=workdir))
 
         with open(os.path.join(workdir, 'index.txt'), 'w') as f:
-            now = datetime.now()
+            now = timezone.now()
             for cert in Certificate.objects.order_by('serial'):
                 status = 'V'
                 exp_ts = cert.expires_at.strftime('%y%m%d%H%M%SZ')
