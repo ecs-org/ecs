@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.pki.views',
     url(r'^pki/certs/new/$', 'create_cert'),

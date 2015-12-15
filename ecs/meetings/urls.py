@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.meetings.views',
     url(r'^reschedule/submission/(?P<submission_pk>\d+)/', 'reschedule_submission'),

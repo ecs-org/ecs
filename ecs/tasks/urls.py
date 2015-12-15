@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.tasks.views',
     url(r'^list/$', 'task_list'),

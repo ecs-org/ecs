@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.votes.views',
     url(r'^(?P<vote_pk>\d+)/html/$', 'show_html_vote'),

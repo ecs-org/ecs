@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 from django.http import HttpResponse
 from ecs.docstash.decorators import with_docstash_transaction
 

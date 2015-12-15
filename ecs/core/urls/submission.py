@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('',
     url(r'^(?P<submission_pk>\d+)/tasks/log/$', 'ecs.tasks.views.task_backlog'),

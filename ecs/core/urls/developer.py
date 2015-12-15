@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.core.views', 
     url(r'^submissions/$', 'developer_test_pdf'),

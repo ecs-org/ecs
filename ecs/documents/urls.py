@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import *
+from django.conf.urls import *
 
 urlpatterns = patterns('ecs.documents.views',
     url(r'^(?P<document_pk>\d+)/view/(?:page/(?P<page>\d+)/)?$', 'view_document'),
