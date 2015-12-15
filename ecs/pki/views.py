@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.db.models import Count
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_group_required

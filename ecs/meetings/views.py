@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.servers.basehttp import FileWrapper
 from django.core.paginator import Paginator, EmptyPage, InvalidPage

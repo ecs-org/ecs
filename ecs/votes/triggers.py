@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.template import Context, loader
 
 from ecs.utils import connect

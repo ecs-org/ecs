@@ -4,7 +4,7 @@ import mimetypes
 from django.db import models
 from django.db.models.signals import post_save, post_delete
 from django.conf import settings
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _

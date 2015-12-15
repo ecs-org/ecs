@@ -5,7 +5,7 @@ from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import loader
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 from django.utils import timezone
 
 import reversion

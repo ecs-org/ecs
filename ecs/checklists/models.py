@@ -4,7 +4,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from django.template.defaultfilters import slugify
+from django.utils.text import slugify
 
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
