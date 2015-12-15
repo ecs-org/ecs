@@ -551,8 +551,7 @@ class SubmissionForm(models.Model):
 
         pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='submissionform', parent_object=self, name=name,
-            original_file_name=filename, version=str(self.version),
-            date=datetime.now())
+            original_file_name=filename, version=str(self.version))
         self.pdf_document = pdf_document
         self.save()
 

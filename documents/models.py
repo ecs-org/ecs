@@ -35,7 +35,10 @@ class DocumentManager(AuthorizationManager):
     def create_from_buffer(self, buf, **kwargs): 
         if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
             kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
-        kwargs.setdefault('date', datetime.datetime.now())
+
+        now = datetime.datetime.now()
+        kwargs.setdefault('date', now)
+        kwargs.setdefault('version', str(now))
 
         doc = self.create(**kwargs)
         with tempfile.TemporaryFile() as f:

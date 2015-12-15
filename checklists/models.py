@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from datetime import datetime
 from uuid import uuid4
 
 from django.db import models
@@ -125,8 +124,7 @@ class Checklist(models.Model):
 
         self.pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='checklist', parent_object=self, name=name,
-            original_file_name=filename, version='1', date=datetime.now()
-        )
+            original_file_name=filename)
         self.save()
 
     def get_submission(self):

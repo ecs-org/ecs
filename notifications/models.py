@@ -125,12 +125,10 @@ class Notification(models.Model):
             'submission_forms': submission_forms,
             'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
         })
-        now = datetime.now()
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification', parent_object=self, name=unicode(self),
-            original_file_name=self.get_filename(), version=str(now), date=now
-        )
+            original_file_name=self.get_filename())
         self.save()
         
         return self.pdf_document
@@ -200,10 +198,9 @@ class NotificationAnswer(models.Model):
         tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
         pdf = render_pdf_context(tpl, self.get_render_context())
 
-        now = datetime.now()
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification_answer', parent_object=self,
-            name=unicode(self), version=str(now), date=now,
+            name=unicode(self),
             original_file_name=notification.get_filename('-answer.pdf')
         )
         self.save()
