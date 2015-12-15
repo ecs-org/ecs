@@ -132,7 +132,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'ecs.utils.forceauth.ForceAuth',
-    'ecs.utils.middleware.SignedCookiesMiddleware',
     'ecs.users.middleware.SingleLoginMiddleware',  # deactivate previous users sessions on login
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'ecs.pki.middleware.ClientCertMiddleware',
