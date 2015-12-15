@@ -28,7 +28,7 @@
       <h1>{% trans "Catalog of Approved Studies" %}</h1>
       <div class="years">
       {% for date in years %}
-          <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+          <a class="{% if date.year == year %}selected{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
       {% endfor %}
       </div>
       
@@ -72,7 +72,7 @@
   
       <div class="years">
       {% for date in years %}
-          <a class="{% if date.year == year %}selected{% endif %}" href="{% url ecs.core.views.submissions.catalog year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
+          <a class="{% if date.year == year %}selected{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
       {% endfor %}
       </div>
     

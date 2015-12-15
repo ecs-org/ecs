@@ -5,7 +5,7 @@
     {{ block.super }}
     <br />
     {% if answer.pdf_document_id %}
-        <a href="{% url ecs.documents.views.download_document document_pk=answer.pdf_document_id %}" class="button_submit">{% trans 'Download PDF' %}</a>
+        <a href="{% url 'ecs.documents.views.download_document' document_pk=answer.pdf_document_id %}" class="button_submit">{% trans 'Download PDF' %}</a>
     {% endif %}
 {% endblock %}
 
@@ -17,7 +17,7 @@
 
 {% if user|has_flag:'is_internal' %}
 <br/><p>
-    <a href="javascript:void(ecs.fieldhistory.show('{% url ecs.core.views.field_history model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
+    <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.field_history' model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
 </p>
 {% endif %}
 

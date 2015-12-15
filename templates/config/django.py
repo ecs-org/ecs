@@ -70,3 +70,5 @@ STORAGE_DECRYPT = {
     "verify_key":  os.path.join(PROJECT_DIR, "..", "..", "ecs-conf", "ecs_authority.pub"),
     "verify_owner": "%(documents.storage.verify_owner)s",
 }
+
+ALLOWED_HOSTS = ['%(hostname)s']

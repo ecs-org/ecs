@@ -10,7 +10,7 @@
 {% block content %}
 
     {% if diff %}
-        <a href="{% url view_submission submission_pk=submission.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+        <a href="{% url 'view_submission' submission_pk=submission.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
 
         <div class="diff_toggles">
             <a href="#" id="diff_show_old">{% trans "old" %}</a>
@@ -25,7 +25,7 @@
         <div class="diff"><em>{% trans 'No changes.' %}</em></div>
     {% endif %}
 
-    <a href="{% url view_submission submission_pk=submission.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+    <a href="{% url 'view_submission' submission_pk=submission.pk %}#status_tab" class="button_submit">{% trans "Back to the Study" %}</a>
     
 {% endblock %}
 

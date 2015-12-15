@@ -1,16 +1,16 @@
 # encoding: utf-8
 import datetime
+import json
 from south.db import db
 from south.v2 import DataMigration
 from django.db import models
-from django.utils import simplejson
 from urllib import urlencode
 
 class Migration(DataMigration):
 
     def forwards(self, orm):
         for s in orm['users.UserSettings'].objects.all():
-            data = simplejson.loads(s.task_filter_tmp)
+            data = json.loads(s.task_filter_tmp)
             if data:
                 s.task_filter = urlencode(data)
                 s.save()

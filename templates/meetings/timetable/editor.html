@@ -11,9 +11,9 @@
 <div id="meeting_editor">
     {% if not readonly %}
         <ol class="options">
-            <li><a class="open-in-widget" href="{% url ecs.meetings.views.add_free_timetable_entry meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
-            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable meeting_pk=meeting.pk,algorithm='ga' %}">Optimieren</a></li>
-            <li><a class="open-in-widget" href="{% url ecs.meetings.views.optimize_timetable_long meeting_pk=meeting.pk,algorithm='ga' %}">Lange optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url 'ecs.meetings.views.add_free_timetable_entry' meeting_pk=meeting.pk %}">Termin hinzufügen</a></li>
+            <li><a class="open-in-widget" href="{% url 'ecs.meetings.views.optimize_timetable' meeting_pk=meeting.pk algorithm='ga' %}">Optimieren</a></li>
+            <li><a class="open-in-widget" href="{% url 'ecs.meetings.views.optimize_timetable_long' meeting_pk=meeting.pk algorithm='ga' %}">Lange optimieren</a></li>
         </ol>
     {% endif %}
     <div class="waiting_time">
@@ -34,16 +34,16 @@
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
                 {% if entry.submission %}
-                    <a class="preview" href="{% url view_submission submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
+                    <a class="preview" href="{% url 'view_submission' submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
                     {{ entry.submission.project_title_display|smart_truncate:40 }}
                 {% endif %}
             </h4>
             {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
             {% if not readonly %}
                 {% if not entry.submission %}
-                    <a class="open-in-widget remove" href="{% url ecs.meetings.views.remove_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}"></a>
+                    <a class="open-in-widget remove" href="{% url 'ecs.meetings.views.remove_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}"></a>
                 {% endif %}
-                <form action="{% url ecs.meetings.views.update_timetable_entry meeting_pk=meeting.pk,entry_pk=entry.pk %}" method="post" class="open-in-widget">
+                <form action="{% url 'ecs.meetings.views.update_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}" method="post" class="open-in-widget">
                     {% csrf_token %}
                     <input type="text" value="{{ entry.duration|simple_timedelta_format }}" name="duration" class="duration" />
                     <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start" />
@@ -59,7 +59,7 @@
                         {% endwith %}
                     {% endif %}
                     {% for user, ignored in entry.users %}
-                        <a href="{% url ecs.meetings.views.toggle_participation meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                        <a href="{% url 'ecs.meetings.views.toggle_participation' meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 </span>
                 {% endif %}
@@ -90,7 +90,7 @@
                         </ul>
                     {% endif %}
                     {% if not readonly %}
-                        <span class="contraints_edit"><a href="{% url ecs.meetings.views.edit_user_constraints meeting_pk=meeting.pk,user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                        <span class="contraints_edit"><a href="{% url 'ecs.meetings.views.edit_user_constraints' meeting_pk=meeting.pk user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
                     {% endif %}
                     </div>
                 </li>
@@ -142,7 +142,7 @@ window.addEvent('domready', function(){
             dndInfo.startIndex = null;
             if(fromIndex != toIndex && fromIndex !== null){
                 var widget = $('timetable_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
-                widget.load('{% url ecs.meetings.views.move_timetable_entry meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
+                widget.load('{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
             }
         }
         {% endif %}

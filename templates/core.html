@@ -3,8 +3,8 @@
 
 {% block account %}
   <div class="user_data">
-    <div class="user_icon"><a href="{% url ecs.users.views.profile %}">User</a></div> 
-    <div class="user_name"><a href="{% url ecs.users.views.profile %}">{{ user }}</a>
+    <div class="user_icon"><a href="{% url 'ecs.users.views.profile' %}">User</a></div> 
+    <div class="user_name"><a href="{% url 'ecs.users.views.profile' %}">{{ user }}</a>
       <span class="user_logout"><a href="/accounts/logout">Logout</a></span>
     </div>
     
@@ -14,20 +14,20 @@
 
 {% block usertoolbar %}
   <div class="searchbox">
-    <form action="{% url ecs.core.views.all_submissions %}" method="get" enctype="multipart/form-data">
+    <form action="{% url 'ecs.core.views.all_submissions' %}" method="get" enctype="multipart/form-data">
       <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
       <input type="submit" value="" title="suchen" />
     </form>
   </div>
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   {% get_scratchpad as scratchpad %}
-  <a href="{% url ecs.scratchpad.views.popup %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
+  <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="open-in-popup{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
   {% if user|has_flag:"is_internal" %}
     {% get_breadcrumbs as crumbs %}
     {% if crumbs %}
     <div class="breadcrumbs">
       {% for submission in crumbs %}
-        <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }}{% if not forloop.last %},{% endif %}</a>
+        <a href="{% url 'view_submission' submission_pk=submission.pk %}">{{ submission|ec_number }}{% if not forloop.last %},{% endif %}</a>
       {% endfor %}
     </div>
     {% endif %}
@@ -36,44 +36,44 @@
         
 {% block usermenu %}
   <ul>
-    <li class="main_item"><a href="{% url ecs.dashboard.views.view_dashboard %}">{% trans "Dashboard" %}</a></li>
-    <li class="main_item"><a href="{% url ecs.communication.views.list_threads %}">{% trans "Communication" %}</a></li>
+    <li class="main_item"><a href="{% url 'ecs.dashboard.views.view_dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="main_item"><a href="{% url 'ecs.communication.views.list_threads' %}">{% trans "Communication" %}</a></li>
     {% if user.get_profile.has_explicit_workflow %}
-        <li class="main_item"><a href="{% url ecs.tasks.views.task_list %}">{% trans "Tasks" %}</a></li>
+        <li class="main_item"><a href="{% url 'ecs.tasks.views.task_list' %}">{% trans "Tasks" %}</a></li>
     {% endif %}
     <li>
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
           {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
-              <li><a href="{% url ecs.core.views.all_submissions %}">{% trans "All Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.all_submissions' %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|has_assigned_submissions %}
-              <li><a href="{% url ecs.core.views.assigned_submissions %}">{% trans "Assigned Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.assigned_submissions' %}">{% trans "Assigned Studies" %}</a></li>
           {% endif %}
           {% if user|has_submissions %}
-              <li><a href="{% url ecs.core.views.my_submissions %}">{% trans "My Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.my_submissions' %}">{% trans "My Studies" %}</a></li>
           {% endif %}
-          <li><a href="{% url ecs.core.views.create_submission_form %}">{% trans "New Submission" %}</a></li>
-          <li><a href="{% url ecs.core.views.import_submission_form %}">{% trans "Import" %}</a></li>
+          <li><a href="{% url 'ecs.core.views.create_submission_form' %}">{% trans "New Submission" %}</a></li>
+          <li><a href="{% url 'ecs.core.views.import_submission_form' %}">{% trans "Import" %}</a></li>
       </ul>
     </li>
     <li>
       <span class="togglers">{% trans "Study Notifications" %}</span>
       <ul class="elements">
-          <li><a href="{% url ecs.notifications.views.open_notifications %}">{% trans 'Open Notifications' %}</a></li>
-          <li><a href="{% url ecs.notifications.views.select_notification_creation_type %}">{% trans 'New Notification' %}</a></li>
+          <li><a href="{% url 'ecs.notifications.views.open_notifications' %}">{% trans 'Open Notifications' %}</a></li>
+          <li><a href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans 'New Notification' %}</a></li>
       </ul>
     </li>
     {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" or user|has_flag:"is_resident_member" %}
         <li>
           <span class="togglers">{% trans "Meetings" %}</span>
           <ul class="elements">
-                <li><a href="{% url ecs.meetings.views.next %}">{% trans "Next Meeting" %}</a></li>
+                <li><a href="{% url 'ecs.meetings.views.next' %}">{% trans "Next Meeting" %}</a></li>
                 {% if user|has_flag:"is_internal" or user|has_flag:"is_resident_member" %}
-                    <li><a href="{% url ecs.meetings.views.upcoming_meetings %}">{% trans "Upcoming Meetings" %}</a></li>
-                    <li><a href="{% url ecs.meetings.views.past_meetings %}">{% trans "Past Meetings" %}</a></li>
+                    <li><a href="{% url 'ecs.meetings.views.upcoming_meetings' %}">{% trans "Upcoming Meetings" %}</a></li>
+                    <li><a href="{% url 'ecs.meetings.views.past_meetings' %}">{% trans "Past Meetings" %}</a></li>
                     {% if user|is_member_of:"EC-Office" %}
-                        <li><a href="{% url ecs.meetings.views.create_meeting %}">{% trans "New Meeting" %}</a></li>
+                        <li><a href="{% url 'ecs.meetings.views.create_meeting' %}">{% trans "New Meeting" %}</a></li>
                     {% endif %}
                 {% endif %}
           </ul>
@@ -85,15 +85,15 @@
           <ul class="elements">
                 {% if user|has_flag:"is_internal" %}
                       {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Group" %}
-                          <li><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
-                          <li><a href="{% url ecs.billing.views.submission_billing %}">{% trans "Accounting of fees" %}</a></li>
-                          <li><a href="{% url ecs.billing.views.external_review_payment %}">Gutachter Bezahlung</a></li>
-                          <li><a href="{% url ecs.core.views.advanced_settings %}">{% trans 'Advanced Settings' %}</a></li>
+                          <li><a href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a></li>
+                          <li><a href="{% url 'ecs.billing.views.submission_billing' %}">{% trans "Accounting of fees" %}</a></li>
+                          <li><a href="{% url 'ecs.billing.views.external_review_payment' %}">Gutachter Bezahlung</a></li>
+                          <li><a href="{% url 'ecs.core.views.advanced_settings' %}">{% trans 'Advanced Settings' %}</a></li>
                       {% endif %}
-                      <li><a href="{% url ecs.statistics.views.stats %}">{% trans 'Statistics' %}</a></li>
-                      <li><a href="{% url ecs.boilerplate.views.list_boilerplate %}">{% trans 'Boilerplates' %}</a></li>
+                      <li><a href="{% url 'ecs.statistics.views.stats' %}">{% trans 'Statistics' %}</a></li>
+                      <li><a href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">{% trans 'Boilerplates' %}</a></li>
                       {% if user|is_member_of:'EC-Signing Group' %}
-                          <li><a href="{% url ecs.pki.views.cert_list %}">{% trans 'PKI' %}</a></li>
+                          <li><a href="{% url 'ecs.pki.views.cert_list' %}">{% trans 'PKI' %}</a></li>
                       {% endif %}
                 {% endif %}   
           </ul>
@@ -103,12 +103,12 @@
       <li>
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">
-             <li><a href="{% url ecs.core.views.developer_test_pdf %}">{% trans "Submission PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_checklist_pdf %}">{% trans "Checklist PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_notification_pdf %}">{% trans "Notification PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_notification_answer_pdf %}">{% trans "Notification Answer PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_test_vote_pdf %}">{% trans "Vote PDF" %}</a></li>
-             <li><a href="{% url ecs.core.views.developer_translations %}">{% trans "Translations" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_test_pdf' %}">{% trans "Submission PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_test_checklist_pdf' %}">{% trans "Checklist PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_test_notification_pdf' %}">{% trans "Notification PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_test_notification_answer_pdf' %}">{% trans "Notification Answer PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_test_vote_pdf' %}">{% trans "Vote PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer_translations' %}">{% trans "Translations" %}</a></li>
         </ul>
       </li>
     {% endif %} 
@@ -142,7 +142,7 @@
 {% block headernav %}
     {% if user.get_profile.is_indisposed %}
     <div>
-      {% url ecs.users.views.profile as profile_url %}
+      {% url 'ecs.users.views.profile' as profile_url %}
       {% blocktrans with profile_url as profile_url %}
           You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
       {% endblocktrans %}
@@ -261,15 +261,15 @@
       
       window.openHelpPage = function(e){
           {% if request.tracking_data.view %}
-          var url = '{% url ecs.help.views.find_help view_pk=request.tracking_data.view.pk %}';
+          var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
           if(e && e.shift){
-              url = '{% url ecs.help.views.edit_help_page view_pk=request.tracking_data.view.pk %}';
+              url = '{% url 'ecs.help.views.edit_help_page' view_pk=request.tracking_data.view.pk %}';
           }
           if(window.location.hash){
               url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
           }
           {% else %}
-          var url = '{% url ecs.help.views.index %}';
+          var url = '{% url 'ecs.help.views.index' %}';
           {% endif %}
           var win = window.open(url, 'ecshelp');
           win.focus();

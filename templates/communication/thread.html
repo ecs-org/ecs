@@ -16,9 +16,9 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
+<a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 <ul class="thread">
@@ -28,7 +28,7 @@
             <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
             <span class="preview">{{ message|preview:80 }}</span>
             {% if not thread|closed_by:user %}
-                <span class="message_done">{% trans 'mark as done' %}: <a class="icon_accept" href="{% url ecs.communication.views.close_thread thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}">done</a></span>
+                <span class="message_done">{% trans 'mark as done' %}: <a class="icon_accept" href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}">done</a></span>
             {% endif %}
             <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
         </div>
@@ -39,7 +39,7 @@
 <div class="related_thread">
 {% if thread.related_thread %}
 {% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
-    Den betreffenden Nachrichtenstrang finden sie <a href="{% url ecs.communication.views.read_thread thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
+    Den betreffenden Nachrichtenstrang finden sie <a href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
 {% endif %}
 {% endif %}
 </div>
@@ -56,9 +56,9 @@
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
-<a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "To the communication overview" %}</a>
+<a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "To the communication overview" %}</a>
 {% if thread.submission %}
-<a href="{% url view_submission submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+<a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
 {% endif %}
 
 </div>
@@ -78,7 +78,7 @@
         var messageToolbarItems = [];
 
         {% if user|has_flag:'is_internal' %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
         {% endif %}
 
         var textarea = communication_thread.getElement('textarea[name="text"]');

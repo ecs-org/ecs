@@ -21,7 +21,7 @@
             {% trans "Indisposed" %}: 
             {{ profile.is_indisposed|yesno:'ja,nein' }}
             {% if user == profile_user and profile.is_indisposed %}
-                <a href="{% url ecs.users.views.notify_return %}">{% trans 'Reset' %}</a>
+                <a href="{% url 'ecs.users.views.notify_return' %}">{% trans 'Reset' %}</a>
             {% endif %}
         </div>
     </td></tr>

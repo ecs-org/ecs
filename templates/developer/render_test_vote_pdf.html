@@ -6,8 +6,8 @@
     {% for vote in votes %}
         <li>
             {{ vote }}
-            <a href="{% url ecs.core.views.test_vote_pdf_html vote_pk=vote.pk %}">HTML</a>
-            | <a href="{% url ecs.core.views.test_render_vote_pdf vote_pk=vote.pk %}">PDF</a>
+            <a href="{% url 'ecs.core.views.test_vote_pdf_html' vote_pk=vote.pk %}">HTML</a>
+            | <a href="{% url 'ecs.core.views.test_render_vote_pdf' vote_pk=vote.pk %}">PDF</a>
             <div style="height:10px;"></div>
         </li>
     {% endfor %}

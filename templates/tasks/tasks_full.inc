@@ -61,21 +61,21 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url ecs.tasks.views.accept_task_type_full flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
+                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
                         {% endif %}
                     {% endwith %}
                     | 
-                    <form action="{% url ecs.tasks.views.decline_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{% trans "Decline" %}</a>{% csrf_token %}</form>{% if not forloop.last %}, {% endif %}
+                    <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{% trans "Decline" %}</a>{% csrf_token %}</form>{% if not forloop.last %}, {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -90,14 +90,14 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url ecs.tasks.views.accept_task_type_full flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
+                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
@@ -117,14 +117,14 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url ecs.tasks.views.accept_task_type_full flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h3>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h3>
                 <ul> {% for task in task_type.list %} <li>
-                    <form action="{% url ecs.tasks.views.accept_task_full task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
+                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
                             <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>

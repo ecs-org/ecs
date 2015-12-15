@@ -16,7 +16,7 @@
         <ul class="results">
         {% for result in page.object_list %}
             <li>
-                <a class="page" href="{% url ecs.help.views.view_help_page page_pk=result.pk %}">
+                <a class="page" href="{% url 'ecs.help.views.view_help_page' page_pk=result.pk %}">
                     {{ result.title }}
                 </a>
                 {% highlight result.object.text with query class "highlight" %}

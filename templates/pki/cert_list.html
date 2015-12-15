@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<a href="{% url ecs.pki.views.create_cert %}">{% trans 'Create new certificate' %}</a>
+<a href="{% url 'ecs.pki.views.create_cert' %}">{% trans 'Create new certificate' %}</a>
 
 <table class="cert_list">
     <tr>
@@ -21,7 +21,7 @@
             <td>{{ cert.cn }}</td>
             <td>
                 {% if not cert.revoked_at %}
-                <form action="{% url ecs.pki.views.revoke_cert cert_pk=cert.pk %}" method="post">
+                <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
                     {% csrf_token %}
                     <a class="submit_parent">{% trans 'Revoke' %}</a>
                 </form>

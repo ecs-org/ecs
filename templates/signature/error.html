@@ -3,7 +3,7 @@
 
 {% block actions %}
     {{ block.super }}
-    <a class="highlight" href="{% url ecs.signature.views.batch_action pdf_id=pdf_id action="retry" %}">{% trans 'Try again' %}</a>
+    <a class="highlight" href="{% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="retry" %}">{% trans 'Try again' %}</a>
 {% endblock %}
 
 {% block navbottom %}

@@ -13,11 +13,11 @@
     <div class="list_item">
         {% block actions %}
 	    {% if doc.doctype.is_downloadable or user|has_flag:'is_internal' %}
-		<a href="{% url ecs.documents.views.download_document document_pk=doc.pk %}">{% trans "Download" %}</a> | 
+		<a href="{% url 'ecs.documents.views.download_document' document_pk=doc.pk %}">{% trans "Download" %}</a> | 
 	    {% endif %}
-	    <a href="{% url ecs.documents.views.view_document document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> | 
+	    <a href="{% url 'ecs.documents.views.view_document' document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> | 
         {% endblock %}
-        <a class="doc_name" href="{% url ecs.documents.views.view_document document_pk=doc.pk %}" target="_blank">
+        <a class="doc_name" href="{% url 'ecs.documents.views.view_document' document_pk=doc.pk %}" target="_blank">
             {% if doc.name %}
             {{ doc.name }}
             {% else %}

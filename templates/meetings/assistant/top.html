@@ -3,9 +3,9 @@
 
 {% block meeting_assistant_body %}
   <div class="column_main">
-    <form id="meeting_assistant_form" action="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk top_pk=top.pk %}" method="post" class="open-in-widget">
+    <form id="meeting_assistant_form" action="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
-        <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url view_submission submission_pk=submission.pk %}" target="_blank">preview</a>{% endif %}</h3>
+        <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="preview" href="{% url 'view_submission' submission_pk=submission.pk %}" target="_blank">preview</a>{% endif %}</h3>
         {% if not top.is_break %}
             {{ submission.project_title_display|default:top.title }}<br />
             {% if top.submission.invite_primary_investigator_to_meeting %}
@@ -70,19 +70,19 @@
 
 {% block meeting_assistant_navigation %}
     {% if top.next_open %}
-        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
+        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
     {% endif %}
     {% if top.previous_open %}
-        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
+        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
     {% endif %}
     {% if top.next %}
-        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
+        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
     {% endif %}
     {% if top.previous %}
-        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
+        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
     {% endif %}
     {% if last_top %}
-        <a class="open-in-widget" href="{% url ecs.meetings.views.meeting_assistant_top meeting_pk=meeting.pk,top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
+        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
     {% endif %}
     {{ block.super }}
 {% endblock %}
@@ -100,10 +100,10 @@
                 {% endif %}
                 {% if checklist and task.closed_at %}
                   {% if checklist.has_positive_comments %}
-                    <a class="textblock" href="{% url ecs.checklists.views.checklist_comments flavour='positive',checklist_pk=checklist.pk %}">{% trans 'copy positive' %}</a>
+                    <a class="textblock" href="{% url 'ecs.checklists.views.checklist_comments' flavour='positive' checklist_pk=checklist.pk %}">{% trans 'copy positive' %}</a>
                   {% endif %}
                   {% if checklist.has_negative_comments %}
-                    <a class="textblock" href="{% url ecs.checklists.views.checklist_comments flavour='negative',checklist_pk=checklist.pk %}">{% trans 'copy negative' %}</a>
+                    <a class="textblock" href="{% url 'ecs.checklists.views.checklist_comments' flavour='negative' checklist_pk=checklist.pk %}">{% trans 'copy negative' %}</a>
                   {% endif %}
                 {% endif %}
               </li>
@@ -136,7 +136,7 @@
             var textarea = $('id_text')
             new ecs.textarea.TextArea(textarea);
             ecs.textarea.installToolbar(textarea, [
-                ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}")
+                ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}")
             ]);
             {% endif %}
             

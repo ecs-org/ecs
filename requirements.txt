@@ -2,12 +2,12 @@ psycopg2
 pytz
 
 # django main
-Django>=1.4,<1.5
+Django>=1.5,<1.6
 South<2.0
 django-extensions<1.6
 django-picklefield		# for docstash
 django-dbtemplates
-django-reversion==1.6.6
+django-reversion==1.7.1
 pylibmc				# for caching
 docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
@@ -23,14 +23,14 @@ django-celery<2.4
 # mail: ecsmail, communication: lamson mail server
 mock<1.1.3
 lamson
-#BeautifulSoup==3.0.8
+BeautifulSoup==3.0.8
 # from http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
-#BeautifulCleaner==2.0dev
+BeautifulCleaner==2.0dev
 
 # search
 Whoosh==2.4
 pysolr
-django-haystack==2.1.0
+django-haystack==2.3.2
 
 xlwt	# excel generation
 

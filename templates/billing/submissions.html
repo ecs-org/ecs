@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url ecs.billing.views.invoice_list %}">{% trans 'Old Invoices' %}</a></p>
+    <p><a href="{% url 'ecs.billing.views.invoice_list' %}">{% trans 'Old Invoices' %}</a></p>
 
     <h2>{% trans 'Unbilled Submissions' %}</h2>
     {% if submissions %}
@@ -22,9 +22,9 @@
                     <li>
                         <input type="checkbox" name="bill_{{ submission.pk }}" checked="checked" />
                         <span class="indent">
-                            <a href="{% url view_submission submission_pk=submission.pk %}">{{ submission|ec_number }} </a>{{ submission.project_title_display }}<br>
+                            <a href="{% url 'view_submission' submission_pk=submission.pk %}">{{ submission|ec_number }} </a>{{ submission.project_title_display }}<br>
                             {% trans 'Sponsor' %}: {{ submission.current_submission_form.sponsor_name }}<br>
-                            {# <a href="{% url ecs.votes.views.show_html_vote vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a> #}
+                            {# <a href="{% url 'ecs.votes.views.show_html_vote' vote_pk=vote.pk %}" target="_blank">{% trans "Ansehen" %}</a> #}
                             <span class="price">{{ submission.price.price|euro }}</span> ({{ submission.price.text }})
                         </span>
                     </li>

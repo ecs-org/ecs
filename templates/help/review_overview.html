@@ -7,7 +7,7 @@
     {% for page in ready_for_review %}
         <li>
             {{ page.title }}
-            | <a href="{% url ecs.help.views.view_help_page page_pk=page.pk %}">review</a>
+            | <a href="{% url 'ecs.help.views.view_help_page' page_pk=page.pk %}">review</a>
         </li>
     {% empty %}
         <li><em>No page is ready for review yet!</em></li>
@@ -19,7 +19,7 @@
     {% for page in review_fail %}
         <li>
             {{ page.title }}
-            | <a href="{% url ecs.help.views.view_help_page page_pk=page.pk %}">view</a>
+            | <a href="{% url 'ecs.help.views.view_help_page' page_pk=page.pk %}">view</a>
         </li>
     {% empty %}
         <li><em>No review failed yet!</em></li>
@@ -31,7 +31,7 @@
     {% for page in new %}
         <li>
             {{ page.title }}
-            | <a href="{% url ecs.help.views.view_help_page page_pk=page.pk %}">view</a>
+            | <a href="{% url 'ecs.help.views.view_help_page' page_pk=page.pk %}">view</a>
         </li>
     {% empty %}
         <li><em>No new page yet!</em></li>
@@ -43,7 +43,7 @@
     {% for page in review_ok %}
         <li>
             {{ page.title }}
-            | <a href="{% url ecs.help.views.view_help_page page_pk=page.pk %}">view</a>
+            | <a href="{% url 'ecs.help.views.view_help_page' page_pk=page.pk %}">view</a>
         </li>
     {% empty %}
         <li><em>No page is completed yet!</em></li>

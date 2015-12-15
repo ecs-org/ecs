@@ -7,9 +7,9 @@
         <h3>{% trans "Scratchpad" %}</h3>
     {% endif %}
 
-    <a href="{% url ecs.scratchpad.views.popup_list %}" class="scratchpad_list open-in-widget">{% trans "Show all my scratchpads" %}</a>
+    <a href="{% url 'ecs.scratchpad.views.popup_list' %}" class="scratchpad_list open-in-widget">{% trans "Show all my scratchpads" %}</a>
 
-    <form id="scratchpad_form" action="{% url ecs.scratchpad.views.popup scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
+    <form id="scratchpad_form" action="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
         {% csrf_token %}
         {{ form.text }}
     </form>

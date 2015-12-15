@@ -6,7 +6,7 @@
 {% endif %}
 
 {# this form needs an explicit action, because it is used in widgets #}
-<form id="{{ form_id }}" action="{% if submission %}{% url ecs.tasks.views.my_tasks submission_pk=submission.pk %}{% else %}{% url ecs.tasks.views.my_tasks %}{% endif %}" method="post" class="open-in-widget">
+<form id="{{ form_id }}" action="{% if submission %}{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}{% else %}{% url 'ecs.tasks.views.my_tasks' %}{% endif %}" method="post" class="open-in-widget">
     {% csrf_token %}
     <div class="task_list_choose">
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
@@ -56,14 +56,14 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task_type' flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
-                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         {% csrf_token %}
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>
@@ -73,7 +73,7 @@
                         {% endif %}
                     {% endwith %}
                     | 
-                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.decline_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.decline_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         {% csrf_token %}
                         <a class="submit-in-widget" href="">{% trans "Decline" %}</a>
                     </form>
@@ -91,14 +91,14 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task_type' flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
-                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         {% csrf_token %}
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>
@@ -123,14 +123,14 @@
         {% for task_type in task_type_list %}
             <div class="task_item toggle_collapse">
                 {% if task_type.list|length > 1 %}
-                <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task_type flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task_type' flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
-                    <form class="open-in-widget" method="post" action="{% url ecs.tasks.views.accept_task task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                         {% csrf_token %}
                         <a class="submit-in-widget" href="">{{ task.data }}</a>
                     </form>

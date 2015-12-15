@@ -52,7 +52,7 @@
             var pos = textarea.getPosition();
             preview.setStyles({left: pos.x, top: pos.y, width: size.x, height: size.y});
             var request = new Request.HTML({
-                url: '{% url ecs.help.views.preview_help_page_text %}',
+                url: '{% url 'ecs.help.views.preview_help_page_text' %}',
                 method: 'post',
                 data: 'text=' + encodeURIComponent(textarea.value),
                 update: preview,
@@ -78,13 +78,13 @@
                 var self = this;
                 var request = new Request.HTML({
                     update: $$('#help_attachments > .list')[0],
-                    url: '{% url ecs.help.views.find_attachments %}?q=' + encodeURIComponent(this.query),
+                    url: '{% url 'ecs.help.views.find_attachments' %}?q=' + encodeURIComponent(this.query),
                     onSuccess: function(){
                         $$('#help_attachments > .list > div').each(function(d){
                             var deleteLink = new Element('a', {html: 'delete'});
                             deleteLink.addEvent('click', function(){
                                 var request = new Request({
-                                    url: '{% url ecs.help.views.delete_attachment %}',
+                                    url: '{% url 'ecs.help.views.delete_attachment' %}',
                                     data: 'pk=' + d.id.split('_')[1],
                                     onSuccess: function(){
                                         self.refresh(true)

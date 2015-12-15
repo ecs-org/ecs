@@ -6,8 +6,8 @@
     {% for notification in notifications %}
         <li>
             {{ notification }}
-            <a href="{% url ecs.core.views.test_notification_pdf_html notification_pk=notification.pk %}">HTML</a>
-            | <a href="{% url ecs.core.views.test_render_notification_pdf notification_pk=notification.pk %}">PDF</a>
+            <a href="{% url 'ecs.core.views.test_notification_pdf_html' notification_pk=notification.pk %}">HTML</a>
+            | <a href="{% url 'ecs.core.views.test_render_notification_pdf' notification_pk=notification.pk %}">PDF</a>
             <div style="height:10px;"></div>
         </li>
     {% endfor %}

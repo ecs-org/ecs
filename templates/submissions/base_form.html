@@ -73,7 +73,7 @@
                                     </ul>
                                 </div>
                             {% endif %}
-                            <iframe class="upload" src="{% url ecs.core.views.upload_document_for_submission docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
+                            <iframe class="upload" src="{% url 'ecs.core.views.upload_document_for_submission' docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
                         {% else %}
                             {% include "documents/compact_list.html" %}
                         {% endif %}

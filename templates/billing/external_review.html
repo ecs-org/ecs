@@ -10,11 +10,11 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url ecs.billing.views.checklist_payment_list %}">{% trans 'Old Payments' %}</a></p>
+    <p><a href="{% url 'ecs.billing.views.checklist_payment_list' %}">{% trans 'Old Payments' %}</a></p>
 
     <h2>{% trans 'Unbilled Reviews' %}</h2>
     {% if debug %}
-        <a href="{% url ecs.billing.views.reset_external_review_payment %}" class="button_submit">reset</a>
+        <a href="{% url 'ecs.billing.views.reset_external_review_payment' %}" class="button_submit">reset</a>
     {% endif %}
 
     {% if checklists %}

@@ -6,7 +6,7 @@
     <ul>
     {% for scratchpad in scratchpads %}
         <li>
-            <a href="{% url ecs.scratchpad.views.popup scratchpad_pk=scratchpad.pk %}" class="open-in-widget">
+            <a href="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}" class="open-in-widget">
             {% if scratchpad.submission %}
                 {% blocktrans with scratchpad.submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}
             {% else %}

@@ -20,7 +20,7 @@
 
             {% for result in page.object_list %}
                 <p>
-                    <a href="{% url ecs.documents.views.view_document document_pk=result.objects.doc_id page=result.object.num %}">
+                    <a href="{% url 'ecs.documents.views.view_document' document_pk=result.objects.doc_id page=result.object.num %}">
                         {% if not document %}{{ result.object.doc }} {% endif %}Seite {{ result.object.num }}:
                     </a>
                     {% highlight result.object.text with request.GET.q class "highlight" %}

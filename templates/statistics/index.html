@@ -12,7 +12,7 @@
                 {% if year == current_year %}
                     {{ year }}
                 {% else %}
-                    <a href="{% url ecs.statistics.views.stats year=year %}">{{ year }}</a>
+                    <a href="{% url 'ecs.statistics.views.stats' year=year %}">{{ year }}</a>
                 {% endif %}
             </li>
         {% endfor %}
@@ -28,7 +28,7 @@
                     <td>
                         {% if entry.with_listing %}
                         {% for submission in entry.submissions %}
-                            <a href="{% url view_submission submission_pk=submission.pk %}">
+                            <a href="{% url 'view_submission' submission_pk=submission.pk %}">
                                 {{ submission|ec_number }}
                             </a>
                         {% endfor %}

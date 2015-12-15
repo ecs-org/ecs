@@ -35,7 +35,7 @@
             <div id="tabs-{{ forloop.counter }}" class="tab">
                 {% if tab.slug == 'documents' %}
                     <div class="field">
-                        <iframe class="upload" src="{% url ecs.notifications.views.upload_document_for_notification docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
+                        <iframe class="upload" src="{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
                     </div>
                 {% endif %}
                 
@@ -122,7 +122,7 @@
 
             function loadSubmissionFormData(pks){
                 var request = new Request.HTML({
-                    url: '{% url ecs.notifications.views.submission_data_for_notification %}',
+                    url: '{% url 'ecs.notifications.views.submission_data_for_notification' %}',
                     data: 'submission_form=' + pks.join('&submission_form='),
                     method: 'get',
                     evalScripts: false,

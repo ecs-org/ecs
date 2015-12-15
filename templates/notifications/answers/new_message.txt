@@ -2,9 +2,9 @@
 {% load i18n core %}
 
 {% block content %}
-    Antwort auf {{ notification }} ({{ ABSOLUTE_URL_PREFIX }}{% url ecs.notifications.views.view_notification notification_pk=notification.pk %})
+    Antwort auf {{ notification }} ({{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %})
 
-    {% for sf in notification.submission_forms.all %}   - {{ sf.submission }}: {{ ABSOLUTE_URL_PREFIX }}{% url ecs.core.views.view_submission submission_pk=sf.submission.pk %}
+    {% for sf in notification.submission_forms.all %}   - {{ sf.submission }}: {{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.core.views.view_submission' submission_pk=sf.submission.pk %}
     {% endfor %}
     vom {{ notification.timestamp|date:'d.m.Y' }}.
 

@@ -13,7 +13,7 @@
                 <strong>{{ form.instance.category }}</strong>
                 [Einreichungen:
                 {% for submission in form.submissions %}
-                     <a href="{% url view_submission submission_pk=submission.pk %}">
+                     <a href="{% url 'view_submission' submission_pk=submission.pk %}">
                         {{ submission }}</a>{% if not forloop.last %}, {% endif %}
                 {% endfor %}]
             </span>

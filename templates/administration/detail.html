@@ -6,10 +6,10 @@
         <li>
             <a href="#" class="active">{% trans "Administration" %}</a>
             <ul class="tab_headers">
-                <li{% if active == 'user_administration' %} class="active"{% endif %}><a href="{% url ecs.users.views.administration %}">{% trans "User Administration" %}</a></li>
-                <li{% if active == 'user_invite' %} class="active"{% endif %}><a href="{% url ecs.users.views.invite %}">{% trans "Invite User" %}</a></li>
+                <li{% if active == 'user_administration' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a></li>
+                <li{% if active == 'user_invite' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.invite' %}">{% trans "Invite User" %}</a></li>
                 {% if user|has_flag:"is_executive_board_member" %}
-                    <li{% if active == 'login_history' %} class="active"{% endif %}><a href="{% url ecs.users.views.login_history %}">{% trans 'Login History' %}</a></li>
+                    <li{% if active == 'login_history' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.login_history' %}">{% trans 'Login History' %}</a></li>
                 {% endif %}
             </ul>
         </li>

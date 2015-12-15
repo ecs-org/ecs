@@ -7,20 +7,20 @@
 <div id="help">
   <div id="help_top">
     <div id="help_logo">
-      <a href="{% url ecs.help.views.index %}"><img src={% static 'images/logo_small.png' %} alt="EC-Meduni Wien Hilfe"/></a>
+      <a href="{% url 'ecs.help.views.index' %}"><img src={% static 'images/logo_small.png' %} alt="EC-Meduni Wien Hilfe"/></a>
     </div>
     <span href="" class="help_button icon_help">help</span>
     <div id="help_title">
       {% for p in page.nav.top %}
-        <a href="{% url ecs.help.views.view_help_page page_pk=p.pk %}" class="max_twenty">{{ p.title }}</a> /
+        <a href="{% url 'ecs.help.views.view_help_page' page_pk=p.pk %}" class="max_twenty">{{ p.title }}</a> /
       {% endfor %}
       <span class="max_twenty">{{ page.title }}</span>
     </div>
     {% if user|has_flag:"is_help_writer" %}
-        <span class="help_review_overview"><a href="{% url ecs.help.views.review_overview %}">Review Übersicht</a></span>
+        <span class="help_review_overview"><a href="{% url 'ecs.help.views.review_overview' %}">Review Übersicht</a></span>
     {% endif %}
-    <span class="help_overview"><a href="{% url ecs.help.views.index %}">Inhaltsverzeichnis</a></span>
-    <span class="help_search"><a href="{% url ecs.help.views.search %}">Suche</a></span>
+    <span class="help_overview"><a href="{% url 'ecs.help.views.index' %}">Inhaltsverzeichnis</a></span>
+    <span class="help_search"><a href="{% url 'ecs.help.views.search' %}">Suche</a></span>
   </div>
 
   <div id="help_nav{% if not user|has_flag:"is_help_writer" %} disabled{% endif %}">
@@ -31,10 +31,10 @@
 
     <div class="nav_right">
         {% if user|has_flag:"is_help_writer" %}
-            <a href="{% url ecs.help.views.edit_help_page %}">Neue Seite</a>
-            | <a href="{% url ecs.help.views.upload %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
-            | <a href="{% url ecs.help.views.export %}">Export</a>
-            | <a href="{% url ecs.help.views.load %}">Import</a>
+            <a href="{% url 'ecs.help.views.edit_help_page' %}">Neue Seite</a>
+            | <a href="{% url 'ecs.help.views.upload' %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
+            | <a href="{% url 'ecs.help.views.export' %}">Export</a>
+            | <a href="{% url 'ecs.help.views.load' %}">Import</a>
         {% endif %}
     </div>
   </div>

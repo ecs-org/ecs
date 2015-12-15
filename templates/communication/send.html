@@ -12,9 +12,9 @@
 
 {% block content %}
 <div class="message_display">
-  <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
+  <a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
   {% if submission %}
-      <a href="{% url view_submission submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
   {% endif %}
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       {% csrf_token %}
@@ -58,9 +58,9 @@
       {% include 'communication/send_base.inc' %}
       <input type="submit" value="Nachricht abschicken" />
   </form>
-  <a href="{% url ecs.communication.views.list_threads %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
+  <a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
   {% if submission %}
-      <a href="{% url view_submission submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
   {% endif %}
 </div>
 {% endblock %}
@@ -76,7 +76,7 @@
         var messageToolbarItems = [];
 
         {% if user|has_flag:'is_internal' %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url ecs.boilerplate.views.select_boilerplate %}"));
+            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
         {% endif %}
 
         var textarea = container.getElement('textarea[name="text"]');

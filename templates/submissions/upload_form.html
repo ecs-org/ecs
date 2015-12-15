@@ -1,6 +1,6 @@
 {% extends 'documents/upload_form.html' %}
-{% block action %}{% url ecs.core.views.upload_document_for_submission docstash_key=request.docstash.key %}{% endblock %}
-{% block delete_url %}{% url ecs.core.views.delete_document_from_submission docstash_key=request.docstash.key %}{% endblock %}
+{% block action %}{% url 'ecs.core.views.upload_document_for_submission' docstash_key=request.docstash.key %}{% endblock %}
+{% block delete_url %}{% url 'ecs.core.views.delete_document_from_submission' docstash_key=request.docstash.key %}{% endblock %}
 {% block extra_hint %}
     <div class="hint">
         <span class="icon_comment"></span>Bitte beachten Sie, dass Name, Version und Datum Ihrer Dateien im Votum aufscheinen und niemand außer Ihnen diese Metadaten verändern kann.
