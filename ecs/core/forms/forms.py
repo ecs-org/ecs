@@ -429,19 +429,16 @@ import_error_logger = logging.getLogger('ecx-import')
 class SubmissionImportForm(forms.Form):
     file = forms.FileField(label=_('file'))
 
-    @transaction.commit_manually()
     def clean_file(self):
         f = self.cleaned_data['file']
         from ecs.core.serializer import Serializer
         serializer = Serializer()
         try:
-            self.submission_form = serializer.read(self.cleaned_data['file'])
+            with transaction.atomic():
+                self.submission_form = serializer.read(self.cleaned_data['file'])
         except Exception as e:
             import_error_logger.debug('invalid ecx file')
             self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
-            transaction.rollback()
-        else:
-            transaction.commit()
         f.seek(0)
         return f
 

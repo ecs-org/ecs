@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.functional import wraps
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.db import transaction
 from django.utils.encoding import force_unicode
 from django.http import HttpRequest
 
@@ -122,28 +121,21 @@ def user_group_required(*groups):
 
 
 def create_phantom_user(email, role=None):
-    sid = transaction.savepoint()
-    try:
-        user = create_user(email)
-        profile = user.get_profile()
-        profile.is_phantom = True
-        profile.forward_messages_after_minutes = 5
-        profile.save()
+    user = create_user(email)
+    profile = user.get_profile()
+    profile.is_phantom = True
+    profile.forward_messages_after_minutes = 5
+    profile.save()
 
-        if not role == 'investigator':  # see #4808
-            invitation = Invitation.objects.create(user=user)
+    if not role == 'investigator':  # see #4808
+        invitation = Invitation.objects.create(user=user)
 
-            subject = 'Erstellung eines Zugangs zum ECS'
-            link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-            htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
-                'link': link,
-            }))
-            msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
-    except Exception, e:
-        transaction.savepoint_rollback(sid)
-        raise e
-    else:
-        transaction.savepoint_commit(sid)
+        subject = 'Erstellung eines Zugangs zum ECS'
+        link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+        htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
+            'link': link,
+        }))
+        msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
 
     return user
 

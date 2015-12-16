@@ -374,33 +374,23 @@ def invite(request):
     comment = None
 
     if request.method == 'POST' and form.is_valid():
-        from django.db import transaction
-        sid = transaction.savepoint()
-        try:
-            user = form.save()
+        user = form.save()
 
-            invitation = Invitation.objects.create(user=user)
+        invitation = Invitation.objects.create(user=user)
 
-            subject = 'Erstellung eines Zugangs zum ECS'
-            link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
-            htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
-                'invitation_text': form.cleaned_data['invitation_text'],
-                'link': link,
-            }))
-            transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
-            msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
-        except IndexError, e:
-            transaction.savepoint_rollback(sid)
-            form._errors['email'] = form.error_class([_('Failed to deliver invitation')])
-        except:
-            transaction.savepoint_rollback(sid)
-            raise
-        else:
-            transaction.savepoint_commit(sid)
-            if user.groups.filter(name=u'EC-Signing Group').exists():
-                for u in User.objects.filter(groups__name=u'EC-Signing Group'):
-                    send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
-            return redirect('ecs.users.views.details', user_pk=user.pk)
+        subject = 'Erstellung eines Zugangs zum ECS'
+        link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+        htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
+            'invitation_text': form.cleaned_data['invitation_text'],
+            'link': link,
+        }))
+        transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
+        msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
+
+        if user.groups.filter(name=u'EC-Signing Group').exists():
+            for u in User.objects.filter(groups__name=u'EC-Signing Group'):
+                send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
+        return redirect('ecs.users.views.details', user_pk=user.pk)
 
     return render(request, 'users/invitation/invite_user.html', {
         'form': form,

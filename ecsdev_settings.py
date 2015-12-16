@@ -15,6 +15,7 @@ if user in DBPWD_DICT:
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': user, 'USER': user, 'PASSWORD': DBPWD_DICT[user],
         'HOST': '127.0.0.1', 'PORT': '',
+        'ATOMIC_REQUESTS': True,
     }
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)

@@ -25,12 +25,8 @@ def _create_root_user():
 
 
 class Command(BaseCommand):
-    option_list = BaseCommand.option_list + (
-        make_option('--dry-run', dest='dry_run', action='store_true', default=False, help="Don't change the db, just output what would be done"),
-    )
-
-    @transaction.commit_manually
-    def handle(self, dry_run=False, **options):
+    @transaction.atomic
+    def handle(self, **options):
         bootstrap_funcs = {}
         for app in settings.INSTALLED_APPS:
             try:
@@ -61,22 +57,8 @@ class Command(BaseCommand):
             if cycle:
                 raise CommandError("Cyclic dependencies: %s" % ", ".join(sorted(set(bootstrap_funcs.keys())-set(order))))
         
-        def cleanup(rollback=False):
-            if rollback:
-                transaction.rollback()
-            else:
-                transaction.commit()
-
-        try:
-            _create_root_user()
-            for name in order:
-                print ' > {0}'.format(name)
-                func = bootstrap_funcs[name]
-                func()
-        except:
-            cleanup(rollback=True)
-            raise
-        else:
-            if transaction.is_dirty():
-                cleanup(rollback=True if dry_run else False)
-
+        _create_root_user()
+        for name in order:
+            print ' > {0}'.format(name)
+            func = bootstrap_funcs[name]
+            func()

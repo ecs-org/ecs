@@ -8,6 +8,7 @@ DATABASES['default'].update({
     'HOST': 'localhost',
     'PASSWORD': '%(postgresql.password)s',
     'PORT': '6432', # use pgbouncer for connection with postgres
+    'ATOMIC_REQUESTS': True,
 })
 
 

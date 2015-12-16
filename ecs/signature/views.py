@@ -135,53 +135,50 @@ def sign_preview(request):
 @with_sign_data()
 def sign_receive(request, mock=False):
     ''' accessed by pdf-as when the pdf has been successfully signed '''
-    sid = transaction.savepoint()
     try:
-        if mock:
-            pdfurl_str = "mock:"
-            pdf_data = request.sign_data['pdf_data']
-        else:
-            pdfurl_str = urllib.unquote(request.GET['pdfurl'])
-            if not pdfurl_str.startswith(settings.PDFAS_SERVICE):
-                raise RuntimeError("pdfurl does not start with settings.PDFAS_SERVICE: {0} != {1}".format(settings.PDFAS_SERVICE, pdfurl_str))
-            sock_pdfas = urllib2.urlopen(pdfurl_str)
-            # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
-            # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
-            pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
+        with transaction.atomic():
+            if mock:
+                pdfurl_str = "mock:"
+                pdf_data = request.sign_data['pdf_data']
+            else:
+                pdfurl_str = urllib.unquote(request.GET['pdfurl'])
+                if not pdfurl_str.startswith(settings.PDFAS_SERVICE):
+                    raise RuntimeError("pdfurl does not start with settings.PDFAS_SERVICE: {0} != {1}".format(settings.PDFAS_SERVICE, pdfurl_str))
+                sock_pdfas = urllib2.urlopen(pdfurl_str)
+                # TODO: verify "ValueCheckCode" and "CertificateCheckCode" in http header
+                # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
+                pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
-            # FIXME: remove /tmp file writes
-            with open("/tmp/signed.pdf","wb") as t:
-                t.write(pdf_data)
-            with open("/tmp/get_urls.txt","ab") as t:
-                t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
+                # FIXME: remove /tmp file writes
+                with open("/tmp/signed.pdf","wb") as t:
+                    t.write(pdf_data)
+                with open("/tmp/get_urls.txt","ab") as t:
+                    t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
 
-        document = Document.objects.create_from_buffer(pdf_data,
-            uuid=request.sign_data["document_uuid"],
-            stamp_on_download=False, doctype=request.sign_data['document_type'],
-            original_file_name=request.sign_data["document_filename"],
-            version=request.sign_data["document_version"]
-        )
-        parent_model = request.sign_data.get('parent_type')
-        if parent_model:
-            document.parent_object = parent_model.objects.get(pk=request.sign_data['parent_pk'])
-            document.save()
+            document = Document.objects.create_from_buffer(pdf_data,
+                uuid=request.sign_data["document_uuid"],
+                stamp_on_download=False, doctype=request.sign_data['document_type'],
+                original_file_name=request.sign_data["document_filename"],
+                version=request.sign_data["document_version"]
+            )
+            parent_model = request.sign_data.get('parent_type')
+            if parent_model:
+                document.parent_object = parent_model.objects.get(pk=request.sign_data['parent_pk'])
+                document.save()
 
-        # called unconditionally, because the function can have side effects
-        url = request.sign_data['success_func'](request, document=document)
+            # called unconditionally, because the function can have side effects
+            url = request.sign_data['success_func'](request, document=document)
 
-        if request.sign_session:
-            task_pk = request.sign_session.pop_listitem('tasks', 0)
-            _get_tasks(request.user).get(pk=task_pk).done(choice=True)
-        document = Document.objects.get(pk=document.pk)
+            if request.sign_session:
+                task_pk = request.sign_session.pop_listitem('tasks', 0)
+                _get_tasks(request.user).get(pk=task_pk).done(choice=True)
+            document = Document.objects.get(pk=document.pk)
 
     except Exception as e:
-        # the cake is a lie
-        transaction.savepoint_rollback(sid)
         logger.warn('Signing Error', exc_info=sys.exc_info())
         return sign_error(request, pdf_id=request.sign_data.id, error=repr(e)+ " url: {0}".format(pdfurl_str), cause=traceback.format_exc())
 
     else:
-        transaction.savepoint_commit(sid)
         request.sign_data.delete()
         if request.sign_session:
             url = reverse('ecs.signature.views.batch_sign', kwargs={'sign_session_id': request.sign_session.id})

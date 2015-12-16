@@ -46,7 +46,7 @@ def _eval_timetable(metrics):
     return math.log(1 + 1.0 / (1 + v)) / _log2
 
 @task()
-@transaction.commit_manually
+@transaction.atomic
 def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameters=None):
     logger = optimize_timetable_task.get_logger()
     meeting = Meeting.objects.get(id=meeting_id)
@@ -79,13 +79,10 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         f = meeting.create_evaluation_func(_eval_timetable)
         meeting._apply_permutation(head + algo(tuple(body), f, algorithm_parameters) + tail + tuple(batch_entries))
         retval = True
-        transaction.commit()
     except Exception, e:
-        transaction.rollback()
         logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
     finally:
         Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
-        transaction.commit()
 
     return retval
 

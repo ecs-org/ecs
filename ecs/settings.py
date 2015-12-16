@@ -23,6 +23,7 @@ DATABASES = {}
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': 'ecs',
+    'ATOMIC_REQUESTS': True,
 }
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
@@ -136,7 +137,6 @@ MIDDLEWARE_CLASSES = (
     #'ecs.TestMiddleware',
     'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

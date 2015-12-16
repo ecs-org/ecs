@@ -2,9 +2,9 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand
 from django.contrib.contenttypes.models import ContentType
-from django.db import transaction
 
 from ecs.workflow.models import NodeType, Guard, NODE_TYPE_CATEGORY_ACTIVITY, NODE_TYPE_CATEGORY_CONTROL
+from ecs.workflow.controllers.registry import iter_guards, iter_activities, iter_controls
 
 def _get_ct_or_none(model):
     if model:
@@ -18,25 +18,10 @@ def _format_model(model):
 
 class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
-        make_option('--dry-run', dest='dry-run', action='store_true', default=False, help="Don't change the db, just output what would be done"),
-        make_option('--quiet', dest='quiet', action='store_true', default=False, help="Suppress any output")
+        make_option('--quiet', dest='quiet', action='store_true', default=False, help="Suppress any output"),
     )
 
-    def handle(self, **options):
-        if options['dry-run']:
-            self.do_dryrun(**options)
-        else:
-            self.do_sync(**options)
-
-    @transaction.commit_manually
-    def do_dryrun(self, **options):
-        try:
-            self.do_sync(**options)
-        finally:
-            transaction.rollback()
-    
-    def do_sync(self, quiet=False, **options):
-        from ecs.workflow.controllers.registry import iter_guards, iter_activities, iter_controls
+    def handle(self, quiet=False, **options):
         guards = set()
         for g in iter_guards():
             guard, created = Guard.objects.get_or_create(
