@@ -1003,16 +1003,17 @@ def my_submissions(request):
 @forceauth.exempt
 def catalog(request, year=None):
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=timezone.now())
+        votes = Vote.objects.filter(result='1',
+            submission_form__sponsor_agrees_to_publishing=True,
+            published_at__isnull=False, published_at__lte=timezone.now())
         votes = votes.select_related('submission_form').order_by('published_at')
-        years = votes.dates('published_at', 'year')
+        years = votes.datetimes('published_at', 'year')
         if year is None:
             try:
                 year = list(years)[-1].year
             except IndexError:  # no votes yet
-                today = timezone.now()
-                year = today.year
-                years = [today]
+                year = timezone.now().year
+                years = [year]
 
             return redirect('ecs.core.views.submissions.catalog', year=year)
         else:
