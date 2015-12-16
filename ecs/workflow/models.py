@@ -79,7 +79,7 @@ class GraphManager(models.Manager):
         return super(GraphManager, self).get_or_create(**self._prep_get_kwargs(kwargs))
 
 class Graph(NodeType):
-    auto_start = models.BooleanField()
+    auto_start = models.BooleanField(default=False)
     
     objects = GraphManager()
     

@@ -152,7 +152,7 @@ class ReportNotification(Notification):
     
 
 class CompletionReportNotification(ReportNotification):
-    study_aborted = models.BooleanField()
+    study_aborted = models.BooleanField(default=False)
     completion_date = models.DateField()
 
 

@@ -336,27 +336,27 @@ class SubmissionForm(models.Model):
     invoice_uid = models.CharField(max_length=35, null=True, blank=True) # 24? need to check
     
     # 2.1
-    project_type_non_reg_drug = models.BooleanField()
-    project_type_reg_drug = models.BooleanField()
-    project_type_reg_drug_within_indication = models.BooleanField()
-    project_type_reg_drug_not_within_indication = models.BooleanField()
-    project_type_medical_method = models.BooleanField()
-    project_type_medical_device = models.BooleanField()
-    project_type_medical_device_with_ce = models.BooleanField()
-    project_type_medical_device_without_ce = models.BooleanField()
-    project_type_medical_device_performance_evaluation = models.BooleanField()
-    project_type_basic_research = models.BooleanField()
-    project_type_genetic_study = models.BooleanField()
-    project_type_register = models.BooleanField()
-    project_type_biobank = models.BooleanField()
-    project_type_retrospective = models.BooleanField()
-    project_type_questionnaire = models.BooleanField()
+    project_type_non_reg_drug = models.BooleanField(default=False)
+    project_type_reg_drug = models.BooleanField(default=False)
+    project_type_reg_drug_within_indication = models.BooleanField(default=False)
+    project_type_reg_drug_not_within_indication = models.BooleanField(default=False)
+    project_type_medical_method = models.BooleanField(default=False)
+    project_type_medical_device = models.BooleanField(default=False)
+    project_type_medical_device_with_ce = models.BooleanField(default=False)
+    project_type_medical_device_without_ce = models.BooleanField(default=False)
+    project_type_medical_device_performance_evaluation = models.BooleanField(default=False)
+    project_type_basic_research = models.BooleanField(default=False)
+    project_type_genetic_study = models.BooleanField(default=False)
+    project_type_register = models.BooleanField(default=False)
+    project_type_biobank = models.BooleanField(default=False)
+    project_type_retrospective = models.BooleanField(default=False)
+    project_type_questionnaire = models.BooleanField(default=False)
     project_type_education_context = models.SmallIntegerField(null=True, blank=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])
     project_type_misc = models.TextField(null=True, blank=True)
-    project_type_psychological_study = models.BooleanField()
-    project_type_nursing_study = models.BooleanField()
-    project_type_non_interventional_study = models.BooleanField()
-    project_type_gender_medicine = models.BooleanField()
+    project_type_psychological_study = models.BooleanField(default=False)
+    project_type_nursing_study = models.BooleanField(default=False)
+    project_type_non_interventional_study = models.BooleanField(default=False)
+    project_type_gender_medicine = models.BooleanField(default=False)
     
     # 2.2
     specialism = models.TextField(null=True)
@@ -375,7 +375,7 @@ class SubmissionForm(models.Model):
     # 2.6 + 2.7 (via ParticipatingCenter)
     
     # 2.8
-    already_voted = models.BooleanField()
+    already_voted = models.BooleanField(default=False)
     
     # 2.9
     subject_count = models.IntegerField()
@@ -383,10 +383,10 @@ class SubmissionForm(models.Model):
     # 2.10
     subject_minage = models.IntegerField(null=True, blank=True)
     subject_maxage = models.IntegerField(null=True, blank=True)
-    subject_noncompetents = models.BooleanField()
-    subject_males = models.BooleanField()    
-    subject_females = models.BooleanField()
-    subject_childbearing = models.BooleanField()
+    subject_noncompetents = models.BooleanField(default=False)
+    subject_males = models.BooleanField(default=False)
+    subject_females = models.BooleanField(default=False)
+    subject_childbearing = models.BooleanField(default=False)
     
     # 2.11
     subject_duration = models.CharField(max_length=200)
@@ -419,7 +419,7 @@ class SubmissionForm(models.Model):
     medtech_departure_from_regulations = models.TextField(null=True, blank=True)
     
     # 5.x
-    insurance_not_required = models.BooleanField()
+    insurance_not_required = models.BooleanField(default=False)
     insurance_name = models.CharField(max_length=125, null=True, blank=True)
     insurance_address = models.CharField(max_length=80, null=True, blank=True)
     insurance_phone = models.CharField(max_length=30, null=True, blank=True)
@@ -457,15 +457,15 @@ class SubmissionForm(models.Model):
     
     # 8.1
     study_plan_blind = models.SmallIntegerField(choices=[(0, ugettext_lazy('open')), (1, ugettext_lazy('blind')), (2, ugettext_lazy('double-blind')), (3, ugettext_lazy('not applicable'))])
-    study_plan_observer_blinded = models.BooleanField()
-    study_plan_randomized = models.BooleanField()
-    study_plan_parallelgroups = models.BooleanField()
-    study_plan_controlled = models.BooleanField()
-    study_plan_cross_over = models.BooleanField()
-    study_plan_placebo = models.BooleanField()
-    study_plan_factorized = models.BooleanField()
-    study_plan_pilot_project = models.BooleanField()
-    study_plan_equivalence_testing = models.BooleanField()
+    study_plan_observer_blinded = models.BooleanField(default=False)
+    study_plan_randomized = models.BooleanField(default=False)
+    study_plan_parallelgroups = models.BooleanField(default=False)
+    study_plan_controlled = models.BooleanField(default=False)
+    study_plan_cross_over = models.BooleanField(default=False)
+    study_plan_placebo = models.BooleanField(default=False)
+    study_plan_factorized = models.BooleanField(default=False)
+    study_plan_pilot_project = models.BooleanField(default=False)
+    study_plan_equivalence_testing = models.BooleanField(default=False)
     study_plan_misc = models.TextField(null=True, blank=True)
     study_plan_number_of_groups = models.TextField(null=True, blank=True)
     study_plan_stratification = models.TextField(null=True, blank=True)
@@ -480,14 +480,14 @@ class SubmissionForm(models.Model):
     study_plan_alpha_sided = models.SmallIntegerField(choices=[(0, ugettext_lazy('single-sided')), (1, ugettext_lazy('double-sided'))], null=True, blank=True)
     study_plan_power = models.CharField(max_length=80)
     study_plan_statalgorithm = models.CharField(max_length=80)
-    study_plan_multiple_test = models.BooleanField()
+    study_plan_multiple_test = models.BooleanField(default=False)
     study_plan_multiple_test_correction_algorithm = models.CharField(max_length=100, null=True, blank=True)
     study_plan_dropout_ratio = models.CharField(max_length=80)
     
     # 8.3
-    study_plan_population_intention_to_treat  = models.BooleanField()
-    study_plan_population_per_protocol  = models.BooleanField()
-    study_plan_interim_evaluation = models.BooleanField()
+    study_plan_population_intention_to_treat  = models.BooleanField(default=False)
+    study_plan_population_per_protocol  = models.BooleanField(default=False)
+    study_plan_interim_evaluation = models.BooleanField(default=False)
     study_plan_abort_crit = models.CharField(max_length=265, null=True, blank=True)
     study_plan_planned_statalgorithm = models.TextField(null=True, blank=True)
 
@@ -511,10 +511,10 @@ class SubmissionForm(models.Model):
     submitter_email = models.EmailField(blank=False, null=True)
     submitter_organisation = models.CharField(max_length=180)
     submitter_jobtitle = models.CharField(max_length=130)
-    submitter_is_coordinator = models.BooleanField()
-    submitter_is_main_investigator = models.BooleanField()
-    submitter_is_sponsor = models.BooleanField()
-    submitter_is_authorized_by_sponsor = models.BooleanField()
+    submitter_is_coordinator = models.BooleanField(default=False)
+    submitter_is_main_investigator = models.BooleanField(default=False)
+    submitter_is_sponsor = models.BooleanField(default=False)
+    submitter_is_authorized_by_sponsor = models.BooleanField(default=False)
     
     date_of_receipt = models.DateField(null=True, blank=True)
 
