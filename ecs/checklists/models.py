@@ -118,7 +118,7 @@ class Checklist(models.Model):
             name = unicode(self)
         filename = u'{0}.pdf'.format(slugify(name))
 
-        pdfdata = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
+        pdfdata = render_pdf_context('checklists/wkhtml2pdf/checklist.html', {
             'checklist': self,
         })
 

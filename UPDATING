@@ -71,14 +71,13 @@ in addition to the usual steps. In chronological order:
 	$ mkdir ~/ecs-ca
 	$ cp ~/ecs-ca.bak/{ca.cert.pem,crl.pem} ~/ecs-ca/
 
-* 2015-12-13: django-dbtemplates and django-reversion now use south
+* 2015-12-13: django-reversion now uses south
 
-  The django-dbtemplates and the django-reversion apps have been changed to use
-  south for database migrations. For the upgrade to work correctly with the
-  existing tables,the first migration of the respective app has to be fake
-  applied before running the other migrations.
+  The django-reversion app has been changed to use south for database
+  migrations. For the upgrade to work correctly with the existing tables, the
+  first migration of django-reversion has to be fake applied before running the
+  other migrations.
 
-	$ ./manage.py migrate dbtemplates 0001 --fake
 	$ ./manage.py migrate reversion 0001 --fake
 	$ ./manage.py migrate
 

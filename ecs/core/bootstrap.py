@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-import os
-from datetime import datetime
-from dbtemplates.models import Template
 
-from django.conf import settings
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
-from django.utils import timezone
 
 from ecs import bootstrap
 from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission, AdvancedSettings
@@ -20,7 +15,7 @@ from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
-    needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_b2, is_still_b2,
+    needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
     needs_insurance_b2_review, needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
 
@@ -60,32 +55,6 @@ def _get_expedited_category(abbrev, cache={}):
 def sites():
     site, created = Site.objects.get_or_create(pk=1)
     update_instance(site, {'name': 'dummy', 'domain': 'localhost'})
-
-
-@bootstrap.register(depends_on=('ecs.core.bootstrap.sites',))
-def templates():
-    basedir = os.path.join(settings.PROJECT_DIR, 'templates')
-
-    sites = list(Site.objects.all())
-
-    for dirpath, dirnames, filenames in os.walk(basedir):
-        if 'wkhtml2pdf' not in dirpath:
-            continue
-        for filename in filenames:
-            if filename.startswith('.'):
-                continue
-            _, ext = os.path.splitext(filename)
-            if ext in ('.html', '.inc'):
-                path = os.path.join(dirpath, filename)
-                name = "db%s" % path.replace(basedir, '').replace('\\', '/')
-                tpl, created = Template.objects.get_or_create(name=name)
-                if created or tpl.last_changed < timezone.make_aware(datetime.fromtimestamp(os.path.getmtime(path)), timezone.get_current_timezone()):
-                    # only read the file if we really have to
-                    with open(path, 'r') as f:
-                        content = f.read()
-                    tpl.content = content
-                tpl.sites = sites
-                tpl.save()
 
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))

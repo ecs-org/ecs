@@ -544,7 +544,7 @@ class SubmissionForm(models.Model):
         from ecs.core import paper_forms
         name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
         filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
-        pdfdata = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
+        pdfdata = render_pdf_context('submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
             'submission_form': self,
             'documents': self.documents.order_by('doctype__name', '-date'),

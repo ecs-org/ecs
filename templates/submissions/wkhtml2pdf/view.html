@@ -1,4 +1,4 @@
-{% extends 'db/wkhtml2pdf/skeleton.html' %}
+{% extends 'wkhtml2pdf/skeleton.html' %}
 {% load core corepdf %}
 
 {% block title %}Antragsformular{% endblock %}
@@ -8,48 +8,48 @@
 {% endblock %}
 
 {% block content %}
-    {% include "db/submissions/wkhtml2pdf/head.html" %}
+    {% include "submissions/wkhtml2pdf/head.html" %}
 
     <div class="main_part">
         <h2>Teil A</h2>
     </div>
     
-    {% include "db/submissions/wkhtml2pdf/section_1.html" %}
+    {% include "submissions/wkhtml2pdf/section_1.html" %}
     
     <div class="pb_after"></div>
     
     <h3>2. Eckdaten der Studie</h3>
 
-    {% include "db/submissions/wkhtml2pdf/section_2_1.html" %}
-    {% include "db/submissions/wkhtml2pdf/section_2_2-2_11.html" %}
+    {% include "submissions/wkhtml2pdf/section_2_1.html" %}
+    {% include "submissions/wkhtml2pdf/section_2_2-2_11.html" %}
     
     <div class="pb_after"></div>
 
     <h3>3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert):</h3>
     
-    {% include "db/submissions/wkhtml2pdf/section_3a.html" %}
+    {% include "submissions/wkhtml2pdf/section_3a.html" %}
 
     <h3>3b. Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind:</h3>
 
-    {% include "db/submissions/wkhtml2pdf/section_3b.html" %}
+    {% include "submissions/wkhtml2pdf/section_3b.html" %}
     
     <h3>4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt:</h3>
 
-    {% include "db/submissions/wkhtml2pdf/section_4.html" %}
+    {% include "submissions/wkhtml2pdf/section_4.html" %}
     
     <h3>5. Angaben zur Versicherung (gemäß §32 Abs.1 Z.11 und Z.12 und Abs.2 AMG; §§47 und 48 MPG)</h3>
 
-    {% include "db/submissions/wkhtml2pdf/section_5.html" %}
+    {% include "submissions/wkhtml2pdf/section_5.html" %}
     
     <h3>6. Angaben zur durchzuführenden Therapie und Diagnostik</h3>
 
-    {% include "db/submissions/wkhtml2pdf/section_6.html" %}
+    {% include "submissions/wkhtml2pdf/section_6.html" %}
     
     <div class="pb_after"></div>
 
     <h3>7.  Strukturierte Kurzfassung des Projektes <em>(in deutscher Sprache, kein Verweis auf das Protokoll)</em></h3>
     
-    {% include "db/submissions/wkhtml2pdf/section_7.html" %}
+    {% include "submissions/wkhtml2pdf/section_7.html" %}
 
     <div class="pb_after"></div>
         
@@ -57,13 +57,13 @@
 
     <center>!!! Achtung: Pkt. 8.1 ist in jedem Fall auszufüllen !!!</center>
 
-    {% include "db/submissions/wkhtml2pdf/section_8.html" %}
+    {% include "submissions/wkhtml2pdf/section_8.html" %}
 
     <div class="pb_after"></div>
     
     <h3>9. Liste der eingereichten Unterlagen <span style="font-weight:normal;">(wenn nicht gesondert dem Antrag beiliegend)</span></h3>
     
-    {% include "db/submissions/wkhtml2pdf/section_9.html" %}
+    {% include "submissions/wkhtml2pdf/section_9.html" %}
 
 
 {% for inv in submission_form.investigators.all %}
@@ -73,6 +73,6 @@
         <h2>Teil B</h2>
     </div>
 
-    {% include "db/submissions/wkhtml2pdf/part_b.html" %}
+    {% include "submissions/wkhtml2pdf/part_b.html" %}
 {% endfor %}
 {% endblock %}

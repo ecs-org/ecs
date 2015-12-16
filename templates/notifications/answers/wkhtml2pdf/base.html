@@ -1,10 +1,10 @@
-{% extends 'db/wkhtml2pdf/skeleton.html' %}
+{% extends 'wkhtml2pdf/skeleton.html' %}
 {% load core corepdf i18n userutils notifications %}
 
 {% block title %}Meldung{% endblock %}
 
 {% block content %}
-    {% include 'db/wkhtml2pdf/ec_head.inc' %}
+    {% include 'wkhtml2pdf/ec_head.inc' %}
     <div class="header">
         <h1>{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}{% endblock %}</h1>
     </div>
@@ -27,7 +27,7 @@
     {% block documents %}
         {% if documents %}
             <h4>Eingereichte Unterlagen</h4>
-            {% include 'db/wkhtml2pdf/documents.html' %}
+            {% include 'wkhtml2pdf/documents.html' %}
         {% endif %}
     {% endblock %}
 

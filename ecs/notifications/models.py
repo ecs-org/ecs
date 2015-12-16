@@ -122,7 +122,7 @@ class Notification(models.Model):
         return u'{}-{}{}'.format(slugify(ec_num), slugify(self.type.name), suffix)
 
     def render_pdf(self):
-        tpl = self.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+        tpl = self.type.get_template('notifications/wkhtml2pdf/%s.html')
         submission_forms = self.submission_forms.select_related('submission').all()
         pdf = render_pdf_context(tpl, {
             'notification': self,
@@ -200,7 +200,7 @@ class NotificationAnswer(models.Model):
 
     def render_pdf(self):
         notification = self.notification
-        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
         pdf = render_pdf_context(tpl, self.get_render_context())
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 

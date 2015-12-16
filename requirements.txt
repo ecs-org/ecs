@@ -6,7 +6,6 @@ Django>=1.6,<1.7
 South<2.0
 django-extensions
 django-picklefield		# for docstash
-django-dbtemplates
 django-reversion==1.8.5
 pylibmc				# for caching
 docutils			# for ecs.help

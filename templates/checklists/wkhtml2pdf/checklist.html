@@ -1,4 +1,4 @@
-{% extends 'db/wkhtml2pdf/skeleton.html' %}
+{% extends 'wkhtml2pdf/skeleton.html' %}
 {% load core i18n %}
 
 {% block title %}{{ checklist.blueprint }} für {{ checklist.submission }}{% endblock %}
@@ -29,7 +29,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'db/wkhtml2pdf/ec_head.inc' %}
+    {% include 'wkhtml2pdf/ec_head.inc' %}
     <h1>
         {{ checklist.blueprint }} für {{ checklist.submission }}
         {% with checklist.submission as submission %}

@@ -95,16 +95,6 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of br
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
-# By default dbtemplates adds the current site to the database template when
-# created. The next line disables this behaviour.
-#DBTEMPLATES_ADD_DEFAULT_SITE = False
-
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    'dbtemplates.loader.Loader',
-)
-
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),
 )
@@ -158,7 +148,6 @@ INSTALLED_APPS = (
     'djcelery',
     'ecs.utils.countries',
     'compressor',
-    'dbtemplates',
     'haystack',
     'reversion',
 

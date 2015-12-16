@@ -3,7 +3,7 @@
 <table class="withborders">
     <tr>
         <td width="3%">[X]</td>
-        <td>{% include 'db/meetings/wkhtml2pdf/protocol_vote.inc' %}</td>
+        <td>{% include 'meetings/wkhtml2pdf/protocol_vote.inc' %}</td>
     </tr>
 </table> 
 

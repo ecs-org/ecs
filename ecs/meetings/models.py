@@ -391,7 +391,7 @@ class Meeting(models.Model):
         return True   # work around a django bug
 
     def get_agenda_pdf(self, request):
-        return render_pdf(request, 'db/meetings/wkhtml2pdf/agenda.html', {
+        return render_pdf(request, 'meetings/wkhtml2pdf/agenda.html', {
             'meeting': self,
         })
         
@@ -419,7 +419,7 @@ class Meeting(models.Model):
             b1ized = b1ized.filter(published_at__lte=end)
         b1ized = b1ized.order_by('submission_form__submission__ec_number')
 
-        return render_pdf(request, 'db/meetings/wkhtml2pdf/protocol.html', {
+        return render_pdf(request, 'meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
             'b1ized': b1ized,
@@ -459,7 +459,7 @@ class Meeting(models.Model):
             start, end = self._get_timeframe_for_user(row['user'])
             row['time'] = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
 
-        return render_pdf(request, 'db/meetings/wkhtml2pdf/timetable.html', {
+        return render_pdf(request, 'meetings/wkhtml2pdf/timetable.html', {
             'meeting': self,
             'timetable': timetable,
         })

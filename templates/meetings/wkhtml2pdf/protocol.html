@@ -1,10 +1,10 @@
-{% extends 'db/wkhtml2pdf/skeleton.html' %}
+{% extends 'wkhtml2pdf/skeleton.html' %}
 {% load core %}
 
 {% block title %}Meeting Agenda{% endblock %}
 
 {% block content %}
-    {% include 'db/wkhtml2pdf/ec_head.inc' %}
+    {% include 'wkhtml2pdf/ec_head.inc' %}
     <div align="center" style="font-weight:bold;font-size:12pt;margin-bottom:0.5cm;">
     Sitzung der Ethik-Kommission am {{ meeting.start|date:'d.m.Y' }}<br />
     Protokoll<br />
@@ -45,7 +45,7 @@
                 {% endif %}<br />
                 <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
                 <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
-                {% include 'db/meetings/wkhtml2pdf/protocol_submission.inc' %}
+                {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% else %}
                 <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span><br />
                 <br />

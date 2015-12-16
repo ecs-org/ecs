@@ -9,7 +9,6 @@ from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.core import paper_forms
 from ecs.utils.viewutils import render_pdf_context, pdf_response
-from ecs.core import bootstrap
 from ecs.users.utils import sudo
 from ecs.notifications.models import Notification, NotificationAnswer
 from ecs.votes.models import Vote
@@ -21,8 +20,7 @@ def test_pdf_html(request, submission_pk=None):
         submission = get_object_or_404(Submission, pk=submission_pk)
     with sudo(submission.presenter):
         submission_form = submission.current_submission_form
-        bootstrap.templates()
-        template = loader.get_template('db/submissions/wkhtml2pdf/view.html')
+        template = loader.get_template('submissions/wkhtml2pdf/view.html')
         html = template.render(Context({
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
@@ -36,8 +34,7 @@ def test_render_pdf(request, submission_pk=None):
         submission = get_object_or_404(Submission, pk=submission_pk)
     with sudo(submission.presenter):
         submission_form = submission.current_submission_form
-        bootstrap.templates()
-        pdf = render_pdf_context('db/submissions/wkhtml2pdf/view.html', {
+        pdf = render_pdf_context('submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
             'documents': submission_form.documents.order_by('doctype__name', '-date'),
@@ -55,8 +52,7 @@ def test_checklist_pdf_html(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
     with sudo(checklist.user):
-        bootstrap.templates()
-        template = loader.get_template('db/checklists/wkhtml2pdf/checklist.html')
+        template = loader.get_template('checklists/wkhtml2pdf/checklist.html')
         html = template.render(Context({
             'checklist': checklist,
         }))
@@ -67,8 +63,7 @@ def test_render_checklist_pdf(request, checklist_pk=None):
     with sudo():
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
     with sudo(checklist.user):
-        bootstrap.templates()
-        pdf = render_pdf_context('db/checklists/wkhtml2pdf/checklist.html', {
+        pdf = render_pdf_context('checklists/wkhtml2pdf/checklist.html', {
             'checklist': checklist,
         })
     return pdf_response(pdf, filename='test.pdf')
@@ -84,8 +79,7 @@ def test_notification_pdf_html(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
     with sudo(notification.user):
-        bootstrap.templates()
-        tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+        tpl = notification.type.get_template('notifications/wkhtml2pdf/%s.html')
         submission_forms = notification.submission_forms.select_related('submission').all()
         html = tpl.render(Context({
             'notification': notification,
@@ -99,8 +93,7 @@ def test_render_notification_pdf(request, notification_pk=None):
     with sudo():
         notification = get_object_or_404(Notification, pk=notification_pk)
     with sudo(notification.user):
-        bootstrap.templates()
-        tpl = notification.type.get_template('db/notifications/wkhtml2pdf/%s.html')
+        tpl = notification.type.get_template('notifications/wkhtml2pdf/%s.html')
         submission_forms = notification.submission_forms.select_related('submission').all()
         pdf = render_pdf_context(tpl, {
             'notification': notification,
@@ -121,8 +114,7 @@ def test_notification_answer_pdf_html(request, notification_answer_pk=None):
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
     with sudo(notification_answer.notification.user):
         notification = notification_answer.notification
-        bootstrap.templates()
-        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
         html = tpl.render(Context({
             'notification': notification,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
@@ -136,8 +128,7 @@ def test_render_notification_answer_pdf(request, notification_answer_pk=None):
         notification_answer = get_object_or_404(NotificationAnswer, pk=notification_answer_pk)
     with sudo(notification_answer.notification.user):
         notification = notification_answer.notification
-        bootstrap.templates()
-        tpl = notification.type.get_template('db/notifications/answers/wkhtml2pdf/%s.html')
+        tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
         pdf = render_pdf_context(tpl, {
             'notification': notification,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
@@ -156,8 +147,7 @@ def test_vote_pdf_html(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
     with sudo(vote.submission_form.submission.presenter):
-        bootstrap.templates()
-        template = loader.get_template('db/meetings/wkhtml2pdf/vote.html')
+        template = loader.get_template('meetings/wkhtml2pdf/vote.html')
         html = template.render(Context(vote.get_render_context()))
     return HttpResponse(html)
 
@@ -166,8 +156,7 @@ def test_render_vote_pdf(request, vote_pk=None):
     with sudo():
         vote = get_object_or_404(Vote, pk=vote_pk)
     with sudo(vote.submission_form.submission.presenter):
-        bootstrap.templates()
-        pdf = render_pdf_context('db/meetings/wkhtml2pdf/vote.html', vote.get_render_context())
+        pdf = render_pdf_context('meetings/wkhtml2pdf/vote.html', vote.get_render_context())
     return pdf_response(pdf, filename='test.pdf')
 
 @developer
