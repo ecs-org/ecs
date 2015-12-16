@@ -8,4 +8,3 @@ class EmailAuthBackend(ModelBackend):
     def authenticate(self, email=None, password=None):
         username = hash_email(email)
         return super(EmailAuthBackend, self).authenticate(username=username, password=password)
-

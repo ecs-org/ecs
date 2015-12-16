@@ -89,7 +89,7 @@ class InvitationQuerySet(models.query.QuerySet):
         return self.filter(is_accepted=False)
 
 class InvitationManager(models.Manager):
-    def get_query_set(self):
+    def get_queryset(self):
         return InvitationQuerySet(self.model).distinct()
 
     def new(self):

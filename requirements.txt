@@ -2,12 +2,12 @@ psycopg2
 pytz
 
 # django main
-Django>=1.5,<1.6
+Django>=1.6,<1.7
 South<2.0
-django-extensions<1.6
+django-extensions
 django-picklefield		# for docstash
 django-dbtemplates
-django-reversion==1.7.1
+django-reversion==1.8.5
 pylibmc				# for caching
 docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
@@ -29,9 +29,9 @@ BeautifulSoup==3.0.8
 BeautifulCleaner==2.0dev
 
 # search
-Whoosh==2.4
+Whoosh
 pysolr
-django-haystack==2.3.2
+django-haystack
 
 xlwt	# excel generation
 

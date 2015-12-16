@@ -14,7 +14,7 @@ class NotificationQuerySet(models.query.QuerySet):
 
 
 class NotificationManager(AuthorizationManager):
-    def get_base_query_set(self):
+    def get_base_queryset(self):
         return NotificationQuerySet(self.model)
 
     def answered(self):

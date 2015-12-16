@@ -41,7 +41,7 @@ class ThreadQuerySet(models.query.QuerySet):
 
 
 class ThreadManager(AuthorizationManager):
-    def get_query_set(self):
+    def get_queryset(self):
         return ThreadQuerySet(self.model)
 
     def by_user(self, *users):
@@ -79,7 +79,7 @@ class MessageQuerySet(models.query.QuerySet):
 
 
 class MessageManager(AuthorizationManager):
-    def get_query_set(self):
+    def get_queryset(self):
         return MessageQuerySet(self.model)
 
     def by_user(self, *users):

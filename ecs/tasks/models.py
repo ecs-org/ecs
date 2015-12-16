@@ -102,7 +102,7 @@ class TaskQuerySet(models.query.QuerySet):
         return self.for_submissions([submission.id], related=related)
 
 class TaskManager(AuthorizationManager):
-    def get_base_query_set(self):
+    def get_base_queryset(self):
         return TaskQuerySet(self.model).distinct()
 
     def for_data(self, data):

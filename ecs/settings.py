@@ -13,7 +13,6 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # admins is used to send django 500, 404 and celery error messages per email, DEBUG needs to be false for this
 MANAGERS = ADMINS = ()
 # eg. this could be MANAGERS = ADMINS = (('Felix Erkinger', 'felix@erkinger.at'),)
-SEND_BROKEN_LINK_EMAILS = True  # send 404 errors too, if DEBUG=False
 MAIL_ADMINS = False
 
 # Default is DEBUG, others may override it later
@@ -150,7 +149,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.humanize',
-    'django.contrib.markup',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',

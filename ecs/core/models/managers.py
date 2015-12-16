@@ -143,7 +143,7 @@ class SubmissionQuerySet(models.query.QuerySet):
 
 
 class SubmissionManager(AuthorizationManager):
-    def get_base_query_set(self):
+    def get_base_queryset(self):
         return SubmissionQuerySet(self.model).distinct()
 
     def amg(self):
@@ -237,7 +237,7 @@ class SubmissionFormQuerySet(models.query.QuerySet):
         return self.filter(submission__id__in=Submission.objects.with_vote(**kwargs).values('id').query)
 
 class SubmissionFormManager(AuthorizationManager):
-    def get_base_query_set(self):
+    def get_base_queryset(self):
         return SubmissionFormQuerySet(self.model)
         
     def current(self):

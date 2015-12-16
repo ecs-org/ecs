@@ -9,7 +9,6 @@ from django.utils.text import slugify
 from django.utils import timezone
 
 import reversion
-from reversion.models import Version
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
@@ -171,6 +170,7 @@ class SafetyNotification(Notification):
     reviewer = models.ForeignKey('auth.User', null=True)
 
 
+@reversion.register(fields=('text',))
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     text = models.TextField()
@@ -185,7 +185,7 @@ class NotificationAnswer(models.Model):
 
     @property
     def version_number(self):
-        return Version.objects.get_for_object(self).count()
+        return reversion.get_for_object(self).count()
 
     @property
     def needs_further_review(self):
@@ -244,8 +244,6 @@ class NotificationAnswer(models.Model):
                 'answer': self,
                 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             }, submission=submission, cc_groups=cc_groups)
-
-reversion.register(NotificationAnswer, fields=('text',))
 
 
 NOTIFICATION_MODELS = (

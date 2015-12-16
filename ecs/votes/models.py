@@ -8,13 +8,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
 import reversion
-from reversion.models import Version
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import on_vote_publication, on_vote_expiry, on_vote_extension
 
 
+@reversion.register(fields=('result', 'text'))
 class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
@@ -92,7 +92,7 @@ class Vote(models.Model):
 
     @property
     def version_number(self):
-        return Version.objects.get_for_object(self).count()
+        return reversion.get_for_object(self).count()
     
     @property
     def is_positive(self):
@@ -135,8 +135,6 @@ class Vote(models.Model):
             'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             'past_votes': past_votes,
         }
-
-reversion.register(Vote, fields=('result', 'text'))
 
 
 def _post_vote_save(sender, **kwargs):

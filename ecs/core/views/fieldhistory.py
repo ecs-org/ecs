@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from reversion.models import Version
+import reversion
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
@@ -31,7 +31,7 @@ def field_history(request, model_name=None, pk=None):
     last_value = dict((fieldname, u'') for fieldname, label in fields)
     last_change = None
     versions = list(
-        Version.objects.get_for_object(obj).order_by('revision__date_created')
+        reversion.get_for_object(obj).order_by('revision__date_created')
     )
     for change in versions:
         diffs = []

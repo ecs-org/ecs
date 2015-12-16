@@ -19,7 +19,7 @@ class VoteQuerySet(models.query.QuerySet):
 
 
 class VoteManager(AuthorizationManager):
-    def get_base_query_set(self):
+    def get_base_queryset(self):
         return VoteQuerySet(self.model)
 
     def positive(self):

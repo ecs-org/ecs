@@ -14,6 +14,7 @@ from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
+import reversion
 from reversion import revision
 
 from ecs.utils.viewutils import redirect_to_next_url
@@ -32,9 +33,8 @@ def redirect_to_page(page):
 
 @forceauth.exempt
 def view_help_page(request, page_pk=None):
-    from reversion.models import Version
     page = get_object_or_404(Page, pk=page_pk)
-    available_versions = Version.objects.get_for_object(page)
+    available_versions = reversion.get_for_object(page)
     return render(request, 'help/view_page.html', {
         'page': page,
         'versions': len(available_versions),
@@ -230,10 +230,9 @@ def preview_help_page_text(request):
 @user_flag_required('is_help_writer')
 def difference_help_pages(request, page_pk=None, old_version="-2", new_version="-1"):
     from reversion.helpers import generate_patch_html
-    from reversion.models import Version
 
     page = get_object_or_404(Page, pk=page_pk)
-    available_versions = Version.objects.get_for_object(page)
+    available_versions = reversion.get_for_object(page)
     if len(available_versions) < 2:
         return HttpResponse("<html><body>no revisions</body></html>")
 

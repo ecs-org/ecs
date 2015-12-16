@@ -9,6 +9,8 @@ from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 
+import reversion
+
 from ecs.utils import cached_property
 from ecs.tracking.models import View
 from ecs.help.utils import publish_parts
@@ -21,6 +23,7 @@ REVIEW_STATUS_CHOICES = (
     ('review_fail', _('Review Failed')),
 )
 
+@reversion.register
 class Page(models.Model):
     view = models.ForeignKey(View, null=True, blank=True)
     anchor = models.CharField(max_length=100, blank=True)
@@ -120,9 +123,6 @@ class Attachment(models.Model):
                 i += 1
         return super(Attachment, self).save(**kwargs)
         
-
-import reversion
-reversion.register(Page)
 
 def _post_page_delete(sender, **kwargs):
     from ecs.help.search_indexes import HelpPageIndex
