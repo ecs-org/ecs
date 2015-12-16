@@ -11,6 +11,7 @@ django-reversion==1.7.1
 pylibmc				# for caching
 docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
+diff-match-patch		# for ecs.core.diff
 
 # preprocessing, combining, compressing of js and css
 django_compressor

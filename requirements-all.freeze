@@ -12,6 +12,7 @@ celery==2.3.5
 chardet==2.3.0
 coverage==3.5.1
 decorator==4.0.6
+diff-match-patch==20110725.1
 django-appconf==1.0.1
 django-celery==2.3.3
 django-compressor==1.6

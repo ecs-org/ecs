@@ -2,7 +2,9 @@
 import datetime
 import types
 import traceback
-from ecs.utils.diff_match_patch import diff_match_patch
+import re
+
+from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
 from django.utils.datastructures import SortedDict
@@ -25,12 +27,33 @@ DATETIME_FORMAT = '%d.%m.%Y %H:%M'
 DATE_FORMAT = '%d.%m.%Y'
 
 
+def words_to_chars(text1, text2):
+    words = []
+    word_map = {}
+
+    def translate(text):
+        chars = []
+        boundaries = [m.start() for m in re.finditer(r'[ \t\n]', text)]
+        for word_start, word_end in \
+                zip([-1] + boundaries, boundaries + [len(text) - 1]):
+            word = text[word_start+1:word_end+1]
+            if word not in word_map:
+                words.append(word)
+                word_map[word] = len(words) - 1
+            chars.append(unichr(word_map[word]))
+        return u''.join(chars)
+
+    chars1 = translate(text1)
+    chars2 = translate(text2)
+    return (chars1, chars2, words)
+
+
 def word_diff(a, b):
     dmp = diff_match_patch()
-    a, b, wordArray = dmp.diff_wordsToChars(a, b)
+    a, b, wordArray = words_to_chars(a, b)
     diff = dmp.diff_main(a, b, checklines=False)
     dmp.diff_cleanupSemantic(diff)
-    dmp.diff_charsToWords(diff, wordArray)
+    dmp.diff_charsToLines(diff, wordArray)
     return diff
 
 class DiffNode(object):
