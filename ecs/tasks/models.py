@@ -48,7 +48,7 @@ class TaskQuerySet(models.query.QuerySet):
             t.mark_deleted()
 
     def acceptable_for_user(self, user):
-        return self.filter(Q(assigned_to=None) | Q(assigned_to=user, accepted=False) | Q(assigned_to__ecs_profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
+        return self.filter(Q(assigned_to=None) | Q(assigned_to=user, accepted=False) | Q(assigned_to__profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
 
     def for_user(self, user, activity=None, data=None):
         qs = self.filter(Q(task_type__groups__user=user) | Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)

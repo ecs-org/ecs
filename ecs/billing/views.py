@@ -211,9 +211,9 @@ def external_review_payment(request):
                 unicode(reviewer),
                 ", ".join(c.submission.get_ec_number_display() for c in checklists),
                 len(checklists) * price.price,
-                reviewer.ecs_profile.iban,
-                reviewer.ecs_profile.swift_bic,
-                reviewer.ecs_profile.social_security_number,
+                reviewer.profile.iban,
+                reviewer.profile.swift_bic,
+                reviewer.profile.social_security_number,
             ])
         r = len(reviewers) + 1
         xls.write_row(r, [

@@ -97,7 +97,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.office_user.save()
         office_group = Group.objects.get(name='EC-Office')
         self.office_user.groups.add(office_group)
-        profile = self.office_user.get_profile()
+        profile = self.office_user.profile
         profile.is_internal = True
         profile.save()
 

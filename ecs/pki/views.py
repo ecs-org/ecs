@@ -59,7 +59,7 @@ def revoke_cert(request, cert_pk=None):
 
 
 def authenticate(request):
-    if request.user.ecs_profile.is_internal or getattr(settings, 'ECS_MANDATORY_CLIENT_CERTS', False):
+    if request.user.profile.is_internal or getattr(settings, 'ECS_MANDATORY_CLIENT_CERTS', False):
         request.session['ecs_pki_authenticated'] = True
         request.session.modified = True
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))

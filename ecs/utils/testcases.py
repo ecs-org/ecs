@@ -62,7 +62,7 @@ class EcsTestCase(TestCase):
         user, created = get_or_create_user('{0}@example.com'.format(name), is_superuser=True, **extra)
         user.set_password('password')
         user.save()
-        profile = user.get_profile()
+        profile = user.profile
         for k, v in profile_extra.iteritems():
             setattr(profile, k, v)
         profile.save()

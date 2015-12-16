@@ -18,7 +18,7 @@ def _create_root_user():
     root.set_unusable_password() # root (System) is not supposed to login
     root.save()
     
-    profile = root.get_profile()
+    profile = root.profile
     profile.forward_messages_after_minutes = 0 # Never forward messages
     profile.gender = 'x'
     profile.save()

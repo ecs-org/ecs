@@ -158,7 +158,7 @@ class UserDetailsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
-        profile = self.instance.get_profile()
+        profile = self.instance.profile
         self.fields['gender'].initial = profile.gender
         self.fields['title'].initial = profile.title
         if getattr(settings, 'USE_TEXTBOXLIST', False):
@@ -182,7 +182,7 @@ class UserDetailsForm(forms.ModelForm):
         user.medical_categories = self.cleaned_data.get('medical_categories', ())
         user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', ())
         user.save()
-        profile = user.get_profile()
+        profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
         profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
@@ -232,7 +232,7 @@ class InvitationForm(forms.Form):
         user.medical_categories = self.cleaned_data.get('medical_categories', [])
         user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
         user.save()
-        profile = user.get_profile()
+        profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
         profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
@@ -249,7 +249,7 @@ class InvitationForm(forms.Form):
 
 class IndispositionForm(forms.ModelForm):
     is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
-    communication_proxy = forms.ModelChoiceField(queryset=User.objects.all().select_related('ecs_profile'), required=False, label=_('communication_proxy'),
+    communication_proxy = forms.ModelChoiceField(queryset=User.objects.all().select_related('profile'), required=False, label=_('communication_proxy'),
         widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})))
 
     class Meta:

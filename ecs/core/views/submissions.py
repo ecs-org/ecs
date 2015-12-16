@@ -150,7 +150,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     formsets = get_submission_formsets(instance=submission_form, readonly=True)
     vote = submission_form.current_vote
     submission = submission_form.submission
-    profile = request.user.get_profile()
+    profile = request.user.profile
     if profile.is_internal or profile.is_insurance_reviewer:
         try:
             vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
@@ -163,7 +163,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     cache.set(crumbs_key, crumbs, 60*60*24*30) # store for thirty days
 
     checklists_q = Q(last_edited_by=request.user)
-    if request.user.get_profile().is_internal:
+    if request.user.profile.is_internal:
         checklists_q |= Q(status__in=['completed', 'review_ok'])
     else:
         checklists_q |= Q(status__in=['completed', 'review_ok']) & ~(Q(blueprint__slug='external_review') & ~Q(status='review_ok'))
@@ -555,7 +555,7 @@ def create_submission_form(request):
         if request.method == 'GET':
             # neither docstash nor POST data: this is a completely new submission
             # => prepopulate submitter_* fields with the presenters data
-            profile = request.user.get_profile()
+            profile = request.user.profile
             form.initial.update({
                 'submitter_contact_first_name': request.user.first_name,
                 'submitter_contact_last_name': request.user.last_name,
@@ -656,7 +656,7 @@ def create_submission_form(request):
 
 
 def change_submission_presenter(request, submission_pk=None):
-    profile = request.user.get_profile()
+    profile = request.user.profile
     if profile.is_executive_board_member:
         submission = get_object_or_404(Submission, pk=submission_pk)
     else:
@@ -684,7 +684,7 @@ def change_submission_presenter(request, submission_pk=None):
 
 
 def change_submission_susar_presenter(request, submission_pk=None):
-    profile = request.user.get_profile()
+    profile = request.user.profile
     if profile.is_executive_board_member:
         submission = get_object_or_404(Submission, pk=submission_pk)
     else:
@@ -840,7 +840,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
-    if request.user.get_profile().is_internal:
+    if request.user.profile.is_internal:
         data.update({
             'submissions': Submission.objects.all(),
             'filtername': 'submission_filter_widget_internal',
@@ -954,7 +954,7 @@ def all_submissions(request):
                 q |= _sf_query('{0}__first_name'.format(f), k)
                 q |= _sf_query('{0}__last_name'.format(f), k)
 
-            if request.user.get_profile().is_internal:
+            if request.user.profile.is_internal:
                 q |= _external_reviewer_query(Q(first_name__icontains=k)|Q(last_name__icontains=k))
 
             if '@' in keyword:
@@ -967,7 +967,7 @@ def all_submissions(request):
                 for f in ('presenter', 'submitter', 'investigators__user', 'sponsor'):
                     q |= _sf_query('{0}__email'.format(f), k, exact=True)
 
-                if request.user.get_profile().is_internal:
+                if request.user.profile.is_internal:
                     q |= _external_reviewer_query(Q(email__iexact=k))
 
             submissions_q &= q

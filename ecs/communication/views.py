@@ -176,7 +176,7 @@ def message_widget(request, queryset=None, template='communication/widgets/messa
         page_num = 1
 
     queryset = queryset.select_related('last_message', 'last_message__sender', 'last_message__receiver',
-        'last_message__sender__ecs_profile', 'last_message__receiver__ecs_profile', 'submission')
+        'last_message__sender__profile', 'last_message__receiver__profile', 'submission')
     paginator = Paginator(queryset, page_size)
     try:
         page = paginator.page(page_num)

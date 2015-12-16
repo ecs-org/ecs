@@ -58,7 +58,7 @@
                 <li>
                     <a href="#status_tab">{% trans 'Status' %}</a>
                 </li>
-                {% if user.get_profile.has_explicit_workflow %}
+                {% if user.profile.has_explicit_workflow %}
                     <li>
                         <a href="#workflow_tab">{% trans 'Workflow' %}</a>
                     </li>
@@ -284,7 +284,7 @@
             <div class="widget" x-widget-url="{% url 'ecs.communication.views.communication_overview_widget' submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
-    {% if user.get_profile.has_explicit_workflow %}
+    {% if user.profile.has_explicit_workflow %}
         <div id="workflow_tab" class="tab">
             <div class="widget" x-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>

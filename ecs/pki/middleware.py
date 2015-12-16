@@ -14,7 +14,7 @@ class ClientCertMiddleware(object):
         if request.user.is_authenticated():
             # nested to prevent premature imports
             url = reverse('ecs.pki.views.authenticate')
-            if (request.path != url and (request.user.ecs_profile.is_internal or mandatory) 
+            if (request.path != url and (request.user.profile.is_internal or mandatory)
                 and not request.session.get('ecs_pki_authenticated', False)):
                 return HttpResponseRedirect('%s?%s' % (url, urlencode({'next': request.get_full_path()})))
         

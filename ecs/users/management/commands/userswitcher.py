@@ -30,8 +30,8 @@ class Command(BaseCommand):
 
         group = Group.objects.get(name='userswitcher_target')
         boardmember_group = Group.objects.get(name="EC-Board Member")
-        internal_users = User.objects.filter(ecs_profile__is_internal=True).exclude(ecs_profile__is_testuser=True)
-        testusers = User.objects.filter(ecs_profile__is_testuser=True)
+        internal_users = User.objects.filter(profile__is_internal=True).exclude(profile__is_testuser=True)
+        testusers = User.objects.filter(profile__is_testuser=True)
         boardmembers = User.objects.filter(groups=boardmember_group.id)
 
         def _toggle(user, activate):

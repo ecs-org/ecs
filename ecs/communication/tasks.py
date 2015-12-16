@@ -32,11 +32,11 @@ def forward_messages():
     messages = Message.objects.filter(
         unread=True,
         smtp_delivery_state='new',
-        receiver__ecs_profile__forward_messages_after_minutes__gt=0
+        receiver__profile__forward_messages_after_minutes__gt=0
     ).select_related('receiver')
 
     now = timezone.now()
-    messages = [m for m in messages if m.timestamp + timedelta(minutes=m.receiver.get_profile().forward_messages_after_minutes) <= now]
+    messages = [m for m in messages if m.timestamp + timedelta(minutes=m.receiver.profile.forward_messages_after_minutes) <= now]
     if len(messages) == 0:
         return
 

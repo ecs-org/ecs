@@ -237,7 +237,7 @@ class PresenterChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PresenterChangeForm, self).__init__(*args, **kwargs)
-        profile = get_current_user().get_profile()
+        profile = get_current_user().profile
         if not profile.is_internal:
             self.fields['presenter'].widget = EmailUserSelectWidget()
         else:
@@ -252,7 +252,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
-        profile = get_current_user().get_profile()
+        profile = get_current_user().profile
         self.fields['susar_presenter'].label = _('Susar presenter')
         if not profile.is_internal:
             self.fields['susar_presenter'].widget = EmailUserSelectWidget()
@@ -322,12 +322,12 @@ _queries = {
     'local_ec':         lambda s,u: s.localec(),
 
     # vote filters
-    'b2':               lambda s,u: s.b2(include_pending=u.ecs_profile.is_internal),
-    'b3':               lambda s,u: s.b3(include_pending=u.ecs_profile.is_internal),
-    'other_votes':      lambda s,u: s.b1(include_pending=u.ecs_profile.is_internal) |
-        s.b4(include_pending=u.ecs_profile.is_internal) |
-        s.b5(include_pending=u.ecs_profile.is_internal),
-    'no_votes':         lambda s,u: s.without_vote(include_pending=u.ecs_profile.is_internal),
+    'b2':               lambda s,u: s.b2(include_pending=u.profile.is_internal),
+    'b3':               lambda s,u: s.b3(include_pending=u.profile.is_internal),
+    'other_votes':      lambda s,u: s.b1(include_pending=u.profile.is_internal) |
+        s.b4(include_pending=u.profile.is_internal) |
+        s.b5(include_pending=u.profile.is_internal),
+    'no_votes':         lambda s,u: s.without_vote(include_pending=u.profile.is_internal),
 
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),

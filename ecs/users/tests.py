@@ -47,7 +47,7 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         self.failUnlessEqual(response.status_code, 200)
         user = get_user('new.user@example.org')
         self.failUnlessEqual(user.first_name, 'New')
-        self.failUnlessEqual(user.get_profile().gender, 'm')
+        self.failUnlessEqual(user.profile.gender, 'm')
         self.failUnless(user.check_password('password'))
         
 

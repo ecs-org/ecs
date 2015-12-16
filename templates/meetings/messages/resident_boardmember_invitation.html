@@ -3,7 +3,7 @@
 <body>
 {% block content %}
     <p>
-{% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}<br />
+{% if recipient.profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}<br />
 <br />
 <br />
 Sie sind zur Teilnahme an der  Sitzung der Ethik-Kommission der MedUni Wien am {{ meeting.start|date:'d.m.Y, H:i' }} Uhr s.t. eingeladen.<br />

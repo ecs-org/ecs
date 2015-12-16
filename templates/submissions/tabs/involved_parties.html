@@ -49,7 +49,7 @@
                 <tr>
                     <td>{{ ta.start|date:'d.m.Y, H:i' }} Uhr – {{ ta.end|date:'d.m.Y, H:i' }} Uhr</td>
                     <td>{{ ta.user }}</td>
-                    <td>{{ ta.user.ecs_profile.organisation }}</td>
+                    <td>{{ ta.user.profile.organisation }}</td>
                     {% if user|has_flag:'is_internal' %}
                         <td>{{ ta.user.email|default:'' }}</td>
                     {% endif %}

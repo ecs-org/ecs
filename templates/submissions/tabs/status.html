@@ -62,7 +62,7 @@
     <tr>
         <th>Eingereicht von:</th>
         <td colspan="3">
-            {% with submission.presenter.get_profile.organisation as organisation %}
+            {% with submission.presenter.profile.organisation as organisation %}
                 {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
@@ -73,7 +73,7 @@
     <tr>
         <th>Sicherheitsmeldungsersteller:</th>
         <td colspan="3">
-            {% with submission.susar_presenter.get_profile.organisation as organisation %}
+            {% with submission.susar_presenter.profile.organisation as organisation %}
                 {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}

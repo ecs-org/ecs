@@ -3,7 +3,7 @@
 
 {% block content %}
 
-{% with profile_user.get_profile as profile %}
+{% with profile_user.profile as profile %}
 <div class="profile">
     <h2>{{ profile_user }}</h2>
     <a href="{% url 'ecs.users.views.edit_profile' %}">{% trans "Edit Profile" %}</a>

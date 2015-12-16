@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 class _UserSwitcherChoiceField(forms.ModelChoiceField):
     def __init__(self, *args, **kwargs):
-        queryset = User.objects.filter(groups__name='userswitcher_target', is_active=True).select_related('ecs_profile').order_by('last_name', 'first_name', 'email')
+        queryset = User.objects.filter(groups__name='userswitcher_target', is_active=True).select_related('profile').order_by('last_name', 'first_name', 'email')
         defaults = {
             'required': False,
             'widget': forms.Select(attrs={'id': 'userswitcher_input'}),

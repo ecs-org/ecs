@@ -38,7 +38,7 @@
   <ul>
     <li class="main_item"><a href="{% url 'ecs.dashboard.views.view_dashboard' %}">{% trans "Dashboard" %}</a></li>
     <li class="main_item"><a href="{% url 'ecs.communication.views.list_threads' %}">{% trans "Communication" %}</a></li>
-    {% if user.get_profile.has_explicit_workflow %}
+    {% if user.profile.has_explicit_workflow %}
         <li class="main_item"><a href="{% url 'ecs.tasks.views.task_list' %}">{% trans "Tasks" %}</a></li>
     {% endif %}
     <li>
@@ -140,7 +140,7 @@
 {% endblock %}
 
 {% block headernav %}
-    {% if user.get_profile.is_indisposed %}
+    {% if user.profile.is_indisposed %}
     <div>
       {% url 'ecs.users.views.profile' as profile_url %}
       {% blocktrans with profile_url as profile_url %}
@@ -169,7 +169,7 @@
     var accordion_items = {
       'overview': -1,
       'communication': -1,
-{% if user.get_profile.has_explicit_workflow %}
+{% if user.profile.has_explicit_workflow %}
       'tasks': -1,
 {% endif %}
     };
@@ -231,7 +231,7 @@
       var AccordionObject = new Accordion(toggles, content, { show: accordionitem , duration: 200});
       
       // single login popup
-      {% if user.get_profile.get_single_login_enforced %}
+      {% if user.profile.get_single_login_enforced %}
         ecs.messages.alert('{% trans 'Single Login enforced' %}', '{% trans 'The old session is now void.' %}');
       {% endif %}
       

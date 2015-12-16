@@ -144,7 +144,7 @@ def activate(request, token=None):
         user.set_password(form.cleaned_data['password'])
         user.save()
         # the userprofile is auto-created, we only have to update some fields.
-        profile = user.get_profile()
+        profile = user.profile
         profile.gender = data['gender']
         profile.forward_messages_after_minutes = 5
         profile.save()
@@ -203,7 +203,7 @@ def do_password_reset(request, token=None):
         user = get_user(email)
     except User.DoesNotExist:
         raise Http404()
-    profile = user.get_profile()
+    profile = user.profile
     if profile.last_password_change and time.mktime(profile.last_password_change.timetuple()) > timestamp:
         return render(request, 'users/password_reset/token_already_used.html', {})
     
@@ -227,7 +227,7 @@ def profile(request):
 
 @readonly(methods=['GET'])
 def edit_profile(request):
-    form = ProfileForm(request.POST or None, instance=request.user.get_profile())
+    form = ProfileForm(request.POST or None, instance=request.user.profile)
     
     if form.is_valid():
         form.save()
@@ -243,7 +243,7 @@ def edit_profile(request):
 ###########################
 
 def notify_return(request):
-    profile = request.user.get_profile()
+    profile = request.user.profile
     profile.is_indisposed = False
     profile.save()
     return redirect('ecs.users.views.profile')
@@ -253,11 +253,11 @@ def notify_return(request):
 @user_group_required('EC-Office', 'EC-Executive Board Group')
 def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    form = IndispositionForm(request.POST or None, instance=user.get_profile())
+    form = IndispositionForm(request.POST or None, instance=user.profile)
 
     if request.method == 'POST' and form.is_valid():
         form.save()
-        profile = user.get_profile()
+        profile = user.profile
         if profile.is_indisposed:
             send_system_message_template(profile.communication_proxy, _('{user} indisposed').format(user=user), 'users/indisposed_proxy.txt', {'user': user})
         return redirect('ecs.users.views.administration')
@@ -342,7 +342,7 @@ def administration(request, limit=20):
             keyword_q |= Q(last_name__icontains=keyword)
         users = users.filter(keyword_q)
 
-    users = users.select_related('ecs_profile').order_by('last_name', 'first_name', 'email')
+    users = users.select_related('profile').order_by('last_name', 'first_name', 'email')
 
     paginator = Paginator(users, limit, allow_empty_first_page=True)
     try:
@@ -410,7 +410,7 @@ def accept_invitation(request, invitation_uuid=None):
     form = SetPasswordForm(invitation.user, request.POST or None)
     if form.is_valid():
         form.save()
-        profile = user.get_profile()
+        profile = user.profile
         profile.last_password_change = timezone.now()
         profile.is_phantom = False
         profile.forward_messages_after_minutes = 5

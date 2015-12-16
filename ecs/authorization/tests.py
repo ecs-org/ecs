@@ -24,7 +24,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         user = create_user(email)
         user.set_password(email)
         user.save()
-        profile = user.get_profile()
+        profile = user.profile
         for name, value in profile_attrs.items():
             setattr(profile, name, value)
         profile.save()

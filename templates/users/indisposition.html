@@ -5,7 +5,7 @@
 {% block headertitle %}{% trans "Indisposition" %} - {{ profile_user }}{% endblock %}
 
 {% block content %}
-{% with profile_user.get_profile as profile %}
+{% with profile_user.profile as profile %}
     <form action="{{ request.path }}" method="POST">
         {% csrf_token %}
         {{ form.as_p }}

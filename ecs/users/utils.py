@@ -30,7 +30,7 @@ def get_or_create_user(email, defaults=None, start_workflow=True, **kwargs):
     user, created = User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
 
     if start_workflow:
-        profile = user.get_profile()
+        profile = user.profile
         profile.start_workflow = True
         profile.save()
 
@@ -40,7 +40,7 @@ def create_user(email, start_workflow=True, **kwargs):
     user = User.objects.create(username=hash_email(email), email=email, **kwargs)
 
     if start_workflow:
-        profile = user.get_profile()
+        profile = user.profile
         profile.start_workflow = True
         profile.save()
 
@@ -60,7 +60,7 @@ def get_current_user():
         return None
 
 def get_full_name(user):
-    profile = user.ecs_profile
+    profile = user.profile
     if user.first_name or user.last_name:
         nameparts = [user.first_name, user.last_name]
         if profile.title:
@@ -112,7 +112,7 @@ class sudo(object):
 
 def user_flag_required(*flags):
     def check(user):
-        return any(getattr(user.get_profile(), f, False) for f in flags)
+        return any(getattr(user.profile, f, False) for f in flags)
     return user_passes_test(check)
 
 
@@ -122,7 +122,7 @@ def user_group_required(*groups):
 
 def create_phantom_user(email, role=None):
     user = create_user(email)
-    profile = user.get_profile()
+    profile = user.profile
     profile.is_phantom = True
     profile.forward_messages_after_minutes = 5
     profile.save()

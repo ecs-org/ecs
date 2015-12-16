@@ -21,10 +21,8 @@ from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 class SubmissionQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
-
         ### internal users can see all submissions
-        if user.is_staff or profile.is_internal:
+        if user.is_staff or user.profile.is_internal:
             return self.make_q()
 
         q = self.make_q(id__in=
@@ -36,7 +34,7 @@ class SubmissionQFactory(authorization.QFactory):
         ### permissions until final vote is published
         until_vote_q = self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
         until_vote_q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-        if profile.is_insurance_reviewer:
+        if user.profile.is_insurance_reviewer:
             until_vote_q |= self.make_q(forms__votes__insurance_review_required=True)
         q |= until_vote_q & ~self.make_q(forms__current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
 
@@ -58,11 +56,10 @@ authorization.register(ForeignParticipatingCenter, lookup='submission_form__subm
 
 class VoteQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
         q = self.make_q(submission_form__submission__pk__in=Submission.objects.values('pk').query)
-        if not profile.is_internal:
+        if not user.profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
-        if profile.is_insurance_reviewer:
+        if user.profile.is_insurance_reviewer:
             q |= self.make_q(insurance_review_required=True)
         return q
 
@@ -86,7 +83,7 @@ authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.values('pk').query) & (self.make_q(assigned_to=None) | self.make_q(assigned_to__ecs_profile__is_indisposed=True))
+        q = self.make_q(task_type__groups__in=user.groups.values('pk').query) & (self.make_q(assigned_to=None) | self.make_q(assigned_to__profile__is_indisposed=True))
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
         q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user).values('pk').query)
         return q
@@ -102,9 +99,8 @@ for cls in NOTIFICATION_MODELS:
 
 class NotificationAnswerQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
         q = self.make_q(notification__in=Notification.objects.values('pk').query)
-        if not profile.is_internal:
+        if not user.profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
         for cls in NOTIFICATION_MODELS:
             ct = ContentType.objects.get_for_model(cls)
@@ -115,8 +111,7 @@ authorization.register(NotificationAnswer, factory=NotificationAnswerQFactory)
 
 class ChecklistQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
-        if profile.is_internal:
+        if user.profile.is_internal:
             return self.make_q()
 
         involved_by_task = self.make_q(submission__pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
@@ -140,7 +135,7 @@ authorization.register(ChecklistAnswer, lookup='checklist')
 
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
+        profile = user.profile
         if profile.is_internal or profile.is_resident_member or profile.is_board_member:
             return self.make_q()
         else:
@@ -154,8 +149,7 @@ authorization.register(Constraint, lookup='meeting')
 
 class ChecklistBillingStateQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
-        if profile.is_internal:
+        if user.profile.is_internal:
             return self.make_q()
         else:
             return self.make_deny_q()
@@ -170,8 +164,7 @@ authorization.register(ScratchPad, factory=ScratchPadQFactory)
 
 class TextQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
-        if profile.is_internal:
+        if user.profile.is_internal:
             return self.make_q()
         else:
             return self.make_deny_q()
@@ -180,8 +173,7 @@ authorization.register(Text, factory=TextQFactory)
 
 class ThreadQFactory(authorization.QFactory):
     def get_q(self, user):
-        profile = user.get_profile()
-        if profile.is_internal:
+        if user.profile.is_internal:
             return self.make_q()
 
         return self.make_q(sender=user) | self.make_q(receiver=user)

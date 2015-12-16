@@ -84,9 +84,6 @@ CACHES = {
     },
 }
 
-# model that gets connected to contrib.auth model
-AUTH_PROFILE_MODULE = 'users.UserProfile'
-
 # django.contrib.messages
 MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
 

@@ -36,7 +36,7 @@ def delete_document(request, document_pk):
 
 def handle_download(request, doc):
     if (not doc.doctype.is_downloadable and
-        not request.user.get_profile().is_internal):
+        not request.user.profile.is_internal):
         return HttpResponseForbidden()
 
     response = StreamingHttpResponse(

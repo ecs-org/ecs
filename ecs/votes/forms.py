@@ -49,7 +49,7 @@ class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
     def __init__(self, *args, **kwargs):
         super(VoteReviewForm, self).__init__(*args, **kwargs)
         user = get_current_user()
-        if not self.readonly and user.get_profile().is_executive_board_member:
+        if not self.readonly and user.profile.is_executive_board_member:
             self.fields['result'] = ResultField(required=True, initial=self.instance.result)
 
     def clean(self):

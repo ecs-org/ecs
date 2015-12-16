@@ -114,7 +114,7 @@ def open_tasks(request, meeting=None):
     open_tasks = SortedDict()
     for top in tops:
         with sudo():
-            ts = list(Task.objects.for_submission(top.submission).open().select_related('task_type', 'assigned_to', 'assigned_to__ecs_profile'))
+            ts = list(Task.objects.for_submission(top.submission).open().select_related('task_type', 'assigned_to', 'assigned_to__profile'))
         if len(ts):
             open_tasks[top] = ts
     
@@ -747,7 +747,7 @@ def meeting_details(request, meeting_pk=None, active=None):
     expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting).distinct())
     experts_saved = False
 
-    if request.method == 'POST' and expert_formset.is_valid() and request.user.ecs_profile.is_internal:
+    if request.method == 'POST' and expert_formset.is_valid() and request.user.profile.is_internal:
         submitted_form = request.POST.get('submitted_form')
         if submitted_form == 'expert_formset' and expert_formset.is_valid():
             active = 'experts'

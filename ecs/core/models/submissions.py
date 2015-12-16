@@ -532,7 +532,7 @@ class SubmissionForm(models.Model):
                         user.first_name = getattr(self, '{0}_contact_first_name'.format(x))
                         user.last_name = getattr(self, '{0}_contact_last_name'.format(x))
                         user.save()
-                        profile = user.get_profile()
+                        profile = user.profile
                         profile.title = getattr(self, '{0}_contact_title'.format(x))
                         profile.gender = getattr(self, '{0}_contact_gender'.format(x)) or 'f'
                         profile.organisation = getattr(self, org)
@@ -597,7 +597,7 @@ class SubmissionForm(models.Model):
         return False
 
     def allows_export(self, user):
-        return user.ecs_profile.is_internal or user == self.submission.presenter
+        return user.profile.is_internal or user == self.submission.presenter
 
     @property
     def is_amg(self):
@@ -707,7 +707,7 @@ class SubmissionForm(models.Model):
 
     def get_involved_parties(self):
         current_user = get_current_user()
-        if current_user and not current_user.get_profile().is_internal and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at__isnull=True).exists():
+        if current_user and not current_user.profile.is_internal and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at__isnull=True).exists():
             return get_reviewing_parties(self)
         return get_involved_parties(self)
 
@@ -825,7 +825,7 @@ class Investigator(models.Model):
                 user.first_name = self.contact_first_name
                 user.last_name = self.contact_last_name
                 user.save()
-                profile = user.get_profile()
+                profile = user.profile
                 profile.title = self.contact_title
                 profile.gender = self.contact_gender
                 profile.organisation = self.organisation

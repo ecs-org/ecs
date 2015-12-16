@@ -165,7 +165,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         'mine': Q(assigned_to=request.user, accepted=True),
         'assigned': Q(assigned_to=request.user, accepted=False),
         'open': Q(assigned_to=None),
-        'proxy': Q(assigned_to__ecs_profile__is_indisposed=True),
+        'proxy': Q(assigned_to__profile__is_indisposed=True),
     }
 
     for k, q in task_flavors.iteritems():
@@ -203,7 +203,7 @@ def accept_task_type(request, flavor=None, slug=None, full=False):
     task_flavors = {
         'assigned': tasks.filter(assigned_to=request.user, accepted=False),
         'open': tasks.filter(assigned_to=None),
-        'proxy': tasks.filter(assigned_to__ecs_profile__is_indisposed=True),
+        'proxy': tasks.filter(assigned_to__profile__is_indisposed=True),
     }
     tasks = task_flavors[flavor]
 

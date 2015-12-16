@@ -40,7 +40,7 @@
         <div class="head">
             <span class="username">
                 {{ profile|formal_name }}
-                {% if profile.get_profile.is_phantom %}
+                {% if profile.profile.is_phantom %}
                     ({% trans "phantom" %})
                 {% endif %}
             </span>
@@ -55,7 +55,7 @@
                 </a>
             | <form action="{% url 'ecs.users.views.toggle_active' user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>{% csrf_token %}</form>
             {% with profile as profile_user %}
-            {% with profile_user.get_profile as profile %}
+            {% with profile_user.profile as profile %}
             <div class="profile">
             <table class="profile_data">
                 <tr><th>Organisation:</th><td>{{ profile.organisation }}</td></tr>

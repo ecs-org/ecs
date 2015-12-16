@@ -130,8 +130,8 @@ class Thread(models.Model):
         else:
             raise ValueError("Messages for this thread must only be sent from %s or %s. Sender is %s" % (self.sender.email, self.receiver.email, user.email))
 
-        if receiver.get_profile().is_indisposed:
-            proxy = receiver.get_profile().communication_proxy
+        if receiver.profile.is_indisposed:
+            proxy = receiver.profile.communication_proxy
             receiver = proxy
             if origin == MESSAGE_ORIGIN_ALICE:
                 self.receiver = proxy
@@ -149,8 +149,8 @@ class Thread(models.Model):
             else:
                 self.sender = previous_message.reply_receiver
 
-            if receiver.get_profile().is_indisposed:
-                proxy = receiver.get_profile().communication_proxy
+            if receiver.profile.is_indisposed:
+                proxy = receiver.profile.communication_proxy
                 receiver = proxy
                 if origin == MESSAGE_ORIGIN_ALICE:
                     self.receiver = proxy
@@ -192,7 +192,7 @@ class Thread(models.Model):
 
     def save(self, **kwargs):
         if self.receiver:
-            receiver_profile = self.receiver.get_profile()
+            receiver_profile = self.receiver.profile
             if receiver_profile.is_indisposed:
                 self.receiver = receiver_profile.communication_proxy
         return super(Thread, self).save(**kwargs)

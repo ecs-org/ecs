@@ -330,8 +330,7 @@ def auth_user_developers():
         user.is_superuser = False
         user.groups.add(translators_group)
         user.save()
-        profile = user.get_profile()
-        update_instance(profile, {
+        update_instance(user.profile, {
             'is_developer': True,
             'is_help_writer': True,
             'forward_messages_after_minutes': 360,
@@ -399,7 +398,6 @@ def auth_user_testusers():
                 user.groups.add(_get_group(testgroup))
             user.groups.add(userswitcher_group)
 
-            profile = user.get_profile()
             flags = flags.copy()
             flags.update({
                 'is_testuser': True,
@@ -408,15 +406,14 @@ def auth_user_testusers():
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 flags['is_help_writer'] = True
-            update_instance(profile, flags)
+            update_instance(user.profile, flags)
 
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
         user.groups.add(boardmember_group)
         user.groups.add(userswitcher_group)
 
-        profile = user.get_profile()
-        update_instance(profile, {
+        update_instance(user.profile, {
             'is_testuser': True,
             'is_board_member': True,
             'start_workflow': True,
@@ -431,8 +428,7 @@ def auth_user_testusers():
         user.groups.add(expedited_review_group)
         user.groups.add(userswitcher_group)
 
-        profile = user.get_profile()
-        update_instance(profile, {
+        update_instance(user.profile, {
             'is_testuser': True,
             'is_expedited_reviewer': True,
             'start_workflow': True,

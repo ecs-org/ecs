@@ -3,7 +3,7 @@
 <body>
 {% block content %}
     <p>
-{% if recipient.ecs_profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}<br />
+{% if recipient.profile.gender == 'f' %}{% blocktrans with recipient as recipient %}Dear(f) {{ recipient }}{% endblocktrans %}{% else %}{% blocktrans with recipient as recipient %}Dear(m) {{ recipient }}{% endblocktrans %}{% endif %}<br />
 <br />
 <br />
 Anbei senden wir Ihnen das Protokoll der Sitzung vom {{ meeting.start|date:'d.m.Y' }}.<br />

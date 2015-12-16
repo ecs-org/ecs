@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, related_name='ecs_profile')
+    user = models.OneToOneField(User, related_name='profile')
     last_password_change = models.DateTimeField(auto_now_add=True)
     is_phantom = models.BooleanField(default=False)
     is_indisposed = models.BooleanField(default=False)

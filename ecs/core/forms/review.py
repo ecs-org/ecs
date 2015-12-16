@@ -46,7 +46,7 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
             submission = self.instance
             submission_form = submission.current_submission_form
             user = get_current_user()
-            if not user.get_profile().is_internal or user in submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter]):
+            if not user.profile.is_internal or user in submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter]):
                 del self.fields['external_reviewers']
         except AttributeError:
             pass        # workaround for old docstashes; remove in 2013 when no old docstashes are left
