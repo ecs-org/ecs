@@ -88,6 +88,5 @@ class LoginTestCase(EcsTestCase):
         self.client.login(email='unittest@example.com', password='password')
     
     def tearDown(self):
-        super(LoginTestCase, self).tearDown()
         self.client.logout()
-
+        super(LoginTestCase, self).tearDown()

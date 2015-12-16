@@ -30,8 +30,8 @@ class ViewTestCase(EcsTestCase):
         self.client.login(email='unittest-office@example.com', password='password')
 
     def tearDown(self):
-        super(ViewTestCase, self).tearDown()
         self.client.logout()
+        super(ViewTestCase, self).tearDown()
 
     def refetch(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)
