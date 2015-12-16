@@ -112,10 +112,16 @@ class Notification(models.Model):
             return sf.submission
         return None
             
-    def get_filename(self, suffix=".pdf"):
-        ec_num = '_'.join(str(s['submission__ec_number']) for s in self.submission_forms.order_by('submission__ec_number').values('submission__ec_number').distinct())
-        return "%s%s" % (slugify("%s-%s" % (ec_num, self.type.name)), suffix)
-            
+    def get_filename(self, suffix=u'.pdf'):
+        ec_num = u'_'.join(
+            unicode(num)
+            for num in self.submission_forms
+                .order_by('submission__ec_number')
+                .distinct()
+                .values_list('submission__ec_number', flat=True)
+        )
+        return u'{}-{}{}'.format(slugify(ec_num), slugify(self.type.name), suffix)
+
     def render_pdf(self):
         tpl = self.type.get_template('db/notifications/wkhtml2pdf/%s.html')
         submission_forms = self.submission_forms.select_related('submission').all()
@@ -200,7 +206,7 @@ class NotificationAnswer(models.Model):
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification_answer', parent_object=self,
             name=unicode(self),
-            original_file_name=notification.get_filename('-answer.pdf')
+            original_file_name=notification.get_filename(u'-answer.pdf')
         )
         self.save()
         return self.pdf_document

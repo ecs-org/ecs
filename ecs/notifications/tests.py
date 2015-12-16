@@ -93,7 +93,7 @@ class NotificationFormTest(LoginTestCase):
         '''Tests if a pdf is produced if a Notification is created.
         '''
 
-        notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
+        notification_type, _ = NotificationType.objects.get_or_create(name=u'foo notif')
         notification = Notification.objects.create(type=notification_type)
         notification.render_pdf()
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': notification.pdf_document.pk}))
