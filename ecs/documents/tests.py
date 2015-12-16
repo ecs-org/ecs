@@ -25,4 +25,5 @@ class DocumentsTest(LoginTestCase):
             
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content[:5], '%PDF-')
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')

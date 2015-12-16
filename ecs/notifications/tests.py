@@ -97,9 +97,9 @@ class NotificationFormTest(LoginTestCase):
         notification = Notification.objects.create(type=notification_type)
         notification.render_pdf()
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': notification.pdf_document.pk}))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(response['Content-Type'], 'application/pdf')
-        self.failUnlessEqual(response.content[:4], '%PDF')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
 
     def _setup_POST_url(self):
         notification_type = NotificationType.objects.create(name='foo notif')
@@ -132,10 +132,9 @@ class NotificationFormTest(LoginTestCase):
         self.failUnlessEqual(doc.version, '3.1415')
         
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
-        while response.status_code == 302:
-            response = self.client.get(response['Location'])
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(response.content[:4], '%PDF')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
    
     def test_incomplete_upload(self):
         '''Tests an incomplete document upload. Regression test for the KeyError bug fixed in r729:b022598f8e55
