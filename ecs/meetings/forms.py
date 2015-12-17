@@ -61,6 +61,7 @@ class ConstraintForm(forms.ModelForm):
 
     class Meta:
         model = Constraint
+        fields = ('start_time', 'end_time', 'weight')
 
 UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=0, exclude = ('meeting', 'user'), can_delete=True, form=ConstraintForm)
 

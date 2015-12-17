@@ -31,10 +31,6 @@ class ModelFormSetPickleMixin(object):
 
 ## submissions ##
 
-class SubmissionEditorForm(forms.ModelForm):
-    class Meta:
-        model = Submission
-
 AMG_REQUIRED_FIELDS = (
     'substance_preexisting_clinical_tries', 'submission_type', 'eudract_number',
     'pharma_checked_substance', 'pharma_reference_substance',
@@ -461,6 +457,7 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
 class AdvancedSettingsForm(TranslatedModelForm):
     class Meta:
         model = AdvancedSettings
+        fields = ('default_contact',)
         widgets = {
             'default_contact': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
         }
