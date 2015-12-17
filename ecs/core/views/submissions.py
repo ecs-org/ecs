@@ -726,7 +726,7 @@ def export_submission(request, submission_pk):
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.write(submission.current_submission_form, tmpfile)
         tmpfile.seek(0)
-        response = HttpResponse(tmpfile.read(), mimetype='application/ecx')
+        response = HttpResponse(tmpfile.read(), content_type='application/ecx')
     response['Content-Disposition'] = 'attachment;filename=%s.ecx' % submission.get_ec_number_display(separator='-')
     return response
 

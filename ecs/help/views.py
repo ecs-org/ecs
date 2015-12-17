@@ -314,7 +314,7 @@ def export(request):
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.export(tmpfile)
         tmpfile.seek(0)
-        response = HttpResponse(tmpfile.read(), mimetype='application/ech')
+        response = HttpResponse(tmpfile.read(), content_type='application/ech')
     response['Content-Disposition'] = 'attachment;filename=help-{0}.ech'.format(timezone.now().strftime('%Y-%m-%d'))
     return response
 
