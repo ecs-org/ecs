@@ -2,11 +2,10 @@ psycopg2
 pytz
 
 # django main
-Django>=1.6,<1.7
-South<2.0
+Django>=1.7,<1.8
 django-extensions
 django-picklefield		# for docstash
-django-reversion==1.8.5
+django-reversion
 pylibmc				# for caching
 docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
@@ -36,4 +35,4 @@ xlwt	# excel generation
 
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main
 # requirements for now
-django-rosetta==0.7.6
+django-rosetta
