@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from ecs.utils.testcases import EcsTestCase
-from ecs.core.tests.submissions import create_submission_form
+from ecs.core.tests.test_submissions import create_submission_form
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.meetings.models import Meeting

@@ -12,7 +12,7 @@ from ecs.utils.testcases import LoginTestCase
 from ecs.documents.models import DocumentType
 from ecs.notifications.models import NotificationType, Notification, ProgressReportNotification
 from ecs.votes.models import Vote
-from ecs.core.tests.submissions import create_submission_form
+from ecs.core.tests.test_submissions import create_submission_form
 
 class NotificationFormTest(LoginTestCase):
     '''Tests for the Notification and NotificationType module
@@ -155,7 +155,6 @@ class NotificationFormTest(LoginTestCase):
         self.assertTrue('<form' in response.content)
 
     def test_vote_extension_workflow(self):
-        from ecs.core.tests.submissions import create_submission_form
         from django.contrib.auth.models import Group
         
         call_command('bootstrap')

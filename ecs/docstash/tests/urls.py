@@ -13,5 +13,5 @@ def simple_post_view(request):
     return HttpResponse(json.dumps(request.docstash.value), content_type='text/json')
 
 urlpatterns = patterns('',
-    url(r'^simple_post/(?:(?P<docstash_key>.*)/)?$', 'ecs.docstash.tests.urls.simple_post_view'),
+    url(r'^simple_post/(?:(?P<docstash_key>.*)/)?$', simple_post_view),
 )

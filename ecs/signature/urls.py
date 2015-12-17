@@ -11,7 +11,7 @@ urlpatterns = patterns('ecs.signature.views',
 )
 
 if 'test' in sys.argv:
-    urlpatterns += patterns('ecs.signature.tests.signaturetest',
+    urlpatterns += patterns('ecs.signature.tests',
         url(r'^test/success/$', 'sign_success'),
         url(r'^test/failure/$', 'sign_fail'),
     )

@@ -5,6 +5,7 @@ from contextlib import contextmanager
 
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 
 from ecs.integration import bootstrap as integration_bootstrap
@@ -12,11 +13,15 @@ from ecs.core import bootstrap as core_bootstrap
 from ecs.documents import bootstrap as documents_bootstrap
 from ecs.checklists import bootstrap as checklists_bootstrap
 from ecs.users.utils import get_user, get_or_create_user
+from ecs.workflow.controllers import clear_caches as clear_workflow_caches
 
 
 class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(self):
+        ContentType.objects.clear_cache()
+        clear_workflow_caches()
+
         get_or_create_user('root@system.local', is_superuser=True)
 
         settings.STORAGE_VAULT_DIR = tempfile.mkdtemp()

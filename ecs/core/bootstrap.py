@@ -25,32 +25,6 @@ from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expe
 _ = lambda s: s
 
 
-# caching lookup function to spare db queries
-def _get_group(name, cache={}):
-    try:
-        g = cache[name]
-    except KeyError:
-        g = Group.objects.get(name=name)
-        cache[name] = g
-    return g
-
-def _get_medical_category(abbrev, cache={}):
-    try:
-        mc = cache[abbrev]
-    except KeyError:
-        mc = MedicalCategory.objects.get(abbrev=abbrev)
-        cache[abbrev] = mc
-    return mc
-
-def _get_expedited_category(abbrev, cache={}):
-    try:
-        ec = cache[abbrev]
-    except KeyError:
-        ec = ExpeditedReviewCategory.objects.get(abbrev=abbrev)
-        cache[abbrev] = ec
-    return ec
-
-
 @bootstrap.register()
 def sites():
     site, created = Site.objects.get_or_create(pk=1)
@@ -289,7 +263,7 @@ def auth_user_developers():
         # first, Last, email, gender (sic!)
         developers = ((u'John', u'Doe', u'developer@example.org', 'f'),)
 
-    translators_group = _get_group('translators')
+    translators_group = Group.objects.get(name='translators')
 
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email, start_workflow=False)
@@ -356,15 +330,15 @@ def auth_user_testusers():
          ('expedited.recht', ('Recht',)),
     )
 
-    userswitcher_group = _get_group('userswitcher_target')
-    boardmember_group = _get_group('EC-Board Member')
-    expedited_review_group = _get_group('Expedited Review Group')
+    userswitcher_group = Group.objects.get(name='userswitcher_target')
+    boardmember_group = Group.objects.get(name='EC-Board Member')
+    expedited_review_group = Group.objects.get(name='Expedited Review Group')
 
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
             if testgroup:
-                user.groups.add(_get_group(testgroup))
+                user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(userswitcher_group)
 
             flags = flags.copy()
@@ -389,7 +363,7 @@ def auth_user_testusers():
         })
 
         for medcategory in medcategories:
-            m = _get_medical_category(medcategory)
+            m = MedicalCategory.objects.get(abbrev=medcategory)
             m.users.add(user)
 
     for testuser, expcategories in expeditedtestusers:
@@ -404,7 +378,7 @@ def auth_user_testusers():
         })
 
         for expcategory in expcategories:
-            e = _get_expedited_category(expcategory)
+            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
             e.users.add(user)
 
 @bootstrap.register()

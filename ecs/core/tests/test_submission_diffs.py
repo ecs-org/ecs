@@ -3,7 +3,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.diff import diff_submission_forms
-from ecs.core.tests.submissions import create_submission_form
+from ecs.core.tests.test_submissions import create_submission_form
 
 
 class SubmissionFormDiffTest(EcsTestCase):

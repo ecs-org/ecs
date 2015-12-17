@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from ecs.communication.testcases import CommunicationTestCase
-from ecs.core.tests.submissions import create_submission_form
+from ecs.core.tests.test_submissions import create_submission_form
 from ecs.votes.tasks import send_reminder_messages
 from ecs.meetings.models import Meeting
 from ecs.votes.models import Vote

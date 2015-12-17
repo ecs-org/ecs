@@ -71,8 +71,7 @@ ROOT_URLCONF = 'ecs.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'ecs.wsgi.application'
 
-# use nose for unit tests
-TEST_RUNNER = 'django_nose.runner.NoseTestSuiteRunner'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # additional fixture search paths. implicitly used by every app the needs fixtures
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
@@ -144,7 +143,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'south',
-    'django_nose',
     'djcelery',
     'ecs.utils.countries',
     'compressor',
@@ -304,7 +302,7 @@ BROKER_USER = 'ecsuser'
 BROKER_PASSWORD = 'ecspassword'
 BROKER_VHOST = 'ecshost'
 CELERY_IMPORTS = (
-    'ecs.core.tests.tasks',
+    'ecs.core.tests.test_tasks',
     'ecs.meetings.tasks',
     'ecs.ecsmail.tasks',
     'ecs.communication.tasks',

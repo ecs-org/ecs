@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.meetings.models import Meeting
-from ecs.core.tests.submissions import create_submission_form
+from ecs.core.tests.test_submissions import create_submission_form
 
 class MeetingModelTest(EcsTestCase):
     '''Tests for the Meeting module

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import os
 import re
+
 from django.conf import settings
+
 from lamson.server import SMTPError
 
 from ecs.ecsmail.testcases import MailTestCase
@@ -101,4 +102,3 @@ class ecsmailOutgoingTest(MailTestCase):
         
         self.assertTrue(re.search("<b>bold attachment</b>", html_data))
         self.assertEqual(attachment_data, pdf_data)
-        
