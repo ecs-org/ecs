@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from nose.tools import ok_, eq_
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
@@ -23,14 +22,14 @@ class CommunicationTest(CommunicationTestCase):
         standard test setup makes a new ecs internal message (which currently will send an email to the user)
         and then answer to that email which is then forwarded back to the original sender
         '''
-        eq_(self.queue_count(), 1)
-        ok_(self.is_delivered("test message"))
+        self.assertEqual(self.queue_count(), 1)
+        self.assertTrue(self.is_delivered("test message"))
         
         self.receive("testsubject", "second message", self.bob.email,  
             "".join(("ecs-", self.last_message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
             )
-        eq_(self.queue_count(), 2)
-        ok_(self.is_delivered("second message"))
+        self.assertEqual(self.queue_count(), 2)
+        self.assertTrue(self.is_delivered("second message"))
     """
 
         
