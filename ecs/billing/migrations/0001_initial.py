@@ -1,37 +1,54 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Price'
-        db.create_table('billing_price', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('category', self.gf('django.db.models.fields.SmallIntegerField')(unique=True, db_index=True)),
-            ('price', self.gf('django.db.models.fields.DecimalField')(max_digits=8, decimal_places=2)),
-            ('text', self.gf('django.db.models.fields.TextField')(blank=True)),
-        ))
-        db.send_create_signal('billing', ['Price'])
+from django.db import models, migrations
 
 
-    def backwards(self, orm):
-        
-        # Deleting model 'Price'
-        db.delete_table('billing_price')
+class Migration(migrations.Migration):
 
+    dependencies = [
+    ]
 
-    models = {
-        'billing.price': {
-            'Meta': {'object_name': 'Price'},
-            'category': ('django.db.models.fields.SmallIntegerField', [], {'unique': 'True', 'db_index': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '8', 'decimal_places': '2'}),
-            'text': ('django.db.models.fields.TextField', [], {'blank': 'True'})
-        }
-    }
-
-    complete_apps = ['billing']
+    operations = [
+        migrations.CreateModel(
+            name='ChecklistBillingState',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('billed_at', models.DateTimeField(default=None, null=True, db_index=True, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ChecklistPayment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Invoice',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Price',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('category', models.SmallIntegerField(db_index=True, unique=True, choices=[(1, 'All studies except multicentre drug studies'), (2, 'Multicentre drug trials for controlling ethics committees'), (3, 'Multicentre drug trials for locally responsible ethics committees'), (4, 'fee exemption'), (5, 'External Reviewer')])),
+                ('price', models.DecimalField(max_digits=8, decimal_places=2)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+    ]

@@ -142,7 +142,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'south',
     'djcelery',
     'ecs.utils.countries',
     'compressor',

@@ -1,69 +1,59 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Page'
-        db.create_table('help_page', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('view', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tracking.View'], null=True, blank=True)),
-            ('anchor', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=150)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('help', ['Page'])
-
-        # Adding unique constraint on 'Page', fields ['view', 'anchor']
-        db.create_unique('help_page', ['view_id', 'anchor'])
-
-        # Adding model 'Attachment'
-        db.create_table('help_attachment', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('mimetype', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('file', self.gf('django.db.models.fields.files.FileField')(max_length=100)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=50)),
-        ))
-        db.send_create_signal('help', ['Attachment'])
+from django.db import models, migrations
+import ecs.help.models
 
 
-    def backwards(self, orm):
-        
-        # Removing unique constraint on 'Page', fields ['view', 'anchor']
-        db.delete_unique('help_page', ['view_id', 'anchor'])
+class Migration(migrations.Migration):
 
-        # Deleting model 'Page'
-        db.delete_table('help_page')
+    dependencies = [
+        ('tracking', '0001_initial'),
+    ]
 
-        # Deleting model 'Attachment'
-        db.delete_table('help_attachment')
-
-
-    models = {
-        'help.attachment': {
-            'Meta': {'object_name': 'Attachment'},
-            'file': ('django.db.models.fields.files.FileField', [], {'max_length': '100'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'mimetype': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50'})
-        },
-        'help.page': {
-            'Meta': {'unique_together': "(('view', 'anchor'),)", 'object_name': 'Page'},
-            'anchor': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '150'}),
-            'view': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['tracking.View']", 'null': 'True', 'blank': 'True'})
-        },
-        'tracking.view': {
-            'Meta': {'object_name': 'View'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'path': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200', 'db_index': 'True'})
-        }
-    }
-
-    complete_apps = ['help']
+    operations = [
+        migrations.CreateModel(
+            name='Attachment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('file', models.FileField(storage=ecs.help.models.AttachmentFileStorage(), upload_to=ecs.help.models.upload_to)),
+                ('mimetype', models.CharField(max_length=100)),
+                ('is_screenshot', models.BooleanField(default=False)),
+                ('slug', models.CharField(unique=True, max_length=100, blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Page',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('anchor', models.CharField(max_length=100, blank=True)),
+                ('slug', models.CharField(unique=True, max_length=100)),
+                ('title', models.CharField(max_length=150)),
+                ('text', models.TextField()),
+                ('review_status', models.CharField(default=b'new', max_length=20, choices=[(b'new', 'New'), (b'ready_for_review', 'Ready for Review'), (b'review_ok', 'Review OK'), (b'review_fail', 'Review Failed')])),
+                ('view', models.ForeignKey(blank=True, to='tracking.View', null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AlterUniqueTogether(
+            name='page',
+            unique_together=set([('view', 'anchor')]),
+        ),
+        migrations.AddField(
+            model_name='attachment',
+            name='page',
+            field=models.ForeignKey(blank=True, to='help.Page', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='attachment',
+            name='view',
+            field=models.ForeignKey(blank=True, to='tracking.View', null=True),
+            preserve_default=True,
+        ),
+    ]

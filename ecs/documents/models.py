@@ -2,7 +2,6 @@
 import tempfile
 import mimetypes
 import logging
-from uuid import uuid4
 
 from django.db import models
 from django.utils.text import slugify
@@ -15,6 +14,7 @@ from django.utils import timezone
 from ecs.authorization import AuthorizationManager
 from ecs.utils.pdfutils import pdf_barcodestamp
 from ecs.documents.storagevault import getVault
+from ecs.compat import gen_uuid
 
 
 logger = logging.getLogger(__name__)
@@ -50,7 +50,7 @@ class DocumentManager(AuthorizationManager):
 
 
 class Document(models.Model):
-    uuid = models.SlugField(max_length=36, unique=True, default=lambda: uuid4().get_hex())
+    uuid = models.SlugField(max_length=36, unique=True, default=gen_uuid)
     original_file_name = models.CharField(max_length=250, null=True, blank=True)
     mimetype = models.CharField(max_length=100, default='application/pdf')
     stamp_on_download = models.BooleanField(default=True)
@@ -103,7 +103,7 @@ class DownloadHistory(models.Model):
     document = models.ForeignKey(Document, db_index=True)
     user = models.ForeignKey(User)
     downloaded_at = models.DateTimeField(auto_now_add=True)
-    uuid = models.SlugField(max_length=36, default=lambda: uuid4().get_hex())
+    uuid = models.SlugField(max_length=36, default=gen_uuid)
     context = models.CharField(max_length=15)
 
     class Meta:

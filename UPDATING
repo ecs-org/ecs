@@ -62,23 +62,42 @@ in addition to the usual steps. In chronological order:
 
 	$ rm -rf ~/ecs-temp
 
-* 2015-12-11: pki file layout
+* 2015-12-18: Manual intervention required for django migration transition
 
-  The pki file layout has been changed. The following manual steps have
-  to be performed after the upgrade.
+  A database migration mechanism, similar to south, has been integrated into
+  django. To aid the transition from south to django migrations, the initial set
+  of django migrations needs to be fake applied when upgrading from a legacy
+  database.
+
+	# Fake apply initial migrations. Answer 'no' when asked whether to
+	# delete stale content types. Ignore the error messages regarding the
+	# failed creation of content types.
+	$ for app in auth admin contenttypes sessions sites reversion \
+		boilerplate docstash documents help meetings notifications \
+		pki scratchpad tracking users votes workflow
+	  do
+		./manage.py migrate --fake $app 0001_initial
+	  done
+	$ ./manage.py migrate --fake billing 0002_auto_20151217_1249
+	$ ./manage.py migrate --fake checklists 0002_auto_20151217_1249
+	$ ./manage.py migrate --fake communication 0003_auto_20151217_1249
+	$ ./manage.py migrate --fake core 0003_auto_20151217_1249
+	$ ./manage.py migrate --fake tasks 0002_auto_20151217_1249
+
+	# Migration to bring the legacy database up to date. This might take a
+	# couple of minutes.
+	$ ./manage.py migrate core 0005_production_compat2
+
+	# Run remaining migrations. Now answer with 'yes' when asked whether to
+	# delete stale content types.
+	$ ./manage.py migrate
+
+* 2015-12-18: Client certificate authority needs to be rebuilt
+
+  The client certificate authority has to be rebuilt. All existing certificates
+  will be rendered invalid.
 
 	$ mv ~/ecs-ca ~/ecs-ca.bak
-	$ mkdir ~/ecs-ca
-	$ cp ~/ecs-ca.bak/{ca.cert.pem,crl.pem} ~/ecs-ca/
-
-* 2015-12-13: django-reversion now uses south
-
-  The django-reversion app has been changed to use south for database
-  migrations. For the upgrade to work correctly with the existing tables, the
-  first migration of django-reversion has to be fake applied before running the
-  other migrations.
-
-	$ ./manage.py migrate reversion 0001 --fake
-	$ ./manage.py migrate
+	$ ./manage.py bootstrap
 
 --- Next release ---

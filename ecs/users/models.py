@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-from uuid import uuid4
-
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django_extensions.db.fields.json import JSONField
 from django.utils.translation import ugettext_lazy as _
+
+from ecs.compat import gen_uuid
 
 
 class UserProfile(models.Model):
@@ -97,7 +97,7 @@ class InvitationManager(models.Manager):
 
 class Invitation(models.Model):
     user = models.ForeignKey(User, related_name='ecs_invitations')
-    uuid = models.CharField(max_length=32, default=lambda: uuid4().get_hex(), unique=True)
+    uuid = models.CharField(max_length=32, default=gen_uuid, unique=True)
     is_accepted = models.BooleanField(default=False)
 
     objects = InvitationManager()

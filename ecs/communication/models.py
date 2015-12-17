@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-import uuid
-
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
 from ecs.authorization import AuthorizationManager
+from ecs.compat import gen_uuid
 
 MESSAGE_ORIGIN_ALICE = 1
 MESSAGE_ORIGIN_BOB = 2
@@ -217,7 +216,7 @@ class Message(models.Model):
                             choices=DELIVERY_STATES, default='new',
                             db_index=True)
 
-    uuid = models.CharField(max_length=32, default=lambda: uuid.uuid4().get_hex(), db_index=True)
+    uuid = models.CharField(max_length=32, default=gen_uuid, db_index=True)
 
     reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
 

@@ -924,8 +924,8 @@ class ForeignParticipatingCenter(models.Model):
 class TemporaryAuthorization(models.Model):
     submission = models.ForeignKey(Submission, related_name='temp_auth')
     user = models.ForeignKey(User, related_name='temp_submission_auth')
-    start = models.DateTimeField(default=timezone.now)
-    end = models.DateTimeField(default=lambda: timezone.now() + timedelta(days=30))
+    start = models.DateTimeField()
+    end = models.DateTimeField()
 
     objects = TemporaryAuthorizationManager()
 
