@@ -9,7 +9,7 @@ from django.core.files.storage import FileSystemStorage
 from django.utils.encoding import smart_str
 from django.utils.translation import ugettext_lazy as _
 
-import reversion
+from reversion import revisions as reversion
 
 from ecs.utils import cached_property
 from ecs.tracking.models import View

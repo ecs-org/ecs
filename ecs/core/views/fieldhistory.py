@@ -2,7 +2,7 @@ from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-import reversion
+from reversion import revisions as reversion
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer

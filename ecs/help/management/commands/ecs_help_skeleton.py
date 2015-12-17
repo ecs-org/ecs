@@ -1,5 +1,5 @@
 import re
-from reversion import revision
+from reversion import revisions as reversion
 
 from django.core.management.base import BaseCommand
 from django.core import urlresolvers
@@ -33,5 +33,5 @@ class Command(BaseCommand):
 
         for v in View.objects.exclude(pk__in=Page.objects.filter(view__isnull=False).values('view').query):
             slug = re.sub(r'ecs\.(.*)\.views\.(.*)', r'\1.\2', v.path)
-            with revision:
+            with reversion.create_revision():
                 Page.objects.create(view=v, slug=slug, title='Skeleton: {0}'.format(slug), text='Ich bin ein dummy!')

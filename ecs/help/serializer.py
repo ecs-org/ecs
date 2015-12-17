@@ -6,7 +6,7 @@ from django.core.files.base import ContentFile
 from ecs.help.models import Page, Attachment
 from ecs.tracking.models import View
 
-import reversion
+from reversion import revisions as reversion
 
 class Serializer(object):
     fields = []
@@ -41,7 +41,7 @@ class Serializer(object):
         instance, created = self.model.objects.get_or_create(**create_kwargs)
         for k, v in kwargs.iteritems():
             setattr(instance, k, v)
-        with reversion.revision:
+        with reversion.create_revision():
             instance.save()
         return instance
 

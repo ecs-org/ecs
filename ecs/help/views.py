@@ -14,8 +14,7 @@ from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
-import reversion
-from reversion import revision
+from reversion import revisions as reversion
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.tracking.models import View
@@ -143,7 +142,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if form.is_valid():
         new = not bool(page)
         page = form.save()
-        revision.user = request.original_user if hasattr(request, "original_user") else request.user
+        reversion.set_user(request.original_user if hasattr(request, "original_user") else request.user)
         if new and page.slug:
             try:
                 index = Page.objects.get(slug='index')
@@ -217,7 +216,7 @@ search = forceauth.exempt(search_view_factory(
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
-    revision.user = request.original_user if hasattr(request, "original_user") else request.user
+    reversion.set_user(request.original_user if hasattr(request, "original_user") else request.user)
     return redirect('ecs.help.views.index')
 
 
