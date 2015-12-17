@@ -26,8 +26,8 @@ class NotificationFormTest(LoginTestCase):
         
         NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.select_notification_creation_type'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless('foo notif' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('foo notif' in response.content)
         
     def _create_POST_data(self, **extra):
         data = {
@@ -45,39 +45,39 @@ class NotificationFormTest(LoginTestCase):
 
         # GET the form and expect a docstash transactions redirect, then follow this redirect
         response = self.client.get(reverse('ecs.notifications.views.create_notification', kwargs={'notification_type_pk': notification_type.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         url = response['Location']
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless('foo notif' in response.content)
-        self.failUnless('<form' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('foo notif' in response.content)
+        self.assertTrue('<form' in response.content)
         
         # POST the form in `autosave` mode
         response = self.client.post(url, self._create_POST_data(autosave='autosave'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failIf('<form' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('<form' in response.content)
 
         # POST the form in `save` mode
         response = self.client.post(url, self._create_POST_data(save='save', comments='bar comment'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failIf('<form' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('<form' in response.content)
         
         # POST the form in `submit` mode (incomplete data)
         response = self.client.post(url, self._create_POST_data(submit='submit'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless('<form' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('<form' in response.content)
         form = response.context['form']
-        self.failUnlessEqual(form['comments'].data, 'foo comment')
+        self.assertEqual(form['comments'].data, 'foo comment')
         
         # POST the form in `submit` mode (complete data) and follow the redirect
         submission_form = create_submission_form()
         response = self.client.post(url, self._create_POST_data(submit='submit', submission_forms=submission_form.pk))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         view_url = response['Location']
         response = self.client.get(view_url)
         obj = response.context['notification']
-        self.failUnlessEqual(obj.comments, 'foo comment')
-        self.failUnlessEqual(obj.submission_forms.all()[0], submission_form)
+        self.assertEqual(obj.comments, 'foo comment')
+        self.assertEqual(obj.submission_forms.all()[0], submission_form)
 
     def test_submission_data_for_notification(self):
         '''Tests if the submission_data_for_notification view is accessible for a created notification for a submission.
@@ -87,7 +87,7 @@ class NotificationFormTest(LoginTestCase):
         notification = Notification.objects.create(type=notification_type)
         submission_form = create_submission_form()
         response = self.client.get(reverse('ecs.notifications.views.submission_data_for_notification'), {'submission_form': submission_form.pk})
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_notification_pdf(self):
         '''Tests if a pdf is produced if a Notification is created.
@@ -125,11 +125,11 @@ class NotificationFormTest(LoginTestCase):
         })
         response = self.client.post(upload_url, data)
         f.close()
-        self.failUnless('<form' in response.content)
+        self.assertTrue('<form' in response.content)
         documents = response.context['documents']
-        self.failUnlessEqual(len(documents), 1)
+        self.assertEqual(len(documents), 1)
         doc = documents[0]
-        self.failUnlessEqual(doc.version, '3.1415')
+        self.assertEqual(doc.version, '3.1415')
         
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
         self.assertEqual(response.status_code, 200)
@@ -151,8 +151,8 @@ class NotificationFormTest(LoginTestCase):
            'document-0-date': '30.03.2010',
         })
         response = self.client.post(upload_url, data)
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless('<form' in response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('<form' in response.content)
 
     def test_vote_extension_workflow(self):
         from ecs.core.tests.submissions import create_submission_form

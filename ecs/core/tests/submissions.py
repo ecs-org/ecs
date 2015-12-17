@@ -385,8 +385,8 @@ class SubmissionAttachUserTest(EcsTestCase):
         
         attach_to_submissions(self.user)        
         self.sf = SubmissionForm.objects.get(project_title="High Risk Test Study")
-        self.assertEquals(self.sf.sponsor, self.user)
-        self.assertEquals(self.sf.submitter, self.user)
+        self.assertEqual(self.sf.sponsor, self.user)
+        self.assertEqual(self.sf.submitter, self.user)
 
     def tearDown(self):
         self.user.delete()

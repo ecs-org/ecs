@@ -63,8 +63,8 @@ class VoteRemindersTest(CommunicationTestCase):
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=self.valid_until+timedelta(days=1))
-        self.failUnless(alice_message_count < Message.objects.filter(receiver=self.alice).count())
-        self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
+        self.assertTrue(alice_message_count < Message.objects.filter(receiver=self.alice).count())
+        self.assertTrue(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_expiry_diplomathesis(self):
         '''Tests that reminder messages actually get sent to submission participants in a diploma thesis submission.
@@ -73,8 +73,8 @@ class VoteRemindersTest(CommunicationTestCase):
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
         bob_message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=self.valid_until+timedelta(days=1))
-        self.failUnless(alice_message_count < Message.objects.filter(receiver=self.alice).count())
-        self.failUnless(bob_message_count < Message.objects.filter(receiver=self.bob).count())
+        self.assertTrue(alice_message_count < Message.objects.filter(receiver=self.alice).count())
+        self.assertTrue(bob_message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office(self):
         '''Tests that messages get sent to office before the deadline
@@ -82,7 +82,7 @@ class VoteRemindersTest(CommunicationTestCase):
         
         message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=self.valid_until-timedelta(days=7))
-        self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
+        self.assertTrue(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_office_diplomathesis(self):
         '''Tests that messages get sent to office for a thesis submission
@@ -90,7 +90,7 @@ class VoteRemindersTest(CommunicationTestCase):
         
         message_count = Message.objects.filter(receiver=self.bob).count()
         send_reminder_messages(today=self.valid_until-timedelta(days=7))
-        self.failUnless(message_count < Message.objects.filter(receiver=self.bob).count())
+        self.assertTrue(message_count < Message.objects.filter(receiver=self.bob).count())
 
     def test_reminder_submitter(self):
         '''Tests if the submitter of a study gets a reminder message.
@@ -98,7 +98,7 @@ class VoteRemindersTest(CommunicationTestCase):
         
         message_count = Message.objects.filter(receiver=self.alice).count()
         send_reminder_messages(today=self.valid_until-timedelta(days=21))
-        self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())
+        self.assertTrue(message_count < Message.objects.filter(receiver=self.alice).count())
 
     def test_reminder_submitter_diplomathesis(self):
         '''Tests if the submitter of a diploma thesis gets a reminder message.
@@ -106,5 +106,5 @@ class VoteRemindersTest(CommunicationTestCase):
         
         message_count = Message.objects.filter(receiver=self.alice).count()
         send_reminder_messages(today=self.valid_until-timedelta(days=21))
-        self.failUnless(message_count < Message.objects.filter(receiver=self.alice).count())
+        self.assertTrue(message_count < Message.objects.filter(receiver=self.alice).count())
 

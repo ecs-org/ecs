@@ -30,25 +30,25 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
             'last_name': 'User',
             'email': 'new.user@example.org',
         })
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(self.queue_count(),1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.queue_count(),1)
         mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message)
-        self.failUnless(match)
+        self.assertTrue(match)
         activation_url = match.group(1)
         response = self.client.get(activation_url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         response = self.client.post(activation_url, {
             'password': 'password',
             'password_again': 'password',
         })
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         user = get_user('new.user@example.org')
-        self.failUnlessEqual(user.first_name, 'New')
-        self.failUnlessEqual(user.profile.gender, 'm')
-        self.failUnless(user.check_password('password'))
+        self.assertEqual(user.first_name, 'New')
+        self.assertEqual(user.profile.gender, 'm')
+        self.assertTrue(user.check_password('password'))
         
 
 class PasswordChangeTest(MailTestCase):
@@ -69,28 +69,28 @@ class PasswordChangeTest(MailTestCase):
         response = self.client.post(reverse('ecs.users.views.request_password_reset'), {
             'email': 'new.user@example.org',
         })
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(self.queue_count(), 1)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.queue_count(), 1)
         mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message)
-        self.failUnless(match)
+        self.assertTrue(match)
         password_reset_url = match.group(1)
         response = self.client.get(password_reset_url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = self.client.post(password_reset_url, {
             'new_password1': '12345678',
             'new_password2': '12345678',
         })
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         user = get_user('new.user@example.org')
-        self.failUnless(user.check_password('12345678'))
+        self.assertTrue(user.check_password('12345678'))
         
         response = self.client.get(password_reset_url)
-        self.failUnlessEqual(response.status_code, 200)
-        self.failIf('form' in response.context)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse('form' in response.context)
         
     def test_password_change(self):
         '''Makes sure that a password can be changed, by changing a password and
@@ -104,18 +104,18 @@ class PasswordChangeTest(MailTestCase):
 
         url = reverse('ecs.users.views.change_password')
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post(url, {
             'old_password': 'test', 
             'new_password1': '12345678',
             'new_password2': '12345678',
         })
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         self.client.logout()
         
         user = get_user('foobar@example.com')
-        self.failUnless(user.check_password('12345678'))
+        self.assertTrue(user.check_password('12345678'))
         
 class MiddlewareTest(EcsTestCase):
     '''Tests for the user middleware
@@ -139,12 +139,12 @@ class MiddlewareTest(EcsTestCase):
 
         c1.login(email='testuser@example.com', password='4223')
         response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         c2.login(email='testuser@example.com', password='4223')  # now, c1 has to be logged out, because of the single login middleware
         response = c2.get(reverse('ecs.dashboard.views.view_dashboard'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         

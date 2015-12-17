@@ -20,7 +20,7 @@ Tests for accessibility and configuration of the asynchronous task queue.
         '''Tests if the asynchronous task queue worker is accessible, if the logger works and if the remote test task succeeds.'''
         
         retval = basic_test.delay()
-        self.failUnlessEqual(retval.get(), 'success')
-        self.failUnlessEqual(retval.result, 'success')
-        self.failUnless(retval.successful())
+        self.assertEqual(retval.get(), 'success')
+        self.assertEqual(retval.result, 'success')
+        self.assertTrue(retval.successful())
 

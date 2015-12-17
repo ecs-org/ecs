@@ -53,26 +53,26 @@ class SerializerTest(EcsTestCase):
         return sf
         
     def compare(self, a, b):
-        self.failUnlessEqual(type(a), type(b))
+        self.assertEqual(type(a), type(b))
         for attr, value in SUBMISSION_FORM_DATA.iteritems():
-            self.failUnlessEqual(getattr(a, attr), value)
-            self.failUnlessEqual(getattr(b, attr), value)
+            self.assertEqual(getattr(a, attr), value)
+            self.assertEqual(getattr(b, attr), value)
             
         get_doc_set = lambda x: set((doc.doctype, doc.version, doc.date, doc.mimetype) for doc in x.documents.all())
-        self.failUnlessEqual(get_doc_set(a), get_doc_set(b))
+        self.assertEqual(get_doc_set(a), get_doc_set(b))
         
         get_measure_set = lambda x: set((m.category, m.type, m.period, m.total) for m in x.measures.all())
-        self.failUnlessEqual(get_measure_set(a), get_measure_set(b))
+        self.assertEqual(get_measure_set(a), get_measure_set(b))
         
         get_employee_set = lambda x: frozenset((e.sex, e.firstname, e.surname) for e in x.employees.all())
         get_investigator_set = lambda x: set((i.contact_last_name, i.main, i.ethics_commission, i.subject_count, get_employee_set(i)) for i in x.investigators.all())
-        self.failUnlessEqual(get_investigator_set(a), get_investigator_set(b))
+        self.assertEqual(get_investigator_set(a), get_investigator_set(b))
         
         get_fpc_set = lambda x: set((fpc.name,) for fpc in x.foreignparticipatingcenter_set.all())
-        self.failUnlessEqual(get_fpc_set(a), get_fpc_set(b))
+        self.assertEqual(get_fpc_set(a), get_fpc_set(b))
         
         get_ntud_set = lambda x: set((ntud.generic_name, ntud.preparation_form, ntud.dosage) for ntud in x.nontesteduseddrug_set.all())
-        self.failUnlessEqual(get_ntud_set(a), get_ntud_set(b))
+        self.assertEqual(get_ntud_set(a), get_ntud_set(b))
     
     def test_import_export(self):
         '''Tests the serializer by comparing original submission data

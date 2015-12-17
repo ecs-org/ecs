@@ -33,5 +33,5 @@ class SubmissionFormDiffTest(EcsTestCase):
         
         self.new_sf.project_title = 'roflcopter'
         diff = diff_submission_forms(self.old_sf, self.new_sf)
-        self.failUnless(diff[u'1.1 %s' % _('project title (english)')])
-        self.failUnlessEqual(diff[u'1.1 %s' % _('project title (english)')].new, 'roflcopter')
+        self.assertTrue(diff[u'1.1 %s' % _('project title (english)')])
+        self.assertEqual(diff[u'1.1 %s' % _('project title (english)')].new, 'roflcopter')

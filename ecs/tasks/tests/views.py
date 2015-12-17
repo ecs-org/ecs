@@ -20,18 +20,18 @@ class ViewTestCase(LoginTestCase, WorkflowTestCase):
 
         # show the task list
         response = self.client.get(reverse('ecs.tasks.views.my_tasks'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(task in response.context['open_tasks'])
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(task in response.context['open_tasks'])
         
         # change the task list filter
         response = self.client.post(reverse('ecs.tasks.views.my_tasks'), {'proxy': False, 'mine': True, 'open': True, 'amg': False, 'mpg': False, 'other': True})
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(task in response.context['open_tasks'])
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(task in response.context['open_tasks'])
         
         # accept the task
         response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
         task = refetch()
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(self.user, task.assigned_to)
-        self.failIf(task.assigned_at is None)
-        self.failIf(not task.accepted)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.user, task.assigned_to)
+        self.assertFalse(task.assigned_at is None)
+        self.assertFalse(not task.accepted)

@@ -76,35 +76,35 @@ class SubmissionAuthTestCase(EcsTestCase):
         '''
         
         with sudo(self.anyone):
-            self.failUnlessEqual(Submission.objects.count(), 0)
+            self.assertEqual(Submission.objects.count(), 0)
         with sudo(self.submitter_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.sponsor_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.primary_investigator_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.external_review_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.internal_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.board_member_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.another_board_member_user):
-            self.failUnlessEqual(Submission.objects.count(), 0)
+            self.assertEqual(Submission.objects.count(), 0)
 
         with sudo(self.thesis_review_user):
-            self.failUnlessEqual(Submission.objects.count(), 0)
+            self.assertEqual(Submission.objects.count(), 0)
         self.sf.submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
 
         with sudo(self.expedited_review_user):
-            self.failUnlessEqual(Submission.objects.count(), 0)
+            self.assertEqual(Submission.objects.count(), 0)
         self.sf.submission.workflow_lane = SUBMISSION_LANE_EXPEDITED
         self.sf.submission.save()
         with sudo(self.expedited_review_user):
-            self.failUnlessEqual(Submission.objects.count(), 1)
+            self.assertEqual(Submission.objects.count(), 1)
     
     @contextmanager
     def _login(self, user):
@@ -118,9 +118,9 @@ class SubmissionAuthTestCase(EcsTestCase):
             while response.status_code == 302:
                 response = self.client.get(response['Location'])
             if expect404:
-                self.failUnlessEqual(response.status_code, allowed and 200 or 404)
+                self.assertEqual(response.status_code, allowed and 200 or 404)
             else:
-                self.failUnlessEqual(str(self.BASE_EC_NUMBER) in response.content, allowed)
+                self.assertEqual(str(self.BASE_EC_NUMBER) in response.content, allowed)
                 
     def _check_view(self, expect404, viewname, *args, **kwargs):
         url = reverse(viewname, args=args, kwargs=kwargs)

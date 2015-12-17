@@ -329,17 +329,17 @@ class FlowTest(WorkflowTestCase):
         s_tokens = Token.objects.filter(node=n_sync)
         e_token = Token.objects.get(node=n_e)
         
-        self.failUnlessEqual(set(a_token.trail.all()), set([]))
-        self.failUnlessEqual(set(b_token.trail.all()), set([a_token]))
-        self.failUnlessEqual(set(c_token.trail.all()), set([a_token]))
-        self.failUnlessEqual(s_tokens.get(source=n_b).trail.get(), b_token)
-        self.failUnlessEqual(s_tokens.get(source=n_c).trail.get(), c_token)
-        self.failUnlessEqual(set(e_token.trail.all()), set(s_tokens))
-        
-        self.failUnlessEqual(a_token.activity_trail, set())
-        self.failUnlessEqual(b_token.activity_trail, set([a_token]))
-        self.failUnlessEqual(c_token.activity_trail, set([a_token]))
-        self.failUnlessEqual(e_token.activity_trail, set([b_token, c_token]))
+        self.assertEqual(set(a_token.trail.all()), set([]))
+        self.assertEqual(set(b_token.trail.all()), set([a_token]))
+        self.assertEqual(set(c_token.trail.all()), set([a_token]))
+        self.assertEqual(s_tokens.get(source=n_b).trail.get(), b_token)
+        self.assertEqual(s_tokens.get(source=n_c).trail.get(), c_token)
+        self.assertEqual(set(e_token.trail.all()), set(s_tokens))
+
+        self.assertEqual(a_token.activity_trail, set())
+        self.assertEqual(b_token.activity_trail, set([a_token]))
+        self.assertEqual(c_token.activity_trail, set([a_token]))
+        self.assertEqual(e_token.activity_trail, set([b_token, c_token]))
 
     def test_parametrization(self):
         '''Tests if parametrization of a workflow node is implemented correctly.'''

@@ -20,29 +20,29 @@ class DecoratorApiTest(LoginTestCase):
         base_url = '/simple_post/'
         test_post_data = {'foo': 'bar'}
         response = self.client.post(base_url)
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         key_url = response['Location']
-        self.failUnless(base_url in key_url)
+        self.assertTrue(base_url in key_url)
         key = key_url.rsplit('/', 2)[-2]
         
         # post test data
         response = self.client.post(key_url, test_post_data)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.failUnlessEqual(data, test_post_data)
+        self.assertEqual(data, test_post_data)
         
         # get test data
         response = self.client.get(key_url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.failUnlessEqual(data, test_post_data)
+        self.assertEqual(data, test_post_data)
         
         # post test data again
         test_post_data = {'baz': '42'}
         response = self.client.post(key_url, test_post_data)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.failUnlessEqual(data, test_post_data)
+        self.assertEqual(data, test_post_data)
 
 
         

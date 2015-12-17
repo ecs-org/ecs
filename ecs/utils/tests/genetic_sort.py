@@ -22,5 +22,5 @@ class GeneticSorterTest(TestCase):
             result = sorter.run(1000)
             if result == tuple(xrange(N)):
                 break
-        self.failUnlessEqual(result, tuple(xrange(N)))
+        self.assertEqual(result, tuple(xrange(N)))
         

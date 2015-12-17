@@ -13,5 +13,5 @@ class WorkflowTestCase(EcsTestCase):
         super(WorkflowTestCase, self).tearDown()
 
     def assertActivitiesEqual(self, obj, acts):
-        self.failUnlessEqual(set(acts), set(type(act) for act in obj.workflow.activities))
+        self.assertEqual(set(acts), set(type(act) for act in obj.workflow.activities))
 

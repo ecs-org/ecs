@@ -33,8 +33,8 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         that the correct Excpetion is raised on Nonexistence.
         '''
         
-        self.failUnless(TaskType.objects.get(workflow_node=self.n_a))
-        self.failUnless(TaskType.objects.get(workflow_node=self.n_b))
+        self.assertTrue(TaskType.objects.get(workflow_node=self.n_a))
+        self.assertTrue(TaskType.objects.get(workflow_node=self.n_b))
         self.assertRaises(TaskType.DoesNotExist, TaskType.objects.get, workflow_node=self.n_x)
         
     def test_task_creation(self):
@@ -44,13 +44,13 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         obj = Foo.objects.create()
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
-        self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_a)
+        self.assertEqual(tasks[0].task_type.workflow_node, self.n_a)
         self.assertRaises(Task.DoesNotExist, tasks.get, task_type__workflow_node=self.n_b)
         
         obj.workflow.do(decl.A)
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
-        self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_b)
+        self.assertEqual(tasks[0].task_type.workflow_node, self.n_b)
         self.assertRaises(Task.DoesNotExist, tasks.get, task_type__workflow_node=self.n_a)
 
     def test_task_done(self):
@@ -60,12 +60,12 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         obj = Foo.objects.create()
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
-        self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_a)
+        self.assertEqual(tasks[0].task_type.workflow_node, self.n_a)
         
         tasks[0].done()
         
         tasks = Task.objects.for_data(obj).filter(closed_at=None)
-        self.failUnlessEqual(tasks[0].task_type.workflow_node, self.n_b)
+        self.assertEqual(tasks[0].task_type.workflow_node, self.n_b)
 
     def test_task_trail(self):
         '''Tests if the task trail works correctly.
@@ -75,6 +75,6 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         a_task = Task.objects.filter(closed_at=None).get()
         obj.workflow.do(decl.A)
         b_task = Task.objects.filter(closed_at=None).get()
-        self.failUnlessEqual(set(b_task.trail), set([a_task]))
+        self.assertEqual(set(b_task.trail), set([a_task]))
 
         

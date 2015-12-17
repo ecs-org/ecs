@@ -41,7 +41,7 @@ class CommunicationTest(CommunicationTestCase):
         self.client.login(email='alice@example.com', password='password')
 
         response = self.client.get(reverse('ecs.communication.views.new_thread'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         message_count = Message.objects.count()
         response = self.client.post(reverse('ecs.communication.views.new_thread'), {
@@ -50,29 +50,29 @@ class CommunicationTest(CommunicationTestCase):
             'receiver_type': 'person',
             'receiver_person': self.bob.pk,
         })
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(Message.objects.count(), message_count+1)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Message.objects.count(), message_count+1)
         message = Message.objects.all().order_by('-pk')[0]
-        self.failUnlessEqual(message.sender, self.alice)
-        self.failUnlessEqual(message.receiver, self.bob)
+        self.assertEqual(message.sender, self.alice)
+        self.assertEqual(message.receiver, self.bob)
         
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(message.thread in response.context['page'].object_list)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(message.thread in response.context['page'].object_list)
         response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failIf(message.thread in response.context['page'].object_list)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(message.thread in response.context['page'].object_list)
 
         self.client.logout()
         self.client.login(email='bob@example.com', password='password')
 
         response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnless(message.thread in response.context['page'].object_list)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(message.thread in response.context['page'].object_list)
 
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failIf(message.thread in response.context['page'].object_list)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(message.thread in response.context['page'].object_list)
 
         self.client.logout()
 
@@ -90,7 +90,7 @@ class CommunicationTest(CommunicationTestCase):
             'text': 'TEXT',
             'receiver': self.bob.pk,
         })
-        self.failUnlessEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
     def test_reply_message(self):
         '''Tests if a personal message can be replied to.
@@ -101,11 +101,11 @@ class CommunicationTest(CommunicationTestCase):
 
         response = self.client.post(reverse('ecs.communication.views.read_thread',
             kwargs={'thread_pk': self.thread.pk}), {'text': 'REPLY TEXT'})
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(Message.objects.count(), 2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()
-        self.failUnlessEqual(message.receiver, self.alice)
-        self.failUnlessEqual(message.sender, self.bob)
+        self.assertEqual(message.receiver, self.alice)
+        self.assertEqual(message.sender, self.bob)
 
     def test_read_thread(self):
         '''Tests if a thread is really accessible for the users entitled to read it.
@@ -113,11 +113,11 @@ class CommunicationTest(CommunicationTestCase):
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         self.client.login(email='bob@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
     def test_bump_message(self):
         '''Tests if a thread can be bumped.'''
@@ -127,34 +127,34 @@ class CommunicationTest(CommunicationTestCase):
 
         response = self.client.post(reverse('ecs.communication.views.read_thread',
             kwargs={'thread_pk': self.thread.pk}), {'text': 'BUMP TEXT'})
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(Message.objects.count(), 2)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Message.objects.count(), 2)
         message = Message.objects.exclude(pk=message.pk).get()
-        self.failUnlessEqual(message.sender, self.alice)
-        self.failUnlessEqual(message.receiver, self.bob)
+        self.assertEqual(message.sender, self.alice)
+        self.assertEqual(message.receiver, self.bob)
 
     def test_close_thread(self):
         '''Makes sure that a thread can be closed.'''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         
         self.client.login(email='bob@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
 
     def test_incoming_message_widget(self):
         '''Tests if the incoming message widget is accessible.'''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_outgoing_message_widget(self):
         '''Tests if the outgoing message widget is accessible.'''
         
         self.client.login(email='alice@example.com', password='password')
         response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 

@@ -1,7 +1,6 @@
 import math
 from datetime import datetime, timedelta
 
-from django.db.models import connection
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -27,35 +26,35 @@ class MeetingModelTest(EcsTestCase):
         b = m.add_entry(duration=timedelta(hours=1), title="B")
         c = m.add_entry(duration=timedelta(minutes=15), title="C")
         
-        self.failUnlessEqual(len(m), 3)
-        self.failUnlessEqual(list(m), [a, b, c])
+        self.assertEqual(len(m), 3)
+        self.assertEqual(list(m), [a, b, c])
         a.index = 1
-        self.failUnlessEqual(list(m), [b, a, c])
+        self.assertEqual(list(m), [b, a, c])
         a.index = 0
-        self.failUnlessEqual(list(m), [a, b, c])
+        self.assertEqual(list(m), [a, b, c])
 
         self.assertRaises(IndexError, lambda: setattr(a, 'index', 3))
         self.assertRaises(IndexError, lambda: setattr(a, 'index', -1))
         
-        self.failUnlessEqual(m[0], a)
-        self.failUnlessEqual(m[2], c)
+        self.assertEqual(m[0], a)
+        self.assertEqual(m[2], c)
         self.assertRaises(IndexError, lambda: m[-1])
         self.assertRaises(IndexError, lambda: m[3])
         
         timetable = list(m)
-        self.failUnlessEqual(timetable[0].start - start, timedelta(minutes=0))
-        self.failUnlessEqual(timetable[0].end - start, timedelta(minutes=30))
-        self.failUnlessEqual(timetable[1].start - start, timedelta(minutes=30))
-        self.failUnlessEqual(timetable[1].end - start, timedelta(minutes=90))
-        self.failUnlessEqual(timetable[2].start - start, timedelta(minutes=90))
-        self.failUnlessEqual(timetable[2].end - start, timedelta(minutes=105))
+        self.assertEqual(timetable[0].start - start, timedelta(minutes=0))
+        self.assertEqual(timetable[0].end - start, timedelta(minutes=30))
+        self.assertEqual(timetable[1].start - start, timedelta(minutes=30))
+        self.assertEqual(timetable[1].end - start, timedelta(minutes=90))
+        self.assertEqual(timetable[2].start - start, timedelta(minutes=90))
+        self.assertEqual(timetable[2].end - start, timedelta(minutes=105))
 
-        self.failUnlessEqual(m[0].start - start, timedelta(minutes=0))
-        self.failUnlessEqual(m[0].end - start, timedelta(minutes=30))
-        self.failUnlessEqual(m[1].start - start, timedelta(minutes=30))
-        self.failUnlessEqual(m[1].end - start, timedelta(minutes=90))
-        self.failUnlessEqual(m[2].start - start, timedelta(minutes=90))
-        self.failUnlessEqual(m[2].end - start, timedelta(minutes=105))
+        self.assertEqual(m[0].start - start, timedelta(minutes=0))
+        self.assertEqual(m[0].end - start, timedelta(minutes=30))
+        self.assertEqual(m[1].start - start, timedelta(minutes=30))
+        self.assertEqual(m[1].end - start, timedelta(minutes=90))
+        self.assertEqual(m[2].start - start, timedelta(minutes=90))
+        self.assertEqual(m[2].end - start, timedelta(minutes=105))
 
 
     def test_metrics(self):
@@ -86,21 +85,19 @@ class MeetingModelTest(EcsTestCase):
         d.add_user(u3)
         
         metrics = m.metrics
-        query_count = len(connection.queries)
 
-        wtpu = metrics.waiting_time_per_user
-        self.failUnlessEqual(len(wtpu), 4)
-        self.failUnlessEqual(wtpu[u0], timedelta(hours=4))
-        self.failUnlessEqual(wtpu[u1], timedelta(hours=4))
-        self.failUnlessEqual(wtpu[u2], timedelta(hours=0))
-        self.failUnlessEqual(wtpu[u3], timedelta(hours=6))
-        self.failUnlessEqual(metrics.waiting_time_total, timedelta(hours=14))
-        self.failUnlessEqual(metrics.waiting_time_avg, timedelta(hours=3.5))
-        self.failUnlessEqual(metrics.waiting_time_min, timedelta(hours=0))
-        self.failUnlessEqual(metrics.waiting_time_max, timedelta(hours=6))
-        self.failUnlessEqual(metrics.waiting_time_variance, timedelta(hours=math.sqrt(4.75)))
-        
-        self.failUnlessEqual(len(connection.queries), query_count)
+        with self.assertNumQueries(0):
+            wtpu = metrics.waiting_time_per_user
+            self.assertEqual(len(wtpu), 4)
+            self.assertEqual(wtpu[u0], timedelta(hours=4))
+            self.assertEqual(wtpu[u1], timedelta(hours=4))
+            self.assertEqual(wtpu[u2], timedelta(hours=0))
+            self.assertEqual(wtpu[u3], timedelta(hours=6))
+            self.assertEqual(metrics.waiting_time_total, timedelta(hours=14))
+            self.assertEqual(metrics.waiting_time_avg, timedelta(hours=3.5))
+            self.assertEqual(metrics.waiting_time_min, timedelta(hours=0))
+            self.assertEqual(metrics.waiting_time_max, timedelta(hours=6))
+            self.assertEqual(metrics.waiting_time_variance, timedelta(hours=math.sqrt(4.75)))
         
     def test_automatic_meeting_assignment(self):
         '''Tests the scheduling mechanism for meetings by scheduling

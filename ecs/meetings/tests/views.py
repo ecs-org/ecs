@@ -43,38 +43,38 @@ class ViewTestCase(EcsTestCase):
         
         create_meeting_url = reverse('ecs.meetings.views.create_meeting')
         response = self.client.get(create_meeting_url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         data = {'title': 'Testmeeting'}
         data.update(_get_datetime_inputs('start', self.start))
         data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + datetime.timedelta(days=30)))
         data.update(_get_datetime_inputs('deadline', self.start + datetime.timedelta(days=14)))
         response = self.client.post(create_meeting_url, data)
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(Meeting.objects.filter(start=self.start).count(), 1)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Meeting.objects.filter(start=self.start).count(), 1)
         meeting = Meeting.objects.get(start=self.start)
         
         timetable_url = reverse('ecs.meetings.views.timetable_editor', kwargs={'meeting_pk': meeting.pk})
         response = self.client.get(timetable_url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         e0 = meeting.add_entry(duration_in_seconds=42)
         response = self.client.post(reverse('ecs.meetings.views.update_timetable_entry', kwargs={'meeting_pk': meeting.pk, 'entry_pk': e0.pk}), {
             'duration': '2h',
         })
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(self.refetch(e0).duration, datetime.timedelta(hours=2))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.refetch(e0).duration, datetime.timedelta(hours=2))
         
         e1 = meeting.add_entry(duration_in_seconds=42)
-        self.failUnlessEqual(list(meeting), [e0, e1])
+        self.assertEqual(list(meeting), [e0, e1])
         
         response = self.client.get(reverse('ecs.meetings.views.move_timetable_entry', kwargs={'meeting_pk': meeting.pk}) + '?from_index=0&to_index=1')
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(list(self.refetch(meeting)), [e1, e0])
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(list(self.refetch(meeting)), [e1, e0])
         
         response = self.client.get(reverse('ecs.meetings.views.remove_timetable_entry', kwargs={'meeting_pk': meeting.pk, 'entry_pk': e0.pk}))
-        self.failUnlessEqual(response.status_code, 302)
-        self.failUnlessEqual(list(self.refetch(meeting)), [e1])
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(list(self.refetch(meeting)), [e1])
         
 
     def test_meeting_assistant(self):
@@ -88,40 +88,40 @@ class ViewTestCase(EcsTestCase):
         e1 = meeting.add_entry(duration_in_seconds=42*42)
 
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant_start', kwargs={'meeting_pk': meeting.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         meeting = self.refetch(meeting)
-        self.failUnless(meeting.started)
+        self.assertTrue(meeting.started)
         
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         response = self.client.post(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}), {
             'close_top': 'on',
             'result': '1',
         })
-        self.failUnless(response.status_code, 302)
-        self.failIf(self.refetch(e0).is_open)
+        self.assertTrue(response.status_code, 302)
+        self.assertFalse(self.refetch(e0).is_open)
 
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant_stop', kwargs={'meeting_pk': meeting.pk}))
-        self.failUnlessEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
         response = self.client.post(reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e1.pk}), {
             'close_top': 'on',
             'result': '2',
         })
-        self.failUnless(response.status_code, 302)
-        self.failIf(self.refetch(e1).is_open)
+        self.assertTrue(response.status_code, 302)
+        self.assertFalse(self.refetch(e1).is_open)
         
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant_stop', kwargs={'meeting_pk': meeting.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         meeting = self.refetch(meeting)
-        self.failUnless(meeting.ended)
+        self.assertTrue(meeting.ended)
 
     def test_meeting_assistant_quickjump(self):
         '''Tests that the quickjump view is accessible and that it returns the right url.
@@ -133,9 +133,9 @@ class ViewTestCase(EcsTestCase):
         
         quickjump_url = reverse('ecs.meetings.views.meeting_assistant_quickjump', kwargs={'meeting_pk': meeting.pk})
         response = self.client.get(quickjump_url + '?q=')
-        self.failUnless(response.status_code, 200)
+        self.assertTrue(response.status_code, 200)
         
         response = self.client.get(quickjump_url + '?q=TOP 1')
-        self.failUnless(response.status_code, 302)
-        self.failUnlessEqual(urlsplit(response['Location']).path, reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))
+        self.assertTrue(response.status_code, 302)
+        self.assertEqual(urlsplit(response['Location']).path, reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))
 

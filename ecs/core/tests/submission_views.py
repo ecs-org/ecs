@@ -104,7 +104,7 @@ class SubmissionViewsTestCase(LoginTestCase):
     def get_docstash_url(self):
         url = reverse('ecs.core.views.create_submission_form')
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         url = response['Location']
         return url
         
@@ -124,11 +124,11 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         # post some data
         response = self.client.post(url, {})
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         # from docstash
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
         upload_url = url.replace('new', 'doc/upload', 1)    # XXX: ugly
 
@@ -141,9 +141,9 @@ class SubmissionViewsTestCase(LoginTestCase):
                 'document-version': '3.1415',
                 'document-date': '26.10.2010',
             }))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         first_doc = response.context['documents'][0]
-        self.failUnlessEqual(first_doc.version, '3.1415')
+        self.assertEqual(first_doc.version, '3.1415')
         
         # replace document
         with open(file_path, 'rb') as f:
@@ -154,17 +154,17 @@ class SubmissionViewsTestCase(LoginTestCase):
                 'document-date': '26.10.2010',
                 'document-replaces_document': first_doc.pk,
             }))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         docs = response.context['documents']
-        self.failUnlessEqual(len(docs), 1)
-        self.failUnlessEqual(docs[0].version, '3')
+        self.assertEqual(len(docs), 1)
+        self.assertEqual(docs[0].version, '3')
         
         # posting valid data
         response = self.client.post(url, self.get_post_data({'submit': 'submit', 'documents': [str(doc.pk) for doc in docs]}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         sf = SubmissionForm.objects.get(project_title=u'FOOBAR POST Test')
-        self.failUnlessEqual(sf.documents.count(), 1)
-        self.failUnlessEqual(sf.documents.all()[0].version, '3')
+        self.assertEqual(sf.documents.count(), 1)
+        self.assertEqual(sf.documents.all()[0].version, '3')
         
     def test_readonly_submission_form(self):
         '''Tests if the readonly submissionform is accessible.
@@ -172,7 +172,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         submission_form = create_submission_form()
         response = self.client.get(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
         
     def test_submission_pdf(self):
         '''Tests if a pdf can be produced out of a pre existing submissionform.
@@ -195,16 +195,16 @@ class SubmissionViewsTestCase(LoginTestCase):
         url = reverse('ecs.core.views.all_submissions')
         
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 3)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.count()]), 3)
         
         response = self.client.get(url, {'keyword': '42'})
-        self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
+        self.assertTrue(response.status_code, 200)
+        self.assertEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
 
         response = self.client.get(url, {'keyword': '42/2020'})
-        self.failUnless(response.status_code, 200)
-        self.failUnlessEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
+        self.assertTrue(response.status_code, 200)
+        self.assertEqual(len([x for x in response.context['submissions'].object_list if not x.timetable_entries.exists()]), 1)
         
     def test_submission_form_copy(self):
         '''Tests if a submissionform can be copied. Compares initial version against copied version.
@@ -212,16 +212,16 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         submission_form = create_submission_form(presenter=self.user)
         response = self.client.get(reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         url = reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk})
-        self.failUnlessEqual(url, urlsplit(response['Location']).path)
+        self.assertEqual(url, urlsplit(response['Location']).path)
     
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         target_url = response['Location']
         response = self.client.get(target_url)
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(response.context['form'].initial.get('project_title'), submission_form.project_title)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['form'].initial.get('project_title'), submission_form.project_title)
         
     def test_autocomplete(self):
         '''Tests the autocompletion feature of the system by comparing the count of objects returned by the autocompletion view.
@@ -229,8 +229,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         
         medical_categories_count = MedicalCategory.objects.all().count()
         response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
-        self.failUnlessEqual(response.status_code, 200)
-        self.failUnlessEqual(len(json.loads(response.content)), medical_categories_count)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(json.loads(response.content)), medical_categories_count)
 
     def test_initial_review(self):
         submission_form = create_submission_form(presenter=self.user)
@@ -243,30 +243,30 @@ class SubmissionViewsTestCase(LoginTestCase):
 
         # accept initial review task
         response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         task = refetch()
-        self.failUnlessEqual(self.office_user, task.assigned_to)
+        self.assertEqual(self.office_user, task.assigned_to)
 
         url = task.url
 
         response = self.client.get(url)
-        self.failUnlessEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         # delegate the task back to the pool
         reponse = self.client.post(url, {'task_management-action': 'delegate', 'task_management-assign_to': '', 'task_management-submit': 'submit'})
         task = refetch()
-        self.failUnlessEqual(None, task.assigned_to)
+        self.assertEqual(None, task.assigned_to)
 
         # accept the task again
         response = self.client.post(reverse('ecs.tasks.views.accept_task', kwargs={'task_pk': task.pk}))
-        self.failUnlessEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)
         task = refetch()
-        self.failUnlessEqual(self.office_user, task.assigned_to)
+        self.assertEqual(self.office_user, task.assigned_to)
 
         # complete the task
         reponse = self.client.post(url, {'task_management-action': 'complete_0', 'task_management-submit': 'submit'})
         task = refetch()
-        self.failUnless(task.closed_at is not None)
+        self.assertTrue(task.closed_at is not None)
 
         self.client.logout()
         self.client.login(email=self.user.email, password='password')
