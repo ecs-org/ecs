@@ -271,16 +271,12 @@ class Submission(models.Model):
     def allows_categorization(self):
         return not self.meetings.filter(started__isnull=False, ended__isnull=True).exists() and not self.is_active and not self.is_finished
 
-    class Meta:
-        app_label = 'core'
-
 
 class MySubmission(models.Model):
     user_id = models.IntegerField()
     submission_id = models.IntegerField()
 
     class Meta:
-        app_label = 'core'
         db_table = 'core_mysubmission'
         managed = False
 
@@ -305,9 +301,6 @@ class SubmissionForm(models.Model):
     current_published_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_published_for')
     current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
-    class Meta:
-        app_label = 'core'
-        
     objects = SubmissionFormManager()
     
     # 1.4 (via self.documents)
@@ -813,7 +806,6 @@ class Investigator(models.Model):
     objects = AuthorizationManager()
     
     class Meta:
-        app_label = 'core'
         ordering = ['id']
 
     def save(self, **kwargs):
@@ -854,7 +846,6 @@ class InvestigatorEmployee(models.Model):
     objects = AuthorizationManager()
     
     class Meta:
-        app_label = 'core'
         ordering = ['id']
     
     @property
@@ -889,7 +880,6 @@ class Measure(models.Model):
     objects = AuthorizationManager()
     
     class Meta:
-        app_label = 'core'
         ordering = ['id']
 
 
@@ -904,7 +894,6 @@ class NonTestedUsedDrug(models.Model):
     objects = AuthorizationManager()
     
     class Meta:
-        app_label = 'core'
         ordering = ['id']
 
 
@@ -917,7 +906,6 @@ class ForeignParticipatingCenter(models.Model):
     objects = AuthorizationManager()
     
     class Meta:
-        app_label = 'core'
         ordering = ['id']
 
 
@@ -929,9 +917,6 @@ class TemporaryAuthorization(models.Model):
 
     objects = TemporaryAuthorizationManager()
 
-    class Meta:
-        app_label = 'core'
-        
     @property
     def is_active(self):
         return self.start <= timezone.now() < self.end
