@@ -53,7 +53,7 @@
           {% if user|has_submissions %}
               <li><a href="{% url 'ecs.core.views.my_submissions' %}">{% trans "My Studies" %}</a></li>
           {% endif %}
-          <li><a href="{% url 'ecs.core.views.create_submission_form' %}">{% trans "New Submission" %}</a></li>
+          <li><a href="{% url 'ecs.core.views.submissions.create_submission_form' %}">{% trans "New Submission" %}</a></li>
           <li><a href="{% url 'ecs.core.views.import_submission_form' %}">{% trans "Import" %}</a></li>
       </ul>
     </li>

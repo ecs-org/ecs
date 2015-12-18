@@ -12,7 +12,7 @@ urlpatterns += patterns('ecs.core.views',
     url(r'^list/widget/$', 'submission_widget'),
 
     url(r'^import/$', 'import_submission_form'),
-    url(r'^new/(?:(?P<docstash_key>.+)/)?$', 'create_submission_form'),
+    url(r'^new/(?:(?P<docstash_key>.+)/)?$', 'submissions.create_submission_form'),
     url(r'^delete/(?P<docstash_key>.+)/$', 'delete_docstash_entry'),
     url(r'^doc/upload/(?P<docstash_key>.+)/$', 'upload_document_for_submission'),
     url(r'^doc/delete/(?P<docstash_key>.+)/$', 'delete_document_from_submission'),

@@ -124,7 +124,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         if delete:
             submission_form.submission.delete()
 
-    return redirect('ecs.core.views.create_submission_form', docstash_key=docstash.key)
+    return redirect('ecs.core.views.submissions.create_submission_form', docstash_key=docstash.key)
 
 
 @readonly()
