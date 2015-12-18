@@ -58,3 +58,6 @@ def autostart_disabled():
     globals()['_autostart_disabled'] = True
     yield
     globals()['_autostart_disabled'] = False
+
+
+default_app_config = 'ecs.workflow.apps.WorkflowAppConfig'

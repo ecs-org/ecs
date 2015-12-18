@@ -20,10 +20,3 @@ def process_failure_signal(exception, traceback, sender, task_id, signal, args, 
         }
     )
 task_failure.connect(process_failure_signal)
-
-
-def worker_startup(**kwargs):
-    from ecs.integration.startup import startup
-    startup()
-
-worker_process_init.connect(worker_startup)

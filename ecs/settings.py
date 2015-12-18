@@ -110,7 +110,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'ecs.utils.startup.StartupMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -181,12 +180,6 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 
 # ecs settings
 ##############
-
-# used by ecs.utils.startup middleware: executes list on framework startup
-STARTUP_CALLS = (
-    'ecs.integration.startup.startup',
-    'ecs.users.startup.startup',
-)
 
 # directory for generated config files
 ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
