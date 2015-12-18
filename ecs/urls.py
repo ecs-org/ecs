@@ -7,9 +7,6 @@ from django.views.generic.base import RedirectView
 
 from ecs.utils import forceauth
 
-# stuff that needs called at the beginning, but not in settings.py
-admin.autodiscover()
-
 def handler500(request):
     ''' 500 error handler which includes ``request`` in the context '''
     from django.template import Context, loader
