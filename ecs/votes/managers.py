@@ -4,7 +4,7 @@ from ecs.authorization import AuthorizationManager
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 
 
-class VoteQuerySet(models.query.QuerySet):
+class VoteQuerySet(models.QuerySet):
     def positive(self):
         return self.filter(result__in=POSITIVE_VOTE_RESULTS)
         
@@ -18,18 +18,4 @@ class VoteQuerySet(models.query.QuerySet):
         return self.filter(result__in=RECESSED_VOTE_RESULTS)
 
 
-class VoteManager(AuthorizationManager):
-    def get_base_queryset(self):
-        return VoteQuerySet(self.model)
-
-    def positive(self):
-        return self.all().positive()
-
-    def negative(self):
-        return self.all().negative()
-
-    def permanent(self):
-        return self.all().permanent()
-
-    def recessed(self):
-        return self.all().recessed()
+VoteManager = AuthorizationManager.from_queryset(VoteQuerySet)

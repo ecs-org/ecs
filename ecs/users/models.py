@@ -84,12 +84,15 @@ def _post_user_save(sender, **kwargs):
 post_save.connect(_post_user_save, sender=User)
 
 
-class InvitationQuerySet(models.query.QuerySet):
+class InvitationQuerySet(models.QuerySet):
     def new(self):
         return self.filter(is_accepted=False)
 
 class InvitationManager(models.Manager):
     def get_queryset(self):
+        # XXX: We really shouldn't be using distinct() here - it hurts
+        # performance. Also, it prevents us from simply replacing the
+        # InvitationManager with InvitationQuerySet.as_manager().
         return InvitationQuerySet(self.model).distinct()
 
     def new(self):

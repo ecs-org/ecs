@@ -22,7 +22,7 @@ DELIVERY_STATES = (
 )
 
 
-class ThreadQuerySet(models.query.QuerySet):
+class ThreadQuerySet(models.QuerySet):
     def by_user(self, *users):
         return self.filter(models.Q(sender__in=users) | models.Q(receiver__in=users))
 
@@ -40,55 +40,12 @@ class ThreadQuerySet(models.query.QuerySet):
 
 
 class ThreadManager(AuthorizationManager):
-    def get_queryset(self):
-        return ThreadQuerySet(self.model)
-
-    def by_user(self, *users):
-        return self.all().by_user(*users)
-
     def create(self, **kwargs):
         text = kwargs.pop('text', None)
         thread = super(ThreadManager, self).create(**kwargs)
         if text:
             thread.add_message(kwargs['sender'], text)
         return thread
-
-    def incoming(self, user):
-        return self.all().incoming(user)
-
-    def outgoing(self, user):
-        return self.all().outgoing(user)
-
-    def open(self, user):
-        return self.all().open(user)
-
-
-class MessageQuerySet(models.query.QuerySet):
-    def by_user(self, *users):
-        return self.filter(models.Q(thread__sender__in=users) | models.Q(thread__receiver__in=users))
-
-    def open(self, user):
-        return self.filter(models.Q(thread__closed_by_receiver=False, thread__receiver=user) | models.Q(thread__closed_by_sender=False, thread__sender=user))
-
-    def outgoing(self, user):
-        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB))
-
-    def incoming(self, user):
-        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
-
-
-class MessageManager(AuthorizationManager):
-    def get_queryset(self):
-        return MessageQuerySet(self.model)
-
-    def by_user(self, *users):
-        return self.all().by_user(*users)
-
-    def incoming(self, user):
-        return self.all().incoming(user)
-
-    def outgoing(self, user):
-        return self.all().outgoing(user)
 
 
 class Thread(models.Model):
@@ -105,7 +62,7 @@ class Thread(models.Model):
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
 
-    objects = ThreadManager()
+    objects = ThreadManager.from_queryset(ThreadQuerySet)()
 
     def mark_closed_for_user(self, user):
         for msg in self.messages.filter(receiver=user):
@@ -196,6 +153,21 @@ class Thread(models.Model):
                 self.receiver = receiver_profile.communication_proxy
         return super(Thread, self).save(**kwargs)
 
+
+class MessageQuerySet(models.QuerySet):
+    def by_user(self, *users):
+        return self.filter(models.Q(thread__sender__in=users) | models.Q(thread__receiver__in=users))
+
+    def open(self, user):
+        return self.filter(models.Q(thread__closed_by_receiver=False, thread__receiver=user) | models.Q(thread__closed_by_sender=False, thread__sender=user))
+
+    def outgoing(self, user):
+        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB))
+
+    def incoming(self, user):
+        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
+
+
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
     sender = models.ForeignKey(User, related_name='outgoing_messages')
@@ -220,7 +192,7 @@ class Message(models.Model):
 
     reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
 
-    objects = MessageManager()
+    objects = AuthorizationManager.from_queryset(MessageQuerySet)()
 
     @property
     def return_username(self):

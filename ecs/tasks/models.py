@@ -32,7 +32,7 @@ class TaskType(models.Model):
     def trans_name(self):
         return _(self.name)
 
-class TaskQuerySet(models.query.QuerySet):
+class TaskQuerySet(models.QuerySet):
     def for_data(self, data):
         ct = ContentType.objects.get_for_model(type(data))
         return self.filter(content_type=ct, data_id=data.pk)
@@ -103,6 +103,9 @@ class TaskQuerySet(models.query.QuerySet):
 
 class TaskManager(AuthorizationManager):
     def get_base_queryset(self):
+        # XXX: We really shouldn't be using distinct() here - it hurts
+        # performance. Also, it prevents us from simply replacing the
+        # TaskManager with AuthorizationManager.from_queryset(TaskQuerySet).
         return TaskQuerySet(self.model).distinct()
 
     def for_data(self, data):

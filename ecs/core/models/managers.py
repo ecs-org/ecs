@@ -29,7 +29,7 @@ def get_vote_filter_q(**kwargs):
     return Q(**f)
 
 
-class SubmissionQuerySet(models.query.QuerySet):
+class SubmissionQuerySet(models.QuerySet):
     def amg(self):
         return self.filter(Q(current_submission_form__project_type_non_reg_drug=True)|Q(current_submission_form__project_type_reg_drug=True))
 
@@ -144,6 +144,10 @@ class SubmissionQuerySet(models.query.QuerySet):
 
 class SubmissionManager(AuthorizationManager):
     def get_base_queryset(self):
+        # XXX: We really shouldn't be using distinct() here - it hurts
+        # performance. Also, it prevents us from simply replacing the
+        # SubmissionManager with
+        # AuthorizationManager.from_queryset(SubmissionQuerySet).
         return SubmissionQuerySet(self.model).distinct()
 
     def amg(self):
@@ -225,7 +229,7 @@ class SubmissionManager(AuthorizationManager):
         return self.all().for_year(year)
 
 
-class SubmissionFormQuerySet(models.query.QuerySet):
+class SubmissionFormQuerySet(models.QuerySet):
     def current(self):
         return self.filter(submission__current_submission_form__id=models.F('id'))
 
@@ -236,18 +240,8 @@ class SubmissionFormQuerySet(models.query.QuerySet):
         from ecs.core.models import Submission
         return self.filter(submission__id__in=Submission.objects.with_vote(**kwargs).values('id').query)
 
-class SubmissionFormManager(AuthorizationManager):
-    def get_base_queryset(self):
-        return SubmissionFormQuerySet(self.model)
-        
-    def current(self):
-        return self.all().current()
-        
-    def with_vote(self, **kwargs):
-        return self.all().with_vote(**kwargs)
-        
-    def with_any_vote(self, **kwargs):
-        return self.all().with_any_vote(**kwargs)
+
+SubmissionFormManager = AuthorizationManager.from_queryset(SubmissionFormQuerySet)
 
 
 class TemporaryAuthorizationManager(models.Manager):

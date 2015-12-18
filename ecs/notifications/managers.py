@@ -2,7 +2,7 @@ from django.db import models
 from ecs.authorization.managers import AuthorizationManager
 
 
-class NotificationQuerySet(models.query.QuerySet):
+class NotificationQuerySet(models.QuerySet):
     def answered(self):
         return self.filter(models.Q(answer__isnull=False) | models.Q(safetynotification__is_acknowledged=True))
         
@@ -13,15 +13,4 @@ class NotificationQuerySet(models.query.QuerySet):
         return self.unanswered() | self.filter(answer__published_at__isnull=True)
 
 
-class NotificationManager(AuthorizationManager):
-    def get_base_queryset(self):
-        return NotificationQuerySet(self.model)
-
-    def answered(self):
-        return self.all().answered()
-
-    def unanswered(self):
-        return self.all().unanswered()
-
-    def pending(self):
-        return self.all().pending()
+NotificationManager = AuthorizationManager.from_queryset(NotificationQuerySet)
