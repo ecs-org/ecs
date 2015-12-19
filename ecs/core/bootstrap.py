@@ -265,7 +265,7 @@ def auth_user_developers():
     translators_group = Group.objects.get(name='translators')
 
     for first, last, email, gender in developers:
-        user, created = get_or_create_user(email, start_workflow=False)
+        user, created = get_or_create_user(email)
         user.first_name = first
         user.last_name = last
         user.is_staff = False
@@ -277,7 +277,6 @@ def auth_user_developers():
         user.profile.is_help_writer = True
         user.profile.forward_messages_after_minutes = 30
         user.profile.gender = gender
-        user.profile.start_workflow = True
         user.profile.save()
 
 
@@ -335,16 +334,13 @@ def auth_user_testusers():
 
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
-            user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number), start_workflow=False)
+            user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number))
             if testgroup:
                 user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(userswitcher_group)
 
             flags = flags.copy()
-            flags.update({
-                'is_testuser': True,
-                'start_workflow': True,
-            })
+            flags['is_testuser'] = True
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 flags['is_help_writer'] = True
@@ -354,13 +350,12 @@ def auth_user_testusers():
             user.profile.save()
 
     for testuser, medcategories in boardtestusers:
-        user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
+        user, created = get_or_create_user('{0}@example.org'.format(testuser))
         user.groups.add(boardmember_group)
         user.groups.add(userswitcher_group)
 
         user.profile.is_testuser = True
         user.profile.is_board_member = True
-        user.profile.start_workflow = True
         user.profile.save()
 
         for medcategory in medcategories:
@@ -368,13 +363,12 @@ def auth_user_testusers():
             m.users.add(user)
 
     for testuser, expcategories in expeditedtestusers:
-        user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
+        user, created = get_or_create_user('{0}@example.org'.format(testuser))
         user.groups.add(expedited_review_group)
         user.groups.add(userswitcher_group)
 
         user.profile.is_testuser = True
         user.profile.is_expedited_reviewer = True
-        user.profile.start_workflow = True
         user.profile.save()
 
         for expcategory in expcategories:

@@ -23,28 +23,14 @@ from ecs.utils.viewutils import render_html
 def hash_email(email):
     return hashlib.md5(email.lower()).hexdigest()[:30]
 
-def get_or_create_user(email, defaults=None, start_workflow=True, **kwargs):
+def get_or_create_user(email, defaults=None, **kwargs):
     if defaults is None:
         defaults = {}
 
-    user, created = User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
+    return User.objects.get_or_create(username=hash_email(email), email=email, defaults=defaults, **kwargs)
 
-    if start_workflow:
-        profile = user.profile
-        profile.start_workflow = True
-        profile.save()
-
-    return user, created
-
-def create_user(email, start_workflow=True, **kwargs):
-    user = User.objects.create(username=hash_email(email), email=email, **kwargs)
-
-    if start_workflow:
-        profile = user.profile
-        profile.start_workflow = True
-        profile.save()
-
-    return user
+def create_user(email, **kwargs):
+    return User.objects.create(username=hash_email(email), email=email, **kwargs)
 
 def get_user(email, **kwargs):
     try:

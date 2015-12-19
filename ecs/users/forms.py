@@ -227,7 +227,7 @@ class InvitationForm(forms.Form):
         return email
 
     def save(self):
-        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'], start_workflow=False)
+        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         user.groups = self.cleaned_data.get('groups', [])
         user.medical_categories = self.cleaned_data.get('medical_categories', [])
         user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
