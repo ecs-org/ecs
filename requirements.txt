@@ -16,8 +16,7 @@ django_compressor
 pyScss
 
 # queuing: celery
-celery<2.4
-django-celery<2.4
+django-celery
 
 # mail: ecsmail, communication: lamson mail server
 mock<1.1.3

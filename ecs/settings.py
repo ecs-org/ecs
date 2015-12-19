@@ -288,11 +288,8 @@ USE_TEXTBOXLIST = True
 # ### celery ### configuration defaults, uses memory transport and always eager
 # production environments should:
 #   set BROKER_USER, PASSWORD, VHOST 
-BROKER_HOST = 'localhost'
-BROKER_PORT = 5672
-BROKER_USER = 'ecsuser'
-BROKER_PASSWORD = 'ecspassword'
-BROKER_VHOST = 'ecshost'
+BROKER_URL = 'amqp://ecsuser:ecspassword@localhost:5672/ecshost'
+
 CELERY_IMPORTS = (
     'ecs.core.tests.test_tasks',
     'ecs.meetings.tasks',
@@ -301,6 +298,8 @@ CELERY_IMPORTS = (
     'ecs.integration.tasks',
     'ecs.help.tasks',
 )
+CELERY_TASK_SERIALIZER = 'pickle'
+CELERY_ACCEPT_CONTENT = (CELERY_TASK_SERIALIZER,)
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 # dont use queueing backend but consume it right away

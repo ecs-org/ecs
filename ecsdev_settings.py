@@ -19,9 +19,7 @@ if user in DBPWD_DICT:
     }
     
     # Use RabbitMQ for celery (and carrot); rabbit mq users and db users are the same (also passwords)
-    BROKER_USER = user
-    BROKER_PASSWORD = DBPWD_DICT[user]
-    BROKER_VHOST = user
+    BROKER_URL = 'amqp://{0}:{1}@localhost:5672/{0}'.format(user, DBPWD_DICT[user])
     # use queueing 
     CELERY_ALWAYS_EAGER = False
 

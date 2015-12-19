@@ -13,9 +13,7 @@ DATABASES['default'].update({
 
 
 # rabbitmq/celery settings
-BROKER_USER = '%(rabbitmq.username)s'
-BROKER_PASSWORD = '%(rabbitmq.password)s'
-BROKER_VHOST = '%(rabbitmq.username)s'
+BROKER_URL = 'amqp://%(rabbitmq.username)s:%(rabbitmq.password)s@localhost:5672/%(rabbitmq.username)s'
 CELERY_ALWAYS_EAGER = False
 
 # haystack settings
