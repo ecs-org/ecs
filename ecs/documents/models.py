@@ -6,7 +6,7 @@ import logging
 from django.db import models
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext
 from django.utils import timezone

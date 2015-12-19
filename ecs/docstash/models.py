@@ -4,7 +4,7 @@ from django.http import QueryDict
 from django.utils.functional import wraps
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django_extensions.db.fields.json import JSONField
 from picklefield.fields import PickledObjectField

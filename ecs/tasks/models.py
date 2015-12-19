@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.generic import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.utils import timezone
