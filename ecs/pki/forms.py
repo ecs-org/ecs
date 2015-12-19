@@ -26,9 +26,9 @@ class CertForm(forms.Form):
         if user:
             cn = cd.get('cn')
             if Certificate.objects.filter(cn=cn).exists():
-                self._errors['cn'] = self.error_class([_('A certificate with this CN already exists.')])
+                self.add_error('cn', _('A certificate with this CN already exists.'))
 
         if cd.get('passphrase') != cd.get('passphrase2'):
-            self._errors['passphrase2'] = self.error_class([_('The passphrases do not match.')])
+            self.add_error('passphrase2', _('The passphrases do not match.'))
         return cd
         

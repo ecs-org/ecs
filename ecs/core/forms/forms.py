@@ -434,7 +434,7 @@ class SubmissionImportForm(forms.Form):
                 self.submission_form = serializer.read(self.cleaned_data['file'])
         except Exception as e:
             import_error_logger.debug('invalid ecx file')
-            self._errors['file'] = self.error_class([_(u'This file is not a valid ECX archive.')])
+            self.add_error('file', _(u'This file is not a valid ECX archive.'))
         f.seek(0)
         return f
 

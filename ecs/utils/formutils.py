@@ -7,7 +7,7 @@ from django.utils.importlib import import_module
 def require_fields(form, fields):
     for f in fields:
         if f not in form.cleaned_data or form.cleaned_data[f] in EMPTY_VALUES:
-            form._errors[f] = form.error_class([form.fields[f].error_messages['required']])
+            form.add_error(f, form.fields[f].error_messages['required'])
 
 class TranslatedModelFormOptions(ModelFormOptions):
     def __init__(self, options=None):
