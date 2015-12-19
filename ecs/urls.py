@@ -9,25 +9,25 @@ from ecs.utils import forceauth
 
 def handler500(request):
     ''' 500 error handler which includes ``request`` in the context '''
-    from django.template import Context, loader
+    from django.template import loader
     from django.http import HttpResponseServerError
 
     t = loader.get_template('500.html') # You need to create a 500.html template.
-    return HttpResponseServerError(t.render(Context({'request': request,})))
+    return HttpResponseServerError(t.render({'request': request}))
 
 def fake404handler(request):
     ''' 404 error fake handler to be called via /trigger404 ''' 
     return render(request, '404.html', {}) 
-    from django.template import Context, loader
+    from django.template import loader
     from django.http import HttpResponseNotFound
 
     t = loader.get_template('404.html') 
-    return HttpResponseNotFound(t.render(Context({'request': request,})))
+    return HttpResponseNotFound(t.render({'request': request}))
     
 
 urlpatterns = patterns('',
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
-    url(r'^$', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL)),
+    url(r'^$', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL, permanent=False)),
 
     url(r'^', include('ecs.users.urls')),
     url(r'^core/', include('ecs.core.urls')),

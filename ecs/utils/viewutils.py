@@ -1,4 +1,4 @@
-from django.template import Context, RequestContext, loader, Template
+from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
 from ecs.utils.pdfutils import wkhtml2pdf
@@ -6,9 +6,9 @@ from ecs.utils.pdfutils import wkhtml2pdf
 def render_html(request, template, context):
     if isinstance(template, (tuple, list)):
         template = loader.select_template(template)
-    if not isinstance(template, Template):
+    if not hasattr(template, 'render'):
         template = loader.get_template(template)
-    return template.render(RequestContext(request, context))
+    return template.render(context, request)
 
 def redirect_to_next_url(request, default_url=None):
     next = request.GET.get('next')
@@ -28,9 +28,9 @@ def render_pdf(request, template, context):
     return wkhtml2pdf(html, footer_html=footer_html)
 
 def render_pdf_context(template, context):
-    if not isinstance(template, Template):
+    if not hasattr(template, 'render'):
         template = loader.get_template(template)
-    html = template.render(Context(context))
+    html = template.render(context)
     footer_template = loader.get_template('wkhtml2pdf/footer.html')
-    footer_html = footer_template.render(Context(context))
+    footer_html = footer_template.render(context)
     return wkhtml2pdf(html, footer_html=footer_html)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from functools import wraps
 
-from django.template import RequestContext, Context, loader, Template
+from django.template import loader
 from django.conf import settings
 
 from ecs.communication.models import Thread
@@ -61,13 +61,10 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
 
     if isinstance(template, (tuple, list)):
         template = loader.select_template(template)
-    if not isinstance(template, Template):
+    if not hasattr(template, 'render'):
         template = loader.get_template(template)
 
-    if request:
-        text = template.render(RequestContext(request, context))
-    else:
-        text = template.render(Context(context))
+    text = template.render(context, request)
 
     return send_message(sender, receiver, subject, text, *args, **kwargs)
 

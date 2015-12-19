@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
-from django.template import loader, RequestContext
+from django.template import loader
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.db import models
@@ -46,10 +46,10 @@ def open_notifications(request):
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
-    return HttpResponse(tpl.render(RequestContext(request, {
+    return HttpResponse(tpl.render({
         'documents': notification.documents.order_by('doctype__identifier', 'version', 'date'),
         'notification': notification,
-    })))
+    }, request))
 
 
 @readonly()

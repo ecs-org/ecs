@@ -1,6 +1,6 @@
 BeautifulCleaner==2.0dev
 BeautifulSoup==3.0.8
-Django==1.7.11
+Django==1.8.7
 Jinja2==2.8
 MarkupSafe==0.23
 Whoosh==2.7.0

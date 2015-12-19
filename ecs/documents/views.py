@@ -2,8 +2,7 @@ from urllib import urlencode
 from uuid import uuid4
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import StreamingHttpResponse, HttpResponseForbidden, Http404
-from django.core.servers.basehttp import FileWrapper
+from django.http import FileResponse, HttpResponseForbidden, Http404
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -39,10 +38,8 @@ def handle_download(request, doc):
         not request.user.profile.is_internal):
         return HttpResponseForbidden()
 
-    response = StreamingHttpResponse(
-        FileWrapper(doc.retrieve(request.user, 'download')),
-        content_type=doc.mimetype
-    )
+    response = FileResponse(doc.retrieve(request.user, 'download'),
+        content_type=doc.mimetype)
     response['Content-Disposition'] = \
         'attachment;filename={}'.format(doc.get_filename())
     return response
@@ -79,10 +76,8 @@ def download_once(request, ref_key=None):
     cache.delete(cache_key)
 
     doc = get_object_or_404(Document, pk=doc_id)
-    response = StreamingHttpResponse(
-        FileWrapper(doc.retrieve(request.user, 'view')),
-        content_type=doc.mimetype
-    )
+    response = FileResponse(doc.retrieve(request.user, 'view'),
+        content_type=doc.mimetype)
 
     # Disable browser caching, so the PDF won't end up on the users hard disk.
     response['Cache-Control'] = 'no-cache, no-store, must-revalidate'

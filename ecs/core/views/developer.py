@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render, get_object_or_404
-from django.template import Context, loader
+from django.template import loader
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 
@@ -21,11 +21,11 @@ def test_pdf_html(request, submission_pk=None):
     with sudo(submission.presenter):
         submission_form = submission.current_submission_form
         template = loader.get_template('submissions/wkhtml2pdf/view.html')
-        html = template.render(Context({
+        html = template.render({
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
             'documents': submission_form.documents.order_by('doctype__name', '-date'),
-        }))
+        })
     return HttpResponse(html)
 
 @developer
@@ -53,9 +53,7 @@ def test_checklist_pdf_html(request, checklist_pk=None):
         checklist = get_object_or_404(Checklist, pk=checklist_pk)
     with sudo(checklist.user):
         template = loader.get_template('checklists/wkhtml2pdf/checklist.html')
-        html = template.render(Context({
-            'checklist': checklist,
-        }))
+        html = template.render({'checklist': checklist})
     return HttpResponse(html)
 
 @developer
@@ -81,11 +79,11 @@ def test_notification_pdf_html(request, notification_pk=None):
     with sudo(notification.user):
         tpl = notification.type.get_template('notifications/wkhtml2pdf/%s.html')
         submission_forms = notification.submission_forms.select_related('submission').all()
-        html = tpl.render(Context({
+        html = tpl.render({
             'notification': notification,
             'submission_forms': submission_forms,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
-        }))
+        })
     return HttpResponse(html)
 
 @developer
@@ -115,11 +113,11 @@ def test_notification_answer_pdf_html(request, notification_answer_pk=None):
     with sudo(notification_answer.notification.user):
         notification = notification_answer.notification
         tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
-        html = tpl.render(Context({
+        html = tpl.render({
             'notification': notification,
             'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
             'answer': notification_answer
-        }))
+        })
     return HttpResponse(html)
 
 @developer
@@ -148,7 +146,7 @@ def test_vote_pdf_html(request, vote_pk=None):
         vote = get_object_or_404(Vote, pk=vote_pk)
     with sudo(vote.submission_form.submission.presenter):
         template = loader.get_template('meetings/wkhtml2pdf/vote.html')
-        html = template.render(Context(vote.get_render_context()))
+        html = template.render(vote.get_render_context())
     return HttpResponse(html)
 
 @developer

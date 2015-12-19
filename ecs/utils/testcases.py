@@ -18,7 +18,9 @@ from ecs.workflow.controllers import clear_caches as clear_workflow_caches
 
 class EcsTestCase(TestCase):
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
+        super(EcsTestCase, cls).setUpClass()
+
         ContentType.objects.clear_cache()
         clear_workflow_caches()
 
@@ -45,8 +47,9 @@ class EcsTestCase(TestCase):
         core_bootstrap.submission_workflow()
         
     @classmethod
-    def teardownClass(self):
+    def teardownClass(cls):
         shutil.rmtree(settings.STORAGE_VAULT_DIR)
+        super(EcsTestCase, cls).teardownClass()
     
     def setUp(self):
         self.logger = logging.getLogger() 

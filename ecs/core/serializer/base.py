@@ -7,7 +7,7 @@ from collections import OrderedDict
 
 from django.db import models
 from django.core.files.base import ContentFile
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
@@ -233,19 +233,18 @@ class ModelSerializer(object):
             elif isinstance(field, models.DateField):
                 val = datetime.date.strptime(val, DATE_FORMAT)
             elif isinstance(field, models.ManyToManyField):
-                val = self.load_many(field.related.parent_model, val, zf, version)
+                val = self.load_many(field.related_model, val, zf, version)
                 deferr = True
-            elif isinstance(field, models.FileField):
-                f = ContentFile(zf.read(val))
-                f.name = val # we hack in a name, to force django to automatically save the ContentFile on Model.save()
-                val = f
+            elif isinstance(field, models.ManyToOneRel):
+                val = self.load_many(field.related_model, val, zf, version, commit=False)
+                deferr = True
             elif isinstance(field, models.ForeignKey):
                 val = load_model_instance(field.rel.to, val, zf, version)
-            elif isinstance(field, generic.GenericRelation):
+            elif isinstance(field, GenericRelation):
                 val = self.load_many(field.rel.to, val, zf, version, commit=False)
                 deferr = True
         elif isinstance(val, list):
-            rel_model = getattr(self.model, fieldname).related.model
+            rel_model = getattr(self.model, fieldname).related.related_model
             val = self.load_many(rel_model, val, zf, version, commit=False)
             deferr = True
         return val, deferr

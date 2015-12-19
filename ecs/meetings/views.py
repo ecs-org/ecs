@@ -7,13 +7,12 @@ import os.path
 from collections import OrderedDict
 
 from django.conf import settings
-from django.http import HttpResponse, Http404
+from django.http import FileResponse, HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
-from django.core.servers.basehttp import FileWrapper
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
 from django.db.models import Q
@@ -223,7 +222,8 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     else:
         os.utime(cache_file, None)
 
-    response = HttpResponse(FileWrapper(open(cache_file, 'r')), content_type='application/octet-stream')
+    response = FileResponse(open(cache_file, 'r'),
+        content_type='application/octet-stream')
     response['Content-Disposition'] = 'attachment; filename="%s.ZIP"' % '_'.join(filename_bits)
     response['Content-Length'] = str(os.path.getsize(cache_file))
     return response

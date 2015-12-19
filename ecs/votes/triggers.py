@@ -2,7 +2,7 @@ from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
-from django.template import Context, loader
+from django.template import loader
 
 from ecs.utils import connect
 from ecs.votes import signals
@@ -46,7 +46,7 @@ def on_vote_published(sender, **kwargs):
     vote_pdf = doc.file.read()
     attachments = ((name + '.pdf', vote_pdf, 'application/pdf'),)
     template = loader.get_template('meetings/email/basg.txt')
-    text = unicode(template.render(Context({})))
+    text = unicode(template.render({}))
     for receiver in receivers:
         deliver(receiver, subject=name, message=text, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 

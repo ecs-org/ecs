@@ -2,7 +2,6 @@ from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template
-from django.template import Context
 
 from ecs.core.serializer import Serializer
 from ecs.utils.pdfutils import wkhtml2pdf
@@ -24,10 +23,10 @@ class Command(BaseCommand):
         
         ecxf = Serializer()
         tpl = get_template('docs/ecx/base.html')
-        html = tpl.render(Context({
+        html = tpl.render({
             'version': ecxf.version,
             'fields': ecxf.docs(),
-            })).encode('utf-8')
+        }).encode('utf-8')
             
         with open(options['outfile'], 'wb') as f:                    
             if options['output_type'] == "html":
