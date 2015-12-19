@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from django.db import models
 from django.db.models import Q
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.text import slugify
 
 from ecs.authorization import AuthorizationManager
@@ -41,11 +41,11 @@ class ChecklistQuestion(models.Model):
 
 
 CHECKLIST_STATUS_CHOICES = (
-    ('new', _('New')),
-    ('completed', _('Completed')),
-    ('review_ok', _('Review OK')),
-    ('review_fail', _('Review Failed')),
-    ('dropped', _('Dropped')),
+    ('new', ugettext_lazy('New')),
+    ('completed', ugettext_lazy('Completed')),
+    ('review_ok', ugettext_lazy('Review OK')),
+    ('review_fail', ugettext_lazy('Review Failed')),
+    ('dropped', ugettext_lazy('Dropped')),
 )
 
 class Checklist(models.Model):

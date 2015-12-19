@@ -88,7 +88,7 @@ class Submission(models.Model):
             return unicode(num)
         return u"%s%s%s" % (num, separator, year)
         
-    get_ec_number_display.short_description = _('EC-Number')
+    get_ec_number_display.short_description = ugettext_lazy('EC-Number')
 
     def resubmission_task_for(self, user):
         try:
