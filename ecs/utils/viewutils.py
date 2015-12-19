@@ -11,7 +11,7 @@ def render_html(request, template, context):
     return template.render(RequestContext(request, context))
 
 def redirect_to_next_url(request, default_url=None):
-    next = request.REQUEST.get('next')
+    next = request.GET.get('next')
     if not next or '//' in next:
         next = default_url or '/'
     return HttpResponseRedirect(next)

@@ -370,7 +370,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     top = None
-    q = request.REQUEST.get('q', '').upper()
+    q = request.GET.get('q', '').upper()
     explict_top = 'TOP' in q
     q = q.replace('TOP', '').strip()
 

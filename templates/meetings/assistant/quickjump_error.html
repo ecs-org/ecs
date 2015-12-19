@@ -3,7 +3,7 @@
 
 {% block meeting_assistant_body %}
     {% if tops %}
-        Mehrere TOPs passen auf ihre Anfrage "<i>{{ request.REQUEST.q }}</i>":
+        Mehrere TOPs passen auf ihre Anfrage "<i>{{ request.GET.q }}</i>":
         <ul>
             {% for top in tops %}
                 <li>
@@ -12,6 +12,6 @@
             {% endfor %}
         </ul>
     {% else %}
-        Es konnte kein passendes TOP für "<em>{{ request.REQUEST.q }}</em>" gefunden werden.
+        Es konnte kein passendes TOP für "<em>{{ request.GET.q }}</em>" gefunden werden.
     {% endif %}
 {% endblock %}
