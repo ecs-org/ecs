@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+from importlib import import_module
 
 from django.forms.models import ModelForm, ModelFormMetaclass, ModelFormOptions
 from django.core.validators import EMPTY_VALUES
-from django.utils.importlib import import_module
 
 def require_fields(form, fields):
     for f in fields:

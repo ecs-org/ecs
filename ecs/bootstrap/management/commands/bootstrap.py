@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import imp
+from importlib import import_module
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from django.conf import settings
-from django.utils.importlib import import_module
 
 from ecs.users.utils import get_or_create_user
 

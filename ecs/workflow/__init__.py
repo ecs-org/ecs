@@ -1,6 +1,7 @@
 import imp
+from importlib import import_module
+
 from django.conf import settings
-from django.utils.importlib import import_module
 from django.db.models.signals import post_save, class_prepared
 from django.db.models import Model
 from django.contrib.contenttypes.models import ContentType

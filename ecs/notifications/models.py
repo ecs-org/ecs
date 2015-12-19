@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
+from importlib import import_module
+
 from django.conf import settings
 from django.db import models
-from django.utils.importlib import import_module
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 from django.template import loader
