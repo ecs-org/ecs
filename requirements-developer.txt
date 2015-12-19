@@ -2,3 +2,4 @@ ipython
 pyflakes
 pep8
 django-debug-toolbar
+pyinotify	# for efficient reload in ./manage.py runserver
