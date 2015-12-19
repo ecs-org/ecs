@@ -1,6 +1,6 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-from ecs.utils.viewutils import JSONResponse
 from ecs.users.utils import user_flag_required
 from ecs.boilerplate.models import Text
 from ecs.boilerplate.forms import TextForm
@@ -48,4 +48,4 @@ def select_boilerplate(request):
     texts = Text.objects.all()
     if 'q' in request.GET:
         texts = texts.filter(slug__icontains=request.GET['q'].strip())
-    return JSONResponse(list(texts.values('slug', 'text')))
+    return JsonResponse(list(texts.values('slug', 'text')), safe=False)

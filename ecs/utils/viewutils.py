@@ -1,5 +1,3 @@
-import json
-
 from django.template import Context, RequestContext, loader, Template
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -36,6 +34,3 @@ def render_pdf_context(template, context):
     footer_template = loader.get_template('wkhtml2pdf/footer.html')
     footer_html = footer_template.render(Context(context))
     return wkhtml2pdf(html, footer_html=footer_html)
-
-def JSONResponse(data):
-    return HttpResponse(json.dumps(data), content_type='application/json')

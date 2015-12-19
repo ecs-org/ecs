@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.contrib.auth.models import User, Group
 
 from ecs.utils.countries.models import Country
@@ -6,7 +6,6 @@ from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.users.utils import user_flag_required
 from ecs.tasks.models import TaskType
 from ecs.utils.security import readonly
-from ecs.utils.viewutils import JSONResponse
 
 def _get_task_types():
     uids = TaskType.objects.values_list('workflow_node__uid', flat=True).distinct()
@@ -38,7 +37,7 @@ def autocomplete(request, queryset_name=None):
         result = AUTOCOMPLETE_QUERYSETS[queryset_name]()
     except KeyError:
         raise Http404
-    return JSONResponse(result)
+    return JsonResponse(result, safe=False)
 
 
 @readonly()
@@ -48,4 +47,4 @@ def internal_autocomplete(request, queryset_name=None):
         result = INTERNAL_AUTOCOMPLETE_QUERYSETS[queryset_name]()
     except KeyError:
         raise Http404
-    return JSONResponse(result)
+    return JsonResponse(result, safe=False)
