@@ -34,7 +34,7 @@ class View(models.Model):
 
 class Request(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    ip = models.IPAddressField(db_index=True)
+    ip = models.GenericIPAddressField(protocol='IPv4', db_index=True)
     user = models.ForeignKey(User, related_name='requests')
     url = models.TextField()
     view = models.ForeignKey(View)
