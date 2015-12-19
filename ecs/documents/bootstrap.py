@@ -6,7 +6,6 @@ from django.core.exceptions import ImproperlyConfigured
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
-from ecs.bootstrap.utils import update_instance
 from ecs.utils import Args, gpgutils
 
 _ = lambda s: s     # dummy gettext for marking strings
@@ -42,14 +41,12 @@ def document_types():
 
     for args in names:
         name, identifier, helptext = args
-        data = {
+        DocumentType.objects.update_or_create(identifier=identifier, defaults={
             'name': name,
             'helptext': helptext,
             'is_hidden': args.get('is_hidden', False),
             'is_downloadable': args.get('is_downloadable', True),
-        }
-        d, created = DocumentType.objects.get_or_create(identifier=identifier, defaults=data)
-        update_instance(d, data)
+        })
 
 @bootstrap.register()
 def import_encryption_sign_keys():

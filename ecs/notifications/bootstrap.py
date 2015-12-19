@@ -4,7 +4,6 @@ from ecs.notifications.models import NotificationType, Notification
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
-from ecs.bootstrap.utils import update_instance
 from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
     SafetyNotificationReview, FinalAmendmentReview, FinalAmendmentSigningReview,
@@ -66,8 +65,8 @@ def notification_types():
     objs = set()
     for data in types:
         data = data.copy()
-        t, created = NotificationType.objects.get_or_create(name=data.pop('name'), defaults=data)
-        update_instance(t, data)
+        t, created = NotificationType.objects.update_or_create(
+            name=data.pop('name'), defaults=data)
         objs.add(t)
     NotificationType.objects.exclude(pk__in=[obj.pk for obj in objs]).delete()
 

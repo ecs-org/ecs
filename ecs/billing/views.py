@@ -229,10 +229,8 @@ def external_review_payment(request):
             mimetype='application/vnd.ms-excel', doctype='checklist_payment')
 
         for checklist in selected_for_payment:
-            state, created = ChecklistBillingState.objects.get_or_create(checklist=checklist, defaults={'billed_at': doc.date})
-            if not state.billed_at == doc.date:
-                state.billed_at = doc.date
-                state.save()
+            ChecklistBillingState.objects.update_or_create(
+                checklist=checklist, defaults={'billed_at': doc.date})
 
         payment = ChecklistPayment.objects.create(document=doc)
         payment.checklists = selected_for_payment

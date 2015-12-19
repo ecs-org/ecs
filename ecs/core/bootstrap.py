@@ -10,7 +10,6 @@ from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
-from ecs.bootstrap.utils import update_instance
 from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
@@ -27,8 +26,8 @@ _ = lambda s: s
 
 @bootstrap.register()
 def sites():
-    site, created = Site.objects.get_or_create(pk=1)
-    update_instance(site, {'name': 'dummy', 'domain': 'localhost'})
+    Site.objects.get_or_create(pk=1,
+        defaults={'name': 'dummy', 'domain': 'localhost'})
 
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
@@ -243,15 +242,15 @@ def medcategories():
 @bootstrap.register()
 def expedited_review_categories():
     for abbrev, name in medcategories():
-        erc, created = ExpeditedReviewCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
-        update_instance(erc, {'name': name})
+        ExpeditedReviewCategory.objects.update_or_create(
+            abbrev=abbrev, defaults={'name': name})
 
 
 @bootstrap.register()
 def medical_categories():
     for abbrev, name in medcategories():
-        medcat, created = MedicalCategory.objects.get_or_create(abbrev=abbrev, defaults={'name': name})
-        update_instance(medcat, {'name': name})
+        MedicalCategory.objects.update_or_create(
+            abbrev=abbrev, defaults={'name': name})
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
@@ -273,13 +272,13 @@ def auth_user_developers():
         user.is_superuser = False
         user.groups.add(translators_group)
         user.save()
-        update_instance(user.profile, {
-            'is_developer': True,
-            'is_help_writer': True,
-            'forward_messages_after_minutes': 360,
-            'gender': gender,
-            'start_workflow': True,
-        })
+
+        user.profile.is_developer = True
+        user.profile.is_help_writer = True
+        user.profile.forward_messages_after_minutes = 30
+        user.profile.gender = gender
+        user.profile.start_workflow = True
+        user.profile.save()
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
@@ -349,18 +348,20 @@ def auth_user_testusers():
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
                 flags['is_help_writer'] = True
-            update_instance(user.profile, flags)
+
+            for key, value in flags.items():
+                setattr(user.profile, key, value)
+            user.profile.save()
 
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser), start_workflow=False)
         user.groups.add(boardmember_group)
         user.groups.add(userswitcher_group)
 
-        update_instance(user.profile, {
-            'is_testuser': True,
-            'is_board_member': True,
-            'start_workflow': True,
-        })
+        user.profile.is_testuser = True
+        user.profile.is_board_member = True
+        user.profile.start_workflow = True
+        user.profile.save()
 
         for medcategory in medcategories:
             m = MedicalCategory.objects.get(abbrev=medcategory)
@@ -371,11 +372,10 @@ def auth_user_testusers():
         user.groups.add(expedited_review_group)
         user.groups.add(userswitcher_group)
 
-        update_instance(user.profile, {
-            'is_testuser': True,
-            'is_expedited_reviewer': True,
-            'start_workflow': True,
-        })
+        user.profile.is_testuser = True
+        user.profile.is_expedited_reviewer = True
+        user.profile.start_workflow = True
+        user.profile.save()
 
         for expcategory in expcategories:
             e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
@@ -403,8 +403,7 @@ def ethics_commissions():
 
     for comm in commissions:
         comm = comm.copy()
-        ec, created = EthicsCommission.objects.get_or_create(uuid=comm.pop('uuid'), defaults=comm)
-        update_instance(ec, comm)
+        EthicsCommission.objects.update_or_create(uuid=comm.pop('uuid'), defaults=comm)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_user_testusers',))
 def advanced_settings():

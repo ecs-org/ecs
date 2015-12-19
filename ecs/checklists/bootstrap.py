@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ecs import bootstrap
-from ecs.bootstrap.utils import update_instance
 from ecs.checklists.models import Checklist, ChecklistBlueprint, ChecklistQuestion
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
@@ -29,8 +28,8 @@ def checklist_blueprints():
     )
 
     for blueprint in blueprints:
-        b, created = ChecklistBlueprint.objects.get_or_create(slug=blueprint['slug'])
-        update_instance(b, blueprint)
+        ChecklistBlueprint.objects.update_or_create(
+            slug=blueprint['slug'], defaults=blueprint)
 
     for slug in checklist_questions.keys():
         blueprint = ChecklistBlueprint.objects.get(slug=slug)
@@ -43,8 +42,8 @@ def checklist_blueprints():
                 'is_inverted': question.pop('is_inverted', False),
                 'requires_comment': question.pop('requires_comment', False),
             }
-            cq, created = ChecklistQuestion.objects.get_or_create(blueprint=blueprint, number=number, defaults=data)
-            update_instance(cq, data)
+            ChecklistQuestion.objects.update_or_create(
+                blueprint=blueprint, number=number, defaults=data)
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def checklist_workflow():

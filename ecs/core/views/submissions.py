@@ -370,14 +370,13 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 
     user = request.user if blueprint.multiple else get_user('root@system.local')
     with sudo():
-        checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=submission_form.submission, user=user, defaults={'last_edited_by': request.user})
+        checklist, created = Checklist.objects.update_or_create(
+            blueprint=blueprint, submission=submission_form.submission,
+            user=user, defaults={'last_edited_by': request.user})
     if created:
         for question in blueprint.questions.order_by('text'):
             checklist.answers.get_or_create(question=question)
         checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
-    elif not checklist.last_edited_by == request.user:
-        checklist.last_edited_by = request.user
-        checklist.save()
 
     docstash, created = DocStash.objects.get_or_create(
         group='ecs.core.views.submissions.checklist_review',

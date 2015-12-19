@@ -14,6 +14,6 @@ def prices():
         EXTERNAL_REVIEW_PRICING: Decimal('200.00'),
     }
     for category, price in prices.items():
-        Price.objects.get_or_create(category=category, defaults={
+        Price.objects.update_or_create(category=category, defaults={
             'price': price,
         })
