@@ -38,7 +38,7 @@ class Submission(models.Model):
     expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory', related_name='submissions', blank=True)
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
-    befangene = models.ManyToManyField(User, null=True, blank=True, related_name='befangen_for_submissions')
+    befangene = models.ManyToManyField(User, blank=True, related_name='befangen_for_submissions')
     executive_comment = models.TextField(null=True, blank=True)
 
     legal_and_patient_review_required = models.NullBooleanField(default=False)
@@ -285,7 +285,7 @@ class SubmissionForm(models.Model):
     submission = models.ForeignKey('core.Submission', related_name="forms")
     ethics_commissions = models.ManyToManyField('core.EthicsCommission', related_name='submission_forms', through='Investigator')
     pdf_document = models.OneToOneField(Document, related_name="submission_form", null=True)
-    documents = models.ManyToManyField('documents.Document', null=True, related_name='submission_forms')
+    documents = models.ManyToManyField('documents.Document', related_name='submission_forms')
     is_notification_update = models.BooleanField(default=False)
     is_transient = models.BooleanField(default=False)
     is_acknowledged = models.BooleanField(default=False)
