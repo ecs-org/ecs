@@ -3,10 +3,10 @@ import json
 import zipfile, os, datetime
 from tempfile import TemporaryFile
 from uuid import uuid4
+from collections import OrderedDict
 
 from django.db import models
 from django.core.files.base import ContentFile
-from django.utils.datastructures import SortedDict
 from django.contrib.contenttypes import generic
 from django.utils import timezone
 
@@ -313,7 +313,7 @@ class ModelSerializer(object):
                 raise
         
     def docs(self):
-        d = SortedDict()
+        d = {}
         for name in self.get_field_names():
             prefix, key = self.split_prefix(name)
             info = self.get_field_docs(name)
@@ -322,8 +322,7 @@ class ModelSerializer(object):
                 d[prefix][key] = info
             else:
                 d[name] = info
-        d.keyOrder = list(sorted(d.keys()))
-        return d
+        return OrderedDict(sorted(d.items()))
 
 
 class DocumentTypeSerializer(object):

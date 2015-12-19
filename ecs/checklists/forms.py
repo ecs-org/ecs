@@ -1,5 +1,6 @@
+from collections import OrderedDict
+
 from django import forms
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
 from ecs.core.forms.utils import ReadonlyFormMixin
@@ -17,7 +18,7 @@ class ChecklistFormPickleMixin(object):
         return (_unpickle, (self.__class__.checklist.pk, (), kwargs))
 
 def make_checklist_form(checklist):
-    fields = SortedDict()
+    fields = OrderedDict()
     blueprint = checklist.blueprint
     for question in blueprint.questions.all().order_by('index'):
         answer = checklist.answers.get(question=question)

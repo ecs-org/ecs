@@ -4,12 +4,12 @@ import zipfile
 import hashlib
 import os
 import os.path
+from collections import OrderedDict
 
 from django.conf import settings
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
@@ -111,7 +111,7 @@ def open_tasks(request, meeting=None):
     tops = list(meeting.timetable_entries.filter(submission__isnull=False).select_related('submission', 'submission__current_submission_form'))
     tops.sort(key=lambda e: e.agenda_index)
 
-    open_tasks = SortedDict()
+    open_tasks = OrderedDict()
     for top in tops:
         with sudo():
             ts = list(Task.objects.for_submission(top.submission).open().select_related('task_type', 'assigned_to', 'assigned_to__profile'))
@@ -131,7 +131,7 @@ def tops(request, meeting=None):
     next_tops = [t for t in tops if t.is_open][:3]
     closed_tops = [t for t in tops if not t.is_open]
 
-    open_tops = SortedDict()
+    open_tops = {}
     for top in [t for t in tops if t.is_open]:
         if top.submission:
             medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
@@ -151,7 +151,10 @@ def tops(request, meeting=None):
             return -1
         return a < b
 
-    open_tops.keyOrder = list(sorted(open_tops.keys(), cmp=board_member_cmp))
+    open_tops = OrderedDict(
+        (k, open_tops[k])
+        for k in sorted(open_tops.keys(), cmp=board_member_cmp)
+    )
 
     return render_html(request, 'meetings/tabs/tops.html', {
         'meeting': meeting,
@@ -562,7 +565,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     if not last_top == top:
         on_meeting_top_jump.send(Meeting, meeting=meeting, timetable_entry=top)
 
-    checklist_review_states = SortedDict()
+    checklist_review_states = OrderedDict()
     blueprint_ct = ContentType.objects.get_for_model(ChecklistBlueprint)
     checklist_ct = ContentType.objects.get_for_model(Checklist)
     if top.submission:

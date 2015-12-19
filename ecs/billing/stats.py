@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
+from collections import OrderedDict
 
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext as _
 
 from ecs.billing.models import Price, STUDY_PRICING_OTHER, \
@@ -9,7 +9,7 @@ from ecs.billing.models import Price, STUDY_PRICING_OTHER, \
     STUDY_PRICING_REMISSION
 
 
-SUBMISSION_STAT_TEMPLATE = SortedDict((
+SUBMISSION_STAT_TEMPLATE = OrderedDict((
     ('local', {
         'label': _(u'fees note - local EC'),
         'price': STUDY_PRICING_MULTICENTRIC_AMG_LOCAL,

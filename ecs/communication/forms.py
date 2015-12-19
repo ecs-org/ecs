@@ -101,7 +101,7 @@ class ReplyDelegateForm(forms.Form):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.profile.is_internal:
             self.fields['to'] = forms.ModelChoiceField(User.objects.filter(is_active=True), required=False, label=_('Delegate to'))
-            self.fields.keyOrder = ['to', 'text']
+            self.fields['text'] = self.fields.pop('text')       # change order
             if getattr(settings, 'USE_TEXTBOXLIST', False):
                 self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 

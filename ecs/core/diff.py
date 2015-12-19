@@ -3,11 +3,11 @@ import datetime
 import types
 import traceback
 import re
+from collections import OrderedDict
 
 from diff_match_patch import diff_match_patch
 
 from django.utils.translation import ugettext as _
-from django.utils.datastructures import SortedDict
 from django.utils.encoding import force_unicode
 from django.db import models
 from django.db.models import Manager
@@ -280,7 +280,7 @@ class ModelDiffer(object):
         identity = None
         if self.identify:
             identity = getattr(new or old, self.identify)
-        return ModelDiffNode(old, new, SortedDict(d), identity=identity)
+        return ModelDiffNode(old, new, OrderedDict(d), identity=identity)
 
 
 class AtomicModelDiffer(ModelDiffer):

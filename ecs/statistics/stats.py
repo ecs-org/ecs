@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from copy import deepcopy
+from collections import OrderedDict
 
-from django.utils.datastructures import SortedDict
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.models import Submission
@@ -27,7 +27,7 @@ class _Entry(object):
 class _Section(object):
     def __init__(self, label, *entries):
         self.label = label
-        self.entries = SortedDict((entry.slug, entry) for entry in entries)
+        self.entries = OrderedDict((entry.slug, entry) for entry in entries)
 
     def __iter__(self):
         return self.entries.itervalues()
@@ -36,7 +36,7 @@ class _Section(object):
         return self.entries[key]
 
 
-STATS_TEMPLATE = SortedDict((
+STATS_TEMPLATE = OrderedDict((
     ('submissions', _Section(_('Submissions'),
         _Entry('total', _('Total'), '2.0'),
         _Entry('no_remission', _('Comercially sponsored'), '2.1'),

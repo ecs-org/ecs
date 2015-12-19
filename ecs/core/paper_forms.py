@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
+
 from django.utils.translation import ugettext_lazy as _
-from django.utils.datastructures import SortedDict
 
 from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator, InvestigatorEmployee
 from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification, SafetyNotification
@@ -30,7 +31,7 @@ class FieldInfo(object):
 class FormInfo(object):
     def __init__(self, model, fields=()):
         self.model = model
-        self.fields = SortedDict()
+        self.fields = OrderedDict()
         for field in fields:
             field.model_info = self
             self.fields[field.name] = field
