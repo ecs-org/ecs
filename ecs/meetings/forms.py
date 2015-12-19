@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from django.utils import timezone
 
-from ecs.meetings.models import Meeting, TimetableEntry, Constraint, Participation, AssignedMedicalCategory, WEIGHT_CHOICES
+from ecs.meetings.models import Meeting, TimetableEntry, Constraint, AssignedMedicalCategory, WEIGHT_CHOICES
 from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
 from ecs.votes.models import Vote
 
@@ -64,8 +64,6 @@ class ConstraintForm(forms.ModelForm):
         fields = ('start_time', 'end_time', 'weight')
 
 UserConstraintFormSet = modelformset_factory(Constraint, formset=BaseConstraintFormSet, extra=0, exclude = ('meeting', 'user'), can_delete=True, form=ConstraintForm)
-
-ParticipationFormSet = modelformset_factory(Participation, extra=1, can_delete=True)
 
 
 class SubmissionReschedulingForm(forms.Form):
