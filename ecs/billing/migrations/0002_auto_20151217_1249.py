@@ -6,6 +6,8 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
         ('documents', '0001_initial'),
         ('billing', '0001_initial'),

@@ -6,6 +6,8 @@ from django.db import models, migrations
 
 class Migration(migrations.Migration):
 
+    initial = True
+
     dependencies = [
         ('communication', '0001_initial'),
         ('core', '0001_initial'),
