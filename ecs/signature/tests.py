@@ -7,9 +7,6 @@ from django.contrib.auth.models import Group
 from ecs.utils.testcases import LoginTestCase
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.signature.views import sign
- 
-SIGN_INDICATE_SUCCCES = 'about:sucess'
-SIGN_INDICATE_FAILURE = 'error'
 
 
 def _sign_dict():
@@ -35,7 +32,7 @@ def sign_fail(request):
     return sign(request, _sign_dict(), force_mock=True, force_fail=True)
 
 def success_func(request, document=None):
-    return SIGN_INDICATE_SUCCCES
+    return '/success/'
 
 
 class SignatureTest(LoginTestCase):
@@ -53,7 +50,7 @@ class SignatureTest(LoginTestCase):
     def test_success(self):
         ''' Tests that signing a document is possible; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.sign_success'))
-        self.assertEqual(response['Location'], SIGN_INDICATE_SUCCCES)
+        self.assertTrue('/success/' in response['Location'])
     
     def test_failure(self):     
         ''' Tests that signing a document fails; Will use mock signing. '''

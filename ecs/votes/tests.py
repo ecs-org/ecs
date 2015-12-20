@@ -54,7 +54,7 @@ class VoteRemindersTest(CommunicationTestCase):
         next_year = now + timedelta(days=365)
         self.valid_until = timezone.now().date() + timedelta(days=365)
         self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1', published_at=now, valid_until=next_year)
-        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis), result='1', published_at=now, valid_until=next_year)
+        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis.submission), result='1', published_at=now, valid_until=next_year)
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.
