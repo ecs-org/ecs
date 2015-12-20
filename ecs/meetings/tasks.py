@@ -40,7 +40,7 @@ _log2 = math.log(2)
 
 def _eval_timetable(metrics):
     v = 0.0 # badness
-    v += metrics._waiting_time_total / 10800.0 # 1 ~ 3h waiting
+    v += metrics._waiting_time_total.total_seconds() / 10800.0 # 1 ~ 3h waiting
     v += 2 * math.pow(metrics.constraint_violation_total, 2)
     v += metrics._optimal_start_diff_squared_sum / 3240000.0
     return math.log(1 + 1.0 / (1 + v)) / _log2

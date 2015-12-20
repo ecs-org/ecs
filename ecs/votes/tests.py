@@ -47,8 +47,8 @@ class VoteRemindersTest(CommunicationTestCase):
         meeting.deadline_diplomathesis = meeting.start - timedelta(days=2)
         meeting.save()
 
-        meeting.add_entry(submission=submission_form.submission, duration_in_seconds=60)
-        meeting.add_entry(submission=submission_form_thesis.submission, duration_in_seconds=60)
+        meeting.add_entry(submission=submission_form.submission, duration=timedelta(seconds=60))
+        meeting.add_entry(submission=submission_form_thesis.submission, duration=timedelta(seconds=60))
 
         now = timezone.now()
         next_year = now + timedelta(days=365)

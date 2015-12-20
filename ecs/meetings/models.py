@@ -26,7 +26,7 @@ class TimetableMetrics(object):
         self.users = users
 
         self.waiting_time_per_user = {}
-        self._waiting_time_total = 0
+        self._waiting_time_total = timedelta()
         self._waiting_time_min = None
         self._waiting_time_max = None
 
@@ -34,15 +34,15 @@ class TimetableMetrics(object):
         self.constraint_violation_total = 0
         
         self.optimal_start_diffs = {}
-        self._optimal_start_diff_sum = 0
+        self._optimal_start_diff_sum = timedelta()
         self._optimal_start_diff_squared_sum = 0
 
-        offset = 0
+        offset = timedelta()
         for user in users:
-            user._waiting_time = 0
+            user._waiting_time = timedelta()
             user._waiting_time_offset = None
         for entry in permutation:
-            next_offset = offset + entry.duration_in_seconds
+            next_offset = offset + entry.duration
             for user, ignored in entry.users:
                 if ignored:
                     continue
@@ -52,20 +52,20 @@ class TimetableMetrics(object):
                     self._waiting_time_total += wt
                 user._waiting_time_offset = next_offset
                 for constraint in user.constraints:
-                    if constraint.offset_in_seconds < next_offset and constraint.offset_in_seconds + constraint.duration_in_seconds > offset:
+                    if constraint.offset < next_offset and constraint.offset + constraint.duration > offset:
                         self.constraint_violations.setdefault(constraint, 0)
                         self.constraint_violations[constraint] += constraint.weight
                         self.constraint_violation_total += constraint.weight
             if entry.optimal_start_offset is not None:
                 diff = abs(offset - entry.optimal_start_offset)
                 self.optimal_start_diffs[entry] = diff
-                self._optimal_start_diff_squared_sum += diff * diff
+                self._optimal_start_diff_squared_sum += diff.total_seconds() ** 2
                 self._optimal_start_diff_sum += diff
             offset = next_offset
         
         for user in users:
             wt = user._waiting_time
-            self.waiting_time_per_user[user] = timedelta(seconds=wt)
+            self.waiting_time_per_user[user] = wt
             if self._waiting_time_min is None or wt < self._waiting_time_min:
                 self._waiting_time_min = wt
             if self._waiting_time_max is None or wt > self._waiting_time_max:
@@ -217,7 +217,8 @@ class Meeting(models.Model):
         
     @cached_property
     def duration(self):
-        return timedelta(seconds=self.timetable_entries.aggregate(sum=models.Sum('duration_in_seconds'))['sum'])
+        sum_ = self.timetable_entries.aggregate(sum=models.Sum('duration'))['sum']
+        return sum_ or timedelta()
 
     @property
     def end(self):
@@ -270,9 +271,6 @@ class Meeting(models.Model):
                 kwargs['timetable_index'] = last_index + 1
         else:
             kwargs['timetable_index'] = None
-        duration = kwargs.pop('duration', None)
-        if duration is not None:
-            kwargs['duration_in_seconds'] = duration.seconds
         entry = self.timetable_entries.create(**kwargs)
         if index is not None and index != -1:
             entry.index = index
@@ -317,7 +315,7 @@ class Meeting(models.Model):
             start = timezone.make_aware(
                 datetime.combine(start_date, constraint.start_time),
                 timezone.get_current_timezone())
-            constraint.offset_in_seconds = (start - self.start).total_seconds()
+            constraint.offset = start - self.start
             constraints_by_user_id.setdefault(constraint.user_id, []).append(constraint)
         users = []
         for user in self.users:
@@ -369,8 +367,10 @@ class Meeting(models.Model):
         return iter(entries)
         
     def _get_start_for_index(self, index):
-        offset = self.timetable_entries.filter(timetable_index__lt=index).aggregate(sum=models.Sum('duration_in_seconds'))['sum']
-        return self.start + timedelta(seconds=offset or 0)
+        offset = (self.timetable_entries
+            .filter(timetable_index__lt=index)
+            .aggregate(sum=models.Sum('duration'))['sum'])
+        return self.start + (offset or timedelta())
     
     def _apply_permutation(self, permutation):
         assert set(self) == set(permutation)
@@ -490,7 +490,7 @@ class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
     title = models.CharField(max_length=200, blank=True)
     timetable_index = models.IntegerField(null=True)
-    duration_in_seconds = models.PositiveIntegerField()
+    duration = models.DurationField()
     is_break = models.BooleanField(default=False)
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
     optimal_start = models.TimeField(null=True)
@@ -500,14 +500,6 @@ class TimetableEntry(models.Model):
 
     def __unicode__(self):
         return u"TOP %s" % (self.agenda_index + 1)
-    
-    def _get_duration(self):
-        return timedelta(seconds=self.duration_in_seconds)
-        
-    def _set_duration(self, d):
-        self.duration_in_seconds = int(d.total_seconds())
-    
-    duration = property(_get_duration, _set_duration)
 
     class Meta:
         unique_together = (
@@ -533,7 +525,7 @@ class TimetableEntry(models.Model):
         return (timezone.make_aware(
             datetime.combine(self.meeting.start.date(), self.optimal_start),
             timezone.get_current_timezone()) - self.meeting.start
-        ).total_seconds()
+        )
     
     @cached_property
     def users(self):
@@ -575,12 +567,16 @@ class TimetableEntry(models.Model):
     
     def move_to_optimal_position(self):
         i = 0
-        offset = 0
-        start = (timezone.make_aware(datetime.combine(self.meeting.start.date(), self.optimal_start), timezone.get_current_timezone()) - self.meeting.start).total_seconds()
+        offset = timedelta()
+        optimal_start = timezone.make_aware(
+            datetime.combine(self.meeting.start.date(), self.optimal_start),
+            timezone.get_current_timezone()
+        )
+        start_delta = optimal_start - self.meeting.start
         for entry in self.meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index').exclude(pk=self.pk):
-            if offset >= start:
+            if offset >= start_delta:
                 break
-            offset += entry.duration_in_seconds
+            offset += entry.duration
             i += 1
         self.index = i
     
@@ -672,9 +668,6 @@ class TimetableEntry(models.Model):
                 kwargs['timetable_index'] = last_index + 1
         elif from_visible:
             kwargs['timetable_index'] = None
-        duration = kwargs.pop('duration', None)
-        if duration is not None:
-            kwargs['duration_in_seconds'] = duration.total_seconds()
         for k, v in kwargs.iteritems():
             setattr(self, k, v)
         self.save()
@@ -729,7 +722,3 @@ class Constraint(models.Model):
     def duration(self):
         d = timezone.now().date()
         return datetime.combine(d, self.end_time) - datetime.combine(d, self.start_time)
-
-    @cached_property
-    def duration_in_seconds(self):
-        return self.duration.total_seconds()

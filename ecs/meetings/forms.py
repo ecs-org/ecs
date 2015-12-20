@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.utils import timezone
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, AssignedMedicalCategory, WEIGHT_CHOICES
-from ecs.core.forms.fields import DateTimeField, TimeField, TimedeltaField
+from ecs.core.forms.fields import DateTimeField, TimeField
 from ecs.votes.models import Vote
 
 from ecs.utils.formutils import TranslatedModelForm
@@ -30,7 +30,7 @@ class MeetingForm(TranslatedModelForm):
         }
 
 class TimetableEntryForm(forms.Form):
-    duration = TimedeltaField()
+    duration = forms.DurationField()
     optimal_start = forms.TimeField(required=False)
 
 class MeetingAssistantForm(forms.ModelForm):
@@ -40,7 +40,7 @@ class MeetingAssistantForm(forms.ModelForm):
 
 class FreeTimetableEntryForm(forms.Form):
     title = forms.CharField(required=True, label=_(u'title'), max_length=TimetableEntry._meta.get_field('title').max_length)
-    duration = TimedeltaField(initial=u'1h 30min', label=_(u"duration"))
+    duration = forms.DurationField(initial=u'1:30:00', label=_(u"duration"))
     is_break = forms.BooleanField(label=_(u"break"), required=False)
     optimal_start = TimeField(required=False, label=_(u'ideal start time (time)'))
     index = forms.TypedChoiceField(label=_('Position'), coerce=int, empty_value=None, required=False, choices=[

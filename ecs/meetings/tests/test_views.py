@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 from urlparse import urlsplit
 
 from django.core.urlresolvers import reverse
@@ -24,7 +24,7 @@ class ViewTestCase(EcsTestCase):
     
     def setUp(self):
         super(ViewTestCase, self).setUp()
-        self.start = datetime.datetime(2020, 2, 20, 20, 20)
+        self.start = datetime(2020, 2, 20, 20, 20)
         self.user = self.create_user('unittest-office', profile_extra={'is_internal': True})
         self.user.groups.add(Group.objects.get(name='EC-Office'))
         self.client.login(email='unittest-office@example.com', password='password')
@@ -47,8 +47,8 @@ class ViewTestCase(EcsTestCase):
 
         data = {'title': 'Testmeeting'}
         data.update(_get_datetime_inputs('start', self.start))
-        data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + datetime.timedelta(days=30)))
-        data.update(_get_datetime_inputs('deadline', self.start + datetime.timedelta(days=14)))
+        data.update(_get_datetime_inputs('deadline_diplomathesis', self.start + timedelta(days=30)))
+        data.update(_get_datetime_inputs('deadline', self.start + timedelta(days=14)))
         response = self.client.post(create_meeting_url, data)
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Meeting.objects.filter(start=self.start).count(), 1)
@@ -58,14 +58,14 @@ class ViewTestCase(EcsTestCase):
         response = self.client.get(timetable_url)
         self.assertEqual(response.status_code, 200)
         
-        e0 = meeting.add_entry(duration_in_seconds=42)
+        e0 = meeting.add_entry(duration=timedelta(seconds=42))
         response = self.client.post(reverse('ecs.meetings.views.update_timetable_entry', kwargs={'meeting_pk': meeting.pk, 'entry_pk': e0.pk}), {
-            'duration': '2h',
+            'duration': '2:00:00',
         })
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(self.refetch(e0).duration, datetime.timedelta(hours=2))
+        self.assertEqual(self.refetch(e0).duration, timedelta(hours=2))
         
-        e1 = meeting.add_entry(duration_in_seconds=42)
+        e1 = meeting.add_entry(duration=timedelta(seconds=42))
         self.assertEqual(list(meeting), [e0, e1])
         
         response = self.client.get(reverse('ecs.meetings.views.move_timetable_entry', kwargs={'meeting_pk': meeting.pk}) + '?from_index=0&to_index=1')
@@ -84,8 +84,8 @@ class ViewTestCase(EcsTestCase):
         
         meeting = Meeting.objects.create(start=self.start)
         submission = create_submission_form().submission
-        e0 = meeting.add_entry(duration_in_seconds=42, submission=submission)
-        e1 = meeting.add_entry(duration_in_seconds=42*42)
+        e0 = meeting.add_entry(duration=timedelta(seconds=42), submission=submission)
+        e1 = meeting.add_entry(duration=timedelta(seconds=42*42))
 
         response = self.client.get(reverse('ecs.meetings.views.meeting_assistant', kwargs={'meeting_pk': meeting.pk}))
         self.assertEqual(response.status_code, 200)
@@ -128,8 +128,8 @@ class ViewTestCase(EcsTestCase):
         '''
         
         meeting = Meeting.objects.create(start=self.start, started=self.start)
-        e0 = meeting.add_entry(duration_in_seconds=42)
-        e1 = meeting.add_entry(duration_in_seconds=42*42)
+        e0 = meeting.add_entry(duration=timedelta(seconds=42))
+        e1 = meeting.add_entry(duration=timedelta(seconds=42*42))
         
         quickjump_url = reverse('ecs.meetings.views.meeting_assistant_quickjump', kwargs={'meeting_pk': meeting.pk})
         response = self.client.get(quickjump_url + '?q=')

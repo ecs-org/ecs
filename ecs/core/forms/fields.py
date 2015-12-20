@@ -6,7 +6,6 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
-from ecs.utils.timedelta import parse_timedelta
 from ecs.users.utils import get_user
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
@@ -39,16 +38,6 @@ class TimeField(forms.TimeField):
         kwargs.setdefault('widget', LooseTimeWidget())
         super(TimeField, self).__init__(*args, **kwargs)
         
-class TimedeltaField(forms.CharField):
-    default_error_messages = {
-        'invalid': _(u'Please enter a valid time period. E.g. "10min" or "1h 30min"'),
-    }
-    def to_python(self, value):
-        try:
-            return parse_timedelta(super(TimedeltaField, self).to_python(value))
-        except ValueError:
-            raise ValidationError(self.error_messages['invalid'])
-
 class BooleanWidget(forms.widgets.Select):
     def __init__(self, attrs=None):
         choices = ((True, _(u'Yes')), (False, _(u'No')))

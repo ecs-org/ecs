@@ -1,4 +1,6 @@
 from contextlib import contextmanager
+from datetime import timedelta
+
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 
@@ -59,7 +61,7 @@ class SubmissionAuthTestCase(EcsTestCase):
         sf.submission.external_reviewers.add(self.external_review_user)
 
         meeting = Meeting.objects.create(start=timezone.now())
-        entry = meeting.add_entry(submission=sf.submission, duration_in_seconds=60)
+        entry = meeting.add_entry(submission=sf.submission, duration=timedelta(seconds=60))
         entry.add_user(self.board_member_user)
         sf.submission.next_meeting = meeting
         sf.submission.save()
