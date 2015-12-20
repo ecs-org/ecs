@@ -1,6 +1,8 @@
-# -*- coding: utf-8 -*-
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.dashboard.views',
-    url(r'^$', 'view_dashboard'),
+from ecs.dashboard import views
+
+
+urlpatterns = (
+    url(r'^$', views.view_dashboard),
 )

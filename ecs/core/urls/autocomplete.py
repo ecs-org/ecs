@@ -1,6 +1,9 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.core.views', 
-    url(r'^(?P<queryset_name>[^/]+)/$', 'autocomplete'),
-    url(r'^internal/(?P<queryset_name>[^/]+)/$', 'internal_autocomplete'),
+from ecs.core.views import autocomplete as views
+
+
+urlpatterns = (
+    url(r'^(?P<queryset_name>[^/]+)/$', views.autocomplete),
+    url(r'^internal/(?P<queryset_name>[^/]+)/$', views.internal_autocomplete),
 )

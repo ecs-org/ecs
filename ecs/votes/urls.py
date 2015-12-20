@@ -1,8 +1,11 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.votes.views',
-    url(r'^(?P<vote_pk>\d+)/html/$', 'show_html_vote'),
-    url(r'^(?P<vote_pk>\d+)/pdf/$', 'show_pdf_vote'),
-    url(r'^(?P<vote_pk>\d+)/download/$', 'download_signed_vote'),
-    url(r'^(?P<vote_pk>\d+)/sign$', 'vote_sign'),
+from ecs.votes import views
+
+
+urlpatterns = (
+    url(r'^(?P<vote_pk>\d+)/html/$', views.show_html_vote),
+    url(r'^(?P<vote_pk>\d+)/pdf/$', views.show_pdf_vote),
+    url(r'^(?P<vote_pk>\d+)/download/$', views.download_signed_vote),
+    url(r'^(?P<vote_pk>\d+)/sign$', views.vote_sign),
 )

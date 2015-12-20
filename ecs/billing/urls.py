@@ -1,13 +1,15 @@
-# -*- coding: utf-8 -*-
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.billing.views',
-    url(r'^submissions/$', 'submission_billing'),
-    url(r'^invoice/(?P<invoice_pk>\d+)/$', 'view_invoice'),
-    url(r'^invoices/$', 'invoice_list'),
+from ecs.billing import views
 
-    url(r'^external_review/$', 'external_review_payment'),
-    url(r'^payment/(?P<payment_pk>\d+)/$', 'view_checklist_payment'),
-    url(r'^payments/$', 'checklist_payment_list'),
-    url(r'^external_review/reset/$', 'reset_external_review_payment'),
+
+urlpatterns = (
+    url(r'^submissions/$', views.submission_billing),
+    url(r'^invoice/(?P<invoice_pk>\d+)/$', views.view_invoice),
+    url(r'^invoices/$', views.invoice_list),
+
+    url(r'^external_review/$', views.external_review_payment),
+    url(r'^payment/(?P<payment_pk>\d+)/$', views.view_checklist_payment),
+    url(r'^payments/$', views.checklist_payment_list),
+    url(r'^external_review/reset/$', views.reset_external_review_payment),
 )

@@ -1,6 +1,9 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.core.views', 
-    url(r'^(?:(?P<year>\d+)/)?$', 'submissions.catalog'),
-    url(r'^json/$', 'submissions.catalog_json'),
+from ecs.core.views import submissions as views
+
+
+urlpatterns = (
+    url(r'^(?:(?P<year>\d+)/)?$', views.catalog),
+    url(r'^json/$', views.catalog_json),
 )

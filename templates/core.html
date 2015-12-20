@@ -14,7 +14,7 @@
 
 {% block usertoolbar %}
   <div class="searchbox">
-    <form action="{% url 'ecs.core.views.all_submissions' %}" method="get" enctype="multipart/form-data">
+    <form action="{% url 'ecs.core.views.submissions.all_submissions' %}" method="get" enctype="multipart/form-data">
       <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
       <input type="submit" value="" title="suchen" />
     </form>
@@ -45,16 +45,16 @@
       <span class="togglers">{% trans "Studies" %}</span>
       <ul class="elements">
           {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
-              <li><a href="{% url 'ecs.core.views.all_submissions' %}">{% trans "All Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.submissions.all_submissions' %}">{% trans "All Studies" %}</a></li>
           {% endif %}
           {% if user|has_assigned_submissions %}
-              <li><a href="{% url 'ecs.core.views.assigned_submissions' %}">{% trans "Assigned Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.submissions.assigned_submissions' %}">{% trans "Assigned Studies" %}</a></li>
           {% endif %}
           {% if user|has_submissions %}
-              <li><a href="{% url 'ecs.core.views.my_submissions' %}">{% trans "My Studies" %}</a></li>
+              <li><a href="{% url 'ecs.core.views.submissions.my_submissions' %}">{% trans "My Studies" %}</a></li>
           {% endif %}
           <li><a href="{% url 'ecs.core.views.submissions.create_submission_form' %}">{% trans "New Submission" %}</a></li>
-          <li><a href="{% url 'ecs.core.views.import_submission_form' %}">{% trans "Import" %}</a></li>
+          <li><a href="{% url 'ecs.core.views.submissions.import_submission_form' %}">{% trans "Import" %}</a></li>
       </ul>
     </li>
     <li>
@@ -88,7 +88,7 @@
                           <li><a href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a></li>
                           <li><a href="{% url 'ecs.billing.views.submission_billing' %}">{% trans "Accounting of fees" %}</a></li>
                           <li><a href="{% url 'ecs.billing.views.external_review_payment' %}">Gutachter Bezahlung</a></li>
-                          <li><a href="{% url 'ecs.core.views.advanced_settings' %}">{% trans 'Advanced Settings' %}</a></li>
+                          <li><a href="{% url 'ecs.core.views.administration.advanced_settings' %}">{% trans 'Advanced Settings' %}</a></li>
                       {% endif %}
                       <li><a href="{% url 'ecs.statistics.views.stats' %}">{% trans 'Statistics' %}</a></li>
                       <li><a href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">{% trans 'Boilerplates' %}</a></li>
@@ -103,12 +103,12 @@
       <li>
         <span class="togglers">{% trans "Developer" %}</span>
         <ul class="elements">
-             <li><a href="{% url 'ecs.core.views.developer_test_pdf' %}">{% trans "Submission PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer_test_checklist_pdf' %}">{% trans "Checklist PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer_test_notification_pdf' %}">{% trans "Notification PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer_test_notification_answer_pdf' %}">{% trans "Notification Answer PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer_test_vote_pdf' %}">{% trans "Vote PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer_translations' %}">{% trans "Translations" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_test_pdf' %}">{% trans "Submission PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_test_checklist_pdf' %}">{% trans "Checklist PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_test_notification_pdf' %}">{% trans "Notification PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_test_notification_answer_pdf' %}">{% trans "Notification Answer PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_test_vote_pdf' %}">{% trans "Vote PDF" %}</a></li>
+             <li><a href="{% url 'ecs.core.views.developer.developer_translations' %}">{% trans "Translations" %}</a></li>
         </ul>
       </li>
     {% endif %} 

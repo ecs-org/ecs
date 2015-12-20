@@ -24,6 +24,6 @@ class CoreUrlsTest(LoginTestCase):
     def test_submission_forms(self):
         '''Tests if the all-submissions view of the system is accessible.'''
         
-        response = self.client.get(reverse('ecs.core.views.all_submissions'))
+        response = self.client.get(reverse('ecs.core.views.submissions.all_submissions'))
         self.assertEqual(response.status_code, 200)
 

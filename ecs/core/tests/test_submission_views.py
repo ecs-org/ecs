@@ -192,7 +192,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         create_submission_form(20200001)
         create_submission_form(20200042)
         create_submission_form(20209942)
-        url = reverse('ecs.core.views.all_submissions')
+        url = reverse('ecs.core.views.submissions.all_submissions')
         
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
@@ -211,9 +211,9 @@ class SubmissionViewsTestCase(LoginTestCase):
         '''
         
         submission_form = create_submission_form(presenter=self.user)
-        response = self.client.get(reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
+        response = self.client.get(reverse('ecs.core.views.submissions.copy_latest_submission_form', kwargs={'submission_pk': submission_form.submission.pk}))
         self.assertEqual(response.status_code, 302)
-        url = reverse('ecs.core.views.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk})
+        url = reverse('ecs.core.views.submissions.copy_submission_form', kwargs={'submission_form_pk': submission_form.pk})
         self.assertEqual(url, urlsplit(response['Location']).path)
     
         response = self.client.get(url)
@@ -228,7 +228,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         '''
         
         medical_categories_count = MedicalCategory.objects.all().count()
-        response = self.client.get(reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+        response = self.client.get(reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(json.loads(response.content)), medical_categories_count)
 

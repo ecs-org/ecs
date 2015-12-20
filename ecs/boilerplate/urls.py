@@ -1,9 +1,12 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.boilerplate.views',
-    url(r'^list/$', 'list_boilerplate'),
-    url(r'^new/$', 'edit_boilerplate'),
-    url(r'^(?P<text_pk>\d+)/edit/$', 'edit_boilerplate'),
-    url(r'^(?P<text_pk>\d+)/delete/$', 'delete_boilerplate'),
-    url(r'^select/$', 'select_boilerplate'),
+from ecs.boilerplate import views
+
+
+urlpatterns = (
+    url(r'^list/$', views.list_boilerplate),
+    url(r'^new/$', views.edit_boilerplate),
+    url(r'^(?P<text_pk>\d+)/edit/$', views.edit_boilerplate),
+    url(r'^(?P<text_pk>\d+)/delete/$', views.delete_boilerplate),
+    url(r'^select/$', views.select_boilerplate),
 )

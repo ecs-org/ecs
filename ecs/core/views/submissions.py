@@ -131,7 +131,7 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
 def copy_latest_submission_form(request, submission_pk=None, **kwargs):
     submission = get_object_or_404(Submission, pk=submission_pk)
     kwargs['submission_form_pk'] = submission.newest_submission_form.pk
-    return redirect('ecs.core.views.copy_submission_form', **kwargs)
+    return redirect('ecs.core.views.submissions.copy_submission_form', **kwargs)
 
 
 @readonly()
@@ -320,7 +320,7 @@ def paper_submission_review(request, submission_pk=None):
     task = submission.paper_submission_review_task
     if not task.assigned_to == request.user:
         task.accept(request.user)
-        return redirect('ecs.core.views.paper_submission_review', submission_pk=submission_pk)
+        return redirect('ecs.core.views.submissions.paper_submission_review', submission_pk=submission_pk)
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
@@ -364,7 +364,7 @@ def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     if request.method == 'GET' and not submission_form.is_current:
-        return redirect('ecs.core.views.checklist_review', submission_form_pk=submission_form.submission.current_submission_form.pk, blueprint_pk=blueprint_pk)
+        return redirect('ecs.core.views.submissions.checklist_review', submission_form_pk=submission_form.submission.current_submission_form.pk, blueprint_pk=blueprint_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
     related_task = request.related_tasks[0]
 
@@ -535,7 +535,7 @@ def upload_document_for_submission(request):
 @with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
 def delete_document_from_submission(request):
     delete_document(request, int(request.GET['document_pk']))
-    return redirect('ecs.core.views.upload_document_for_submission', docstash_key=request.docstash.key)
+    return redirect('ecs.core.views.submissions.upload_document_for_submission', docstash_key=request.docstash.key)
 
 @with_docstash_transaction
 def create_submission_form(request):
@@ -1076,7 +1076,7 @@ def grant_temporary_access(request, submission_pk=None):
         temp_auth = form.save(commit=False)
         temp_auth.submission = submission
         temp_auth.save()
-    return redirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
+    return redirect(reverse('ecs.core.views.submissions.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
 
 
 @user_flag_required('is_executive_board_member')
@@ -1084,4 +1084,4 @@ def revoke_temporary_access(request, submission_pk=None, temp_auth_pk=None):
     temp_auth = get_object_or_404(TemporaryAuthorization, pk=temp_auth_pk)
     temp_auth.end = timezone.now()
     temp_auth.save()
-    return redirect(reverse('ecs.core.views.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
+    return redirect(reverse('ecs.core.views.submissions.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')

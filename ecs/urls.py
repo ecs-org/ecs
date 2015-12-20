@@ -1,4 +1,4 @@
-from django.conf.urls import *
+from django.conf.urls import include, url
 from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
@@ -25,7 +25,7 @@ def fake404handler(request):
     return HttpResponseNotFound(t.render({'request': request}))
     
 
-urlpatterns = patterns('',
+urlpatterns = (
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
     url(r'^$', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL, permanent=False)),
 
@@ -62,24 +62,25 @@ if settings.DEBUG:
     def __trigger_log(request):
         logger.warn('foo')
         return HttpResponse()
-    urlpatterns += patterns('', 
+    urlpatterns += (
         url(r'^debug/empty/$', lambda request: HttpResponse()),
-        url(r'^debug/404/$', 'ecs.urls.fake404handler'),
+        url(r'^debug/404/$', fake404handler),
         url(r'^debug/500/$', lambda request: 1/0),
         url(r'^trigger-warning-log/$', __trigger_log),
     )
 
 if 'ecs.userswitcher' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
+    urlpatterns += (
         url(r'^userswitcher/', include('ecs.userswitcher.urls')),
     )
 
 if 'rosetta' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
+    urlpatterns += (
         url(r'^rosetta/', include('rosetta.urls')),
     )
 
 if 'debug_toolbar' in settings.INSTALLED_APPS:
-    urlpatterns += patterns('',
-        url(r'^%s(.*)$' % "__debug__/m/", 'debug_toolbar.views.debug_media'),
+    from debug_toolbar.views import debug_media
+    urlpatterns += (
+        url(r'^%s(.*)$' % "__debug__/m/", debug_media),
     )

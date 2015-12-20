@@ -63,7 +63,7 @@ class SendMessageForm(forms.ModelForm):
             ]
             self.fields['receiver_person'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
             if getattr(settings, 'USE_TEXTBOXLIST', False):
-                self.fields['receiver_person'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+                self.fields['receiver_person'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
         self.fields['receiver'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
 
@@ -103,7 +103,7 @@ class ReplyDelegateForm(forms.Form):
             self.fields['to'] = forms.ModelChoiceField(User.objects.filter(is_active=True), required=False, label=_('Delegate to'))
             self.fields['text'] = self.fields.pop('text')       # change order
             if getattr(settings, 'USE_TEXTBOXLIST', False):
-                self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+                self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 
 class ThreadListFilterForm(forms.Form):

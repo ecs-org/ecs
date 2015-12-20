@@ -1,5 +1,8 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.checklists.views',
-    url(r'^(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', 'checklist_comments'),
+from ecs.checklists import views
+
+
+urlpatterns = (
+    url(r'^(?P<checklist_pk>\d+)/comments/(?P<flavour>positive|negative)/', views.checklist_comments),
 )

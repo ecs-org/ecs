@@ -1,19 +1,18 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.tasks.views',
-    url(r'^list/$', 'task_list'),
-    url(r'^list/submission/(?P<submission_pk>\d+)/$', 'task_list'),
-    url(r'^list/mine/$', 'my_tasks'),
-    url(r'^list/mine/submission/(?P<submission_pk>\d+)/$', 'my_tasks'),
-    url(r'^backlog/$', 'task_backlog', {'template': 'tasks/backlog.html'}),
+from ecs.tasks import views
 
-    url(r'^(?P<task_pk>\d+)/accept/$', 'accept_task'),
-    url(r'^(?P<task_pk>\d+)/accept/full/$', 'accept_task_full'),
-    url(r'^type/(?P<flavor>[^/]+)/(?P<slug>[^/]+)/accept/$', 'accept_task_type'),
-    url(r'^type/(?P<flavor>[^/]+)/(?P<slug>[^/]+)/accept/full/$', 'accept_task_type_full'),
-    url(r'^(?P<task_pk>\d+)/decline/$', 'decline_task'),
-    url(r'^(?P<task_pk>\d+)/decline/full/$', 'decline_task_full'),
-    url(r'^(?P<task_pk>\d+)/reopen/$', 'reopen_task'),
-    url(r'^(?P<task_pk>\d+)/do/$', 'do_task'),
+
+urlpatterns = (
+    url(r'^list/(?:submission/(?P<submission_pk>\d+)/)?$', views.task_list),
+    url(r'^list/mine/(?:submission/(?P<submission_pk>\d+)/)?$', views.my_tasks),
+    url(r'^backlog/$', views.task_backlog, {'template': 'tasks/backlog.html'}),
+    url(r'^(?P<task_pk>\d+)/accept/$', views.accept_task),
+    url(r'^(?P<task_pk>\d+)/accept/full/$', views.accept_task_full),
+    url(r'^type/(?P<flavor>[^/]+)/(?P<slug>[^/]+)/accept/$', views.accept_task_type),
+    url(r'^type/(?P<flavor>[^/]+)/(?P<slug>[^/]+)/accept/full/$', views.accept_task_type_full),
+    url(r'^(?P<task_pk>\d+)/decline/$', views.decline_task),
+    url(r'^(?P<task_pk>\d+)/decline/full/$', views.decline_task_full),
+    url(r'^(?P<task_pk>\d+)/reopen/$', views.reopen_task),
+    url(r'^(?P<task_pk>\d+)/do/$', views.do_task),
 )
-

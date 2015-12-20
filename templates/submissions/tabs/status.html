@@ -18,7 +18,7 @@
                     <td colspan="5"><i>{% trans "This form has not been submitted yet." %}</i></td>
                     <td>
                     {% if submission_form|allows_edits_by:request.user %}
-                        <a href="{% url 'ecs.core.views.create_submission_form' docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
+                        <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
                     {% endif %}
                     </td>
                 </tr>
@@ -32,12 +32,12 @@
                     <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                     <td>
                         {% if sf.previous_form %}
-                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
+                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
                         {% endif %}
                     </td>
                     <td>
                         {% if sf != newest_form %}
-                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.diff' old_submission_form_pk=sf.pk new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
+                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.pk new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
                         {% endif %}
                     </td>
                     <td>
@@ -66,7 +66,7 @@
                 {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
-                | <a href="{% url 'ecs.core.views.change_submission_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
+                | <a href="{% url 'ecs.core.views.submissions.change_submission_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
     </tr>
@@ -77,7 +77,7 @@
                 {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
             {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}
-                | <a href="{% url 'ecs.core.views.change_submission_susar_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
+                | <a href="{% url 'ecs.core.views.submissions.change_submission_susar_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
     </tr>
@@ -191,7 +191,7 @@
             {% for checklist in external_review_checklists %}
                 <div>{{ checklist }} [{{ checklist.get_status_display }}]
                 {% if checklist.status == 'new' or checklist.status == 'review_fail' %}
-                    | <a href="{% url 'ecs.core.views.drop_checklist_review' submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "drop" %}</a>
+                    | <a href="{% url 'ecs.core.views.submissions.drop_checklist_review' submission_form_pk=submission_form.pk checklist_pk=checklist.pk %}">{% trans "drop" %}</a>
                 {% endif %}</div>
             {% endfor %}
         </td>
@@ -207,5 +207,5 @@
 </table>
 
 {% if submission_form|allows_export_by:request.user %}
-    <a href="{% url 'ecs.core.views.export_submission' submission_pk=submission.pk %}" class="button_submit">{% trans "Export" %}</a>
+    <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}

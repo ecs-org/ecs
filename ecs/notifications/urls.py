@@ -1,19 +1,19 @@
-# -*- coding: utf-8 -*-
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.notifications.views',
-    url(r'^new/$', 'select_notification_creation_type'),
-    url(r'^new/(?P<notification_type_pk>\d+)/diff/(?P<submission_form_pk>\d+)/$', 'create_diff_notification'),
-    url(r'^new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', 'create_notification'),
-    url(r'^delete/(?P<docstash_key>.+)/$', 'delete_docstash_entry'),
-    url(r'^doc/upload/(?P<docstash_key>.+)/$', 'upload_document_for_notification'),
-    url(r'^doc/delete/(?P<docstash_key>.+)/$', 'delete_document_from_notification'),
-    url(r'^submission_data_for_notification/$', 'submission_data_for_notification'),
+from ecs.notifications import views
 
-    url(r'^(?P<notification_pk>\d+)/$', 'view_notification'),
-    url(r'^(?P<notification_pk>\d+)/answer/$', 'view_notification_answer'),
-    url(r'^(?P<notification_pk>\d+)/answer/edit/$', 'edit_notification_answer'),
-    url(r'^(?P<notification_pk>\d+)/answer/sign/$', 'notification_answer_sign'),
 
-    url(r'^list/open/$', 'open_notifications'),
+urlpatterns = (
+    url(r'^new/$', views.select_notification_creation_type),
+    url(r'^new/(?P<notification_type_pk>\d+)/diff/(?P<submission_form_pk>\d+)/$', views.create_diff_notification),
+    url(r'^new/(?P<notification_type_pk>\d+)/(?:(?P<docstash_key>.+)/)?$', views.create_notification),
+    url(r'^delete/(?P<docstash_key>.+)/$', views.delete_docstash_entry),
+    url(r'^doc/upload/(?P<docstash_key>.+)/$', views.upload_document_for_notification),
+    url(r'^doc/delete/(?P<docstash_key>.+)/$', views.delete_document_from_notification),
+    url(r'^submission_data_for_notification/$', views.submission_data_for_notification),
+    url(r'^(?P<notification_pk>\d+)/$', views.view_notification),
+    url(r'^(?P<notification_pk>\d+)/answer/$', views.view_notification_answer),
+    url(r'^(?P<notification_pk>\d+)/answer/edit/$', views.edit_notification_answer),
+    url(r'^(?P<notification_pk>\d+)/answer/sign/$', views.notification_answer_sign),
+    url(r'^list/open/$', views.open_notifications),
 )

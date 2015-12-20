@@ -112,10 +112,10 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
         rval = super(SubmissionFormForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['substance_registered_in_countries'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})
+                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'countries'})
             )
             self.fields['substance_p_c_t_countries'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'countries'})
+                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'countries'})
             )
         for field in self.fields.itervalues():
             if isinstance(field, (forms.EmailField,)):
@@ -237,7 +237,7 @@ class PresenterChangeForm(forms.ModelForm):
         if not profile.is_internal:
             self.fields['presenter'].widget = EmailUserSelectWidget()
         else:
-            self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+            self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class SusarPresenterChangeForm(forms.ModelForm):
     susar_presenter = forms.ModelChoiceField(User.objects.filter(is_active=True), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
@@ -253,7 +253,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
         if not profile.is_internal:
             self.fields['susar_presenter'].widget = EmailUserSelectWidget()
         else:
-            self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+            self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
@@ -446,7 +446,7 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
         model = TemporaryAuthorization
         exclude = ('submission',)
         widgets = {
-            'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+            'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
         }
         labels = {
             'user': _('User'),
@@ -459,7 +459,7 @@ class AdvancedSettingsForm(TranslatedModelForm):
         model = AdvancedSettings
         fields = ('default_contact',)
         widgets = {
-            'default_contact': SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
+            'default_contact': SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
         }
         labels = {
             'default_contact': _('Default Contact'),

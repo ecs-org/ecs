@@ -1,23 +1,25 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.users.views',
-    url(r'^accounts/login/$', 'login'),
-    url(r'^accounts/logout/$', 'logout'),
-    url(r'^accounts/register/$', 'register'),
+from ecs.users import views
 
-    url(r'^activate/(?P<token>.+)$', 'activate'),
-    url(r'^profile/$', 'profile'),
-    url(r'^profile/edit/$', 'edit_profile'),
-    url(r'^profile/change-password/$', 'change_password'),
-    url(r'^request-password-reset/$', 'request_password_reset'),
-    url(r'^password-reset/(?P<token>.+)$', 'do_password_reset'),
-    url(r'^users/(?P<user_pk>\d+)/indisposition/$', 'indisposition'),
-    url(r'^users/notify_return/$', 'notify_return'),
-    url(r'^users/(?P<user_pk>\d+)/toggle_active/$', 'toggle_active'),
-    url(r'^users/(?P<user_pk>\d+)/details/', 'details'),
-    url(r'^users/administration/$', 'administration'),
-    url(r'^users/invite/$', 'invite'),
-    url(r'^users/login_history/$', 'login_history'),
-    url(r'^accept_invitation/(?P<invitation_uuid>[\da-zA-Z]{32})/$', 'accept_invitation'),
+
+urlpatterns = (
+    url(r'^accounts/login/$', views.login),
+    url(r'^accounts/logout/$', views.logout),
+    url(r'^accounts/register/$', views.register),
+
+    url(r'^activate/(?P<token>.+)$', views.activate),
+    url(r'^profile/$', views.profile),
+    url(r'^profile/edit/$', views.edit_profile),
+    url(r'^profile/change-password/$', views.change_password),
+    url(r'^request-password-reset/$', views.request_password_reset),
+    url(r'^password-reset/(?P<token>.+)$', views.do_password_reset),
+    url(r'^users/(?P<user_pk>\d+)/indisposition/$', views.indisposition),
+    url(r'^users/notify_return/$', views.notify_return),
+    url(r'^users/(?P<user_pk>\d+)/toggle_active/$', views.toggle_active),
+    url(r'^users/(?P<user_pk>\d+)/details/', views.details),
+    url(r'^users/administration/$', views.administration),
+    url(r'^users/invite/$', views.invite),
+    url(r'^users/login_history/$', views.login_history),
+    url(r'^accept_invitation/(?P<invitation_uuid>[\da-zA-Z]{32})/$', views.accept_invitation),
 )
-

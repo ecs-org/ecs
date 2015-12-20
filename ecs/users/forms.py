@@ -141,8 +141,8 @@ class AdministrationFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(AdministrationFilterForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
-            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
 
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
@@ -162,9 +162,9 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['gender'].initial = profile.gender
         self.fields['title'].initial = profile.title
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
-            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
-            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
         self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
         self.fields['is_internal'].initial = profile.is_internal
@@ -213,9 +213,9 @@ class InvitationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(InvitationForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
-            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
-            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
+            self.fields['groups'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'groups'}))
+            self.fields['medical_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
+            self.fields['expedited_review_categories'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'}))
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -250,7 +250,7 @@ class InvitationForm(forms.Form):
 class IndispositionForm(forms.ModelForm):
     is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
     communication_proxy = forms.ModelChoiceField(queryset=User.objects.all().select_related('profile'), required=False, label=_('communication_proxy'),
-        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'users'})))
+        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'})))
 
     class Meta:
         model = UserProfile

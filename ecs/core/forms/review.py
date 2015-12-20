@@ -53,14 +53,14 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
 
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['medical_categories'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'medical_categories'})
+                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'})
             )
             self.fields['expedited_review_categories'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
+                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'expedited_review_categories'})
             )
             if 'external_reviewers' in self.fields.keys():
                 self.fields['external_reviewers'].widget = MultiselectWidget(
-                    url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'external-reviewers'})
+                    url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'external-reviewers'})
                 )
 
     def clean(self):
@@ -80,7 +80,7 @@ class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
         rval = super(BefangeneReviewForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
             self.fields['befangene'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': 'board-members'})
+                url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'board-members'})
             )
         return rval
 

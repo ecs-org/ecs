@@ -1,9 +1,11 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.pki.views',
-    url(r'^pki/certs/new/$', 'create_cert'),
-    url(r'^pki/certs/$', 'cert_list'),
-    url(r'^pki/certs/(?P<cert_pk>\d+)/revoke/$', 'revoke_cert'),
-    url(r'^secure/login/$', 'authenticate'),
+from ecs.pki import views
+
+
+urlpatterns = (
+    url(r'^pki/certs/new/$', views.create_cert),
+    url(r'^pki/certs/$', views.cert_list),
+    url(r'^pki/certs/(?P<cert_pk>\d+)/revoke/$', views.revoke_cert),
+    url(r'^secure/login/$', views.authenticate),
 )
-

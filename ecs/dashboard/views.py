@@ -9,7 +9,7 @@ def view_dashboard(request):
     widgets = [
         reverse('ecs.communication.views.outgoing_message_widget'),
         reverse('ecs.communication.views.incoming_message_widget'),
-        reverse('ecs.core.views.submission_widget'),
+        reverse('ecs.core.views.submissions.submission_widget'),
     ]
 
     if request.user.profile.has_explicit_workflow():

@@ -33,7 +33,7 @@ class VoteReview(Activity):
         return True
 
     def get_url(self):
-        return reverse('ecs.core.views.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
+        return reverse('ecs.core.views.submissions.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
 
 class VoteSigning(Activity):
@@ -61,7 +61,7 @@ class B2Resubmission(Activity):
 
     def get_url(self):
         submission_id = self.workflow.data.submission_form.submission_id
-        return reverse('ecs.core.views.copy_latest_submission_form', kwargs={'submission_pk': submission_id})
+        return reverse('ecs.core.views.submissions.copy_latest_submission_form', kwargs={'submission_pk': submission_id})
 
     def get_final_urls(self):
         s = self.workflow.data.submission_form.submission

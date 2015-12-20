@@ -58,7 +58,7 @@
                             <span class="icon_send"></span>{% trans "Send Message" %}
                         </a>
                         {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
-                            <td><a href="{% url 'ecs.core.views.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}"><span class="icon_revoke"></span>{% trans 'Revoke' %}</a></td>
+                            <td><a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}"><span class="icon_revoke"></span>{% trans 'Revoke' %}</a></td>
                         {% endif %}
                     </td>
                 </tr>
@@ -68,7 +68,7 @@
 {% endif %}
 {% if user|has_flag:'is_executive_board_member' %}
     <div>
-        <form class="authorize" action="{% url 'ecs.core.views.grant_temporary_access' submission_pk=submission.pk %}" method="post">
+        <form class="authorize" action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
             {% csrf_token %}
             <ol>
             {% for field in temporary_auth_form %}
@@ -87,7 +87,7 @@
             {% include 'submissions/review_form.inc' %}
         {% endwith %}
         {% if befangene_review_form and befangene_review_form.readonly %}
-            <a href="{% url 'ecs.core.views.befangene_review' submission_form_pk=submission_form.pk %}#involved_parties_tab" class="button_submit">{% trans "Edit" %}</a>
+            <a href="{% url 'ecs.core.views.submissions.befangene_review' submission_form_pk=submission_form.pk %}#involved_parties_tab" class="button_submit">{% trans "Edit" %}</a>
         {% endif %}
     </div>
 {% endif %}

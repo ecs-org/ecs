@@ -121,7 +121,7 @@ class TaskListFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(TaskListFilterForm, self).__init__(*args, **kwargs)
         if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete', kwargs={'queryset_name': 'task_types'}))
+            self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'task_types'}))
 
     @property
     def defaults(self):

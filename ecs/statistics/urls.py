@@ -1,6 +1,8 @@
-from django.conf.urls import *
+from django.conf.urls import url
 
-urlpatterns = patterns('ecs.statistics.views',
-    url(r'^$', 'stats'),
-    url(r'^(?P<year>\d{4})/$', 'stats'),
+from ecs.statistics import views
+
+
+urlpatterns = (
+    url(r'^(?:(?P<year>\d{4})/)?$', views.stats),
 )

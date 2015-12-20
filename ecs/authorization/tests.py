@@ -141,11 +141,11 @@ class SubmissionAuthTestCase(EcsTestCase):
         and is denied for unauthorized users depending on the role of the users.
         '''
         
-        self._check_view(False, 'ecs.core.views.all_submissions')
+        self._check_view(False, 'ecs.core.views.submissions.all_submissions')
         self._check_view(False, 'readonly_submission_form', submission_form_pk=self.sf.pk)
-        self._check_view(False, 'ecs.core.views.diff', self.sf.pk, self.sf.pk)
+        self._check_view(False, 'ecs.core.views.submissions.diff', self.sf.pk, self.sf.pk)
 
-        export_url = reverse('ecs.core.views.export_submission', kwargs={'submission_pk': self.sf.submission.pk})
+        export_url = reverse('ecs.core.views.submissions.export_submission', kwargs={'submission_pk': self.sf.submission.pk})
         self._check_access(False, True, self.anyone, export_url)
         self._check_access(False, True, self.submitter_user, export_url)
         self._check_access(False, True, self.sponsor_user, export_url)
@@ -158,5 +158,5 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         #self._check_view(True, 'ecs.documents.views.document_search', document_pk=self.sf.documents.all()[0].pk)
         #self._check_view(True, 'ecs.documents.views.download_document', document_pk=self.sf.documents.all()[0].pk)
-        #self._check_view('ecs.core.views.copy_submission_form', submission_form_pk=self.sf.pk)
-        #self._check_view('ecs.core.views.copy_latest_submission_form', submission_pk=self.sf.submission.pk)
+        #self._check_view('ecs.core.views.submissions.copy_submission_form', submission_form_pk=self.sf.pk)
+        #self._check_view('ecs.core.views.submissions.copy_latest_submission_form', submission_pk=self.sf.submission.pk)

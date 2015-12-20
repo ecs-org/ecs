@@ -13,7 +13,7 @@ user_queryset_name = 'users' if mandatory else 'internal-users'
 class CertForm(forms.Form):
     user = forms.ModelChoiceField(
         queryset=User.objects.filter(is_active=True) if mandatory else User.objects.filter(is_active=True, profile__is_internal=True),
-        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.internal_autocomplete', kwargs={'queryset_name': user_queryset_name}))
+        widget=SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': user_queryset_name}))
     )
     cn = forms.CharField()
     passphrase = forms.CharField(widget=forms.PasswordInput(), min_length=12)
