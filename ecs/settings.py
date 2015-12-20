@@ -94,20 +94,25 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True   # session cookie expires at close of br
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'ptn5xj+85fvd=d4u@i1-($z*otufbvlk%x1vflb&!5k94f$i3w'
 
-TEMPLATE_DIRS = (
-    os.path.join(PROJECT_DIR, 'templates'),
-)
-
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.contrib.auth.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.static",
-    "django.core.context_processors.request",
-    'django.core.context_processors.csrf',
-    "django.contrib.messages.context_processors.messages",
-    "ecs.core.context_processors.ecs_settings",
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(PROJECT_DIR, 'templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                "django.contrib.auth.context_processors.auth",
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.static",
+                "django.template.context_processors.request",
+                'django.template.context_processors.csrf',
+                "django.contrib.messages.context_processors.messages",
+                "ecs.core.context_processors.ecs_settings",
+            ]
+        },
+    },
+]
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
