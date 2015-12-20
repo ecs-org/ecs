@@ -105,7 +105,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                 expedited_q = Submission.objects.expedited()
                 local_ec_q = Submission.objects.localec()
                 other_q = Submission.objects.exclude(
-                    pk__in=(amg_q | mpg_q | thesis_q | expedited_q | local_ec_q).values('pk').query)
+                    pk__in=(amg_q | mpg_q | thesis_q | expedited_q | local_ec_q).values('pk'))
 
                 q = Submission.objects.none()
                 if amg:
@@ -122,32 +122,31 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                     q |= other_q
                 submissions &= q
 
-            submission_q = submissions.values('pk').query
+            submission_q = submissions.values('pk')
 
             submission_ct = ContentType.objects.get_for_model(Submission)
             vote_ct = ContentType.objects.get_for_model(Vote)
             notification_cts = map(ContentType.objects.get_for_model, NOTIFICATION_MODELS)
 
-            submission_tasks = all_tasks.filter(
+            other_tasks_q = ~Q(content_type__in=[submission_ct, vote_ct] + notification_cts)
+
+            submission_tasks_q = Q(
                 content_type=submission_ct, data_id__in=submission_q)
 
-            notification_tasks = all_tasks.filter(
+            notification_tasks_q = Q(
                 content_type__in=notification_cts,
                 data_id__in=Notification.objects.filter(
                     submission_forms__submission__pk__in=submission_q
-                ).values('pk').query)
+                ).values('pk'))
 
-            vote_tasks = all_tasks.filter(
+            vote_tasks_q = Q(
                 content_type=vote_ct,
                 data_id__in=Vote.objects.filter(
                     submission_form__submission__pk__in=submission_q
-                ).values('pk').query)
+                ).values('pk'))
 
-            tasks = all_tasks.exclude(
-                content_type__in=[submission_ct, vote_ct] + notification_cts)
-            tasks |= submission_tasks
-            tasks |= notification_tasks
-            tasks |= vote_tasks
+            tasks = all_tasks.filter(other_tasks_q | submission_tasks_q |
+                notification_tasks_q | vote_tasks_q)
     
         if not ignore_task_types:
             task_types = filterform.cleaned_data['task_types']
