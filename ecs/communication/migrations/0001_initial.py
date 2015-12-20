@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import ecs.compat
 from django.conf import settings
 
 
@@ -26,7 +25,7 @@ class Migration(migrations.Migration):
                 ('rawmsg_digest_hex', models.CharField(max_length=32, null=True, db_index=True)),
                 ('origin', models.SmallIntegerField(default=1, choices=[(1, b'Alice'), (2, b'Bob')])),
                 ('smtp_delivery_state', models.CharField(default=b'new', max_length=7, db_index=True, choices=[(b'new', b'new'), (b'received', b'received'), (b'pending', b'pending'), (b'started', b'started'), (b'success', b'success'), (b'failure', b'failure'), (b'retry', b'retry'), (b'revoked', b'revoked')])),
-                ('uuid', models.CharField(default=ecs.compat.gen_uuid, max_length=32, db_index=True)),
+                ('uuid', models.CharField(max_length=32, db_index=True)),
             ],
             options={
             },

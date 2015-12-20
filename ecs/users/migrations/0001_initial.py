@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import ecs.compat
 from django.conf import settings
 import django_extensions.db.fields.json
 
@@ -18,7 +17,7 @@ class Migration(migrations.Migration):
             name='Invitation',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('uuid', models.CharField(default=ecs.compat.gen_uuid, unique=True, max_length=32)),
+                ('uuid', models.CharField(unique=True, max_length=32)),
                 ('is_accepted', models.BooleanField(default=False)),
                 ('user', models.ForeignKey(related_name='ecs_invitations', to=settings.AUTH_USER_MODEL)),
             ],

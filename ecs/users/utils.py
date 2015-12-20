@@ -117,7 +117,11 @@ def create_phantom_user(email, role=None):
         invitation = Invitation.objects.create(user=user)
 
         subject = 'Erstellung eines Zugangs zum ECS'
-        link = '{0}{1}'.format(settings.ABSOLUTE_URL_PREFIX, reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+        link = '{0}{1}'.format(
+            settings.ABSOLUTE_URL_PREFIX,
+            reverse('ecs.users.views.accept_invitation',
+                kwargs={'invitation_uuid': invitation.uuid.get_hex()})
+        )
         htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
             'link': link,
         }))

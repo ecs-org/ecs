@@ -35,7 +35,7 @@ class TransactionContextManager(object):
         
 
 class DocStash(models.Model):
-    key = models.CharField(max_length=41, primary_key=True)
+    key = models.UUIDField(default=uuid.uuid4, primary_key=True)
     group = models.CharField(max_length=120, db_index=True, null=True)
     current_version = models.IntegerField(default=-1)
     owner = models.ForeignKey(User)
@@ -49,14 +49,9 @@ class DocStash(models.Model):
     class Meta:
         unique_together = ('group', 'owner', 'content_type', 'object_id')
 
-    def save(self, *args, **kwargs):
-        if not self.key:
-            self.key = uuid.uuid4().get_hex()
-        super(DocStash, self).save(*args, **kwargs)
-        
     def delete(self):
         self._deleted = True
-        
+
     def _get_current_attribute(self, name, default=None):
         if not hasattr(self, '_current_data'):
             if self.current_version == -1:
@@ -88,7 +83,7 @@ class DocStash(models.Model):
         try:
             self._transaction = DocStashData(stash=self, version=version+1, value=self.current_value, name=self.current_name)
         except DocStashData.DoesNotExist:
-            raise UnknownVersion("key=%s, version=%s" % (self.key, version))
+            raise UnknownVersion("key=%s, version=%s" % (self.key.get_hex(), version))
     
     @_transaction_required
     def commit_transaction(self):
@@ -158,7 +153,7 @@ class DocStashData(models.Model):
         unique_together = ('version', 'stash')
         
     def __str__(self):
-        return "stash_key=%s, version=%s" % (self.stash.key, self.version)
+        return "stash_key=%s, version=%s" % (self.stash.key.get_hex(), self.version)
         
     def is_dirty(self):
         return getattr(self, '_dirty', False)

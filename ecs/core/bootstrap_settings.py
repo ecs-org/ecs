@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# TODO: why are the commissions uuid's one character short compared to uuidgen ?
-# (not counting the "-" dashes)
-
 developers = (
     (u'Felix', u'Erkinger', u'felix@erkinger.at', 'm'),
     (u'Johannes', u'Dollinger', 'emulbreh@googlemail.com', 'm'),
@@ -365,7 +362,7 @@ commissions = [{
     'address_2': u'St.-Veiter-Strasse 45-47',
     'zip_code': u'A-9020',
 }, {
-    'uuid': u'c890205dcb7543c8a76b-324512c5f81',
+    'uuid': u'c890205dcb7543c8a76bf324512c5f81',
     'city': u'Wien',
     'fax': u'+43 (1) 878 44 - 4050',
     'chairperson': u'Unknown',

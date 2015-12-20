@@ -5,6 +5,7 @@ import traceback
 import logging
 import sys
 import hashlib
+import uuid
 
 from tempfile import TemporaryFile
 
@@ -156,7 +157,7 @@ def sign_receive(request, mock=False):
                     t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
 
             document = Document.objects.create_from_buffer(pdf_data,
-                uuid=request.sign_data["document_uuid"],
+                uuid=uuid.UUID(request.sign_data["document_uuid"]),
                 stamp_on_download=False, doctype=request.sign_data['document_type'],
                 original_file_name=request.sign_data["document_filename"],
                 version=request.sign_data["document_version"]

@@ -347,7 +347,7 @@ class DocumentSerializer(ModelSerializer):
         zip_name = 'attachments/{0}'.format(uuid4())
         if obj.mimetype == 'application/pdf':
             zip_name += '.pdf'
-        f = getVault()[obj.uuid]
+        f = getVault()[obj.uuid.get_hex()]
         zf.writestr(zip_name, f.read())
         f.close()
         d['file'] = zip_name
@@ -373,10 +373,10 @@ class EthicsCommissionSerializer(object):
             raise ValueError("no such ethicscommission: {0}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"{0}"'.format(ec.uuid), ec.name) for ec in EthicsCommission.objects.all()])
+        return FieldDocs(choices=[('"{0}"'.format(ec.uuid.get_hex()), ec.name) for ec in EthicsCommission.objects.all()])
         
     def dump(self, obj, zf):
-        return obj.uuid
+        return obj.uuid.get_hex()
         
 class SubmissionSerializer(ModelSerializer):
     def __init__(self, **kwargs):

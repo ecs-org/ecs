@@ -379,7 +379,10 @@ def invite(request):
         invitation = Invitation.objects.create(user=user)
 
         subject = 'Erstellung eines Zugangs zum ECS'
-        link = request.build_absolute_uri(reverse('ecs.users.views.accept_invitation', kwargs={'invitation_uuid': invitation.uuid}))
+        link = request.build_absolute_uri(
+            reverse('ecs.users.views.accept_invitation',
+                kwargs={'invitation_uuid': invitation.uuid.get_hex()})
+        )
         htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
             'invitation_text': form.cleaned_data['invitation_text'],
             'link': link,
@@ -402,7 +405,7 @@ def invite(request):
 @forceauth.exempt
 def accept_invitation(request, invitation_uuid=None):
     try:
-        invitation = Invitation.objects.new().get(uuid=invitation_uuid.lower())
+        invitation = Invitation.objects.new().get(uuid=invitation_uuid)
     except Invitation.DoesNotExist:
         raise Http404
 

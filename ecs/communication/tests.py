@@ -26,7 +26,7 @@ class CommunicationTest(CommunicationTestCase):
         self.assertTrue(self.is_delivered("test message"))
         
         self.receive("testsubject", "second message", self.bob.email,  
-            "".join(("ecs-", self.last_message.uuid, "@", settings.ECSMAIL ['authoritative_domain'])),
+            "".join(("ecs-", self.last_message.uuid.get_hex(), "@", settings.ECSMAIL ['authoritative_domain'])),
             )
         self.assertEqual(self.queue_count(), 2)
         self.assertTrue(self.is_delivered("second message"))

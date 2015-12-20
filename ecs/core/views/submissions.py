@@ -1059,8 +1059,7 @@ def catalog_json(request):
             for i in sf.investigators.all():
                 investigators.append({
                     'organisation': i.organisation,
-                    'name': unicode(i.contact) if (i.ethics_commission.uuid == 
-                        settings.ETHICS_COMMISSION_UUID) else "",
+                    'name': unicode(i.contact) if (i.ethics_commission.system) else "",
                     'ethics_commission': unicode(i.ethics_commission),
                 })
             item['investigators'] = investigators
