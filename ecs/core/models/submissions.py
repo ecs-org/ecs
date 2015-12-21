@@ -6,7 +6,11 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
+
+from django_countries import countries
+from django_countries.fields import CountryField
 
 from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
@@ -390,9 +394,9 @@ class SubmissionForm(models.Model):
     subject_planned_total_duration = models.CharField(max_length=250)
 
     # 3a
-    substance_registered_in_countries = models.ManyToManyField('countries.Country', related_name='submission_forms', blank=True, db_table='submission_registered_countries')
+    substance_registered_in_countries = ArrayField(CountryField(), default=list)
     substance_preexisting_clinical_tries = models.NullBooleanField(blank=True, db_column='existing_tries')
-    substance_p_c_t_countries = models.ManyToManyField('countries.Country', blank=True)
+    substance_p_c_t_countries = ArrayField(CountryField(), default=list)
     substance_p_c_t_phase = models.CharField(max_length=80, null=True, blank=True)
     substance_p_c_t_period = models.TextField(null=True, blank=True)
     substance_p_c_t_application_type = models.CharField(max_length=145, null=True, blank=True)
@@ -732,6 +736,14 @@ class SubmissionForm(models.Model):
         if self.project_type_non_interventional_study:
             bits.append(_('NIS'))
         return u', '.join(bits)
+
+    def get_substance_registered_in_countries_display(self):
+        c = [unicode(countries.name(c)) for c in self.substance_registered_in_countries]
+        return u', '.join(sorted(c))
+
+    def get_substance_p_c_t_countries_display(self):
+        c = [unicode(countries.name(c)) for c in self.substance_p_c_t_countries]
+        return u', '.join(sorted(c))
     
     @property
     def study_plan_dataprotection_none(self):

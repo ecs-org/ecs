@@ -3,11 +3,11 @@
 {% if submission_form.is_amg %}
 
 <p class="pbi_avoid">
-3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries.exists|yesno_checkboxes }}.
-Wenn <strong>ja</strong>, geben Sie an, in welchen: <br>(bitte verwenden Sie englische Landesbezeichnungen) </p>
+3.1 Registrierung in anderen Staaten? {{ submission_form.substance_registered_in_countries|yesno_checkboxes }}.
+Wenn <strong>ja</strong>, geben Sie an, in welchen: </p>
 
 <p class="pbi_avoid">
-<strong> {% for country in submission_form.substance_registered_in_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
+<strong> {{ submission_form.get_substance_registered_in_countries_display }} </strong> </p>
 
 <p>
 3.2 Liegen über das zu prüfende Arzneimittel bereits aussagekräftige Ergebnisse von klinischen Prüfungen vor? 
@@ -18,7 +18,7 @@ an: </p>
 
 <p class="pbi_avoid">3.2.1
  In welchen Staaten wurden
-die Prüfungen durchgeführt: <strong> {% for country in submission_form.substance_p_c_t_countries.all %}{{country.name}}{% if not forloop.last %}, {% endif %}{% endfor %} </strong> </p>
+ die Prüfungen durchgeführt: <strong> {{ submission_form.get_substance_p_c_t_countries_display }} </strong> </p>
 
 <p>
  3.2.2 Phase: <strong> {{ submission_form.substance_p_c_t_phase }} </strong> (Wenn Studien in mehreren Phasen angeführt sind,

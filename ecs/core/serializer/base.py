@@ -12,7 +12,6 @@ from django.utils import timezone
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
-from ecs.utils.countries.models import Country
 from ecs.documents.storagevault import getVault
 
 CURRENT_SERIALIZER_VERSION = '1.2'
@@ -168,7 +167,7 @@ class ModelSerializer(object):
         return prefix, key
         
     def dump_field(self, fieldname, val, zf, obj):
-        if val is None or isinstance(val, (bool, basestring, int, long, datetime.datetime, datetime.date)):
+        if val is None or isinstance(val, (bool, basestring, int, long, list, datetime.datetime, datetime.date)):
             return val
         if hasattr(val, 'all') and hasattr(val, 'count'):
             try:
@@ -385,17 +384,6 @@ class SubmissionSerializer(ModelSerializer):
     def load(self, data, zf, version, commit=False):
         return Submission.objects.create(is_transient=True)
         
-class CountrySerializer(ModelSerializer):
-    def __init__(self, **kwargs):
-        super(CountrySerializer, self).__init__(Country, **kwargs)
-
-    # FIXME: to use ModelSerializer does fix the generation, but it would need a correct, docs() function instead
-    def dump(self, obj, zf):
-        return obj.iso
-        
-    def load(self, data, zf, version, commit=False):
-        return Country.objects.get(iso=data)
-        
 
 class SubmissionFormSerializer(ModelSerializer):
     def load(self, data, zf, version, commit=True):
@@ -420,8 +408,6 @@ _serializers = {
             'measures': 'submission_form',
             'documents': '_submission_forms',
             'nontesteduseddrug_set': 'submission_form',
-            'substance_registered_in_countries': 'submission_forms',
-            'substance_p_c_t_countries': 'submissionform_set',
         },
     ),
     Submission: SubmissionSerializer(fields=('ec_number')),
@@ -433,7 +419,6 @@ _serializers = {
     Document: DocumentSerializer(Document, fields=('doctype', 'name', 'original_file_name', 'date', 'version', 'mimetype')),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
-    Country: CountrySerializer(),
 }
 
 def load_model_instance(model, data, zf, version, commit=True):

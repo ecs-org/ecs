@@ -10,6 +10,7 @@ pylibmc				# for caching
 docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
+django-countries
 
 # preprocessing, combining, compressing of js and css
 django_compressor

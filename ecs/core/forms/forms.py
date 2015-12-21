@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils import timezone
 
+from django_countries import countries
+
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
@@ -57,6 +59,8 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
+    substance_registered_in_countries = forms.MultipleChoiceField(choices=countries, required=False)
+    substance_p_c_t_countries = forms.MultipleChoiceField(choices=countries, required=False)
 
     medtech_certified_for_exact_indications = NullBooleanField(required=False)
     medtech_certified_for_other_indications = NullBooleanField(required=False)

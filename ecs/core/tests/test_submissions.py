@@ -7,7 +7,6 @@ from django.db.models import Q
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.documents.models import Document, DocumentType
 from ecs.core.models.submissions import attach_to_submissions
-from ecs.utils.countries.models import Country
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_or_create_user, create_user
 
@@ -26,7 +25,7 @@ def create_submission_form(ec_number=None, presenter=None):
     presenter = presenter or get_or_create_user('test_presenter@example.com')[0]
     sub = Submission(ec_number=ec_number, presenter=presenter, susar_presenter=presenter)
     sub.save()
-    sform = SubmissionForm(
+    sform = SubmissionForm.objects.create(
         submission = sub,
         project_title="High Risk Test Study",
         eudract_number="2010-002323-99",
@@ -169,13 +168,10 @@ def create_submission_form(ec_number=None, presenter=None):
         submitter_is_main_investigator=False,
         submitter_is_sponsor=False,
         submitter_is_authorized_by_sponsor=False,
+        substance_registered_in_countries=[],
+        substance_p_c_t_countries=['AT', 'DE', 'US'],
         presenter=presenter,
-        )
-    sform.save()
-    
-    sform.substance_registered_in_countries = []
-    sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
-    sform.save()
+    )
     
     with open(TEST_PDF, 'rb') as f:
         attach_document(sform, f, 'protocol.pdf', 'protocol')
@@ -204,7 +200,7 @@ class SubmissionFormTest(EcsTestCase):
         presenter=get_or_create_user('test_presenter@example.com')[0]
         sub = Submission(presenter=presenter, susar_presenter=presenter)
         sub.save()
-        sform = SubmissionForm(
+        sform = SubmissionForm.objects.create(
             submission = sub,
             project_title="High Risk Test Study",
             eudract_number="2010-002323-99",
@@ -347,12 +343,10 @@ class SubmissionFormTest(EcsTestCase):
             submitter_is_main_investigator=False,
             submitter_is_sponsor=False,
             submitter_is_authorized_by_sponsor=False,
+            substance_registered_in_countries=[],
+            substance_p_c_t_countries=['AT', 'DE', 'US'],
             presenter=presenter,
-            )
-        sform.save()
-        sform.substance_registered_in_countries = []
-        sform.substance_p_c_t_countries = Country.objects.filter(Q(iso='DE')|Q(iso='US')|Q(iso='AT'))
-        sform.save()
+        )
         # normal way would be to fetch one, but the test database does not contain the data rows :(
         ek1 = EthicsCommission(address_1 = u'mainstreet 1', chairperson = u'Univ.Prof.Dr.John Doe', city = u'Wien', contactname = u'', email = u'johndoe@example.com', fax = u'', name = u'EK von Noeverland', phone = u'+43098765432345678', url = u'', zip_code = u'2323')
         ek1.save()

@@ -6,6 +6,7 @@ import re
 from collections import OrderedDict
 
 from diff_match_patch import diff_match_patch
+from django_countries import countries
 
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_unicode
@@ -13,13 +14,13 @@ from django.db import models
 from django.db.models import Manager
 from django.http import HttpRequest
 from django.contrib.auth.models import User
+from django.utils.html import escape
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
     Measure, NonTestedUsedDrug, ForeignParticipatingCenter, InvestigatorEmployee
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
-from ecs.utils.countries.models import Country
 from ecs.users.utils import get_full_name
 
 
@@ -55,6 +56,7 @@ def word_diff(a, b):
     dmp.diff_cleanupSemantic(diff)
     dmp.diff_charsToLines(diff, wordArray)
     return diff
+
 
 class DiffNode(object):
     def __init__(self, old, new, identity=None, ignore_old=False, ignore_new=False):
@@ -181,6 +183,31 @@ class DocumentListDiffNode(ListDiffNode):
     def html(self, plain=False):
         return "\n".join(d.html(plain=plain) for op, d in self.diffs)
 
+
+class CountryListDiffNode(DiffNode):
+    def __nonzero__(self):
+        return set(self.old) != set(self.new)
+
+    def html(self, plain=False):
+        old = '\n'.join(sorted(unicode(countries.name(c)) for c in self.old))
+        new = '\n'.join(sorted(unicode(countries.name(c)) for c in self.new))
+
+        dmp = diff_match_patch()
+        a, b, lineArray = dmp.diff_linesToChars(old, new)
+        diff = dmp.diff_main(a, b, checklines=False)
+        dmp.diff_cleanupSemantic(diff)
+        dmp.diff_charsToLines(diff, lineArray)
+
+        result = []
+        for op, country in diff:
+            if op:
+                result.append(u'<div class="{}">{}</div>'.format(
+                    'inserted' if op > 0 else 'deleted', escape(country)))
+            else:
+                result.append(u'<div>{}</div>'.format(escape(country)))
+        return u'\n'.join(result)
+
+
 def _render_value(val):
     if val is None:
         return _('No Information')
@@ -305,13 +332,6 @@ class DocumentDiffer(AtomicModelDiffer):
         return _render
 
 
-class CountryDiffer(AtomicModelDiffer):
-    model = ForeignParticipatingCenter
-    
-    def format(self, country):
-        return country.printable_name
-
-
 class UserDiffer(AtomicModelDiffer):
     model = User
 
@@ -327,6 +347,14 @@ class SubmissionFormDiffer(ModelDiffer):
             names.insert(0, 'documents')
         return names
 
+    def diff_field(self, name, old, new, **kwargs):
+        if name in ('substance_registered_in_countries', 'substance_p_c_t_countries'):
+            old_val = getattr(old, name, None)
+            new_val = getattr(new, name, None)
+            return CountryListDiffNode(old_val, new_val, **kwargs)
+        else:
+            return super(SubmissionFormDiffer, self).diff_field(name, old, new, **kwargs)
+
 
 _differs = {
     SubmissionForm: SubmissionFormDiffer(SubmissionForm,
@@ -334,8 +362,8 @@ _differs = {
             'pdf_document', 'current_pending_vote', 'current_published_vote', 'is_acknowledged',
             'created_at', 'presenter', 'sponsor', 'submitter', 'is_transient',
             'is_notification_update',),
-        follow=('foreignparticipatingcenter_set','investigators','measures','nontesteduseddrug_set',
-            'documents', 'substance_registered_in_countries', 'substance_p_c_t_countries'),
+        follow=('foreignparticipatingcenter_set', 'investigators', 'measures',
+            'nontesteduseddrug_set', 'documents'),
         node_map={
             'documents': DocumentListDiffNode,
         },
@@ -373,7 +401,6 @@ _differs = {
         identify='name',
     ),
     EthicsCommission: AtomicModelDiffer(),
-    Country: AtomicModelDiffer(),
     Document: DocumentDiffer(),
     User: UserDiffer(),
 }

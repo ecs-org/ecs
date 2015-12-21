@@ -148,10 +148,10 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'djcelery',
-    'ecs.utils.countries',
     'compressor',
     'haystack',
     'reversion',
+    'django_countries',
 
     'ecs.core',
     'ecs.checklists',

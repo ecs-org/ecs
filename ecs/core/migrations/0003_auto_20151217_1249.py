@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
+import django.contrib.postgres.fields
+import django_countries.fields
 
 
 class Migration(migrations.Migration):
@@ -12,7 +14,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('documents', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('countries', '__first__'),
         ('core', '0002_auto_20151217_1249'),
     ]
 
@@ -68,14 +69,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='submissionform',
             name='substance_p_c_t_countries',
-            field=models.ManyToManyField(to='countries.Country', blank=True),
-            preserve_default=True,
+            field=django.contrib.postgres.fields.ArrayField(default=list, base_field=django_countries.fields.CountryField(max_length=2), size=None),
         ),
         migrations.AddField(
             model_name='submissionform',
             name='substance_registered_in_countries',
-            field=models.ManyToManyField(related_name='submission_forms', db_table=b'submission_registered_countries', to='countries.Country', blank=True),
-            preserve_default=True,
+            field=django.contrib.postgres.fields.ArrayField(default=list, base_field=django_countries.fields.CountryField(max_length=2), size=None),
         ),
         migrations.AddField(
             model_name='submission',

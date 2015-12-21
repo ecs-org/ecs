@@ -98,6 +98,22 @@ def upgrade_celery_tables(apps, schema_editor):
             ''')
 
 
+def migrate_countries2(apps, schema_editor):
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute("select to_regclass('submission_registered_countries')")
+        if cursor.fetchone()[0]:
+            cursor.execute('''
+                alter table core_submissionform
+                    alter column substance_p_c_t_countries set not null,
+                    alter column substance_registered_in_countries set not null;
+
+                drop table core_submissionform_substance_p_c_t_countries;
+                drop table submission_registered_countries;
+                drop table country;
+                drop table usstate;
+            ''')
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -106,4 +122,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(upgrade_celery_tables),
+        migrations.RunPython(migrate_countries2),
     ]

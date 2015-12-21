@@ -1746,6 +1746,43 @@ def rename_indices(apps, schema_editor):
             ''')
 
 
+def migrate_countries(apps, schema_editor):
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute("select to_regclass('submission_registered_countries')")
+        if cursor.fetchone()[0]:
+            cursor.execute('''
+                alter table core_submissionform
+                    add column substance_p_c_t_countries character varying(2)[],
+                    add column substance_registered_in_countries character varying(2)[];
+
+                update core_submissionform sf
+                    set substance_registered_in_countries = agg.countries
+                    from (
+                        select submissionform_id, array_agg(country_id order by country_id) as countries
+                        from submission_registered_countries
+                        group by submissionform_id
+                    ) agg
+                    where sf.id = agg.submissionform_id;
+
+                update core_submissionform sf
+                    set substance_p_c_t_countries = agg.countries
+                    from (
+                        select submissionform_id, array_agg(country_id order by country_id) as countries
+                        from core_submissionform_substance_p_c_t_countries
+                        group by submissionform_id
+                    ) agg
+                    where sf.id = agg.submissionform_id;
+
+                update core_submissionform
+                    set substance_registered_in_countries = '{}'::varchar(2)[]
+                    where substance_registered_in_countries is null;
+
+                update core_submissionform
+                    set substance_p_c_t_countries = '{}'::varchar(2)[]
+                    where substance_p_c_t_countries is null;
+            ''')
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -1754,4 +1791,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(rename_indices),
+        migrations.RunPython(migrate_countries),
     ]

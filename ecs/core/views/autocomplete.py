@@ -1,7 +1,8 @@
 from django.http import Http404, JsonResponse
 from django.contrib.auth.models import User, Group
 
-from ecs.utils.countries.models import Country
+from django_countries import countries
+
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
 from ecs.users.utils import user_flag_required
 from ecs.tasks.models import TaskType
@@ -16,7 +17,7 @@ def _get_task_types():
     return task_types
 
 AUTOCOMPLETE_QUERYSETS = {
-    'countries': lambda: [(c.pk, u"%s (%s)" % (c.printable_name, c.iso), c.printable_name) for c in Country.objects.order_by('name')],
+    'countries': lambda: [(iso, u'{} ({})'.format(name, iso), name) for iso, name in countries],
     'medical_categories': lambda: [(str(c.pk), u"%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
     'expedited_review_categories': lambda: [(str(c.pk), u"%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
     'task_types': _get_task_types,
