@@ -20,7 +20,7 @@ class Migration(DataMigration):
             for line in f:
                 status, exp, rev, serial, filename, subject = line.split('\t')
                 if status == 'R':
-                    d = datetime.datetime.strptime(rev, '%y%d%m%H%M%SZ')
+                    d = datetime.datetime.strptime(rev, '%y%m%d%H%M%SZ')
                     revocation_dates[int(serial, 16)] = d
 
         for cert in orm.Certificate.objects.all():
