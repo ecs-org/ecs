@@ -3,20 +3,14 @@ import os
 import mimetypes
 import re
 import copy
+from HTMLParser import HTMLParser
 
 from django.conf import settings
 from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
-
-import BeautifulSoup
-from BeautifulCleaner.bc import Cleaner, removeElement
+from django.utils.html import strip_tags
 
 from ecs.ecsmail.tasks import queued_mail_send
    
-
-
-class TotalCleaner(Cleaner):
-    style = True
-    whitelist_tags = set([])
 
 # http://code.activestate.com/recipes/148061/
 def _wrap(text, width):
@@ -29,27 +23,12 @@ def _wrap(text, width):
                   text.split(' ')
                  )
 
-def whitewash(htmltext, puretext=True):
+def whitewash(htmltext):
     ''' cleans htmltext into harmless pure text '''
-    if puretext:
-        hexentityMassage = copy.copy(BeautifulSoup.BeautifulSoup.MARKUP_MASSAGE)
-        hexentityMassage = [(re.compile('&#x([^;]+);'), 
-            lambda m: '&#%d' % int(m.group(1), 16))]
-
-        doc = BeautifulSoup.BeautifulSoup(htmltext,
-            convertEntities=BeautifulSoup.BeautifulSoup.HTML_ENTITIES,
-            markupMassage=hexentityMassage)        
-    else:
-        doc = BeautifulSoup.BeautifulSoup(htmltext)
-        
-    TotalCleaner()(doc) # to kill the really bad tags first.
-    for el in doc.findAll():
-        removeElement(el)
-    string = unicode(doc)
-    string = '\n\n'.join(re.split(r'\s*\n\s*\n\s*', string))
-    string = re.sub('\s\s\s+', ' ', string)
-    string = _wrap(string, 70)
-    return string
+    text = HTMLParser().unescape(strip_tags(htmltext))
+    text = '\n\n'.join(re.split(r'\s*\n\s*\n\s*', text))
+    text = re.sub('\s\s\s+', ' ', text)
+    return _wrap(text, 72)
 
 
 def create_mail(subject, message, from_email, recipient, message_html=None, \

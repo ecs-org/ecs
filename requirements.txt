@@ -21,9 +21,6 @@ django-celery
 # mail: ecsmail, communication: lamson mail server
 mock<1.1.3
 lamson
-BeautifulSoup==3.0.8
-# from http://github.com/downloads/enki/beautifulcleaner/BeautifulCleaner-2.0dev.tar.gz
-BeautifulCleaner==2.0dev
 
 # search
 Whoosh

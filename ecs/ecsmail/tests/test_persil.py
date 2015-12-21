@@ -8,13 +8,10 @@ class PersilTest(EcsTestCase):
     
     testhtml = '<html><body><p>bla&auml;</p></body></html>'
     result_decoded_entities = u'bla\xe4'
-    result_encoded_entities = u'bla&auml;'
     
     def testWhitewashing(self):
         '''Tests if Html entities are translated correctly
         
         '''
         
-        self.assertEqual(whitewash(self.testhtml, True), self.result_decoded_entities)
-        self.assertEqual(whitewash(self.testhtml, False), self.result_encoded_entities)
-    
+        self.assertEqual(whitewash(self.testhtml), self.result_decoded_entities)
