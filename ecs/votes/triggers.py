@@ -10,7 +10,7 @@ from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
-from ecs.ecsmail.utils import deliver
+from ecs.communication.mailutils import deliver
 
 
 @connect(signals.on_vote_publication)

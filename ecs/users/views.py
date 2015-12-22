@@ -21,7 +21,7 @@ from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
 from ecs.utils.ratelimitcache import ratelimit_post
 from ecs.utils.security import readonly
-from ecs.ecsmail.utils import deliver
+from ecs.communication.mailutils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
 from ecs.users.models import UserProfile, Invitation, LoginHistory

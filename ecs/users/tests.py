@@ -1,10 +1,9 @@
 import re
-import email
 
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
-from ecs.ecsmail.testcases import MailTestCase
+from ecs.communication.testcases import MailTestCase
 from ecs.workflow.tests import WorkflowTestCase
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_user, create_user
@@ -32,8 +31,7 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
             'email': 'new.user@example.org',
         })
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.queue_count(),1)
-        mimetype, message = self.get_mimeparts(email.message_from_string(self.queue_get(0)), "text", "html") [0]
+        mimetype, message = self.get_mimeparts(self.queue_get(0), "text", "html")[0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message)
@@ -71,8 +69,7 @@ class PasswordChangeTest(MailTestCase):
             'email': 'new.user@example.org',
         })
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.queue_count(), 1)
-        mimetype, message = self.get_mimeparts(email.message_from_string(self.queue_get(0)), "text", "html") [0]
+        mimetype, message = self.get_mimeparts(self.queue_get(0), "text", "html")[0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message)

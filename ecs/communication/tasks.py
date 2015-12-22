@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 from django.utils import timezone
 
 from ecs.communication.models import Message
-from ecs.ecsmail.utils import deliver_to_recipient
+from ecs.communication.mailutils import deliver_to_recipient
 from ecs.users.utils import get_full_name
 from ecs.utils.celeryutils import translate
 

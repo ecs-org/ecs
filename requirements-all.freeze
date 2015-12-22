@@ -1,13 +1,10 @@
 Django==1.8.7
-Jinja2==2.8
-MarkupSafe==0.23
 Whoosh==2.7.0
 amqp==1.4.8
 anyjson==0.3.3
 argparse==1.2.1
 billiard==3.3.0.22
 celery==3.1.19
-chardet==2.3.0
 coverage==4.0.3
 decorator==4.0.6
 diff-match-patch==20110725.1
@@ -27,14 +24,9 @@ httpagentparser==1.7.8
 ipython==4.0.1
 ipython-genutils==0.1.0
 kombu==3.0.32
-lamson==1.3.4
-lockfile==0.12.2
 microsofttranslator==0.7
-mock==1.1.2
-nose==1.3.7
 path.py==8.1.2
 pathlib==1.0.1
-pbr==1.8.1
 pep8==1.6.2
 pexpect==4.0.1
 pickleshare==0.5
@@ -46,8 +38,6 @@ pyflakes==1.0.0
 pyinotify==0.9.6
 pylibmc==1.5.0
 pysolr==3.3.3
-python-daemon==2.1.0
-python-modargs==1.7
 pytz==2015.7
 requests==2.9.0
 simplegeneric==0.8.1

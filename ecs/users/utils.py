@@ -12,7 +12,7 @@ from django.http import HttpRequest
 
 from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
-from ecs.ecsmail.utils import deliver_to_recipient
+from ecs.communication.mailutils import deliver_to_recipient
 from ecs.utils.viewutils import render_html
 
 # Do not import models here which depend on the AuthorizationManager, because

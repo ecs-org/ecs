@@ -1,4 +1,4 @@
-from ecs.ecsmail.utils import html2text
+from ecs.communication.mailutils import html2text
 from ecs.utils.testcases import EcsTestCase
 
 class PersilTest(EcsTestCase):

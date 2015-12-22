@@ -187,10 +187,7 @@ class Message(models.Model):
     objects = AuthorizationManager.from_queryset(MessageQuerySet)()
 
     @property
-    def return_username(self):
-        return 'ecs-%s' % (self.uuid.get_hex(),)
-
-    @property
     def return_address(self):
-        return '%s@%s' % (self.return_username, settings.ECSMAIL['authoritative_domain'])
+        return 'ecs-{}@{}'.format(self.uuid.get_hex(),
+            settings.ECSMAIL['authoritative_domain'])
 

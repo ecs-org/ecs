@@ -29,7 +29,6 @@ CACHES = {
 
 # ecsmail settings
 ECSMAIL['authoritative_domain'] = '%(host)s'
-ECSMAIL['trusted_sources'] = ['127.0.0.1', '%(ip)s']
 if %(debug.filter_smtp)s:
     ECSMAIL['filter_outgoing_smtp'] = True
 

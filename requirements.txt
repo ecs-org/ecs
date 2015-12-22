@@ -19,10 +19,6 @@ pyScss
 # queuing: celery
 django-celery
 
-# mail: ecsmail, communication: lamson mail server
-mock<1.1.3
-lamson
-
 # search
 Whoosh
 pysolr

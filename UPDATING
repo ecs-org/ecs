@@ -100,4 +100,11 @@ in addition to the usual steps. In chronological order:
 	$ mv ~/ecs-ca ~/ecs-ca.bak
 	$ ./manage.py bootstrap
 
+* 2016-01-05: Undeliverable mail directory renamed
+
+  For simplicity, the undeliverable mail directory has been renamed.
+
+	$ mv ~/ecs-mail/undeliverable ~/ecs-undeliverable-mail
+	$ rmdir ~/ecs-mail
+
 --- Next release ---

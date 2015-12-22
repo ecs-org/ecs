@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from ecs.core.models import Submission
 from ecs.communication.models import Message
@@ -14,25 +11,7 @@ class CommunicationTest(CommunicationTestCase):
     Thread creation, replying to messages, closing threads and genereal message/thread 
     accessibility and authorization is tested.
     '''
-    
-    
-    """
-    def test_from_ecs_to_outside_and_back_to_us(self):
-        ''' 
-        standard test setup makes a new ecs internal message (which currently will send an email to the user)
-        and then answer to that email which is then forwarded back to the original sender
-        '''
-        self.assertEqual(self.queue_count(), 1)
-        self.assertTrue(self.is_delivered("test message"))
-        
-        self.receive("testsubject", "second message", self.bob.email,  
-            "".join(("ecs-", self.last_message.uuid.get_hex(), "@", settings.ECSMAIL ['authoritative_domain'])),
-            )
-        self.assertEqual(self.queue_count(), 2)
-        self.assertTrue(self.is_delivered("second message"))
-    """
 
-        
     def test_new_thread(self):
         '''Tests if a new thread can be created and is not accessible by another user not allowed to view it.
         Also checks that the message is only visible in the right widget.

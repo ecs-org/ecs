@@ -26,7 +26,7 @@ from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
 from ecs.tasks.models import Task
-from ecs.ecsmail.utils import deliver
+from ecs.communication.mailutils import deliver
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task

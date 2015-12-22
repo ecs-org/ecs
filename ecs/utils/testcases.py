@@ -27,6 +27,8 @@ class EcsTestCase(TestCase):
         get_or_create_user('root@system.local', is_superuser=True)
 
         settings.STORAGE_VAULT_DIR = tempfile.mkdtemp()
+        settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+        settings.LIMITED_EMAIL_BACKEND = settings.EMAIL_BACKEND
         
         integration_bootstrap.create_settings_dirs()
         

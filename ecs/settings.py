@@ -2,7 +2,6 @@
 
 import os, sys, platform, logging
 from datetime import timedelta
-from copy import deepcopy
 
 # root dir of project
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -162,7 +161,6 @@ INSTALLED_APPS = (
     'ecs.workflow',
     'ecs.tasks',
     'ecs.communication',
-    'ecs.ecsmail',
     'ecs.dashboard',
     'ecs.bootstrap',
     'ecs.billing',
@@ -262,22 +260,15 @@ LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND     # used if ECSMAIL['filter_outgoi
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
-ECSMAIL_DEFAULT = {
-    'log_dir':   LOGFILE_DIR,
-    'postmaster': 'root@system.local', # the email address of the ecs user where emails from local machine to postmaster will get send
-    # THIS MUST BE A VALID ecs user name !
-    'listen': '0.0.0.0',
-    'port': 8823,
-    'handlers': ['ecs.communication.mailreceiver'],
-    'undeliverable_queue_dir': os.path.join(PROJECT_DIR, "..", "ecs-mail", "undeliverable"),
-    'trusted_sources': ['127.0.0.1'],
+ECSMAIL = {
+    'addr': ('127.0.0.1', 8823),
+    'undeliverable_maildir': os.path.join(PROJECT_DIR, '..', 'ecs-undeliverable-mail'),
     'authoritative_domain': 'localhost',
     'filter_outgoing_smtp': False,
     # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND,
     # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND
     # this is used only for ecs.users.views. register and request_password_reset
 }
-ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
 # absolute URL prefix w/out trailing slash
 ABSOLUTE_URL_PREFIX = "http://localhost:8000"
@@ -299,7 +290,6 @@ BROKER_URL = 'amqp://ecsuser:ecspassword@localhost:5672/ecshost'
 CELERY_IMPORTS = (
     'ecs.core.tests.test_tasks',
     'ecs.meetings.tasks',
-    'ecs.ecsmail.tasks',
     'ecs.communication.tasks',
     'ecs.integration.tasks',
     'ecs.help.tasks',
