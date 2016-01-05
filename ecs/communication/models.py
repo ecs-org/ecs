@@ -77,7 +77,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, rawmsg_digest_hex=None, reply_receiver=None):
+    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -120,10 +120,9 @@ class Thread(models.Model):
             text=text,
             reply_to=reply_to,
             origin=origin,
-            smtp_delivery_state= smtp_delivery_state,
-            rawmsg= rawmsg,
-            rawmsg_msgid= rawmsg_msgid,
-            rawmsg_digest_hex= rawmsg_digest_hex,
+            smtp_delivery_state=smtp_delivery_state,
+            rawmsg=rawmsg,
+            rawmsg_msgid=rawmsg_msgid,
             reply_receiver=reply_receiver
         )
         self.last_message = msg
@@ -181,7 +180,6 @@ class Message(models.Model):
 
     rawmsg = models.TextField(null=True)
     rawmsg_msgid = models.CharField(max_length=250, null=True, db_index=True)
-    rawmsg_digest_hex = models.CharField(max_length=32, null=True, db_index=True)
 
     origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
 

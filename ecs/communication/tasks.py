@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import traceback
-import hashlib
 from datetime import timedelta
 
 from celery.task import task, periodic_task
@@ -60,7 +59,6 @@ def forward_messages():
             )
             msg.smtp_delivery_state = 'pending'
             msg.rawmsg = mail_list[1].as_string()
-            msg.rawmsg_digest_hex = hashlib.md5(msg.rawmsg).hexdigest()
         except:
             traceback.print_exc()
             msg.smtp_delivery_state = 'failure'

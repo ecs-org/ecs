@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-
 import logging
 import re
-import hashlib
 import traceback
 
 from socket import gethostbyname
@@ -150,8 +148,7 @@ def START(message, address=None, host=None):
         rawmsg = message.to_message().as_string()
 
         ecsmsg.thread.add_message(ecsmsg.receiver, unicode(body), reply_to=ecsmsg, 
-            rawmsg_msgid= message['Message-ID'], rawmsg=rawmsg, 
-            rawmsg_digest_hex= hashlib.md5(rawmsg).hexdigest())
+            rawmsg_msgid=message['Message-ID'], rawmsg=rawmsg)
 
         if attachment_count > 0:
             notification_text = '\n'.join([
@@ -188,8 +185,7 @@ def START(message, address=None, host=None):
             subject = message.base['subject'] or '<no subject>'
             thread = Thread.objects.create(subject=subject, sender=postmaster, receiver=postmaster)
             thread.add_message(ecsmsg.receiver, unicode(body),
-                rawmsg_msgid=message['Message-ID'], rawmsg=rawmsg, 
-                rawmsg_digest_hex=hashlib.md5(rawmsg).hexdigest())
+                rawmsg_msgid=message['Message-ID'], rawmsg=rawmsg)
         else:
             logging.info('RELAYING %s %s %s' % (repr(message), address, host))
             relay.deliver(message)
