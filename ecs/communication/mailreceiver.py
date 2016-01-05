@@ -13,7 +13,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 from ecs.communication.models import Thread, Message
-from ecs.ecsmail.utils import deliver_to_recipient, whitewash
+from ecs.ecsmail.utils import deliver_to_recipient, html2text
 from ecs.users.utils import get_user
 
 @route(".+")
@@ -93,7 +93,7 @@ def __prepareBody(message):
             if (not body) and ('text/plain' in part.content_encoding['Content-Type']):
                 body = part.body
             elif (not body) and ('text/html' in part.content_encoding['Content-Type']):
-                body = whitewash(part.body)
+                body = html2text(part.body)
             else:
                 attachment_count += 1
         if not body:

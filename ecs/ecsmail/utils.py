@@ -2,7 +2,7 @@
 import os
 import mimetypes
 import re
-import copy
+import textwrap
 from HTMLParser import HTMLParser
 
 from django.conf import settings
@@ -10,25 +10,15 @@ from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
 from django.utils.html import strip_tags
 
 from ecs.ecsmail.tasks import queued_mail_send
-   
 
-# http://code.activestate.com/recipes/148061/
-def _wrap(text, width):
-    return reduce(lambda line, word, width=width: '%s%s%s' %
-                  (line,
-                   ' \n'[(len(line)-line.rfind('\n')-1
-                         + len(word.split('\n',1)[0]
-                              ) >= width)],
-                   word),
-                  text.split(' ')
-                 )
 
-def whitewash(htmltext):
-    ''' cleans htmltext into harmless pure text '''
+def html2text(htmltext):
     text = HTMLParser().unescape(strip_tags(htmltext))
     text = '\n\n'.join(re.split(r'\s*\n\s*\n\s*', text))
     text = re.sub('\s\s\s+', ' ', text)
-    return _wrap(text, 72)
+    wrapper = textwrap.TextWrapper(
+        replace_whitespace=False, drop_whitespace=False, width=72)
+    return '\n'.join(wrapper.wrap(text))
 
 
 def create_mail(subject, message, from_email, recipient, message_html=None, \
@@ -44,7 +34,7 @@ def create_mail(subject, message, from_email, recipient, message_html=None, \
             headers[head_key]=rfc2822_headers[head_key]
 
     if message is None: # make text version out of html if text version is missing
-        message = whitewash(message_html)
+        message = html2text(message_html)
     
     if message and message_html:
         msg = EmailMultiAlternatives(subject, message, from_email, [recipient], headers= headers)
