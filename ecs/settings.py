@@ -18,7 +18,7 @@ MAIL_ADMINS = False
 # Default is DEBUG, others may override it later
 DEBUG = True
 
-# database configuration defaults, may get overwritten in ecsdev_settings and local_settings
+# database configuration defaults, may get overwritten in local_settings
 DATABASES = {}
 DATABASES['default'] = {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -351,10 +351,6 @@ COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 #ECS_WORDING = True/False defaults to False if empty
 # activates django-rosetta
 
-
-# use ecsdev settings if on node ecsdev.ep3.at
-if platform.node() == "ecsdev.ep3.at":
-    from ecsdev_settings import *
 
 # use different settings if local_settings.py exists
 try:
