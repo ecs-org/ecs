@@ -618,7 +618,10 @@ def send_agenda_to_board(request, meeting_pk=None):
     agenda_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda')))
     timetable_pdf = meeting.get_timetable_pdf(request)
     timetable_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot')))
-    attachments = ((agenda_filename, agenda_pdf, 'application/pdf'), (timetable_filename, timetable_pdf, 'application/pdf'))
+    attachments = (
+        (agenda_filename, agenda_pdf, 'application/pdf'),
+        (timetable_filename, timetable_pdf, 'application/pdf'),
+    )
     subject = _(u'EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
@@ -632,11 +635,10 @@ def send_agenda_to_board(request, meeting_pk=None):
                    'meetings/messages/boardmember_invitation.html', \
                    {'meeting': meeting, 'time': time, 'recipient': user, \
                     'reply_to': settings.DEFAULT_REPLY_TO}))
-        deliver(user.email, subject=subject, \
-                message=None, message_html=htmlmail, \
-                from_email=settings.DEFAULT_FROM_EMAIL, \
-                rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO}, \
-                attachments=attachments)
+        deliver(user.email, subject=subject, message=None,
+            message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
+            rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO},
+            attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
@@ -644,11 +646,10 @@ def send_agenda_to_board(request, meeting_pk=None):
                     'meetings/messages/resident_boardmember_invitation.html', \
                     {'meeting': meeting, 'recipient': user, \
                     'reply_to': settings.DEFAULT_REPLY_TO}))
-        deliver(user.email, subject=subject, \
-                message=None, message_html=htmlmail, \
-                from_email=settings.DEFAULT_FROM_EMAIL, \
-                rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO}, \
-                attachments=attachments)
+        deliver(user.email, subject=subject, message=None,
+            message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
+            rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO},
+            attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
@@ -699,7 +700,9 @@ def send_protocol(request, meeting_pk=None):
     
     for user in User.objects.filter(Q(meeting_participations__entry__meeting=meeting) | Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)).distinct():
         htmlmail = unicode(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
-        deliver(user.email, subject=_('Meeting Protocol'), message=None, message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        deliver(user.email, subject=_('Meeting Protocol'), message=None,
+            message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
+            attachments=attachments)
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 

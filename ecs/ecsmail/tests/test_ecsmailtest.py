@@ -72,17 +72,15 @@ class ecsmailOutgoingTest(MailTestCase):
         
         # make two attachments, first attachment via a filename, second attachment via data supplied inline
         self.deliver("another subject", "this comes with attachments", 
-            attachments=[attachment_name, ["myname.pdf", attachment_data, "application/pdf"]])
+            attachments=(("myname.pdf", attachment_data, "application/pdf"),))
         x = self.is_delivered("with attachments")
         self.assertTrue(x)
    
         msg = email.message_from_string(x)
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf") [0]
         self.assertEqual(attachment_data, pdf_data)
-        mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf") [1]
-        self.assertEqual(attachment_data, pdf_data)
-        
-        
+
+
     def test_text_and_html_and_attachment(self):
         '''Makes sure that a message can consist of text and html and also has an attachment.
         Further checks that attached data is not altered during sending.
@@ -93,7 +91,7 @@ class ecsmailOutgoingTest(MailTestCase):
         
         self.deliver("another subject", "another attachment", 
             message_html= "<html><head></head><body><b>bold attachment</b></body>", 
-            attachments=[attachment_name])
+            attachments=(("myname.pdf", attachment_data, "application/pdf"),))
         x = self.is_delivered("another attachment")
         self.assertTrue(x)
         

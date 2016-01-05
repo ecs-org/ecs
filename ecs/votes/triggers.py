@@ -48,7 +48,8 @@ def on_vote_published(sender, **kwargs):
     template = loader.get_template('meetings/email/basg.txt')
     text = unicode(template.render({}))
     for receiver in receivers:
-        deliver(receiver, subject=name, message=text, from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
+        deliver(receiver, subject=name, message=text,
+            from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)
 
     if vote.is_recessed:
         meeting = sf.submission.schedule_to_meeting()

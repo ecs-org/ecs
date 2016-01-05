@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
-import mimetypes
 import re
 import textwrap
 from HTMLParser import HTMLParser
@@ -22,45 +20,24 @@ def html2text(htmltext):
 
 def create_mail(subject, message, from_email, recipient, message_html=None, \
                 attachments= None, msgid=None, rfc2822_headers=None):
-    if msgid is None:
-        msgid = make_msgid()
-    headers = {'Message-ID': msgid}
-    
-    if type(rfc2822_headers) is dict:
-        for head_key in rfc2822_headers.keys():
-            headers[head_key]=rfc2822_headers[head_key]
+    headers = {'Message-ID': msgid or make_msgid()}
+
+    if rfc2822_headers:
+        headers.update(rfc2822_headers)
 
     if message is None: # make text version out of html if text version is missing
         message = html2text(message_html)
     
-    if message and message_html:
-        msg = EmailMultiAlternatives(subject, message, from_email, [recipient], headers= headers)
+    if message_html:
+        msg = EmailMultiAlternatives(subject, message, from_email, [recipient],
+            headers=headers)
         msg.attach_alternative(message_html, "text/html")
     else:
-        msg = EmailMessage(subject, message, from_email, [recipient], headers= headers)
+        msg = EmailMessage(subject, message, from_email, [recipient],
+            headers=headers)
       
     if attachments:
-        for attachment in attachments:
-            filename = content = mimetype = encoding = None
-            
-            if isinstance(attachment, tuple) or isinstance(attachment, list):
-                filename, content = attachment[0:2]
-                if len(attachment) == 3:
-                    mimetype = attachment[2]
-                else:
-                    mimetype, encoding = mimetypes.guess_type(filename)
-            elif isinstance(attachment, basestring):
-                filename = attachment
-                if not os.path.exists(filename):
-                    raise IOError("attachment file not found %s" % filename)
-                mimetype, encoding = mimetypes.guess_type(filename)    
-                content = open(filename, "rb").read()
-            else:
-                raise TypeError('dont know how to handle attachment from type %s' % (str(type(attachment))))
-
-            if not mimetype:
-                raise TypeError("No content type given, and couldn't guess from the filename: %s" % filename)
-                
+        for filename, content, mimetype in attachments:
             msg.attach(filename, content, mimetype)
             
     return msg
