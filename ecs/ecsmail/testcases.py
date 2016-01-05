@@ -30,33 +30,14 @@ class MailTestCase(EcsTestCase):
         #  import lamson ecsmail config, this makes the production frontend accessable from within the testcase
         from ecs.ecsmail import lamson_settings
 
-    @classmethod
-    def teardownClass(self):
-        super(MailTestCase, self).teardownClass()
-
     def setUp(self):
         routing.Router.clear_states()
         self.queue_clear()
         super(MailTestCase, self).setUp()
 
-    def tearDown(self):
-        super(MailTestCase, self).tearDown()
-        
     @staticmethod
     def _entry_transform(entry):
         return entry.message().as_string()
-    
-    @staticmethod
-    def convert_raw2message(data):
-        ''' Convert a raw message to a python email.Message Object '''
-        y=StringIO.StringIO(data)     
-        msg = message_from_file(y)
-        return msg
-    
-    @staticmethod
-    def convert_message2raw(message):
-        ''' Convert a python email.Message Object to a raw message '''
-        return message.as_string()
     
     @staticmethod
     def get_mimeparts(msg, maintype="*", subtype="*"):
@@ -84,9 +65,9 @@ class MailTestCase(EcsTestCase):
         else:
             return self._entry_transform(django.core.mail.outbox [key])
     
-    def deliver(self, subject="test subject", message="test body", from_email="alice@example.com", recipient_list="bob@example.com", message_html=None, attachments=None, callback=None):
+    def deliver(self, subject="test subject", message="test body", from_email="alice@example.com", recipient_list="bob@example.com", message_html=None, attachments=None):
         ''' just call our standard email deliver, prefilled values: subject, message, from_email, recipient_list '''
-        return ecsmail_deliver(recipient_list, subject, message, from_email, message_html, attachments, callback)
+        return ecsmail_deliver(recipient_list, subject, message, from_email, message_html, attachments)
         
     def receive(self, subject, message, from_email, recipient_list, message_html=None, attachments=None, connecting_host="localhost"):
         ''' Fakes an incoming message trough ecsmail server '''

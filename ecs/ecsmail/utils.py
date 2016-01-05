@@ -6,10 +6,9 @@ import textwrap
 from HTMLParser import HTMLParser
 
 from django.conf import settings
+from django.core import mail
 from django.core.mail import EmailMessage, EmailMultiAlternatives, make_msgid
 from django.utils.html import strip_tags
-
-from ecs.ecsmail.tasks import queued_mail_send
 
 
 def html2text(htmltext):
@@ -22,9 +21,7 @@ def html2text(htmltext):
 
 
 def create_mail(subject, message, from_email, recipient, message_html=None, \
-                attachments= None, msgid=None, rfc2822_headers=None, **kwargs):
-    '''
-    '''
+                attachments= None, msgid=None, rfc2822_headers=None):
     if msgid is None:
         msgid = make_msgid()
     headers = {'Message-ID': msgid}
@@ -70,12 +67,10 @@ def create_mail(subject, message, from_email, recipient, message_html=None, \
 
     
 def deliver(recipient_list, *args, **kwargs):
-    """
-    send email to recipient list, puts messages to send into celery queue
+    '''
+    send email to recipient list
     returns a list of (msgid, rawmessage) for each messages to be sent
-    if callback is set to a celery task:
-       it will be called on every single recipient delivery with callback(msgid, status)
-    """
+    '''
     # make a list if only one recipient (and therefore string) is there
     if isinstance(recipient_list, basestring):
         recipient_list = [recipient_list]
@@ -88,7 +83,7 @@ def deliver(recipient_list, *args, **kwargs):
 
 
 def deliver_to_recipient(recipient, subject, message, from_email, \
-                         message_html=None, attachments=None, callback=None, \
+                         message_html=None, attachments=None, \
                          msgid=None, nofilter=False, rfc2822_headers=None, \
                          **kwargs):
     if msgid is None:
@@ -100,6 +95,8 @@ def deliver_to_recipient(recipient, subject, message, from_email, \
     backend = None
     if settings.ECSMAIL.get('filter_outgoing_smtp') and not nofilter:
         backend = settings.LIMITED_EMAIL_BACKEND
+
+    connection = mail.get_connection(backend= backend)
+    connection.send_messages([msg])
     
-    queued_mail_send.apply_async(args=[msgid, msg, from_email, recipient, callback, backend], countdown=3)
     return (msgid, msg.message(),)

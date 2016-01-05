@@ -1,4 +1,5 @@
 import re
+import email
 
 from django.core.urlresolvers import reverse
 from django.test.client import Client
@@ -32,7 +33,7 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.queue_count(),1)
-        mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
+        mimetype, message = self.get_mimeparts(email.message_from_string(self.queue_get(0)), "text", "html") [0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message)
@@ -71,7 +72,7 @@ class PasswordChangeTest(MailTestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.queue_count(), 1)
-        mimetype, message = self.get_mimeparts(self.convert_raw2message(self.queue_get(0)), "text", "html") [0]
+        mimetype, message = self.get_mimeparts(email.message_from_string(self.queue_get(0)), "text", "html") [0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
         match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message)

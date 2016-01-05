@@ -13,13 +13,9 @@ MESSAGE_ORIGIN_BOB = 2
 
 DELIVERY_STATES = (
     ("new", "new"),
-    ("received", "received"),
-    ("pending", "pending"),
     ("started", "started"),
     ("success", "success"),
     ("failure", "failure"),
-    ("retry", "retry"),
-    ("revoked", "revoked"),
 )
 
 
@@ -77,7 +73,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None, is_received=False, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
+    def add_message(self, user, text, reply_to=None, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
         if user.id == self.receiver_id:
             receiver = self.sender
             origin = MESSAGE_ORIGIN_BOB
@@ -94,9 +90,6 @@ class Thread(models.Model):
                 self.receiver = proxy
             else:
                 self.sender = proxy
-
-        # fixme: instead of not sending emails received, we should check if the target user is currently online, and send message only if the is not online
-        smtp_delivery_state = "received" if is_received else "new"
 
         previous_message = self.last_message
         if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
@@ -120,7 +113,7 @@ class Thread(models.Model):
             text=text,
             reply_to=reply_to,
             origin=origin,
-            smtp_delivery_state=smtp_delivery_state,
+            smtp_delivery_state='new',
             rawmsg=rawmsg,
             rawmsg_msgid=rawmsg_msgid,
             reply_receiver=reply_receiver

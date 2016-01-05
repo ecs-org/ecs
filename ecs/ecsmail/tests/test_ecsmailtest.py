@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import email
 
 from django.conf import settings
 
@@ -56,7 +57,7 @@ class ecsmailOutgoingTest(MailTestCase):
             message_html= "<html><head></head><body><b>this is bold</b></body>")
         self.assertTrue(self.is_delivered("second message"))
         
-        msg = self.convert_raw2message(x)
+        msg = email.message_from_string(x)
         mimetype, html_data = self.get_mimeparts(msg, "text", "html") [0]
         self.assertTrue(re.search("this is bold", html_data))
     
@@ -75,7 +76,7 @@ class ecsmailOutgoingTest(MailTestCase):
         x = self.is_delivered("with attachments")
         self.assertTrue(x)
    
-        msg = self.convert_raw2message(x)
+        msg = email.message_from_string(x)
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf") [0]
         self.assertEqual(attachment_data, pdf_data)
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf") [1]
@@ -96,7 +97,7 @@ class ecsmailOutgoingTest(MailTestCase):
         x = self.is_delivered("another attachment")
         self.assertTrue(x)
         
-        msg = self.convert_raw2message(x)
+        msg = email.message_from_string(x)
         mimetype, html_data = self.get_mimeparts(msg, "text", "html") [0]
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf") [0]
         
