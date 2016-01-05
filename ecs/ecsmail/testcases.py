@@ -5,7 +5,6 @@ import StringIO
 
 import django.core.mail
 from django.conf import settings
-from django.core.mail import make_msgid
 
 from email import message_from_file
 from email.iterators import typed_subpart_iterator
@@ -76,11 +75,11 @@ class MailTestCase(EcsTestCase):
 
         sentids = []
         for recipient in recipient_list:
-            msgid = make_msgid()
             msg = create_mail(subject, message, from_email, recipient, message_html, attachments, msgid)
+            msgid = msg.extra_headers['Message-ID']
             self.logger.debug("Receiving Mail from %s to %s, message= %s" % (from_email, recipient, str(msg.message())))
             routing.Router.deliver(MailRequest(connecting_host, from_email, recipient, str(msg.message())))
-            sentids += [[msgid, msg.message()]]
+            sentids.append([msgid, msg.message()])
             
         return sentids
         

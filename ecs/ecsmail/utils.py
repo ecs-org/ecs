@@ -18,9 +18,9 @@ def html2text(htmltext):
     return '\n'.join(wrapper.wrap(text))
 
 
-def create_mail(subject, message, from_email, recipient, message_html=None, \
-                attachments= None, msgid=None, rfc2822_headers=None):
-    headers = {'Message-ID': msgid or make_msgid()}
+def create_mail(subject, message, from_email, recipient, message_html=None,
+                attachments= None, rfc2822_headers=None):
+    headers = {'Message-ID': make_msgid()}
 
     if rfc2822_headers:
         headers.update(rfc2822_headers)
@@ -59,15 +59,12 @@ def deliver(recipient_list, *args, **kwargs):
     return sentids
 
 
-def deliver_to_recipient(recipient, subject, message, from_email, \
-                         message_html=None, attachments=None, \
-                         msgid=None, nofilter=False, rfc2822_headers=None, \
-                         **kwargs):
-    if msgid is None:
-        msgid = make_msgid()
+def deliver_to_recipient(recipient, subject, message, from_email,
+    message_html=None, attachments=None, nofilter=False, rfc2822_headers=None):
 
-    msg = create_mail(subject, message, from_email, recipient, message_html, \
-                      attachments, msgid, rfc2822_headers)
+    msg = create_mail(subject, message, from_email, recipient, message_html,
+        attachments, rfc2822_headers)
+    msgid = msg.extra_headers['Message-ID']
     
     backend = None
     if settings.ECSMAIL.get('filter_outgoing_smtp') and not nofilter:
