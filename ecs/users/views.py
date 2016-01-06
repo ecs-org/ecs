@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 import random
 
 from django.http import Http404, HttpResponse
@@ -176,7 +176,8 @@ def request_password_reset(request):
                     'email': email,
                 }))
             else:
-                token = _password_reset_token_factory.generate_token([email, time.time()])
+                timestamp = (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()
+                token = _password_reset_token_factory.generate_token([email, timestamp])
                 reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
                 htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
                     'reset_url': reset_url,
@@ -204,7 +205,8 @@ def do_password_reset(request, token=None):
     except User.DoesNotExist:
         raise Http404()
     profile = user.profile
-    if profile.last_password_change and time.mktime(profile.last_password_change.timetuple()) > timestamp:
+    timestamp = datetime.utcfromtimestamp(timestamp).replace(tzinfo=timezone.utc)
+    if profile.last_password_change and profile.last_password_change > timestamp:
         return render(request, 'users/password_reset/token_already_used.html', {})
     
     form = SetPasswordForm(user, request.POST or None)

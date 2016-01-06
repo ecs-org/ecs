@@ -79,6 +79,7 @@ class PasswordChangeTest(MailTestCase):
         password_reset_url = match.group(1)
         response = self.client.get(password_reset_url)
         self.assertEqual(response.status_code, 200)
+        self.assertTrue('form' in response.context)
         
         response = self.client.post(password_reset_url, {
             'new_password1': '12345678',
