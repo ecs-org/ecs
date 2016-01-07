@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import uuid
 
 from django.db import models
@@ -29,7 +28,7 @@ class UserProfile(models.Model):
     session_key = models.CharField(max_length=40, null=True)
     single_login_enforced = models.BooleanField(default=False)
 
-    gender = models.CharField(max_length=1, choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
+    gender = models.CharField(max_length=1, choices=(('f', _('Ms')), ('m', _('Mr'))))
     title = models.CharField(max_length=30, blank=True)
     organisation = models.CharField(max_length=180, blank=True)
     jobtitle = models.CharField(max_length=130, blank=True)
@@ -48,8 +47,8 @@ class UserProfile(models.Model):
     # 0 = never send messages, is editable via profile, activate via registration sets this to 5 minutes
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
 
-    def __unicode__(self):
-        return unicode(self.user)
+    def __str__(self):
+        return str(self.user)
 
     def get_single_login_enforced(self):
         if self.single_login_enforced:
@@ -60,7 +59,7 @@ class UserProfile(models.Model):
             return False
 
     def has_explicit_workflow(self):
-        return self.user.groups.exclude(name__in=[u'External Reviewer', u'userswitcher_target', u'translators']).count() > 0
+        return self.user.groups.exclude(name__in=['External Reviewer', 'userswitcher_target', 'translators']).count() > 0
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
@@ -114,4 +113,4 @@ class LoginHistory(models.Model):
     type = models.CharField(max_length=32, choices=LOGIN_HISTORY_TYPES)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User)
-    ip = models.GenericIPAddressField(protocol='IPv4')
+    ip = models.GenericIPAddressField(protocol='ipv4')

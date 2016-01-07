@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import re
 from textwrap import dedent
 from django.template import Library, Node, TemplateSyntaxError
@@ -28,7 +27,7 @@ register.filter('endswith', lambda obj, end: obj.endswith(end))
 register.filter('contains', lambda obj, x: x in obj)
 register.filter('not', lambda obj: not obj)
 register.filter('multiply', lambda a, b: a * b)
-register.filter('euro', lambda val: (u"€ %.2f" % float(val)).replace('.', ','))
+register.filter('euro', lambda val: ("€ %.2f" % float(val)).replace('.', ','))
 register.filter('is_none', lambda obj: obj is None)
 
 @register.filter
@@ -82,10 +81,10 @@ def simple_timedelta_format(td):
 @register.filter
 def smart_truncate(s, n):
     if not s:
-        return u""
+        return ""
     if len(s) <= n:
         return s
-    return u"%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
+    return "%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
     
 
 @register.filter
@@ -193,7 +192,7 @@ class BreadcrumbsNode(Node):
             crumbs = list(Submission.objects.filter(pk__in=crumb_pks).only('ec_number'))
             crumbs.sort(key=lambda x: crumb_pks.index(x.pk))
             context[self.varname] = crumbs
-        return u''
+        return ''
 
 @register.tag
 def get_breadcrumbs(parser, token):

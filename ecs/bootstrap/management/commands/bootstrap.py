@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import imp
 from importlib import import_module
 from optparse import make_option
@@ -8,6 +7,7 @@ from django.db import transaction
 from django.conf import settings
 
 from ecs.users.utils import get_or_create_user
+import collections
 
 def _create_root_user():
     root, _ = get_or_create_user('root@system.local')
@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 if name.startswith('_'):
                     continue
                 func = getattr(module, name)
-                if callable(func) and getattr(func, 'bootstrap', False):
+                if isinstance(func, collections.Callable) and getattr(func, 'bootstrap', False):
                     bootstrap_funcs["%s.%s" % (func.__module__, func.__name__)] = func
 
         # XXX: inefficient (FMD3)
@@ -50,7 +50,7 @@ class Command(BaseCommand):
         order = []
         while len(order) < len(bootstrap_funcs):
             cycle = True
-            for name, func in bootstrap_funcs.iteritems():
+            for name, func in bootstrap_funcs.items():
                 if name not in order and set(order) >= set(func.depends_on):
                     order.append(name)
                     cycle = False
@@ -59,6 +59,6 @@ class Command(BaseCommand):
         
         _create_root_user()
         for name in order:
-            print ' > {0}'.format(name)
+            print(' > {0}'.format(name))
             func = bootstrap_funcs[name]
             func()

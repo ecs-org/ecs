@@ -79,7 +79,7 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         f = meeting.create_evaluation_func(_eval_timetable)
         meeting._apply_permutation(head + algo(tuple(body), f, algorithm_parameters) + tail + tuple(batch_entries))
         retval = True
-    except Exception, e:
+    except Exception as e:
         logger.error("meeting optimization error (pk=%s, algo=%s): %r" % (meeting_id, algorithm, e))
     finally:
         Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)

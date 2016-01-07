@@ -30,9 +30,9 @@ class Version(tuple):
         return instance
 
     def __cmp__(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, str):
             other = Version(other)
-        for i in xrange(len(other)):
+        for i in range(len(other)):
             if self[i] > other[i]:
                 return +1
             elif self[i] < other[i]:

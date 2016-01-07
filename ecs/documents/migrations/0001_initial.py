@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -21,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('uuid', models.SlugField(unique=True, max_length=36)),
                 ('original_file_name', models.CharField(max_length=250, null=True, blank=True)),
-                ('mimetype', models.CharField(default=b'application/pdf', max_length=100)),
+                ('mimetype', models.CharField(default='application/pdf', max_length=100)),
                 ('stamp_on_download', models.BooleanField(default=True)),
                 ('name', models.CharField(max_length=250)),
                 ('version', models.CharField(max_length=250)),
@@ -38,8 +35,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
-                ('identifier', models.CharField(default=b'', max_length=30, db_index=True, blank=True)),
-                ('helptext', models.TextField(default=b'', blank=True)),
+                ('identifier', models.CharField(default='', max_length=30, db_index=True, blank=True)),
+                ('helptext', models.TextField(default='', blank=True)),
                 ('is_hidden', models.BooleanField(default=False)),
                 ('is_downloadable', models.BooleanField(default=True)),
             ],

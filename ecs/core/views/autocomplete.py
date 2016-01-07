@@ -17,17 +17,17 @@ def _get_task_types():
     return task_types
 
 AUTOCOMPLETE_QUERYSETS = {
-    'countries': lambda: [(iso, u'{} ({})'.format(name, iso), name) for iso, name in countries],
-    'medical_categories': lambda: [(str(c.pk), u"%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
-    'expedited_review_categories': lambda: [(str(c.pk), u"%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
+    'countries': lambda: [(iso, '{} ({})'.format(name, iso), name) for iso, name in countries],
+    'medical_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
+    'expedited_review_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
     'task_types': _get_task_types,
 }
 
 INTERNAL_AUTOCOMPLETE_QUERYSETS = {
-    'users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'external-reviewers': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name='External Reviewer').order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'internal-users': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, profile__is_internal=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'board-members': lambda: [(str(u.pk), u'{0} [{1}]'.format(u, u.email), unicode(u)) for u in User.objects.filter(is_active=True, groups__name__in=['EC-Board Member', 'EC-Executive Board Group']).order_by('first_name', 'last_name', 'email').select_related('profile')],
+    'users': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
+    'external-reviewers': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, groups__name='External Reviewer').order_by('first_name', 'last_name', 'email').select_related('profile')],
+    'internal-users': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, profile__is_internal=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
+    'board-members': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, groups__name__in=['EC-Board Member', 'EC-Executive Board Group']).order_by('first_name', 'last_name', 'email').select_related('profile')],
     'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
 }
 

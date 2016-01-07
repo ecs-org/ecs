@@ -1,4 +1,3 @@
-#-*- coding: utf-8 -*-
 from django.utils.translation import ugettext as _
 
 from ecs.notifications import signals
@@ -22,4 +21,4 @@ def on_safety_notification_review(sender, **kwargs):
     notification.save()
 
     # automatically create notification answer
-    answer = NotificationAnswer.objects.create(notification=notification, is_final_version=True, text=_(u'Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung.'))
+    answer = NotificationAnswer.objects.create(notification=notification, is_final_version=True, text=_('Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung.'))

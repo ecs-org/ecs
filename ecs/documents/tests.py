@@ -20,10 +20,10 @@ class DocumentsTest(LoginTestCase):
 
         doctype = DocumentType.objects.create(name="Test")
         doc = Document.objects.create(version="1",
-            date=datetime.date(2010, 03, 10), doctype=doctype)
+            date=datetime.date(2010, 0o3, 10), doctype=doctype)
         doc.store(pdf_file)
             
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
-        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
+        self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')

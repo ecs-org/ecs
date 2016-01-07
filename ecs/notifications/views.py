@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import uuid4
 
 from django.http import HttpResponse
@@ -86,7 +85,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
                 'new_submission_form': new_submission_form,
             }
         })
-        docstash.name = u"%s für %s" % (notification_type.name, old_submission_form)
+        docstash.name = "%s für %s" % (notification_type.name, old_submission_form)
     return redirect('ecs.notifications.views.create_notification', docstash_key=docstash.key, notification_type_pk=notification_type.pk)
 
 
@@ -214,7 +213,7 @@ def get_notification_answer_sign_data(request, task):
         'success_func': sign_success,
         'parent_pk': answer.pk,
         'parent_type': NotificationAnswer,
-        'document_uuid': uuid4().get_hex(),
+        'document_uuid': uuid4().hex,
         'document_name': answer.notification.get_filename('-answer'),
         'document_type': "notification_answer",
         'document_version': 'signed-at',

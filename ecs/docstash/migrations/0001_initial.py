@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 import picklefield.fields
@@ -46,10 +43,10 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='docstashdata',
-            unique_together=set([('version', 'stash')]),
+            unique_together={('version', 'stash')},
         ),
         migrations.AlterUniqueTogether(
             name='docstash',
-            unique_together=set([('group', 'owner', 'content_type', 'object_id')]),
+            unique_together={('group', 'owner', 'content_type', 'object_id')},
         ),
     ]

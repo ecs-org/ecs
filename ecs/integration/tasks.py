@@ -8,7 +8,7 @@ logger = logging.getLogger('task')
 def process_failure_signal(exception, traceback, sender, task_id, signal, args, kwargs, einfo, **kw):
     exc_info = (type(exception), exception, traceback)
     logger.error(
-        unicode(exception),
+        str(exception),
         exc_info=exc_info,
         extra={
             'data': {

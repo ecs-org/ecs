@@ -40,13 +40,13 @@ def on_vote_published(sender, **kwargs):
         sf.eudract_number if sf.is_amg else sf.submission.ec_number,
         'Votum {0}'.format(vote.result),
     )
-    name = slugify(u'_'.join(unicode(bit) for bit in bits if bit is not None))
+    name = slugify('_'.join(str(bit) for bit in bits if bit is not None))
     vote_ct = ContentType.objects.get_for_model(Vote)
     doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
     vote_pdf = doc.file.read()
     attachments = ((name + '.pdf', vote_pdf, 'application/pdf'),)
     template = loader.get_template('meetings/email/basg.txt')
-    text = unicode(template.render({}))
+    text = str(template.render({}))
     for receiver in receivers:
         deliver(receiver, subject=name, message=text,
             from_email=settings.DEFAULT_FROM_EMAIL, attachments=attachments)

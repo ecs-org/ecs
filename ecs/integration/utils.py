@@ -7,7 +7,7 @@ from copy import deepcopy
 def workflow_graph_needs_upgrade(graph, nodes, edges):
     existing_nodes = {}
     nodes = deepcopy(nodes)
-    for name, args in nodes.iteritems():
+    for name, args in nodes.items():
         args.setdefault('uid', name)
         args.pop('group', None)
         try:
@@ -15,7 +15,7 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
         except (Node.DoesNotExist, Node.MultipleObjectsReturned):
             return True
     edges = deepcopy(edges)
-    for node_names, args in edges.iteritems():
+    for node_names, args in edges.items():
         if not args:
             args = Args()
         from_name, to_name = node_names
@@ -45,7 +45,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
         graph = Graph.objects.create(model=model, **kwargs)
     
     node_instances = {}
-    for name, args in nodes.iteritems():
+    for name, args in nodes.items():
         args.setdefault('name', " ".join(camel_split(args[0].__name__)))
         args.setdefault('uid', name)
         group = args.pop('group', None)
@@ -59,7 +59,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
             task_type = TaskType.objects.get(workflow_node=node)
             task_type.is_delegatable = is_delegatable
             task_type.save()
-    for node_names, args in edges.iteritems():
+    for node_names, args in edges.items():
         if not args:
             args = Args()
         from_name, to_name = node_names

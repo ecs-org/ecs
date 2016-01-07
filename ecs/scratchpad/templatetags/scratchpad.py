@@ -14,7 +14,7 @@ class ScratchpadNode(Node):
             context[self.varname] = ScratchPad.objects.get(owner=context['request'].user, submission=context.get('submission'))
         except ScratchPad.DoesNotExist:
             context[self.varname] = None
-        return u''
+        return ''
 
 @register.tag
 def get_scratchpad(parser, token):

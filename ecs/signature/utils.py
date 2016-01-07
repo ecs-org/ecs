@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 import random
 from functools import wraps
 from datetime import timedelta
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from django.conf import settings
 from django.core.cache import cache
@@ -81,5 +80,5 @@ def get_pdfas_url(request, sign_data):
         #'inline': 'false',
         #'pdf-id': sign_data.id,
     }
-    data = urllib.urlencode(dict([k, v.encode('utf-8')] for k, v in values.items()))
+    data = urllib.parse.urlencode({k: v.encode('utf-8') for k, v in values.items()})
     return '{0}Sign?{1}'.format(settings.PDFAS_SERVICE, data)

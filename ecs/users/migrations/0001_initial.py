@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 import django_extensions.db.fields.json
@@ -31,7 +28,7 @@ class Migration(migrations.Migration):
             name='LoginHistory',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('type', models.CharField(max_length=32, choices=[(b'login', 'login'), (b'logout', 'logout')])),
+                ('type', models.CharField(max_length=32, choices=[('login', 'login'), ('logout', 'logout')])),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
                 ('ip', models.IPAddressField()),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
@@ -60,7 +57,7 @@ class Migration(migrations.Migration):
                 ('is_developer', models.BooleanField(default=False)),
                 ('session_key', models.CharField(max_length=40, null=True)),
                 ('single_login_enforced', models.BooleanField(default=False)),
-                ('gender', models.CharField(max_length=1, choices=[(b'f', 'Ms'), (b'm', 'Mr')])),
+                ('gender', models.CharField(max_length=1, choices=[('f', 'Ms'), ('m', 'Mr')])),
                 ('title', models.CharField(max_length=30, blank=True)),
                 ('organisation', models.CharField(max_length=180, blank=True)),
                 ('jobtitle', models.CharField(max_length=130, blank=True)),

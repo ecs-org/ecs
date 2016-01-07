@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -25,8 +22,8 @@ class Migration(migrations.Migration):
                 ('rawmsg', models.TextField(null=True)),
                 ('rawmsg_msgid', models.CharField(max_length=250, null=True, db_index=True)),
                 ('rawmsg_digest_hex', models.CharField(max_length=32, null=True, db_index=True)),
-                ('origin', models.SmallIntegerField(default=1, choices=[(1, b'Alice'), (2, b'Bob')])),
-                ('smtp_delivery_state', models.CharField(default=b'new', max_length=7, db_index=True, choices=[(b'new', b'new'), (b'received', b'received'), (b'pending', b'pending'), (b'started', b'started'), (b'success', b'success'), (b'failure', b'failure'), (b'retry', b'retry'), (b'revoked', b'revoked')])),
+                ('origin', models.SmallIntegerField(default=1, choices=[(1, 'Alice'), (2, 'Bob')])),
+                ('smtp_delivery_state', models.CharField(default='new', max_length=7, db_index=True, choices=[('new', 'new'), ('received', 'received'), ('pending', 'pending'), ('started', 'started'), ('success', 'success'), ('failure', 'failure'), ('retry', 'retry'), ('revoked', 'revoked')])),
                 ('uuid', models.CharField(max_length=32, db_index=True)),
             ],
             options={

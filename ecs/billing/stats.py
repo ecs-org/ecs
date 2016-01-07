@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from copy import deepcopy
 from collections import OrderedDict
 
@@ -11,37 +10,37 @@ from ecs.billing.models import Price, STUDY_PRICING_OTHER, \
 
 SUBMISSION_STAT_TEMPLATE = OrderedDict((
     ('local', {
-        'label': _(u'fees note - local EC'),
+        'label': _('fees note - local EC'),
         'price': STUDY_PRICING_MULTICENTRIC_AMG_LOCAL,
         'count': 0,
     }),
     ('amg', {
-        'label': _(u'fees note - AMG'),
+        'label': _('fees note - AMG'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('mpg', {
-        'label': _(u'fees note - MPG'),
+        'label': _('fees note - MPG'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('other', {
-        'label': _(u'fees note - other'),
+        'label': _('fees note - other'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('main_monocentric', {
-        'label': _(u'fees note - controlling-EC monocentric'),
+        'label': _('fees note - controlling-EC monocentric'),
         'price': STUDY_PRICING_OTHER,
         'count': 0,
     }),
     ('main_multicentric', {
-        'label': _(u'fees note - controlling-EC multicentric'),
+        'label': _('fees note - controlling-EC multicentric'),
         'price': STUDY_PRICING_MULTICENTRIC_AMG_MAIN,
         'count': 0,
     }),
     ('remission', {
-        'label': _(u'fees note - remission'),
+        'label': _('fees note - remission'),
         'price': STUDY_PRICING_REMISSION,
         'count': 0,
     }),

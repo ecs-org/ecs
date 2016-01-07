@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from celery.task import task
 
 from ecs.help.models import Page

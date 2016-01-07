@@ -10,14 +10,14 @@ class ControllerRegistry(object):
         self.guard_map = {}
 
     def clear_caches(self):
-        for c in self.node_controller_map.itervalues():
+        for c in self.node_controller_map.values():
             del c._meta.node_type
-        for key in self.node_controller_map.keys():
+        for key in list(self.node_controller_map.keys()):
             try:
                 del self.node_controller_map[int(key)]
             except ValueError:
                 pass
-        for g in self.guard_map.itervalues():
+        for g in self.guard_map.values():
             del g._meta.instance
             
     def bind_node(self, node, workflow):
@@ -69,14 +69,14 @@ add_guard = _registry.add_guard
 clear_caches = _registry.clear_caches
 
 def iter_guards():
-    return _registry.guard_map.itervalues()
+    return iter(_registry.guard_map.values())
     
 def iter_activities():
-    for c in _registry.node_controller_map.itervalues():
+    for c in _registry.node_controller_map.values():
         if hasattr(c, 'perform'):
             yield c
             
 def iter_controls():
-    for c in _registry.node_controller_map.itervalues():
+    for c in _registry.node_controller_map.values():
         if not hasattr(c, 'perform'):
             yield c

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import migrations, models
 
 
@@ -14,6 +11,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='message',
             name='smtp_delivery_state',
-            field=models.CharField(default=b'new', max_length=7, db_index=True, choices=[(b'new', b'new'), (b'started', b'started'), (b'success', b'success'), (b'failure', b'failure')]),
+            field=models.CharField(default='new', max_length=7, db_index=True, choices=[('new', 'new'), ('started', 'started'), ('success', 'success'), ('failure', 'failure')]),
         ),
     ]

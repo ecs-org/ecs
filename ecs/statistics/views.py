@@ -18,6 +18,6 @@ def stats(request, year=None):
 
     return render(request, 'statistics/index.html', {
         'current_year': current_year,
-        'years': xrange(first_year, last_year + 1),
+        'years': range(first_year, last_year + 1),
         'stats': collect_submission_stats_for_year(current_year),
     })

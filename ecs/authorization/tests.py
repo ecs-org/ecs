@@ -122,7 +122,7 @@ class SubmissionAuthTestCase(EcsTestCase):
             if expect404:
                 self.assertEqual(response.status_code, allowed and 200 or 404)
             else:
-                self.assertEqual(str(self.BASE_EC_NUMBER) in response.content, allowed)
+                self.assertEqual(str(self.BASE_EC_NUMBER).encode('ascii') in response.content, allowed)
                 
     def _check_view(self, expect404, viewname, *args, **kwargs):
         url = reverse(viewname, args=args, kwargs=kwargs)

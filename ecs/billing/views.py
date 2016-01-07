@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 import xlwt
 from decimal import Decimal
-from StringIO import StringIO
+from io import StringIO
 import math
 
 from django.contrib.auth.models import User
@@ -24,10 +23,10 @@ from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistP
 def _get_address(submission_form, prefix):
     attrs = ('name', 'contact', 'address', 'zip_code', 'city')
     data = dict((attr, getattr(submission_form, '%s_%s' % (prefix, attr), '')) for attr in attrs)
-    return u'{name} z.H. {contact.full_name}, {address}, {zip_code} {city}'.format(**data)
+    return '{name} z.H. {contact.full_name}, {address}, {zip_code} {city}'.format(**data)
 
 def _get_uid_number(submission_form, prefix):
-    return getattr(submission_form, '{0}_uid'.format(prefix)) or u'?'
+    return getattr(submission_form, '{0}_uid'.format(prefix)) or '?'
     
 def _get_organizations(submission_form):
     organizations = submission_form.investigators.values_list('organisation')
@@ -39,7 +38,7 @@ def _get_organizations(submission_form):
     
 
 class SimpleXLS(object):
-    def __init__(self, sheet_name=_(u"statistical result")):
+    def __init__(self, sheet_name=_("statistical result")):
         self.xls = xlwt.Workbook(encoding="utf-8")
         self.sheet = self.xls.add_sheet(sheet_name)
         self.sheet.panes_frozen = True
@@ -52,8 +51,8 @@ class SimpleXLS(object):
             self.write(r, c, cell, header=header)
 
             try:
-                if isinstance(cell, (int, long, float, Decimal)):
-                    width = len(unicode(cell))
+                if isinstance(cell, (int, float, Decimal)):
+                    width = len(str(cell))
                 else:
                     width = len(cell)
             except TypeError:
@@ -65,9 +64,9 @@ class SimpleXLS(object):
                 self.widths[c] = max(self.widths[c], width)
 
             if r >= len(self.characters):
-                for i in xrange(len(self.characters), r+1):
+                for i in range(len(self.characters), r+1):
                     self.characters.append(0)
-            self.characters[r] = max(self.characters[r], len(unicode(cell)))
+            self.characters[r] = max(self.characters[r], len(str(cell)))
             
     def write(self, r, c, cell, header=False):
         style = xlwt.easyxf('align: wrap on, vert top;')
@@ -113,7 +112,7 @@ def submission_billing(request):
                     selected_fee += [submission]
                 
         xls = SimpleXLS()
-        xls.write_row(0, (_(u'amt.'), _(u'EC-Number'), _(u'company'), _(u'UID-Nr.'), _(u'Eudract-Nr.'), _(u'applicant'), _(u'clinic'), _(u'sum')), header=True)
+        xls.write_row(0, (_('amt.'), _('EC-Number'), _('company'), _('UID-Nr.'), _('Eudract-Nr.'), _('applicant'), _('clinic'), _('sum')), header=True)
         if selected_fee:
             for i, submission in enumerate(selected_fee, 1):
                 r = i
@@ -135,7 +134,7 @@ def submission_billing(request):
             i = 0
             r = 1
         if selected_remission:
-            xls.write_merge(r, r, 0, 2, _(u'fee-exempted submissions'), header=True)
+            xls.write_merge(r, r, 0, 2, _('fee-exempted submissions'), header=True)
             for i, submission in enumerate(selected_remission, i+1):
                 r += 1
                 submission_form = submission.current_submission_form
@@ -203,12 +202,12 @@ def external_review_payment(request):
         reviewers = User.objects.filter(pk__in=[c.user.pk for c in selected_for_payment]).distinct()
 
         xls = SimpleXLS()
-        xls.write_row(0, (_(u'amt.'), _(u'reviewer'), _(u'EC-Nr.'), _(u'sum'), _(u'IBAN'), _('SWIFT-BIC'), _('Social Security Number')), header=True)
+        xls.write_row(0, (_('amt.'), _('reviewer'), _('EC-Nr.'), _('sum'), _('IBAN'), _('SWIFT-BIC'), _('Social Security Number')), header=True)
         for i, reviewer in enumerate(reviewers):
             checklists = reviewer.checklist_set.filter(pk__in=[c.pk for c in selected_for_payment])
             xls.write_row(i + 1, [
                 len(checklists),
-                unicode(reviewer),
+                str(reviewer),
                 ", ".join(c.submission.get_ec_number_display() for c in checklists),
                 len(checklists) * price.price,
                 reviewer.profile.iban,

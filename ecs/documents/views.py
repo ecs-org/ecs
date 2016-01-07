@@ -1,4 +1,4 @@
-from urllib import urlencode
+from urllib.parse import urlencode
 from uuid import uuid4
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -49,7 +49,7 @@ def handle_download(request, doc):
 def view_document(request, document_pk=None, page=None):
     doc = get_object_or_404(Document, pk=document_pk)
 
-    ref_key = uuid4().get_hex()
+    ref_key = uuid4().hex
     cache.set('document-ref-{}'.format(ref_key), doc.id, timeout=60)
 
     params = urlencode({

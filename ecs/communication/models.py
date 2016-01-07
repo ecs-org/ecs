@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import uuid
 
 from django.conf import settings
@@ -188,6 +187,6 @@ class Message(models.Model):
 
     @property
     def return_address(self):
-        return 'ecs-{}@{}'.format(self.uuid.get_hex(),
+        return 'ecs-{}@{}'.format(self.uuid.hex,
             settings.ECSMAIL['authoritative_domain'])
 

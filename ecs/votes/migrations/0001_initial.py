@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 
 
@@ -18,7 +15,7 @@ class Migration(migrations.Migration):
             name='Vote',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('result', models.CharField(max_length=2, null=True, verbose_name='vote', choices=[(b'1', '1 positive'), (b'2', '2 positive under reserve'), (b'3a', '3a recessed (not examined)'), (b'3b', '3b recessed (examined)'), (b'4', '4 negative'), (b'5', '5 withdrawn (applicant)')])),
+                ('result', models.CharField(max_length=2, null=True, verbose_name='vote', choices=[('1', '1 positive'), ('2', '2 positive under reserve'), ('3a', '3a recessed (not examined)'), ('3b', '3b recessed (examined)'), ('4', '4 negative'), ('5', '5 withdrawn (applicant)')])),
                 ('executive_review_required', models.NullBooleanField()),
                 ('insurance_review_required', models.NullBooleanField()),
                 ('text', models.TextField(verbose_name='comment', blank=True)),

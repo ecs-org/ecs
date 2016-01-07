@@ -12,7 +12,7 @@ class ObjectWorkflow(object):
             is_finished=False,
         )
         
-    def __nonzero__(self):
+    def __bool__(self):
         return self.workflows.exists()
     
     @property

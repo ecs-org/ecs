@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from importlib import import_module
 
 from django.forms.models import ModelForm, ModelFormMetaclass, ModelFormOptions
@@ -28,13 +27,13 @@ class TranslatedModelFormMetaclass(ModelFormMetaclass):
         opts = newcls._meta = TranslatedModelFormOptions(getattr(newcls, 'Meta', None))
 
         if opts.labels:
-            for name, label in opts.labels.iteritems():
+            for name, label in opts.labels.items():
                 newcls.base_fields[name].label = label
 
         return newcls
 
-class TranslatedModelForm(ModelForm):
-    __metaclass__ = TranslatedModelFormMetaclass
+class TranslatedModelForm(ModelForm, metaclass=TranslatedModelFormMetaclass):
+    pass
 
 
 def _unpickle(module, cls_name, args, kwargs):

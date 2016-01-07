@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import sys
 import getpass
 
@@ -33,7 +32,7 @@ class Command(OrigCommand):
             try:
                 while 1:
                     if not email:
-                        email = raw_input('Email: ')
+                        email = input('Email: ')
                     try:
                         is_valid_email(email)
                     except exceptions.ValidationError:
@@ -45,7 +44,7 @@ class Command(OrigCommand):
                         except User.DoesNotExist:
                             break
                         else:
-                            print >> sys.stderr, 'Error: That e-mail address is already taken.'
+                            print('Error: That e-mail address is already taken.', file=sys.stderr)
                             email = None
 
                 while 1:
@@ -53,23 +52,23 @@ class Command(OrigCommand):
                         password = getpass.getpass('Password:')
                         password2 = getpass.getpass('Password: (again):')
                         if password != password2:
-                            print >> sys.stderr, 'Error: Your passwords didn\'t match.'
+                            print('Error: Your passwords didn\'t match.', file=sys.stderr)
                             password = None
                             continue
                     if password.strip() == '':
-                        print >> sys.stderr, 'Error: Blank passwords aren\'t allowed.'
+                        print('Error: Blank passwords aren\'t allowed.', file=sys.stderr)
                         password = None
                         continue
                     break
 
             except KeyboardInterrupt:
-                print >> sys.stderr, 'Operation cancelled.'
+                print('Operation cancelled.', file=sys.stderr)
                 sys.exit(1)
 
 
         u = create_user(email, is_superuser=True, is_staff = True, is_active=True)
         u.set_password(password)
         u.save()
-        print 'Superuser created successfully.'
+        print('Superuser created successfully.')
 
 

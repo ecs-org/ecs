@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import uuid
 
 from django.db import models
@@ -20,7 +19,7 @@ class EthicsCommission(models.Model):
     fax = models.CharField(max_length=60, null=True)
     vote_receiver = models.EmailField(null=True, blank=True)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
         
     @property
@@ -32,16 +31,16 @@ class ExpeditedReviewCategory(models.Model):
     abbrev = models.CharField(max_length=12, unique=True)
     users = models.ManyToManyField(User, related_name='expedited_review_categories')
 
-    def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.abbrev)
+    def __str__(self):
+        return '%s (%s)' % (self.name, self.abbrev)
 
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12, unique=True)
     users = models.ManyToManyField(User, related_name='medical_categories')
 
-    def __unicode__(self):
-        return u'%s (%s)' % (self.name, self.abbrev)
+    def __str__(self):
+        return '%s (%s)' % (self.name, self.abbrev)
 
 class AdvancedSettings(models.Model):
     default_contact = models.ForeignKey(User)

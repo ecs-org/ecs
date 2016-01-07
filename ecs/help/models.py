@@ -6,7 +6,7 @@ from django.db.models.signals import post_save, post_delete
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.files.storage import FileSystemStorage
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_bytes
 from django.utils.translation import ugettext_lazy as _
 
 from reversion import revisions as reversion
@@ -35,7 +35,7 @@ class Page(models.Model):
     class Meta:
         unique_together = ('view', 'anchor')
         
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     @cached_property
@@ -91,7 +91,7 @@ class Page(models.Model):
 class AttachmentFileStorage(FileSystemStorage):
     def path(self, name):
         # We need to overwrite the default behavior, because django won't let us save documents outside of MEDIA_ROOT
-        return smart_str(os.path.normpath(name))
+        return smart_bytes(os.path.normpath(name))
 
 
 def upload_to(instance=None, filename=None):

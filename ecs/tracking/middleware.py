@@ -2,7 +2,7 @@ import re
 from django.conf import settings
 from ecs.tracking.models import Request, View
 
-HTML_TITLE_RE = re.compile('<title>([^<]*)</title>', re.IGNORECASE)
+HTML_TITLE_RE = re.compile(b'<title>([^<]*)</title>', re.IGNORECASE)
 HTML_TITLE_MAX_OFFSET = 1000
 
 class TrackingMiddleware(object):

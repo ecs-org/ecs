@@ -17,4 +17,4 @@ if settings.ECS_USERSWITCHER:
 else:
     @register.simple_tag
     def userswitcher():
-        return u''
+        return ''

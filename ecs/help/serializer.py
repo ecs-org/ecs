@@ -39,7 +39,7 @@ class Serializer(object):
         create_kwargs = dict((k, kwargs.pop(k)) for k in self.unique)
         create_kwargs['defaults'] = kwargs
         instance, created = self.model.objects.get_or_create(**create_kwargs)
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(instance, k, v)
         with reversion.create_revision():
             instance.save()
@@ -62,7 +62,7 @@ class AttachmentSerializer(Serializer):
     model = Attachment
 
     def serialize_file(self, zf, instance):
-        zip_name = u'attachments/{0}'.format(instance.slug)
+        zip_name = 'attachments/{0}'.format(instance.slug)
         
 #        if instance.mimetype.startswith("image/"):
 #            suffix = instance.mimetype.split("image/")[1]
@@ -126,7 +126,7 @@ def load(file_like):
 
     page_pks = {}
     page_serializer = PageSerializer()
-    for old_pk, d in data['pages'].iteritems():
+    for old_pk, d in data['pages'].items():
         page = page_serializer.load(zf, d)
         page_pks[old_pk] = page.pk
 

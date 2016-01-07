@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-from urllib import urlencode
+from urllib.parse import urlencode
 
 from django import forms
 from django.http import QueryDict
@@ -18,7 +17,7 @@ class DeclineTaskForm(forms.Form):
 
 class TaskChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, task):
-        return u"%s (%s)" % (task.assigned_to, task)
+        return "%s (%s)" % (task.assigned_to, task)
 
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=[])
@@ -66,14 +65,14 @@ class ManageTaskForm(forms.Form):
         action = cd.get('action')
         if action == 'delegate':
             if 'assign_to' not in cd:
-                self.add_error('assign_to', _(u'You must select a user.'))
+                self.add_error('assign_to', _('You must select a user.'))
         elif action == 'complete' and self.task and self.task.is_locked:
-            self.add_error('locked', _(u'Fill out the form completely to complete the task.'))
+            self.add_error('locked', _('Fill out the form completely to complete the task.'))
         return cd
 
 class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
     def clean(self, value):
-        from django.utils.encoding import force_unicode
+        from django.utils.encoding import force_text
         if self.required and not value:
             raise forms.ValidationError(self.error_messages['required'])
         elif not self.required and not value:
@@ -86,9 +85,9 @@ class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
             except ValueError:
                 raise forms.ValidationError(self.error_messages['invalid_pk_value'] % pk)
         qs = self.queryset.filter(workflow_node__uid__in=value)
-        uids = set([force_unicode(o.workflow_node.uid) for o in qs])
+        uids = {force_text(o.workflow_node.uid) for o in qs}
         for val in value:
-            if force_unicode(val) not in uids:
+            if force_text(val) not in uids:
                 raise forms.ValidationError(self.error_messages['invalid_choice'] % val)
         return qs
 
@@ -128,7 +127,7 @@ class TaskListFilterForm(forms.Form):
         data = {'sorting': 'deadline'}
         for name, field in self.fields.items():
             if isinstance(field, forms.BooleanField):
-                data[name] = u'on'
+                data[name] = 'on'
         return QueryDict(urlencode(data))
 
     def get_data(self):

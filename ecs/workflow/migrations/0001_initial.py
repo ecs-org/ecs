@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -59,7 +56,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=100)),
                 ('description', models.TextField(null=True, blank=True)),
-                ('category', models.PositiveIntegerField(db_index=True, choices=[(1, b'activity'), (2, b'control'), (3, b'subgraph')])),
+                ('category', models.PositiveIntegerField(db_index=True, choices=[(1, 'activity'), (2, 'control'), (3, 'subgraph')])),
                 ('implementation', models.CharField(max_length=200)),
             ],
             options={
@@ -146,7 +143,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='guard',
-            unique_together=set([('content_type', 'implementation')]),
+            unique_together={('content_type', 'implementation')},
         ),
         migrations.AddField(
             model_name='edge',

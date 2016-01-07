@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 
 from django.utils.translation import ugettext as _
@@ -24,13 +23,13 @@ def send_vote_expired(vote):
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
-    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist abgelaufen.\n') % {
+    text = _('Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist abgelaufen.\n') % {
         'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
     send_submission_message(submission, subject, text, recipients)
 
 def send_vote_reminder_submitter(vote):
@@ -42,7 +41,7 @@ def send_vote_reminder_submitter(vote):
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
-    text = _(u'''Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in drei Wochen ab.
+    text = _('''Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in drei Wochen ab.
 Stellen Sei bitte zeitgerecht den Antrag auf Verlängerung des Votums.
 Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf „Studien Meldungen“ > „Neue Meldung“,
 wählen Sie dann „Verlängerung der Gültigkeit des Votums“ und machen Sie die erforderlichen Angaben.
@@ -61,7 +60,7 @@ das Team der Ethik-Kommission
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
     send_submission_message(submission, subject, text, recipients)
     
 def send_vote_reminder_office(vote):
@@ -73,13 +72,13 @@ def send_vote_reminder_office(vote):
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
-    text = _(u'Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in einer Woche ab.\n') % {
+    text = _('Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in einer Woche ab.\n') % {
         'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _(u'Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
     send_submission_message(submission, subject, text, recipients)
 
 

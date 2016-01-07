@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import uuid4
 
 from django.core.urlresolvers import reverse
@@ -14,7 +13,7 @@ def _sign_dict():
         'success_func': success_func,
         'parent_pk': None,
         'parent_type': None,    
-        'document_uuid': uuid4().get_hex(),
+        'document_uuid': uuid4().hex,
         'document_name': 'Unit-Test',
         'document_type': 'other',
         'document_version': '1',
@@ -44,7 +43,7 @@ class SignatureTest(LoginTestCase):
     def setUp(self, *args, **kwargs):
         rval = super(SignatureTest, self).setUp(*args, **kwargs)
         self.user = self.create_user('unittest-signing', profile_extra={'is_internal': True})
-        self.user.groups.add(Group.objects.get(name=u'EC-Signing Group'))    
+        self.user.groups.add(Group.objects.get(name='EC-Signing Group'))    
         self.client.login(email='unittest-signing@example.com', password='password')
         
     def test_success(self):
@@ -56,4 +55,4 @@ class SignatureTest(LoginTestCase):
     def test_failure(self):     
         ''' Tests that signing a document fails; Will use mock signing. '''
         response = self.client.get(reverse('ecs.signature.tests.sign_fail'))
-        self.assertTrue('error' in response.content)
+        self.assertTrue(b'error' in response.content)

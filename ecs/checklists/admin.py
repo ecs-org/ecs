@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.contrib import admin
 
 from ecs.checklists.models import ChecklistBlueprint, ChecklistQuestion, Checklist, ChecklistAnswer

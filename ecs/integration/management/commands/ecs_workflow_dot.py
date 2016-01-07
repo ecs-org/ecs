@@ -19,4 +19,4 @@ class Command(BaseCommand):
         model = {'Submission': Submission, 'Vote': Vote, 'Meeting': Meeting, 
             'Notification': Notification, 'UserProfile': UserProfile}.get(model)
         g = Graph.objects.get(model=model, auto_start=True)
-        print make_dot(g)
+        print(make_dot(g))

@@ -36,13 +36,13 @@ class Command(BaseCommand):
 
         def _toggle(user, activate):
             if verbosity >= 2:
-                print u'  {0}{1}'.format(u'+' if activate else u'-', user.email)
+                print('  {0}{1}'.format('+' if activate else '-', user.email))
             (group.user_set.add if activate else group.user_set.remove)(user)
 
         def _toggle_set(name, users, activate):
             if not activate is None:
                 if verbosity >= 1:
-                    print (u'+' if activate else u'-') + name
+                    print(('+' if activate else '-') + name)
                 for user in users:
                     _toggle(user, activate)
 

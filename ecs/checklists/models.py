@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import uuid4
 
 from django.db import models
@@ -19,7 +18,7 @@ class ChecklistBlueprint(models.Model):
     reviewer_is_anonymous = models.BooleanField(default=False)
     allow_pdf_download = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return _(self.name)
 
 class ChecklistQuestion(models.Model):
@@ -36,8 +35,8 @@ class ChecklistQuestion(models.Model):
         unique_together = (('blueprint', 'number'),)
         ordering = ('blueprint', 'index',)
 
-    def __unicode__(self):
-        return u"%s: '%s'" % (self.blueprint, self.text)
+    def __str__(self):
+        return "%s: '%s'" % (self.blueprint, self.text)
 
 
 CHECKLIST_STATUS_CHOICES = (
@@ -66,16 +65,16 @@ class Checklist(models.Model):
         if self.blueprint.multiple:
             u = get_current_user()
             presenting_parties = self.submission.current_submission_form.get_presenting_parties()
-            name = _(u'Anonymous') if self.blueprint.reviewer_is_anonymous else unicode(self.last_edited_by)
+            name = _('Anonymous') if self.blueprint.reviewer_is_anonymous else str(self.last_edited_by)
             if u == self.user or (u is not None and u.profile.is_internal and not u in presenting_parties):
-                name = unicode(self.last_edited_by)
+                name = str(self.last_edited_by)
             return "%s (%s)" % (self.blueprint, name)
-        return unicode(self.blueprint)
+        return str(self.blueprint)
 
-    def __unicode__(self):
+    def __str__(self):
         if not self.submission:
             return self.short_name
-        return u'%s für %s' % (self.short_name, unicode(self.submission))
+        return '%s für %s' % (self.short_name, str(self.submission))
         
     @property
     def is_complete(self):
@@ -110,13 +109,13 @@ class Checklist(models.Model):
     def render_pdf(self):
         if self.blueprint.reviewer_is_anonymous:
             if self.submission:
-                name = u'{0} für {1}'.format(self.blueprint, self.submission)
+                name = '{0} für {1}'.format(self.blueprint, self.submission)
             else:
-                name = unicode(self.blueprint)
-            name = u'{0}-{1}'.format(name, uuid4().get_hex()[:5])
+                name = str(self.blueprint)
+            name = '{0}-{1}'.format(name, uuid4().hex[:5])
         else:
-            name = unicode(self)
-        filename = u'{0}.pdf'.format(slugify(name))
+            name = str(self)
+        filename = '{0}.pdf'.format(slugify(name))
 
         pdfdata = render_pdf_context('checklists/wkhtml2pdf/checklist.html', {
             'checklist': self,
@@ -142,8 +141,8 @@ class ChecklistAnswer(models.Model):
     class Meta:
         ordering = ('question__blueprint', 'question__index')
 
-    def __unicode__(self):
-        return u"Answer to '%s': %s" % (self.question, self.answer)
+    def __str__(self):
+        return "Answer to '%s': %s" % (self.question, self.answer)
 
     @property
     def is_answered(self):

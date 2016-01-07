@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from functools import wraps
 
 from django.template import loader
@@ -17,12 +16,12 @@ def msg_fun(func):
 
         submission = kwargs.get('submission', None)
         task = kwargs.get('task', None)
-        if isinstance(sender, basestring):
+        if isinstance(sender, str):
             sender = get_user(sender)
-        if isinstance(receiver, basestring):
+        if isinstance(receiver, str):
             receiver = get_user(receiver)
-        kwargs['submission'] = Submission.objects.get(pk=int(submission)) if isinstance(submission, (basestring, int)) else submission
-        kwargs['task'] = Task.objects.get(pk=int(task)) if isinstance(task, (basestring, int)) else task
+        kwargs['submission'] = Submission.objects.get(pk=int(submission)) if isinstance(submission, (str, int)) else submission
+        kwargs['task'] = Task.objects.get(pk=int(task)) if isinstance(task, (str, int)) else task
 
         args = [sender, receiver] + list(args)
         return func(*args, **kwargs)

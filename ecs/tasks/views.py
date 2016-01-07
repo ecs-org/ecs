@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import random
 
 from django.core.urlresolvers import reverse
@@ -47,7 +46,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     if request.method == 'POST':
         usersettings.task_filter = filterform.urlencode()
         usersettings.save()
-        if len(request.GET.values()) > 0:
+        if len(request.GET) > 0:
             return redirect(request.path)
 
     sortings = {
@@ -126,7 +125,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
 
             submission_ct = ContentType.objects.get_for_model(Submission)
             vote_ct = ContentType.objects.get_for_model(Vote)
-            notification_cts = map(ContentType.objects.get_for_model, NOTIFICATION_MODELS)
+            notification_cts = list(map(ContentType.objects.get_for_model, NOTIFICATION_MODELS))
 
             other_tasks_q = ~Q(content_type__in=[submission_ct, vote_ct] + notification_cts)
 
@@ -167,7 +166,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         'proxy': Q(assigned_to__profile__is_indisposed=True),
     }
 
-    for k, q in task_flavors.iteritems():
+    for k, q in task_flavors.items():
         ck = '%s_tasks' % k
         on = not filterform.is_valid() or filterform.cleaned_data[k]
         data[ck] = tasks.filter(q).order_by(*order_by) if on else tasks.none()

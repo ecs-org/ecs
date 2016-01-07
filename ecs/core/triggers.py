@@ -149,7 +149,7 @@ def on_categorization_review(sender, **kwargs):
 
     with sudo():
         tasks = Task.objects.for_submission(submission).open()
-        for lane, uids in LANE_TASKS.iteritems():
+        for lane, uids in LANE_TASKS.items():
             if not submission.workflow_lane == lane:
                 tasks.filter(task_type__workflow_node__uid__in=uids).mark_deleted()
         if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:

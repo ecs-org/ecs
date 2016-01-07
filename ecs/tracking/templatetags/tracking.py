@@ -10,7 +10,7 @@ class GetHistoryNode(Node):
     def render(self, context):
         request = context['request']
         context[self.var_name] = Request.objects.filter(user=request.user).order_by('-timestamp')[:5]
-        return u""
+        return ""
 
 @register.tag
 def get_tracking_history(parser, token):

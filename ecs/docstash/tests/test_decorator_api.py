@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 
 from django.test.utils import override_settings
@@ -29,18 +28,18 @@ class DecoratorApiTest(LoginTestCase):
         # post test data
         response = self.client.post(key_url, test_post_data)
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(data, test_post_data)
 
         # get test data
         response = self.client.get(key_url)
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(data, test_post_data)
 
         # post test data again
         test_post_data = {'baz': '42'}
         response = self.client.post(key_url, test_post_data)
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf-8'))
         self.assertEqual(data, test_post_data)

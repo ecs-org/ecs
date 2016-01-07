@@ -87,7 +87,7 @@ class SmtpdTest(CommunicationTestCase):
             'Invalid message format - empty message')
 
     def test_invalid_message_format_image(self):
-        msg = MIMEImage('P1\n1 1\n1')   # 1px PBM image
+        msg = MIMEImage(b'P1\n1 1\n1')   # 1px PBM image
         msg['From'] = 'Alice <alice@example.com>'
         msg['To'] = 'Bob <bob@ecs>'
 
@@ -99,7 +99,7 @@ class SmtpdTest(CommunicationTestCase):
     def test_invalid_message_format_attachment(self):
         msg = MIMEMultipart()
         msg.attach(MIMEText('This is a test mail.'))
-        msg.attach(MIMEImage('P1\n1 1\n1'))
+        msg.attach(MIMEImage(b'P1\n1 1\n1'))
         msg['From'] = 'Alice <alice@example.com>'
         msg['To'] = 'Bob <bob@ecs>'
 

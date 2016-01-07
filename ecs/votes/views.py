@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import uuid4
 
 from django.shortcuts import render, get_object_or_404
@@ -72,7 +71,7 @@ def get_vote_sign_data(request, task):
         'success_func': sign_success,
         'parent_pk': vote.pk,
         'parent_type': Vote,
-        'document_uuid': uuid4().get_hex(),
+        'document_uuid': uuid4().hex,
         'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
         'document_type': "votes",
         'document_version': 'signed-at',

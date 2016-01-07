@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -18,7 +15,7 @@ class Migration(migrations.Migration):
             name='Checklist',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('status', models.CharField(default=b'new', max_length=15, choices=[(b'new', 'Neu'), (b'completed', 'Abgeschlossen'), (b'review_ok', '\xdcberpr\xfcfung OK'), (b'review_fail', '\xdcberpr\xfcfung fehlgeschlagen'), (b'dropped', 'Fallengelassen')])),
+                ('status', models.CharField(default='new', max_length=15, choices=[('new', 'Neu'), ('completed', 'Abgeschlossen'), ('review_ok', '\xdcberpr\xfcfung OK'), ('review_fail', '\xdcberpr\xfcfung fehlgeschlagen'), ('dropped', 'Fallengelassen')])),
             ],
             options={
             },
@@ -72,7 +69,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='checklistquestion',
-            unique_together=set([('blueprint', 'number')]),
+            unique_together={('blueprint', 'number')},
         ),
         migrations.AddField(
             model_name='checklistanswer',

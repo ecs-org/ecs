@@ -23,7 +23,7 @@ class FetchMessagesNode(Node):
 
         cache.set(cache_key, timezone.now(), 7*24*3600)
         context[self.varname] = messages
-        return u''
+        return ''
 
 @register.tag
 def fetch_messages(parser, token):

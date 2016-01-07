@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.template import Library, Node
 
 from ecs.users.utils import get_formal_name, get_full_name, sudo

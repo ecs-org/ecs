@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import tempfile
 import re
 import json
@@ -176,8 +175,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         else:
             reopen_task = None
             tasks = list(get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(assigned_to=request.user, deleted_at__isnull=True).order_by('-closed_at'))
-            if (tasks and not [t for t in tasks if not t.closed_at] and not
-                (t.task_type.workflow_node.uid in ('thesis_recommendation', 'expedited_recommendation', 'localec_recommendation') and not submission.meetings.filter(started__isnull=True).exists())):
+            if (tasks and not any(t for t in tasks if not t.closed_at and not
+                t.task_type.workflow_node.uid in ('thesis_recommendation', 'expedited_recommendation', 'localec_recommendation')) and not submission.meetings.filter(started__isnull=True).exists()):
                 reopen_task = tasks[0]
             checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
         checklist_reviews.append((checklist, checklist_form))
@@ -263,7 +262,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     if extra_context:
         context.update(extra_context)
 
-    for prefix, formset in formsets.iteritems():
+    for prefix, formset in formsets.items():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
 
@@ -471,8 +470,8 @@ def vote_preparation(request, submission_form_pk=None):
 
     text = []
     for checklist in checklists:
-        text += [u'>>> {0}: {1} <<<\n\n'.format(checklist.blueprint.name, checklist.last_edited_by) + u'\n\n'.join(u'{0}. {1}\n{2} - {3}'.format(a.question.number, a.question.text, _(u'Yes') if a.answer else _(u'No'), a.comment) for a in checklist.answers.all())]
-    text = u'\n\n\n'.join(text)
+        text += ['>>> {0}: {1} <<<\n\n'.format(checklist.blueprint.name, checklist.last_edited_by) + '\n\n'.join('{0}. {1}\n{2} - {3}'.format(a.question.number, a.question.text, _('Yes') if a.answer else _('No'), a.comment) for a in checklist.answers.all())]
+    text = '\n\n\n'.join(text)
 
     initial = None
     if vote is None:
@@ -541,7 +540,7 @@ def delete_document_from_submission(request):
 def create_submission_form(request):
     form = request.docstash.get('form')
     documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
-    protocol_uploaded = documents.filter(doctype__identifier=u'protocol').exists()
+    protocol_uploaded = documents.filter(doctype__identifier='protocol').exists()
     if request.method == 'POST' or form is None:
         form = SubmissionFormForm(request.POST or None)
         if request.method == 'GET':
@@ -589,10 +588,10 @@ def create_submission_form(request):
         if save or autosave:
             return HttpResponse('save successfull')
 
-        for name, formset in formsets.iteritems():
+        for name, formset in formsets.items():
             formset.full_clean()        # work around django bug: full_clean does not get called in is_valid if total_form_count==0
 
-        formsets_valid = all([formset.is_valid() for formset in formsets.itervalues()]) # non-lazy validation of formsets
+        formsets_valid = all([formset.is_valid() for formset in formsets.values()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
         submission = request.docstash.get('submission')
         if submission:   # refetch submission object because it could have changed
@@ -624,7 +623,7 @@ def create_submission_form(request):
                 employee.investigator = investigators[employee.investigator_index]
                 employee.save()
 
-            for formset in formsets.itervalues():
+            for formset in formsets.values():
                 for instance in formset.save(commit=False):
                     instance.submission_form = submission_form
                     instance.save()
@@ -649,7 +648,7 @@ def create_submission_form(request):
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
     }
-    for prefix, formset in formsets.iteritems():
+    for prefix, formset in formsets.items():
         context['%s_formset' % prefix] = formset
     return render(request, 'submissions/form.html', context)
 
@@ -1053,14 +1052,14 @@ def catalog_json(request):
             if sf.project_type_education_context:
                 item.update({
                     'project_type': sf.get_project_type_education_context_display(),
-                    'submitter': unicode(sf.submitter_contact),
+                    'submitter': str(sf.submitter_contact),
                 })
             investigators = []
             for i in sf.investigators.all():
                 investigators.append({
                     'organisation': i.organisation,
-                    'name': unicode(i.contact) if (i.ethics_commission.system) else "",
-                    'ethics_commission': unicode(i.ethics_commission),
+                    'name': str(i.contact) if (i.ethics_commission.system) else "",
+                    'ethics_commission': str(i.ethics_commission),
                 })
             item['investigators'] = investigators
             data.append(item)

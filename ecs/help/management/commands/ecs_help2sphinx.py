@@ -23,7 +23,7 @@ class Inserter:
             self.node.parent.add(newNode)
         else:
             parent = self.node.parent
-            for i in xrange(0, self.depth - depth):
+            for i in range(0, self.depth - depth):
                 parent = parent.parent
             parent.add(newNode)
             self.depth = depth
@@ -63,7 +63,7 @@ class HelpNode:
     def __iter__(self): 
         yield self
         for child in self.children:
-            for node in child.__iter__().next():
+            for node in next(child.__iter__()):
                 yield node
         
     def root(self):
@@ -77,9 +77,9 @@ class HelpNode:
         child.parent = self
 
     def _page_title(self):
-        title = unicode(self.title)
-        heading = u''.ljust(len(title), '#')
-        pagetitle = u'{heading}\n{title}\n{heading}\n\n\n'.format(heading= heading, title= title)
+        title = str(self.title)
+        heading = ''.ljust(len(title), '#')
+        pagetitle = '{heading}\n{title}\n{heading}\n\n\n'.format(heading= heading, title= title)
         return pagetitle
 
     def _write_file(self, filename, data):
@@ -120,7 +120,7 @@ class HelpNode:
             
             child.process_tree(depth= depth + 1, dryrun=dryrun)
 
-        toctree = u'.. toctree::\n\n  '+ u'\n  '.join(toctree)+ u'\n\n'
+        toctree = '.. toctree::\n\n  '+ '\n  '.join(toctree)+ '\n\n'
         if dryrun:
             self.slugdict[self.slug] = slugname
         else:

@@ -1,5 +1,5 @@
 import os, datetime, uuid
-from StringIO import StringIO
+from io import BytesIO
 
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.serializer import Serializer
@@ -33,7 +33,7 @@ class SerializerTest(EcsTestCase):
             doctype = DocumentType.objects.create(name='doctype-%s' % i)
             with open(os.path.join(os.path.dirname(__file__), 'data', 'menschenrechtserklaerung.pdf'), 'rb') as f:
                 doc = Document.objects.create(doctype=doctype,
-                    version='v%s' % i, date=datetime.date(2010, 03, 10))
+                    version='v%s' % i, date=datetime.date(2010, 0o3, 10))
                 doc.store(f)
                 docs.append(doc)
         sf.documents = docs
@@ -45,7 +45,7 @@ class SerializerTest(EcsTestCase):
         for i in range(3):
             NonTestedUsedDrug.objects.create(submission_form=sf, generic_name="gn-%s" % i, preparation_form="pf-%s" % i, dosage="d-%s" % i)
         for i in range(2):
-            ec = EthicsCommission.objects.create(name="ethics-commission-%s" % i, uuid=uuid.uuid4().get_hex())
+            ec = EthicsCommission.objects.create(name="ethics-commission-%s" % i, uuid=uuid.uuid4().hex)
             investigator = Investigator.objects.create(submission_form=sf, main=bool(i), ethics_commission=ec, contact_last_name="investigator-%s" % i, subject_count=3+i)
             for j in range(2):
                 investigator.employees.create(sex='m', surname='s-%s-%s' % (i, j), firstname='s-%s-%s' % (i, j))
@@ -54,7 +54,7 @@ class SerializerTest(EcsTestCase):
         
     def compare(self, a, b):
         self.assertEqual(type(a), type(b))
-        for attr, value in SUBMISSION_FORM_DATA.iteritems():
+        for attr, value in SUBMISSION_FORM_DATA.items():
             self.assertEqual(getattr(a, attr), value)
             self.assertEqual(getattr(b, attr), value)
             
@@ -82,7 +82,7 @@ class SerializerTest(EcsTestCase):
         
         with sudo(get_or_create_user('test_presenter@example.com')[0]):
             sf = self.create_submission_form()
-            buf = StringIO()
+            buf = BytesIO()
             serializer = Serializer()
             serializer.write(sf, buf)
             cp = serializer.read(buf)

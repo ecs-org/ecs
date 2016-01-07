@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os
 import sys
 import site
-import StringIO
+import io
 
 # writing to stdout as wsgi is considered an error, and borks wsgi setup
 sys.stdout = sys.stderr
@@ -61,9 +59,9 @@ def maintenance(environ, start_response):
     write = start_response('200 OK', headers)
     input = environ['wsgi.input']
 
-    output = StringIO.StringIO()
-    print >> output, "<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>"
-    print >> output
+    output = io.StringIO()
+    print("<html><head>Server Maintenance</head><body>Server Maintenance, please standby</body></html>", file=output)
+    print(file=output)
     #output.write(input.read(int(environ.get('CONTENT_LENGTH', '0'))))
     data = output.getvalue()
     output.close()

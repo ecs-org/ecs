@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -39,7 +37,7 @@ class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
 
 
 class SafetyNotificationForm(NotificationForm):
-    comments = forms.CharField(widget=forms.Textarea(), initial=_(u'Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses.'))
+    comments = forms.CharField(widget=forms.Textarea(), initial=_('Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses.'))
 
     def __init__(self, *args, **kwargs):
         super(SafetyNotificationForm, self).__init__(*args, **kwargs)

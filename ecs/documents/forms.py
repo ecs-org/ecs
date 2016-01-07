@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from tempfile import TemporaryFile
 from shutil import copyfileobj
 
@@ -13,7 +12,7 @@ from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import decrypt_pdf
 from ecs.utils.formutils import require_fields
 
-PDF_MAGIC = '%PDF'
+PDF_MAGIC = b'%PDF'
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     file = forms.FileField(required=True)
@@ -23,11 +22,11 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     def clean_file(self):
         pdf = self.cleaned_data['file']
         if not pdf:
-            raise ValidationError(_(u'no file'))
+            raise ValidationError(_('no file'))
 
         # pdf magic check
         if pdf.read(4) != PDF_MAGIC:
-            raise ValidationError(_(u'This file is not a PDF document.'))
+            raise ValidationError(_('This file is not a PDF document.'))
         pdf.seek(0)
 
         # XXX: Depending on the upload handler, pdf might not be backed by a

@@ -24,7 +24,7 @@
 {% if open_tops %}
 <h2>{% trans "Open TOPs" %}</h2>
 <div>
-{% for board_members, tops in open_tops.iteritems %}
+{% for board_members, tops in open_tops.items %}
     {% if board_members %}
         <h4>{% for bm in board_members %}{{ bm }}{% if not forloop.last %}, {% endif %}{% endfor %}</h4>
     {% else %}

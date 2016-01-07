@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ecs import bootstrap
 from ecs.notifications.models import NotificationType, Notification
 from ecs.workflow.patterns import Generic
@@ -21,9 +20,9 @@ _ = lambda s: s
 def notification_types():
     types = (
         dict(
-            name = u"Sicherheitsbericht (SUSAR / SAE / Jährlicher Sicherheitsbericht)", 
+            name = "Sicherheitsbericht (SUSAR / SAE / Jährlicher Sicherheitsbericht)", 
             form = "ecs.notifications.forms.SafetyNotificationForm",
-            default_response = u"Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
+            default_response = "Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
             includes_diff = False,
             grants_vote_extension = False,
             is_rejectable = False,
@@ -31,9 +30,9 @@ def notification_types():
             position = 1,
         ),
         dict(
-            name = u"Verlängerung der Gültigkeit des Votums",
+            name = "Verlängerung der Gültigkeit des Votums",
             form = "ecs.notifications.forms.ProgressReportNotificationForm",
-            default_response = u"",
+            default_response = "",
             includes_diff = False,
             grants_vote_extension = True,
             is_rejectable = True,
@@ -41,9 +40,9 @@ def notification_types():
             position = 2,
         ),
         dict(
-            name = u"Beendigung der Studie / Abschlussbericht",
+            name = "Beendigung der Studie / Abschlussbericht",
             form = "ecs.notifications.forms.CompletionReportNotificationForm",
-            default_response = u"",
+            default_response = "",
             includes_diff = False,
             grants_vote_extension = False,
             is_rejectable = True,
@@ -51,9 +50,9 @@ def notification_types():
             position = 3,
         ),
         dict(
-            name = u"Amendment",
+            name = "Amendment",
             form = "ecs.notifications.forms.AmendmentNotificationForm",
-            default_response = u"Die Kommission stimmt der vorgeschlagenen Protokolländerung zu.",
+            default_response = "Die Kommission stimmt der vorgeschlagenen Protokolländerung zu.",
             includes_diff = True,
             grants_vote_extension = False,
             is_rejectable = True,

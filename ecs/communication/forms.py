@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -24,8 +22,8 @@ class InvolvedPartiesChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, user):
         for p in self.involved_parties:
             if p.user == user:
-                return u'{0} ({1})'.format(user, p.involvement)
-        return unicode(user)
+                return '{0} ({1})'.format(user, p.involvement)
+        return str(user)
 
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield()

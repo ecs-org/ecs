@@ -7,7 +7,7 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
     
     statements = []
     def make_attrs(attrs):
-        return ", ".join('%s="%s"' % (opt, val) for opt, val in attrs.iteritems())
+        return ", ".join('%s="%s"' % (opt, val) for opt, val in attrs.items())
         
     def add_node(node_id, **options):
         attrs = common_node_attrs.copy()

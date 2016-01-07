@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from importlib import import_module
 
 from django.conf import settings
@@ -40,7 +39,7 @@ class NotificationType(models.Model):
         template_names = [pattern % name for name in (self.form_cls.__name__, 'base')]
         return loader.select_template(template_names)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -87,12 +86,12 @@ class Notification(models.Model):
     
     objects = NotificationManager()
     
-    def __unicode__(self):
-        return u"%s für %s" % (self.type, " + ".join(unicode(sf.submission) for sf in self.submission_forms.all()))
+    def __str__(self):
+        return "%s für %s" % (self.type, " + ".join(str(sf.submission) for sf in self.submission_forms.all()))
     
     @property
     def short_name(self):
-        return unicode(self.type)
+        return str(self.type)
         
     @property
     def is_rejected(self):
@@ -112,15 +111,15 @@ class Notification(models.Model):
             return sf.submission
         return None
             
-    def get_filename(self, suffix=u'.pdf'):
-        ec_num = u'_'.join(
-            unicode(num)
+    def get_filename(self, suffix='.pdf'):
+        ec_num = '_'.join(
+            str(num)
             for num in self.submission_forms
                 .order_by('submission__ec_number')
                 .distinct()
                 .values_list('submission__ec_number', flat=True)
         )
-        return u'{}-{}{}'.format(slugify(ec_num), slugify(self.type.name), suffix)
+        return '{}-{}{}'.format(slugify(ec_num), slugify(self.type.name), suffix)
 
     def render_pdf(self):
         tpl = self.type.get_template('notifications/wkhtml2pdf/%s.html')
@@ -132,7 +131,7 @@ class Notification(models.Model):
         })
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
-            doctype='notification', parent_object=self, name=unicode(self),
+            doctype='notification', parent_object=self, name=str(self),
             original_file_name=self.get_filename())
         self.save()
         
@@ -206,8 +205,8 @@ class NotificationAnswer(models.Model):
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
             doctype='notification_answer', parent_object=self,
-            name=unicode(self),
-            original_file_name=notification.get_filename(u'-answer.pdf')
+            name=str(self),
+            original_file_name=notification.get_filename('-answer.pdf')
         )
         self.save()
         return self.pdf_document

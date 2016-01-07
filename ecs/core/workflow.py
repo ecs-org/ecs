@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _

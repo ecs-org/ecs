@@ -1,4 +1,4 @@
-from urllib import urlencode
+from urllib.parse import urlencode
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings

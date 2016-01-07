@@ -5,7 +5,7 @@ from ecs.core.forms.fields import ReadonlyTextInput, ReadonlyTextarea
 
 def mark_readonly(form):
     form.readonly = True
-    for field in form.fields.itervalues():
+    for field in form.fields.values():
         if hasattr(field.widget, 'mark_readonly'):
             field.widget.mark_readonly()
         else:
@@ -18,11 +18,11 @@ class ReadonlyFormMixin(object):
         self.reopen_task = kwargs.pop('reopen_task', None)
         super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
         if self.readonly:
-            for field in self.fields.itervalues():
-                if isinstance(field.widget, (forms.TextInput,)):
+            for field in self.fields.values():
+                if isinstance(field.widget, forms.TextInput):
                     attrs = field.widget.attrs.copy()
                     field.widget = ReadonlyTextInput(attrs=attrs)
-                elif isinstance(field.widget, (forms.Textarea,)):
+                elif isinstance(field.widget, forms.Textarea):
                     attrs = field.widget.attrs.copy()
                     if 'cols' in attrs: attrs.pop('cols')
                     if 'rows' in attrs: attrs.pop('rows')
@@ -38,10 +38,10 @@ class ReadonlyFormSetMixin(object):
         super(ReadonlyFormSetMixin, self).__init__(*args, **kwargs)
         if self.readonly:
             for form in self.forms:
-                for field in form.fields.itervalues():
-                    if isinstance(field.widget, (forms.TextInput,)):
+                for field in form.fields.values():
+                    if isinstance(field.widget, forms.TextInput):
                         field.widget = ReadonlyTextInput(attrs=field.widget.attrs)
-                    elif isinstance(field.widget, (forms.Textarea,)):
+                    elif isinstance(field.widget, forms.Textarea):
                         field.widget = ReadonlyTextarea(attrs=field.widget.attrs)
                 mark_readonly(form)
 

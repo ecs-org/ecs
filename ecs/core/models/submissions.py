@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 
 from django.db import models
@@ -86,11 +85,11 @@ class Submission(models.Model):
     def get_submission(self):
         return self
 
-    def get_ec_number_display(self, short=False, separator=u'/'):
+    def get_ec_number_display(self, short=False, separator='/'):
         year, num = divmod(self.ec_number, 10000)
         if short and timezone.now().year == int(year):
-            return unicode(num)
-        return u"%s%s%s" % (num, separator, year)
+            return str(num)
+        return "%s%s%s" % (num, separator, year)
         
     get_ec_number_display.short_description = ugettext_lazy('EC-Number')
 
@@ -215,7 +214,7 @@ class Submission(models.Model):
                 self.ec_number = max_num + 1
         return super(Submission, self).save(**kwargs)
         
-    def __unicode__(self):
+    def __str__(self):
         return self.get_ec_number_display()
 
     def finish(self):
@@ -558,7 +557,7 @@ class SubmissionForm(models.Model):
         assert self.pk is not None      # already saved
         return self.submission.forms.filter(created_at__lte=self.created_at).count()
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s: %s" % (self.submission.get_ec_number_display(), self.german_project_title or self.project_title)
     
     def get_filename_slice(self):
@@ -724,9 +723,9 @@ class SubmissionForm(models.Model):
     def get_type_display(self):
         bits = []
         if self.is_amg:
-            bits.append(u'{0}({1})'.format(_(u'AMG'), self.get_submission_type_display()))
+            bits.append('{0}({1})'.format(_('AMG'), self.get_submission_type_display()))
         if self.is_mpg:
-            bits.append(_(u'MPG'))
+            bits.append(_('MPG'))
         if self.is_thesis:
             bits.append(self.get_project_type_education_context_display())
         if self.includes_minors:
@@ -735,15 +734,15 @@ class SubmissionForm(models.Model):
             bits.append(_('Investigator invited'))
         if self.project_type_non_interventional_study:
             bits.append(_('NIS'))
-        return u', '.join(bits)
+        return ', '.join(bits)
 
     def get_substance_registered_in_countries_display(self):
-        c = [unicode(countries.name(c)) for c in self.substance_registered_in_countries]
-        return u', '.join(sorted(c))
+        c = [str(countries.name(c)) for c in self.substance_registered_in_countries]
+        return ', '.join(sorted(c))
 
     def get_substance_p_c_t_countries_display(self):
-        c = [unicode(countries.name(c)) for c in self.substance_p_c_t_countries]
-        return u', '.join(sorted(c))
+        c = [str(countries.name(c)) for c in self.substance_p_c_t_countries]
+        return ', '.join(sorted(c))
     
     @property
     def study_plan_dataprotection_none(self):
@@ -875,7 +874,7 @@ class InvestigatorEmployee(models.Model):
     def geschlecht_string(self):
         return dict(m="Hr", f="Fr").get(self.sex, "")
         
-    def __unicode__(self):
+    def __str__(self):
         return self.full_name
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import hashlib
 
 from django.conf import settings
@@ -7,13 +6,14 @@ from django.contrib.auth.decorators import user_passes_test
 from django.utils.functional import wraps
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.http import HttpRequest
 
 from ecs.users.middleware import current_user_store
 from ecs.users.models import Invitation
 from ecs.communication.mailutils import deliver_to_recipient
 from ecs.utils.viewutils import render_html
+import collections
 
 # Do not import models here which depend on the AuthorizationManager, because
 # the AuthorizationManager depends on this module. If you need to import a
@@ -21,7 +21,7 @@ from ecs.utils.viewutils import render_html
 
 
 def hash_email(email):
-    return hashlib.md5(email.lower()).hexdigest()[:30]
+    return hashlib.md5(email.lower().encode('utf-8')).hexdigest()[:30]
 
 def get_or_create_user(email, defaults=None, **kwargs):
     if defaults is None:
@@ -53,18 +53,18 @@ def get_full_name(user):
             nameparts.insert(0, profile.title)
         if profile.gender:
             if profile.gender == 'f':
-                nameparts.insert(0, force_unicode(_('Ms.')))
+                nameparts.insert(0, force_text(_('Ms.')))
             if profile.gender == 'm':
-                nameparts.insert(0, force_unicode(_('Mr.')))
-        return u' '.join(nameparts)
+                nameparts.insert(0, force_text(_('Mr.')))
+        return ' '.join(nameparts)
     else:
-        return unicode(user.email)
+        return str(user.email)
 
 def get_formal_name(user):
     if user.first_name and user.last_name:
-        return u'{0}, {1}'.format(user.last_name, user.first_name)
+        return '{0}, {1}'.format(user.last_name, user.first_name)
     else:
-        return unicode(user.email)
+        return str(user.email)
 
 class sudo(object):
     """
@@ -79,7 +79,7 @@ class sudo(object):
         self._previous_previous_user = getattr(current_user_store, '_previous_user', None)
         self._previous_user = getattr(current_user_store, 'user', None)
         user = self.user
-        if callable(user):
+        if isinstance(user, collections.Callable):
             user = user()
         current_user_store._previous_user = self._previous_user
         current_user_store.user = user
@@ -120,9 +120,9 @@ def create_phantom_user(email, role=None):
         link = '{0}{1}'.format(
             settings.ABSOLUTE_URL_PREFIX,
             reverse('ecs.users.views.accept_invitation',
-                kwargs={'invitation_uuid': invitation.uuid.get_hex()})
+                kwargs={'invitation_uuid': invitation.uuid.hex})
         )
-        htmlmail = unicode(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
+        htmlmail = str(render_html(HttpRequest(), 'users/invitation/invitation_email.html', {
             'link': link,
         }))
         msgid, rawmail = deliver_to_recipient(email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
@@ -134,7 +134,7 @@ def get_office_user(submission=None):
     from ecs.core.models import AdvancedSettings
     if submission is not None:
         with sudo():
-            tasks = Task.objects.for_submission(submission).filter(task_type__groups__name=u'EC-Office').exclude(assigned_to=get_current_user()).closed().order_by('-closed_at')
+            tasks = Task.objects.for_submission(submission).filter(task_type__groups__name='EC-Office').exclude(assigned_to=get_current_user()).closed().order_by('-closed_at')
             try:
                 return tasks[0].assigned_to
             except IndexError:

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 
 
@@ -14,7 +11,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='checklist',
             name='status',
-            field=models.CharField(default=b'new', max_length=15, choices=[(b'new', 'New'), (b'completed', 'Completed'), (b'review_ok', 'Review OK'), (b'review_fail', 'Review Failed'), (b'dropped', 'Dropped')]),
+            field=models.CharField(default='new', max_length=15, choices=[('new', 'New'), ('completed', 'Completed'), ('review_ok', 'Review OK'), ('review_fail', 'Review Failed'), ('dropped', 'Dropped')]),
             preserve_default=True,
         ),
     ]

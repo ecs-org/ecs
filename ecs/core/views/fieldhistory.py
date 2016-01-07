@@ -28,7 +28,7 @@ def field_history(request, model_name=None, pk=None):
     obj = get_object_or_404(model, pk=pk)
 
     history = []
-    last_value = dict((fieldname, u'') for fieldname, label in fields)
+    last_value = dict((fieldname, '') for fieldname, label in fields)
     last_change = None
     versions = list(
         reversion.get_for_object(obj).order_by('revision__date_created')
@@ -36,7 +36,7 @@ def field_history(request, model_name=None, pk=None):
     for change in versions:
         diffs = []
         for fieldname, label in fields:
-            value = change.field_dict[fieldname] or u''
+            value = change.field_dict[fieldname] or ''
             diffs += [(label, word_diff(last_value[fieldname], value))]
             last_value[fieldname] = value
 
@@ -52,12 +52,12 @@ def field_history(request, model_name=None, pk=None):
             for op, line in diff:
                 line = line.replace('\n', '<br/>')
                 if op:
-                    html_diff.append(u'<span class="%s">%s</span>' % ('inserted' if op > 0 else 'deleted', line))
+                    html_diff.append('<span class="%s">%s</span>' % ('inserted' if op > 0 else 'deleted', line))
                 else:
                     html_diff.append(line)
             if len(html_diff) == 1 and not html_diff[0]:
                 html_diff = []
-            html_diffs += [(label, u''.join(html_diff))]
+            html_diffs += [(label, ''.join(html_diff))]
         
         history.append({
             'timestamp': change.revision.date_created,

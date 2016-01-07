@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -88,7 +85,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='timetableentry',
-            unique_together=set([('meeting', 'timetable_index')]),
+            unique_together={('meeting', 'timetable_index')},
         ),
         migrations.AddField(
             model_name='participation',
@@ -134,6 +131,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='assignedmedicalcategory',
-            unique_together=set([('category', 'meeting')]),
+            unique_together={('category', 'meeting')},
         ),
     ]

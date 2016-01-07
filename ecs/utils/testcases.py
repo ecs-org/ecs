@@ -71,7 +71,7 @@ class EcsTestCase(TestCase):
         user.set_password('password')
         user.save()
         profile = user.profile
-        for k, v in profile_extra.iteritems():
+        for k, v in profile_extra.items():
             setattr(profile, k, v)
         profile.save()
         return user

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.utils.translation import ugettext as _
 
 from ecs.utils.testcases import EcsTestCase
@@ -33,5 +32,5 @@ class SubmissionFormDiffTest(EcsTestCase):
         
         self.new_sf.project_title = 'roflcopter'
         diff = diff_submission_forms(self.old_sf, self.new_sf)
-        self.assertTrue(diff[u'1.1 %s' % _('project title (english)')])
-        self.assertEqual(diff[u'1.1 %s' % _('project title (english)')].new, 'roflcopter')
+        self.assertTrue(diff['1.1 %s' % _('project title (english)')])
+        self.assertEqual(diff['1.1 %s' % _('project title (english)')].new, 'roflcopter')

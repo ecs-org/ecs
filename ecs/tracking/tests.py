@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 
 from django.conf import settings
@@ -37,7 +36,7 @@ class CleanupTest(EcsTestCase):
         N = tasks.MAX_REQUESTS_PER_USER + 2
         for user in users:
             with self.login(user, 'password'):
-                for i in xrange(N):
+                for i in range(N):
                     response = self.client.get('/dashboard/')
                     time.sleep(2) # make shure we get different timestamps
         self.assertEqual(Request.objects.count(), N * len(users))

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 import re
 import textwrap
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 
 from django.conf import settings
 from django.core import mail
@@ -50,7 +49,7 @@ def deliver(recipient_list, *args, **kwargs):
     returns a list of (msgid, rawmessage) for each messages to be sent
     '''
     # make a list if only one recipient (and therefore string) is there
-    if isinstance(recipient_list, basestring):
+    if isinstance(recipient_list, str):
         recipient_list = [recipient_list]
 
     sentids = []

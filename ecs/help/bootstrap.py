@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from ecs import bootstrap
 from django.core import management
 

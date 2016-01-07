@@ -31,10 +31,10 @@ class Command(BaseCommand):
             )
             guards.add(guard)
             if created and not quiet:
-                print "Created guard '%s' for %s" % (g._meta.name, _format_model(g._meta.model))
+                print("Created guard '%s' for %s" % (g._meta.name, _format_model(g._meta.model)))
 
         for removed_guard in Guard.objects.exclude(pk__in=[g.pk for g in guards]):
-            print "The implementation for Guard '%s' could not be found, but it is still present in the db." % removed_guard.implementation
+            print("The implementation for Guard '%s' could not be found, but it is still present in the db." % removed_guard.implementation)
 
         node_types = set()
         for a in iter_activities():
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             )
             node_types.add(node_type)
             if created and not quiet:
-                print "Created activity '%s' for %s" % (a._meta.name, _format_model(a._meta.model))
+                print("Created activity '%s' for %s" % (a._meta.name, _format_model(a._meta.model)))
 
         for c in iter_controls():
             node_type, created = NodeType.objects.get_or_create(
@@ -57,9 +57,9 @@ class Command(BaseCommand):
             )
             node_types.add(node_type)
             if created and not quiet:
-                print "Created control '%s' for %s" % (c._meta.name, _format_model(c._meta.model))
+                print("Created control '%s' for %s" % (c._meta.name, _format_model(c._meta.model)))
         
         for removed_node_type in NodeType.objects.exclude(pk__in=[nt.pk for nt in node_types]):
             if not removed_node_type.is_subgraph:
-                print "The implementation for NodeType '%s' could not be found, but it is still present in the db." % removed_node_type.implementation
+                print("The implementation for NodeType '%s' could not be found, but it is still present in the db." % removed_node_type.implementation)
             

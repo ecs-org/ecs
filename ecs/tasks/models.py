@@ -21,12 +21,12 @@ class TaskType(models.Model):
     groups = models.ManyToManyField(Group, related_name='task_types', blank=True)
     is_delegatable = models.BooleanField(default=True)
     
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
             return _(self.name)
         elif self.workflow_node_id:
-            return u'TaskType for %s' % self.workflow_node
-        return u'TaskType <Anonymous>'
+            return 'TaskType for %s' % self.workflow_node
+        return 'TaskType <Anonymous>'
 
     @property
     def trans_name(self):
@@ -264,10 +264,10 @@ class Task(models.Model):
         if user and check_authorization:
             groups = self.task_type.groups.all()
             if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
-                raise ValueError((u"Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (
+                raise ValueError(("Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (
                     self, 
                     user, 
-                    ", ".join(unicode(x) for x in self.task_type.groups.all()),
+                    ", ".join(str(x) for x in self.task_type.groups.all()),
                 )).encode('ascii', 'ignore'))
         self.assigned_to = user
         self.accepted = False
@@ -297,8 +297,8 @@ class Task(models.Model):
             return Task.objects.none()
         return Task.objects.filter(workflow_token__workflow=self.workflow_token.workflow)
         
-    def __unicode__(self):
-        return u"%s %s" % (self.data, self.task_type)
+    def __str__(self):
+        return "%s %s" % (self.data, self.task_type)
 
 # workflow integration:
 def workflow_token_received(sender, **kwargs):

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.contrib import admin
 from ecs.workflow.models import Graph, Node, Edge, Workflow, Token, NodeType, Guard
 

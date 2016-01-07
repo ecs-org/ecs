@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import math
 from datetime import timedelta, datetime
 from django.db import models
@@ -77,7 +76,7 @@ class TimetableMetrics(object):
     @cached_property
     def waiting_time_total(self):
         s = timedelta(seconds=0)
-        for time in self.waiting_time_per_user.itervalues():
+        for time in self.waiting_time_per_user.values():
             s += time
         return s
         
@@ -91,13 +90,13 @@ class TimetableMetrics(object):
     def waiting_time_max(self):
         if not self.waiting_time_per_user:
             return timedelta(seconds=0)
-        return max(self.waiting_time_per_user.itervalues())
+        return max(self.waiting_time_per_user.values())
 
     @cached_property
     def waiting_time_min(self):
         if not self.waiting_time_per_user:
             return timedelta(seconds=0)
-        return min(self.waiting_time_per_user.itervalues())
+        return min(self.waiting_time_per_user.values())
         
     @cached_property
     def waiting_time_variance(self):
@@ -105,7 +104,7 @@ class TimetableMetrics(object):
             return timedelta(seconds=0)
         avg = self.waiting_time_avg.total_seconds()
         var = 0
-        for time in self.waiting_time_per_user.itervalues():
+        for time in self.waiting_time_per_user.values():
             d = avg - time.total_seconds()
             var += d*d
         return timedelta(seconds=math.sqrt(var / len(self.waiting_time_per_user)))
@@ -121,7 +120,7 @@ class AssignedMedicalCategory(models.Model):
     class Meta:
         unique_together = (('category', 'meeting'),)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s - %s' % (self.meeting.title, self.category.name)
 
 class MeetingManager(AuthorizationManager):
@@ -209,7 +208,7 @@ class Meeting(models.Model):
         entries = self.retrospective_thesis_entries.all() | self.expedited_entries.all() | self.localec_entries.all()
         return entries.order_by('pk')
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s: %s" % (self.start, self.title)
         
     def save(self, **kwargs):
@@ -360,7 +359,7 @@ class Meeting(models.Model):
             duration += entry.duration
             entry.end = self.start + duration
             entries.append(entry)
-        return tuple(entries), set(users_by_id.itervalues())
+        return tuple(entries), set(users_by_id.values())
         
     def __iter__(self):
         entries, users = self.timetable
@@ -387,7 +386,7 @@ class Meeting(models.Model):
     def open_tops_with_vote(self):
         return self.timetable_entries.filter(timetable_index__isnull=False, is_open=True, vote__result__isnull=False)
 
-    def __nonzero__(self):
+    def __bool__(self):
         return True   # work around a django bug
 
     def get_agenda_pdf(self, request):
@@ -477,8 +476,8 @@ class Meeting(models.Model):
                 del old_assignments[cat.pk]
             else:
                 AssignedMedicalCategory.objects.get_or_create(meeting=self, category=cat)
-        AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.itervalues()]).delete()
-        Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=old_assignments.keys()).delete()
+        AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.values()]).delete()
+        Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=list(old_assignments.keys())).delete()
         
         # delete Participation entries where med-cat is not inside the referenced study anymore
         for p in Participation.objects.filter(entry__meeting=self):
@@ -498,8 +497,8 @@ class TimetableEntry(models.Model):
 
     objects = AuthorizationManager()
 
-    def __unicode__(self):
-        return u"TOP %s" % (self.agenda_index + 1)
+    def __str__(self):
+        return "TOP %s" % (self.agenda_index + 1)
 
     class Meta:
         unique_together = (
@@ -647,8 +646,8 @@ class TimetableEntry(models.Model):
                 meeting_participations__entry__timetable_index__gte=self.timetable_index,
             ).distinct()
         )
-        before = self._collect_users(padding_before, xrange(self.index - 1, -1, -1)).difference(waiting_users)
-        after = self._collect_users(padding_after, xrange(self.index + 1, len(self.meeting))).difference(waiting_users)
+        before = self._collect_users(padding_before, range(self.index - 1, -1, -1)).difference(waiting_users)
+        after = self._collect_users(padding_after, range(self.index + 1, len(self.meeting))).difference(waiting_users)
         return len(before), len(waiting_users), len(after)
 
     @property
@@ -668,7 +667,7 @@ class TimetableEntry(models.Model):
                 kwargs['timetable_index'] = last_index + 1
         elif from_visible:
             kwargs['timetable_index'] = None
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k, v)
         self.save()
         if from_visible:

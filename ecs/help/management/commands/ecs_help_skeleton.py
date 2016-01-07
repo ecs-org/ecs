@@ -12,7 +12,7 @@ def _create_all_views(resolver):
     if not hasattr(resolver.urlconf_name, 'startswith') or not resolver.urlconf_name.startswith('ecs.'):
         return
     for pattern in resolver.url_patterns:
-        if isinstance(pattern, (urlresolvers.RegexURLResolver,)):
+        if isinstance(pattern, urlresolvers.RegexURLResolver):
             _create_all_views(pattern)
             continue
         callback = pattern._get_callback()

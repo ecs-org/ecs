@@ -83,7 +83,7 @@ class DocStash(models.Model):
         try:
             self._transaction = DocStashData(stash=self, version=version+1, value=self.current_value, name=self.current_name)
         except DocStashData.DoesNotExist:
-            raise UnknownVersion("key=%s, version=%s" % (self.key.get_hex(), version))
+            raise UnknownVersion("key=%s, version=%s" % (self.key.hex, version))
     
     @_transaction_required
     def commit_transaction(self):
@@ -153,7 +153,7 @@ class DocStashData(models.Model):
         unique_together = ('version', 'stash')
         
     def __str__(self):
-        return "stash_key=%s, version=%s" % (self.stash.key.get_hex(), self.version)
+        return "stash_key=%s, version=%s" % (self.stash.key.hex, self.version)
         
     def is_dirty(self):
         return getattr(self, '_dirty', False)
@@ -190,6 +190,6 @@ class DocStashData(models.Model):
 
     def get_query_dict(self):
         query_dict = QueryDict("", mutable=True)
-        for name, value in self.value.iteritems():
+        for name, value in self.value.items():
             query_dict.setlist(name, value)
         return query_dict

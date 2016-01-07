@@ -18,7 +18,7 @@
         {% endfor %}
         </ol>
 
-        {% for section in stats.itervalues %}
+        {% for section in stats.values %}
             <h2>{{ section.label }}</h2>
             <table>
             {% for entry in section %}

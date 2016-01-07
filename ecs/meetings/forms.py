@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 from datetime import timedelta
 
 from django import forms
@@ -23,10 +22,10 @@ class MeetingForm(TranslatedModelForm):
         model = Meeting
         fields = ('start', 'title', 'deadline', 'deadline_diplomathesis')
         labels = {
-            'start': _(u'date and time'),
-            'title': _(u'title'),
-            'deadline': _(u'deadline'),
-            'deadline_diplomathesis': _(u'deadline thesis'),
+            'start': _('date and time'),
+            'title': _('title'),
+            'deadline': _('deadline'),
+            'deadline_diplomathesis': _('deadline thesis'),
         }
 
 class TimetableEntryForm(forms.Form):
@@ -39,10 +38,10 @@ class MeetingAssistantForm(forms.ModelForm):
         fields = ('comments',)
 
 class FreeTimetableEntryForm(forms.Form):
-    title = forms.CharField(required=True, label=_(u'title'), max_length=TimetableEntry._meta.get_field('title').max_length)
-    duration = forms.DurationField(initial=u'1:30:00', label=_(u"duration"))
-    is_break = forms.BooleanField(label=_(u"break"), required=False)
-    optimal_start = TimeField(required=False, label=_(u'ideal start time (time)'))
+    title = forms.CharField(required=True, label=_('title'), max_length=TimetableEntry._meta.get_field('title').max_length)
+    duration = forms.DurationField(initial='1:30:00', label=_("duration"))
+    is_break = forms.BooleanField(label=_("break"), required=False)
+    optimal_start = TimeField(required=False, label=_('ideal start time (time)'))
     index = forms.TypedChoiceField(label=_('Position'), coerce=int, empty_value=None, required=False, choices=[
         ('', _('Automatic')), 
         ('-1', _('Last')), 
@@ -55,9 +54,9 @@ class BaseConstraintFormSet(BaseModelFormSet):
         super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
 
 class ConstraintForm(forms.ModelForm):
-    start_time = TimeField(label=_(u'from (time)'), required=True)
-    end_time = TimeField(label=_(u'to (time)'), required=True)
-    weight = forms.ChoiceField(label=_(u'weighting'), choices=WEIGHT_CHOICES)
+    start_time = TimeField(label=_('from (time)'), required=True)
+    end_time = TimeField(label=_('to (time)'), required=True)
+    weight = forms.ChoiceField(label=_('weighting'), choices=WEIGHT_CHOICES)
 
     class Meta:
         model = Constraint
@@ -86,7 +85,7 @@ class UserChoiceField(forms.ModelChoiceField):
         super(UserChoiceField, self).__init__(queryset, *args, **kwargs)
 
     def label_from_instance(self, user):
-        return u'{0} <{1}>'.format(unicode(user), user.email)
+        return '{0} <{1}>'.format(str(user), user.email)
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
     board_member = UserChoiceField(required=False)
@@ -99,7 +98,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         instance = kwargs['instance']
         self.submissions = instance.meeting.submissions.filter(medical_categories=instance.category).order_by('ec_number')
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(is_active=True, medical_categories=instance.category, groups__name=u'EC-Board Member').order_by('email')
+        self.fields['board_member'].queryset = User.objects.filter(is_active=True, medical_categories=instance.category, groups__name='EC-Board Member').order_by('email')
 
 AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory, extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
 
@@ -109,7 +108,7 @@ class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     def label_from_instance(self, obj):
         s = obj.submission
-        return u'{0} {1}'.format(s.get_ec_number_display(), s.project_title_display())
+        return '{0} {1}'.format(s.get_ec_number_display(), s.project_title_display())
 
 
 class ExpeditedVoteForm(forms.ModelForm):

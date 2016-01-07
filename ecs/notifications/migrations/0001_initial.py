@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -23,7 +20,7 @@ class Migration(migrations.Migration):
                 ('comments', models.TextField()),
                 ('date_of_receipt', models.DateField(null=True, blank=True)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('review_lane', models.CharField(db_index=True, max_length=6, null=True, choices=[(b'exerev', b'Executive Review'), (b'notrev', b'Notification Group Review'), (b'insrev', b'Insurance Group Review')])),
+                ('review_lane', models.CharField(db_index=True, max_length=6, null=True, choices=[('exerev', 'Executive Review'), ('notrev', 'Notification Group Review'), ('insrev', 'Insurance Group Review')])),
             ],
             options={
             },
@@ -80,7 +77,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(unique=True, max_length=80)),
-                ('form', models.CharField(default=b'ecs.notifications.forms.NotificationForm', max_length=80)),
+                ('form', models.CharField(default='ecs.notifications.forms.NotificationForm', max_length=80)),
                 ('default_response', models.TextField(blank=True)),
                 ('position', models.IntegerField(default=0)),
                 ('includes_diff', models.BooleanField(default=False)),
@@ -114,7 +111,7 @@ class Migration(migrations.Migration):
             name='SafetyNotification',
             fields=[
                 ('notification_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='notifications.Notification')),
-                ('safety_type', models.CharField(db_index=True, max_length=6, verbose_name='Type', choices=[(b'susar', 'SUSAR'), (b'sae', 'SAE'), (b'asr', 'Annual Safety Report'), (b'other', 'Other Safety Report')])),
+                ('safety_type', models.CharField(db_index=True, max_length=6, verbose_name='Type', choices=[('susar', 'SUSAR'), ('sae', 'SAE'), ('asr', 'Annual Safety Report'), ('other', 'Other Safety Report')])),
                 ('is_acknowledged', models.BooleanField(default=False)),
                 ('reviewer', models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True)),
             ],

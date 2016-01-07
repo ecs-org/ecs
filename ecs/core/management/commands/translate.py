@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 from subprocess import list2cmdline
 

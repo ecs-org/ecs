@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 import re
 from datetime import timedelta
@@ -27,7 +26,7 @@ class NotificationFormTest(LoginTestCase):
         NotificationType.objects.create(name='foo notif')
         response = self.client.get(reverse('ecs.notifications.views.select_notification_creation_type'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('foo notif' in response.content)
+        self.assertTrue(b'foo notif' in response.content)
         
     def _create_POST_data(self, **extra):
         data = {
@@ -49,23 +48,23 @@ class NotificationFormTest(LoginTestCase):
         url = response['Location']
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('foo notif' in response.content)
-        self.assertTrue('<form' in response.content)
+        self.assertTrue(b'foo notif' in response.content)
+        self.assertTrue(b'<form' in response.content)
         
         # POST the form in `autosave` mode
         response = self.client.post(url, self._create_POST_data(autosave='autosave'))
         self.assertEqual(response.status_code, 200)
-        self.assertFalse('<form' in response.content)
+        self.assertFalse(b'<form' in response.content)
 
         # POST the form in `save` mode
         response = self.client.post(url, self._create_POST_data(save='save', comments='bar comment'))
         self.assertEqual(response.status_code, 200)
-        self.assertFalse('<form' in response.content)
+        self.assertFalse(b'<form' in response.content)
         
         # POST the form in `submit` mode (incomplete data)
         response = self.client.post(url, self._create_POST_data(submit='submit'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('<form' in response.content)
+        self.assertTrue(b'<form' in response.content)
         form = response.context['form']
         self.assertEqual(form['comments'].data, 'foo comment')
         
@@ -93,13 +92,13 @@ class NotificationFormTest(LoginTestCase):
         '''Tests if a pdf is produced if a Notification is created.
         '''
 
-        notification_type, _ = NotificationType.objects.get_or_create(name=u'foo notif')
+        notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
         notification = Notification.objects.create(type=notification_type)
         notification.render_pdf()
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': notification.pdf_document.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
-        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
+        self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
 
     def _setup_POST_url(self):
         notification_type = NotificationType.objects.create(name='foo notif')
@@ -119,13 +118,13 @@ class NotificationFormTest(LoginTestCase):
         data.update({
             'document-file': f,
             'document-doctype': doctype.pk,
-            'document-name': u'menschenrechtserklärung',
+            'document-name': 'menschenrechtserklärung',
             'document-version': '3.1415',
             'document-date': '17.03.2010',
         })
         response = self.client.post(upload_url, data)
         f.close()
-        self.assertTrue('<form' in response.content)
+        self.assertTrue(b'<form' in response.content)
         documents = response.context['documents']
         self.assertEqual(len(documents), 1)
         doc = documents[0]
@@ -134,7 +133,7 @@ class NotificationFormTest(LoginTestCase):
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
-        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
+        self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
    
     def test_incomplete_upload(self):
         '''Tests an incomplete document upload. Regression test for the KeyError bug fixed in r729:b022598f8e55
@@ -152,7 +151,7 @@ class NotificationFormTest(LoginTestCase):
         })
         response = self.client.post(upload_url, data)
         self.assertEqual(response.status_code, 200)
-        self.assertTrue('<form' in response.content)
+        self.assertTrue(b'<form' in response.content)
 
     def test_vote_extension_workflow(self):
         from django.contrib.auth.models import Group
@@ -164,11 +163,11 @@ class NotificationFormTest(LoginTestCase):
 
         presenter = self.create_user('test_presenter')
         office = self.create_user('test_office', profile_extra={'is_internal': True})
-        office.groups.add(Group.objects.get(name=u'EC-Office'))
+        office.groups.add(Group.objects.get(name='EC-Office'))
         executive = self.create_user('text_executive', profile_extra={'is_internal': True, 'is_executive_board_member': True})
         executive.groups.add(
-            Group.objects.get(name=u'EC-Executive Board Group'),
-            Group.objects.get(name=u'EC-Notification Review Group'),
+            Group.objects.get(name='EC-Executive Board Group'),
+            Group.objects.get(name='EC-Notification Review Group'),
         )
 
         sf = create_submission_form(presenter=presenter)

@@ -29,8 +29,8 @@ class Party(object):
     def name(self):
         name = self._name or self.user or self._email
         if self.anonymous or not name:
-            return u'- anonymous -'
-        return unicode(name)
+            return '- anonymous -'
+        return str(name)
 
     @property
     def user(self):
@@ -44,7 +44,7 @@ class Party(object):
         return all(getattr(self, attr) == getattr(other, attr) for attr in ('organization', '_name', '_email', '_user', 'involvement', 'anonymous'))
 
     def __repr__(self):
-        return unicode(self.email)
+        return str(self.email)
 
 
 class PartyList(list):

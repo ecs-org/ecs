@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -24,7 +21,7 @@ class Migration(migrations.Migration):
                 ('anchor', models.CharField(db_index=True, max_length=100, blank=True)),
                 ('title', models.TextField(blank=True)),
                 ('content_type', models.CharField(max_length=100)),
-                ('method', models.CharField(db_index=True, max_length=4, choices=[(b'GET', b'GET'), (b'POST', b'POST')])),
+                ('method', models.CharField(db_index=True, max_length=4, choices=[('GET', 'GET'), ('POST', 'POST')])),
                 ('user', models.ForeignKey(related_name='requests', to=settings.AUTH_USER_MODEL)),
             ],
             options={

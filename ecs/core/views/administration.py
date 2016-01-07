@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.shortcuts import render
 
 from ecs.core.models import AdvancedSettings, EthicsCommission

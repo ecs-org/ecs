@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 import zipfile, os, datetime
 from tempfile import TemporaryFile
@@ -167,7 +166,7 @@ class ModelSerializer(object):
         return prefix, key
         
     def dump_field(self, fieldname, val, zf, obj):
-        if val is None or isinstance(val, (bool, basestring, int, long, list, datetime.datetime, datetime.date)):
+        if val is None or isinstance(val, (bool, str, int, list, datetime.datetime, datetime.date)):
             return val
         if hasattr(val, 'all') and hasattr(val, 'count'):
             try:
@@ -178,7 +177,7 @@ class ModelSerializer(object):
                     except SkipInstance:
                         pass
                 return result
-            except ValueError, e:
+            except ValueError as e:
                 raise ValueError("cannot dump {0}.{1}: {2}".format(self.model.__name__, fieldname, e))
         
         field = self.model._meta.get_field(fieldname)
@@ -295,7 +294,7 @@ class ModelSerializer(object):
                 try:
                     return _serializers[field.rel.to].docs()
                 except KeyError:
-                    print fieldname, self.model
+                    print(fieldname, self.model)
             if isinstance(field, models.ManyToManyField):
                 spec = _serializers[field.rel.to].docs()
                 spec['array'] = True
@@ -346,7 +345,7 @@ class DocumentSerializer(ModelSerializer):
         zip_name = 'attachments/{0}'.format(uuid4())
         if obj.mimetype == 'application/pdf':
             zip_name += '.pdf'
-        f = getVault()[obj.uuid.get_hex()]
+        f = getVault()[obj.uuid.hex]
         zf.writestr(zip_name, f.read())
         f.close()
         d['file'] = zip_name
@@ -372,10 +371,10 @@ class EthicsCommissionSerializer(object):
             raise ValueError("no such ethicscommission: {0}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"{0}"'.format(ec.uuid.get_hex()), ec.name) for ec in EthicsCommission.objects.all()])
+        return FieldDocs(choices=[('"{0}"'.format(ec.uuid.hex), ec.name) for ec in EthicsCommission.objects.all()])
         
     def dump(self, obj, zf):
-        return obj.uuid.get_hex()
+        return obj.uuid.hex
         
 class SubmissionSerializer(ModelSerializer):
     def __init__(self, **kwargs):
@@ -444,7 +443,7 @@ class Serializer(object):
 
     def read(self, file_like):
         zf = zipfile.ZipFile(file_like, 'r')
-        data = json.loads(zf.read(DATA_JSON_NAME))
+        data = json.loads(zf.read(DATA_JSON_NAME).decode('utf-8'))
         submission_form = _serializers[SubmissionForm].load(data['data'], zf, data['version'])
         return submission_form
     
@@ -457,7 +456,7 @@ class Serializer(object):
             'data': dump_model_instance(submission_form, zf),
         }
         zf.writestr(DATA_JSON_NAME,
-            json.dumps(data, cls=_JsonEncoder, indent=2))
+            json.dumps(data, cls=_JsonEncoder, indent=2).encode('utf-8'))
     
     def docs(self):
         return _serializers[SubmissionForm].docs()

@@ -240,7 +240,7 @@
       {% fetch_messages as new_messages %}
       {% fetch_tasks as new_tasks %}
       var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender|escapejs }}', 'subject': '{{ message.thread.subject|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
-      var newTasks = [{% for task in new_tasks %}{'__unicode__': '{{ task|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
+      var newTasks = [{% for task in new_tasks %}{'__str__': '{{ task|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
 
       var message_popup_body = '';
       newMessages.each(function(msg) {
@@ -252,7 +252,7 @@
       {% endif %}
 
       newTasks.each(function(task){
-          ecs.messages.alert('Neue Aufgabe', '<strong>{__unicode__}</strong>'.substitute(task));
+          ecs.messages.alert('Neue Aufgabe', '<strong>{__str__}</strong>'.substitute(task));
       });
       
       {% for message in messages %}

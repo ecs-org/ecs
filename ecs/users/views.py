@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 from datetime import datetime, timedelta
 import random
@@ -109,11 +108,11 @@ def register(request):
     if form.is_valid():
         token = _registration_token_factory.generate_token(form.cleaned_data)
         activation_url = request.build_absolute_uri(reverse('ecs.users.views.activate', kwargs={'token': token}))        
-        htmlmail = unicode(render_html(request, 'users/registration/activation_email.html', {
+        htmlmail = str(render_html(request, 'users/registration/activation_email.html', {
             'activation_url': activation_url,
             'form': form,
         }))
-        deliver(form.cleaned_data['email'], subject=_(u'ECS - Registration'), message=None, message_html=htmlmail,
+        deliver(form.cleaned_data['email'], subject=_('ECS - Registration'), message=None, message_html=htmlmail,
             from_email= settings.DEFAULT_FROM_EMAIL, nofilter=True)
         return render(request, 'users/registration/registration_complete.html', {})
         
@@ -171,7 +170,7 @@ def request_password_reset(request):
                 user = get_user(email)
             except User.DoesNotExist:
                 register_url = request.build_absolute_uri(reverse('ecs.users.views.register'))
-                htmlmail = unicode(render_html(request, 'users/password_reset/register_email.html', {
+                htmlmail = str(render_html(request, 'users/password_reset/register_email.html', {
                     'register_url': register_url,
                     'email': email,
                 }))
@@ -179,10 +178,10 @@ def request_password_reset(request):
                 timestamp = (datetime.utcnow() - datetime.utcfromtimestamp(0)).total_seconds()
                 token = _password_reset_token_factory.generate_token([email, timestamp])
                 reset_url = request.build_absolute_uri(reverse('ecs.users.views.do_password_reset', kwargs={'token': token}))
-                htmlmail = unicode(render_html(request, 'users/password_reset/reset_email.html', {
+                htmlmail = str(render_html(request, 'users/password_reset/reset_email.html', {
                     'reset_url': reset_url,
                 }))
-            deliver(email, subject=_(u'ECS - Password Reset'), message=None, message_html=htmlmail,
+            deliver(email, subject=_('ECS - Password Reset'), message=None, message_html=htmlmail,
                 from_email= settings.DEFAULT_FROM_EMAIL, nofilter=True)
         return render(request, 'users/password_reset/request_complete.html', {
             'email': email,
@@ -287,15 +286,15 @@ def toggle_active(request, user_pk=None):
 @user_group_required('EC-Office', 'EC-Executive Board Group')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    was_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
+    was_signing_user = user.groups.filter(name='EC-Signing Group').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
     saved = False
     if request.method == 'POST' and form.is_valid():
         user = form.save()
         saved = True
-        is_signing_user = user.groups.filter(name=u'EC-Signing Group').exists()
+        is_signing_user = user.groups.filter(name='EC-Signing Group').exists()
         if is_signing_user and not was_signing_user:
-            for u in User.objects.filter(groups__name=u'EC-Signing Group'):
+            for u in User.objects.filter(groups__name='EC-Signing Group'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
 
     return render(request, 'users/details.html', {
@@ -383,17 +382,17 @@ def invite(request):
         subject = 'Erstellung eines Zugangs zum ECS'
         link = request.build_absolute_uri(
             reverse('ecs.users.views.accept_invitation',
-                kwargs={'invitation_uuid': invitation.uuid.get_hex()})
+                kwargs={'invitation_uuid': invitation.uuid.hex})
         )
-        htmlmail = unicode(render_html(request, 'users/invitation/invitation_email.html', {
+        htmlmail = str(render_html(request, 'users/invitation/invitation_email.html', {
             'invitation_text': form.cleaned_data['invitation_text'],
             'link': link,
         }))
         transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
         msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
 
-        if user.groups.filter(name=u'EC-Signing Group').exists():
-            for u in User.objects.filter(groups__name=u'EC-Signing Group'):
+        if user.groups.filter(name='EC-Signing Group').exists():
+            for u in User.objects.filter(groups__name='EC-Signing Group'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
         return redirect('ecs.users.views.details', user_pk=user.pk)
 

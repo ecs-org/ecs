@@ -75,6 +75,6 @@ class WorkflowIntegrationTest(WorkflowTestCase):
         a_task = Task.objects.filter(closed_at=None).get()
         obj.workflow.do(decl.A)
         b_task = Task.objects.filter(closed_at=None).get()
-        self.assertEqual(set(b_task.trail), set([a_task]))
+        self.assertEqual(set(b_task.trail), {a_task})
 
         

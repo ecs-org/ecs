@@ -201,9 +201,9 @@ ECS_TRACKING_ENABLED = False
 ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 
 # users in these groups receive messages even when they are not related to studies
-ECS_MEETING_AGENDA_RECEIVER_GROUPS = (u'Resident Board Member Group',)
-ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = (u'Meeting Protocol Receiver Group', u'Resident Board Member Group')
-ECS_AMENDMENT_RECEIVER_GROUPS = (u'Amendment Receiver Group',)
+ECS_MEETING_AGENDA_RECEIVER_GROUPS = ('Resident Board Member Group',)
+ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = ('Meeting Protocol Receiver Group', 'Resident Board Member Group')
+ECS_AMENDMENT_RECEIVER_GROUPS = ('Amendment Receiver Group',)
 
 ECS_AMG_MPG_VOTE_RECEIVERS = ('BASG.EKVoten@ages.at',)
 
@@ -351,7 +351,7 @@ except ImportError:
 # load config from ecs-config/django.py
 _config_file = os.path.join(ECS_CONFIG_DIR, 'django.py')
 if os.path.exists(_config_file):
-    execfile(_config_file)
+    exec(compile(open(_config_file).read(), _config_file, 'exec'))
 
 # apply local overrides
 local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import migrations, models
 import uuid
 
@@ -41,7 +38,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='docstashdata',
-            unique_together=set([('version', 'stash')]),
+            unique_together={('version', 'stash')},
         ),
         migrations.RemoveField(
             model_name='docstashdata',

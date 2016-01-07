@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os, tempfile
 from django.conf import settings
 from ecs.utils.testcases import EcsTestCase
@@ -63,7 +61,7 @@ class Gpgutilstest(EcsTestCase):
         '''Tests if data can be encrypted and signed and then if it can be decrypted and verified via gpg and that it matches the previously encrypted test data.'''
         
         # self.fresh_temporary_entities()
-        self.testdata="im very happy to be testdata"
+        self.testdata=b"im very happy to be testdata"
 
         osdescriptor, encryptedfilename = tempfile.mkstemp()
         os.close(osdescriptor)
@@ -78,7 +76,7 @@ class Gpgutilstest(EcsTestCase):
             decryptedfile = decrypt_verify(encryptedfilename,
                 self.decrypt_gpghome, self.decrypt_owner, self.verify_owner)
 
-            self.assertNotEqual(self.testdata, open(encryptedfilename).read())
+            self.assertNotEqual(self.testdata, open(encryptedfilename, 'rb').read())
             self.assertEqual(self.testdata, decryptedfile.read())
         finally:
             if os.path.exists(encryptedfilename):

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 import os
 import json
-from urlparse import urlsplit
+from urllib.parse import urlsplit
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
@@ -18,65 +17,65 @@ from ecs.users.utils import get_or_create_user
 from ecs.tasks.models import Task
 
 VALID_SUBMISSION_FORM_DATA = {
-    u'investigator-0-ethics_commission': [u'1'], u'study_plan_abort_crit': [u'Peto'], u'submitter_contact_title': [u'Univ. Doz. Dr.'], 
-    u'study_plan_statistics_implementation': [u'Mag. rer.soc.oec. Jane Doe / Statistikerin'], u'investigator-1-contact_last_name': [u'Doe'], 
-    u'sponsor_fax': [u'+430987654345678'], u'substance_p_c_t_final_report': [u'2'], u'substance_registered_in_countries': [u'AT',u'FR'], 
-    u'pharma_reference_substance': [u'none'], u'medtech_product_name': [u''], u'study_plan_alpha': [u'0.03'], 
-    u'investigatoremployee-0-investigator_index': [u'0'], u'study_plan_secondary_objectives': [u''], u'eudract_number': [u'2020-002323-99'], 
-    u'study_plan_dropout_ratio': [u'0'], u'german_protected_subjects_info': [u'bla bla bla'], u'sponsor_contact_gender': [u'f'], 
-    u'study_plan_misc': [u''], u'german_preclinical_results': [u'bla bla bla'], u'study_plan_biometric_planning': [u'Mag. rer.soc.oec. Jane Doe/ Statistikerin'], 
-    u'investigatoremployee-0-title': [u''], u'nontesteduseddrug-INITIAL_FORMS': [u'0'], u'submitter_contact_last_name': [u'Doe'], 
-    u'investigatoremployee-0-sex': [u''], u'study_plan_stratification': [u''], u'sponsor_agrees_to_publishing': [u'on'], u'german_recruitment_info': [u'bla bla bla'], 
-    u'investigator-1-phone': [u''], u'submitter_email': [u''], u'invoice_uid': [u''], u'nontesteduseddrug-0-preparation_form': [u''], 
-    u'investigator-1-contact_first_name': [u'John'], u'investigator-1-email': [u'rofl@copter.com'], u'german_concurrent_study_info': [u'bla bla bla'], 
-    u'study_plan_planned_statalgorithm': [u'log rank test'], u'document-date': [u''], u'medtech_reference_substance': [u''], u'measure-MAX_NUM_FORMS': [u''], 
-    u'study_plan_statalgorithm': [u'none'], u'foreignparticipatingcenter-TOTAL_FORMS': [u'1'], u'routinemeasure-MAX_NUM_FORMS': [u''], 
-    u'invoice_contact_first_name': [u''], u'investigator-0-mobile': [u''], u'submitter_is_coordinator': [u'on'], u'insurance_validity': [u'keine'], 
-    u'sponsor_name': [u'sponsor'], u'sponsor_contact_last_name': [u'last'], u'sponsor_email': [u'johndoe@example.com'], u'subject_duration': [u'96 months'], 
-    u'submitter_contact_gender': [u'f'], u'nontesteduseddrug-0-generic_name': [u''], u'medtech_ce_symbol': [u'3'], u'investigator-0-contact_gender': [u'f'], 
-    u'investigator-1-contact_gender': [u'm'], u'nontesteduseddrug-MAX_NUM_FORMS': [u''], u'investigatoremployee-INITIAL_FORMS': [u'0'], u'insurance_phone': [u'1234567'], 
-    u'investigator-0-email': [u'rofl@copter.com'], u'measure-TOTAL_FORMS': [u'0'], u'medtech_manufacturer': [u''], u'subject_planned_total_duration': [u'10 months'], 
-    u'german_summary': [u'Bei diesem Projekt handelt es sich um ein sowieso bla blu'], u'document-doctype': [u''], 
-    u'investigator-0-contact_first_name': [u'Jane'], u'nontesteduseddrug-0-dosage': [u''], u'insurance_contract_number': [u'2323'], u'study_plan_power': [u'0.80'], 
-    u'sponsor_phone': [u'+43 1 40170'], u'subject_maxage': [u'21'], u'investigator-1-ethics_commission': [u''], u'subject_noncompetents': [u'on'], 
-    u'german_dataprotection_info': [u'bla bla bla'], u'german_risks_info': [u'bla bla bla'], 
-    u'german_ethical_info': [u'bla bla bla'], u'foreignparticipatingcenter-0-id': [u''], u'investigatoremployee-TOTAL_FORMS': [u'1'], 
-    u'specialism': [u'Immunologie'], u'investigator-1-subject_count': [u'4'], u'medtech_certified_for_other_indications': [u'3'], 
-    u'german_payment_info': [u'bla bla bla'], u'investigator-0-contact_title': [u'Univ. Doz. Dr.'], 
-    u'study_plan_dataprotection_anonalgoritm': [u'Electronically generated unique patient number'], 
-    u'additional_therapy_info': [u'long blabla'], u'german_inclusion_exclusion_crit': [u'bla bla bla'], 
-    u'medtech_technical_safety_regulations': [u''], u'foreignparticipatingcenter-MAX_NUM_FORMS': [u''], u'german_aftercare_info': [u'bla bla bla'], 
-    u'investigator-1-fax': [u''], u'study_plan_null_hypothesis': [u''], u'investigator-1-mobile': [u''], u'invoice_address': [u''], 
-    u'substance_preexisting_clinical_tries': [u'2'], u'substance_p_c_t_phase': [u'III'], u'subject_males': [u'on'], u'investigator-0-phone': [u''], 
-    u'substance_p_c_t_period': [u'period'], u'german_benefits_info': [u'bla bla bla'], 
-    u'german_abort_info': [u'bla bla bla'], u'insurance_address': [u'insurancestreet 1'], u'german_additional_info': [u'bla bla bla'], 
-    u'investigatoremployee-MAX_NUM_FORMS': [u''], u'investigatoremployee-0-organisation': [u''], u'study_plan_primary_objectives': [u''], 
-    u'study_plan_number_of_groups': [u''], u'invoice_contact_last_name': [u''], u'document-replaces_document': [u''], u'investigator-TOTAL_FORMS': [u'2'], 
-    u'study_plan_dataprotection_reason': [u''], u'medtech_certified_for_exact_indications': [u'3'], u'sponsor_city': [u'Wien'], u'medtech_manual_included': [u'3'], 
-    u'invoice_contact_gender': [u''], u'foreignparticipatingcenter-INITIAL_FORMS': [u'0'], u'study_plan_alternative_hypothesis': [u''], u'medtech_checked_product': [u''], 
-    u'study_plan_dataprotection_dvr': [u''], u'investigator-0-fax': [u''], u'investigator-0-specialist': [u''], u'study_plan_sample_frequency': [u''], 
-    u'investigator-1-contact_title': [u'Maga.'], u'submission_type': '1', u'investigator-1-contact_origanisation': [u'BlaBlu'],
-    u'study_plan_dataquality_checking': [u'National coordinators'], u'project_type_nursing_study': [u'on'],
-    u'project_type_non_reg_drug': [u'on'], u'german_relationship_info': [u'bla bla bla'], u'nontesteduseddrug-0-id': [u''], u'project_title': [u'FOOBAR POST Test'], 
-    u'invoice_fax': [u''], u'investigator-MAX_NUM_FORMS': [u''], u'sponsor_zip_code': [u'2323'], u'subject_duration_active': [u'14 months'], 
-    u'measure-INITIAL_FORMS': [u'0'], u'nontesteduseddrug-TOTAL_FORMS': [u'1'], u'already_voted': [u'on'], u'subject_duration_controls': [u'36 months'], 
-    u'invoice_phone': [u''], u'submitter_jobtitle': [u'jobtitle'], u'investigator-1-specialist': [u''], u'german_sideeffects_info': [u'bla bla bla'], 
-    u'subject_females': [u'on'], u'investigator-0-organisation': [u'orga'], u'sponsor_contact_first_name': [u'first'],
-    u'pharma_checked_substance': [u'1'], u'investigator-0-subject_count': [u'1'], u'project_type_misc': [u''], 
-    u'foreignparticipatingcenter-0-name': [u''], u'investigator-1-organisation': [u'orga'], u'invoice_city': [u''], u'german_financing_info': [u'bla bla bla'], 
-    u'submitter_contact_first_name': [u'Jane'], u'foreignparticipatingcenter-0-investigator_name': [u''], u'german_dataaccess_info': [u'bla bla bla'], 
-    u'documents': [], u'sponsor_contact_title': [u''], u'invoice_contact_title': [u''], 
-    u'investigator-0-contact_last_name': [u'Doe'], u'medtech_departure_from_regulations': [u''], 
-    u'routinemeasure-TOTAL_FORMS': [u'0'], u'invoice_zip_code': [u''], u'routinemeasure-INITIAL_FORMS': [u'0'], u'invoice_email': [u''], 
-    u'csrfmiddlewaretoken': [u'9d8077845a05603196d32bea1cf25c28'], u'investigatoremployee-0-surname': [u''], u'study_plan_blind': [u'0'], 
-    u'document-file': [u''], u'study_plan_datamanagement': [u'Date entry and management'], 
-    u'german_primary_hypothesis': [u'bla bla bla'], u'subject_childbearing': [u'on'], u'substance_p_c_t_countries': [u'AT',u'DE',u'CH'], 
-    u'insurance_name': [u'insurance'], u'project_type_education_context': [u''], u'clinical_phase': [u'II'], 
-    u'investigator-INITIAL_FORMS': [u'1'], u'subject_count': [u'190'], u'substance_p_c_t_gcp_rules': [u'2'], u'subject_minage': [u'0'], 
-    u'investigatoremployee-0-firstname': [u''], u'german_consent_info': [u'bla bla bla'], u'document-version': [u''], u'substance_p_c_t_application_type': [u'IV in children'], 
-    u'german_project_title': [u'kjkjkjk'], u'submitter_organisation': [u'submitter orga'], u'study_plan_multiple_test_correction_algorithm': [u'Keines'], 
-    u'sponsor_address': [u'sponsor address 1'], u'invoice_name': [u''], u'german_statistical_info': [u'bla bla bla'], u'submitter_email': [u'submitter@example.com'],
-    u'study_plan_dataprotection_choice': [u'non-personal'], u'investigator-0-main': [u'on'], u'study_plan_alpha_sided': [u'0'],
+    'investigator-0-ethics_commission': ['1'], 'study_plan_abort_crit': ['Peto'], 'submitter_contact_title': ['Univ. Doz. Dr.'], 
+    'study_plan_statistics_implementation': ['Mag. rer.soc.oec. Jane Doe / Statistikerin'], 'investigator-1-contact_last_name': ['Doe'], 
+    'sponsor_fax': ['+430987654345678'], 'substance_p_c_t_final_report': ['2'], 'substance_registered_in_countries': ['AT','FR'], 
+    'pharma_reference_substance': ['none'], 'medtech_product_name': [''], 'study_plan_alpha': ['0.03'], 
+    'investigatoremployee-0-investigator_index': ['0'], 'study_plan_secondary_objectives': [''], 'eudract_number': ['2020-002323-99'], 
+    'study_plan_dropout_ratio': ['0'], 'german_protected_subjects_info': ['bla bla bla'], 'sponsor_contact_gender': ['f'], 
+    'study_plan_misc': [''], 'german_preclinical_results': ['bla bla bla'], 'study_plan_biometric_planning': ['Mag. rer.soc.oec. Jane Doe/ Statistikerin'], 
+    'investigatoremployee-0-title': [''], 'nontesteduseddrug-INITIAL_FORMS': ['0'], 'submitter_contact_last_name': ['Doe'], 
+    'investigatoremployee-0-sex': [''], 'study_plan_stratification': [''], 'sponsor_agrees_to_publishing': ['on'], 'german_recruitment_info': ['bla bla bla'], 
+    'investigator-1-phone': [''], 'submitter_email': [''], 'invoice_uid': [''], 'nontesteduseddrug-0-preparation_form': [''], 
+    'investigator-1-contact_first_name': ['John'], 'investigator-1-email': ['rofl@copter.com'], 'german_concurrent_study_info': ['bla bla bla'], 
+    'study_plan_planned_statalgorithm': ['log rank test'], 'document-date': [''], 'medtech_reference_substance': [''], 'measure-MAX_NUM_FORMS': [''], 
+    'study_plan_statalgorithm': ['none'], 'foreignparticipatingcenter-TOTAL_FORMS': ['1'], 'routinemeasure-MAX_NUM_FORMS': [''], 
+    'invoice_contact_first_name': [''], 'investigator-0-mobile': [''], 'submitter_is_coordinator': ['on'], 'insurance_validity': ['keine'], 
+    'sponsor_name': ['sponsor'], 'sponsor_contact_last_name': ['last'], 'sponsor_email': ['johndoe@example.com'], 'subject_duration': ['96 months'], 
+    'submitter_contact_gender': ['f'], 'nontesteduseddrug-0-generic_name': [''], 'medtech_ce_symbol': ['3'], 'investigator-0-contact_gender': ['f'], 
+    'investigator-1-contact_gender': ['m'], 'nontesteduseddrug-MAX_NUM_FORMS': [''], 'investigatoremployee-INITIAL_FORMS': ['0'], 'insurance_phone': ['1234567'], 
+    'investigator-0-email': ['rofl@copter.com'], 'measure-TOTAL_FORMS': ['0'], 'medtech_manufacturer': [''], 'subject_planned_total_duration': ['10 months'], 
+    'german_summary': ['Bei diesem Projekt handelt es sich um ein sowieso bla blu'], 'document-doctype': [''], 
+    'investigator-0-contact_first_name': ['Jane'], 'nontesteduseddrug-0-dosage': [''], 'insurance_contract_number': ['2323'], 'study_plan_power': ['0.80'], 
+    'sponsor_phone': ['+43 1 40170'], 'subject_maxage': ['21'], 'investigator-1-ethics_commission': [''], 'subject_noncompetents': ['on'], 
+    'german_dataprotection_info': ['bla bla bla'], 'german_risks_info': ['bla bla bla'], 
+    'german_ethical_info': ['bla bla bla'], 'foreignparticipatingcenter-0-id': [''], 'investigatoremployee-TOTAL_FORMS': ['1'], 
+    'specialism': ['Immunologie'], 'investigator-1-subject_count': ['4'], 'medtech_certified_for_other_indications': ['3'], 
+    'german_payment_info': ['bla bla bla'], 'investigator-0-contact_title': ['Univ. Doz. Dr.'], 
+    'study_plan_dataprotection_anonalgoritm': ['Electronically generated unique patient number'], 
+    'additional_therapy_info': ['long blabla'], 'german_inclusion_exclusion_crit': ['bla bla bla'], 
+    'medtech_technical_safety_regulations': [''], 'foreignparticipatingcenter-MAX_NUM_FORMS': [''], 'german_aftercare_info': ['bla bla bla'], 
+    'investigator-1-fax': [''], 'study_plan_null_hypothesis': [''], 'investigator-1-mobile': [''], 'invoice_address': [''], 
+    'substance_preexisting_clinical_tries': ['2'], 'substance_p_c_t_phase': ['III'], 'subject_males': ['on'], 'investigator-0-phone': [''], 
+    'substance_p_c_t_period': ['period'], 'german_benefits_info': ['bla bla bla'], 
+    'german_abort_info': ['bla bla bla'], 'insurance_address': ['insurancestreet 1'], 'german_additional_info': ['bla bla bla'], 
+    'investigatoremployee-MAX_NUM_FORMS': [''], 'investigatoremployee-0-organisation': [''], 'study_plan_primary_objectives': [''], 
+    'study_plan_number_of_groups': [''], 'invoice_contact_last_name': [''], 'document-replaces_document': [''], 'investigator-TOTAL_FORMS': ['2'], 
+    'study_plan_dataprotection_reason': [''], 'medtech_certified_for_exact_indications': ['3'], 'sponsor_city': ['Wien'], 'medtech_manual_included': ['3'], 
+    'invoice_contact_gender': [''], 'foreignparticipatingcenter-INITIAL_FORMS': ['0'], 'study_plan_alternative_hypothesis': [''], 'medtech_checked_product': [''], 
+    'study_plan_dataprotection_dvr': [''], 'investigator-0-fax': [''], 'investigator-0-specialist': [''], 'study_plan_sample_frequency': [''], 
+    'investigator-1-contact_title': ['Maga.'], 'submission_type': '1', 'investigator-1-contact_origanisation': ['BlaBlu'],
+    'study_plan_dataquality_checking': ['National coordinators'], 'project_type_nursing_study': ['on'],
+    'project_type_non_reg_drug': ['on'], 'german_relationship_info': ['bla bla bla'], 'nontesteduseddrug-0-id': [''], 'project_title': ['FOOBAR POST Test'], 
+    'invoice_fax': [''], 'investigator-MAX_NUM_FORMS': [''], 'sponsor_zip_code': ['2323'], 'subject_duration_active': ['14 months'], 
+    'measure-INITIAL_FORMS': ['0'], 'nontesteduseddrug-TOTAL_FORMS': ['1'], 'already_voted': ['on'], 'subject_duration_controls': ['36 months'], 
+    'invoice_phone': [''], 'submitter_jobtitle': ['jobtitle'], 'investigator-1-specialist': [''], 'german_sideeffects_info': ['bla bla bla'], 
+    'subject_females': ['on'], 'investigator-0-organisation': ['orga'], 'sponsor_contact_first_name': ['first'],
+    'pharma_checked_substance': ['1'], 'investigator-0-subject_count': ['1'], 'project_type_misc': [''], 
+    'foreignparticipatingcenter-0-name': [''], 'investigator-1-organisation': ['orga'], 'invoice_city': [''], 'german_financing_info': ['bla bla bla'], 
+    'submitter_contact_first_name': ['Jane'], 'foreignparticipatingcenter-0-investigator_name': [''], 'german_dataaccess_info': ['bla bla bla'], 
+    'documents': [], 'sponsor_contact_title': [''], 'invoice_contact_title': [''], 
+    'investigator-0-contact_last_name': ['Doe'], 'medtech_departure_from_regulations': [''], 
+    'routinemeasure-TOTAL_FORMS': ['0'], 'invoice_zip_code': [''], 'routinemeasure-INITIAL_FORMS': ['0'], 'invoice_email': [''], 
+    'csrfmiddlewaretoken': ['9d8077845a05603196d32bea1cf25c28'], 'investigatoremployee-0-surname': [''], 'study_plan_blind': ['0'], 
+    'document-file': [''], 'study_plan_datamanagement': ['Date entry and management'], 
+    'german_primary_hypothesis': ['bla bla bla'], 'subject_childbearing': ['on'], 'substance_p_c_t_countries': ['AT','DE','CH'], 
+    'insurance_name': ['insurance'], 'project_type_education_context': [''], 'clinical_phase': ['II'], 
+    'investigator-INITIAL_FORMS': ['1'], 'subject_count': ['190'], 'substance_p_c_t_gcp_rules': ['2'], 'subject_minage': ['0'], 
+    'investigatoremployee-0-firstname': [''], 'german_consent_info': ['bla bla bla'], 'document-version': [''], 'substance_p_c_t_application_type': ['IV in children'], 
+    'german_project_title': ['kjkjkjk'], 'submitter_organisation': ['submitter orga'], 'study_plan_multiple_test_correction_algorithm': ['Keines'], 
+    'sponsor_address': ['sponsor address 1'], 'invoice_name': [''], 'german_statistical_info': ['bla bla bla'], 'submitter_email': ['submitter@example.com'],
+    'study_plan_dataprotection_choice': ['non-personal'], 'investigator-0-main': ['on'], 'study_plan_alpha_sided': ['0'],
 }
 
 class SubmissionViewsTestCase(LoginTestCase):
@@ -89,8 +88,8 @@ class SubmissionViewsTestCase(LoginTestCase):
         super(SubmissionViewsTestCase, self).setUp()
         checklists_bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
-        VALID_SUBMISSION_FORM_DATA[u'investigator-0-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
-        VALID_SUBMISSION_FORM_DATA[u'investigator-1-ethics_commission'] = [unicode(EthicsCommission.objects.all()[0].pk)]
+        VALID_SUBMISSION_FORM_DATA['investigator-0-ethics_commission'] = [str(EthicsCommission.objects.all()[0].pk)]
+        VALID_SUBMISSION_FORM_DATA['investigator-1-ethics_commission'] = [str(EthicsCommission.objects.all()[0].pk)]
 
         self.office_user, created = get_or_create_user('unittest-office@example.org')
         self.office_user.set_password('password')
@@ -137,7 +136,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         with open(file_path, 'rb') as f:
             response = self.client.post(upload_url, self.get_post_data({
                 'document-file': f,
-                'document-name': u'Menschenrechtserklärung',
+                'document-name': 'Menschenrechtserklärung',
                 'document-version': '3.1415',
                 'document-date': '26.10.2010',
             }))
@@ -149,7 +148,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         with open(file_path, 'rb') as f:
             response = self.client.post(upload_url, self.get_post_data({
                 'document-file': f,
-                'document-name': u'Menschenrechtserklärung',
+                'document-name': 'Menschenrechtserklärung',
                 'document-version': '3',
                 'document-date': '26.10.2010',
                 'document-replaces_document': first_doc.pk,
@@ -162,7 +161,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         # posting valid data
         response = self.client.post(url, self.get_post_data({'submit': 'submit', 'documents': [str(doc.pk) for doc in docs]}))
         self.assertEqual(response.status_code, 302)
-        sf = SubmissionForm.objects.get(project_title=u'FOOBAR POST Test')
+        sf = SubmissionForm.objects.get(project_title='FOOBAR POST Test')
         self.assertEqual(sf.documents.count(), 1)
         self.assertEqual(sf.documents.all()[0].version, '3')
         
@@ -182,7 +181,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': submission_form.pdf_document.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
-        self.assertEqual(next(response.streaming_content)[:5], '%PDF-')
+        self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
 
     def test_submission_form_search(self):
         '''Tests if all submissions are searchable via the keyword argument.
@@ -230,7 +229,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         medical_categories_count = MedicalCategory.objects.all().count()
         response = self.client.get(reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical_categories'}))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(json.loads(response.content)), medical_categories_count)
+        self.assertEqual(len(json.loads(response.content.decode('utf-8'))), medical_categories_count)
 
     def test_initial_review(self):
         submission_form = create_submission_form(presenter=self.user)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 
 from django.conf import settings
@@ -19,10 +18,10 @@ class Vote(models.Model):
     submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
     upgrade_for = models.OneToOneField('self', null=True, related_name='previous')
-    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_(u'vote'))
+    result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_('vote'))
     executive_review_required = models.NullBooleanField(blank=True)
     insurance_review_required = models.NullBooleanField(blank=True)
-    text = models.TextField(blank=True, verbose_name=_(u'comment'))
+    text = models.TextField(blank=True, verbose_name=_('comment'))
     is_draft = models.BooleanField(default=False)
     is_final_version = models.BooleanField(default=False)
     is_expired = models.BooleanField(default=False)
@@ -56,7 +55,7 @@ class Vote(models.Model):
             return self.submission_form.submission.get_ec_number_display()
         return None
         
-    def __unicode__(self):
+    def __str__(self):
         ec_number = self.get_ec_number()
         if ec_number:
             return 'Votum %s' % ec_number

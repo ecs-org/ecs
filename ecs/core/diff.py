@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 import types
 import traceback
@@ -9,7 +8,7 @@ from diff_match_patch import diff_match_patch
 from django_countries import countries
 
 from django.utils.translation import ugettext as _
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 from django.db import models
 from django.db.models import Manager
 from django.http import HttpRequest
@@ -22,6 +21,7 @@ from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
 from ecs.users.utils import get_full_name
+import collections
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -41,8 +41,8 @@ def words_to_chars(text1, text2):
             if word not in word_map:
                 words.append(word)
                 word_map[word] = len(words) - 1
-            chars.append(unichr(word_map[word]))
-        return u''.join(chars)
+            chars.append(chr(word_map[word]))
+        return ''.join(chars)
 
     chars1 = translate(text1)
     chars2 = translate(text2)
@@ -83,20 +83,20 @@ class TextDiffNode(DiffNode):
 
 class AtomicDiffNode(DiffNode):
     def format(self, val):
-        return unicode(val)
+        return str(val)
 
     def html(self, plain=False):
         result = []
         if not self.ignore_old:
             old = self.old
-            if callable(old):
+            if isinstance(old, collections.Callable):
                 old = old(plainhtml=plain)
-            result.append('<span class="deleted">- %s</span>' % force_unicode(old))
+            result.append('<span class="deleted">- %s</span>' % force_text(old))
         if not self.ignore_new:
             new = self.new
-            if callable(new):
+            if isinstance(new, collections.Callable):
                 new = new(plainhtml=plain)
-            result.append('<span class="inserted">+ %s</span>' % force_unicode(new))
+            result.append('<span class="inserted">+ %s</span>' % force_text(new))
         return '<span class="atomic">%s</span>' % ''.join(result)
         
 
@@ -106,7 +106,7 @@ class ModelDiffNode(DiffNode):
         super(ModelDiffNode, self).__init__(old, new, **kwargs)
         self.field_diffs = field_diffs
         
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.field_diffs)
         
     def __getitem__(self, label):
@@ -115,13 +115,13 @@ class ModelDiffNode(DiffNode):
     def html(self, plain=False):
         try:
             result = []
-            for label, node in self.field_diffs.iteritems():
+            for label, node in self.field_diffs.items():
                 result.append('<div class="field">%s: %s</div>' % (label, node.html(plain=plain)))
             result = "\n".join(result)
             if self.identity:
                 result = '<span class="title">%s</span>\n%s' % (self.identity, result)
             return result
-        except Exception, e:
+        except Exception as e:
             traceback.print_exc()
 
 
@@ -150,18 +150,18 @@ class ListDiffNode(DiffNode):
         diffs.sort(key=lambda d: d[1].identity)
         self.diffs = diffs
         
-    def __nonzero__(self):
+    def __bool__(self):
         return bool(self.diffs)
     
     def html(self, plain=False):
         result = []
         for op, diff in self.diffs:
-            html = u''
+            html = ''
             if not op == '~':
-                html = unicode(op) + u' '
+                html = str(op) + ' '
             html += diff.html(plain=plain)
-            result.append(u'<div class="item %s">%s</div>' % (self.css_map[op], html))
-        return u'\n'.join(result)
+            result.append('<div class="item %s">%s</div>' % (self.css_map[op], html))
+        return '\n'.join(result)
 
 
 class DocumentListDiffNode(ListDiffNode):
@@ -176,7 +176,7 @@ class DocumentListDiffNode(ListDiffNode):
                 del old_docs[doc.uuid]
             else:
                 diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
-        for doc in old_docs.values():
+        for doc in list(old_docs.values()):
             diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
         self.diffs = diffs
 
@@ -185,12 +185,12 @@ class DocumentListDiffNode(ListDiffNode):
 
 
 class CountryListDiffNode(DiffNode):
-    def __nonzero__(self):
+    def __bool__(self):
         return set(self.old) != set(self.new)
 
     def html(self, plain=False):
-        old = '\n'.join(sorted(unicode(countries.name(c)) for c in self.old))
-        new = '\n'.join(sorted(unicode(countries.name(c)) for c in self.new))
+        old = '\n'.join(sorted(str(countries.name(c)) for c in self.old))
+        new = '\n'.join(sorted(str(countries.name(c)) for c in self.new))
 
         dmp = diff_match_patch()
         a, b, lineArray = dmp.diff_linesToChars(old, new)
@@ -201,11 +201,11 @@ class CountryListDiffNode(DiffNode):
         result = []
         for op, country in diff:
             if op:
-                result.append(u'<div class="{}">{}</div>'.format(
+                result.append('<div class="{}">{}</div>'.format(
                     'inserted' if op > 0 else 'deleted', escape(country)))
             else:
-                result.append(u'<div>{}</div>'.format(escape(country)))
-        return u'\n'.join(result)
+                result.append('<div>{}</div>'.format(escape(country)))
+        return '\n'.join(result)
 
 
 def _render_value(val):
@@ -215,13 +215,13 @@ def _render_value(val):
         return _('Yes')
     elif val is False:
         return _('No')
-    elif isinstance(val, types.IntType):
-        return unicode(val)
+    elif isinstance(val, int):
+        return str(val)
     elif isinstance(val, datetime.date):
         return val.strftime(DATE_FORMAT)
     elif isinstance(val, datetime.date):
         return val.strftime(DATETIME_FORMAT)
-    return unicode(val)
+    return str(val)
 
 
 class ModelDiffer(object):
@@ -280,8 +280,8 @@ class ModelDiffer(object):
                 return None
             return self.node_map.get(name, ListDiffNode)(old_val, new_val, **kwargs)
         elif field is not None and field.choices:
-            old_val = unicode(dict(field.choices)[old_val]) if old_val else _('No Information')
-            new_val = unicode(dict(field.choices)[new_val]) if new_val else _('No Information')
+            old_val = str(dict(field.choices)[old_val]) if old_val else _('No Information')
+            new_val = str(dict(field.choices)[new_val]) if new_val else _('No Information')
             return AtomicDiffNode(old_val, new_val, **kwargs)
         elif isinstance(field, (models.CharField, models.TextField)) and old_val and new_val:
             return TextDiffNode(old_val, new_val, **kwargs)
@@ -294,7 +294,7 @@ class ModelDiffer(object):
             field_info = paper_forms.get_field_info(self.model, name, None)
 
             if field_info is not None:
-                label = force_unicode(field_info.label)
+                label = force_text(field_info.label)
                 if field_info.number:
                     label = "%s %s" % (field_info.number, label)
             elif name in self.label_map:
@@ -312,7 +312,7 @@ class ModelDiffer(object):
 
 class AtomicModelDiffer(ModelDiffer):
     def format(self, obj):
-        return unicode(obj)
+        return str(obj)
 
     def diff(self, old, new, **kwargs):
         if old == new:
@@ -336,7 +336,7 @@ class UserDiffer(AtomicModelDiffer):
     model = User
 
     def format(self, user):
-        return u'{0} <{1}>'.format(get_full_name(user), user.email)
+        return '{0} <{1}>'.format(get_full_name(user), user.email)
 
 
 class SubmissionFormDiffer(ModelDiffer):
@@ -368,12 +368,12 @@ _differs = {
             'documents': DocumentListDiffNode,
         },
         label_map=dict([
-            ('foreignparticipatingcenter_set', _(u'Auslandszentren')),
-            ('investigators', _(u'Zentren')),
-            ('measures', _(u'Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
+            ('foreignparticipatingcenter_set', _('Auslandszentren')),
+            ('investigators', _('Zentren')),
+            ('measures', _('Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
             ('nontesteduseddrug_set',
-                _(u'Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
-            ('documents', _(u'Dokumente')),
+                _('Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
+            ('documents', _('Dokumente')),
         ]),
     ),
     Investigator: ModelDiffer(Investigator,
@@ -381,7 +381,7 @@ _differs = {
         follow=('employees',),
         identify='organisation',
         label_map={
-            'employees': _(u'Mitarbeiter'),
+            'employees': _('Mitarbeiter'),
         }
     ),
     InvestigatorEmployee: ModelDiffer(InvestigatorEmployee,

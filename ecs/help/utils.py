@@ -58,7 +58,7 @@ class Linker(object):
         if not page:
             return "**bad reference: '{0}'**".format(target)
 
-        return u'`{0} <{1}>`_'.format(text or page.title, self.page_url(page))
+        return '`{0} <{1}>`_'.format(text or page.title, self.page_url(page))
     
     def _replace_ref4print(self, match):
         #we need to leave the :doc: refs as is, but supply them with a title,
@@ -74,10 +74,10 @@ class Linker(object):
         if not page:
             return "**bad reference: '{0}'**".format(target)
         #replace target of the link with knowledge from outside...
-        if self.slug2target_dict and self.slug2target_dict.has_key(page.slug):
+        if self.slug2target_dict and page.slug in self.slug2target_dict:
             if self.slug2target_dict[page.slug] != page.slug:
                 page.slug = self.slug2target_dict[page.slug]
-        return u':doc:`{0} <{1}>`'.format(text or page.title, page.slug)
+        return ':doc:`{0} <{1}>`'.format(text or page.title, page.slug)
         
     def _replace_image(self, match):
         ref = match.group('ref')

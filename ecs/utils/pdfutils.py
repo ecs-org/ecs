@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 '''
 ========
 pdfutils
@@ -16,7 +15,7 @@ from tempfile import TemporaryFile, NamedTemporaryFile, mkdtemp
 
 from django.conf import settings
 from django.template import loader
-from django.utils.encoding import smart_str
+from django.utils.encoding import smart_bytes
 
 
 logger = logging.getLogger(__name__)
@@ -53,15 +52,15 @@ def pdf_barcodestamp(source, barcode, text=None):
             <{}> dup stringwidth pop 132 add 32 exch moveto
             270 rotate show
             grestore
-        '''.format(hexlify(text.encode('latin-1', 'replace')))
+        '''.format(hexlify(text.encode('latin-1', 'replace')).decode('ascii'))
 
     with NamedTemporaryFile() as pdf:
         p = subprocess.Popen([
             'gs', '-q', '-dNOPAUSE', '-dBATCH', '-sDEVICE=pdfwrite',
             '-sPAPERSIZE=a4', '-dAutoRotatePages=/None', '-sOutputFile=-', '-c',
             '<</Orientation 0>> setpagedevice', '-'
-        ], stdin=subprocess.PIPE, stdout=pdf)
-        p.stdin.write(barcode_ps)
+        ], stdin=subprocess.PIPE, stdout=pdf, stderr=subprocess.PIPE)
+        p.stdin.write(barcode_ps.encode('ascii'))
         p.stdin.close()
         if p.wait():
             raise subprocess.CalledProcessError(p.returncode, 'ghostscript')
@@ -83,11 +82,11 @@ def decrypt_pdf(src):
     stdout, stderr = popen.communicate()
     if popen.returncode in (0, 3):  # 0 == ok, 3 == warning
         if popen.returncode == 3:
-            logger.warn(u'qpdf warning:\n%s', smart_str(stderr, errors='backslashreplace'))
+            logger.warn('qpdf warning:\n%s', smart_bytes(stderr, errors='backslashreplace'))
     else:
         from ecs.users.utils import get_current_user
         user = get_current_user()
-        logger.warn(u'qpdf error (returncode=%s):\nUser: %s (%s)\n%s', popen.returncode, user, user.email if user else 'anonymous', smart_str(stderr, errors='backslashreplace'))
+        logger.warn('qpdf error (returncode=%s):\nUser: %s (%s)\n%s', popen.returncode, user, user.email if user else 'anonymous', smart_bytes(stderr, errors='backslashreplace'))
         raise ValueError('pdf broken')
     decrypted.seek(0)
     return decrypted
@@ -96,11 +95,11 @@ def decrypt_pdf(src):
 def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
-    if isinstance(html, unicode): 
+    if isinstance(html, str): 
         html = html.encode('utf-8') 
-    if isinstance(header_html, unicode):
+    if isinstance(header_html, str):
         header_html = header_html.encode('utf-8')
-    if isinstance(footer_html, unicode):
+    if isinstance(footer_html, str):
         footer_html = footer_html.encode('utf-8')
     
     cmd = ['wkhtmltopdf-amd64',

@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 from datetime import timedelta
 import zipfile
 import hashlib
 import os
 import os.path
 from collections import OrderedDict
+from functools import cmp_to_key
 
 from django.conf import settings
 from django.http import FileResponse, HttpResponse, Http404
@@ -152,7 +152,7 @@ def tops(request, meeting=None):
 
     open_tops = OrderedDict(
         (k, open_tops[k])
-        for k in sorted(open_tops.keys(), cmp=board_member_cmp)
+        for k in sorted(open_tops.keys(), key=cmp_to_key(board_member_cmp))
     )
 
     return render_html(request, 'meetings/tabs/tops.html', {
@@ -204,7 +204,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
 
     h = hashlib.sha1()
     for submission, doc in files:
-        h.update('(%s:%s)' % (submission.pk, doc.pk))
+        h.update('({}:{})'.format(submission.pk, doc.pk).encode('ascii'))
 
     cache_file = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, '%s.zip' % h.hexdigest())
     
@@ -408,7 +408,7 @@ def meeting_assistant(request, meeting_pk=None):
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,
-                'message': _(u'This meeting has ended.'),
+                'message': _('This meeting has ended.'),
             })
         try:
             top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
@@ -418,7 +418,7 @@ def meeting_assistant(request, meeting_pk=None):
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,
-                'message': _(u'No TOPs are assigned to this meeting.'),
+                'message': _('No TOPs are assigned to this meeting.'),
             })
     else:
         return render(request, 'meetings/assistant/error.html', {
@@ -596,7 +596,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         'vote': vote,
         'form': form,
         'last_top': last_top,
-        'checklist_review_states': checklist_review_states.items(),
+        'checklist_review_states': list(checklist_review_states.items()),
     })
 
 @readonly()
@@ -622,7 +622,7 @@ def send_agenda_to_board(request, meeting_pk=None):
         (agenda_filename, agenda_pdf, 'application/pdf'),
         (timetable_filename, timetable_pdf, 'application/pdf'),
     )
-    subject = _(u'EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
+    subject = _('EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
@@ -630,8 +630,8 @@ def send_agenda_to_board(request, meeting_pk=None):
         if timeframe is None:
             continue
         start, end = timeframe
-        time = u'{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
-        htmlmail = unicode(render_html(request, \
+        time = '{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+        htmlmail = str(render_html(request, \
                    'meetings/messages/boardmember_invitation.html', \
                    {'meeting': meeting, 'time': time, 'recipient': user, \
                     'reply_to': settings.DEFAULT_REPLY_TO}))
@@ -642,7 +642,7 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
-        htmlmail = unicode(render_html(request, \
+        htmlmail = str(render_html(request, \
                     'meetings/messages/resident_boardmember_invitation.html', \
                     {'meeting': meeting, 'recipient': user, \
                     'reply_to': settings.DEFAULT_REPLY_TO}))
@@ -654,7 +654,7 @@ def send_agenda_to_board(request, meeting_pk=None):
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)
     for top in tops_with_primary_investigator:
         sf = top.submission.current_submission_form
-        for u in set([sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor]):
+        for u in {sf.primary_investigator.user, sf.presenter, sf.submitter, sf.sponsor}:
             send_system_message_template(u, subject, 'meetings/messages/primary_investigator_invitation.txt', {'top': top}, submission=top.submission)
 
     meeting.agenda_sent_at = timezone.now()
@@ -699,7 +699,7 @@ def send_protocol(request, meeting_pk=None):
     attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)
     
     for user in User.objects.filter(Q(meeting_participations__entry__meeting=meeting) | Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)).distinct():
-        htmlmail = unicode(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
+        htmlmail = str(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
         deliver(user.email, subject=_('Meeting Protocol'), message=None,
             message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
             attachments=attachments)

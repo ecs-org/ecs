@@ -34,7 +34,7 @@ class RegistrationTest(MailTestCase, WorkflowTestCase):
         mimetype, message = self.get_mimeparts(self.queue_get(0), "text", "html")[0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
-        match = re.search(r'href="https?://[\w.]+(/activate/[^"]+)"', message)
+        match = re.search(rb'href="https?://[\w.]+(/activate/[^"]+)"', message)
         self.assertTrue(match)
         activation_url = match.group(1)
         response = self.client.get(activation_url)
@@ -72,7 +72,7 @@ class PasswordChangeTest(MailTestCase):
         mimetype, message = self.get_mimeparts(self.queue_get(0), "text", "html")[0]
         
         # XXX: how do we get the right url without knowing its path-prefix? (FMD1)
-        match = re.search(r'href="https?://[^/]+(/password-reset/[^"]+)"', message)
+        match = re.search(rb'href="https?://[^/]+(/password-reset/[^"]+)"', message)
         self.assertTrue(match)
         password_reset_url = match.group(1)
         response = self.client.get(password_reset_url)

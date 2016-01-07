@@ -24,17 +24,17 @@ class View(models.Model):
     path = models.CharField(max_length=200, db_index=True, unique=True)
     objects = ViewManager()
     
-    def __unicode__(self):
+    def __str__(self):
         try:
             module, func = self.path.rsplit('.', 1)
             return "%s @ %s" % (func, module)
-        except ValueError, TypeError:
+        except (ValueError, TypeError):
             return self.path
 
 
 class Request(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
-    ip = models.GenericIPAddressField(protocol='IPv4', db_index=True)
+    ip = models.GenericIPAddressField(protocol='ipv4', db_index=True)
     user = models.ForeignKey(User, related_name='requests')
     url = models.TextField()
     view = models.ForeignKey(View)
@@ -48,5 +48,5 @@ class Request(models.Model):
             self.view, created = View.objects.get_or_create_for_url(self.url)
         super(Request, self).save(**kwargs)
     
-    def __unicode__(self):
+    def __str__(self):
         return "%s %s <-> %s" % (self.method, self.url, self.view.path)

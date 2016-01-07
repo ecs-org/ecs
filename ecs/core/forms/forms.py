@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 from datetime import timedelta
 from django import forms
@@ -68,7 +67,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     medtech_manual_included = NullBooleanField(required=False)
 
     # non model fields (required for validation)
-    invoice_differs_from_sponsor = forms.BooleanField(required=False, label=_(u'The account beneficiary is not the sponsor'))
+    invoice_differs_from_sponsor = forms.BooleanField(required=False, label=_('The account beneficiary is not the sponsor'))
 
     class Meta:
         model = SubmissionForm
@@ -121,8 +120,8 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
             self.fields['substance_p_c_t_countries'].widget = MultiselectWidget(
                 url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'countries'})
             )
-        for field in self.fields.itervalues():
-            if isinstance(field, (forms.EmailField,)):
+        for field in self.fields.values():
+            if isinstance(field, forms.EmailField):
                 field.widget = StrippedTextInput()
                 if self.readonly:
                     field.widget.mark_readonly()
@@ -369,9 +368,7 @@ class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
                     newcls.base_fields[name] = forms.BooleanField(required=False, label=_labels[name])
         return newcls
 
-class SubmissionFilterForm(forms.Form):
-    __metaclass__ = SubmissionFilterFormMetaclass
-
+class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
     layout = ()
     page = forms.CharField(required=False, widget=forms.HiddenInput())
 
@@ -438,7 +435,7 @@ class SubmissionImportForm(forms.Form):
                 self.submission_form = serializer.read(self.cleaned_data['file'])
         except Exception as e:
             import_error_logger.debug('invalid ecx file')
-            self.add_error('file', _(u'This file is not a valid ECX archive.'))
+            self.add_error('file', _('This file is not a valid ECX archive.'))
         f.seek(0)
         return f
 

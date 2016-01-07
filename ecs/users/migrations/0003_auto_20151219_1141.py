@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 
 
@@ -14,7 +11,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='loginhistory',
             name='ip',
-            field=models.GenericIPAddressField(protocol=b'IPv4'),
+            field=models.GenericIPAddressField(protocol='ipv4'),
             preserve_default=True,
         ),
     ]

@@ -82,7 +82,7 @@ def _exec(cmd):
 def _get_cert_data(cert):
     out = _exec([
         'x509', '-noout', '-in', cert, '-serial', '-dates', '-subject',
-    ])
+    ]).decode('utf-8')
     data = dict(line.split('=', 1) for line in out.rstrip('\n').split('\n'))
     return {
         'serial': int(data['serial'], 16),

@@ -21,7 +21,7 @@ class FetchTasksNode(Node):
             tasks = Task.objects.none()
         cache.set(cache_key, timezone.now(), 7*24*3600)
         context[self.varname] = tasks
-        return u''
+        return ''
 
 @register.tag
 def fetch_tasks(parser, token):

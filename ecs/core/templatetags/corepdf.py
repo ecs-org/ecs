@@ -5,12 +5,12 @@ register = Library()
 
 @register.filter
 def checkbox(val):
-    return mark_safe(u'<span class="checkbox">%s</span>' % (val and "X" or " "))
+    return mark_safe('<span class="checkbox">%s</span>' % (val and "X" or " "))
 checkbox.is_safe = True
 
 @register.filter
 def yesno_checkboxes(val):
-    return mark_safe(u'<span class="yesno">%s %s %s %s</span>' % (checkbox(val), _(u'yes'), checkbox(not val), _(u'no')))
+    return mark_safe('<span class="yesno">%s %s %s %s</span>' % (checkbox(val), _('yes'), checkbox(not val), _('no')))
 yesno_checkboxes.is_safe = True
 
 
@@ -20,7 +20,7 @@ class SingleCellTableNode(Node):
         self.nodelist = nodelist
 
     def render(self, context):
-        return u'<table class="%s"><tr><td>%s</td></tr></table>' % (self.class_name, self.nodelist.render(context))
+        return '<table class="%s"><tr><td>%s</td></tr></table>' % (self.class_name, self.nodelist.render(context))
 
 #
 @register.tag

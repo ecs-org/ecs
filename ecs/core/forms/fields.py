@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*
 import datetime
 
 from django import forms
@@ -7,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
 from ecs.users.utils import get_user
+import collections
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
 TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
@@ -22,30 +22,30 @@ class LooseTimeWidget(forms.TextInput):
 class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_INPUT_FORMATS)
-        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a date in the format dd.mm.yyyy.')})
+        kwargs.setdefault('error_messages', {'invalid': _('Please enter a date in the format dd.mm.yyyy.')})
         super(DateField, self).__init__(*args, **kwargs)
 
 class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
         kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
-        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a date in dd.mm.yyyy format and time in format HH:MM.')})
+        kwargs.setdefault('error_messages', {'invalid': _('Please enter a date in dd.mm.yyyy format and time in format HH:MM.')})
         super(DateTimeField, self).__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('error_messages', {'invalid': _(u'Please enter a time in the format HH: MM.')})
+        kwargs.setdefault('error_messages', {'invalid': _('Please enter a time in the format HH: MM.')})
         kwargs.setdefault('widget', LooseTimeWidget())
         super(TimeField, self).__init__(*args, **kwargs)
         
 class BooleanWidget(forms.widgets.Select):
     def __init__(self, attrs=None):
-        choices = ((True, _(u'Yes')), (False, _(u'No')))
+        choices = ((True, _('Yes')), (False, _('No')))
         super(BooleanWidget, self).__init__(attrs, choices)
 
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):
-        choices = ((u'1', u'-'), (u'2', _(u'Yes')), (u'3', _(u'No')))
+        choices = (('1', '-'), ('2', _('Yes')), ('3', _('No')))
         forms.widgets.Select.__init__(self, attrs, choices)
 
 class NullBooleanField(forms.NullBooleanField):
@@ -62,7 +62,7 @@ class MultiselectWidget(forms.TextInput):
         value_list = ",".join(map(str, value or ()))
         attrs['class'] = 'autocomplete'
         url = self.url
-        if callable(url):
+        if isinstance(url, collections.Callable):
             url = url()
         attrs['x-autocomplete-url'] = url
         attrs['x-autocomplete-type'] = 'multi'
@@ -84,7 +84,7 @@ class SingleselectWidget(forms.TextInput):
         value_list = str(value) if value else ''
         attrs['class'] = 'autocomplete'
         url = self.url
-        if callable(url):
+        if isinstance(url, collections.Callable):
             url = url()
         attrs['x-autocomplete-url'] = url
         attrs['x-autocomplete-type'] = self.type
@@ -100,7 +100,7 @@ class SingleselectWidget(forms.TextInput):
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
 from django.utils.html import conditional_escape
-from django.utils.encoding import force_unicode
+from django.utils.encoding import force_text
 
 class ReadonlyTextMixin(object):
     def __init__(self, *args, **kwargs):
@@ -119,8 +119,8 @@ class ReadonlyTextMixin(object):
             if not value:
                 attrs['class'] += ' empty'
             final_attrs = self.build_attrs(attrs, name=name)
-            empty_str = u'<em>-- {0} --</em>'.format(_(u'No information given'))
-            return mark_safe(u'<pre{0}>{1}</pre>'.format(flatatt(final_attrs), conditional_escape(force_unicode(value)) or empty_str))
+            empty_str = '<em>-- {0} --</em>'.format(_('No information given'))
+            return mark_safe('<pre{0}>{1}</pre>'.format(flatatt(final_attrs), conditional_escape(force_text(value)) or empty_str))
 
 class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
     def render(self, name, value, attrs=None):

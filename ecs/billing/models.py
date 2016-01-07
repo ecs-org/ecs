@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
@@ -12,11 +11,11 @@ STUDY_PRICING_REMISSION = 4
 EXTERNAL_REVIEW_PRICING = 5
 
 PRICE_CATEGORIES = (
-    (STUDY_PRICING_OTHER, _(u'All studies except multicentre drug studies')),
-    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, _(u'Multicentre drug trials for controlling ethics committees')),
-    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, _(u'Multicentre drug trials for locally responsible ethics committees')),
-    (STUDY_PRICING_REMISSION, _(u'fee exemption')),
-    (EXTERNAL_REVIEW_PRICING, _(u'External Reviewer')),
+    (STUDY_PRICING_OTHER, _('All studies except multicentre drug studies')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_MAIN, _('Multicentre drug trials for controlling ethics committees')),
+    (STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, _('Multicentre drug trials for locally responsible ethics committees')),
+    (STUDY_PRICING_REMISSION, _('fee exemption')),
+    (EXTERNAL_REVIEW_PRICING, _('External Reviewer')),
 )
 
 class PriceManager(models.Manager):
@@ -49,7 +48,7 @@ class Price(models.Model):
     def text(self):
         return dict(PRICE_CATEGORIES)[self.category]
     
-    def __unicode__(self):
+    def __str__(self):
         return dict(PRICE_CATEGORIES)[self.category]
 
 class ChecklistBillingState(models.Model):

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ecs import bootstrap
 from ecs.checklists.models import Checklist, ChecklistBlueprint, ChecklistQuestion
 from ecs.workflow.patterns import Generic
@@ -38,7 +36,7 @@ def checklist_blueprints():
             data = {
                 'index': i,
                 'text': text,
-                'description': question.pop('description', u''),
+                'description': question.pop('description', ''),
                 'is_inverted': question.pop('is_inverted', False),
                 'requires_comment': question.pop('requires_comment', False),
             }

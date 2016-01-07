@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import os
 
 from django.conf import settings
@@ -37,8 +36,8 @@ class MailutilsTest(MailTestCase):
         msg = self.queue_get(0)
         mimetype, text_data = self.get_mimeparts(msg, "text", "plain")[0]
         mimetype, html_data = self.get_mimeparts(msg, "text", "html")[0]
-        self.assertIn('second message', text_data)
-        self.assertIn('this is bold', html_data)
+        self.assertIn(b'second message', text_data)
+        self.assertIn(b'this is bold', html_data)
     
     
     def test_attachments(self):
@@ -56,7 +55,7 @@ class MailutilsTest(MailTestCase):
         msg = self.queue_get(0)
         mimetype, text_data = self.get_mimeparts(msg, "text", "plain")[0]
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf")[0]
-        self.assertIn('with attachments', text_data)
+        self.assertIn(b'with attachments', text_data)
         self.assertEqual(attachment_data, pdf_data)
 
 
@@ -77,6 +76,6 @@ class MailutilsTest(MailTestCase):
         mimetype, html_data = self.get_mimeparts(msg, "text", "html")[0]
         mimetype, pdf_data = self.get_mimeparts(msg, "application", "pdf")[0]
         
-        self.assertIn('another attachment', text_data)
-        self.assertIn('<b>bold attachment</b>', html_data)
+        self.assertIn(b'another attachment', text_data)
+        self.assertIn(b'<b>bold attachment</b>', html_data)
         self.assertEqual(attachment_data, pdf_data)

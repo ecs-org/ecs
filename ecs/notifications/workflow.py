@@ -34,7 +34,7 @@ def is_report(wf):
 
 @guard(model=Notification)
 def is_amendment(wf):
-    return wf.data.type.name == u"Amendment"
+    return wf.data.type.name == "Amendment"
     
 @guard(model=Notification)
 def is_rejected(wf):

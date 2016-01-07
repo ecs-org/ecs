@@ -2,7 +2,7 @@ import random, math, time
 
 def order_crossover(perm_a, perm_b): # OX
     n = len(perm_a)
-    i, j = random.sample(xrange(n), 2)
+    i, j = random.sample(range(n), 2)
     if j < i:
         i, j = j, i
     if i == j:
@@ -12,20 +12,20 @@ def order_crossover(perm_a, perm_b): # OX
     return a_compl[:i] + a_slice + a_compl[i:], b_compl[:i] + b_slice + b_compl[i:]
 
 def swap_mutation(perm):
-    i, j = random.sample(xrange(len(perm)), 2)
+    i, j = random.sample(range(len(perm)), 2)
     perm = list(perm)
     perm[i], perm[j] = perm[j], perm[i]
     return tuple(perm)
     
 def inversion_mutation(perm):
-    i, j = random.sample(xrange(len(perm)), 2)
+    i, j = random.sample(range(len(perm)), 2)
     if j < i:
         i, j = j, i
     return perm[:i] + tuple(reversed(perm[i:j])) + perm[j:]
     
 def displacement_mutation(perm):
     n = len(perm)
-    i, j = random.sample(xrange(n), 2)
+    i, j = random.sample(range(n), 2)
     if i == j:
         return perm
     if j < i:
@@ -45,7 +45,7 @@ class GeneticSorter(object):
         self.n = len(data)
         self.population_size = population_size
         self.population = list(seed or [])
-        for i in xrange(population_size - len(self.population)):
+        for i in range(population_size - len(self.population)):
             self.population.append(self.random_permutation())
         self.evaluation = {}
         self.min_value = None
@@ -57,7 +57,7 @@ class GeneticSorter(object):
         self.total_time = 0
         self.time_per_generation = 0
         if mutations:
-            self.mutations = mutations.items()
+            self.mutations = list(mutations.items())
         else:
             self.mutations = ()
         self.evaluate()
@@ -120,14 +120,14 @@ class GeneticSorter(object):
 
         # crossover
         crossover_count = int(0.5 * self.crossover_p * next_population_size)
-        crossover_indices = random.sample(xrange(next_population_size), 2 * crossover_count)
-        for i in xrange(crossover_count):
+        crossover_indices = random.sample(range(next_population_size), 2 * crossover_count)
+        for i in range(crossover_count):
             index_a, index_b = crossover_indices[2*i], crossover_indices[2*i+1]
             next_population[index_a], next_population[index_b] = self.crossover(next_population[index_a], next_population[index_b])
         
         # mutation
         for mutation, p in self.mutations:
-            for index in random.sample(xrange(next_population_size), int(p * next_population_size)):
+            for index in random.sample(range(next_population_size), int(p * next_population_size)):
                 next_population[index] = mutation(next_population[index])
         
         self.population = next_population

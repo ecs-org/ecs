@@ -53,9 +53,7 @@ class NodeControllerBase(type):
         newcls._meta.name = add_controller(newcls)
         return newcls
 
-class NodeController(object):
-    __metaclass__ = NodeControllerBase
-    
+class NodeController(object, metaclass=NodeControllerBase):
     deadline = None
     
     def __init__(self, node, workflow):

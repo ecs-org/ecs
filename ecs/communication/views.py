@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -68,8 +66,8 @@ def read_thread(request, thread_pk=None):
         if delegate_to:
             thread.delegate(request.user, delegate_to)
             new_subject = format(thread.subject)
-            if not new_subject.startswith(u'Bzgl.:'):
-                new_subject =_(u'Bzgl.: {0}').format(thread.subject)[:100]
+            if not new_subject.startswith('Bzgl.:'):
+                new_subject =_('Bzgl.: {0}').format(thread.subject)[:100]
             thread = Thread.objects.create(
                 subject=new_subject,
                 sender=request.user,

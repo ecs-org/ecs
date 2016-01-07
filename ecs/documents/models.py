@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import tempfile
 import mimetypes
 import logging
@@ -27,13 +26,13 @@ class DocumentType(models.Model):
     is_hidden = models.BooleanField(default=False)
     is_downloadable = models.BooleanField(default=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return ugettext(self.name)
 
 
 class DocumentManager(AuthorizationManager): 
     def create_from_buffer(self, buf, **kwargs): 
-        if 'doctype' in kwargs and isinstance(kwargs['doctype'], basestring):
+        if 'doctype' in kwargs and isinstance(kwargs['doctype'], str):
             kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])
 
         now = timezone.now()
@@ -69,11 +68,11 @@ class Document(models.Model):
     
     objects = DocumentManager()
     
-    def __unicode__(self):
+    def __str__(self):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
-        return u'{0} {1}-{2} vom {3}'.format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
+        return '{0} {1}-{2} vom {3}'.format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
 
     def get_filename(self):
         if self.mimetype == 'application/vnd.ms-excel': # HACK: we want .xls not .xlb for excel files
@@ -87,15 +86,15 @@ class Document(models.Model):
         return ''.join([name, ext])
 
     def store(self, f):
-        getVault()[self.uuid.get_hex()] = f
+        getVault()[self.uuid.hex] = f
 
     def retrieve(self, user, context):
         hist = DownloadHistory.objects.create(document=self, user=user,
             context=context)
 
-        f = getVault()[self.uuid.get_hex()]
+        f = getVault()[self.uuid.hex]
         if self.mimetype == 'application/pdf' and self.stamp_on_download:
-            f = pdf_barcodestamp(f, hist.uuid.get_hex(), unicode(user))
+            f = pdf_barcodestamp(f, hist.uuid.hex, str(user))
         return f
 
 

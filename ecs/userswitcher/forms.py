@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django import forms
 from django.contrib.auth.models import User
 
@@ -10,14 +8,14 @@ class _UserSwitcherChoiceField(forms.ModelChoiceField):
             'required': False,
             'widget': forms.Select(attrs={'id': 'userswitcher_input'}),
         }
-        for k, v in defaults.iteritems():
+        for k, v in defaults.items():
             kwargs.setdefault(k, v)
         super(_UserSwitcherChoiceField, self).__init__(queryset, *args, **kwargs)
 
     def label_from_instance(self, user):
-        label = unicode(user.email)
+        label = str(user.email)
         if user.first_name and user.last_name:
-            label = u'{0}, {1}'.format(user.last_name, user.first_name)
+            label = '{0}, {1}'.format(user.last_name, user.first_name)
         return label
 
 class UserSwitcherForm(forms.Form):

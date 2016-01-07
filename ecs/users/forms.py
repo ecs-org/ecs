@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django import forms
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
@@ -49,7 +48,7 @@ class EmailLoginForm(forms.Form):
 
 
 class RegistrationForm(forms.Form):
-    gender = forms.ChoiceField(label=_('gender'), choices=(('f', _(u'Ms')), ('m', _(u'Mr'))))
+    gender = forms.ChoiceField(label=_('gender'), choices=(('f', _('Ms')), ('m', _('Mr'))))
     first_name = forms.CharField(label=_('First name'))
     last_name = forms.CharField(label=_('Last name'))
     email = forms.EmailField(label=_('email'))
@@ -72,11 +71,11 @@ class ProfileForm(TranslatedModelForm):
     first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, required=False)
     last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length)
     forward_messages_after_minutes = forms.ChoiceField(choices=(
-        (0, _(u'Never')),
-        (5, _(u'after 5 minutes')),
-        (360, _(u'after {0} hours').format(6)),
-        (1440, _(u'after {0} hours').format(24)),
-        (4320, _(u'after {0} hours').format(72)),
+        (0, _('Never')),
+        (5, _('after 5 minutes')),
+        (360, _('after {0} hours').format(6)),
+        (1440, _('after {0} hours').format(24)),
+        (4320, _('after {0} hours').format(72)),
     ), initial=0)
 
     def __init__(self, *args, **kwargs):
@@ -129,9 +128,9 @@ class ProfileForm(TranslatedModelForm):
 
 class AdministrationFilterForm(forms.Form):
     activity = forms.ChoiceField(required=False, choices=(
-        ('both', _(u'Both')),
-        ('active', _(u'active')),
-        ('inactive', _(u'inactive')),
+        ('both', _('Both')),
+        ('active', _('active')),
+        ('inactive', _('inactive')),
     ))
     groups = forms.ModelMultipleChoiceField(required=False, queryset=Group.objects.all())
     medical_categories = forms.ModelMultipleChoiceField(required=False, queryset=MedicalCategory.objects.all())
@@ -185,13 +184,13 @@ class UserDetailsForm(forms.ModelForm):
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.external_review = user.groups.filter(name=u'External Reviewer').exists()
-        profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
-        profile.is_executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
-        profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
-        profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
-        profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
-        profile.is_resident_member = user.groups.filter(name=u'Resident Board Member Group').exists()
+        profile.external_review = user.groups.filter(name='External Reviewer').exists()
+        profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
+        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
+        profile.is_thesis_reviewer = user.groups.filter(name='EC-Thesis Review Group').exists()
+        profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
+        profile.is_expedited_reviewer = user.groups.filter(name='Expedited Review Group').exists()
+        profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
         for k in ('is_internal', 'is_help_writer'):
             setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
@@ -221,7 +220,7 @@ class InvitationForm(forms.Form):
         email = self.cleaned_data['email']
         try:
             user = get_user(email)
-            raise forms.ValidationError(_(u'There is already a user with this email address.'))
+            raise forms.ValidationError(_('There is already a user with this email address.'))
         except User.DoesNotExist:
             pass
         return email
@@ -235,12 +234,12 @@ class InvitationForm(forms.Form):
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.is_board_member = user.groups.filter(name=u'EC-Board Member').exists()
-        profile.is_executive_board_member = user.groups.filter(name=u'EC-Executive Board Group').exists()
-        profile.is_thesis_reviewer = user.groups.filter(name=u'EC-Thesis Review Group').exists()
-        profile.is_insurance_reviewer = user.groups.filter(name=u'EC-Insurance Reviewer').exists()
-        profile.is_expedited_reviewer = user.groups.filter(name=u'Expedited Review Group').exists()
-        profile.is_resident_member = user.groups.filter(name=u'Resident Board Member Group').exists()
+        profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
+        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
+        profile.is_thesis_reviewer = user.groups.filter(name='EC-Thesis Review Group').exists()
+        profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
+        profile.is_expedited_reviewer = user.groups.filter(name='Expedited Review Group').exists()
+        profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
         profile.forward_messages_after_minutes = 5
         for k in ('is_internal', 'is_help_writer'):
             setattr(profile, k, self.cleaned_data.get(k, False))

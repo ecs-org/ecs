@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from copy import deepcopy
 from collections import OrderedDict
 
@@ -30,7 +29,7 @@ class _Section(object):
         self.entries = OrderedDict((entry.slug, entry) for entry in entries)
 
     def __iter__(self):
-        return self.entries.itervalues()
+        return iter(self.entries.values())
 
     def __getitem__(self, key):
         return self.entries[key]
@@ -104,7 +103,7 @@ def collect_submission_stats_for_year(year):
             'mpg.also_amg': sf.is_amg and sf.is_mpg,
         }
 
-        for key, value in classification.iteritems():
+        for key, value in classification.items():
             section, entry = key.split('.', 1)
             if value:
                 submission_stats[section][entry].add_submission(s)

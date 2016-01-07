@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 import ecs.help.models
 
@@ -35,7 +32,7 @@ class Migration(migrations.Migration):
                 ('slug', models.CharField(unique=True, max_length=100)),
                 ('title', models.CharField(max_length=150)),
                 ('text', models.TextField()),
-                ('review_status', models.CharField(default=b'new', max_length=20, choices=[(b'new', 'New'), (b'ready_for_review', 'Ready for Review'), (b'review_ok', 'Review OK'), (b'review_fail', 'Review Failed')])),
+                ('review_status', models.CharField(default='new', max_length=20, choices=[('new', 'New'), ('ready_for_review', 'Ready for Review'), ('review_ok', 'Review OK'), ('review_fail', 'Review Failed')])),
                 ('view', models.ForeignKey(blank=True, to='tracking.View', null=True)),
             ],
             options={
@@ -44,7 +41,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='page',
-            unique_together=set([('view', 'anchor')]),
+            unique_together={('view', 'anchor')},
         ),
         migrations.AddField(
             model_name='attachment',

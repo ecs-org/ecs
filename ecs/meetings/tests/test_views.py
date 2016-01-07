@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from urlparse import urlsplit
+from urllib.parse import urlsplit
 
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group

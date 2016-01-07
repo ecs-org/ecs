@@ -22,7 +22,7 @@ def with_docstash_transaction(*args, **kwargs):
                 version = docstash.current_version 
                 try:
                     docstash.start_transaction(version)
-                except UnknownVersion, e:
+                except UnknownVersion as e:
                     raise Http404(str(e))
                 try:
                     response = view(request, **kwargs)

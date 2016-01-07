@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.db import models, migrations
 from django.conf import settings
 
@@ -95,7 +92,7 @@ class Migration(migrations.Migration):
                 ('specialist', models.CharField(max_length=80, blank=True)),
                 ('certified', models.BooleanField(default=False)),
                 ('subject_count', models.IntegerField()),
-                ('contact_gender', models.CharField(max_length=1, null=True, choices=[(b'f', 'Ms'), (b'm', 'Mr')])),
+                ('contact_gender', models.CharField(max_length=1, null=True, choices=[('f', 'Ms'), ('m', 'Mr')])),
                 ('contact_title', models.CharField(max_length=30, blank=True)),
                 ('contact_first_name', models.CharField(max_length=30)),
                 ('contact_last_name', models.CharField(max_length=30)),
@@ -109,7 +106,7 @@ class Migration(migrations.Migration):
             name='InvestigatorEmployee',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('sex', models.CharField(max_length=1, choices=[(b'm', 'Mr'), (b'f', 'Ms')])),
+                ('sex', models.CharField(max_length=1, choices=[('m', 'Mr'), ('f', 'Ms')])),
                 ('title', models.CharField(max_length=40, blank=True)),
                 ('firstname', models.CharField(max_length=40)),
                 ('surname', models.CharField(max_length=40)),
@@ -124,7 +121,7 @@ class Migration(migrations.Migration):
             name='Measure',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('category', models.CharField(max_length=3, choices=[(b'6.1', 'only study-related'), (b'6.2', 'for routine purposes')])),
+                ('category', models.CharField(max_length=3, choices=[('6.1', 'only study-related'), ('6.2', 'for routine purposes')])),
                 ('type', models.CharField(max_length=150)),
                 ('count', models.CharField(max_length=150)),
                 ('period', models.CharField(max_length=30)),
@@ -225,7 +222,7 @@ class Migration(migrations.Migration):
                 ('project_type_biobank', models.BooleanField(default=False)),
                 ('project_type_retrospective', models.BooleanField(default=False)),
                 ('project_type_questionnaire', models.BooleanField(default=False)),
-                ('project_type_education_context', models.SmallIntegerField(blank=True, null=True, choices=[(1, b'Dissertation'), (2, b'Diplomarbeit')])),
+                ('project_type_education_context', models.SmallIntegerField(blank=True, null=True, choices=[(1, 'Dissertation'), (2, 'Diplomarbeit')])),
                 ('project_type_misc', models.TextField(null=True, blank=True)),
                 ('project_type_psychological_study', models.BooleanField(default=False)),
                 ('project_type_nursing_study', models.BooleanField(default=False)),
@@ -249,7 +246,7 @@ class Migration(migrations.Migration):
                 ('subject_duration_active', models.CharField(max_length=200)),
                 ('subject_duration_controls', models.CharField(max_length=200, null=True, blank=True)),
                 ('subject_planned_total_duration', models.CharField(max_length=250)),
-                ('substance_preexisting_clinical_tries', models.NullBooleanField(db_column=b'existing_tries')),
+                ('substance_preexisting_clinical_tries', models.NullBooleanField(db_column='existing_tries')),
                 ('substance_p_c_t_phase', models.CharField(max_length=80, null=True, blank=True)),
                 ('substance_p_c_t_period', models.TextField(null=True, blank=True)),
                 ('substance_p_c_t_application_type', models.CharField(max_length=145, null=True, blank=True)),
@@ -326,7 +323,7 @@ class Migration(migrations.Migration):
                 ('study_plan_datamanagement', models.TextField()),
                 ('study_plan_biometric_planning', models.CharField(max_length=260)),
                 ('study_plan_statistics_implementation', models.CharField(max_length=270)),
-                ('study_plan_dataprotection_choice', models.CharField(default=b'non-personal', max_length=15, choices=[(b'personal', 'individual-related'), (b'non-personal', 'implicit individual-related'), (b'anonymous', 'completely anonymous')])),
+                ('study_plan_dataprotection_choice', models.CharField(default='non-personal', max_length=15, choices=[('personal', 'individual-related'), ('non-personal', 'implicit individual-related'), ('anonymous', 'completely anonymous')])),
                 ('study_plan_dataprotection_reason', models.CharField(max_length=120, null=True, blank=True)),
                 ('study_plan_dataprotection_dvr', models.CharField(max_length=180, null=True, blank=True)),
                 ('study_plan_dataprotection_anonalgoritm', models.TextField(null=True, blank=True)),
@@ -338,15 +335,15 @@ class Migration(migrations.Migration):
                 ('submitter_is_sponsor', models.BooleanField(default=False)),
                 ('submitter_is_authorized_by_sponsor', models.BooleanField(default=False)),
                 ('date_of_receipt', models.DateField(null=True, blank=True)),
-                ('submitter_contact_gender', models.CharField(max_length=1, null=True, choices=[(b'f', 'Ms'), (b'm', 'Mr')])),
+                ('submitter_contact_gender', models.CharField(max_length=1, null=True, choices=[('f', 'Ms'), ('m', 'Mr')])),
                 ('submitter_contact_title', models.CharField(max_length=30, blank=True)),
                 ('submitter_contact_first_name', models.CharField(max_length=30)),
                 ('submitter_contact_last_name', models.CharField(max_length=30)),
-                ('invoice_contact_gender', models.CharField(blank=True, max_length=1, null=True, choices=[(b'f', 'Ms'), (b'm', 'Mr')])),
+                ('invoice_contact_gender', models.CharField(blank=True, max_length=1, null=True, choices=[('f', 'Ms'), ('m', 'Mr')])),
                 ('invoice_contact_title', models.CharField(max_length=30, blank=True)),
                 ('invoice_contact_first_name', models.CharField(max_length=30, blank=True)),
                 ('invoice_contact_last_name', models.CharField(max_length=30, blank=True)),
-                ('sponsor_contact_gender', models.CharField(max_length=1, null=True, choices=[(b'f', 'Ms'), (b'm', 'Mr')])),
+                ('sponsor_contact_gender', models.CharField(max_length=1, null=True, choices=[('f', 'Ms'), ('m', 'Mr')])),
                 ('sponsor_contact_title', models.CharField(max_length=30, blank=True)),
                 ('sponsor_contact_first_name', models.CharField(max_length=30)),
                 ('sponsor_contact_last_name', models.CharField(max_length=30)),

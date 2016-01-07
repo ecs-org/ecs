@@ -10,6 +10,6 @@ class Command(BaseCommand):
 
     def handle(self, submission_pk=None, **options):
         s = Submission.objects.get(id=submission_pk)
-        print s.ec_number, s.project_title
+        print(s.ec_number, s.project_title)
         wf = Graph.objects.get().create_workflow(data=s)
         wf.start()

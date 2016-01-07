@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from decimal import Decimal
 from ecs import bootstrap
 from ecs.billing.models import Price

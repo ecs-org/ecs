@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.votes.models import Vote

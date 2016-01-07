@@ -54,7 +54,7 @@ class NodeType(models.Model):
     def is_control(self):
         return self.category == NODE_TYPE_CATEGORY_CONTROL
         
-    def __unicode__(self):
+    def __str__(self):
         if self.data_type:
             return "%s(%s)" % (self.name, self.data_type)
         return "'%s':%s" % (self.name, self.implementation)
@@ -150,10 +150,10 @@ class Node(models.Model):
     is_end_node = models.BooleanField(default=False)
     uid = models.CharField(max_length=100, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         if self.name:
             return self.name
-        return u"Node: %s" % (self.node_type)
+        return "Node: %s" % (self.node_type)
 
     def add_edge(self, to, guard=None, negated=False, deadline=False):
         if guard:
@@ -284,5 +284,5 @@ class Token(models.Model):
     def __repr__(self):
         return "<Token: workflow=%s, node=%s, consumed=%s>" % (self.workflow, self.node, self.is_consumed)
         
-    def __unicode__(self):
-        return u"%sToken at %s, deadline=%s, locked=%s" % (self.is_consumed and 'Consumed ' or '', self.node, self.deadline, self.locked)
+    def __str__(self):
+        return "%sToken at %s, deadline=%s, locked=%s" % (self.is_consumed and 'Consumed ' or '', self.node, self.deadline, self.locked)
