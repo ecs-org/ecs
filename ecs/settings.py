@@ -188,13 +188,13 @@ AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 ##############
 
 # directory for generated config files
-ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', '..', 'ecs-conf')
+ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', 'ecs-conf')
 
 # used by ecs.pki
-ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', '..', 'ecs-ca')
+ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', 'ecs-ca')
 
 # ecs.utils.pdfutils wkhtmltopdf uses these options to steer pdf generation out of html files
-WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] # 
+WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] #
 
 # whether ecs.tracking should store requests
 ECS_TRACKING_ENABLED = False
@@ -219,35 +219,35 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# PDF Signing settings, 
+# PDF Signing settings,
 # PDF_AS_SERVICE can either be undefined, or empty string, or string beginning with "mock:" to mock ecs.signature
-# for real pdf-as usage use http://localhost:4780/ per default 
+# for real pdf-as usage use http://localhost:4780/ per default
 # deployment should use something like 'https://hostname/pdf-as'
 #PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
 PDFAS_SERVICE = 'mock:'
 
 
 # directory where to store logfiles, used by every daemon and apache
-LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-log"))
+LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-log"))
 
 # directory where to store zipped submission patientinformation and submission form pdfs
-ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-cache"))
+ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-cache"))
 ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 
 # ecs.help system export path
-ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "..", "ecs-help"))
+ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-help"))
 
 # Storage Vault settings
-STORAGE_VAULT_DIR = os.path.join(PROJECT_DIR, '..', "..", 'ecs-storage-vault')
+STORAGE_VAULT_DIR = os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault')
 STORAGE_ENCRYPT = {
-    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-encrypt", "gpg"),
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "ecs-encrypt", "gpg"),
     "encrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.pub"),
     "encrypt_owner": "ecs_mediaserver",
     "signing_key": os.path.join(PROJECT_DIR, "ecs_authority.sec"),
     "signing_owner": "ecs_authority",
 }
 STORAGE_DECRYPT = {
-    "gpghome" : os.path.join(PROJECT_DIR, "..", "..", "ecs-decrypt", "gpg"),
+    "gpghome" : os.path.join(PROJECT_DIR, "..", "ecs-decrypt", "gpg"),
     "decrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.sec"),
     "decrypt_owner": "ecs_mediaserver",
     "verify_key":  os.path.join(PROJECT_DIR, "ecs_authority.pub"),
@@ -266,16 +266,16 @@ ECSMAIL_DEFAULT = {
     'log_dir':   LOGFILE_DIR,
     'postmaster': 'root@system.local', # the email address of the ecs user where emails from local machine to postmaster will get send
     # THIS MUST BE A VALID ecs user name !
-    'listen': '0.0.0.0', 
+    'listen': '0.0.0.0',
     'port': 8823,
     'handlers': ['ecs.communication.mailreceiver'],
-    'undeliverable_queue_dir': os.path.join(PROJECT_DIR, "..", "..", "ecs-mail", "undeliverable"),
+    'undeliverable_queue_dir': os.path.join(PROJECT_DIR, "..", "ecs-mail", "undeliverable"),
     'trusted_sources': ['127.0.0.1'],
     'authoritative_domain': 'localhost',
     'filter_outgoing_smtp': False,
-    # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND, 
-    # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND  
-    # this is used only for ecs.users.views. register and request_password_reset 
+    # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND,
+    # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND
+    # this is used only for ecs.users.views. register and request_password_reset
 }
 ECSMAIL = deepcopy(ECSMAIL_DEFAULT)
 
@@ -293,7 +293,7 @@ USE_TEXTBOXLIST = True
 
 # ### celery ### configuration defaults, uses memory transport and always eager
 # production environments should:
-#   set BROKER_USER, PASSWORD, VHOST 
+#   set BROKER_USER, PASSWORD, VHOST
 BROKER_URL = 'amqp://ecsuser:ecspassword@localhost:5672/ecshost'
 
 CELERY_IMPORTS = (
@@ -316,7 +316,7 @@ CELERY_ALWAYS_EAGER = True
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(PROJECT_DIR, "..", "..", "ecs-whoosh"),
+        'PATH': os.path.join(PROJECT_DIR, "..", "ecs-whoosh"),
 
         # example solr url, is only used if
         # ENGINE == 'haystack.backends.solr_backend.SolrEngine'
@@ -325,7 +325,7 @@ HAYSTACK_CONNECTIONS = {
 }
 
 
-# ### django_compressor ### 
+# ### django_compressor ###
 COMPRESS_ENABLED = True
 COMPRESS_PRECOMPILERS = (
     (
@@ -338,18 +338,18 @@ COMPRESS_PRECOMPILERS = (
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
 
-# settings override 
+# settings override
 ###################
 #these are local fixes, they default to a sane value if unset
 
 #ECS_USERSWITCHER = True/False
-# default to True, Userswitcher will be shown so user can switch to testusers quickly 
- 
+# default to True, Userswitcher will be shown so user can switch to testusers quickly
+
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
 # loads support for django-debug-toolbar
 
 #ECS_WORDING = True/False defaults to False if empty
-# activates django-rosetta 
+# activates django-rosetta
 
 
 # use ecsdev settings if on node ecsdev.ep3.at
@@ -357,7 +357,7 @@ if platform.node() == "ecsdev.ep3.at":
     from ecsdev_settings import *
 
 # use different settings if local_settings.py exists
-try: 
+try:
     from local_settings import *
 except ImportError:
     pass
@@ -377,7 +377,7 @@ for override in local_overrides:
     else:
         val += val_override
 
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain']) 
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain'])
 
 # TODO: get this from bootstrap_settings.py
 DEFAULT_REPLY_TO   = 'ethik-kom@meduniwien.ac.at'
@@ -404,9 +404,9 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
     INSTALLED_APPS +=('debug_toolbar',) # anywhere
     DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, 'MEDIA_URL': '/__debug__/m/',}
-    INTERNAL_IPS = ('127.0.0.1','78.46.72.166', '78.46.72.189', '78.46.72.188', '78.46.72.187')
+    INTERNAL_IPS = ('127.0.0.1',)
 
-# hack some settings for test and runserver    
+# hack some settings for test and runserver
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
     ECS_REQUIRE_CLIENT_CERTS = False
@@ -415,7 +415,7 @@ if 'test' in sys.argv:
 
 if 'runserver' in sys.argv:
     EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
-    
+
     logging.basicConfig(
         level = logging.DEBUG,
         format = '%(asctime)s %(levelname)s %(message)s',
