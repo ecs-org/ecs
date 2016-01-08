@@ -197,19 +197,13 @@ class HelpSearchView(SearchView):
         return self.form_class(data, **kwargs)
 
 
-# haystack's search_view_factory does not pass *args and **kwargs
-def search_view_factory(view_class=SearchView, *args, **kwargs):
-    def search_view(request, *view_args, **view_kwargs):
-        return view_class(*args, **kwargs)(request, *view_args, **view_kwargs)
-    return search_view
-
-search = forceauth.exempt(search_view_factory(
-    view_class=HelpSearchView,
-    template='help/search.html',
-    searchqueryset=SearchQuerySet().models(Page).order_by('title'),
-    form_class=HighlightedSearchForm,
-))
-
+def search(request, *args, **kwargs):
+    search_view = HelpSearchView(
+        template='help/search.html',
+        searchqueryset=SearchQuerySet().models(Page).order_by('title'),
+        form_class=HighlightedSearchForm,
+    )
+    return search_view(request, *args, **kwargs)
 
 
 @user_flag_required('is_help_writer')
