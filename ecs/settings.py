@@ -344,7 +344,7 @@ COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 
 # use different settings if local_settings.py exists
 try:
-    from local_settings import *
+    from ecs.local_settings import *
 except ImportError:
     pass
 
@@ -370,7 +370,7 @@ DEFAULT_REPLY_TO   = 'ethik-kom@meduniwien.ac.at'
 
 # get version of the Programm from version.py if exists (gets updated on deployment)
 try:
-    from version import *
+    from ecs.version import *
 except ImportError:
     ECS_VERSION = 'unknown'
 
