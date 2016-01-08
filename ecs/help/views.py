@@ -221,7 +221,7 @@ def preview_help_page_text(request):
     
 
 @user_flag_required('is_help_writer')
-def difference_help_pages(request, page_pk=None, old_version="-2", new_version="-1"):
+def difference_help_pages(request, page_pk=None, old_version=None, new_version=None):
     from reversion.helpers import generate_patch_html
 
     page = get_object_or_404(Page, pk=page_pk)
@@ -229,8 +229,8 @@ def difference_help_pages(request, page_pk=None, old_version="-2", new_version="
     if len(available_versions) < 2:
         return HttpResponse("<html><body>no revisions</body></html>")
 
-    old_version = int(old_version)
-    new_version = int(new_version)
+    old_version = int(old_version or '-2')
+    new_version = int(new_version or '-1')
     if new_version < 0:
         new_version = len(available_versions)+ new_version
     if old_version < 0:
