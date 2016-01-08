@@ -14,5 +14,5 @@ def index_help_page(page_pk=None):
         logger.warning("Warning, help page with pk %s does not exist" % str(page_pk))
         return False
 
-    HelpPageIndex.update_object(page)
+    HelpPageIndex().update_object(page)
     return True
