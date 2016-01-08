@@ -19,8 +19,13 @@ class SMTPError(Exception):
 
 
 class EcsMailReceiver(smtpd.SMTPServer):
+
+    # 1MB; this seems a lot, but also includes HTML and inline images.
+    MAX_MSGSIZE = 1024 * 1024
+
     def __init__(self):
-        smtpd.SMTPServer.__init__(self, settings.ECSMAIL['addr'], None)
+        smtpd.SMTPServer.__init__(self, settings.ECSMAIL['addr'], None,
+            data_size_limit=self.MAX_MSGSIZE)
         self.undeliverable_maildir = mailbox.Maildir(
             settings.ECSMAIL['undeliverable_maildir'])
 
@@ -59,11 +64,6 @@ class EcsMailReceiver(smtpd.SMTPServer):
         return plain or html
 
     def process_message(self, peer, mailfrom, rcpttos, data):
-        if len(data) > 1024 * 1024:
-            # XXX: Don't add the message to the undeliverable maildir to
-            # prevent disk space exhaustion.
-            return '552 Message too large (> 1MB)'
-
         try:
             if len(rcpttos) > 1:
                 raise SMTPError(554, 'Too many recipients')

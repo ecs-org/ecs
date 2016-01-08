@@ -39,14 +39,10 @@ class SmtpdTest(CommunicationTestCase):
         code, description = ret.split(' ', 1)
         return int(code), description
 
-    def test_too_large(self):
-        msg = MIMEText('*' * (1024 * 1024))
-        msg['From'] = 'Alice <alice@example.com>'
-        msg['To'] = 'Bob <bob@ecs>'
-
-        code, description = self.process_message(['bob@ecs'], msg)
-        self.assertEqual(code, 552)
-        self.assertEqual(description, 'Message too large (> 1MB)')
+    def test_data_size_limit(self):
+        MB = 1024 * 1024
+        self.assertEqual(EcsMailReceiver.MAX_MSGSIZE, MB)
+        self.assertEqual(self.mail_receiver.data_size_limit, MB)
 
     def test_too_many_recipients(self):
         msg = MIMEText('')
