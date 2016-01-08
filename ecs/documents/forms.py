@@ -45,7 +45,7 @@ class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
             raise ValidationError(_('The PDF-File seems to broken. For more Information click on the question mark in the sidebar.'))
 
         f.seek(0)
-        return UploadedFile(f, content_type='application/pdf')
+        return UploadedFile(f, content_type='application/pdf', name='upload.pdf')
 
     def clean(self):
         cd = super(DocumentForm, self).clean()
