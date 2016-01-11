@@ -18,7 +18,7 @@ from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.notifications.signals import on_notification_submit
-from ecs.documents.views import upload_document, delete_document
+from ecs.documents.views import handle_download, upload_document, delete_document
 from ecs.users.utils import user_flag_required, user_group_required
 from ecs.tasks.utils import task_required, with_task_management
 from ecs.signature.views import init_batch_sign
@@ -51,6 +51,24 @@ def view_notification(request, notification_pk=None):
         'documents': notification.documents.order_by('doctype__identifier', 'version', 'date'),
         'notification': notification,
     }, request))
+
+
+@readonly()
+def notification_pdf(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    return handle_download(request, notification.pdf_document)
+
+
+@readonly()
+def download_document(request, notification_pk=None, document_pk=None, view=False):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    document = get_object_or_404(notification.documents, pk=document_pk)
+    return handle_download(request, document, view=view)
+
+
+@readonly()
+def view_document(request, notification_pk=None, document_pk=None):
+    return download_document(request, notification_pk, document_pk, view=True)
 
 
 @readonly()
@@ -197,6 +215,12 @@ def view_notification_answer(request, notification_pk=None):
         'notification': answer.notification,
         'answer': answer,
     })
+
+
+@readonly()
+def notification_answer_pdf(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    return handle_download(request, notification.answer.pdf_document)
     
 
 @user_flag_required('is_internal')

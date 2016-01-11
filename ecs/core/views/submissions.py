@@ -16,6 +16,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 from ecs.documents.models import Document
+from ecs.documents.views import handle_download
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
@@ -265,6 +266,29 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     for prefix, formset in formsets.items():
         context['%s_formset' % prefix] = formset
     return render(request, template, context)
+
+
+@readonly()
+def submission_form_pdf(request, submission_form_pk=None, view=False):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    return handle_download(request, submission_form.pdf_document, view=view)
+
+
+@readonly()
+def submission_form_pdf_view(request, submission_form_pk=None):
+    return submission_form_pdf(request, submission_form_pk, view=True)
+
+
+@readonly()
+def download_document(request, submission_form_pk=None, document_pk=None, view=False):
+    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    document = get_object_or_404(submission_form.documents, pk=document_pk)
+    return handle_download(request, document, view=view)
+
+
+@readonly()
+def view_document(request, submission_form_pk=None, document_pk=None):
+    return download_document(request, submission_form_pk, document_pk, view=True)
 
 
 @user_flag_required('is_internal')

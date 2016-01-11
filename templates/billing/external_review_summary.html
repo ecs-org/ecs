@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'ecs.documents.views.download_document' document_pk=payment.document.pk %}" class="button_submit">{% trans 'Download payment as xls file' %}</a></p>
+    <p><a href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}" class="button_submit">{% trans 'Download payment as xls file' %}</a></p>
 
     <h2>{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
     <table class="billing_summary">

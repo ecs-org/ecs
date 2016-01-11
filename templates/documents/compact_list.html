@@ -6,6 +6,14 @@
 <div class="doclist">
 
 {% for doc in documents %}
+    {% if submission_form %}
+        {% url 'ecs.core.views.submissions.download_document' submission_form_pk=submission_form.pk document_pk=doc.pk as download_url %}
+        {% url 'ecs.core.views.submissions.view_document' submission_form_pk=submission_form.pk document_pk=doc.pk as view_url %}
+    {% elif notification %}
+        {% url 'ecs.notifications.views.download_document' notification_pk=notification.pk document_pk=doc.pk as download_url %}
+        {% url 'ecs.notifications.views.view_document' notification_pk=notification.pk document_pk=doc.pk as view_url %}
+    {% endif %}
+
     {% ifchanged doc.doctype.identifier %}
         <h4>{{ doc.doctype }}</h4>
     {% endifchanged %}
@@ -13,11 +21,11 @@
     <div class="list_item">
         {% block actions %}
 	    {% if doc.doctype.is_downloadable or user|has_flag:'is_internal' %}
-		<a href="{% url 'ecs.documents.views.download_document' document_pk=doc.pk %}">{% trans "Download" %}</a> | 
+                <a href="{{ download_url }}">{% trans "Download" %}</a> |
 	    {% endif %}
-	    <a href="{% url 'ecs.documents.views.view_document' document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> | 
+            <a href="{{ view_url }}" target="_blank">{% trans "View" %}</a> |
         {% endblock %}
-        <a class="doc_name" href="{% url 'ecs.documents.views.view_document' document_pk=doc.pk %}" target="_blank">
+        <a class="doc_name" href="{{ view_url }}" target="_blank">
             {% if doc.name %}
             {{ doc.name }}
             {% else %}

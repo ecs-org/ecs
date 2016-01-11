@@ -31,6 +31,7 @@ urlpatterns = (
 
     url(r'^', include('ecs.users.urls')),
     url(r'^core/', include('ecs.core.urls')),
+    url(r'^docstash/', include('ecs.docstash.urls')),
     url(r'^checklist/', include('ecs.checklists.urls')),
     url(r'^vote/', include('ecs.votes.urls')),
     url(r'^dashboard/', include('ecs.dashboard.urls')),

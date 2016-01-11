@@ -80,7 +80,7 @@
             {% if submission_form|allows_edits_by:request.user %}
                 <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
             {% endif %}
-             <a href="{% url 'ecs.documents.views.download_document' document_pk=submission_form.pdf_document_id %}">{% trans "Download PDF" %}</a>
+             <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=submission_form.pk %}">{% trans "Download PDF" %}</a>
             {% with submission.paper_submission_task as paper_submission_review_task %}
                 {% if paper_submission_review_task %}
                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
@@ -127,7 +127,7 @@
         {% endif %}
         {% if matched_document.parent_object == submission or matched_document.parent_object.submission == submission %}
             <div class="matched_document">
-                {% trans 'Document' %}: <a href="{% url 'ecs.documents.views.view_document' document_pk=matched_document.pk %}" target="_blank">{{ matched_document }}</a>
+                {% trans 'Document' %}: <a href="{% url 'ecs.core.views.submissions.submission_form_pdf_view' submission_form_pk=matched_document.submission_form.pk %}" target="_blank">{{ matched_document }}</a>
             </div>
         {% endif %}
         {% endwith %}

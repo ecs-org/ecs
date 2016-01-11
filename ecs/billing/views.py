@@ -15,6 +15,7 @@ from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document
+from ecs.documents.views import handle_download
 from ecs.tasks.models import Task
 
 from ecs.billing.models import Price, ChecklistBillingState, Invoice, ChecklistPayment
@@ -171,6 +172,12 @@ def view_invoice(request, invoice_pk=None):
 
 @readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Group')
+def invoice_pdf(request, invoice_pk=None):
+    invoice = get_object_or_404(Invoice, pk=invoice_pk)
+    return handle_download(request, invoice.document)
+
+@readonly()
+@user_group_required('EC-Office', 'EC-Executive Board Group')
 def invoice_list(request):
     invoices = Invoice.objects.all().order_by('-created_at')
     paginator = Paginator(invoices, 25)
@@ -248,6 +255,12 @@ def view_checklist_payment(request, payment_pk=None):
     return render(request, 'billing/external_review_summary.html', {
         'payment': payment,
     })
+
+@readonly()
+@user_group_required('EC-Office', 'EC-Executive Board Group')
+def checklist_payment_pdf(request, payment_pk=None):
+    payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
+    return handle_download(request, payment.document)
 
 @readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Group')

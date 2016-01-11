@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext
 from django.utils import timezone
 
-from ecs.authorization import AuthorizationManager
 from ecs.utils.pdfutils import pdf_barcodestamp
 from ecs.documents.storagevault import getVault
 
@@ -30,7 +29,7 @@ class DocumentType(models.Model):
         return ugettext(self.name)
 
 
-class DocumentManager(AuthorizationManager): 
+class DocumentManager(models.Manager):
     def create_from_buffer(self, buf, **kwargs): 
         if 'doctype' in kwargs and isinstance(kwargs['doctype'], str):
             kwargs['doctype'] = DocumentType.objects.get(identifier=kwargs['doctype'])

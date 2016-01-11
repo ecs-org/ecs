@@ -6,7 +6,6 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
-from ecs.documents.models import Document
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
@@ -58,15 +57,6 @@ class VoteQFactory(authorization.QFactory):
         return q
 
 authorization.register(Vote, factory=VoteQFactory)
-
-class DocumentQFactory(authorization.QFactory):
-    def get_q(self, user):
-        return self.make_q() # FIXME: how should document authorization work?
-        submission_q = self.make_q(content_type=ContentType.objects.get_for_model(SubmissionForm))
-        q = ~submission_q | (submission_q & self.make_q(object_id__in=SubmissionForm.objects.values('pk').query))
-        return q
-
-authorization.register(Document, factory=DocumentQFactory)
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):

@@ -327,7 +327,13 @@ class DocumentDiffer(AtomicModelDiffer):
 
     def format(self, doc):
         def _render(plainhtml=False):
-            data = {'doc': doc, 'plainhtml': plainhtml}
+            submission_form = doc.submission_forms.first()
+            assert submission_form is not None
+            data = {
+                'doc': doc,
+                'plainhtml': plainhtml,
+                'submission_form': submission_form,
+            }
             return render_html(HttpRequest(), 'submissions/diff/document.inc', data)
         return _render
 

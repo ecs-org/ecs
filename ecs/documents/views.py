@@ -31,9 +31,12 @@ def delete_document(request, document_pk):
     if document_pk in document_pks:
         document_pks.remove(document_pk)
     request.docstash['document_pks'] = list(document_pks)
-    
 
-def handle_download(request, doc):
+
+def handle_download(request, doc, view=False):
+    if view:
+        return handle_view(request, doc)
+
     if (not doc.doctype.is_downloadable and
         not request.user.profile.is_internal):
         return HttpResponseForbidden()
@@ -45,10 +48,7 @@ def handle_download(request, doc):
     return response
 
 
-@readonly()
-def view_document(request, document_pk=None, page=None):
-    doc = get_object_or_404(Document, pk=document_pk)
-
+def handle_view(request, doc, page=None):
     ref_key = uuid4().hex
     cache.set('document-ref-{}'.format(ref_key), doc.id, timeout=60)
 
@@ -85,10 +85,3 @@ def download_once(request, ref_key=None):
     response['Expires'] = '0'
     response['Vary'] = '*'
     return response
-
-
-@readonly()
-def download_document(request, document_pk=None):
-    # authorization is handled by ecs.authorization, see ecs.auth_conf for details.
-    doc = get_object_or_404(Document, pk=document_pk)
-    return handle_download(request, doc)

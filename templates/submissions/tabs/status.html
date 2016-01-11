@@ -51,7 +51,7 @@
                     </td>
                     <td>
                         {% if forloop.first %}
-                            <a href="{% url 'ecs.documents.views.download_document' document_pk=sf.pdf_document_id %}" class="icon_pdf">{% trans "Download PDF" %}</a>
+                            <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
                         {% endif %}
                     </td>
                 </tr>

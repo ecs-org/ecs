@@ -95,7 +95,7 @@ class NotificationFormTest(LoginTestCase):
         notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
         notification = Notification.objects.create(type=notification_type)
         notification.render_pdf()
-        response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': notification.pdf_document.pk}))
+        response = self.client.get(reverse('ecs.notifications.views.notification_pdf', kwargs={'notification_pk': notification.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
@@ -130,7 +130,12 @@ class NotificationFormTest(LoginTestCase):
         doc = documents[0]
         self.assertEqual(doc.version, '3.1415')
         
-        response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': doc.pk}))
+        response = self.client.get(
+            reverse('ecs.docstash.views.download_document', kwargs={
+                'docstash_key': response.context['request'].docstash.key,
+                'document_pk': doc.pk
+            })
+        )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')

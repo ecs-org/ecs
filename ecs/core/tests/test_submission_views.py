@@ -178,7 +178,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         '''
 
         submission_form = create_submission_form()
-        response = self.client.get(reverse('ecs.documents.views.download_document', kwargs={'document_pk': submission_form.pdf_document.pk}))
+        response = self.client.get(reverse('ecs.core.views.submissions.submission_form_pdf', kwargs={'submission_form_pk': submission_form.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')

@@ -35,6 +35,10 @@ urlpatterns = (
     url(r'^(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', views.delete_task),
 
     url(r'^form/(?P<submission_form_pk>\d+)/$', views.readonly_submission_form, name='readonly_submission_form'),
+    url(r'^form/(?P<submission_form_pk>\d+)/pdf/$', views.submission_form_pdf),
+    url(r'^form/(?P<submission_form_pk>\d+)/pdf/view/$', views.submission_form_pdf_view),
+    url(r'^form/(?P<submission_form_pk>\d+)/doc/(?P<document_pk>\d+)/$', views.download_document),
+    url(r'^form/(?P<submission_form_pk>\d+)/doc/(?P<document_pk>\d+)/view/$', views.view_document),
     url(r'^form/(?P<submission_form_pk>\d+)/copy/$', views.copy_submission_form),
     url(r'^form/(?P<submission_form_pk>\d+)/amend/(?P<notification_type_pk>\d+)/$', views.copy_submission_form),
     url(r'^form/(?P<submission_form_pk>\d+)/review/checklist/(?P<blueprint_pk>\d+)/$', views.checklist_review),
