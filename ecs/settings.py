@@ -181,6 +181,13 @@ INSTALLED_APPS = (
 # authenticate with email address
 AUTHENTICATION_BACKENDS = ('ecs.users.backends.EmailAuthBackend',)
 
+# Force Django to always use real files, not an InMemoryUploadedFile.
+# The document processing pipeline depends on the file objects having
+# a fileno().
+FILE_UPLOAD_HANDLERS = (
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+)
+
 
 # ecs settings
 ##############
