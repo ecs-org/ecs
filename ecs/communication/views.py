@@ -201,35 +201,42 @@ def list_threads(request):
     for key in ('incoming', 'outgoing', 'closed', 'pending'):
         filter_defaults[key] = 'on'
 
-    filterdict = request.POST or usersettings.communication_filter or filter_defaults
-    filterform = ThreadListFilterForm(filterdict)
+    filterform = ThreadListFilterForm(
+        request.POST or usersettings.communication_filter or filter_defaults)
     filterform.is_valid() # force clean
 
-    usersettings.communication_filter = filterform.cleaned_data
+    filters = usersettings.communication_filter = filterform.cleaned_data
     usersettings.save()
 
-    queryset_stage1 = Thread.objects.none()
-    if filterform.cleaned_data['incoming']:
-        queryset_stage1 |= Thread.objects.incoming(request.user)
-    if filterform.cleaned_data['outgoing']:
-        queryset_stage1 |= Thread.objects.outgoing(request.user)
+    if filters['incoming'] and filters['outgoing']:
+        queryset = Thread.objects.by_user(request.user)
+    elif filters['incoming']:
+        queryset = Thread.objects.incoming(request.user)
+    elif filters['outgoing']:
+        queryset = Thread.objects.outgoing(request.user)
+    else:
+        queryset = Thread.objects.none()
 
-    queryset_stage2 = queryset_stage1.none()
-    if filterform.cleaned_data['closed'] and filterform.cleaned_data['pending']:
-        queryset_stage2 = queryset_stage1
-    elif filterform.cleaned_data['closed']:
-        queryset_stage2 |= queryset_stage1.filter(Q(closed_by_receiver=True, receiver=request.user) | Q(closed_by_sender=True, sender=request.user))
-    elif filterform.cleaned_data['pending']:
-        queryset_stage2 |= queryset_stage1.filter(Q(closed_by_receiver=False, receiver=request.user) | Q(closed_by_sender=False, sender=request.user))
+    if filters['closed'] and filters['pending']:
+        pass
+    elif filters['closed']:
+        queryset = queryset.filter(
+            Q(closed_by_receiver=True, receiver=request.user) |
+            Q(closed_by_sender=True, sender=request.user)
+        )
+    elif filters['pending']:
+        queryset = queryset.filter(
+            Q(closed_by_receiver=False, receiver=request.user) |
+            Q(closed_by_sender=False, sender=request.user)
+        )
+    else:
+        queryset = queryset.none()
 
     return message_widget(request, 
         template='communication/threads.html',
-        queryset=queryset_stage2,
+        queryset=queryset,
         session_prefix='messages:unified',
         user_sort='receiver__username',
         page_size=15,
         extra_context={'filterform': filterform},
     )
-
-
-
