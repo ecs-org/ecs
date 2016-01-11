@@ -10,7 +10,7 @@ from django_extensions.db.fields.json import JSONField
 from picklefield.fields import PickledObjectField
 
 from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
-from ecs.authorization import AuthorizationManager
+
 
 def _transaction_required(method):
     @wraps(method)
@@ -43,8 +43,6 @@ class DocStash(models.Model):
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
     parent_object = GenericForeignKey('content_type', 'object_id')
-
-    objects = AuthorizationManager()
 
     class Meta:
         unique_together = ('group', 'owner', 'content_type', 'object_id')
@@ -146,8 +144,6 @@ class DocStashData(models.Model):
     value = PickledObjectField(compress=True)
     modtime = models.DateTimeField(auto_now_add=True)
     name = models.TextField(blank=True)
-    
-    objects = AuthorizationManager()
     
     class Meta:
         unique_together = ('version', 'stash')

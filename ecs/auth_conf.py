@@ -7,7 +7,6 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
-from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
@@ -68,13 +67,6 @@ class DocumentQFactory(authorization.QFactory):
         return q
 
 authorization.register(Document, factory=DocumentQFactory)
-
-class DocstashQFactory(authorization.QFactory):
-    def get_q(self, user):
-        return self.make_q(owner=user)
-
-authorization.register(DocStash, factory=DocstashQFactory)
-authorization.register(DocStashData, lookup='stash')
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):

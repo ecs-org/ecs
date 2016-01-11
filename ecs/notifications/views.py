@@ -32,10 +32,12 @@ def _get_notification_template(notification, pattern):
 def open_notifications(request):
     title = _('Open Notifications')
     notifications =  Notification.objects.pending().annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+    stashed_notifications = DocStash.objects.filter(
+        owner=request.user, group='ecs.notifications.views.create_notification')
     context = {
         'title': title,
         'notifs': notifications,
-        'stashed_notifications': DocStash.objects.filter(group='ecs.notifications.views.create_notification'),
+        'stashed_notifications': stashed_notifications,
     }
     return render(request, 'notifications/list.html', context)
 

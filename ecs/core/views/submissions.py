@@ -204,7 +204,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     votes = submission.votes
     
     stashed_notifications = []
-    for d in DocStash.objects.filter(group='ecs.notifications.views.create_notification'):
+    for d in DocStash.objects.filter(owner=request.user, group='ecs.notifications.views.create_notification'):
         try:
             if str(submission_form.pk) in d.current_value['form'].data['submission_forms']:
                 stashed_notifications.append(d)
