@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-from ecs.authorization import AuthorizationManager
 
 MESSAGE_ORIGIN_ALICE = 1
 MESSAGE_ORIGIN_BOB = 2
@@ -55,7 +54,7 @@ class Thread(models.Model):
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
 
-    objects = AuthorizationManager.from_queryset(ThreadQuerySet)()
+    objects = ThreadQuerySet.as_manager()
 
     def mark_closed_for_user(self, user):
         for msg in self.messages.filter(receiver=user):
@@ -180,7 +179,7 @@ class Message(models.Model):
 
     reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
 
-    objects = AuthorizationManager.from_queryset(MessageQuerySet)()
+    objects = MessageQuerySet.as_manager()
 
     @property
     def return_address(self):

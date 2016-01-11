@@ -14,7 +14,6 @@ from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry
 from ecs.billing.models import ChecklistBillingState
 from ecs.scratchpad.models import ScratchPad
 from ecs.boilerplate.models import Text
-from ecs.communication.models import Thread, Message
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
@@ -169,13 +168,3 @@ class TextQFactory(authorization.QFactory):
             return self.make_deny_q()
 
 authorization.register(Text, factory=TextQFactory)
-
-class ThreadQFactory(authorization.QFactory):
-    def get_q(self, user):
-        if user.profile.is_internal:
-            return self.make_q()
-
-        return self.make_q(sender=user) | self.make_q(receiver=user)
-
-authorization.register(Thread, factory=ThreadQFactory)
-authorization.register(Message, lookup='thread')
