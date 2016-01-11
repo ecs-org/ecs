@@ -11,7 +11,6 @@ from ecs.docstash.models import DocStash, DocStashData
 from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
-from ecs.billing.models import ChecklistBillingState
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
@@ -142,12 +141,3 @@ authorization.register(AssignedMedicalCategory, lookup='meeting')
 authorization.register(TimetableEntry, lookup='meeting')
 authorization.register(Participation, lookup='entry__meeting')
 authorization.register(Constraint, lookup='meeting')
-
-class ChecklistBillingStateQFactory(authorization.QFactory):
-    def get_q(self, user):
-        if user.profile.is_internal:
-            return self.make_q()
-        else:
-            return self.make_deny_q()
-
-authorization.register(ChecklistBillingState, factory=ChecklistBillingStateQFactory)

@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
-from ecs.authorization import AuthorizationManager
 
 STUDY_PRICING_OTHER = 1
 STUDY_PRICING_MULTICENTRIC_AMG_MAIN = 2
@@ -37,7 +36,6 @@ class PriceManager(models.Manager):
         return self.get(category=EXTERNAL_REVIEW_PRICING)
         
 
-
 class Price(models.Model):
     category = models.SmallIntegerField(choices=PRICE_CATEGORIES, unique=True, db_index=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -51,11 +49,11 @@ class Price(models.Model):
     def __str__(self):
         return dict(PRICE_CATEGORIES)[self.category]
 
+
 class ChecklistBillingState(models.Model):
     checklist = models.OneToOneField('checklists.Checklist', null=True, related_name='billing_state')
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
 
-    objects = AuthorizationManager()
 
 class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
@@ -66,6 +64,7 @@ class Invoice(models.Model):
     def stats(self):
         from ecs.billing.stats import collect_submission_billing_stats
         return collect_submission_billing_stats(self.submissions.all())
+
 
 class ChecklistPayment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
