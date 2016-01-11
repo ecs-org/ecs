@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from ecs.authorization import AuthorizationManager
 
 class Text(models.Model):
     slug = models.CharField(max_length=50, unique=True)
@@ -9,5 +8,3 @@ class Text(models.Model):
     author = models.ForeignKey(User)
     ctime = models.DateTimeField(auto_now_add=True)
     mtime = models.DateTimeField(auto_now=True)
-
-    objects = AuthorizationManager()

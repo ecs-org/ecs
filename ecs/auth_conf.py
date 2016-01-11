@@ -12,7 +12,6 @@ from ecs.tasks.models import Task
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.billing.models import ChecklistBillingState
-from ecs.boilerplate.models import Text
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
@@ -152,12 +151,3 @@ class ChecklistBillingStateQFactory(authorization.QFactory):
             return self.make_deny_q()
 
 authorization.register(ChecklistBillingState, factory=ChecklistBillingStateQFactory)
-
-class TextQFactory(authorization.QFactory):
-    def get_q(self, user):
-        if user.profile.is_internal:
-            return self.make_q()
-        else:
-            return self.make_deny_q()
-
-authorization.register(Text, factory=TextQFactory)
