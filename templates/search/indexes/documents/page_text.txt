@@ -1,3 +1,0 @@
-Seite {{ object.num }}
-
-{{ object.text }}
