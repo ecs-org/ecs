@@ -22,9 +22,6 @@ class ThreadQuerySet(models.QuerySet):
     def by_user(self, *users):
         return self.filter(models.Q(sender__in=users) | models.Q(receiver__in=users))
 
-    def total_message_count(self):
-        return Message.objects.filter(thread__in=self.values('pk')).count()
-
     def incoming(self, user):
         return self.filter(models.Q(sender=user, last_message__origin=MESSAGE_ORIGIN_BOB) | models.Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_ALICE))
 
@@ -147,12 +144,6 @@ class Thread(models.Model):
 
 
 class MessageQuerySet(models.QuerySet):
-    def by_user(self, *users):
-        return self.filter(models.Q(thread__sender__in=users) | models.Q(thread__receiver__in=users))
-
-    def open(self, user):
-        return self.filter(models.Q(thread__closed_by_receiver=False, thread__receiver=user) | models.Q(thread__closed_by_sender=False, thread__sender=user))
-
     def outgoing(self, user):
         return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB))
 
