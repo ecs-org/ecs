@@ -41,15 +41,6 @@ class ThreadQuerySet(models.QuerySet):
         )
 
 
-class ThreadManager(AuthorizationManager):
-    def create(self, **kwargs):
-        text = kwargs.pop('text', None)
-        thread = super(ThreadManager, self).create(**kwargs)
-        if text:
-            thread.add_message(kwargs['sender'], text)
-        return thread
-
-
 class Thread(models.Model):
     subject = models.CharField(max_length=100)
     submission = models.ForeignKey('core.Submission', null=True)
@@ -64,7 +55,7 @@ class Thread(models.Model):
     closed_by_sender = models.BooleanField(default=False)
     closed_by_receiver = models.BooleanField(default=False)
 
-    objects = ThreadManager.from_queryset(ThreadQuerySet)()
+    objects = AuthorizationManager.from_queryset(ThreadQuerySet)()
 
     def mark_closed_for_user(self, user):
         for msg in self.messages.filter(receiver=user):
