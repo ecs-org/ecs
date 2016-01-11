@@ -19,17 +19,26 @@ DELIVERY_STATES = (
 
 
 class ThreadQuerySet(models.QuerySet):
-    def by_user(self, *users):
-        return self.filter(models.Q(sender__in=users) | models.Q(receiver__in=users))
+    def by_user(self, user):
+        return self.filter(Q(sender=user) | Q(receiver=user))
 
     def incoming(self, user):
-        return self.filter(models.Q(sender=user, last_message__origin=MESSAGE_ORIGIN_BOB) | models.Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_ALICE))
+        return self.filter(
+            Q(sender=user, last_message__origin=MESSAGE_ORIGIN_BOB) |
+            Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_ALICE)
+        )
 
     def outgoing(self, user):
-        return self.filter(models.Q(sender=user, last_message__origin=MESSAGE_ORIGIN_ALICE) | models.Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_BOB))
+        return self.filter(
+            Q(sender=user, last_message__origin=MESSAGE_ORIGIN_ALICE) |
+            Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_BOB)
+        )
 
     def open(self, user):
-        return self.filter(models.Q(closed_by_receiver=False, receiver=user) | models.Q(closed_by_sender=False, sender=user))
+        return self.filter(
+            Q(closed_by_receiver=False, receiver=user) |
+            Q(closed_by_sender=False, sender=user)
+        )
 
 
 class ThreadManager(AuthorizationManager):
@@ -145,10 +154,16 @@ class Thread(models.Model):
 
 class MessageQuerySet(models.QuerySet):
     def outgoing(self, user):
-        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB))
+        return self.filter(
+            Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) |
+            Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB)
+        )
 
     def incoming(self, user):
-        return self.filter(models.Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) | models.Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE))
+        return self.filter(
+            Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) |
+            Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE)
+        )
 
 
 class Message(models.Model):
