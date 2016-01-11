@@ -30,7 +30,11 @@ def popup(request, scratchpad_pk=None):
 
 @readonly()
 def popup_list(request):
-    scratchpads = ScratchPad.objects.filter(owner=request.user, text__isnull=False).exclude(text='').order_by('-modified_at')[:100]
+    scratchpads = (ScratchPad.objects
+        .filter(owner=request.user, text__isnull=False)
+        .exclude(text='')
+        .order_by('-modified_at')[:100]
+    )
     return render(request, 'scratchpad/popup_list.html', {
         'scratchpads': scratchpads,
     })

@@ -11,7 +11,10 @@ class ScratchpadNode(Node):
 
     def render(self, context):
         try:
-            context[self.varname] = ScratchPad.objects.get(owner=context['request'].user, submission=context.get('submission'))
+            context[self.varname] = ScratchPad.objects.get(
+                owner=context['request'].user,
+                submission=context.get('submission'),
+            )
         except ScratchPad.DoesNotExist:
             context[self.varname] = None
         return ''
