@@ -1,6 +1,6 @@
 import xlwt
 from decimal import Decimal
-from io import StringIO
+from io import BytesIO
 import math
 
 from django.contrib.auth.models import User
@@ -147,7 +147,7 @@ def submission_billing(request):
                     submission_form.submitter_contact.full_name,
                     _get_organizations(submission_form),
                 ])
-        xls_buf = StringIO()
+        xls_buf = BytesIO()
         xls.save(xls_buf)
         doc = Document.objects.create_from_buffer(xls_buf.getvalue(),
             mimetype='application/vnd.ms-excel', doctype='invoice')
@@ -222,7 +222,7 @@ def external_review_payment(request):
             xlwt.Formula('SUM(D2:D%s)' % r),
         ])
 
-        xls_buf = StringIO()
+        xls_buf = BytesIO()
         xls.save(xls_buf)
         doc = Document.objects.create_from_buffer(xls_buf.getvalue(),
             mimetype='application/vnd.ms-excel', doctype='checklist_payment')
