@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, F
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.text import slugify
 
@@ -82,7 +82,7 @@ class Checklist(models.Model):
 
     @property
     def is_positive(self):
-        return self.answers.filter(Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True)).count() == 0
+        return not self.answers.filter(question__is_inverted=F('answer')).exists()
 
     @property
     def is_negative(self):

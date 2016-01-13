@@ -184,7 +184,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     checklist_summary = []
     for checklist in checklists:
-        if checklist.is_negative or checklist.get_all_answers_with_comments().count():
+        if checklist.is_negative or checklist.get_all_answers_with_comments().exists():
             q = Q(question__is_inverted=False, answer=False) | Q(question__is_inverted=True, answer=True)
             q |= Q(question__requires_comment=False) & ~(Q(comment=None) | Q(comment=''))
             answers = checklist.answers.filter(q)
