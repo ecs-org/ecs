@@ -172,7 +172,7 @@ class SubmissionViewsTestCase(LoginTestCase):
         submission_form = create_submission_form()
         response = self.client.get(reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk}))
         self.assertEqual(response.status_code, 200)
-        
+
     def test_submission_pdf(self):
         '''Tests if a pdf can be produced out of a pre existing submissionform.
         '''
@@ -182,6 +182,28 @@ class SubmissionViewsTestCase(LoginTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')
         self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
+
+    def test_document_download(self):
+        submission_form = create_submission_form()
+        document_pk = submission_form.documents.get().pk
+        response = self.client.get(reverse('ecs.core.views.submissions.download_document', kwargs={'submission_form_pk': submission_form.pk, 'document_pk': document_pk}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/pdf')
+        self.assertEqual(next(response.streaming_content)[:5], b'%PDF-')
+
+    def test_document_download_anyone(self):
+        submission_form = create_submission_form()
+        document_pk = submission_form.documents.get().pk
+
+        user, created = get_or_create_user('someone@example.org')
+        user.set_password('password')
+        user.save()
+
+        self.client.logout()
+        self.client.login(email='someone@example.org', password='password')
+
+        response = self.client.get(reverse('ecs.core.views.submissions.download_document', kwargs={'submission_form_pk': submission_form.pk, 'document_pk': document_pk}))
+        self.assertEqual(response.status_code, 404)
 
     def test_submission_form_search(self):
         '''Tests if all submissions are searchable via the keyword argument.
