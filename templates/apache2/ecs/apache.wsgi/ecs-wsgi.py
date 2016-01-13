@@ -49,9 +49,6 @@ except ValueError:
 pathlist.insert(0,bindir)
 os.environ['PATH']= os.pathsep.join(pathlist)
 
-# tell celery to load its settings from djcelery (which uses django settings.py)
-os.environ["CELERY_LOADER"] = "djcelery.loaders.DjangoLoader"
-
 # maintenance loop (so we can be sure no django is accessing database or therelike)
 def maintenance(environ, start_response):
     headers = []

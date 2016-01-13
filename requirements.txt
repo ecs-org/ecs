@@ -11,13 +11,11 @@ docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
 django-countries
+celery
 
 # preprocessing, combining, compressing of js and css
 django_compressor
 pyScss
-
-# queuing: celery
-django-celery
 
 # search
 Whoosh

@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
 
-    'djcelery',
     'compressor',
     'haystack',
     'reversion',
@@ -413,6 +412,3 @@ if 'runserver' in sys.argv:
         level = logging.DEBUG,
         format = '%(asctime)s %(levelname)s %(message)s',
     )
-
-import djcelery
-djcelery.setup_loader()

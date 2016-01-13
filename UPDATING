@@ -72,7 +72,7 @@ in addition to the usual steps. In chronological order:
 	# Fake apply initial migrations. Answer 'no' when asked whether to
 	# delete stale content types. Ignore the error messages regarding the
 	# failed creation of content types.
-	$ for app in auth admin contenttypes sessions sites reversion djcelery \
+	$ for app in auth admin contenttypes sessions sites reversion \
 		boilerplate docstash documents help meetings notifications \
 		pki scratchpad tracking users votes workflow
 	  do
