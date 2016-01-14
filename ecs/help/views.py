@@ -142,7 +142,7 @@ def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if form.is_valid():
         new = not bool(page)
         page = form.save()
-        reversion.set_user(request.original_user if hasattr(request, "original_user") else request.user)
+        reversion.set_user(getattr(request, 'original_user', request.user))
         if new and page.slug:
             try:
                 index = Page.objects.get(slug='index')
@@ -210,7 +210,7 @@ def search(request, *args, **kwargs):
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
-    reversion.set_user(request.original_user if hasattr(request, "original_user") else request.user)
+    reversion.set_user(getattr(request, 'original_user', request.user))
     return redirect('ecs.help.views.index')
 
 
