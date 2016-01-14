@@ -36,8 +36,8 @@ def view_help_page(request, page_pk=None):
     available_versions = reversion.get_for_object(page)
     return render(request, 'help/view_page.html', {
         'page': page,
-        'versions': len(available_versions),
-        'current': available_versions[len(available_versions)-1]
+        'versions': available_versions.count(),
+        'current': available_versions.latest('revision__date_created'),
     })
 
 
