@@ -225,7 +225,8 @@ def difference_help_pages(request, page_pk=None, old_version=None, new_version=N
     from reversion.helpers import generate_patch_html
 
     page = get_object_or_404(Page, pk=page_pk)
-    available_versions = reversion.get_for_object(page)
+    available_versions = \
+        reversion.get_for_object(page).order_by('revision__date_created')
     if len(available_versions) < 2:
         return HttpResponse("<html><body>no revisions</body></html>")
 
