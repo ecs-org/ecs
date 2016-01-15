@@ -8,6 +8,8 @@
 {% endblock %}
 
 {% block content %}
+    {% include 'paginator.inc' with page=meetings %}
+
     <div id="meeting_list">
       <ol>
           {% for meeting in meetings.object_list %}
@@ -19,15 +21,7 @@
       </ol>
     </div>
 
-    <div class="paginator">
-        {% if meetings.has_previous %}
-            <a href="?page={{ meetings.previous_page_number }}" class="prev_page">next</a>
-        {% endif %}
-        {% trans "Page" %} {{ meetings.number }} {% trans "of" %} {{ meetings.paginator.num_pages }}
-        {% if meetings.has_next %}
-            <a href="?page={{ meetings.next_page_number }}" class="next_page">next</a>
-        {% endif %}
-    </div>
+    {% include 'paginator.inc' with page=meetings %}
 {% endblock %}
 
 {% block menuSelection %}meetings{% endblock %}

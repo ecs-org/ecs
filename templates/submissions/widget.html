@@ -52,57 +52,21 @@
 {% endfor %}
 </ol>
 
-<div class="paginator">
-    {% if not submissions.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if submissions.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
-    {% if submissions.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" class="last_page">last</a>
-    {% endif %}
-</div>
+{% include 'paginator.inc' with page=submissions %}
 
 </div>
 
 <script type="text/javascript">
-  window.addEvent('domready', function(){
-      var widget = $('submission_widget');
-      var form = $('submission_list_filter');
-      form.getElements('input').each(function(input){
-          input.addEvent('change', function(){
-              form.submit();
-          });
-      });
-      var page_input = form.getElement('input[name="page"]');
-{% if not submissions.number == 1 %}
-      widget.getElement('a.first_page').addEvent('click', function(){
-          page_input.value = 1;
-          form.submit();
-      });
-{% endif %}
-{% if submissions.has_previous %}
-      widget.getElement('a.prev_page').addEvent('click', function(){
-          page_input.value = parseInt(page_input.value, 10) - 1;
-          form.submit();
-      });
-{% endif %}
-{% if submissions.has_next %}
-      widget.getElement('a.next_page').addEvent('click', function(){
-          page_input.value = parseInt(page_input.value, 10) + 1;
-          form.submit();
-      });
-{% endif %}
-{% if not submissions.number == submissions.paginator.num_pages %}
-      widget.getElement('a.last_page').addEvent('click', function(){
-          page_input.value = {{ submissions.paginator.num_pages }};
-          form.submit();
-      });
-{% endif %}
-  });
+    jQuery(function(){
+        var form = jQuery('#submission_list_filter');
+        var page_input = form.find('input[name="page"]');
+        jQuery('#submission_widget .paginator a').click(function(ev) {
+            ev.preventDefault();
+            page_input.val(jQuery(this).data('page'));
+            form.submit();
+        });
+        form.find('input').change(function(){
+            form.submit();
+        });
+    });
 </script>

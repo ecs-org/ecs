@@ -12,21 +12,7 @@
 
 {% include "submissions/filterform.inc" %}
 
-<div class="paginator">
-    {% if not submissions.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if submissions.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
-    {% if submissions.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" class="last_page">last page</a>
-    {% endif %}
-</div>
+{% include 'paginator.inc' with page=submissions %}
 
 {% if warning %}
     <div class="warning">
@@ -140,21 +126,7 @@
 
 </ol>
 
-<div class="paginator">
-    {% if not submissions.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if submissions.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ submissions.number }} {% trans "of" %} {{ submissions.paginator.num_pages }}
-    {% if submissions.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not submissions.number == submissions.paginator.num_pages %}
-        <a href="#" class="last_page">last page</a>
-    {% endif %}
-</div>
+{% include 'paginator.inc' with page=submissions %}
 
 </div>
 
@@ -163,57 +135,30 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      var submission_list = $$('.submission_list')[0];
-      window.addEvent('domready', function(){
-          var form = $('submission_list_filter');
-          var page_input = form.getElement('input[name="page"]');
-          $$('#submission_list_filter input').each(function(input){
-              input.addEvent('change', function(){
-                  ecs.stopPageLoad();
-                  form.submit();
-              });
-          });
-    {% if not submissions.number == 1 %}
-          submission_list.getElements('.first_page').each(function(el){
-              el.addEvent('click', function(){
-                  page_input.value = 1;
-                  form.submit();
-              });
-          }, this);
-    {% endif %}
-    {% if submissions.has_previous %}
-          submission_list.getElements('.prev_page').each(function(el){
-              el.addEvent('click', function(){
-                  page_input.value = parseInt(page_input.value, 10) - 1;
-                  form.submit();
-              });
-          }, this);
-    {% endif %}
-    {% if submissions.has_next %}
-          submission_list.getElements('.next_page').each(function(el){
-              el.addEvent('click', function(){
-                  page_input.value = parseInt(page_input.value, 10) + 1;
-                  form.submit();
-              });
-          }, this);
-    {% endif %}
-    {% if not submissions.number == submissions.paginator.num_pages %}
-          submission_list.getElements('.last_page').each(function(el){
-              el.addEvent('click', function(){
-                  page_input.value = {{ submissions.paginator.num_pages }};
-                  form.submit();
-              });
-          }, this);
-    {% endif %}
-
-        $$('a.delete_docstash').each(function(a){
-            a.addEvent('click', function(){
-                var href = a.getAttribute('href');
-                new MooDialog.Confirm('{% trans 'Do you want to delete the submission draft?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Delete")|escapejs }}', cancelText: '{{ _("Don't Delete")|escapejs }}'});
-                return false;
+        jQuery(function(){
+            var form = jQuery('#submission_list_filter');
+            var page_input = form.find('input[name="page"]');
+            jQuery('.submission_list .paginator a').click(function(ev) {
+                ev.preventDefault();
+                page_input.val(jQuery(this).data('page'));
+                form.submit();
             });
-        }, this);
-      });
+
+            $$('#submission_list_filter input').each(function(input){
+                input.addEvent('change', function(){
+                    ecs.stopPageLoad();
+                    form.submit();
+                });
+            });
+
+            $$('a.delete_docstash').each(function(a){
+                a.addEvent('click', function(){
+                    var href = a.getAttribute('href');
+                    new MooDialog.Confirm('{% trans 'Do you want to delete the submission draft?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Delete")|escapejs }}', cancelText: '{{ _("Don't Delete")|escapejs }}'});
+                    return false;
+                });
+            }, this);
+        });
     </script>
 {% endblock %}
 

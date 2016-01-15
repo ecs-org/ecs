@@ -18,21 +18,7 @@
     {{ filterform.page }}
 </form>
 
-<div class="paginator">
-    {% if not users.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if users.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ users.number }} {% trans "of" %} {{ users.paginator.num_pages }}
-    {% if users.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not users.number == users.paginator.num_pages %}
-        <a href="#" class="last_page">last</a>
-    {% endif %}
-</div>
+{% include 'paginator.inc' with page=users %}
 
 <ul class="user_list">
 {% for profile in users.object_list %}
@@ -80,71 +66,33 @@
 {% endfor %}
 </ul>
 
-<div class="paginator">
-    {% if not users.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if users.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ users.number }} {% trans "of" %} {{ users.paginator.num_pages }}
-    {% if users.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not users.number == users.paginator.num_pages %}
-        <a href="#" class="last_page">last</a>
-    {% endif %}
-</div>
+{% include 'paginator.inc' with page=users %}
+
 {% endblock %}
 
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
         window.addEvent('domready', function(){
-            var form = $('{{ form_id }}');
-            var page_input = form.getElement('input[name="page"]');
+            var form = jQuery('#{{ form_id }}');
+            var page_input = form.find('input[name="page"]');
 
-            ecs.setupAutocomplete(form);
+            ecs.setupAutocomplete(form[0]);
             ecs.setupSubmitLinks('a.submit_parent');
 
-            form.getElements('input').each(function(input){
-                input.addEvent('change', function(){
-                    page_input.value = 1;
-                    $('{{ form_id }}').submit();
-                });
-            });
-            form.getElements('select').each(function(input){
-                input.addEvent('change', function(){
-                    page_input.value = 1;
-                    $('{{ form_id }}').submit();
-                });
+            jQuery('.paginator a').click(function(ev) {
+                ev.preventDefault();
+                page_input.val(jQuery(this).data('page'));
+                form.submit();
             });
 
-            $$('.paginator').each(function(paginator){
-{% if not users.number == 1 %}
-                paginator.getElement('a.first_page').addEvent('click', function(){
-                    page_input.value = 1;
-                    form.submit();
-                });
-{% endif %}
-{% if users.has_previous %}
-                paginator.getElement('a.prev_page').addEvent('click', function(){
-                    page_input.value = parseInt(page_input.value, 10) - 1;
-                    form.submit();
-                });
-{% endif %}
-{% if users.has_next %}
-                paginator.getElement('a.next_page').addEvent('click', function(){
-                    page_input.value = parseInt(page_input.value, 10) + 1;
-                    form.submit();
-                });
-{% endif %}
-{% if not users.number == users.paginator.num_pages %}
-                paginator.getElement('a.last_page').addEvent('click', function(){
-                    page_input.value = {{ users.paginator.num_pages }};
-                    form.submit();
-                });
-{% endif %}
+            form.find('input').change(function(){
+                page_input.val(1);
+                form.submit();
+            });
+            form.find('select').change(function(){
+                page_input.val(1);
+                form.submit();
             });
             
             var user_list = $$('ul.user_list')[0];

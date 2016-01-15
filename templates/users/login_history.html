@@ -6,98 +6,45 @@
 
 {% block administration_detail %}
 
-<form id="event_selection_form" action="{{ request.path }}" method="POST">
-    {% csrf_token %}
-    <table>
-    {{ form.as_table }}
-    <tr>
-        <td colspan=2>
-            <input type="submit" value="{% trans "Send" %}">
-        </td>
-    <tr>
-    </table>
-</form>
+    <form id="event_selection_form" action="{{ request.path }}" method="POST">
+        {% csrf_token %}
+        <table>
+        {{ form.as_table }}
+        <tr>
+            <td colspan=2>
+                <input type="submit" value="{% trans "Send" %}">
+            </td>
+        <tr>
+        </table>
+    </form>
 
-<div class="paginator">
-    {% if not page.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if page.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
-    {% if page.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not page.number == page.paginator.num_pages %}
-        <a href="#" class="last_page">last page</a>
-    {% endif %}
-</div>
+    {% include 'paginator.inc' %}
 
-<ul>
-{% for event in page.object_list %}
-    <li>
-        {{ event.timestamp|date:"d.m.Y H:i" }} -
-        {{ event.ip }} -
-        {{ event.get_type_display|upper }} -
-        {{ event.user }}
-    </li>
-{% endfor %}
-</ul>
+    <ul>
+    {% for event in page.object_list %}
+        <li>
+            {{ event.timestamp|date:"d.m.Y H:i" }} -
+            {{ event.ip }} -
+            {{ event.get_type_display|upper }} -
+            {{ event.user }}
+        </li>
+    {% endfor %}
+    </ul>
 
-<div class="paginator">
-    {% if not page.number == 1 %}
-        <a href="#" class="first_page">first</a>
-    {% endif %}
-    {% if page.has_previous %}
-        <a href="#" class="prev_page">previous</a>
-    {% endif %}
-    {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
-    {% if page.has_next %}
-        <a href="#" class="next_page">next</a>
-    {% endif %}
-    {% if not page.number == page.paginator.num_pages %}
-        <a href="#" class="last_page">last page</a>
-    {% endif %}
-</div>
+    {% include 'paginator.inc' %}
 
 {% endblock %}
 
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
-            var form = $('event_selection_form');
-            var page_input = form.getElement('input[name="page"]');
-            $$('.paginator').each(function(paginator){
-                paginator.getElements('.first_page').each(function(el){
-                    el.addEvent('click', function(){
-                        page_input.value = 1;
-                        form.submit();
-                        return false;
-                    });
-                }, this);
-                paginator.getElements('.prev_page').each(function(el){
-                    el.addEvent('click', function(){
-                        page_input.value = parseInt(page_input.value, 10) - 1;
-                        form.submit();
-                        return false;
-                    });
-                }, this);
-                paginator.getElements('.next_page').each(function(el){
-                    el.addEvent('click', function(){
-                        page_input.value = parseInt(page_input.value, 10) + 1;
-                        form.submit();
-                        return false;
-                    });
-                }, this);
-                paginator.getElements('.last_page').each(function(el){
-                    el.addEvent('click', function(){
-                        page_input.value = {{ page.paginator.num_pages }};
-                        form.submit();
-                        return false;
-                    });
-                }, this);
+        jQuery(function(){
+            var form = jQuery('#event_selection_form');
+            var page_input = form.find('input[name="page"]');
+            jQuery('.paginator a').click(function(ev) {
+                ev.preventDefault();
+                page_input.val(jQuery(this).data('page'));
+                form.submit();
             });
         });
     </script>

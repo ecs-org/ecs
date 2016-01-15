@@ -11,6 +11,8 @@
 
 {% block content %}
     <h2>{% trans 'Old Payments' %}</h2>
+
+    {% include 'paginator.inc' with page=payments %}
     
     <div class="billing_list">
       <ol>
@@ -25,13 +27,6 @@
       {% endfor %}
       </ol>
     </div>
-    <div class="paginator">
-        {% if payments.has_previous %}
-            <a href="?page={{ payments.previous_page_number }}" class="prev_page">next</a>
-        {% endif %}
-        {% trans "Page" %} {{ payments.number }} {% trans "of" %} {{ payments.paginator.num_pages }}
-        {% if payments.has_next %}
-            <a href="?page={{ payments.next_page_number }}" class="next_page">next</a>
-        {% endif %}
-    </div>
+
+    {% include 'paginator.inc' with page=payments %}
 {% endblock %}
