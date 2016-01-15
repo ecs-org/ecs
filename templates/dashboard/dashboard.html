@@ -9,37 +9,28 @@
       
 {% block content %}
     <div id="dashboard">
-        <div class="left_column"></div>
-        <div class="right_column"></div>
+        <div class="left_column">
+            <div class="dashboard_widget" data-url="{% url 'ecs.communication.views.outgoing_message_widget' %}"></div>
+            <div class="dashboard_widget" data-url="{% url 'ecs.core.views.submissions.submission_widget' %}"></div>
+        </div>
+        <div class="right_column">
+            <div class="dashboard_widget" data-url="{% url 'ecs.communication.views.incoming_message_widget' %}"></div>
+            {% if user.profile.has_explicit_workflow %}
+                <div class="dashboard_widget" data-url="{% url 'ecs.tasks.views.my_tasks' %}"></div>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript">
-    (function(){
-    window.addEvent('domready', function(){
-        var widgets = [];
-        var reloadAll = function(){
-            widgets.each(function(widget){
-                widget.load();
+    {{ block.super }}
+    <script type="text/javascript">
+        jQuery(function() {
+            jQuery('.dashboard_widget').each(function() {
+                var url = jQuery(this).data('url');
+                new ecs.widgets.Widget(this, {url: url});
             });
-        };
-        var onPopupSpawned = function(popup){
-            popup.addEvent('dispose', reloadAll);
-        };
-        var el, widget;
-        var current_column = 'left';
-        {% for url in widgets %}
-            el = new Element('div', {'class': 'dashboard_widget'});
-            $('dashboard').getChildren('.'+current_column+'_column')[0].grab(el);
-            widget = new ecs.widgets.Widget(el, {url: '{{ url }}'});
-            widgets.push(widget);
-            widget.addEvent('popupSpawned', onPopupSpawned);
-            current_column = (current_column === 'left') ? 'right' : 'left';
-        {% endfor %}
-    });
-    })();
-  </script>
+        });
+    </script>
 {% endblock %}
 
