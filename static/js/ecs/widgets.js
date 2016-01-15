@@ -74,7 +74,7 @@ ecs.widgets.Widget = new Class({
     onSuccess: function(){
         var self = this;
         this.element.scrollTo(0, 0);
-        ecs.widgets.enablePopupHandlers(this.element, this);
+        ecs.widgets.enablePopupHandlers(this.element);
         this.element.getElements('form.open-in-widget').each(function(form){
             var submit = function(){
                 self.load(null, form);
@@ -99,9 +99,6 @@ ecs.widgets.Widget = new Class({
             link.addEvent('click', submitInWidget);
         });
         this.fireEvent('load', this);
-    },
-    onPopupSpawned: function(popup){
-        this.fireEvent('popupSpawned', popup);
     },
     dispose: function(){
         this.element.eliminate('ecs.widgets.Widget');
@@ -219,7 +216,7 @@ ecs.widgets.Popup = new Class({
     }
 });
 
-ecs.widgets.enablePopupHandlers = function(context, widget){
+ecs.widgets.enablePopupHandlers = function(context){
     context = $(context);
     context.getElements('a.open-in-popup').each(function(link){
         if(link.getParent('.ecs-Popup')){
@@ -229,9 +226,6 @@ ecs.widgets.enablePopupHandlers = function(context, widget){
         link.addEvent('click', function(){
             try{
                 var popup = new ecs.widgets.Popup({url: link.href, width: 700, height: 500});
-                if(widget){
-                    widget.onPopupSpawned(popup);
-                }
             }
             catch(e){
                 //console.log(e);

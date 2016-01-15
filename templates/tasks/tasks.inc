@@ -41,7 +41,7 @@
             <div class="task_item toggle_collapse">
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
-                    <a href="{{ task.url }}" class="{% if not task.url %}open-in-popup{% endif %}">{{ task.data }}</a>
+                    <a href="{{ task.url }}">{{ task.data }}</a>
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
