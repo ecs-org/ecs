@@ -46,6 +46,11 @@
     <body class="{% block htmlbody_class %}{% endblock %}" style="overflow: auto;">
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
+            <script type="text/javascript" src={% static '3rd-party/jquery-2.2.0.min.js' %}></script>
+            {# XXX: Don't define $ to not conflict with mootools. #}
+            <script type="text/javascript">
+                jQuery.noConflict();
+            </script>
             {% compress js %}
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5-core-nc.js' %}></script>
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5.1-more.js' %}></script>
