@@ -136,14 +136,25 @@ class MiddlewareTest(EcsTestCase):
         c1 = Client()
         c2 = Client()
 
-        c1.login(email='testuser@example.com', password='4223')
-        response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
+        login_url = reverse('ecs.users.views.login')
+        dashboard_url = reverse('ecs.dashboard.views.view_dashboard')
+
+        response = c1.post(login_url, {'username': 'testuser@example.com', 'password': '4223'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['Location'].endswith(dashboard_url))
+
+        # c1.login(email='testuser@example.com', password='4223')
+        response = c1.get(dashboard_url)
         self.assertEqual(response.status_code, 200)
 
-        c2.login(email='testuser@example.com', password='4223')  # now, c1 has to be logged out, because of the single login middleware
-        response = c2.get(reverse('ecs.dashboard.views.view_dashboard'))
+        response = c2.post(login_url, {'username': 'testuser@example.com', 'password': '4223'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response['Location'].endswith(dashboard_url))
+        # now, c1 has to be logged out, because of the single login restriction
+
+        response = c2.get(dashboard_url)
         self.assertEqual(response.status_code, 200)
 
-        response = c1.get(reverse('ecs.dashboard.views.view_dashboard'))
+        response = c1.get(dashboard_url)
         self.assertEqual(response.status_code, 302)
         

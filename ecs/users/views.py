@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.views.decorators.http import require_POST
 from django.core import signing
 from django.utils import timezone
+from django.contrib.sessions.models import Session
 
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
@@ -74,6 +75,15 @@ def login(request, *args, **kwargs):
     if request.user.is_authenticated():
         LoginHistory.objects.create(type='login', user=request.user,
             ip=request.META['REMOTE_ADDR'])
+
+        profile = request.user.profile
+        old_session_key = profile.session_key
+        profile.session_key = request.session.session_key
+        profile.save()
+
+        if Session.objects.filter(session_key=old_session_key).update(expire_date=timezone.now()):
+            profile.single_login_enforced = True
+            profile.save()
     return response
 
 
