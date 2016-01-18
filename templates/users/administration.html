@@ -94,18 +94,14 @@
                 page_input.val(1);
                 form.submit();
             });
-            
-            var user_list = $$('ul.user_list')[0];
-            user_list.getElements('.user').each(function(user){
-                user.getElement('.head').addEvent('click', (function(){
-                    if (user.hasClass('collapsed')) {
-                        user.removeClass('collapsed');
-                    } else {
-                        user.addClass('collapsed');
-                    }
-                    return false;
-                }).bind(this));
-            }, this);
+
+            jQuery('ul.user_list .user').each(function() {
+                var user = jQuery(this);
+                user.find('.head').click(function(ev) {
+                    ev.preventDefault();
+                    user.toggleClass('collapsed');
+                });
+            });
         });
     </script>
 {% endblock %}

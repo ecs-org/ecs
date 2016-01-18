@@ -25,13 +25,18 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      window.addEvent('domready', function(){
-        var messageToolbarItems = [ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}")];
-        var textarea = $('id_invitation_text');
-        new ecs.textarea.TextArea(textarea);
-        ecs.textarea.installToolbar(textarea, messageToolbarItems);
+        jQuery(function(){
+            var messageToolbarItems = [
+                ecs.textarea.toolbarItems.boilerplate(
+                    "{% trans 'Insert Boilerplate' %}",
+                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                )
+            ];
+            var textarea = jQuery('#id_invitation_text');
+            new ecs.textarea.TextArea(textarea[0]);
+            ecs.textarea.installToolbar(textarea[0], messageToolbarItems);
 
-        ecs.setupFormFieldHelpers();
-      });
+            ecs.setupFormFieldHelpers();
+        });
     </script>
 {% endblock %}

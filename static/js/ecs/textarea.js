@@ -68,7 +68,7 @@ ecs.textarea = {
 ecs.textarea.TextArea = new Class({
     initialize: function(textarea, options){
         options = options || {};
-        this.textarea = textarea;
+        this.textarea = $(textarea);
         this.toolbar = options.toolbar || [];
         this.updater = this.updateHeight.bind(this);
         this.textarea.addEvent('keydown', this.onKeyDown.bind(this));
