@@ -31,8 +31,13 @@
             <strong style="color:red;">Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.<br />
             Lesen Sie <a href="{% help_url 'noscript' %}">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
         </div>
+        <style type="text/css">
+            #login_form {
+                display: none;
+            }
+        </style>
     </noscript>
-    <div id="login_form" style="display:none;">
+    <div id="login_form">
     {% if not request.ua.is_supported and not request.ua.is_crawler %}
         <div id="browser_warning">
             <strong>Achtung:</strong> Sie verwenden einen nicht unterstützen Webbrowser.<br>
@@ -47,12 +52,17 @@
         </div>
     {% endif %}
     <div class="public_area">
+      {% if request.tracking_data.view %}
+          {% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk as help_page_url %}
+      {% else %}
+          {% url 'ecs.help.views.index' as help_page_url %}
+      {% endif %}
       <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
-      | <a href="" id="help_button" class="help_trigger">{% trans 'Online Help Pages' %}</a>
+      | <a href="{{ help_page_url }}" target="_blank" class="help_trigger">{% trans 'Online Help Pages' %}</a>
       | <a href="{% help_url 'sitenotice' %}">{% trans 'Site Notice' %}</a>
     </div>
     <div class="form_public">
-      <form method="post" action="" class="login_error" id="login_form">
+      <form method="post" action="" class="login_error">
         {% csrf_token %}
         <p>{{ form.username.label_tag }}{{ form.username }}
             {% if form.username.errors %}{{ form.username.errors}}{% endif %}</p>
@@ -77,29 +87,11 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function() {
-            $("login_form").show();
-            window.openHelpPage = function(e){
-                {% if request.tracking_data.view %}
-                var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
-                if(e && e.shift){
-                    url = '{% url 'ecs.help.views.edit_help_page' view_pk=request.tracking_data.view.pk %}';
-                }
-                if(window.location.hash){
-                    url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
-                }
-                {% else %}
-                var url = '{% url 'ecs.help.views.index' %}';
-                {% endif %}
-                var win = window.open(url, 'ecshelp');
-                win.focus();
-                return false;
-            };
-            $('help_button').addEvent('click', window.openHelpPage);
-            var show_login = $('show_login');
-            if (show_login) {
-                show_login.addEvent('click', function(){$('login_button').show(); return false;});
-            }
+        jQuery(function() {
+            jQuery('#show_login').click(function(ev) {
+                ev.preventDefault();
+                jQuery('#login_button').show();
+            });
         });
     </script>
 {% endblock %}
