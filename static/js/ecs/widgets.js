@@ -67,7 +67,6 @@ ecs.widgets.Widget = new Class({
     onSuccess: function(){
         var self = this;
         this.element.scrollTo(0, 0);
-        ecs.widgets.enablePopupHandlers(this.element);
         this.element.getElements('form.open-in-widget').each(function(form){
             var submit = function(){
                 self.load(null, form);
@@ -209,38 +208,10 @@ ecs.widgets.Popup = new Class({
     }
 });
 
-ecs.widgets.enablePopupHandlers = function(context){
-    context = $(context);
-    context.getElements('a.open-in-popup').each(function(link){
-        if(link.getParent('.ecs-Popup')){
-            link.addClass('open-in-widget');
-            return;
-        }
-        link.addEvent('click', function(){
-            try{
-                var popup = new ecs.widgets.Popup({url: link.href, width: 700, height: 500});
-            }
-            catch(e){
-                //console.log(e);
-            }
-            return false;
-        });
-    });
-    context.getElements('a.close-popup').each(function(link){
-        var parent = link.getParent('.ecs-Popup');
-        if(!parent){
-            return;
-        }
-        var popup = parent.retrieve('ecs.widgets.Popup');
-        link.addEvent('click', function(){
-            popup.load(link.href, null, function(){
-                popup.dispose();
-            });
-            return false;
-        });
-    });
-};
-
 jQuery(function(){
-    ecs.widgets.enablePopupHandlers(document.body);
+    jQuery(document).on('click', 'a.open-in-popup', function(ev) {
+        ev.preventDefault();
+        var href = jQuery(this).attr('href');
+        new ecs.widgets.Popup({url: href, width: 700, height: 500});
+    });
 });

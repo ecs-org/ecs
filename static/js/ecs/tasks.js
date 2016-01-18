@@ -11,7 +11,6 @@ ecs.widgets.TaskWidget = new Class({
     setup: function(){
         var self = this;
         this.element.scrollTo(0, 0);
-        ecs.widgets.enablePopupHandlers(this.element);
 
         var form = this.element.getElement('form');
         if (self.dataForm) {
