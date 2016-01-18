@@ -1,5 +1,7 @@
 from django.http import Http404, JsonResponse
 from django.contrib.auth.models import User, Group
+from django.db.models import Q, F, Value as V
+from django.db.models.functions import Concat
 
 from django_countries import countries
 
@@ -8,44 +10,85 @@ from ecs.users.utils import user_flag_required
 from ecs.tasks.models import TaskType
 from ecs.utils.security import readonly
 
-def _get_task_types():
-    uids = TaskType.objects.values_list('workflow_node__uid', flat=True).distinct()
-    task_types = []
-    for uid in uids:
-        tt = TaskType.objects.filter(workflow_node__uid=uid).order_by('-pk')[0]
-        task_types.append((uid, tt.trans_name, tt.trans_name,))
-    return task_types
-
-AUTOCOMPLETE_QUERYSETS = {
-    'countries': lambda: [(iso, '{} ({})'.format(name, iso), name) for iso, name in countries],
-    'medical_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in MedicalCategory.objects.order_by('name')],
-    'expedited_review_categories': lambda: [(str(c.pk), "%s (%s)" % (c.name, c.abbrev), c.name) for c in ExpeditedReviewCategory.objects.order_by('name')],
-    'task_types': _get_task_types,
-}
-
-INTERNAL_AUTOCOMPLETE_QUERYSETS = {
-    'users': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'external-reviewers': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, groups__name='External Reviewer').order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'internal-users': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, profile__is_internal=True).order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'board-members': lambda: [(str(u.pk), '{0} [{1}]'.format(u, u.email), str(u)) for u in User.objects.filter(is_active=True, groups__name__in=['EC-Board Member', 'EC-Executive Board Group']).order_by('first_name', 'last_name', 'email').select_related('profile')],
-    'groups': lambda: [(str(g.pk), g.name, g.name) for g in Group.objects.order_by('name')],
-}
-
 
 @readonly()
 def autocomplete(request, queryset_name=None):
-    try:
-        result = AUTOCOMPLETE_QUERYSETS[queryset_name]()
-    except KeyError:
-        raise Http404
-    return JsonResponse(result, safe=False)
+    term = request.GET.get('term', '')
+
+    if queryset_name == 'countries':
+        results = [
+            {'id': iso, 'text': '{} ({})'.format(name, iso)}
+            for iso, name in countries
+            if term.lower() in iso.lower() or term.lower() in name.lower()
+        ]
+    elif queryset_name == 'medical-categories':
+        results = list(MedicalCategory.objects
+            .annotate(text=Concat(F('name'), V(' ('), F('abbrev'), V(')')))
+            .filter(text__icontains=term)
+            .order_by('text')
+            .values('id', 'text')
+        )
+    elif queryset_name == 'expedited-review-categories':
+        results = list(ExpeditedReviewCategory.objects
+            .annotate(text=Concat(F('name'), V(' ('), F('abbrev'), V(')')))
+            .filter(text__icontains=term)
+            .order_by('text')
+            .values('id', 'text')
+        )
+    elif queryset_name == 'task-types':
+        task_types = (TaskType.objects
+            .order_by('workflow_node__uid', '-pk')
+            .distinct('workflow_node__uid')
+            .annotate(uid=F('workflow_node__uid'))
+        )
+        results = [
+            {'id': tt.id, 'text': tt.trans_name} for tt in task_types
+            if term.lower() in tt.trans_name.lower()
+        ]
+    else:
+        return internal_autocomplete(request, queryset_name=queryset_name)
+
+    return JsonResponse({'results': results})
 
 
 @readonly()
 @user_flag_required('is_internal')
 def internal_autocomplete(request, queryset_name=None):
-    try:
-        result = INTERNAL_AUTOCOMPLETE_QUERYSETS[queryset_name]()
-    except KeyError:
-        raise Http404
-    return JsonResponse(result, safe=False)
+    term = request.GET.get('term', '')
+
+    if queryset_name == 'groups':
+        results = list(Group.objects
+            .filter(name__icontains=term)
+            .order_by('name')
+            .annotate(text=F('name'))
+            .values('id', 'text')
+        )
+        return JsonResponse({'results': results})
+
+    USER_QUERY = {
+        'users': Q(),
+        'external-reviewers': Q(groups__name='External Reviewer'),
+        'internal-users': Q(profile__is_internal=True),
+        'board-members': Q(
+            groups__name__in=['EC-Board Member', 'EC-Executive Board Group']),
+    }
+
+    users = (User.objects
+        .filter(USER_QUERY[queryset_name], is_active=True)
+        .select_related('profile')
+        .order_by('first_name', 'last_name', 'email')
+    )
+
+    if term:
+        q = Q()
+        for bit in term.split():
+            q &= (
+                Q(first_name__icontains=bit) |
+                Q(last_name__icontains=bit) |
+                Q(email__icontains=bit) |
+                Q(profile__title__icontains=bit)
+            )
+        users = users.filter(q)
+
+    results = [{'id': u.id, 'text': '{} [{}]'.format(u, u.email)} for u in users]
+    return JsonResponse({'results': results})

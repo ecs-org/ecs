@@ -50,7 +50,7 @@ ecs.setupFormFieldHelpers = function(context){
         });
     });
 
-    ecs.setupAutocomplete(context);
+    jQuery(context).find('select[data-ajax--url]').select2();
 
     context.getElements('.CharField > textarea').each(function(textarea){
         new ecs.textarea.TextArea(textarea);
@@ -89,66 +89,6 @@ ecs.setupFormFieldHelpers = function(context){
             })).inject(input, 'after');
         }
     });
-};
-
-ecs.setupAutocomplete = function(context){
-    context = $(context || document.body);
-
-    var setup_autocomplete = function(elm){
-        var type = elm.getProperty('x-autocomplete-type');
-        if(type == 'single'){
-            return new ecs.autocomplete.Autocompleter(elm, {});
-        }
-        // FIXME: cleanup the following code (we don't need single select support anymore)
-        if (type == 'single') {
-            var currentValues = [elm.value];
-            var max = 1;
-        } else if (type == 'multi') {
-            var currentValues = elm.value.split(',');
-            var max = null;
-        } else {
-            return;
-        }
-        elm.value = '';
-        var tbl = null;
-        var active = !!elm.getParent('form');
-        if(active){
-            tbl = new TextboxList(elm, {unique: true, max: max, plugins: {autocomplete: {onlyFromValues: true, placeholder: 'Tippen Sie um Vorschläge zu erhalten.'}}});
-            tbl.container.addClass('textboxlist-loading');
-        }
-        new Request.JSON({
-            url: elm.getProperty('x-autocomplete-url'),
-            headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
-            onSuccess: function(response){
-                if(active){
-                    tbl.plugins['autocomplete'].setValues(response);
-                    tbl.container.removeClass('textboxlist-loading');
-                }
-                var labels = [];
-                if (response) {
-                    response.each(function(item){
-                        if(currentValues.contains(item[0])){
-                            if(active){
-                                tbl.add(item[1], item[0], item[2]);
-                            } else {
-                                labels.push(item[1]);
-                            }
-                        }
-                    });
-                }
-                if(!active){
-                    (new Element('span', {html: labels.join(', ')})).replaces(elm);
-                }
-            }
-        }).send();
-        return tbl;
-    };
-
-    var tbls = [];
-    context.getElements('input.autocomplete').each(function(input){
-        tbls.push(setup_autocomplete(input));
-    });
-    return tbls;
 };
 
 ecs.InvestigatorFormset = new Class({

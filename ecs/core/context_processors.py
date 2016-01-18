@@ -2,6 +2,5 @@ from django.conf import settings
 
 def ecs_settings(request):
     return {
-        'use_textboxlist': getattr(settings, 'USE_TEXTBOXLIST', False),
         'debug': settings.DEBUG,
     }

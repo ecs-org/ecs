@@ -1,5 +1,4 @@
 from django import forms
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
@@ -8,7 +7,7 @@ from django.core.urlresolvers import reverse
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_office_user, get_current_user
-from ecs.core.forms.fields import SingleselectWidget
+from ecs.core.forms.fields import AutocompleteWidget
 
 
 class InvolvedPartiesChoiceField(forms.ModelChoiceField):
@@ -28,9 +27,18 @@ class InvolvedPartiesChoiceField(forms.ModelChoiceField):
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield()
     receiver_involved = InvolvedPartiesChoiceField(required=False)
-    receiver_person = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), required=False)
-    receiver_type = forms.ChoiceField(choices=(('ek', _('Ethics Commission')),), widget=forms.RadioSelect(), initial='ek')
-    receiver = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), widget=forms.HiddenInput(), required=False)
+    receiver_person = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_active=True), required=False,
+        widget=AutocompleteWidget('users')
+    )
+    receiver_type = forms.ChoiceField(
+        choices=(('ek', _('Ethics Commission')),), widget=forms.RadioSelect(),
+        initial='ek'
+    )
+    receiver = forms.ModelChoiceField(
+        queryset=User.objects.filter(is_active=True),
+        widget=forms.HiddenInput(), required=False
+    )
     
     class Meta:
         model = Message
@@ -60,8 +68,6 @@ class SendMessageForm(forms.ModelForm):
                 ('person', _('Person'))
             ]
             self.fields['receiver_person'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
-            if getattr(settings, 'USE_TEXTBOXLIST', False):
-                self.fields['receiver_person'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
         self.fields['receiver'].queryset = User.objects.filter(is_active=True).exclude(pk=user.pk)
 
@@ -98,10 +104,12 @@ class ReplyDelegateForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.profile.is_internal:
-            self.fields['to'] = forms.ModelChoiceField(User.objects.filter(is_active=True), required=False, label=_('Delegate to'))
+            self.fields['to'] = forms.ModelChoiceField(
+                User.objects.filter(is_active=True), required=False,
+                label=_('Delegate to'),
+                widget=AutocompleteWidget('users')
+            )
             self.fields['text'] = self.fields.pop('text')       # change order
-            if getattr(settings, 'USE_TEXTBOXLIST', False):
-                self.fields['to'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
 
 
 class ThreadListFilterForm(forms.Form):

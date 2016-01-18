@@ -71,7 +71,7 @@
       jQuery(function(){
         var container = $$('.message_display')[0];
         ecs.setupMessagePopup(container);
-        ecs.setupAutocomplete();
+        jQuery('select[data-ajax--url], #id_receiver_involved').select2();
 
         var messageToolbarItems = [];
 

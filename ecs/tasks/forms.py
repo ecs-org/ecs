@@ -4,11 +4,11 @@ from django import forms
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import force_text
 from django.core.urlresolvers import reverse
-from django.conf import settings
 
 from ecs.tasks.models import TaskType
-from ecs.core.forms.fields import MultiselectWidget
+from ecs.core.forms.fields import MultiAutocompleteWidget
 from ecs.users.utils import get_current_user
 
 class DeclineTaskForm(forms.Form):
@@ -70,27 +70,6 @@ class ManageTaskForm(forms.Form):
             self.add_error('locked', _('Fill out the form completely to complete the task.'))
         return cd
 
-class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
-    def clean(self, value):
-        from django.utils.encoding import force_text
-        if self.required and not value:
-            raise forms.ValidationError(self.error_messages['required'])
-        elif not self.required and not value:
-            return []
-        if not isinstance(value, (list, tuple)):
-            raise forms.ValidationError(self.error_messages['list'])
-        for uid in value:
-            try:
-                self.queryset.filter(workflow_node__uid=uid)
-            except ValueError:
-                raise forms.ValidationError(self.error_messages['invalid_pk_value'] % {'pk': pk})
-        qs = self.queryset.filter(workflow_node__uid__in=value)
-        uids = {force_text(o.workflow_node.uid) for o in qs}
-        for val in value:
-            if force_text(val) not in uids:
-                raise forms.ValidationError(self.error_messages['invalid_choice'] % {'value': val})
-        return qs
-
 class TaskListFilterForm(forms.Form):
     past_meetings = forms.BooleanField(required=False, initial=True)
     next_meeting = forms.BooleanField(required=False, initial=True)
@@ -115,12 +94,10 @@ class TaskListFilterForm(forms.Form):
         ('newest', _('Newest')),
     ), initial='deadline')
 
-    task_types = TaskTypeMultipleChoiceField(required=False, queryset=TaskType.objects.all())
-
-    def __init__(self, *args, **kwargs):
-        super(TaskListFilterForm, self).__init__(*args, **kwargs)
-        if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['task_types'].widget = MultiselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'task_types'}))
+    task_types = forms.ModelMultipleChoiceField(required=False,
+        queryset=TaskType.objects.all(),
+        widget=MultiAutocompleteWidget('task-types')
+    )
 
     @property
     def defaults(self):

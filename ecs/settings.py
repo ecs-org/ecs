@@ -279,11 +279,6 @@ ECSMAIL = {
 ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
 
-# if USE_TEXTBOXLIST is True then multiselect widgets will use mootools TEXBOXLIST
-# set USE_TEXTBOXLIST to false (eg. in local_settings.py) e.g. for gui testing
-USE_TEXTBOXLIST = True
-
-
 # thirdparty settings
 ######################
 

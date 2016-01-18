@@ -83,7 +83,6 @@ ecs.widgets.Widget = new Class({
             });
         });
         function submitInWidget(e){
-            console.log(e);
             $(e.target).getParent('form.open-in-widget').submit();
             return false;
         }

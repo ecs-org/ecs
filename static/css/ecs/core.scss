@@ -484,3 +484,39 @@ iframe.upload {
         display: inline-block;
     }
 }
+
+
+/*
+ * select2 styling
+ *
+ * XXX: Our stylesheets contain some overzelous selectors, so we have to
+ * reset styles for select2.
+ */
+
+.select2-container {
+    padding: 0 !important;
+    display: inline-block !important;
+    .selection {
+        display: inline !important;
+        padding: 0 !important;
+        .select2-selection {
+            padding: 0 !important;
+            .select2-selection__rendered,
+            .select2-selection__arrow,
+            .select2-selection__placeholder {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+        }
+    }
+    .dropdown-wrapper {
+        padding: 0 !important;
+    }
+    ul {
+        margin: 0 !important;
+    }
+}
+
+select[data-ajax--url] {
+    min-width: 250px;
+}

@@ -73,7 +73,6 @@
                 if(!force && this.input.value == this.query){
                     return;
                 }
-                console.log(this.query, this.input.value, force);
                 this.query = this.input.value;
                 var self = this;
                 var request = new Request.HTML({
@@ -98,10 +97,8 @@
                                 droppables: '#id_text',
                                 onStart: function(element){
                                     this._startPos = element.getPosition();
-                                    console.log(this._startPos);
                                 },
                                 onDrop: function(element){
-                                    console.log(arguments);
                                     textarea.focus();
                                     textarea.insertAtCursor('\n.. image:: ' + element.getElement('span.slug').innerHTML);
                                     element.setStyles({'position': 'relative', 'top': '0px', 'left': '0px'});

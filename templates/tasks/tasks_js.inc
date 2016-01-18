@@ -2,28 +2,12 @@
 
 <script type="text/javascript">
   jQuery(function(){
-      $$('#{{ form_id }} input').each(function(input){
-          input.addEvent('change', function(){
-              ecs.stopPageLoad();
-              $('{{ form_id }}').submit();
-          });
-      });
-      $$('#{{ form_id }} select').each(function(input){
-          input.addEvent('change', function(){
-              ecs.stopPageLoad();
-              $('{{ form_id }}').submit();
-          });
-      });
+      jQuery('#{{ form_id }} select[data-ajax--url]').select2();
 
-      var tbls = ecs.setupAutocomplete('{{ form_id }}');
-      if (tbls[0]) {
-          tbls[0].addEvent('blur', function(){
-              $('{{ form_id }}').submit();
-          });
-          tbls[0].addEvent('bitBoxRemove', function(){
-              $('{{ form_id }}').submit();
-          });
-      }
+      jQuery('#{{ form_id }}').find('select, input').change(function() {
+          ecs.stopPageLoad();
+          jQuery('#{{ form_id }}').submit();
+      });
 
       var threshold = 7;
 

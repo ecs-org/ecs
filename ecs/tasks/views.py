@@ -150,7 +150,8 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         if not ignore_task_types:
             task_types = filterform.cleaned_data['task_types']
             if task_types:
-                tasks = tasks.filter(task_type__in=task_types)
+                tasks = tasks.filter(task_type__workflow_node__uid__in=
+                    task_types.values('workflow_node__uid'))
 
     data = {
         'submission': submission,

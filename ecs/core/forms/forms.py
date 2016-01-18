@@ -4,7 +4,6 @@ from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import transaction
@@ -16,8 +15,8 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
-from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiselectWidget, ReadonlyTextarea, ReadonlyTextInput, \
-    EmailUserSelectWidget, SingleselectWidget, DateTimeField
+from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiAutocompleteWidget, ReadonlyTextarea, ReadonlyTextInput, \
+    EmailUserSelectWidget, AutocompleteWidget, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
@@ -58,8 +57,14 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
-    substance_registered_in_countries = forms.MultipleChoiceField(choices=countries, required=False)
-    substance_p_c_t_countries = forms.MultipleChoiceField(choices=countries, required=False)
+    substance_registered_in_countries = forms.MultipleChoiceField(
+        choices=countries, required=False,
+        widget=MultiAutocompleteWidget('countries')
+    )
+    substance_p_c_t_countries = forms.MultipleChoiceField(
+        choices=countries, required=False,
+        widget=MultiAutocompleteWidget('countries')
+    )
 
     medtech_certified_for_exact_indications = NullBooleanField(required=False)
     medtech_certified_for_other_indications = NullBooleanField(required=False)
@@ -113,13 +118,6 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
     def __init__(self, *args, **kwargs):
         rval = super(SubmissionFormForm, self).__init__(*args, **kwargs)
-        if getattr(settings, 'USE_TEXTBOXLIST', False):
-            self.fields['substance_registered_in_countries'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'countries'})
-            )
-            self.fields['substance_p_c_t_countries'].widget = MultiselectWidget(
-                url=lambda: reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'countries'})
-            )
         for field in self.fields.values():
             if isinstance(field, forms.EmailField):
                 field.widget = StrippedTextInput()
@@ -228,7 +226,12 @@ class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
         }
 
 class PresenterChangeForm(forms.ModelForm):
-    presenter = forms.ModelChoiceField(User.objects.filter(is_active=True), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('Presenter'))
+    presenter = forms.ModelChoiceField(
+        User.objects.filter(is_active=True), required=True,
+        error_messages={'required': _('Please enter a valid e-mail address')},
+        label=_('Presenter'),
+        widget=EmailUserSelectWidget()
+    )
 
     class Meta:
         model = Submission
@@ -236,14 +239,17 @@ class PresenterChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(PresenterChangeForm, self).__init__(*args, **kwargs)
-        profile = get_current_user().profile
-        if not profile.is_internal:
-            self.fields['presenter'].widget = EmailUserSelectWidget()
-        else:
-            self.fields['presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+        if get_current_user().profile.is_internal:
+            self.fields['presenter'].widget = \
+                AutocompleteWidget('users')
 
 class SusarPresenterChangeForm(forms.ModelForm):
-    susar_presenter = forms.ModelChoiceField(User.objects.filter(is_active=True), required=True, error_messages={'required': _('Please enter a valid e-mail address')}, label=_('SUSAR Presenter'))
+    susar_presenter = forms.ModelChoiceField(
+        User.objects.filter(is_active=True), required=True,
+        error_messages={'required': _('Please enter a valid e-mail address')},
+        label=_('Susar Presenter'),
+        widget=EmailUserSelectWidget()
+    )
 
     class Meta:
         model = Submission
@@ -251,12 +257,9 @@ class SusarPresenterChangeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
-        profile = get_current_user().profile
-        self.fields['susar_presenter'].label = _('Susar presenter')
-        if not profile.is_internal:
-            self.fields['susar_presenter'].widget = EmailUserSelectWidget()
-        else:
-            self.fields['susar_presenter'].widget = SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+        if get_current_user().profile.is_internal:
+            self.fields['susar_presenter'].widget = \
+                AutocompleteWidget('users')
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
@@ -447,7 +450,7 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
         model = TemporaryAuthorization
         exclude = ('submission',)
         widgets = {
-            'user': SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'users'}))
+            'user': AutocompleteWidget('users'),
         }
         labels = {
             'user': _('User'),
@@ -460,7 +463,7 @@ class AdvancedSettingsForm(TranslatedModelForm):
         model = AdvancedSettings
         fields = ('default_contact',)
         widgets = {
-            'default_contact': SingleselectWidget(url=lambda: reverse('ecs.core.views.autocomplete.internal_autocomplete', kwargs={'queryset_name': 'internal-users'}))
+            'default_contact': AutocompleteWidget('internal-users'),
         }
         labels = {
             'default_contact': _('Default Contact'),

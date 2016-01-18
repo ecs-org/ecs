@@ -77,21 +77,13 @@
             var form = jQuery('#{{ form_id }}');
             var page_input = form.find('input[name="page"]');
 
-            ecs.setupAutocomplete(form[0]);
+            form.find('select[data-ajax--url]').select2();
+
             ecs.setupSubmitLinks('a.submit_parent');
 
             jQuery('.paginator a').click(function(ev) {
                 ev.preventDefault();
                 page_input.val(jQuery(this).data('page'));
-                form.submit();
-            });
-
-            form.find('input').change(function(){
-                page_input.val(1);
-                form.submit();
-            });
-            form.find('select').change(function(){
-                page_input.val(1);
                 form.submit();
             });
 

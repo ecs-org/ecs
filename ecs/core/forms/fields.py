@@ -2,11 +2,12 @@ import datetime
 
 from django import forms
 from django.utils.translation import ugettext as _
+from django.utils.encoding import force_text
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 
 from ecs.users.utils import get_user
-import collections
 
 DATE_INPUT_FORMATS = ("%d.%m.%Y", "%Y-%m-%d")
 TIME_INPUT_FORMATS = ("%H:%M", "%H:%M:%S")
@@ -52,55 +53,36 @@ class NullBooleanField(forms.NullBooleanField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('widget', NullBooleanWidget)
         super(NullBooleanField, self).__init__(*args, **kwargs)
-        
-class MultiselectWidget(forms.TextInput):
-    def __init__(self, *args, **kwargs):
-        self.url = kwargs.pop('url')
-        return super(MultiselectWidget, self).__init__(*args, **kwargs)
+
+
+class AutocompleteMixin(object):
+    def __init__(self, queryset_name, *args, **kwargs):
+        self.queryset_name = queryset_name
+        return super(AutocompleteMixin, self).__init__(*args, **kwargs)
 
     def render(self, name, value, attrs=None, choices=()):
-        value_list = ",".join(map(str, value or ()))
-        attrs['class'] = 'autocomplete'
-        url = self.url
-        if isinstance(url, collections.Callable):
-            url = url()
-        attrs['x-autocomplete-url'] = url
-        attrs['x-autocomplete-type'] = 'multi'
-        return super(MultiselectWidget, self).render(name, value_list, attrs=attrs)
-        
-    def value_from_datadict(self, data, files, name):
-        val = data.get(name, '')
-        if not val:
-            return []
-        return val.split(',')
+        attrs['data-ajax--url'] = reverse(
+            'ecs.core.views.autocomplete.autocomplete',
+            kwargs={'queryset_name': self.queryset_name}
+        )
+        attrs['data-placeholder'] = _('Start typing to receive suggestions.')
+        return super(AutocompleteMixin, self).render(name, value, attrs=attrs)
 
-class SingleselectWidget(forms.TextInput):
-    def __init__(self, *args, **kwargs):
-        self.url = kwargs.pop('url')
-        self.type = kwargs.pop('type', 'single')
-        return super(SingleselectWidget, self).__init__(*args, **kwargs)
+    def render_option(self, selected_choices, option_value, option_label):
+        if force_text(option_value or '') not in selected_choices:
+            return ''
+        return super(AutocompleteMixin, self).render_option(selected_choices, option_value, option_label)
 
-    def render(self, name, value, attrs=None, choices=()):
-        value_list = str(value) if value else ''
-        attrs['class'] = 'autocomplete'
-        url = self.url
-        if isinstance(url, collections.Callable):
-            url = url()
-        attrs['x-autocomplete-url'] = url
-        attrs['x-autocomplete-type'] = self.type
-        return super(SingleselectWidget, self).render(name, value_list, attrs=attrs)
+class MultiAutocompleteWidget(AutocompleteMixin, forms.SelectMultiple):
+    pass
 
-    def value_from_datadict(self, data, files, name):
-        val = data.get(name, '')
-        vals = val.split(',')
-        if not val:
-            return None
-        return val.split(',')[0]
+class AutocompleteWidget(AutocompleteMixin, forms.Select):
+    pass
+
 
 from django.utils.safestring import mark_safe
 from django.forms.utils import flatatt
 from django.utils.html import conditional_escape
-from django.utils.encoding import force_text
 
 class ReadonlyTextMixin(object):
     def __init__(self, *args, **kwargs):

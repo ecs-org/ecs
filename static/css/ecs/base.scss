@@ -101,6 +101,11 @@ a {
   overflow-x: hidden;
   overflow-y: auto;
 
+  /*
+   * XXX: The following selectors are really overzealous, resulting in
+   * complex reset cascades when embedding external libraries.
+   */
+
     h1, h2, h3, h4, h5 {
         display: block;
     }

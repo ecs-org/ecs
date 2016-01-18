@@ -25,15 +25,7 @@
     {{ block.super }}
     <script type="text/javascript">
         jQuery(function(){
-            var form = $('cert_form');
-            ecs.setupAutocomplete(form);
-            /*
-            form.addEvent('submit', function(){
-                setTimeout(function(){
-                    window.location.href = '{% url 'ecs.pki.views.cert_list' %}';
-                }, 2000);
-            });
-            */
+            jQuery('#cert_form select[data-ajax--url]').select2();
         });
     </script>
 {% endblock %}
