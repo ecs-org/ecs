@@ -60,32 +60,26 @@
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript">
-    /* http://stackoverflow.com/questions/14267457 */  
-    String.prototype.contains = function(string, separator){
-    return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : String(this).indexOf(string) > -1;
-    };
-    
-    jQuery(function() {
-        var sidebar = $('sidebar');
-        var header = $('header');
-        var content = $('content');
-        sidebar.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-        header.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-        content.set('morph', {duration: 'short', transition: Fx.Transitions.Sine.easeOut});
-        $('toggle_sidebar').addEvent('click', function() {
-            if (sidebar.getStyle('width') == '0px') {
-                sidebar.morph({width: '220px'});
-                header.morph({right: '220px'});
-                content.morph({right: '220px'});
-            } else {
-                sidebar.morph({width: '0px'});
-                header.morph({right: '0px'});
-                content.morph({right: '0px'});
-            }
-            return false;
+    {{ block.super }}
+    <script type="text/javascript">
+        /* http://stackoverflow.com/questions/14267457 */
+        String.prototype.contains = function(string, separator){
+        return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : String(this).indexOf(string) > -1;
+        };
+
+        jQuery(function() {
+            var sidebar = jQuery('#sidebar');
+            var header = jQuery('#header');
+            var content = jQuery('#content');
+            var duration = 150; /* ms */
+
+            jQuery('#toggle_sidebar').click(function(ev) {
+                ev.preventDefault();
+                var width = sidebar.width() ? '0px' : '220px';
+                sidebar.animate({width: width}, duration);
+                header.animate({right: width}, duration);
+                content.animate({right: width}, duration);
+            });
         });
-    });
-  </script>
+    </script>
 {% endblock %}
