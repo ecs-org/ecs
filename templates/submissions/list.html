@@ -144,20 +144,26 @@
                 form.submit();
             });
 
-            $$('#submission_list_filter input').each(function(input){
-                input.addEvent('change', function(){
-                    ecs.stopPageLoad();
-                    form.submit();
-                });
-            });
+	    jQuery('#submission_list_filter input').change(function() {
+		ecs.stopPageLoad();
+		form.submit();
+	    });
 
-            $$('a.delete_docstash').each(function(a){
-                a.addEvent('click', function(){
-                    var href = a.getAttribute('href');
-                    new MooDialog.Confirm('{% trans 'Do you want to delete the submission draft?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Delete")|escapejs }}', cancelText: '{{ _("Don't Delete")|escapejs }}'});
-                    return false;
-                });
-            }, this);
+	    jQuery('a.delete_docstash').click(function(ev) {
+		ev.preventDefault();
+		var href = jQuery(this).attr('href');
+		new MooDialog.Confirm(
+		    '{% trans 'Do you want to delete the submission draft?' %}',
+		    function() {
+			window.location.href = href;
+		    },
+		    null,
+		    {
+			okText: '{{ _("Delete")|escapejs }}',
+			cancelText: '{{ _("Don't Delete")|escapejs }}'
+		    }
+		);
+	    });
         });
     </script>
 {% endblock %}
