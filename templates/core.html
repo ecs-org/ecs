@@ -169,7 +169,7 @@
       var accordionitem = accordion_items['overview'];
     }
     
-    window.addEvent('domready', function(){
+    jQuery(function(){
       {% if request.task_management.form %}
           var headerworkflow = $('headerworkflow');
           var w = new ecs.widgets.TaskWidget(headerworkflow, {});

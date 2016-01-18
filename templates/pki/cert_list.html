@@ -37,7 +37,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             ecs.setupSubmitLinks('a.submit_parent');
         });
     </script>

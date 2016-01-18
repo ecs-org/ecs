@@ -31,9 +31,9 @@
 {% block menuSelection %}administration{% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
+    {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             function updateHeaderHeight() {
                 var tabHeight = $$('.tab_headers')[0].getHeight();
                 if(tabHeight){

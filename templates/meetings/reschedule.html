@@ -24,6 +24,6 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', ecs.setupForms);
+        jQuery(ecs.setupForms);
     </script>
 {% endblock %}

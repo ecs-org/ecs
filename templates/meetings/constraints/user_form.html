@@ -23,7 +23,7 @@
 {% block jsbottom %}
 {{ block.super }}
 <script type="text/javascript">
-window.addEvent('domready', function(){
+jQuery(function(){
     ecs.setupForms();
     new ecs.InlineFormSet($('constraint_formset'), {
         prefix: '{{ formset.prefix }}',

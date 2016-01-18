@@ -36,7 +36,7 @@
 </div>
 
 <script type="text/javascript">
-    window.addEvent('domready', function(){
+    jQuery(function(){
         var threads = $$('.communication_thread');
         threads.each(function(el){
             var container = el.getElement('ul');

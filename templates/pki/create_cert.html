@@ -24,7 +24,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             var form = $('cert_form');
             ecs.setupAutocomplete(form);
             /*

@@ -225,7 +225,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             var setup = ecs.setupForms();
 
             new ecs.FormFieldController(['id_project_type_reg_drug'], {

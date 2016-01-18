@@ -53,7 +53,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 
-        window.addEvent('domready', function(){
+        jQuery(function(){
             var formsets = [
                 ['{{ measure_formset.prefix }}', '{% trans "Add new measure" %}'],
                 ['{{ routinemeasure_formset.prefix }}', '{% trans "Add new measure" %}'],

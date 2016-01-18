@@ -34,7 +34,7 @@
 {{ block.super }}
 <script type="text/javascript" src={% static 'js/restructuredtext.js' %}></script>
 <script type="text/javascript">
-    window.addEvent('domready', function(){
+    jQuery(function(){
         var textarea = $('id_text');
         var r = new ReST(textarea);
         $('ReST_italic').addEvent('click', function(){r.makeItalic(); return false;});

@@ -73,7 +73,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             var form = jQuery('#{{ form_id }}');
             var page_input = form.find('input[name="page"]');
 

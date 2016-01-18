@@ -67,7 +67,7 @@
     return (separator) ? (separator + this + separator).indexOf(separator + string + separator) > -1 : String(this).indexOf(string) > -1;
     };
     
-    window.addEvent('domready', function() {
+    jQuery(function() {
         var sidebar = $('sidebar');
         var header = $('header');
         var content = $('content');

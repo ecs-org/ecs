@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <script type="text/javascript">
-  window.addEvent('domready', function(){
+  jQuery(function(){
       $$('#{{ form_id }} input').each(function(input){
           input.addEvent('change', function(){
               ecs.stopPageLoad();

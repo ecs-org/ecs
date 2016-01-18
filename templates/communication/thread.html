@@ -67,7 +67,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      window.addEvent('domready', function(){
+      jQuery(function(){
         var communication_thread = $$('.communication_thread')[0];
         var container = communication_thread.getElement('ul');
         var collapse_link = communication_thread.getElement('.collapse_all');

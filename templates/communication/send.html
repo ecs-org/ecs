@@ -68,7 +68,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      window.addEvent('domready', function(){
+      jQuery(function(){
         var container = $$('.message_display')[0];
         ecs.setupMessagePopup(container);
         ecs.setupAutocomplete();

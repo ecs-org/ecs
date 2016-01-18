@@ -12,7 +12,7 @@
 {% block jsbottom %}
 {{ block.super }}
 <script type="text/javascript">
-    window.addEvent('domready', function(){
+    jQuery(function(){
         $$('a.api').each(function(link){
             link.addEvent('click', function(){
                 var request = new Request({

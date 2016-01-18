@@ -20,7 +20,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 
-        window.addEvent('domready', function(){
+        jQuery(function(){
             ecs.setupFormFieldHelpers();
             var textarea = $('id_text');
             var toolbar_items = [ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}")];

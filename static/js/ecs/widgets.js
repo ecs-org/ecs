@@ -241,6 +241,6 @@ ecs.widgets.enablePopupHandlers = function(context){
     });
 };
 
-window.addEvent('domready', function(){
+jQuery(function(){
     ecs.widgets.enablePopupHandlers(document.body);
 });

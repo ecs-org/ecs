@@ -71,7 +71,7 @@
 {% block jsbottom %}
   {{ block.super }}
     <script type="text/javascript">
-        window.addEvent('domready', function(){
+        jQuery(function(){
             var tabController = new ecs.TabController($$('.tab_header_groups > li'));
             ecs.setupWidgets();
 
