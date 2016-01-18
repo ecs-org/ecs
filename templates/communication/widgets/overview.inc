@@ -6,7 +6,7 @@
 
     <ul class="thread">
     {% for message in thread.message_list %}
-        <li class="message">
+        <li class="message collapsed">
             <div class="head">
                 <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
                 <span class="preview"></span><span class="preview_text">{{ message|preview:80 }}</span>
@@ -37,12 +37,9 @@
 
 <script type="text/javascript">
     jQuery(function(){
-        var threads = $$('.communication_thread');
-        threads.each(function(el){
-            var container = el.getElement('ul');
-            var thread = new ecs.communication.Thread(container);
-            thread.collapse_all();
-        }, this);
+        jQuery('.communication_thread').each(function(){
+            new ecs.communication.init_thread(this);
+        });
     });
 </script>
 

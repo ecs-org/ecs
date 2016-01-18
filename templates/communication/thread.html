@@ -23,7 +23,7 @@
 
 <ul class="thread">
 {% for message in thread.message_list %}
-    <li class="message">
+    <li class="message {% if not forloop.last %}collapsed{% endif %}">
         <div class="head">
             <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
             <span class="preview">{{ message|preview:80 }}</span>
@@ -67,28 +67,26 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      jQuery(function(){
-        var communication_thread = $$('.communication_thread')[0];
-        var container = communication_thread.getElement('ul');
-        var collapse_link = communication_thread.getElement('.collapse_all');
-        var expand_link = communication_thread.getElement('.expand_all');
-        var thread = new ecs.communication.Thread(container, collapse_link, expand_link);
-        thread.scroll_to_last_message();
+        jQuery(function(){
+            var thread = jQuery('.communication_thread');
+            ecs.communication.init_thread(thread);
 
-        var messageToolbarItems = [];
+            var last_message = thread.find('.message').last();
+            last_message.offsetParent().scrollTop(last_message.position().top);
 
-        {% if user|has_flag:'is_internal' %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
-        {% endif %}
+            var messageToolbarItems = [];
 
-        var textarea = communication_thread.getElement('textarea[name="text"]');
-        new ecs.textarea.TextArea(textarea);
-        ecs.textarea.installToolbar(textarea, messageToolbarItems);
-        ecs.setupAutocomplete();
+            {% if user|has_flag:'is_internal' %}
+                messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
+            {% endif %}
 
-        textarea.focus();
-        textarea.selectRange(0, 0);
-      });
+            var textarea = thread.find('textarea[name="text"]');
+            new ecs.textarea.TextArea(textarea[0]);
+            ecs.textarea.installToolbar(textarea[0], messageToolbarItems);
+            ecs.setupAutocomplete();
+
+            textarea.focus();
+        });
     </script>
 {% endblock %}
 
