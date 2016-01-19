@@ -96,6 +96,9 @@ class Document(models.Model):
             f = pdf_barcodestamp(f, hist.uuid.hex, str(user))
         return f
 
+    def retrieve_raw(self):
+        return getVault()[self.uuid.hex]
+
 
 class DownloadHistory(models.Model):
     document = models.ForeignKey(Document, db_index=True)

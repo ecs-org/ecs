@@ -11,7 +11,6 @@ from django.utils import timezone
 
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
-from ecs.documents.storagevault import getVault
 
 CURRENT_SERIALIZER_VERSION = '1.2'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
@@ -345,7 +344,7 @@ class DocumentSerializer(ModelSerializer):
         zip_name = 'attachments/{0}'.format(uuid4())
         if obj.mimetype == 'application/pdf':
             zip_name += '.pdf'
-        f = getVault()[obj.uuid.hex]
+        f = obj.retrieve_raw()
         zf.writestr(zip_name, f.read())
         f.close()
         d['file'] = zip_name

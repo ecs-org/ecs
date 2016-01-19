@@ -48,7 +48,7 @@ def _store_sign_data(sign_data, force_mock=False):
 
 @user_group_required("EC-Signing Group")
 def init_batch_sign(request, task, data_func):
-    if request.user.email.startswith('signing_mock'):
+    if request.user.email.startswith('signing_mock') or settings.PDFAS_SERVICE == 'mock:':
         sign_data = data_func(request, task)
         rval = sign(request, sign_data)
         _get_tasks(request.user).get(pk=task.pk).done(choice=True)

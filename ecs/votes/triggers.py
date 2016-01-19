@@ -43,7 +43,7 @@ def on_vote_published(sender, **kwargs):
     name = slugify('_'.join(str(bit) for bit in bits if bit is not None))
     vote_ct = ContentType.objects.get_for_model(Vote)
     doc = Document.objects.get(content_type=vote_ct, object_id=vote.id)
-    vote_pdf = doc.file.read()
+    vote_pdf = doc.retrieve_raw().read()
     attachments = ((name + '.pdf', vote_pdf, 'application/pdf'),)
     template = loader.get_template('meetings/email/basg.txt')
     text = str(template.render({}))
