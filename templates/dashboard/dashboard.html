@@ -10,13 +10,13 @@
 {% block content %}
     <div id="dashboard">
         <div class="left_column">
-            <div class="dashboard_widget" data-url="{% url 'ecs.communication.views.outgoing_message_widget' %}"></div>
-            <div class="dashboard_widget" data-url="{% url 'ecs.core.views.submissions.submission_widget' %}"></div>
+            <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.outgoing_message_widget' %}"></div>
+            <div class="dashboard_widget" data-widget-url="{% url 'ecs.core.views.submissions.submission_widget' %}"></div>
         </div>
         <div class="right_column">
-            <div class="dashboard_widget" data-url="{% url 'ecs.communication.views.incoming_message_widget' %}"></div>
+            <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' %}"></div>
             {% if user.profile.has_explicit_workflow %}
-                <div class="dashboard_widget" data-url="{% url 'ecs.tasks.views.my_tasks' %}"></div>
+                <div class="dashboard_widget" data-widget-url="{% url 'ecs.tasks.views.my_tasks' %}"></div>
             {% endif %}
         </div>
     </div>
@@ -25,12 +25,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function() {
-            jQuery('.dashboard_widget').each(function() {
-                var url = jQuery(this).data('url');
-                new ecs.widgets.Widget(this, {url: url});
-            });
-        });
+        ecs.setupWidgets();
     </script>
 {% endblock %}
 

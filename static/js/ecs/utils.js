@@ -391,16 +391,15 @@ ecs.setupForms = function(){
     return setup;
 };
 
-ecs.setupWidgets = function(context){
-    context = $(context || document.body);
-    context.getElements('.widget').each(function(w){
-        var options = {};
-        options.url = w.getAttribute('x-widget-url');
-        if (options.url) {
-            options.reload_interval = parseInt(w.getAttribute('x-widget-reload-interval')) * 1000 || null;
-            new ecs.widgets.Widget(w, options);
-        }
-    }, this);
+ecs.setupWidgets = function(){
+    jQuery('div[data-widget-url]').each(function() {
+        var widget = jQuery(this);
+        var options = {
+            url: widget.data('widgetUrl'),
+            reload_interval: parseInt(widget.data('widgetReloadInterval')) * 1000 || null,
+        };
+        new ecs.widgets.Widget(this, options);
+    });
 };
 
 ecs.FormFieldController = new Class({
@@ -558,17 +557,14 @@ ecs.setupMessagePopup = function(container, prefix) {
 };
 
 ecs.setupSubmitLinks = function(selector){
-    function submitParentForm(e){
-        $(e.target).getParent('form').submit();
-        return false;
-    }
-    $$(selector).each(function(el){
-        el.addEvent('click', submitParentForm);
+    jQuery(selector).click(function(ev) {
+        ev.preventDefault();
+        jQuery(this).parent('form').submit();
     });
 };
 
 ecs.stopPageLoad = function() {
-    if ($defined(window.stop)) {
+    if (typeof(window.stop) !== 'undefined') {
         window.stop();
     } else {
         try { document.execCommand('Stop'); } catch(e){};

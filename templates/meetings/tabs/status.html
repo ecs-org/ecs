@@ -40,7 +40,7 @@
     <tr>
         <th>{% trans "Expedited Reviewer Invitations" %}:</th>
         <td>
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
         </td>
     </tr>
     {% endif %}

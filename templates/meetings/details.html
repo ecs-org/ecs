@@ -40,15 +40,15 @@
     </div>
     {% if user|has_flag:'is_internal' %}
         <div id="open_tasks_tab">
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.open_tasks' meeting_pk=meeting.pk %}"></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.open_tasks' meeting_pk=meeting.pk %}"></div>
         </div>
         <div id="tops_tab">
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} x-widget-reload-interval="10"{% endif %}></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
     {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
         <div id="submissions_tab">
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} x-widget-reload-interval="10"{% endif %}></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
 
@@ -57,10 +57,10 @@
             {% include 'meetings/tabs/experts.html' %}
         </div>
         <div id="timetable_tab">
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}"></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}"></div>
         </div>
         <div id="assistant_tab">
-            <div class="widget" x-widget-url="{% url 'ecs.meetings.views.meeting_assistant' meeting_pk=meeting.pk %}"></div>
+            <div data-widget-url="{% url 'ecs.meetings.views.meeting_assistant' meeting_pk=meeting.pk %}"></div>
         </div>
     {% endif %}
 </div>

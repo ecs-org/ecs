@@ -46,14 +46,12 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      jQuery(function(){
-          $$('#thread_list_filter input').each(function(input){
-              input.addEvent('change', function(){
-                  ecs.stopPageLoad();
-                  $('thread_list_filter').submit();
-              });
-          });
-      });
+        jQuery(function(){
+            jQuery('#thread_list_filter input').change(function() {
+                ecs.stopPageLoad();
+                jQuery('#thread_list_filter').submit();
+            });
+        });
     </script>
 {% endblock %}
 
