@@ -1,5 +1,4 @@
 {% extends 'documents/upload_form.html' %}
-{% block action %}{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}{% endblock %}
 {% block delete_url %}{% url 'ecs.core.views.submissions.delete_document_from_submission' docstash_key=request.docstash.key %}{% endblock %}
 {% block extra_hint %}
     <div class="hint">

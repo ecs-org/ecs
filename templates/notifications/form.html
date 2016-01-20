@@ -35,7 +35,7 @@
             <div id="tabs-{{ forloop.counter }}" class="tab">
                 {% if tab.slug == 'documents' %}
                     <div class="field">
-                        <iframe class="upload" src="{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
+                        <div class="upload_container"></div>
                     </div>
                 {% endif %}
                 
@@ -143,7 +143,7 @@
                 submissionFormSelect.fireEvent('change');
             }
 
-            ecs.setupDocumentUploadIframe();
+            jQuery('.upload_container').load('{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
 
             if ($('id_study_started')) {
                 new ecs.FormFieldController(['id_reason_for_not_started'], {

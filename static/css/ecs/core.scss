@@ -321,35 +321,19 @@ table.notification td,
     }
 }
 
-.document_container {
-  background: $beige-light;
-}
-iframe.upload {
-  border-width: 0px;
-  width: 100%;
-  height: 100%; /* dummy - we set the height via javascript */
-}
 .document_upload {
     ol {
-      margin: 10px 0px;
+        margin: 10px 0px;
     }
-    input[type="submit"].error,
-    input[type="submit"].aborted {
-      background: $red;
-    }
-    input[type="submit"].loaded {
-      background: #00ff00;
+    input[type="submit"].error {
+        background: $red;
     }
     .warning {
-      display: none;
+        display: none;
     }
-    .pdf_warning {
-      display: inline-block;
-      background-color: $yellow-dark;
-      padding: 3px 5px;
-      border-radius: 3px;
-      border: 1px solid $yellow-extra-dark;
-      margin: 5px 0;
+    progress {
+        display: none;
+        width: 50em;
     }
 }
 

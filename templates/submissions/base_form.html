@@ -73,7 +73,7 @@
                                     </ul>
                                 </div>
                             {% endif %}
-                            <iframe class="upload" src="{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}" frameborder=0>{% trans "Your browser does not support iframes." %}</iframe>
+                            <div class="upload_container"></div>
                         {% else %}
                             {% include "documents/compact_list.html" %}
                         {% endif %}
@@ -326,7 +326,10 @@
                 }
             });
 
-            ecs.setupDocumentUploadIframe();
+
+            {% if not readonly %}
+                jQuery('.upload_container').load('{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
+            {% endif %}
         });
     </script>
 {% endblock %}

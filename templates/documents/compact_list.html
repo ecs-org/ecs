@@ -1,10 +1,7 @@
 {# context: documents #}
 {% load core i18n userutils %}
 
-<div class="document_container">
-{% block document_list %}
 <div class="doclist">
-
 {% for doc in documents %}
     {% if submission_form %}
         {% url 'ecs.core.views.submissions.download_document' submission_form_pk=submission_form.pk document_pk=doc.pk as download_url %}
@@ -37,7 +34,4 @@
 {% empty %}
     <p>Noch keine Unterlagen</p>
 {% endfor %}
-
-</div>
-{% endblock %}
 </div>

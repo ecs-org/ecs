@@ -248,169 +248,101 @@ ecs.InvestigatorFormset = new Class({
     }
 });
 
-ecs.setupDocumentUploadIframe = function(){
-    var upload_iframe = $$('iframe.upload')[0];
-    if (!upload_iframe) return;
-
-    function resize_iframe() {
-        if (typeof(upload_iframe.contentWindow.document.body.getElement) === 'undefined') return;
-        if (!upload_iframe.isVisible()) return;
-
-        var container = upload_iframe.contentWindow.document.body.getElement('.document_container');
-        if(!container){ /* this happens on redirect to login */
-            return;
-        }
-        var container_size = container.getScrollSize();
-        var height = container_size.y + 20;
-        var datepicker = upload_iframe.contentWindow.$$('.datepicker')[0];
-        if (datepicker && datepicker.isVisible()) {
-            height = Math.max(height, datepicker.getPosition().y + datepicker.getSize().y);
-        }
-        upload_iframe.setStyle('height', height + 'px');
-    }
-
-    upload_iframe.setStyle('height', '200px');
-    setInterval(resize_iframe, 500);
-};
-
 ecs.setupDocumentUploadForms = function(){
-    document.body.setStyle('background-color', $$('.document_container')[0].getStyle('background-color'));
+    var form = jQuery('.document_upload form');
+    var upload_button = form.find('input[type="submit"]');
+    var progress = form.find('progress');
+    var warning = form.find('.warning');
 
-    var form = document.getElement('.document_upload form');
-    var upload_button = form.getElement('input[type="submit"]');
-    ecs.setupFormFieldHelpers(document);
-    upload_button.addEvent('click', function(){
-        var html5_upload = typeof(FormData) !== 'undefined';
+    ecs.setupFormFieldHelpers(form[0]);
 
-        if(ecs.mainForm){
+    upload_button.click(function(ev) {
+        ev.preventDefault();
+
+        if(ecs.mainForm)
             ecs.mainForm.autosaveDisabled = true;
-        }
-        document.getElement('.warning').show();
+        warning.show();
 
-        if (html5_upload) {
-            upload_button.setAttribute('disabled', 'disabled');
+        upload_button.hide();
+        progress.show();
 
-            var form_data = new FormData();
-            form.getElements('(input)|(select)').each(function(input){
-                if(!input.name) return;
-                if(input.type == 'file' && input.files.length){
-                    form_data.append(input.name, input.files[0]);
-                } else {
-                    form_data.append(input.name, input.value);
-                }
-            }, this);
+        xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener('progress', function(ev){
+            if (ev.lengthComputable) {
+                progress.attr('value', ev.loaded);
+                progress.attr('max', ev.total);
+                progress.html('' + Math.round(ev.loaded * 100 / ev.total) + '%');
+            } else {
+                progress.attr('value', null);
+                progress.attr('max', null);
+            }
+        }, false);
+        xhr.addEventListener('load', function(ev){
+            jQuery('.upload_container').html(xhr.responseText);
+        }, false);
+        xhr.addEventListener('error', function(ev){
+            progress.hide();
+            upload_button.addClass('error').show();
+        }, false);
+        xhr.addEventListener('abort', function(ev){
+            progress.hide();
+            upload_button.addClass('error').show();
+        }, false);
+        xhr.open('POST', form.attr('action'));
+        xhr.send(new FormData(form[0]));
 
-            xhr = new XMLHttpRequest();
-            xhr.upload.addEventListener('progress', function(evt){
-                upload_button.value = ''+Math.round(evt.loaded * 100 / evt.total)+'%';
-            }, false);
-            xhr.addEventListener('load', function(evt){
-                upload_button.setClass('loaded');
-                /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
-                var body_html = RegExp.$1;
-                var body = document.getElement('body');
-                body.innerHTML = body_html;
-                if($('login_form')){
-                    top.location.href = '/';
-                }
-                ecs.setupDocumentUploadForms();
-            }, false);
-            xhr.addEventListener('error', function(evt){upload_button.setClass('error');}, false);
-            xhr.addEventListener('abort', function(evt){upload_button.setClass('aborted');}, false);
-            xhr.open('POST', window.location.pathname);
-            xhr.send(form_data);
-        } else {
-            upload_button.hide();
-        }
-
-        if(ecs.mainForm){
+        if(ecs.mainForm)
             ecs.mainForm.autosaveDisabled = false;
-        }
-        return !html5_upload;
-    }, this);
+    });
 
-    var file_field = $('id_document-file');
-    var name_field = $('id_document-name');
-    file_field.addEvent('change', function() {
-        var name = file_field.value;
-
-        var backslash_offset = name.lastIndexOf('\\');
-        if (backslash_offset >= 0) {
-            name = name.substring(backslash_offset + 1);
-        }
+    var file_field = jQuery('#id_document-file');
+    var name_field = jQuery('#id_document-name');
+    file_field.change(function() {
+        var name = file_field.val().split('\\').slice(0)[0];
 
         var dot_offset = name.lastIndexOf('.');
-        if (dot_offset >= 0) {
+        if (dot_offset >= 0)
             name = name.substring(0, dot_offset);
-        }
-        if (!name_field.getAttribute('disabled')) {
-            name_field.value = name;
-        }
 
-        var errorlist = file_field.getNext('.errorlist');
-        if (errorlist) {
-            errorlist.hide();
-        }
+        if (!name_field.attr('disabled'))
+            name_field.val(name);
     });
 
-    $$('.doclist a.replace_document').each(function(link){
-        link.addEvent('click', function(){
-            var container = link.getParent('div');
-            var document_id = container.getElement('input').getAttribute('value');
-            $('id_document-replaces_document').setAttribute('value', document_id);
+    jQuery('.doclist a.replace_document').click(function(ev) {
+        ev.preventDefault();
+        var link = jQuery(this);
 
-            var replaced_document_name = $('replaced_document_name');
-            replaced_document_name.innerHTML = container.getElement('span.document_display_name').innerHTML;
-            replaced_document_name.getParent('li').show();
+        form.find('input[name="document-replaces_document"]')
+            .val(jQuery(this).data('documentId'));
 
-            var document_type = $('id_document-doctype');
-            document_type.value = container.getElement('span.document_type').innerHTML;
-            document_type.setAttribute('disabled', 'disabled');
+        jQuery('#replaced_document_name')
+            .html(link.siblings('.document_display_name').html())
+            .parent('li').show();
 
-            return false;
-        });
-    }, this);
-
-    $$('.doclist a.delete_document').each(function(link){
-        link.addEvent('click', function(){
-            var href = link.getAttribute('href');
-
-            xhr = new XMLHttpRequest();
-            xhr.addEventListener('load', function(evt){
-                upload_button.setClass('loaded');
-                /<body[^>]*>((.|\n)*)<\/body>/mi.test(xhr.responseText);
-                var body_html = RegExp.$1;;
-                document.getElement('body').innerHTML = body_html;
-                ecs.setupDocumentUploadForms();
-            }, false);
-            xhr.addEventListener('error', function(evt){console.log('error');}, false);
-            xhr.addEventListener('abort', function(evt){console.log('abort');}, false);
-            xhr.open('GET', href);
-            xhr.send(new FormData());
-
-            return false;
-        });
-    }, this);
-
-    $$('#tabs-11 a.new_document').each(function(link){
-        link.addEvent('click', function(){
-            $('id_document-replaces_document').removeAttribute('value');
-            var replaced_document_name = $('replaced_document_name');
-            replaced_document_name.getParent('li').hide();
-
-            var document_type = $('id_document-doctype');
-            document_type.value = '';
-            document_type.removeAttribute('disabled');
-
-            return false;
-        });
+        form.find('select[name="document-doctype"]')
+            .val(link.data('documentType'))
+            .attr('disabled', true);
     });
 
-    var document_replaces_document = $('id_document-replaces_document');
-    if(document_replaces_document && document_replaces_document.value){
-        var link = $$('.doclist input[value='+document_replaces_document.value+']')[0].getParent('div').getElement('a.replace_document');
-        link.fireEvent('click');
-    }
+    jQuery('#tabs-11 a.new_document').click(function(ev) {
+        ev.preventDefault();
+
+        form.find('input[name="document-replaces_document"]')
+            .val(null);
+
+        jQuery('#replaced_document_name')
+            .html(null)
+            .parent('li').hide();
+
+        form.find('select[name="document-doctype"]')
+            .val(null)
+            .attr('disabled', false);
+    });
+
+    jQuery('.doclist a.delete_document').click(function(ev) {
+        ev.preventDefault();
+        jQuery('.upload_container').load(jQuery(this).attr('href'));
+    });
 };
 
 ecs.setupForms = function(){
