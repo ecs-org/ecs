@@ -10,6 +10,8 @@
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2/select2.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/tether/tether.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap/bootstrap.min.css' %} />
             {% compress css %}
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/base.scss' %} />
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/core.scss' %} />
@@ -48,6 +50,8 @@
                 jQuery.noConflict();
             </script>
             <script type="text/javascript" src={% static '3rd-party/select2/select2.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/tether/tether.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/bootstrap/bootstrap.min.js' %}></script>
             {% compress js %}
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5-core-nc.js' %}></script>
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5.1-more.js' %}></script>
