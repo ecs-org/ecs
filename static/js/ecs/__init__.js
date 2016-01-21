@@ -13,23 +13,6 @@ $extend(ecs, {
         setClass: function(cls, set){
             this[set ? 'addClass' : 'removeClass'](cls);
         }
-    },
-    Dialog: new Class({
-        Extends: MooDialog.Iframe,
-        initialize: function(url, options){
-            $extend(options, {
-                fx: {
-                    type: 'tween',
-                    open: 1,
-                    close: 0,
-                    options: {
-                    duration: 0
-                    }
-                },
-                useScrollBar: false
-            });
-            this.parent(url, options);
-        }
-    })
+    }
 });
 Element.implement(ecs.Element);

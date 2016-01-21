@@ -260,13 +260,6 @@
     }
 }
 
-.ecs-Popup .head .close {
-    @include icon_bg_16;
-    background-position: 0 -192px;
-    float: right;
-    margin-right: 10px;
-    cursor: pointer;
-}
 .searchbox input[type=submit] {
   @include icon_bg;
   float: right;
