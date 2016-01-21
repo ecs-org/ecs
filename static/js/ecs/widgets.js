@@ -1,12 +1,5 @@
 ecs.widgets = {
     modalOverlay: null,
-    getWidgetForElement: function(el){
-        var parent = $(el).getParent('.ecs-Widget');
-        if(!parent){
-            return null;
-        }
-        return parent.retrieve('ecs.widgets.Widget');
-    },
     showModalOverlay: function(){
         if(!this.modalOverlay){
             this.modalOverlay = new Element('div', {'class': 'ecs-ModalOverlay', style: 'display:none'});
