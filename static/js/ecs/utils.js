@@ -1,27 +1,15 @@
 
 ecs.clearFormFields = function(context){
-    context = $(context || document.body);
-    context.getElements('input[type=text], textarea').each(function(input){
-        input.setProperty('value', '');
-    });
-    context.getElements('.NullBooleanField > select', function(select){
-        select.setProperty('value', 1);
-    });
-    context.getElements('span.errors').each(function(errors){
-        errors.dispose();
-    });
+    context = jQuery(context || document.body);
+    context.find('input[type=text], textarea').val('');
+    context.find('.NullBooleanField > select').val(1);
+    context.find('span.errors').remove();
 };
 
 ecs.disabledFormFields = function(context, disable){
-    context = $(context || document.body);
-    context.getElements('input, select, textarea').each(function(field){
-        if(typeof(disable) === 'undefined' || disable){
-            field.setProperty('disabled', 'disabled');
-        }
-        else{
-            field.removeProperty('disabled');
-        }
-    });
+    context = jQuery(context || document.body);
+    context.find('input, select, textarea')
+        .attr('disabled', typeof(disable) === 'undefined' || disable);
 };
 
 ecs.datepickerInputSelector = '.DateField > input, .DateTimeField > input[name$=_0]';
