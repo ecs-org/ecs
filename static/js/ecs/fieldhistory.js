@@ -2,7 +2,6 @@ var ecs = window.ecs = window.ecs || {};
 ecs.fieldhistory = {};
 
 ecs.fieldhistory.show = function(url, field){
-    var popup = new ecs.widgets.Popup({
-        url: url + '?field=' + field
-    });
+    var modal = new ecs.popup();
+    modal.find('.modal-content').load(url + '?field=' + field);
 };
