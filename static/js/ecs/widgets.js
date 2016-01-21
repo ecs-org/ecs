@@ -207,10 +207,20 @@ ecs.widgets.Popup = new Class({
     }
 });
 
-jQuery(function(){
-    jQuery(document).on('click', 'a.open-in-popup', function(ev) {
-        ev.preventDefault();
-        var href = jQuery(this).attr('href');
-        new ecs.widgets.Popup({url: href, width: 700, height: 500});
+ecs.popup = function() {
+    var modal = jQuery('\
+        <div class="modal">\
+            <div class="modal-dialog">\
+                <div class="modal-content">\
+                </div>\
+            </div>\
+        </div>\
+    ');
+    jQuery(document.body).append(modal);
+    modal = jQuery(modal.get(0));
+    modal.modal();
+    modal.on('hidden.bs.modal', function() {
+        modal.remove();
     });
-});
+    return modal;
+};

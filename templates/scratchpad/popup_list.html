@@ -1,29 +1,29 @@
 {% load i18n core %}
 
-<div id="scratchpad">
-    <h3>{% trans "List of scratchpads" %}</h3>
-
-    <ul>
-    {% for scratchpad in scratchpads %}
-        <li>
-            <a href="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}" class="open-in-widget">
-            {% if scratchpad.submission %}
-                {% blocktrans with scratchpad.submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}
-            {% else %}
-                {% trans "Global scratchpad" %}
-            {% endif %}
-            </a>
-            <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
-        </li>
-    {% empty %}
-        <li><i>{% trans "No scratchpad" %}</i></li>
-    {% endfor %}
-    </ul>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">{% trans "List of scratchpads" %}</h4>
 </div>
 
-<script type="text/javascript">
-    jQuery(function(){
-        var popup = $('scratchpad').getParent('.ecs-Popup').retrieve('ecs.widgets.Popup');
-        popup.clearPreCloseHandlers();
-    });
-</script>
+<div class="modal-body list-group">
+    {% for scratchpad in scratchpads %}
+        <a class="list-group-item" href="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}">
+            <h6 class="list-group-item-heading">
+                {% if scratchpad.submission %}
+                    {% blocktrans with scratchpad.submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}
+                {% else %}
+                    {% trans "Global scratchpad" %}
+                {% endif %}
+            </h6>
+            <div class="list-group-item-text">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</div>
+        </a>
+    {% empty %}
+        <i>{% trans "No scratchpad" %}</i>
+    {% endfor %}
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
+</div>

@@ -1,55 +1,27 @@
 {% load i18n core %}
 
-<div id="scratchpad">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
     {% if submission %}
-        <h3>{% blocktrans with submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}</h3>
+        <h4 class="modal-title">{% blocktrans with submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}</h4>
     {% else %}
-        <h3>{% trans "Scratchpad" %}</h3>
+        <h4 class="modal-title">{% trans "Scratchpad" %}</h4>
     {% endif %}
+</div>
 
-    <a href="{% url 'ecs.scratchpad.views.popup_list' %}" class="scratchpad_list open-in-widget">{% trans "Show all my scratchpads" %}</a>
-
-    <form id="scratchpad_form" action="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post" class="open-in-widget">
+<div class="modal-body">
+    <form id="scratchpad_form" action="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post">
         {% csrf_token %}
         {{ form.text }}
     </form>
 
     <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>
     {# do not remove classes from buttons or anywhere else! #}
-    <div class="buttons">
-        <a href="#" class="save_close button_submit">{% trans "Save and close" %}</a>
-    </div>
 </div>
 
-<script type="text/javascript">
-    jQuery(function(){
-        function save_scratchpad() {
-            var form = $('scratchpad_form');
-            var request = new Request({
-                url: form.getAttribute('action'),
-                data: form.toQueryString().parseQueryString(),
-            });
-            request.send();
-        }
-
-        var scratchpad = $('scratchpad');
-        var popup = scratchpad.getParent('.ecs-Popup').retrieve('ecs.widgets.Popup');
-        popup.addPreCloseHandler(save_scratchpad);
-        scratchpad.getElement('.save_close').addEvent('click', function(){
-            popup.close();
-            return false;
-        });
-        scratchpad.getElement('.scratchpad_list').addEvent('click', function(){
-            save_scratchpad();
-            return true;
-        });
-
-        var textarea = scratchpad.getElement('textarea[name="text"]');
-        var pos = textarea.value.length;
-        /* does not work w/out setTimeout */
-        setTimeout(function(){
-            textarea.focus();
-            textarea.selectRange(pos, pos);
-        }, 0);
-    });
-</script>
+<div class="modal-footer">
+    <a class="btn btn-secondary" href="{% url 'ecs.scratchpad.views.popup_list' %}" role="button">{% trans "Show all my scratchpads" %}</a>
+    <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Save and close" %}</button>
+</div>

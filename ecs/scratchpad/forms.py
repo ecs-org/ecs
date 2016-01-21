@@ -9,5 +9,4 @@ class ScratchPadForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ScratchPadForm, self).__init__(*args, **kwargs)
-        self.fields['text'].widget.attrs['cols'] = 80
-        self.fields['text'].widget.attrs['rows'] = 25
+        self.fields['text'].widget.attrs['class'] = 'form-control'

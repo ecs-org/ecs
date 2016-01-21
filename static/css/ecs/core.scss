@@ -421,38 +421,6 @@ table.notification td,
   border-bottom: none !important;
 }
 
-/* ScratchPad  */
-
-#scratchpad {
-    h3 {
-      text-align: center;
-      margin-bottom: 10px;
-      color: $grey-20;
-    }
-    .modified_at {
-      color: $grey-40;
-      display: inline-block;
-      margin: 3px;
-      padding: 3px;
-    }
-    .save,
-    .save_close {
-      display: inline-block;
-      margin-right: 10px;
-    }
-    .save_close {
-      float: right;
-      margin-right: 0;
-    }
-    textarea {
-      width: 460px;
-    }
-    .buttons {
-      display: inline-block;
-      width: 240px;
-    }
-}
-
 .submit_progress {
     display: block;
     text-align: center;
