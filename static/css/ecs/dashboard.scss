@@ -34,7 +34,7 @@
         padding-left: 5px;
         padding-right: 5px;
     }
-    
+
     .messages, .submission_widget_list{
         list-style: none;
         & > li{
@@ -42,7 +42,7 @@
             position: relative;
         }
     }
-    
+
     .messages{
         & > li{
             height: auto;
@@ -60,11 +60,11 @@
             }
         }
     }
-    
+
     .submission_widget_list li {
         padding: 5px 20px 5px 5px;
     }
-    
+
     .messages_header {
         display: inline-block;
         background: $beige;
@@ -78,13 +78,13 @@
         position: absolute;
         right: 3px;
         top: 5px;
-        
+
         a {
             display: inline-block;
             margin: 0px 5px;
         }
     }
-    
+
     img {
         vertical-align: middle;
     }

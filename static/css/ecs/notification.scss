@@ -2,90 +2,90 @@
 
 /* notifications */
 
-.notification { 
+.notification {
     label {
-      font-weight: bolder;
-      display: inline-block;
-      width: 120px;
+        font-weight: bolder;
+        display: inline-block;
+        width: 120px;
     }
     input[type="submit"] {
-      margin-left: 120px;
+        margin-left: 120px;
     }
     textarea {
-      display: inline-block;
+        display: inline-block;
     }
     ul {
-      margin: 0 !important;
+        margin: 0 !important;
     }
     ul.errorlist li {
-      margin-left: 120px;
+        margin-left: 120px;
     }
     .item {
-      border-top: 1px solid $grey-80;
-      margin: 2px 0;
-      padding: 2px 0;
+        border-top: 1px solid $grey-80;
+        margin: 2px 0;
+        padding: 2px 0;
     }
     .form_main {
-      li.BooleanField {
-        padding-left: 10px;
-      }
-      
-      li.CharField {
-        margin-top: 5px;
-      
-        label {
-          width: auto;
-          float: left;
-          display: block;
-          padding: 0 0 0 10px;
-          margin-right: 10px;
+        li.BooleanField {
+            padding-left: 10px;
         }
-        textarea {
-          display: block;
-          clear: both;
-          margin-left: 10px;
+
+        li.CharField {
+            margin-top: 5px;
+
+            label {
+                width: auto;
+                float: left;
+                display: block;
+                padding: 0 0 0 10px;
+                margin-right: 10px;
+            }
+            textarea {
+                display: block;
+                clear: both;
+                margin-left: 10px;
+            }
+            .boilerplate_selector {
+                left: 90px;
+            }
         }
-        .boilerplate_selector {
-          left: 90px;
-        }
-      }
-      
+
     }
 }
 
 .form_main.readonly .notification_list,
 .notification_list {
     ol {
-      list-style: none;
-      margin-bottom: 20px;
+        list-style: none;
+        margin-bottom: 20px;
     }
     li {
-      float: none;
-      padding: 5px;
-      margin-bottom: 0;
+        float: none;
+        padding: 5px;
+        margin-bottom: 0;
     }
     .rejected > a{
-      color: #f00 !important;
+        color: #f00 !important;
     }
 }
 
 .notification_answer {
-  padding: 10px;
-  background: $white;
-  border: 1px solid $wheatbrown;
-  border-radius: 5px;
+    padding: 10px;
+    background: $white;
+    border: 1px solid $wheatbrown;
+    border-radius: 5px;
 }
 table.notif_meta {
-  padding-top: 10px;
+    padding-top: 10px;
 }
 
 .submission_data {
-  margin-left: 240px;
+    margin-left: 240px;
 }
 
-.checklist_field { 
-  visibility: visible; 
+.checklist_field {
+    visibility: visible;
 }
-.checklist_field_hidden { 
-  visibility: hidden; 
+.checklist_field_hidden {
+    visibility: hidden;
 }

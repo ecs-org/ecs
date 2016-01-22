@@ -6,11 +6,11 @@
         background: #e4e4e4;
         font-family: Arial, Helvetica, sans-serif;
     }
-    
+
     textarea {
         margin-left: 240px;
     }
-    
+
     .tab_header_groups li a {
         text-decoration: none;
         padding: 4px 7px;
@@ -19,20 +19,20 @@
         margin-right: 3px;
         border-radius: 5px 5px 0 0;
         text-shadow: 0 1px 2px $grey-20;
-        
+
         &.active {
-          background: $grey-ochre-dark;
-          color: $grey-20;
-          text-shadow: 0 1px 2px $white;
+            background: $grey-ochre-dark;
+            color: $grey-20;
+            text-shadow: 0 1px 2px $white;
         }
-        
+
         &.errors {
-          background: $brick-red;
-          color: #fff !important;
-          text-shadow: 0 1px 2px $brick-red;
+            background: $brick-red;
+            color: #fff !important;
+            text-shadow: 0 1px 2px $brick-red;
         }
     }
-    
+
     .tab_headers {
         position: absolute;
         left: 0;
@@ -41,7 +41,7 @@
         width: 86%;
         padding: 2px 5px;
         border-radius: 0 5px 5px 5px;
-        
+
         li a {
             text-decoration: none;
             padding: 3px 5px;
@@ -50,20 +50,20 @@
             border-radius: 3px;
             text-shadow: 0 0 0 $white;
         }
-        
+
         li.active a {
             background: $grey-ochre-light;
         }
-        
+
         li.readonly_review a {
             background: $lightskyblue-light;
             color: $royalblue-dark;
         }
-        
+
         li.errors a {
-          background: $brick-red;
-          color: #fff !important;
-          text-shadow: 0 1px 2px $brick-red;
+            background: $brick-red;
+            color: #fff !important;
+            text-shadow: 0 1px 2px $brick-red;
         }
     }
 
@@ -84,10 +84,10 @@
     ol > li > ol {
         margin-left: 10px;
     }
-    
+
     .answer {
         display: block;
-        
+
         & > .positive{
             color: #00ff00;
         }
@@ -98,7 +98,7 @@
             color: $grey-20;
         }
     }
-    
+
     .comment {
         display: inline-block;
         margin: 5px 0 0 10px;
@@ -145,16 +145,16 @@
         float: left;
         clear: none;
     }
-    
+
     .review ol li label,
     .checklist_review_tab ol li label{
         width: 240px;
     }
-    
+
     ol li.BooleanField {
         padding-left: 0;
     }
-    
+
     pre {
         display: inline-block;
         background-color: $white;
@@ -164,15 +164,15 @@
         padding: 3px 5px;
         white-space: pre-wrap;
         max-width: 700px;
-        
+
         table & {
             margin-left: 0;
         }
-        
+
         &.empty {
-          background-color: #dddddd;
+            background-color: #dddddd;
         }
-        
+
         li &.oneline, td &{
             float: left;
             padding: 4px;
@@ -181,21 +181,21 @@
             position: relative;
             top: -4px;
         }
-        
+
         &.multiline {
-          width: auto;
-          margin: 0 0 20px 0;
+            width: auto;
+            margin: 0 0 20px 0;
         }
-        
+
         em {
             color: $grey-20;
         }
     }
-    
+
     .icon_comment {
         cursor: pointer;
     }
-    
+
     .version {
         td {
             vertical-align: middle;
@@ -209,12 +209,12 @@
     }
     .authorize {
         input[type="submit"] {
-           margin-left: 10px; 
+            margin-left: 10px;
         }
-        
+
         ol {
             margin: 0 0 0 10px;
-            
+
             li label {
                 width: 60px;
             }
@@ -223,14 +223,14 @@
     .ecs-Autocomplete {
         float: left;
     }
-    
+
     #involved_parties_tab {
         table {
             width: 100%;
-            
-              td:first-child {
-                  width: 17%;
-              }
+
+            td:first-child {
+                width: 17%;
+            }
         }
     }
 }
@@ -250,16 +250,16 @@
     ol li select {
         clear: both;
     }
-    
+
     span.NullBooleanField, span.CharField {
         float: left;
     }
-    
+
     span.NullBooleanField {
         clear: left;
         margin: 0 10px 0 20px;
     }
-    
+
     span.CharField label {
         margin-right: 5px;
     }
@@ -268,28 +268,28 @@
         content: " *";
         color: $red;
     }
-    
+
     span.required.errors {
         textarea {
             border: 1px solid $red;
         }
     }
-    
+
     ul.errorlist li {
-        margin-left: 0;  
+        margin-left: 0;
     }
-        
+
     textarea {
         clear: both;
         display: block;
         margin-left: 0;
     }
-    
+
     input {
         /* XXX: which inputs do we wan't to hide? */
         display: none;
     }
-    
+
 }
 
 .boilerplate_selector input {

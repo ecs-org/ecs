@@ -2,7 +2,7 @@
 
 .message_display {
     display: block;
-    
+
     form {
         max-width: 700px;
         margin: 20px 10px;
@@ -33,7 +33,7 @@
             list-style: none;
             padding: 3px 5px;
             margin-bottom: 2px;
-            
+
             li {
                 display: block;
                 clear: both;
@@ -52,7 +52,7 @@
         padding-bottom: 5px;
     }
     p {
-      margin-bottom: 10px !important;
+        margin-bottom: 10px !important;
     }
     .form ul {
         display: inline-block;
@@ -79,7 +79,7 @@
         padding: 10px;
         border-left: 1px solid $grey-80;
         border-bottom: 1px solid $grey-80;
-        
+
         a {
             display: inline-block;
             margin-bottom: 5px;
@@ -95,10 +95,10 @@
         display: inline-block;
         margin-left: 10px;
         vertical-align: bottom;
-        
-          a {
+
+        a {
             margin: 0 10px 0 0;
-          }
+        }
     }
     .ecs-Autocomplete {
         display: inline;
@@ -109,14 +109,14 @@
 }
 
 .communication_thread #id_text {
-  display: block;
-  width: 500px;
-  min-height: 180px;
+    display: block;
+    width: 500px;
+    min-height: 180px;
 }
 
-.message_display img, 
+.message_display img,
 .messages_overview img {
-  vertical-align: middle;
+    vertical-align: middle;
 }
 
 .form_main .message {
@@ -126,7 +126,7 @@
         list-style-type: none;
         margin-bottom: 10px;
         font-size: 12px;
-        
+
         label {
             display: block;
             width: 100px;
@@ -134,189 +134,189 @@
             text-align: right;
             float: left;
         }
-        
+
         input, textarea{
             border: 1px solid $grey-60;
             padding: 2px;
         }
-        
+
         textarea {
             height: 16em;
             display: block;
             width: 30em;
         }
-        
+
     }
 }
 
 #thread_list_filter,
 .thread_list_choose,
 .messages_header .sort_options {
-  display: inline;
+    display: inline;
 }
 .thread_list_choose,
 .messages_header .sort_options {
-  margin-right: 10px;
-  background: $beige;
-  border-radius: 3px;
+    margin-right: 10px;
+    background: $beige;
+    border-radius: 3px;
 }
 .thread_list_choose {
-  padding: 7px 3px 5px 8px;
+    padding: 7px 3px 5px 8px;
 }
 .messages_header .sort_options {
-  padding: 7px 8px 5px;
+    padding: 7px 8px 5px;
 }
 .thread_list_choose label {
-  display: inline-block;
-  margin-right: 5px;
-  cursor: pointer;
+    display: inline-block;
+    margin-right: 5px;
+    cursor: pointer;
 }
 
 .messages_overview{
     .messages_header {
-         margin-bottom: 15px;
+        margin-bottom: 15px;
     }
     table.messages {
         display: block;
         clear: both;
-        
+
         .threadstart {
-          border-top: 1px solid $grey-80;
+            border-top: 1px solid $grey-80;
         }
     }
 }
 
 #content .messages th, #content .messages td {
-  padding: 5px;
+    padding: 5px;
 }
 
 
 /* Communication Thread */
 
 #communication_tab .messages {
-  margin-top: 10px;
+    margin-top: 10px;
 
     li {
-      float: none;
-      padding: 5px;
-      margin-bottom: 0;
-    }  
+        float: none;
+        padding: 5px;
+        margin-bottom: 0;
+    }
 }
 
 ul.thread {
-  margin: 20px 0px !important;
-  
+    margin: 20px 0px !important;
+
     li {
-      list-style-type: none;
+        list-style-type: none;
     }
 }
 
-.thread { 
+.thread {
     .message {
-      border-radius: 5px;
-      background: $white;
-      border: 1px solid $wheatbrown;;
-      margin-bottom: 2px;
-      
+        border-radius: 5px;
+        background: $white;
+        border: 1px solid $wheatbrown;;
+        margin-bottom: 2px;
+
         .head {
-          padding: 10px;
-          border-bottom: 1px solid $wheatbrown;;
-          cursor: pointer;
-          
+            padding: 10px;
+            border-bottom: 1px solid $wheatbrown;;
+            cursor: pointer;
+
             .preview {
-              margin-left: 5px;
-              color: $grey-40;
-              display: none;
+                margin-left: 5px;
+                color: $grey-40;
+                display: none;
             }
-            
+
             .time {
-              float: right;
-              color: $grey-40;
+                float: right;
+                color: $grey-40;
             }
-            
+
             .sender {
-              font-weight: bold;
+                font-weight: bold;
             }
-            
+
             .message_done {
-              float: right;
-              margin-left: 5px;
+                float: right;
+                margin-left: 5px;
             }
             .message_done:before {
-              content: " | ";
+                content: " | ";
             }
         }
-        
+
         .body {
-          white-space: pre-wrap;
-          overflow: hidden;
+            white-space: pre-wrap;
+            overflow: hidden;
         }
     }
-    
+
     li.message:nth-child(odd) {
-      background: $beige;
+        background: $beige;
     }
     li.message:nth-child(even) {
-      background: $beige-dark;
+        background: $beige-dark;
     }
     pre {
-      padding: 10px;
-      border-radius: 0 0 5px 5px;
-      background: $white;
+        padding: 10px;
+        border-radius: 0 0 5px 5px;
+        background: $white;
     }
-    
+
     .message.collapsed {
-      border-radius-bottom-left: 0px;
-      border-radius-bottom-right: 0px;
-      margin-bottom: -5px;
-      
+        border-radius-bottom-left: 0px;
+        border-radius-bottom-right: 0px;
+        margin-bottom: -5px;
+
         .head {
-          border: none;
+            border: none;
         }
-        
+
         .preview {
-          display: inline;
+            display: inline;
         }
-        
+
         .body {
-          display: none;
+            display: none;
         }
     }
 }
 
 .communication_thread {
     form.send {
-      margin: 20px 10px;
+        margin: 20px 10px;
     }
     .related_thread {
-      display: block;
-      text-align: left;
-      margin: -15px 10px 0 0;
+        display: block;
+        text-align: left;
+        margin: -15px 10px 0 0;
     }
     .expand_collapse {
-      display: block;
-      text-align: right;
-      margin: -15px 10px 0 0;
+        display: block;
+        text-align: right;
+        margin: -15px 10px 0 0;
     }
     label, .ecs-Autocomplete, .ecs-TextAreaToolbar {
-      display: inline-block;
+        display: inline-block;
     }
     label {
-      padding-bottom: 5px;
-      font-weight: bold;
+        padding-bottom: 5px;
+        font-weight: bold;
     }
     .ecs-TextAreaToolbar {
-      margin-left: 10px;
-      vertical-align: bottom;
+        margin-left: 10px;
+        vertical-align: bottom;
     }
     .ecs-Autocomplete {
-      display: block;
-      
+        display: block;
+
         input[type="text"] {
-          width: 300px;
+            width: 300px;
         }
     }
     .boilerplate_selector {
-      left: 80px; 
+        left: 80px;
     }
 }

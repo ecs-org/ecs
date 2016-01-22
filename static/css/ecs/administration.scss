@@ -7,24 +7,24 @@
         margin: 0 0 20px;
         padding: 5px;
     }
-    
+
     .useradministration_choose {
         li {
             list-style: none;
             margin-bottom: 5px;
         }
-        
+
         label {
             font-weight: bolder;
             display: inline-block;
             width: 100px;
         }
-        
+
         input[type=submit] {
             margin-left: 102px;
         }
     }
-    
+
     ul.user_list {
         margin: 20px 0px !important;
         li {
@@ -95,18 +95,18 @@
             }
         }
     }
-    
+
     .CharField {
-        
+
         .ecs-TextAreaToolbar {
-           display: inline-block;
+            display: inline-block;
         }
-        
+
         textarea#id_invitation_text {
             display: block;
             margin-left: 240px;
         }
-        
+
         .boilerplate_selector {
             left: 260px;
         }

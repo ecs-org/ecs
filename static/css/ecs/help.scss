@@ -31,7 +31,7 @@
     float: left;
     clear: both;
     width: 100%;
-    
+
     .searchbox form {
         display: block;
         width: 290px;
@@ -39,12 +39,12 @@
         height: 30px;
         padding: 10px 10px 0 0;
     }
-    
+
     input[type=text] {
         display: inline-block;
         width: 250px;
     }
-    
+
     input[type=submit] {
         display: inline-block;
         text-indent: -9999px;
@@ -88,34 +88,34 @@
 }
 
 .help_overview a:hover, .help_search a:hover, .help_review_overview a:hover {
-  text-decoration: none;
-  background: $royalblue-dark;
-  color: $white;
+    text-decoration: none;
+    background: $royalblue-dark;
+    color: $white;
 }
 .help_search a {
-  position: absolute;
-  top: 8px;
-  right: 30px;
-  display: block;
-  border-radius: 3px;
-  background-color: $lightskyblue-light;
-  border: 1px solid $lightskyblue;
-  padding: 3px 7px;
-  font-size: 14px;
+    position: absolute;
+    top: 8px;
+    right: 30px;
+    display: block;
+    border-radius: 3px;
+    background-color: $lightskyblue-light;
+    border: 1px solid $lightskyblue;
+    padding: 3px 7px;
+    font-size: 14px;
 }
 #help_content h2,
 #help_preview h2 {
-  display: block;
-  font-size: 20px;
-  letter-spacing: 1px;  
-  margin-bottom: 20px;
-  font-weight: lighter;
-  clear: both;
+    display: block;
+    font-size: 20px;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-weight: lighter;
+    clear: both;
 }
 
 #help_nav {
     padding: 5px 20px;
-  height: 15px;
+    height: 15px;
     background: #eee;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
@@ -130,31 +130,31 @@
     color: $red;
 }
 .nav_left {
-  float: left;
+    float: left;
 }
 .nav_right {
-  display: block;
-  float: right;
+    display: block;
+    float: right;
 }
 #help_content {
-  margin: 10px;
-  max-width: 900px;
+    margin: 10px;
+    max-width: 900px;
 }
 #help_content ul,
 #help_preview ul {
-  margin: 0 0 15px 20px;
+    margin: 0 0 15px 20px;
 }
 #help p,
 #help_preview p,
 .help_edit,
 #help_content .location {
-  display: block;
-  margin-bottom: 10px;
+    display: block;
+    margin-bottom: 10px;
 }
 .help_edit,
 #help_content .location {
-  float: left;
-  margin-right: 10px;
+    float: left;
+    margin-right: 10px;
 }
 
 .max_twenty {
@@ -175,7 +175,7 @@
         margin: 10px 0;
         font-weight: lighter;
     }
-    
+
     blockquote p {
         margin-bottom: 5px;
     }
@@ -192,33 +192,33 @@
         float: none;
         margin: 0px;
     }
-    
+
     .dir, .title, .options {
         margin-bottom: 10px;
     }
-    
+
     .dir{
         input, select{
             margin-bottom: 10px;
         }
     }
-    
+
     .title input {
         width: 100%;
         font-size: 20px;
     }
-    
+
     .text textarea {
         font-family: monospace;
         font-size: 14px;
         width: 100%;
         height: 100%;
     }
-    
+
     .location {
         color: $grey-40;
     }
-    
+
     table {
         padding: 5px;
         background: #eee;
@@ -262,54 +262,54 @@
 
 
 #help_overlay {
-  z-index: 100000;
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: $white;
+    z-index: 100000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: $white;
 }
 #help_iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
+    width: 100%;
+    height: 100%;
+    border: none;
 }
 
 #help_attachments {
-  width: 250px;
-  height: 100%;
-  position: absolute;
-  right: 0px;
-  top: 80px;
-  padding: 10px;
-  background: #eee;
-  border-top: 1px solid #ddd;
-  border-left: 1px solid #ddd;
-  
-    .list { 
+    width: 250px;
+    height: 100%;
+    position: absolute;
+    right: 0px;
+    top: 80px;
+    padding: 10px;
+    background: #eee;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+
+    .list {
         div {
-          position: relative;
-          width: 200px;
-          height: 100px;
-          margin: 5px 5px 5px 0;
-          padding: 10px;
-          border: 1px solid #ddd;
-          -moz-user-select: none;
+            position: relative;
+            width: 200px;
+            height: 100px;
+            margin: 5px 5px 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            -moz-user-select: none;
         }
         div img {
-          max-width: 100px;
-          float: left;
-          -moz-user-select: none;
+            max-width: 100px;
+            float: left;
+            -moz-user-select: none;
         }
     }
-    
+
     .slug {
-      display: block;
-      -moz-user-select: none;
+        display: block;
+        -moz-user-select: none;
     }
     iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
+        border: none;
+        width: 100%;
+        height: 100%;
     }
 }
 
@@ -329,7 +329,7 @@
     padding: 10px 0;
     border-top: 2px solid $grey-80;
     border-bottom: 2px solid $grey-80;
-    
+
     img{
         max-width: 600px;
     }

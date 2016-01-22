@@ -1,24 +1,24 @@
 @import "ecs/variables.scss";
 
 #content div.submission_list #submission_list_filter {
-  display: block;
+    display: block;
 }
 #content div.submission_list ul.submission_list_choose {
-  display: inline-block;
-  border-bottom: none;
-  margin: 0 5px 5px 0;
-  background: $beige;
-  border-radius: 3px;
-  padding: 3px 3px 0 8px;
+    display: inline-block;
+    border-bottom: none;
+    margin: 0 5px 5px 0;
+    background: $beige;
+    border-radius: 3px;
+    padding: 3px 3px 0 8px;
 }
 
 /* submission widget */
 
 #submission_widget {
-  padding: 5px;
+    padding: 5px;
 }
 #submission_list_filter {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .submission_list_choose {
@@ -29,7 +29,7 @@
         margin: 0 5px 5px 0;
         cursor: pointer;
     }
-    
+
     li {
         display: inline;
         list-style: none;
@@ -37,17 +37,17 @@
 }
 
 .submission_list .warning {
-  font-size: 150%;
-  font-style: bold;
-  color: $red;
-  margin: 15px 0px 15px 0px;
-  border: 1px solid $red;
-  padding: 10px;
-  text-align: center;
+    font-size: 150%;
+    font-style: bold;
+    color: $red;
+    margin: 15px 0px 15px 0px;
+    border: 1px solid $red;
+    padding: 10px;
+    text-align: center;
 }
 #content ul.submission_list_choose, ul.submission_list_choose {
-  position: relative;
-  margin: 0 0 3px;
-  line-height: 16px;
-  padding: 3px 0 0;
+    position: relative;
+    margin: 0 0 3px;
+    line-height: 16px;
+    padding: 3px 0 0;
 }
