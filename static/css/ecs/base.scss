@@ -305,16 +305,15 @@ a.button_submit:hover,
 
 /* sidebar */
 
-#logo,
 #account,
 #usertoolbar,
 #usermenu {
-    width: 200px;
     padding: 10px;
     border-bottom: 1px solid $grey-80;
 }
 #logo {
-    height: 53px;
+    padding: 10px 10px 0 10px;
+    border-bottom: 1px solid $grey-80;
     background: $white;
 }
 #account {
