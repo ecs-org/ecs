@@ -43,12 +43,10 @@
 
 .innerwrap img,
 .innerwrap a img {
-  float: left;
   border: none;
-  margin: 0 10px 10px 10px;
+  margin: 0 0 10px 10px;
 }
 #content .innerwrap form {
-  float: left;
   padding: 20px 20px;
   background: #D8E6EF;
   border: 1px solid #b7d4e5;
@@ -69,7 +67,7 @@
   display: block;
   padding: 5px;
   font-size: 14px;
-  width: 286px;
+  width: 100%;
   clear: both;
 }
 .innerwrap input[type=submit] {
@@ -167,7 +165,7 @@
 #content .wrapper_404 {
   position: absolute;
   width: 100%;
-  top: 90px;
+  top: 100px;
   left: 0;
   right: 0;
 }
@@ -175,7 +173,7 @@
 .catalogue_list_inner,
 .wrapper_404_inner {
   margin: 0 auto;
-  max-width: 800px;
+  max-width: 1000px;
 }
 .catalogue_list_inner .content,
 .wrapper_404 .content {

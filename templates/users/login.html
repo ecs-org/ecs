@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load i18n core helputils staticfiles %}
+{% load i18n compress core helputils staticfiles %}
 
 {% block jshead %} {# enqueue javasript #}
   {{ block.super }}
@@ -7,7 +7,9 @@
 
 {% block htmlcss %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href={% static 'css/ecs/public.css' %} />
+  {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/public.scss' %} />
+  {% endcompress %}
 {% endblock %}
 
 
