@@ -181,17 +181,6 @@
       var accordionitem = accordion_items['overview'];
     }
     
-    function maxlength(e) {
-      if (e.control || e.alt || e.meta ||
-          e.key === 'up' || e.key === 'down' || e.key === 'left' || e.key === 'right' ||
-          e.key === 'backspace' || e.key === 'delete' || e.key === 'esc') {
-        return true;
-      }
-
-      var max = e.target.className.match(/maxlength-(\d*)/)[1];
-      return (e.target.value.length < max);
-    }
-
     window.addEvent('domready', function(){
       {% if request.task_management.form %}
           var headerworkflow = $('headerworkflow');
@@ -205,10 +194,6 @@
             w.updateContentHeight();
           });
       {% endif %}
-
-      $$('textarea.maxlength').each(function(el) {
-        el.addEvent('keypress', maxlength);
-      });
 
       // accordions
       var toggles = $$('.togglers');
