@@ -6,12 +6,6 @@ ecs.clearFormFields = function(context){
     context.find('span.errors').remove();
 };
 
-ecs.disabledFormFields = function(context, disable){
-    context = jQuery(context || document.body);
-    context.find('input, select, textarea')
-        .attr('disabled', typeof(disable) === 'undefined' || disable);
-};
-
 ecs.datepickerInputSelector = '.DateField > input, .DateTimeField > input[name$=_0]';
 
 ecs.setupFormFieldHelpers = function(context){
@@ -337,17 +331,15 @@ ecs.setupForms = function(){
     var tabHeaders = $$('.tab_headers');
     var setup = {};
     if(tabHeaders.length){
-        var tabController = new ecs.TabController($$('.tab_header_groups > li'));
+        var tabController = new ecs.TabController('.tab_header_groups a');
         var mainForm = document.getElement('.form_main');
         var readonly = true;
         if(mainForm.tagName == 'FORM'){
             readonly = false;
         }
         if(mainForm){
-            var form = ecs.mainForm = new ecs.TabbedForm(mainForm, {
-                tabController: tabController,
-                autosaveInterval: readonly ? 0 : 120
-            });
+            var form = ecs.mainForm = new ecs.TabbedForm(mainForm,
+                tabController, readonly ? null : 120);
             setup.mainForm = form;
         }
 
@@ -359,19 +351,6 @@ ecs.setupForms = function(){
         }
 
         setup.tabController = tabController;
-
-        function updateHeaderHeight() {
-            var tabHeight = setup.tabController.getSelectedTabGroup().container.getHeight();
-            if(tabHeight){
-                $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
-                $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
-            }
-            $('content').setStyle('top', $('header').getHeight() + 'px');
-        }
-        setup.tabController.addEvent('tabGroupSelectionChange', updateHeaderHeight);
-        window.addEvent('resize', updateHeaderHeight);
-        $('header').setStyle('height', 'auto');
-        updateHeaderHeight();
     }
     
     ecs.setupFormFieldHelpers();

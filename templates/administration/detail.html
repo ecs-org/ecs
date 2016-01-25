@@ -2,18 +2,16 @@
 {% load core i18n userutils %}
 
 {% block headernav %}
-    <ul class="tab_header_groups">
-        <li>
-            <a href="#" class="active">{% trans "Administration" %}</a>
-            <ul class="tab_headers">
-                <li{% if active == 'user_administration' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a></li>
-                <li{% if active == 'user_invite' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.invite' %}">{% trans "Invite User" %}</a></li>
-                {% if user|has_flag:"is_executive_board_member" %}
-                    <li{% if active == 'login_history' %} class="active"{% endif %}><a href="{% url 'ecs.users.views.login_history' %}">{% trans 'Login History' %}</a></li>
-                {% endif %}
-            </ul>
-        </li>
-    </ul>
+    <div class="tab_header_groups">
+        <a href="#tabs_administration" class="active">{% trans "Administration" %}</a>
+    </div>
+    <div id="tabs_administration" class="tab_headers">
+        <a href="{% url 'ecs.users.views.administration' %}"{% if active == 'user_administration' %} class="active"{% endif %}>{% trans "User Administration" %}</a>
+        <a href="{% url 'ecs.users.views.invite' %}"{% if active == 'user_invite' %} class="active"{% endif %}>{% trans "Invite User" %}</a>
+        {% if user|has_flag:"is_executive_board_member" %}
+            <a href="{% url 'ecs.users.views.login_history' %}"{% if active == 'login_history' %} class="active"{% endif %}>{% trans 'Login History' %}</a>
+        {% endif %}
+    </div>
     {{ block.super }}
 {% endblock %}
 
@@ -29,23 +27,3 @@
 {% endblock %}
 
 {% block menuSelection %}administration{% endblock %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript">
-        jQuery(function(){
-            function updateHeaderHeight() {
-                var tabHeight = $$('.tab_headers')[0].getHeight();
-                if(tabHeight){
-                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
-                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
-                }
-                $('content').setStyle('top', $('header').getHeight() + 'px');
-            }
-            window.addEvent('resize', updateHeaderHeight);
-            $('header').setStyle('height', 'auto');
-            updateHeaderHeight();
-        });
-    </script>
-{% endblock %}
-

@@ -1,53 +1,34 @@
 ecs.TabbedForm = new Class({
-    Implements: Options,
-    options: {
-        tabController: null,
-        autosaveInterval: 15
-    },
-    initialize: function(form, options){
-        this.form = $(form);
-        this.options = options;
+    initialize: function(form, tabController, autosaveInterval) {
+        this.form = jQuery(form);
         this.autosaveDisabled = false;
-        var tabController = this.tabs = options.tabController;
-        tabController.getTabs().each(function(tab){
-            if(tab.panel.getElement('.errors')){
-                tab.setClass('errors', true);
-                tab.group.setHeaderClass('errors', true);
+
+        tabController.tabs.forEach(function(tab) {
+            if (tab.panel.find('.errors').length) {
+                tab.toggleClass('errors', true);
+                tab.group.header.toggleClass('errors', true);
             }
         });
-        tabController.addEvent('tabAdded', function(tab){
-            if(tab.panel.getElement('.errors')){
-                tab.setClass('errors', true);
-                tab.group.setHeaderClass('errors', true);
-            }
-        });
-        tabController.addEvent('tabSelectionChange', (function(tab){
-            this.form.action = '#' + tab.panel.id;
-        }).bind(this));
-        if(this.options.autosaveInterval){
-            this.lastSave = {
-                data: this.form.toQueryString(),
-                timestamp: new Date()
-            };
-            setInterval(this.autosave.bind(this), this.options.autosaveInterval * 1000);
-            $(window).addEvent('unload', this.autosave.bind(this));
-        }
-        else{
-            this.lastSave = {};
+
+        this.lastSaveData = this.form.serialize();
+        if (autosaveInterval) {
+            setInterval(this.autosave.bind(this), autosaveInterval * 1000);
+            jQuery(window).unload(this.autosave.bind(this));
         }
     },
-    _save: function(callback, extraParameter){
-        var currentData = this.form.toQueryString();
+    _save: function(callback, extraParameter) {
+        var currentData = this.form.serialize();
 
-        this.lastSave.timestamp = new Date();
-        this.lastSave.data = currentData;
+        this.lastSaveData = currentData;
 
-        if(!callback){
-            callback = function(){ecs.messages.alert('_save', 'Das Formular wurde gespeichert');};
+        if (!callback) {
+            callback = function() {
+                ecs.messages.alert('_save', 'Das Formular wurde gespeichert');
+            };
         }
-        if(!extraParameter){
+
+        if (!extraParameter)
             extraParameter = '_save';
-        }
 
         var request = new Request({
             url: window.location.href,
@@ -56,22 +37,25 @@ ecs.TabbedForm = new Class({
             onSuccess: callback,
         });
         request.send();
+    },
+    save: function() {
+        this._save(function(responseText, response) {
+            ecs.messages.alert('Speichern', 'Das Formular wurde gespeichert.');
+        }, 'save');
+    },
+    autosave: function() {
+        if (this.autosaveDisabled ||
+            this.lastSaveData == this.form.serialize())
+            return;
 
-
+        this._save(function(responseText, response) {
+            ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');
+        }, 'autosave');
     },
-    save: function(){
-        this._save(function(responseText, response){ecs.messages.alert('Speichern', 'Das Formular wurde gespeichert.');}, 'save');
-    },
-    autosave: function(force){
-        if(!this.autosaveDisabled && (force === true || (this.lastSave.data != this.form.toQueryString()))){
-            this._save(function(responseText, response){ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');}, 'autosave');
-        }
-    },
-    submit: function(name){
+    submit: function(name) {
         this.autosaveDisabled = true;
-        if(!name){
+        if (!name)
             return this.form.submit();
-        }
-        this.form.getElement('input[type=submit][name=' + name + ']').click();
+        this.form.find('input[type=submit][name=' + name + ']').click();
     }
 });

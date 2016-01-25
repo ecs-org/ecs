@@ -10,69 +10,68 @@ input[disabled] {
 .tab_header_groups {
     position: relative;
     margin-bottom: 0;
+}
 
-    li {
-        display: inline-block;
-        line-height: 24px;
+.tab_header_groups a,
+.tab_headers a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 4px 7px;
+    background: #f4f4f4;
+    color: $royalblue-dark;
+    font-weight: bolder;
+    margin-right: 3px;
+    border-radius: 5px 5px 0 0;
+    text-shadow: 0 1px 2px $white;
 
-        a {
-            text-decoration: none;
-            padding: 4px 7px;
-            background: #f4f4f4;
-            color: $royalblue-dark;
-            font-weight: bolder;
-            margin-right: 3px;
-            border-radius: 5px 5px 0 0;
-            text-shadow: 0 1px 2px $white;
+    &.active {
+        background: $lightskyblue;
+        color: $royalblue-dark;
+    }
 
-            &.active {
-                background: $lightskyblue;
-                color: $royalblue-dark;
-            }
-        }
-        a.errors {
-            background: $brick-red;
-            color: #fff !important;
-            text-shadow: 0 1px 2px $brick-red;
-        }
+    &.errors {
+        background: $brick-red;
+        color: #fff !important;
+        text-shadow: 0 1px 2px $brick-red;
     }
 }
 
 .tab_header_groups a.active.errors,
-.tab_headers .active.errors a {
+.tab_headers a.active.errors  {
     color: $white;
     background: $orange;
     text-shadow: 0 1px 2px $orange;
 }
 
 .tab_headers {
-    position: absolute;
-    left: 0;
-    line-height: 30px;
     background: $lightskyblue;
     width: 84%;
-    padding: 2px 5px;
+    padding: 5px;
     border-radius: 0 5px 5px 5px;
+    margin-bottom: 0;
 
-    li a {
+    a {
         padding: 3px 5px;
         background: $skyblue;
         color: $white;
         font-weight: normal;
         border-radius: 3px;
         text-shadow: 0 0 0 $white;
-    }
-    .active a {
-        background: $lightskyblue-light;
-        color: $royalblue-dark;
-    }
-    .errors a {
-        background: $brick-red;
-        color: #fff !important;
-    }
-    .disabled a {
-        background-color: $grey-80;
-        color: $grey-60;
+
+        &.active {
+            background: $lightskyblue-light;
+            color: $royalblue-dark;
+        }
+
+        &.errors {
+            background: $brick-red;
+            color: #fff !important;
+        }
+
+        &.disabled {
+            background-color: $grey-80;
+            color: $grey-60;
+        }
     }
 }
 

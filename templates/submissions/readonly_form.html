@@ -50,83 +50,68 @@
 
 {% block headernav %}
   <div class="readonly">
-    <ul class="tab_header_groups">
+    <div class="tab_header_groups">
     {% block tab_header_groups %}
-        <li>
-            <a href="#">{% trans "General" %}</a>
-            <ul class="tab_headers">
-                <li>
-                    <a href="#status_tab">{% trans 'Status' %}</a>
-                </li>
-                {% if user.profile.has_explicit_workflow %}
-                    <li>
-                        <a href="#workflow_tab">{% trans 'Workflow' %}</a>
-                    </li>
-                    {% if user|has_flag:'is_internal' %}
-                        <li>
-                            <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
-                        </li>
-                    {% endif %}
+        <a href="#tabs_general">{% trans "General" %}</a>
+        {{ block.super }}
+        {% if categorization_review_form or checklist_reviews or user|has_flag:'is_internal' %}
+            <a href="#tabs_checklists">{% trans "Evaluations" %}</a>
+        {% endif %}
+        <a href="#tabs_votes">{% trans "Votes" %}</a>
+        <a href="#tabs_notifications">{% trans "Notifications" %}</a>
+        <a href="#tabs_communication">{% trans "Communication" %}</a>
+    {% endblock %}
+    </div>
+
+    {% block tab_headers %}
+        <div id="tabs_general" class="tab_headers collapse">
+            <a href="#status_tab">{% trans 'Status' %}</a>
+            {% if user.profile.has_explicit_workflow %}
+                <a href="#workflow_tab">{% trans 'Workflow' %}</a>
+                {% if user|has_flag:'is_internal' %}
+                    <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
                 {% endif %}
-                {% if not user|is_presenting_party:submission_form %}
-                    <li>
-                        <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </li>
+            {% endif %}
+            {% if not user|is_presenting_party:submission_form %}
+                <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
+            {% endif %}
+        </div>
 
         {{ block.super }}
 
         {% if categorization_review_form or checklist_reviews or user|has_flag:'is_internal' %}
-        <li>
-            <a href="#">{% trans "Evaluations" %}</a>
-            <ul class="tab_headers">
-                {% if user|has_flag:'is_internal' %}
-                    <li><a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
-                {% endif %}
-                {% if categorization_review_form %}
-                <li{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>
-                    <a href="#categorization_review_tab">{% trans "Categorization Review" %}</a>
-                </li>
-                {% endif %}
-                {% for checklist, checklist_review_form in checklist_reviews %}
-                    <li{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>
-                        <a href="#checklist_{{ checklist.pk }}_review_form">{{ checklist.short_name }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
+        <div id="tabs_checklists" class="tab_headers collapse">
+            {% if user|has_flag:'is_internal' %}
+                <a href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a>
+            {% endif %}
+            {% if categorization_review_form %}
+            <a href="#categorization_review_tab"{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>{% trans "Categorization Review" %}</a>
+            {% endif %}
+            {% for checklist, checklist_review_form in checklist_reviews %}
+                <a href="#checklist_{{ checklist.pk }}_review_form"{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>{{ checklist.short_name }}</a>
+            {% endfor %}
+        </div>
         {% endif %}
-        <li>
-            <a href="#">{% trans "Votes" %}</a>
-            <ul class="tab_headers">
-                {% if vote_review_form %}
-                    <li{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>
-                        <a href="#vote_review_tab">Votum</a>
-                    </li>
-                {% endif %}
-                <li><a href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">{% trans "Notifications" %}</a>
-            <ul class="tab_headers">
-                <li><a href="#pending_notifications_tab">{% trans "Pending Notifications" %}</a></li>
-                <li><a href="#answered_notifications_tab">{% trans "Answered Notifications" %}</a></li>
-            </ul>
-        </li>
-        <li>
-            <a href="#">{% trans "Communication" %}</a>
-            <ul class="tab_headers">
-                <li><a href="#communication_tab">{% trans "My Communication" %}</a></li>
-                {% if user|has_flag:'is_internal' %}
-                    <li><a href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>
-                {% endif %}
-            </ul>
-        </li>
+
+        <div id="tabs_votes" class="tab_headers collapse">
+            {% if vote_review_form %}
+                <a href="#vote_review_tab"{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>Votum</a>
+            {% endif %}
+            <a href="#published_votes_tab">{% trans "Published Votes" %}</a>
+        </div>
+
+        <div id="tabs_notifications" class="tab_headers collapse">
+            <a href="#pending_notifications_tab">{% trans "Pending Notifications" %}</a>
+            <a href="#answered_notifications_tab">{% trans "Answered Notifications" %}</a>
+        </div>
+
+        <div id="tabs_communication" class="tab_headers collapse">
+            <a href="#communication_tab">{% trans "My Communication" %}</a>
+            {% if user|has_flag:'is_internal' %}
+                <a href="#communication_overview_tab">{% trans "Communication Overview" %}</a>
+            {% endif %}
+        </div>
     {% endblock %}
-    </ul>
   </div>
 {% endblock %}
 
@@ -137,15 +122,15 @@
 {% endblock %}
 
 {% block tabs %}
-    <div id="status_tab">
+    <div id="status_tab" class="collapse">
         {% include 'submissions/tabs/status.html' %}
     </div>
     {% if not user|is_presenting_party:submission_form %}
-        <div id="involved_parties_tab">
+        <div id="involved_parties_tab" class="collapse">
             {% include 'submissions/tabs/involved_parties.html' %}
         </div>
     {% endif %}
-    <div id="pending_notifications_tab" class="tab">
+    <div id="pending_notifications_tab" class="tab collapse">
         <h3>{% trans "Open Notifications" %}</h3>
         {% if open_notifications %}
             <ol class="notification_list">
@@ -167,7 +152,7 @@
             <a href="{% url 'ecs.notifications.views.select_notification_creation_type' %}" class="button_submit">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
-    <div id="answered_notifications_tab" class="tab">
+    <div id="answered_notifications_tab" class="tab collapse">
         <h3>{% trans "Answered Notifications" %}</h3>
         {% if answered_notifications %}
             <ol class="notification_list">
@@ -190,7 +175,7 @@
         {% endif %}
     </div>
     {% if vote_review_form %}
-        <div id="vote_review_tab" class="tab">
+        <div id="vote_review_tab" class="tab collapse">
             {% block vote_review_tab_content %}
                 <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
                 <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
@@ -207,7 +192,7 @@
         </div>
     {% endif %}
 
-    <div id="published_votes_tab" class="tab">
+    <div id="published_votes_tab" class="tab collapse">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
             <ul>
@@ -227,13 +212,13 @@
     </div>
 
     {% if user|has_flag:'is_internal' %}
-        <div id="checklist_summary_tab" class="tab">
+        <div id="checklist_summary_tab" class="tab collapse">
             {% include 'submissions/checklist_summary.inc' %}
         </div>
     {% endif %}
 
     {% if categorization_review_form %}
-        <div id="categorization_review_tab" class="tab">
+        <div id="categorization_review_tab" class="tab collapse">
             {% block categorization_review_tab_content %}
                 {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
                     <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
@@ -254,7 +239,7 @@
         </div>
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
-    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab">
+    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab collapse">
         {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
             <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=checklist_review_form.reopen_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
         {% endif %}
@@ -274,22 +259,22 @@
     </div>
     {% endfor %}
     
-    <div id="communication_tab" class="tab">
+    <div id="communication_tab" class="tab collapse">
         <div data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' submission_pk=submission.pk %}"></div>
         <div data-widget-url="{% url 'ecs.communication.views.outgoing_message_widget' submission_pk=submission.pk %}"></div>
         <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
     </div>
     {% if user|has_flag:'is_internal' %}
-        <div id="communication_overview_tab" class="tab">
+        <div id="communication_overview_tab" class="tab collapse">
             <div data-widget-url="{% url 'ecs.communication.views.communication_overview_widget' submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
     {% if user.profile.has_explicit_workflow %}
-        <div id="workflow_tab" class="tab">
+        <div id="workflow_tab" class="tab collapse">
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>
         {% if user|has_flag:'is_internal' %}
-            <div id="workflow_log" class="tab">
+            <div id="workflow_log" class="tab collapse">
                 <div data-widget-url="{% url 'ecs.tasks.views.task_backlog' submission_pk=submission.pk %}"></div>
             </div>
         {% endif %}
@@ -354,7 +339,7 @@
                 $('tabs-4').getElement('.fieldset_2').hide();
             }
 
-            $('submission_headers').getElements('a').each(function(a){
+            $('tabs_submission').getElements('a').each(function(a){
                 var container = a.getAttribute('href').split('#', 2)[1];
                 $(container).getElements('input[type="checkbox"]').each(function(input){
                     if (!input.getAttribute('checked')) {

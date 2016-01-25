@@ -17,23 +17,24 @@ body {
 }
 #container {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    top: 0;
+    right: 220px;
+    bottom: 0;
+    left: 0;
+
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-flex-direction: column;
+    flex-direction: column;
 }
 #header {
-    position: absolute;
-    right: 220px;
-    top: 0;
-    left: 0;
     z-index: 101;
     background: $lightblue;
     padding: 10px;
-    display: block;
     border-bottom: 1px solid #B5CFDF;
-    overflow: hidden;
 }
 #headertitle {
-    float: left;
     width: 86.5%;
     display: block;
     margin-bottom: 5px;
@@ -42,7 +43,6 @@ body {
 #headernav {
     position: relative;
     display: block;
-    float: left;
     width: 100%;
     background: $lightblue;
     font-size: 14px;
@@ -61,8 +61,8 @@ body {
     bottom: 0;
     right: 0;
     width: 220px; /* Width of frame div */
-    height: 100%;
-    overflow: hidden; /* Disable scrollbars. Set to "scroll" to enable */
+    overflow-x: hidden;
+    overflow-y: auto;
     color: $grey-20;
     background: #f6f6e9;
     word-wrap: break-word;
@@ -91,12 +91,9 @@ a {
     text-decoration: none;
 }
 #content {
-    position: absolute;
-    top: 41px;
-    right: 220px;
-    bottom: 0px;
-    left: 0px;
-    display: block;
+    -webkit-flex: 1;
+    flex: 1;
+
     background: $white;
     overflow-x: hidden;
     overflow-y: auto;

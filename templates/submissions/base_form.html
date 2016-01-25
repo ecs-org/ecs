@@ -6,22 +6,24 @@
 {% endblock %}
 
 {% block headernav %}
-    <ul class="tab_header_groups">
+    <div class="tab_header_groups">
         {% block tab_header_groups %}
-        <li>
-            <a href="#">{% trans "Submission" %}</a>
-            <ul class="tab_headers" id="submission_headers">
-                {% block submission_tab_headers %}
-                    {% for tab, fieldsets in tabs %}
-                        <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-                    {% endfor %}
-                {% endblock %}
-                {% block center_tabs %}
-                {% endblock %}
-            </ul>
-        </li>
+            <a href="#tabs_submission">{% trans "Submission" %}</a>
         {% endblock %}
-    </ul>
+    </div>
+
+    {% block tab_headers %}
+        <div id="tabs_submission" class="tab_headers collapse">
+            {% block submission_tab_headers %}
+                {% for tab, fieldsets in tabs %}
+                    <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+                {% endfor %}
+            {% endblock %}
+            {% block center_tabs %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+
     {{ block.super }}
 {% endblock %}
 
@@ -30,7 +32,7 @@
         <div id="tabs">
           {% block tabs %}
             {% for tab in tabs %}
-                <div id="tabs-{{ forloop.counter }}" class="tab">
+                <div id="tabs-{{ forloop.counter }}" class="tab collapse">
                     {% if unacknowledged_forms %}
                     <div class="unacknowledged_forms">
                         <span class="icon_comment" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
@@ -243,12 +245,19 @@
                     'id_project_type_medical_device_performance_evaluation'
                 ],
                 toggleTab: {
-                    tab: setup.tabController.getTabForElement($('tabs-7')),
+                    tab: setup.tabController.getTab('#tabs-7'),
                     message: '% trans "This tab may only be used when 2.1.4 is selected." %}',
                     requiredFields: [
-                        'id_medtech_checked_product', 'id_medtech_reference_substance', 'id_medtech_product_name', 'id_medtech_manufacturer',
-                        'id_medtech_certified_for_exact_indications', 'id_medtech_certified_for_other_indications', 'id_medtech_ce_symbol',
-                        'id_medtech_manual_included', 'id_medtech_technical_safety_regulations', 'id_medtech_departure_from_regulations'
+                        'id_medtech_checked_product',
+                        'id_medtech_reference_substance',
+                        'id_medtech_product_name',
+                        'id_medtech_manufacturer',
+                        'id_medtech_certified_for_exact_indications',
+                        'id_medtech_certified_for_other_indications',
+                        'id_medtech_ce_symbol',
+                        'id_medtech_manual_included',
+                        'id_medtech_technical_safety_regulations',
+                        'id_medtech_departure_from_regulations'
                     ]
                 }
             });
@@ -256,11 +265,14 @@
             new ecs.FormFieldController(['id_project_type_reg_drug', 'id_project_type_non_reg_drug'], {
                 sources: [],
                 toggleTab: {
-                    tab: setup.tabController.getTabForElement($('tabs-6')),
+                    tab: setup.tabController.getTab('#tabs-6'),
                     message: '{% trans "This tab may only be used when 2.1.2 is selected." %}',
                     requiredFields: [
                         'id_substance_preexisting_clinical_tries',
-                        'id_submission_type', 'id_eudract_number', 'id_pharma_checked_substance', 'id_pharma_reference_substance'
+                        'id_submission_type',
+                        'id_eudract_number',
+                        'id_pharma_checked_substance',
+                        'id_pharma_reference_substance'
                     ]
                 }
             });

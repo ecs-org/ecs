@@ -2,16 +2,15 @@
 {% load core i18n notifications %}
 
 {% block headernav %}
-    <ul class="tab_header_groups">
-        <li>
-            <a href="#">{% trans "New Notification" %}</a>
-            <ul class="tab_headers">
-            {% for tab, fieldsets in tabs %}
-                <li><a href="#tabs-{{ forloop.counter }}">{{ tab }}</a></li>
-            {% endfor %}
-            </ul>
-        </li>
-    </ul>
+    <div class="tab_header_groups">
+        <a href="#tabs_notification">{% trans "New Notification" %}</a>
+    </div>
+
+    <div id="tabs_notification" class="tab_headers collapsed">
+        {% for tab, fieldsets in tabs %}
+            <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+        {% endfor %}
+    </div>
     {{ block.super }}
 {% endblock %}
 
@@ -32,7 +31,7 @@
     {% csrf_token %}
     <div id="tabs">
         {% for tab in tabs %}
-            <div id="tabs-{{ forloop.counter }}" class="tab">
+            <div id="tabs-{{ forloop.counter }}" class="tab collapse">
                 {% if tab.slug == 'documents' %}
                     <div class="field">
                         <div class="upload_container"></div>

@@ -2,31 +2,30 @@
 {% load core i18n userutils %}
 
 {% block headernav %}
-    <ul class="tab_header_groups">
-        <li>
-            <a href="#">{% trans "Overview" %}</a>
-            <ul class="tab_headers">
-                <li><a href="#status_tab">{% trans "Status" %}</a></li>
-                {% if user|has_flag:'is_internal' %}
-                    <li><a href="#open_tasks_tab">{% trans "Open Tasks" %}</a></li>
-                    <li><a href="#tops_tab">{% trans "TOPs" %}</a></li>
-                {% endif %}
-                {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
-                    <li><a href="#submissions_tab">{% trans "Submissions" %}</a></li>
-                {% endif %}
-            </ul>
-        </li>
+    <div class="tab_header_groups">
+        <a href="#tabs_overview">{% trans "Overview" %}</a>
         {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-        <li>
-            <a href="#">{% trans "Planning" %}</a>
-            <ul class="tab_headers">
-                <li{% if active == 'experts' %} class="active"{% endif %}><a href="#experts_tab">{% trans "Spezialistenzuordnung" %}</a></li>
-                <li{% if active == 'timetable' %} class="active"{% endif %}><a href="#timetable_tab">{% trans "Timetable" %}</a></li>
-                <li{% if active == 'assistant' %} class="active"{% endif %}><a href="#assistant_tab">{% trans "Sitzungsassistent" %}</a></li>
-            </ul>
-        </li>
+            <a href="#tabs_planning">{% trans "Planning" %}</a>
         {% endif %}
-    </ul>
+    </div>
+    <div id="tabs_overview" class="tab_headers collapse">
+        <a href="#status_tab">{% trans "Status" %}</a>
+        {% if user|has_flag:'is_internal' %}
+            <a href="#open_tasks_tab">{% trans "Open Tasks" %}</a>
+            <a href="#tops_tab">{% trans "TOPs" %}</a>
+        {% endif %}
+        {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
+            <a href="#submissions_tab">{% trans "Submissions" %}</a>
+        {% endif %}
+    </div>
+    {% if user|is_member_of:"EC-Office" and not meeting.ended %}
+        <div id="tabs_planning" class="tab_headers collapse">
+            <a href="#experts_tab"{% if active == 'experts' %} class="active"{% endif %}>{% trans "Spezialistenzuordnung" %}</a>
+            <a href="#timetable_tab"{% if active == 'timetable' %} class="active"{% endif %}>{% trans "Timetable" %}</a>
+            <a href="#assistant_tab"{% if active == 'assistant' %} class="active"{% endif %}>{% trans "Sitzungsassistent" %}</a>
+        </div>
+    {% endif %}
+
     {{ block.super }}
 {% endblock %}
 
@@ -35,31 +34,31 @@
 
 {% block content %}
 <div id="tabs">
-    <div id="status_tab">
+    <div id="status_tab" class="collapse">
         {% include 'meetings/tabs/status.html' %}
     </div>
     {% if user|has_flag:'is_internal' %}
-        <div id="open_tasks_tab">
+        <div id="open_tasks_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.open_tasks' meeting_pk=meeting.pk %}"></div>
         </div>
-        <div id="tops_tab">
+        <div id="tops_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
     {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
-        <div id="submissions_tab">
+        <div id="submissions_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
 
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-        <div id="experts_tab">
+        <div id="experts_tab" class="collapse">
             {% include 'meetings/tabs/experts.html' %}
         </div>
-        <div id="timetable_tab">
+        <div id="timetable_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}"></div>
         </div>
-        <div id="assistant_tab">
+        <div id="assistant_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.meeting_assistant' meeting_pk=meeting.pk %}"></div>
         </div>
     {% endif %}
@@ -72,21 +71,8 @@
   {{ block.super }}
     <script type="text/javascript">
         jQuery(function(){
-            var tabController = new ecs.TabController($$('.tab_header_groups > li'));
+            new ecs.TabController('.tab_header_groups a');
             ecs.setupWidgets();
-
-            function updateHeaderHeight() {
-                var tabHeight = tabController.getSelectedTabGroup().container.getHeight();
-                if(tabHeight){
-                    $$('.tab_header_groups')[0].setStyle('margin-bottom', tabHeight + 'px');
-                    $$('.tab_headers')[0].setStyle('margin-bottom', tabHeight + 'px');
-                }
-                $('content').setStyle('top', $('header').getHeight() + 'px');
-            }
-            tabController.addEvent('tabGroupSelectionChange', updateHeaderHeight);
-            window.addEvent('resize', updateHeaderHeight);
-            $('header').setStyle('height', 'auto');
-            updateHeaderHeight();
 
             {% if experts_saved %}
                 ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.' %}');

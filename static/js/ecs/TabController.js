@@ -1,245 +1,118 @@
-ecs.Tab = new Class({
-    Implements: Events,
-    initialize: function(controller, header, panel, index){
-        this.controller = controller;
-        this.header = header;
-        this.panel = panel;
-        this.index = index;
-        this.group = null;
-        this.panel.setStyle('display', 'none');
-        this.selected = false;
+ecs.Tab = function(controller, header) {
+    this.controller = controller;
+    this.header = header;
+    this.panel = jQuery(header.attr('href'));
+    this.group = null;  /* set by ecs.TabGroup */
+};
+ecs.Tab.prototype = {
+    toggleClass: function(cls, set) {
+        this.header.toggleClass(cls, set);
+        this.panel.toggleClass(cls, set);
     },
-    getTitle: function(){
-        return this.header.getElement('a').innerHTML;
-    },
-    setClass: function(cls, set){
-        this.header.setClass(cls, set);
-        this.panel.setClass(cls, set);
-    },
-    setSelected: function(selected){
-        this.setClass(this.controller.options.selectedTabClass, selected);
-        this.panel.setStyle('display', selected ? 'block' : 'none');
-        this.selected = selected;
-        this.fireEvent(selected ? 'select' : 'deselect', this);
-    },
-    setDisabled: function(disabled){
-        this.setClass('disabled', disabled);
-        ecs.disabledFormFields(this.panel, disabled);
-    },
-    remove: function(){
-        this.header.dispose();
-        this.panel.dispose();
-        this.fireEvent('remove');
-    },
-    getIndex: function(){
-        return this.controller.tabs.indexOf(this);
-    }
-});
+    setSelected: function(selected) {
+        this.toggleClass('active', selected);
+        this.panel.toggleClass('in', selected);
+        this.group.selectedTab = this;
 
-ecs.TabGroup = new Class({
-    initialize: function(controller, header, container, tabs){
-        this.controller = controller;
-        this.header = header;
-        this.container = container;
-        this.tabs = [];
-        this.selectedTab = tabs ? tabs[0] : null;
-        this.selected = false;
-        this.tabSelectionHandler = this.onTabSelect.bind(this);
-        this.container.setStyle('display', 'none');
-        tabs.each(function(tab){
-            this.addTab(tab);
-        }, this);
-        if(this.header){
-            this.header.addEvent('click', controller.onTabGroupHeaderClick.bindWithEvent(controller, this));
+        if (selected) {
+            var title = document.title.split(' | ');
+            title[0] = this.header.html();
+            document.title = title.join(' | ');
         }
     },
-    addTab: function(tab){
-        this.tabs.push(tab);
+    setDisabled: function(disabled) {
+        this.toggleClass('disabled', disabled);
+        this.panel.find('input, select, textarea').attr('disabled', disabled);
+    }
+};
+
+ecs.TabGroup = function(controller, header, container, tabs) {
+    this.controller = controller;
+    this.header = header;
+    this.container = container;
+    this.tabs = tabs;
+    this.selectedTab = tabs[0];
+    for (var tab of tabs)
         tab.group = this;
-        if(this.tabs.length === 1){
-            this.selectedTab = tab;
-        }
-        tab.addEvent('select', this.tabSelectionHandler);
-    },
-    onTabSelect: function(tab){
-        this.selectedTab = tab;
-        var title = $(document).title.split('|');
-        title[0] = tab.getTitle();
-        document.title = title.join(' | ');
-    },
-    removeTab: function(tab){
-        this.tabs.erase(tab);
-        if(tab === this.selectedTab){
-            this.selectedTab = this.tabs[0];
-        }
-        tab.removeEvent('select', this.tabSelectionHandler);
-    },
-    setHeaderClass: function(cls, set){
-        if(this.header){
-            this.header.setClass(cls, set);
-        }
-    },
-    setClass: function(cls, set){
-        this.setHeaderClass(cls, set);
-        this.tabs.each(function(tab){
-            tab.setClass(cls, set);
+
+    this.header.click((function(ev) {
+        ev.preventDefault();
+        controller.selectTabGroup(this);
+    }).bind(this));
+};
+ecs.TabGroup.prototype = {
+    setSelected: function(selected) {
+        this.header.toggleClass('active', selected);
+        this.container.toggleClass('in', selected);
+        if (selected && this.selectedTab)
+            window.location.hash = this.selectedTab.header.attr('href');
+    }
+};
+
+ecs.TabController = function(tabGroupContainers) {
+    this.tabs = [];
+    this.tabGroups = [];
+    this.selectedTab = null;
+    this.selectedTabGroup = null;
+
+    var initialSelection = null;
+    jQuery(tabGroupContainers).each(jQuery.proxy(function(controller) {
+        var header = jQuery(this);
+        var container = jQuery(header.attr('href'));
+        var tabs = [];
+        container.find('a').each(function() {
+            var link = jQuery(this);
+            var tab = new ecs.Tab(controller, link);
+            if (window.location.hash == link.attr('href'))
+                initialSelection = tab;
+            if (!initialSelection && link.hasClass('active'))
+                initialSelection = tab;
+            link.removeClass('active');
+            controller.tabs.push(tab);
+            tabs.push(tab);
         });
-    },
-    setSelected: function(selected){
-        this.selected = selected;
-        if(this.header){
-            this.header.setClass(this.controller.options.selectedTabClass, selected);
-        }
-        this.container.setStyle('display', selected ? 'block' : 'none');
-        if (selected && this.selectedTab) {
-            window.location.hash = '#' + this.selectedTab.header.getElement('a').href.split('#')[1];
-        }
-    }
-});
+        controller.tabGroups.push(new ecs.TabGroup(controller, header, container, tabs));
+    }, null, this));
+    this.selectTab(initialSelection || this.tabs[0]);
 
-ecs.TabController = new Class({
-    Implements: [Options, Events],
-    options: {
-        tabIdPrefix: 'tab-',
-        selectedTabClass: 'active',
-        tabGroupHeaderSelector: 'a',
-        tabGroupContainerSelector: 'ul',
-        tabGroupSelector: null
-    },
-    initialize: function(tabGroupContainers, options){
-        this.setOptions(options);
-        this.tabs = [];
-        this.tabGroups = [];
-        this.selectedTab = null;
-        this.selectedTabGroup = null;
-        this.tabGroupContainers = tabGroupContainers;
-        this.hashChangeHandler = this.onHashChange.bind(this);
-
-        var index = 0;
-        var initialSelection = null;
-        tabGroupContainers.each(function(el){
-            var header = el.getFirst(this.options.tabGroupHeaderSelector);
-            var container = el.getFirst(this.options.tabGroupContainerSelector);
-            var tabs = [];
-            container.getElements('li').each(function(header){
-                var hash = header.getElement('a').href.split('#')[1];
-                var panel = $(hash);
-                var tab = new ecs.Tab(this, header, panel, index++);
-                if(window.location.hash == '#' + hash){
-                    initialSelection = tab;
-                }
-                if(!initialSelection && header.hasClass(this.options.selectedTabClass)){
-                    initialSelection = tab;
-                }
-                header.removeClass(this.options.selectedTabClass);
-                this.tabs.push(tab);
-                tabs.push(tab);
-            }, this);
-            this.tabGroups.push(new ecs.TabGroup(this, header, container, tabs));
-        }, this);
-        this.selectTab(initialSelection || this.tabs[0], true);
-        window.addEventListener('hashchange', this.hashChangeHandler, false);
-    },
-    onHashChange: function(evt){
-        var new_hash = window.location.hash.substr(1);
-        if (!new_hash) {
-            this.selectTab(this.tabs[0]);
+    jQuery(window).on('hashchange', this.onHashChange.bind(this));
+};
+ecs.TabController.prototype = {
+    onHashChange: function(ev) {
+        var new_hash = window.location.hash;
+        var tab = new_hash ? this.getTab(new_hash) : this.tabs[0];
+        if (tab) {
+            ev.preventDefault();
+            this.selectTab(tab);
         }
-        this.tabs.some(function(tab){
-            var tab_hash = tab.header.getElement('a').href.split('#')[1];
-            if (tab_hash == new_hash) {
-                this.selectTab(tab);
-                return true;
-            } else {
-                return false;
-            }
-        }, this);
     },
-    onTabGroupHeaderClick: function(evt, tabGroup){
-        this.selectTabGroup(tabGroup);
-        evt.stop();
-    },
-    selectTab: function(tab, initial){
-        if(tab === this.selectedTab){
+    selectTab: function(tab) {
+        if (tab === this.selectedTab)
             return;
-        }
-        if(this.selectedTab){
+
+        if (this.selectedTab)
             this.selectedTab.setSelected(false);
-        }
+
         this.selectedTab = tab;
-        if(tab){
+        if (tab) {
             tab.setSelected(true);
-            this.selectTabGroup(tab.group, initial);
+            this.selectTabGroup(tab.group);
         }
-        this.fireEvent('tabSelectionChange', tab, !!initial);
     },
-    selectTabGroup: function(tabGroup, initial){
-        if(tabGroup === this.selectedTabGroup){
+    selectTabGroup: function(tabGroup) {
+        if (tabGroup === this.selectedTabGroup)
             return;
-        }
-        if(this.selectedTabGroup){
+
+        if (this.selectedTabGroup)
             this.selectedTabGroup.setSelected(false);
-        }
+
         this.selectedTabGroup = tabGroup;
-        if(tabGroup){
+        if (tabGroup)
             tabGroup.setSelected(true);
-        }
-        this.fireEvent('tabGroupSelectionChange', tabGroup, !!initial);
     },
-    getSelectedTab: function(){
-        return this.selectedTab;
-    },
-    getSelectedTabGroup: function(){
-        return this.selectedTabGroup;
-    },
-    getTabs: function(){
-        return this.tabs;
-    },
-    getPanels: function(){
-        return this.tabs.map(function(tab){ return tab.panel;})
-    },
-    getTabForElement: function(el){
-        el = $(el);
-        for(var i=0;i<this.tabs.length;i++){
-            var tab = this.tabs[i];
-            if(tab.panel === el || tab.panel.hasChild(el)){
-                return tab;
-            }
-        }
-        return null;
-    },
-    getTab: function(index){
-        return this.tabs[index];
-    },
-    getTabGroupForElement: function(el){
-        el = $(el);
-        for(var i=0;i<this.tabGroups.length;i++){
-            var tabGroup = this.tabGroups[i];
-            if(tabGroup.container === el || tabGroup.container.hasChild(el)){
-                return tabGroup;
-            }
-        }
-        return null;
-    },
-    addTab: function(tabGroup, header, panel, inject){
-        panel.id = panel.id || this.options.tabIdPrefix + this.tabs.length;
-        header = new Element('li', {html: '<a href="#' + panel.id + '">' + header + '</a>'});
-        tabGroup.container.grab(header);
-        if(inject){
-            panel.inject(this.tabs.getLast().panel, 'after');
-        }
-        var tab = new ecs.Tab(this, header, panel, this.tabs.length);
-        this.tabs.push(tab);
-        tabGroup.addTab(tab);
-        this.fireEvent('tabAdded', tab);
-        return tab;
-    },
-    removeTab: function(tab){
-        this.tabs.erase(tab);
-        tab.remove();
-        if(tab == this.selectedTab){
-            this.selectTab(this.tabs[tab.index - 1]);
-        }
-        this.fireEvent('tabRemoved', tab);
+    getTab: function(href) {
+        return this.tabs.find(function(tab) {
+            return tab.header.attr('href') == href;
+        });
     }
-});
+};

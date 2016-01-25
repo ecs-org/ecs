@@ -3,7 +3,6 @@
 
 {% block htmlbody %}
 <div id="container">
-
     <div id="header">
       {% block header %}
         <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
@@ -31,32 +30,34 @@
       </div>
     </div>
 
-    <span id="toggle_sidebar_button"><a href="#" id="toggle_sidebar" class="toggle_sidebar" title="Sidebar verstecken/wiederherstellen">toggle</a></span>
-    
-    <div id="sidebar">
-        {% block sidebar %}
-            <div id="logo">
-                {% block logo %}
-                    <img src={% static 'images/logo.png' %} alt="EC- Meduni Wien"/>
-                    <small>{% current_version %}</small>
-                {% endblock %}
-            </div>
-            <div id="account">
-                {% block account %}
-                {% endblock %}	        
-            </div>
-            <div id="usertoolbar">
-                {% block usertoolbar %}
-                {% endblock %}
-            </div>
-            <div id="usermenu">
-                {% block usermenu %}
-                {% endblock %}
-            </div>
-        {% endblock %}
-    </div>
-  
 </div>
+
+<div id="sidebar">
+    {% block sidebar %}
+        <div id="logo">
+            {% block logo %}
+                <img src={% static 'images/logo.png' %} alt="EC- Meduni Wien"/>
+                <small>{% current_version %}</small>
+            {% endblock %}
+        </div>
+        <div id="account">
+            {% block account %}
+            {% endblock %}
+        </div>
+        <div id="usertoolbar">
+            {% block usertoolbar %}
+            {% endblock %}
+        </div>
+        <div id="usermenu">
+            {% block usermenu %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>
+<span id="toggle_sidebar_button">
+    <a href="#" id="toggle_sidebar" class="toggle_sidebar" title="Sidebar verstecken/wiederherstellen">toggle</a>
+</span>
+
 {% endblock %}
 
 {% block jsbottom %}
@@ -69,16 +70,14 @@
 
         jQuery(function() {
             var sidebar = jQuery('#sidebar');
-            var header = jQuery('#header');
-            var content = jQuery('#content');
+            var container = jQuery('#container');
             var duration = 150; /* ms */
 
             jQuery('#toggle_sidebar').click(function(ev) {
                 ev.preventDefault();
                 var width = sidebar.width() ? '0px' : '220px';
                 sidebar.animate({width: width}, duration);
-                header.animate({right: width}, duration);
-                content.animate({right: width}, duration);
+                container.animate({right: width}, duration);
             });
         });
     </script>
