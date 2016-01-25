@@ -106,7 +106,7 @@
             {% if valid and allows_resubmission %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
                     $('submit-button').hide();
-                    new Element('div', {'class': 'submit_progress', 'html': '<img src="/static/images/loading_small.gif"/><span class="text">{% if notification_type %}{{ _("Your are being redirected to the notification form") }}{% else %}{{ _("Your study is being submitted") }}{% endif %}&hellip;</span>'}).MooDialog();
+                    new Element('div', {'class': 'submit_progress', 'html': '<span class="fa fa-spinner fa-pulse fa-2x"></span><span class="text">{% if notification_type %}{{ _("Your are being redirected to the notification form") }}{% else %}{{ _("Your study is being submitted") }}{% endif %}&hellip;</span>'}).MooDialog();
                     ecs.mainForm.submit('submit');
                 }, null, {
                     okText: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
