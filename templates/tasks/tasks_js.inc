@@ -12,38 +12,38 @@
       var threshold = 7;
 
       var toggle_collapse = function(){
-          var item = this.getParent();
-          var lis = item.getElement('ul').getElements('li');
+          var toggler = jQuery(this);
+          var item = toggler.parent();
+          var lis = item.find('ul li');
           if(item.hasClass('collapsed')) {
-              this.innerHTML = '{% trans "Collapse" %}';
+              toggler.html('{% trans "Collapse" %}');
               lis.show();
-              lis.pop().hide();
+              lis.filter(':last-child').hide();
           } else {
-              this.innerHTML = '{% trans "Expand" %}';
-              lis.splice(0, threshold);
-              lis.hide();
-              lis.pop().show();
+              toggler.html('{% trans "Expand" %}');
+              lis.slice(threshold).hide();
+              lis.filter(':last-child').show();
           }
           item.toggleClass('collapsed');
       };
-      $$('#task_main .task_item.toggle_collapse').each(function(item){
-          if (item.getElement('ul').getElements('li').length <= threshold) {
+      jQuery('#task_main .task_item.toggle_collapse').each(function() {
+          var item = jQuery(this);
+
+          if (item.find('ul li').length <= threshold) {
               return;
           }
-          var toggler = new Element('a', {
-              'text': 'foo',
-              'events': {
-                  'click': toggle_collapse
+
+          var toggler = jQuery('<a/>', {
+              on: {
+                  click: toggle_collapse
               },
-              'styles': {
-                  'float': 'right'
-              }
+              style: 'float: right;'
           });
-          item.insertBefore(toggler, item.getFirst());
-          var elipsis = new Element('li', {
-              'text': '...'
-          });
-          elipsis.inject(item.getElement('ul'));
+          item.prepend(toggler);
+
+          var ellipsis = jQuery('<li>&hellip;</li>');
+          item.find('ul').append(ellipsis);
+
           toggle_collapse.apply(toggler);
       });
       
