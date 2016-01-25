@@ -13,12 +13,14 @@
 {% endblock %}
 
 {% block usertoolbar %}
-  <div class="searchbox">
-    <form action="{% url 'ecs.core.views.submissions.all_submissions' %}" method="get" enctype="multipart/form-data">
-      <input type="text" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
-      <input type="submit" value="" title="suchen" />
-    </form>
-  </div>
+  <form action="{% url 'ecs.core.views.submissions.all_submissions' %}" method="get">
+    <div class="searchbox input-group input-group-sm">
+      <input type="text" class="form-control" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
+      <span class="input-group-btn">
+        <button class="btn btn-secondary fa fa-search" type="submit"></button>
+      </span>
+    </div>
+  </form>
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   {% get_scratchpad as scratchpad %}
   <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="scratchpad{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>

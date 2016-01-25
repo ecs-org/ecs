@@ -187,14 +187,7 @@ input[disabled] {
 }
 
 .searchbox {
-    display: block;
-    width: 190px;
-    float: left;
     margin-bottom: 10px;
-    input[type=text] {
-        display: inline-block;
-        width: 150px;
-    }
 }
 
 .breadcrumbs {
@@ -203,8 +196,7 @@ input[disabled] {
 }
 
 #userswitcher_form select {
-    width: 190px;
-    font-size: 12px;
+    width: 100%;
 }
 
 /* table border definitions */

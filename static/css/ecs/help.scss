@@ -24,29 +24,6 @@
     font-size: 14px;
     font-weight: bolder;
 }
-#help_search {
-    float: left;
-    clear: both;
-    width: 100%;
-
-    .searchbox form {
-        display: block;
-        width: 290px;
-        background: $white;
-        height: 30px;
-        padding: 10px 10px 0 0;
-    }
-
-    input[type=text] {
-        display: inline-block;
-        width: 250px;
-    }
-
-    input[type=submit] {
-        display: inline-block;
-        text-indent: -9999px;
-    }
-}
 
 #help_body {
     padding: 10px;

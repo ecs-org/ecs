@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from haystack.views import SearchView
 from haystack.forms import HighlightedSearchForm
@@ -194,7 +195,12 @@ class HelpSearchView(SearchView):
         if self.searchqueryset is not None:
             kwargs['searchqueryset'] = self.searchqueryset
 
-        return self.form_class(data, **kwargs)
+        form = self.form_class(data, **kwargs)
+        form.fields['q'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': _('Search'),
+        })
+        return form
 
 
 def search(request, *args, **kwargs):
