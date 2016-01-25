@@ -102,13 +102,13 @@
                 jQuery('.diff .inserted').show();
             });
 
-            $('save-button').addEvent('click', function(){
+            jQuery('#save-button').click(function(ev){
+                ev.preventDefault();
                 ecs.mainForm.save(true);
-                return false;
             });
-            $('submit-button').addEvent('click', function(){
+            jQuery('#submit-button').click(function(ev){
+                ev.preventDefault();
                 ecs.mainForm.submit('submit');
-                return false;
             });
 
             var submissionFormsSelect = $('id_submission_forms');
