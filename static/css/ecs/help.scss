@@ -2,15 +2,12 @@
 
 #help_top {
     display: block;
-    height: 40px;
     background: $lightblue;
     border-bottom: 1px solid #B5CFDF;
 }
 #help_logo {
     float: left;
     display: block;
-    width: 60px;
-    height: 20px;
     background: $white;
     padding: 10px;
     border-right: 1px solid #B5CFDF;
@@ -64,45 +61,24 @@
     font-weight: lighter;
 }
 
-.help_overview a {
-    position: absolute;
-    top: 8px;
-    right: 100px;
-    display: block;
+.help_overview a,
+.help_review_overview a,
+.help_search a {
+    display: inline-block;
+    margin: 8px 8px 0 0;
     border-radius: 3px;
     background-color: $lightskyblue-light;
     border: 1px solid $lightskyblue;
     padding: 3px 7px;
     font-size: 14px;
-}
-.help_review_overview a {
-    position: absolute;
-    top: 8px;
-    right: 240px;
-    display: block;
-    border-radius: 3px;
-    background-color: $lightskyblue-light;
-    border: 1px solid $lightskyblue;
-    padding: 3px 7px;
-    font-size: 14px;
+
+    &:hover {
+        text-decoration: none;
+        background: $royalblue-dark;
+        color: $white;
+    }
 }
 
-.help_overview a:hover, .help_search a:hover, .help_review_overview a:hover {
-    text-decoration: none;
-    background: $royalblue-dark;
-    color: $white;
-}
-.help_search a {
-    position: absolute;
-    top: 8px;
-    right: 30px;
-    display: block;
-    border-radius: 3px;
-    background-color: $lightskyblue-light;
-    border: 1px solid $lightskyblue;
-    padding: 3px 7px;
-    font-size: 14px;
-}
 #help_content h2,
 #help_preview h2 {
     display: block;
@@ -115,7 +91,6 @@
 
 #help_nav {
     padding: 5px 20px;
-    height: 15px;
     background: #eee;
     font-size: 14px;
     border-bottom: 1px solid #ddd;
@@ -129,13 +104,6 @@
 #help_nav .help_review_status.review_fail {
     color: $red;
 }
-.nav_left {
-    float: left;
-}
-.nav_right {
-    display: block;
-    float: right;
-}
 #help_content {
     margin: 10px;
     max-width: 900px;
@@ -145,16 +113,9 @@
     margin: 0 0 15px 20px;
 }
 #help p,
-#help_preview p,
-.help_edit,
-#help_content .location {
+#help_preview p {
     display: block;
     margin-bottom: 10px;
-}
-.help_edit,
-#help_content .location {
-    float: left;
-    margin-right: 10px;
 }
 
 .max_twenty {
@@ -213,10 +174,6 @@
         font-size: 14px;
         width: 100%;
         height: 100%;
-    }
-
-    .location {
-        color: $grey-40;
     }
 
     table {
