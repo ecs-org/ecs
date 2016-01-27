@@ -39,22 +39,19 @@ class Version(tuple):
                 return -1
         return 0
 
-def parse_ua(fn):
-    @wraps(fn)
-    def _inner(ua_str):
-        ua = httpagentparser.detect(ua_str)
-        for x in ('browser', 'platform', 'flavor'):
-            if x in ua and 'version' in ua[x]:
-                ua[x]['version'] = Version(ua[x]['version'])
-        return fn(ua)
-    return _inner
+def parse_ua(ua_str):
+    ua = httpagentparser.detect(ua_str)
+    for x in ('browser', 'platform', 'flavor'):
+        if x in ua and 'version' in ua[x]:
+            ua[x]['version'] = Version(ua[x]['version'])
+    return ua
 
 def supported_starting(name, version, tmp_unsupported=None):
     version = Version(version)
     tmp_unsupported = tmp_unsupported or []
 
-    @parse_ua
     def _fn(ua):
+        ua = parse_ua(ua)
         if 'browser' in ua and 'name' in ua['browser'] and 'version' in ua['browser']:
             b = ua['browser']
             if b['name'] == name:
@@ -66,8 +63,8 @@ def supported_starting(name, version, tmp_unsupported=None):
                     return BROWSER_SUPPORT_NO
     return _fn
 
-@parse_ua
 def android_quirks(ua):
+    ua = parse_ua(ua)
     if 'browser' in ua and 'platform' in ua:
         b = ua['browser']
         if b.get('name', None) == 'AndroidBrowser':
@@ -76,8 +73,8 @@ def android_quirks(ua):
                 platform.get('version',  Version('0')) >= '3.2':
                 return BROWSER_SUPPORT_OK
 
-@parse_ua
 def crawler_detected(ua):
+    ua = parse_ua(ua)
     if 'bot' in ua and ua['bot'] == True:
         return BROWSER_SUPPORT_CRAWLER
 
