@@ -75,12 +75,12 @@ def android_quirks(ua):
 
 def crawler_detected(ua):
     ua = parse_ua(ua)
-    if 'bot' in ua and ua['bot'] == True:
+    if ua.get('bot', False):
         return BROWSER_SUPPORT_CRAWLER
 
 def crawler_quirks(ua_str):
     ua_str = ua_str.lower()
-    bots = ('googlebot', 'yahoo! slurp', 'msnbot', 'bingbot', 'hetzner system monitoring')
+    bots = ('yahoo! slurp', 'msnbot', 'hetzner system monitoring')
 
     if any(bot in ua_str for bot in bots):
         return BROWSER_SUPPORT_CRAWLER
