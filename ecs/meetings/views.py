@@ -4,7 +4,6 @@ import hashlib
 import os
 import os.path
 from collections import OrderedDict
-from functools import cmp_to_key
 
 from django.conf import settings
 from django.http import FileResponse, HttpResponse, Http404
@@ -143,16 +142,9 @@ def tops(request, meeting=None):
         else:
             open_tops[bms] = [top]
 
-    def board_member_cmp(a, b):
-        if not a:
-            return 1
-        if not b:
-            return -1
-        return a < b
-
     open_tops = OrderedDict(
         (k, open_tops[k])
-        for k in sorted(open_tops.keys(), key=cmp_to_key(board_member_cmp))
+        for k in sorted(open_tops.keys(), key=lambda u: str(u))
     )
 
     return render_html(request, 'meetings/tabs/tops.html', {
