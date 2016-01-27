@@ -137,6 +137,18 @@ class ListDiffNode(DiffNode):
         self._prepare()
         
     def _prepare(self):
+        differ = None
+        if self.old:
+            differ = _differs[self.old[0].__class__]
+        elif self.new:
+            differ = _differs[self.new[0].__class__]
+
+        if differ:
+            fields = differ.get_field_names()
+            key = lambda x: [getattr(x, f) for f in fields]
+            self.old = sorted(self.old, key=key)
+            self.new = sorted(self.new, key=key)
+
         diffs = []
         for old, new in zip(self.old, self.new):
             item_diff = diff_model_instances(old, new, ignore_old=self.ignore_old, ignore_new=self.ignore_new)
@@ -274,8 +286,8 @@ class ModelDiffer(object):
         if isinstance(field, models.ForeignKey):
             return diff_model_instances(old_val, new_val, model=field.rel.to, **kwargs)
         elif isinstance(new_val, Manager) or isinstance(old_val, Manager):
-            old_val = list(old_val.all().order_by('pk')) if old else []
-            new_val = list(new_val.all().order_by('pk')) if new else []
+            old_val = list(old_val.all()) if old else []
+            new_val = list(new_val.all()) if new else []
             if not old_val and not new_val:
                 return None
             return self.node_map.get(name, ListDiffNode)(old_val, new_val, **kwargs)
