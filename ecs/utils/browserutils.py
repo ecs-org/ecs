@@ -83,7 +83,7 @@ def android_quirks(ua):
 @parse_ua
 def crawler_detected(ua):
     if 'bot' in ua and ua['bot'] == True:
-            return BROWSER_SUPPORT_CRAWLER
+        return BROWSER_SUPPORT_CRAWLER
 
 def crawler_quirks(ua_str):
     ua_str = ua_str.lower()
