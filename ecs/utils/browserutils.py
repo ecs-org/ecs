@@ -49,10 +49,6 @@ def parse_ua(fn):
         return fn(ua)
     return _inner
 
-@parse_ua
-def print_ua(ua):
-    print(ua)
-
 def supported_starting(name, version, tmp_unsupported=None):
     version = Version(version)
     tmp_unsupported = tmp_unsupported or []
