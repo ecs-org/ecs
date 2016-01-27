@@ -29,16 +29,6 @@ class Version(tuple):
         instance = super(Version, cls).__new__(cls, version)
         return instance
 
-    def __cmp__(self, other):
-        if isinstance(other, str):
-            other = Version(other)
-        for i in range(len(other)):
-            if self[i] > other[i]:
-                return +1
-            elif self[i] < other[i]:
-                return -1
-        return 0
-
 def parse_ua(ua_str):
     ua = httpagentparser.detect(ua_str)
     for x in ('browser', 'platform', 'flavor'):
