@@ -94,11 +94,12 @@ def crawler_quirks(ua_str):
 
 # browser filtering rules; order is significant
 BROWSER_FILTER_RULES = (
-    supported_starting('Firefox', '4'),
-    supported_starting('Chrome', '10'),
+    supported_starting('Firefox', '28'),
+    supported_starting('Chrome', '29'),
     android_quirks,
-    supported_starting('Safari', '5'),
-    supported_starting('Microsoft Internet Explorer', '10'),
+    supported_starting('Safari', '7'),
+    supported_starting('Microsoft Internet Explorer', '11'),
+    supported_starting('MSEdge', '20'),
     crawler_detected,
     crawler_quirks,
 )
