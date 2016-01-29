@@ -286,13 +286,17 @@
     {{ block.super }}
     <script type="text/javascript"> 
         jQuery(function(){
+            ecs.setupForms();
             ecs.setupWidgets();
 
-            var reviewToolbarItems = [];
-
-            {% if user|has_flag:'is_internal' %}
-                reviewToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
-            {% endif %}
+            var reviewToolbarItems = [
+                {% if user|has_flag:'is_internal' %}
+                    ecs.textarea.toolbarItems.boilerplate(
+                        "{% trans 'Insert Boilerplate' %}",
+                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                    )
+                {% endif %}
+            ];
 
             $$('form.review .CharField textarea').each(function(textarea){
                 ecs.textarea.installToolbar(textarea, reviewToolbarItems);
@@ -305,23 +309,17 @@
             {% endif %}
 
 
-            var review_save_buttons = $$('.header_actions')[0].getElements('a.review[id^=save_]');
-            review_save_buttons.each(function(el){
-                var tab_name = el.id.substring('save_'.length);
-                el.addEvent('click', function(){
-                    $(tab_name).getElement('input[type="submit"][name="save"]').click();
-                    return false;
-                });
-            }, this);
+            jQuery('.header_actions a.review[id^=save_]').click(function(ev) {
+                ev.preventDefault();
+                var tab = jQuery(this).attr('id').substring('save_'.length);
+                jQuery('#' + tab).find('input[type="submit"][name="save"]').click();
+            });
 
-            var review_close_buttons = $$('.header_actions')[0].getElements('a.review[id^=close_]');
-            review_close_buttons.each(function(el){
-                var tab_name = el.id.substring('close_'.length);
-                el.addEvent('click', function(){
-                    $(tab_name).getElement('input[type="submit"][name="complete_task"]').click();
-                    return false;
-                });
-            }, this);
+            jQuery('.header_actions a.review[id^=close_]').click(function(ev) {
+                ev.preventDefault();
+                var tab = jQuery(this).attr('id').substring('close_'.length);
+                jQuery('#' + tab).find('input[type="submit"][name="complete_task"]').click();
+            });
 
             {% if review_incomplete %}
                 new MooDialog.Error('{% trans "Your review is incomplete." %}');
@@ -335,16 +333,15 @@
                 })
             {% endif %}
 
-            if (!$('id_invoice_differs_from_sponsor').hasAttribute('checked')) {
-                $('tabs-4').getElement('.fieldset_2').hide();
-            }
+            if (!jQuery('#id_invoice_differs_from_sponsor').is(':checked'))
+                jQuery('#tabs-4 .fieldset_2').hide();
 
-            $('tabs_submission').getElements('a').each(function(a){
-                var container = a.getAttribute('href').split('#', 2)[1];
-                $(container).getElements('input[type="checkbox"]').each(function(input){
-                    if (!input.getAttribute('checked')) {
-                        input.getParent('li.BooleanField').hide();
-                    }
+            jQuery('#tabs_submission a').each(function() {
+                var container = jQuery(jQuery(this).attr('href'));
+                container.find('input[type="checkbox"]').each(function() {
+                    var input = jQuery(this);
+                    if (!input.is(':checked'))
+                        input.parent('li.BooleanField').hide();
                 });
             });
         });

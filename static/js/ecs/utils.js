@@ -369,118 +369,60 @@ ecs.setupWidgets = function(){
     });
 };
 
-ecs.FormFieldController = new Class({
-    initialize: function(fields, options){
-        fields = fields.map($).erase(null);
-        if(!fields.length || !fields[0].getParent('form')){
-            return;
-        }
-        this.fields = fields;
-        if(options.disable){
-            this.setDisabled(true);
-        }
-        this.auto = options.auto || function(values){
-            if(!values.length){
-                return;
-            }
-            var autoValue = values.some(function(x){ return !!x;})
-            for(var i=0;i<this.fields.length;i++){
-                this.setValue(i, autoValue);
-            }
-        };
-        this.sources = [];
-        if(options.sources){
-            options.sources.each(function(el){
-                el = $(el);
-                this.sources.push(el);
-                el.addEvent('change', this.onChange.bind(this));
-                if(options.sourceFieldClass){
-                    el.addClass(options.sourceFieldClass);
-                }
-            }, this);
-        }
-        this.toggleTab = options.toggleTab;
-        if(this.toggleTab){
-            this.fields.each(function(f){
-                f.addEvent('change', this.onFieldValueChange.bind(this));
-            }, this);
-            this.onFieldValueChange(null, true);
-        }
-        this.onChange(null, true);
-    },
-    requireField: function(f, enable){
-        var li = f.getParent('li');
-        var label = li.getChildren('label')[0];
-        if(enable && !li.hasClass('required')){
-            li.addClass('required');
-            var star = new Element('span', {'class': 'star'});
-            star.innerHTML = '*';
-            var paperform_number = label.getChildren('.paperform_number')[0];
-            if(paperform_number){
-                star.injectBefore(paperform_number);
-            } else {
-                star.inject(label, 'bottom');
-            }
-        } else if(!enable && li.hasClass('required')){
-            li.removeClass('required');
-            label.getChildren('.star').each(function(s){
-                s.dispose();
-            });
-            li.getChildren('.errorlist').each(function(e){
-                e.hide();
-            });
-        }
-    },
-    onFieldValueChange: function(e, initial){
-        if(this.toggleTab){
-            var enable = this.getValues().some(function(x){ return !!x;});
-            this.toggleTab.tab.setDisabled(!enable);
-            if(this.toggleTab.requiredFields){
-                this.toggleTab.requiredFields.map($).each(function(f){
-                    this.requireField(f, enable);
-                }, this);
-            }
-        }
-    },
-    onChange: function(e, initial){
-        var values = this.sources.map(this.getValue, this);
-        this.auto.call(this, values, !!initial);
-    },
-    setDisabled: function(disable){
-        this.fields.each(function(f){
-            if(disable){
-                f.setProperty("disabled", "disabled");
-            }
-            else{
-                f.removeProperty("disabled");
-            }
-        });
-    },
-    getValues: function(){
-        return this.fields.map(this.getValue, this);
-    },
-    getValue: function(field){
-        if(field.type == 'checkbox'){
-            return field.checked;
-        }
-        return field.value;
-    },
-    setValue: function(i, val){
-        var f = this.fields[i];
-        if(f.type == 'checkbox'){
-            f.checked = !!val;
-        }
-        else{
-            f.value = val;
-        }
-        f.fireEvent('change');
-    },
-    setValues: function(values){
-        values.each(function(val, i){
-            this.setValue(i, val);
-        }, this);
+ecs.FormFieldController = function(options) {
+    this.fields = jQuery(options.fields);
+
+    if (options.disable)
+        this.setDisabled(true);
+
+    this.auto = options.auto || function() {
+        this.fields.prop('checked', this.sources.is(':checked'));
+        this.fields.change();
+    };
+
+    this.sources = jQuery(options.sources);
+    this.sources.change((function(ev) {
+        this.auto.apply(this);
+    }).bind(this));
+    if (options.sourceFieldClass)
+        this.sources.addClass(options.sourceFieldClass);
+
+    this.toggleTab = options.toggleTab;
+    if (this.toggleTab) {
+        this.fields.change(this.onFieldValueChange.bind(this));
+        this.onFieldValueChange(null);
     }
-});
+
+    this.auto.apply(this);
+};
+ecs.FormFieldController.prototype = {
+    requireField: function(f, enable) {
+        var li = f.parents('li');
+        li.toggleClass('required', enable);
+        if (!enable)
+            li.find('label .errorlist').hide();
+    },
+    onFieldValueChange: function(ev) {
+        var enable = this.getValues().some(function(x) { return !!x;});
+        this.toggleTab.tab.setDisabled(!enable);
+        if (this.toggleTab.requiredFields)
+            this.requireField(jQuery(this.toggleTab.requiredFields), enable);
+    },
+    setDisabled: function(disable) {
+        this.fields.prop('disabled', disable);
+    },
+    getValues: function() {
+        return this.fields.map((function(i, el) {
+            return this.getValue(el);
+        }).bind(this)).get();
+    },
+    getValue: function(field) {
+        field = jQuery(field);
+        if (field.attr('type') == 'checkbox')
+            return field.is(':checked');
+        return field.val();
+    }
+};
 
 ecs.setupMessagePopup = function(container, prefix) {
     container = $(container);
@@ -498,7 +440,7 @@ ecs.setupMessagePopup = function(container, prefix) {
         var value = checked_input.value;
         var receiver_prefix = id_prefix + 'receiver_';
 
-        ['ec', 'involved', 'person'].each(function(x){
+        ['ec', 'involved', 'person'].each(function(x) {
             var el = container.getElement(receiver_prefix+x);
             if (x == value) {
                 if (el) {

@@ -142,14 +142,17 @@
                 submissionFormSelect.fireEvent('change');
             }
 
-            jQuery('.upload_container').load('{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
+            jQuery('.upload_container').load(
+                '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
 
-            if ($('id_study_started')) {
-                new ecs.FormFieldController(['id_reason_for_not_started'], {
-                    sources: ['id_study_started'],
-                    auto: function(values, initial){
-                        this.requireField($('id_reason_for_not_started'), !values[0]);
-                        this.setDisabled(values[0]);
+            if (jQuery('#id_study_started').length) {
+                new ecs.FormFieldController({
+                    fields: '#id_reason_for_not_started',
+                    sources: '#id_study_started',
+                    auto: function() {
+                        var started = this.sources.is(':checked');
+                        this.requireField(this.fields, !started);
+                        this.setDisabled(started);
                     }
                 });
             }

@@ -54,6 +54,8 @@
     {{ block.super }}
     <script type="text/javascript"> 
         jQuery(function(){
+            var setup = ecs.setupForms();
+
             var formsets = [
                 ['{{ measure_formset.prefix }}', '{% trans "Add new measure" %}'],
                 ['{{ routinemeasure_formset.prefix }}', '{% trans "Add new measure" %}'],
@@ -68,30 +70,147 @@
                 });
             });
 
-            new ecs.FormFieldController([
-                    'id_invoice_name', 'id_invoice_contact_gender', 'id_invoice_contact_title', 'id_invoice_contact_first_name',
-                    'id_invoice_contact_last_name', 'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone',
-                    'id_invoice_fax', 'id_invoice_email', 'id_invoice_uid'
-                ], {
-                    sources: ['id_invoice_differs_from_sponsor'],
-                    auto: function(values, initial){
-                        var requiredFields = [
-                            'id_invoice_name', 'id_invoice_contact_gender', 'id_invoice_contact_first_name', 'id_invoice_contact_last_name',
-                            'id_invoice_address', 'id_invoice_zip_code', 'id_invoice_city', 'id_invoice_phone', 'id_invoice_email'
-                        ];
+            new ecs.FormFieldController({
+                fields: '#id_project_type_reg_drug, #id_project_type_non_reg_drug',
+                sources: [],
+                toggleTab: {
+                    tab: setup.tabController.getTab('#tabs-6'),
+                    requiredFields:
+                        '#id_substance_preexisting_clinical_tries,' +
+                        '#id_submission_type,' +
+                        '#id_eudract_number,' +
+                        '#id_pharma_checked_substance,' +
+                        '#id_pharma_reference_substance'
+                }
+            });
 
-                        if(values[0]){
-                            $('tabs-4').getElement('.fieldset_2').show();
-                            this.setDisabled(false);
-                        } else {
-                            $('tabs-4').getElement('.fieldset_2').hide();
-                            this.setDisabled(true);
-                        }
+            new ecs.FormFieldController({
+                fields: '#id_project_type_reg_drug',
+                disable: true,
+                sourceFieldClass: 'subchoice',
+                sources: 'input[id^=id_project_type_reg_drug_]'
+            });
 
-                        requiredFields.map($).each(function(f){
-                            this.requireField(f, values[0]);
-                        }, this);
-                    }
+            new ecs.FormFieldController({
+                fields: '#id_project_type_medical_device',
+                disable: true,
+                sourceFieldClass: 'subchoice',
+                sources: 'input[id^=id_project_type_medical_device_]',
+                toggleTab: {
+                    tab: setup.tabController.getTab('#tabs-7'),
+                    requiredFields:
+                        '#id_medtech_checked_product,' +
+                        '#id_medtech_reference_substance,' +
+                        '#id_medtech_product_name,' +
+                        '#id_medtech_manufacturer,' +
+                        '#id_medtech_certified_for_exact_indications,' +
+                        '#id_medtech_certified_for_other_indications,' +
+                        '#id_medtech_ce_symbol,' +
+                        '#id_medtech_manual_included,' +
+                        '#id_medtech_technical_safety_regulations,' +
+                        '#id_medtech_departure_from_regulations'
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_substance_p_c_t_phase,' +
+                        '#id_substance_p_c_t_period,' +
+                        '#id_substance_p_c_t_application_type,' +
+                        '#id_substance_p_c_t_gcp_rules,' +
+                        '#id_substance_p_c_t_final_report',
+                sources: '#id_substance_preexisting_clinical_tries',
+                auto: function() {
+                    this.requireField(this.fields, this.sources.val() != 3);
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_study_plan_abort_crit',
+                sources: '#id_study_plan_interim_evaluation',
+                auto: function() {
+                    var require = this.sources.is(':checked');
+                    this.requireField(this.fields, require);
+                    this.setDisabled(!require);
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_study_plan_multiple_test_correction_algorithm',
+                sources: '#id_study_plan_multiple_test',
+                auto: function() {
+                    var require = this.sources.is(':checked');
+                    this.requireField(this.fields, require);
+                    this.setDisabled(!require);
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_study_plan_dataprotection_reason,' +
+                        '#id_study_plan_dataprotection_dvr',
+                sources: '#id_study_plan_dataprotection_choice',
+                auto: function() {
+                    var personal = this.sources.val() == 'personal';
+                    this.setDisabled(!personal);
+                    this.requireField(this.fields, personal);
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_study_plan_dataprotection_anonalgoritm',
+                sources: '#id_study_plan_dataprotection_choice',
+                auto: function(values){
+                    var personal = this.sources.val() == 'personal';
+                    this.setDisabled(personal);
+                    var f = jQuery('#id_study_plan_dataprotection_anonalgoritm');
+                    this.requireField(f, !personal);
+                }
+            });
+
+            new ecs.FormFieldController({
+                fields: '#id_insurance_name,' +
+                        '#id_insurance_address,' +
+                        '#id_insurance_phone,' +
+                        '#id_insurance_contract_number,' +
+                        '#id_insurance_validity',
+                sources: '#id_insurance_not_required',
+                auto: function(values){
+                    this.setDisabled(this.sources.is(':checked'));
+                }
+            });
+
+
+
+            new ecs.FormFieldController({
+                fields: '#id_invoice_name,' +
+                        '#id_invoice_contact_gender,' +
+                        '#id_invoice_contact_title,' +
+                        '#id_invoice_contact_first_name,' +
+                        '#id_invoice_contact_last_name,' +
+                        '#id_invoice_address,' +
+                        '#id_invoice_zip_code,' +
+                        '#id_invoice_city,' +
+                        '#id_invoice_phone,' +
+                        '#id_invoice_fax,' +
+                        '#id_invoice_email,' +
+                        '#id_invoice_uid',
+                sources: '#id_invoice_differs_from_sponsor',
+                auto: function() {
+                    var requiredFields =
+                        '#id_invoice_name,' +
+                        '#id_invoice_contact_gender,' +
+                        '#id_invoice_contact_first_name,' +
+                        '#id_invoice_contact_last_name,' +
+                        '#id_invoice_address,' +
+                        '#id_invoice_zip_code,' +
+                        '#id_invoice_city,' +
+                        '#id_invoice_phone,' +
+                        '#id_invoice_email';
+
+                    var require = this.sources.is(':checked');
+                    jQuery('#tabs-4 .fieldset_2').toggle(require);
+                    this.setDisabled(!require);
+                    this.requireField(jQuery(requiredFields), require);
+                }
             });
             
             jQuery('#save-button').click(function(ev){
@@ -102,6 +221,9 @@
                 ev.preventDefault();
                 ecs.mainForm.submit('validate');
             });
+
+            jQuery('.upload_container').load(
+                '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
             {% if valid and allows_resubmission %}
                 new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
