@@ -393,9 +393,7 @@ if 'ECS_WORDING' in locals() and ECS_WORDING:
 
 # django-debug-toolbar activation
 if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
-    MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',) # at bottom
-    INSTALLED_APPS +=('debug_toolbar',) # anywhere
-    DEBUG_TOOLBAR_CONFIG = {"INTERCEPT_REDIRECTS": False, 'MEDIA_URL': '/__debug__/m/',}
+    INSTALLED_APPS += ('debug_toolbar',)
     INTERNAL_IPS = ('127.0.0.1',)
 
 # hack some settings for test and runserver

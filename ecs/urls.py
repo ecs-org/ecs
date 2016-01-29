@@ -25,7 +25,7 @@ def fake404handler(request):
     return HttpResponseNotFound(t.render({'request': request}))
     
 
-urlpatterns = (
+urlpatterns = [
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
     url(r'^$', RedirectView.as_view(url=settings.LOGIN_REDIRECT_URL, permanent=False)),
 
@@ -53,7 +53,7 @@ urlpatterns = (
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.STATIC_ROOT}),
 
     url(r'^search/', include('haystack.urls')),
-)
+]
 
 
 if settings.DEBUG:
@@ -63,25 +63,19 @@ if settings.DEBUG:
     def __trigger_log(request):
         logger.warn('foo')
         return HttpResponse()
-    urlpatterns += (
+    urlpatterns += [
         url(r'^debug/empty/$', lambda request: HttpResponse()),
         url(r'^debug/404/$', fake404handler),
         url(r'^debug/500/$', lambda request: 1/0),
         url(r'^trigger-warning-log/$', __trigger_log),
-    )
+    ]
 
 if 'ecs.userswitcher' in settings.INSTALLED_APPS:
-    urlpatterns += (
+    urlpatterns += [
         url(r'^userswitcher/', include('ecs.userswitcher.urls')),
-    )
+    ]
 
 if 'rosetta' in settings.INSTALLED_APPS:
-    urlpatterns += (
+    urlpatterns += [
         url(r'^rosetta/', include('rosetta.urls')),
-    )
-
-if 'debug_toolbar' in settings.INSTALLED_APPS:
-    from debug_toolbar.views import debug_media
-    urlpatterns += (
-        url(r'^%s(.*)$' % "__debug__/m/", debug_media),
-    )
+    ]
