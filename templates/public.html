@@ -1,24 +1,23 @@
-{% extends 'base.html' %}
- {% load compress staticfiles %}
+{% extends 'shell.html' %}
+{% load compress staticfiles %}
 
 {% block htmlcss %}
-  {{ block.super }}
-  {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/public.scss' %} />
-  {% endcompress %}
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/public.scss' %} />
+    {% endcompress %}
 {% endblock %}
 
-
-{% block header %}
-{% endblock %}
-{% block sidebar %}
-{% endblock %}
-
-
-
-{% block content_prefix %}
-<div id="wrapper" style="overflow:auto;">
-  <a href="/"><img src="{% static 'images/logo.png' %}" alt="Ethik-Kommission" /></a>
+{% block htmlbody %}
+<div id="container">
+    <div id="content">
+        <div class="innerwrap">
+            {% block content %}
+                <a href="/">
+                    <img src="{% static 'images/logo.png' %}" alt="Ethik-Kommission" />
+                </a>
+            {% endblock %}
+        </div>
+    </div>
 </div>
 {% endblock %}
-

@@ -3,15 +3,16 @@
 
 {% block content %}
 
-	<form action="" method="post">
-            {% csrf_token %}
-	    
-    <p class="reg_detail"><label>Anrede</label> {% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</p>
-	  <p class="reg_detail"><label>Vorname</label> {{ data.first_name }}</p>
-    <p class="reg_detail"><label>Nachname</label> {{ data.last_name }}</p>
-    <p class="reg_detail" style="margin-bottom: 20px;"><label>E-Mail</label> {{ data.email }}</p>
-	        {{ form.as_p }}
-	    <input type="submit" value="Registrieren" />
-	</form>
+    {{ block.super }}
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <p class="reg_detail"><label>Anrede</label> {% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</p>
+        <p class="reg_detail"><label>Vorname</label> {{ data.first_name }}</p>
+        <p class="reg_detail"><label>Nachname</label> {{ data.last_name }}</p>
+        <p class="reg_detail" style="margin-bottom: 20px;"><label>E-Mail</label> {{ data.email }}</p>
+        {{ form.as_p }}
+        <input type="submit" value="Registrieren" />
+    </form>
 
 {% endblock %}

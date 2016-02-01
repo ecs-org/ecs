@@ -1,18 +1,5 @@
-{% extends 'base.html' %}
-{% load i18n compress staticfiles %}
-
-{% block htmlcss %}
-  {{ block.super }}
-  {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/public.scss' %} />
-  {% endcompress %}
-{% endblock %}
-
-
-{% block header %}
-{% endblock %}
-{% block sidebar %}
-{% endblock %}
+{% extends 'public.html' %}
+{% load i18n staticfiles %}
 
 {% block content %}
 <div id="header_public">
@@ -86,4 +73,3 @@
   </div>
 </div>
 {% endblock %}
-

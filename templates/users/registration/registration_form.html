@@ -1,6 +1,9 @@
 {% extends 'public.html' %}
 
 {% block content %}
+
+    {{ block.super }}
+
     <form action="" method="post" class="register_error">
         {% csrf_token %}
         <p>{{ form.gender.label_tag }}{{ form.gender }}
@@ -14,4 +17,5 @@
 		    {{ form.non_field_errors }}
         <input type="submit" value="Registrieren" />
     </form>
+
 {% endblock %}

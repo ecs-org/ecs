@@ -3,6 +3,8 @@
 
 {% block content %}
 
+    {{ block.super }}
+
     <form action="" method="post">
         {% csrf_token %}
         <p>Wir senden Ihnen eine E-Mail zu, die einen Link enthält, mit dem Sie Ihr Passwort zurücksetzen können.</p><br />

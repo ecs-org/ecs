@@ -2,7 +2,6 @@
 {% load i18n %}
 
 {% block content %}
-
-  <p>Eine E-Mail wurde Ihnen an die Adresse <em>{{ email }}</em> geschickt.</p>
-
+    {{ block.super }}
+    <p>Eine E-Mail wurde Ihnen an die Adresse <em>{{ email }}</em> geschickt.</p>
 {% endblock %}

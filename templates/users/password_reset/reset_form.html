@@ -3,6 +3,8 @@
 
 {% block content %}
 
+    {{ block.super }}
+
     <form action="" method="post">
         {% csrf_token %}
         <table>
