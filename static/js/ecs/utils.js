@@ -330,22 +330,20 @@ ecs.setupDocumentUploadForms = function(){
 ecs.setupForms = function(){
     var tabHeaders = $$('.tab_headers');
     var setup = {};
-    if(tabHeaders.length){
+    if (tabHeaders.length) {
         var tabController = new ecs.TabController('.tab_header_groups a');
-        var mainForm = document.getElement('.form_main');
-        var readonly = true;
-        if(mainForm.tagName == 'FORM'){
-            readonly = false;
-        }
-        if(mainForm){
+        var mainForm = jQuery('.form_main');
+        var readonly = !mainForm.is('form');
+
+        if (mainForm.length) {
             var form = ecs.mainForm = new ecs.TabbedForm(mainForm,
                 tabController, readonly ? null : 120);
             setup.mainForm = form;
         }
 
-        var ifs = $('tabs-12');
-        if (ifs) {
-            var investigatorFormset = new ecs.InvestigatorFormset(ifs, {
+        var ifs = jQuery('#tabs-12');
+        if (ifs.length) {
+            var investigatorFormset = new ecs.InvestigatorFormset(ifs.get(0), {
                 readonly: readonly
             });
         }

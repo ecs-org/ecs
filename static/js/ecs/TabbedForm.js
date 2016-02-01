@@ -1,21 +1,21 @@
-ecs.TabbedForm = new Class({
-    initialize: function(form, tabController, autosaveInterval) {
-        this.form = jQuery(form);
-        this.autosaveDisabled = false;
+ecs.TabbedForm = function(form, tabController, autosaveInterval) {
+    this.form = jQuery(form);
+    this.autosaveDisabled = false;
 
-        tabController.tabs.forEach(function(tab) {
-            if (tab.panel.find('.errors').length) {
-                tab.toggleClass('errors', true);
-                tab.group.header.toggleClass('errors', true);
-            }
-        });
-
-        this.lastSaveData = this.form.serialize();
-        if (autosaveInterval) {
-            setInterval(this.autosave.bind(this), autosaveInterval * 1000);
-            jQuery(window).unload(this.autosave.bind(this));
+    tabController.tabs.forEach(function(tab) {
+        if (tab.panel.find('.errors').length) {
+            tab.toggleClass('errors', true);
+            tab.group.header.toggleClass('errors', true);
         }
-    },
+    });
+
+    this.lastSaveData = this.form.serialize();
+    if (autosaveInterval) {
+        setInterval(this.autosave.bind(this), autosaveInterval * 1000);
+        jQuery(window).unload(this.autosave.bind(this));
+    }
+};
+ecs.TabbedForm.prototype = {
     _save: function(callback, extraParameter) {
         var currentData = this.form.serialize();
 
@@ -58,4 +58,4 @@ ecs.TabbedForm = new Class({
             return this.form.submit();
         this.form.find('input[type=submit][name=' + name + ']').click();
     }
-});
+};
