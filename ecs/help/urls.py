@@ -25,7 +25,7 @@ urlpatterns = (
     url(r'^attachments/$', views.attachments),
     url(r'^attachments/upload/$', views.upload),
     url(r'^attachments/find/$', views.find_attachments),
-    url(r'^attachments/delete/$', views.delete_attachment),
+    url(r'^attachments/(?P<attachment_pk>\d+)/delete/$', views.delete_attachment),
     url(r'^attachment/(?P<attachment_pk>\d+)/download/$', views.download_attachment),
     
     url(r'^screenshot/$', views.screenshot),

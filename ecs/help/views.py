@@ -268,8 +268,8 @@ def upload(request):
 
 
 @user_flag_required('is_help_writer')
-def delete_attachment(request):
-    attachment = get_object_or_404(Attachment, pk=request.POST.get('pk', None))
+def delete_attachment(request, attachment_pk):
+    attachment = get_object_or_404(Attachment, pk=attachment_pk)
     attachment.delete()
     return HttpResponse('OK')
 

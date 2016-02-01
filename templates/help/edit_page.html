@@ -15,10 +15,10 @@
         <div class="title">{{ form.title }}</div>
         <div class="text">
             <div class="options">
-            <a href="" id="ReST_italic"><em>kursiv</em></a> 
-            | <a href="" id="ReST_bold"><strong>fett</strong></a>
-            | <a href="" id="ReST_heading">Überschrift</a>
-            | <a href="" id="ReST_preview">Vorschau</a>
+            <a id="ReST_italic" class="fa fa-italic" title="Italic"></a>
+            | <a id="ReST_bold" class="fa fa-bold" title="Bold"></a>
+            | <a id="ReST_heading" class="fa fa-header" title="Header"></a>
+            | <a id="ReST_preview">Vorschau</a>
             </div>
             {{ form.text }}
         </div>
@@ -32,97 +32,126 @@
 
 {% block jsbottom %}
 {{ block.super }}
-<script type="text/javascript" src={% static 'js/restructuredtext.js' %}></script>
 <script type="text/javascript">
     jQuery(function(){
-        var textarea = $('id_text');
-        var r = new ReST(textarea);
-        $('ReST_italic').addEvent('click', function(){r.makeItalic(); return false;});
-        $('ReST_bold').addEvent('click', function(){r.makeBold(); return false;});
-        $('ReST_heading').addEvent('click', function(){r.makeHeading(); return false;});
-        $('ReST_preview').addEvent('click', function(){
-            var preview = $('help_preview');
-            if(preview){
-                preview.dispose();
-                return false;
+        var textarea = jQuery('#id_text');
+
+        var csrftoken = document.cookie.split('; ')
+            .find(function(el) {
+                return el.startsWith('csrftoken=');
+            })
+            .split('=', 2)[1];
+
+        jQuery('#ReST_italic').click(function(ev) {
+            ev.preventDefault();
+            var text = textarea.val(), t = textarea.get(0);
+            var s = t.selectionStart, e = t.selectionEnd;
+            text = text.slice(0, s) + '*' + text.slice(s, e) + '*' + text.slice(e);
+            textarea.val(text);
+            textarea.focus();
+            t.setSelectionRange(s + 1, e + 1);
+        });
+        jQuery('#ReST_bold').click(function(ev) {
+            ev.preventDefault();
+            var text = textarea.val(), t = textarea.get(0);
+            var s = t.selectionStart, e = t.selectionEnd;
+            text = text.slice(0, s) + '**' + text.slice(s, e) + '**' + text.slice(e);
+            textarea.val(text);
+            textarea.focus();
+            t.setSelectionRange(s + 2, e + 2);
+        });
+        jQuery('#ReST_heading').click(function(ev) {
+            ev.preventDefault();
+            var text = textarea.val(), t = textarea.get(0);
+            var s = t.selectionStart, e = t.selectionEnd;
+            var header = text.slice(s, e).trim();
+
+            if (!header)
+                return;
+
+            text = text.slice(0, s) + '\n\n' + header + '\n' + '~'.repeat(header.length) + '\n' + text.slice(e);
+            textarea.val(text);
+            textarea.focus();
+            t.setSelectionRange(s + 2, s + 2 + header.length);
+        });
+        jQuery('#ReST_preview').click(function(ev) {
+            ev.preventDefault();
+
+            var preview = jQuery('#help_preview');
+            if (preview.length) {
+                preview.remove();
+                return;
             }
-            
-            preview = new Element('div', {id: 'help_preview'});
-            var size = textarea.getSize();
-            var pos = textarea.getPosition();
-            preview.setStyles({left: pos.x, top: pos.y, width: size.x, height: size.y});
-            var request = new Request.HTML({
+
+            preview = jQuery('<div />', {id: 'help_preview'});
+            preview.css(textarea.position());
+            preview.css({width: textarea.width(), height: textarea.height()});
+
+            jQuery.ajax({
                 url: '{% url 'ecs.help.views.preview_help_page_text' %}',
                 method: 'post',
-                data: 'text=' + encodeURIComponent(textarea.value),
-                update: preview,
-                onSuccess: function(){
-                    document.body.appendChild(preview);
+                headers: {'X-CSRFtoken': csrftoken},
+                data: {text: textarea.val()},
+                success: function(data) {
+                    jQuery('body').append(preview);
+                    preview.html(data);
                 }
             });
-            request.send();
-            return false;
         });
-        textarea.setAttribute('rows', 20);
         
         var attachments = {
-            input: $('help_attachments_filter_input'),
-            interval: null,
-            query: '',
+            input: jQuery('#help_attachments_filter_input'),
             refresh: function(force){
-                if(!force && this.input.value == this.query){
+                if (!force && this.input.val() == this.query)
                     return;
-                }
-                this.query = this.input.value;
+
+                this.query = this.input.val();
                 var self = this;
-                var request = new Request.HTML({
-                    update: $$('#help_attachments > .list')[0],
-                    url: '{% url 'ecs.help.views.find_attachments' %}?q=' + encodeURIComponent(this.query),
-                    onSuccess: function(){
-                        $$('#help_attachments > .list > div').each(function(d){
-                            var deleteLink = new Element('a', {html: 'delete'});
-                            deleteLink.addEvent('click', function(){
-                                var request = new Request({
-                                    url: '{% url 'ecs.help.views.delete_attachment' %}',
-                                    data: 'pk=' + d.id.split('_')[1],
-                                    onSuccess: function(){
-                                        self.refresh(true)
-                                    }
-                                });
-                                request.send();
-                                return false;
-                            });
-                            d.grab(deleteLink);
-                            new Drag.Move(d, {
-                                droppables: '#id_text',
-                                onStart: function(element){
-                                    this._startPos = element.getPosition();
-                                },
-                                onDrop: function(element){
-                                    textarea.focus();
-                                    textarea.insertAtCursor('\n.. image:: ' + element.getElement('span.slug').innerHTML);
-                                    element.setStyles({'position': 'relative', 'top': '0px', 'left': '0px'});
+
+                jQuery.ajax({
+                    url: '{% url 'ecs.help.views.find_attachments' %}',
+                    method: 'get',
+                    data: {q: this.query},
+                    success: function(data) {
+                        var list = jQuery('#help_attachments > .list');
+                        list.html(data);
+                        list.find('a').click(function(ev) {
+                            ev.preventDefault();
+                            jQuery.get({
+                                url: jQuery(this).attr('href'),
+                                success: function() {
+                                    self.refresh(true);
                                 }
                             });
                         });
+                        list.find('img').click(function(ev) {
+                            ev.preventDefault();
+                            var slug = jQuery(this).parent().data('slug');
+
+                            var text = textarea.val(), t = textarea.get(0);
+                            var s = t.selectionStart, e = t.selectionEnd;
+                            var ref = '\n.. image:: ' + slug + '\n';
+                            text = text.slice(0, s) + ref + text.slice(e);
+                            textarea.val(text);
+                            textarea.focus();
+                            t.setSelectionRange(s + 1, s + ref.length - 1);
+                        });
                     }
                 });
-                request.send();
             },
             setup: function(){
                 var self = this;
-                this.input.addEvent('focus', function(){
-                    this.interval = setInterval(function(){
+                this.input.focus(function(ev) {
+                    this.interval = setInterval(function() {
                         self.refresh();
                     }, 500);
                 });
-                this.input.addEvent('blur', function(){
+                this.input.blur(function(ev) {
                     clearInterval(self.interval);
                 });
-                this.input.addEvent('keydown', function(e){
-                    if(e.key == 'enter'){
+                this.input.keydown(function(ev){
+                    if(ev.key == 'Enter')
                         self.refresh();
-                    }
                 });
                 this.refresh(true);
             }
