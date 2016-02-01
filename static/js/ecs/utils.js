@@ -89,16 +89,6 @@ ecs.setupFormFieldHelpers = function(context){
             })).inject(input, 'after');
         }
     });
-    /*
-    context.getChildren('input[type=text],input[type=checkbox],textarea,select').each(function(input){
-        input.addEvent('focus', function(){
-            field.addClass('focus');
-        });
-        input.addEvent('blur', function(){
-            field.removeClass('focus');
-        });
-    });
-    */
 };
 
 ecs.setupAutocomplete = function(context){
@@ -526,14 +516,6 @@ ecs.setupForms = function(){
     
     ecs.setupFormFieldHelpers();
 
-    /* XXX: cleanup the following code (FMD2) */
-    $$('a.submit_main_form').each(function(link){
-        link.addEvent('click', function(){
-            form.submit('submit');
-            return false;
-        });
-    });
-    
     return setup;
 };
 
