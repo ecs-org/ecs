@@ -190,30 +190,6 @@
       $$('#usermenu .elements').show();
       var AccordionObject = new Accordion(toggles, content, { show: accordionitem , duration: 200});
       
-      // message popups
-      {% load communication tasks %}
-      {% fetch_messages as new_messages %}
-      {% fetch_tasks as new_tasks %}
-      var newMessages = [{% for message in new_messages %}{'sender': '{{ message.sender|escapejs }}', 'subject': '{{ message.thread.subject|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
-      var newTasks = [{% for task in new_tasks %}{'__str__': '{{ task|escapejs }}'}{% if not forloop.last %}, {% endif %}{% endfor %}];
-
-      var message_popup_body = '';
-      newMessages.each(function(msg) {
-        message_popup_body += '<strong>{subject}</strong> - {sender}<br />\n'.substitute(msg);
-      });
-
-      {% if new_messages|length %}
-        ecs.messages.alert('{% trans "New Messages" %} ({{ new_messages|length }})', message_popup_body);
-      {% endif %}
-
-      newTasks.each(function(task){
-          ecs.messages.alert('Neue Aufgabe', '<strong>{__str__}</strong>'.substitute(task));
-      });
-      
-      {% for message in messages %}
-          ecs.messages.alert('{{ message.tags|escapejs }}', '{{ message|escapejs }}')
-      {% endfor %}
-      
       window.openHelpPage = function(e){
           {% if request.tracking_data.view %}
           var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
