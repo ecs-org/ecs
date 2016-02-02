@@ -81,9 +81,8 @@ def login(request, *args, **kwargs):
         profile.session_key = request.session.session_key
         profile.save()
 
-        if Session.objects.filter(session_key=old_session_key).update(expire_date=timezone.now()):
-            profile.single_login_enforced = True
-            profile.save()
+        Session.objects.filter(session_key=old_session_key).update(expire_date=timezone.now())
+
     return response
 
 

@@ -26,7 +26,6 @@ class UserProfile(models.Model):
     is_developer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
-    single_login_enforced = models.BooleanField(default=False)
 
     gender = models.CharField(max_length=1, choices=(('f', _('Ms')), ('m', _('Mr'))))
     title = models.CharField(max_length=30, blank=True)
@@ -49,14 +48,6 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return str(self.user)
-
-    def get_single_login_enforced(self):
-        if self.single_login_enforced:
-            self.single_login_enforced = False
-            self.save()
-            return True
-        else:
-            return False
 
     def has_explicit_workflow(self):
         return self.user.groups.exclude(name__in=['External Reviewer', 'userswitcher_target', 'translators']).exists()

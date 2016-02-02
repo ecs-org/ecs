@@ -190,11 +190,6 @@
       $$('#usermenu .elements').show();
       var AccordionObject = new Accordion(toggles, content, { show: accordionitem , duration: 200});
       
-      // single login popup
-      {% if user.profile.get_single_login_enforced %}
-        ecs.messages.alert('{% trans 'Single Login enforced' %}', '{% trans 'The old session is now void.' %}');
-      {% endif %}
-      
       // message popups
       {% load communication tasks %}
       {% fetch_messages as new_messages %}

@@ -2515,14 +2515,6 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/core.html:236
-msgid "Single Login enforced"
-msgstr "Einzelanmeldung erzwungen"
-
-#: templates/core.html:236
-msgid "The old session is now void."
-msgstr "Ihre vorherige Session ist nun ungültig"
-
 #: templates/core.html:252
 msgid "New Messages"
 msgstr "Neue Nachrichten"
