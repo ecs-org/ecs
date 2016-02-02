@@ -16,6 +16,7 @@ from django.views.decorators.http import require_POST
 from django.core import signing
 from django.utils import timezone
 from django.contrib.sessions.models import Session
+from django.contrib import messages
 
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
@@ -297,18 +298,16 @@ def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     was_signing_user = user.groups.filter(name='EC-Signing Group').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
-    saved = False
     if request.method == 'POST' and form.is_valid():
         user = form.save()
-        saved = True
         is_signing_user = user.groups.filter(name='EC-Signing Group').exists()
         if is_signing_user and not was_signing_user:
             for u in User.objects.filter(groups__name='EC-Signing Group'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
+        messages.success(request, _('The change of the user has been saved.'))
 
     return render(request, 'users/details.html', {
         'form': form,
-        'saved': saved,
     })
 
 @user_group_required('EC-Office', 'EC-Executive Board Group')

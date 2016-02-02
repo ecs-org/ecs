@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load version_tag staticfiles %}
+{% load alert version_tag staticfiles %}
 
 {% block htmlbody %}
 <div id="container">
@@ -17,6 +17,15 @@
 
     <div id="content">
         <div class="innerwrap">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.level|level2alert }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
             {% block content %}
             {% endblock %}
         </div>

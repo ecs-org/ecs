@@ -38,7 +38,7 @@
 </div>
 
 {% block extra_hint %}{% endblock %}
-<div class="form form_main document_upload">
+<div class="form document_upload">
     <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <ol>

@@ -16,6 +16,7 @@ from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
@@ -344,19 +345,17 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     user = get_object_or_404(User, pk=user_pk)
     formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
-    saved = False
     if formset.is_valid():
         for constraint in formset.save(commit=False):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
         formset = UserConstraintFormSet(None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
-        saved = True
+        messages.success(request, _('The constraints have been saved. The constraints will be taken into account when optimizing the timetable.'))
     return render(request, 'meetings/constraints/user_form.html', {
         'meeting': meeting,
         'participant': user,
         'formset': formset,
-        'saved': saved,
     })
 
 @readonly(methods=['GET'])
@@ -746,13 +745,12 @@ def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
     expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting).distinct())
-    experts_saved = False
 
     if request.method == 'POST' and expert_formset.is_valid() and request.user.profile.is_internal:
         submitted_form = request.POST.get('submitted_form')
         if submitted_form == 'expert_formset' and expert_formset.is_valid():
             active = 'experts'
-            experts_saved = True
+            messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))
             for amc in expert_formset.save(commit=False):
                 previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
                 amc.save()
@@ -799,7 +797,6 @@ def meeting_details(request, meeting_pk=None, active=None):
 
         'meeting': meeting,
         'expert_formset': expert_formset,
-        'experts_saved': experts_saved,
         'active': active,
     })
 

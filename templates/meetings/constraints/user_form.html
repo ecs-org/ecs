@@ -29,9 +29,6 @@ jQuery(function(){
         prefix: '{{ formset.prefix }}',
         canDelete: true
     });
-    {% if saved %}
-        ecs.messages.alert('{% trans 'form saved' %}', '{% trans 'The constraints have been saved. The constraints will be taken into account when optimizing the timetable.' %}');
-    {% endif %}
 });
 </script>
 {% endblock %}
