@@ -107,12 +107,12 @@
 {% block header %}
     {{ block.super }}
     {% if request.task_management.form %}
+        <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
         <div id="headerworkflow">
         {% with request.task_management.form as form %}
             {% include 'tasks/manage_task.html' %}
         {% endwith %}
         </div>
-        <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
     {% endif %}
 {% endblock %}
 
@@ -173,16 +173,7 @@
     
     jQuery(function(){
       {% if request.task_management.form %}
-          var headerworkflow = $('headerworkflow');
-          var w = new ecs.widgets.TaskWidget(headerworkflow, {});
-          var toggle_headerworkflow = $('toggle_headerworkflow');
-          toggle_headerworkflow.addEvent('click', function(){
-            var visible = headerworkflow.isVisible();
-            headerworkflow.toggle();
-            toggle_headerworkflow.toggleClass('collapsed', !visible);
-            toggle_headerworkflow.innerHTML = visible ? '&gt;' : '&lt;';
-            w.updateContentHeight();
-          });
+          ecs.init_task_form();
       {% endif %}
 
       // accordions
