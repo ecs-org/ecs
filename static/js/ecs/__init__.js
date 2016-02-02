@@ -7,12 +7,3 @@ var ecs = window.ecs = {
         duration: 10000
     })
 };
-
-$extend(ecs, {
-    Element: {
-        setClass: function(cls, set){
-            this[set ? 'addClass' : 'removeClass'](cls);
-        }
-    }
-});
-Element.implement(ecs.Element);
