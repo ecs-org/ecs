@@ -1,5 +1,5 @@
 if(!window.console){
-    window.console = {log: $empty};
+    window.console = {log: function() {}};
 }
 
 var ecs = window.ecs = {
