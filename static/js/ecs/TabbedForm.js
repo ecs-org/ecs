@@ -16,41 +16,32 @@ ecs.TabbedForm = function(form, tabController, autosaveInterval) {
     }
 };
 ecs.TabbedForm.prototype = {
-    _save: function(callback, extraParameter) {
+    _save: function(extraParameter) {
         var currentData = this.form.serialize();
-
         this.lastSaveData = currentData;
 
-        if (!callback) {
-            callback = function() {
-                ecs.messages.alert('_save', 'Das Formular wurde gespeichert');
-            };
-        }
-
-        if (!extraParameter)
-            extraParameter = '_save';
-
-        var request = new Request({
+        jQuery.post({
             url: window.location.href,
-            method: 'post',
             data: currentData + '&' + extraParameter + '=' + extraParameter,
-            onSuccess: callback,
+            success: function() {
+                var now = new Date();
+                jQuery('#header .last_save').text(
+                    'Last save: ' +
+                    ('0' + now.getHours()).slice(-2) + ':' +
+                    ('0' + now.getMinutes()).slice(-2)
+                );
+            },
         });
-        request.send();
     },
     save: function() {
-        this._save(function(responseText, response) {
-            ecs.messages.alert('Speichern', 'Das Formular wurde gespeichert.');
-        }, 'save');
+        this._save('save');
     },
     autosave: function() {
         if (this.autosaveDisabled ||
             this.lastSaveData == this.form.serialize())
             return;
 
-        this._save(function(responseText, response) {
-            ecs.messages.alert('Autosave', 'Das Formular wurde gespeichert.');
-        }, 'autosave');
+        this._save('autosave');
     },
     submit: function(name) {
         this.autosaveDisabled = true;
