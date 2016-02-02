@@ -99,18 +99,6 @@
           </ul>
         </li>
     {% endif %}
-    {% comment %}
-    <li>
-      <span class="togglers">{% trans "Recent Activities" %}</span>
-      {% load tracking %}
-      {% get_tracking_history as history %}
-      <ul class="elements" style="font-size:0.9em">
-          {% for entry in history %}
-              <li><a href="{{ entry.url }}">{{ entry.timestamp|date:'H:i:s' }} Uhr: {{ entry.title }} ({{ entry.view.path }})</a></li>
-          {% endfor %}
-      </ul>
-    </li>
-    {% endcomment %}
   </ul>
 {% endblock %}
 
