@@ -1,15 +1,8 @@
 
-ecs.clearFormFields = function(context){
-    context = jQuery(context || document.body);
-    context.find('input[type=text], textarea').val('');
-    context.find('.NullBooleanField > select').val(1);
-    context.find('span.errors').remove();
-};
-
 ecs.datepickerInputSelector = '.DateField > input, .DateTimeField > input[name$=_0]';
 
 ecs.setupFormFieldHelpers = function(context){
-    context = $(context || document.body);
+    context = jQuery(context || document.body).get(0);  /* XXX */
 
     var datepickerTogglers = [];
     context.getElements(ecs.datepickerInputSelector).each(function(input){
@@ -73,162 +66,114 @@ ecs.setupFormFieldHelpers = function(context){
     });
 };
 
-ecs.InvestigatorFormset = new Class({
-    Implements: [Options],
-    options: {
-        readonly: false,
-        investigatorClass: 'investigator',
-        addButtonClass: 'add_centre',
-        investigatorEmployeeFormsetClass: 'investigatoremployee_formset',
-        investigatorTranslation: 'Zentrum',
-        jumpListClass: 'investigator_list',
-        addButtonText: 'Weiteres Zentrum hinzufügen',
-        investigatorHeaderClass: 'investigator_header'
-    },
-    initialize: function(container, options) {
-        this.container = $(container);
-        this.setOptions(options);
+ecs.InvestigatorFormset = function(container, readonly) {
+    this.container = container
+    this.readonly = readonly;
 
-        this.inline_formset = new ecs.InlineFormSet(this.container, {
-            prefix: 'investigator',
-            formSelector: '.investigator',
-            addButton: false,
-            removeButton: false,
-            removeButtonText: 'Dieses Zentrum Entfernen'
-        });
-
-        if (this.inline_formset.getFormCount() > 0) {
-            this.generateJumpList();
-            this.show(0);
-        }
-
-        if(this.options.readonly){
-            return;
-        }
-        /*** read/write ***/
-
-        this.employee_formset = new ecs.InlineFormSet($$('.'+this.options.investigatorEmployeeFormsetClass), {
-            prefix: 'investigatoremployee',
-            onFormAdded: (function(form, index, added){
-                var indexField = form.getElement('input[name$=-investigator_index]');
-                indexField.value = this.inline_formset.getIndexForElement(form);
-            }).bind(this)
-        });
-
-        this.inline_formset.addEvent('formAdded', (function(form, index){
-            form.getElement('.'+this.options.investigatorEmployeeFormsetClass+' tbody').innerHTML = '';
-            this.employee_formset.addContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
-        }).bind(this));
-
-        this.inline_formset.addEvent('formRemoved', (function(form, index){
-            this.employee_formset.removeContainer(form.getElement('.'+this.options.investigatorEmployeeFormsetClass));
+    this.inline_formset = new ecs.InlineFormSet(this.container, {
+        prefix: 'investigator',
+        formSelector: '.investigator',
+        addButton: false,
+        removeButton: false,
+        onFormAdded: (function(form, index) {
+            form.find('.investigatoremployee_formset tbody').html('');
+            this.employee_formset.addContainer(form.find('.investigatoremployee_formset'));
+        }).bind(this),
+        onFormRemoved: (function(form, index) {
+            this.employee_formset.removeContainer(form.find('.investigatoremployee_formset'));
             this.generateJumpList();
 
-            var form_count = this.inline_formset.getFormCount();
+            var form_count = this.inline_formset.forms.length;
             this.show(form_count-1 <= index ? form_count - 1 : index);
-        }).bind(this));
-
-        this.inline_formset.addEvent('formIndexChanged', (function(form, newIndex){
-            form.getElement('.'+this.options.investigatorEmployeeFormsetClass).getElements('input[name$=-investigator_index]').each(function(indexField){
-                indexField.value = newIndex;
-            });
-        }).bind(this));
-
-    },
-    show: function(index) {
-        var i = 0;
-
-        var ul = this.container.getElement('.'+this.options.jumpListClass);
-        var offset = this.options.readonly ? 0 : 1;
-        ul.getElements('li').each(function(li){
-            if (i == index+offset) {
-                li.addClass('active');
-            } else {
-                li.removeClass('active');
-            }
-            i += 1;
-        }, this);
-
-        i = 0;
-        this.inline_formset.forms.each(function(f){
-            (i == index) ? f.show() : f.hide();
-            i += 1;
-        });
-
-        var header = this.container.getElement('.'+this.options.investigatorHeaderClass);
-        header.innerHTML = '';
-
-        var title = new Element('h3', {
-            html: this.options.investigatorTranslation + ' ' + (index + 1),
-        });
-        title.inject(header);
-
-        if (!this.options.readonly && this.inline_formset.getFormCount() > 1) {
-            var removeLink =  new Element('a', {
-                html: this.inline_formset.options.removeButtonText,
-                'class': this.inline_formset.options.removeButtonClass,
-                events: {
-                    click: this.inline_formset.remove.bind(this.inline_formset, index)
-                }
-            });
-            removeLink.inject(header);
+        }).bind(this),
+        onFormIndexChanged: function(form, index) {
+            form.find('input[name$=-investigator_index]').val(index);
         }
+    });
+
+    if (this.inline_formset.forms.length > 0) {
+        this.generateJumpList();
+        this.show(0);
+    }
+
+    if (this.readonly)
+        return;
+
+    /*** read/write ***/
+
+    this.employee_formset = new ecs.InlineFormSet('.investigatoremployee_formset', {
+        prefix: 'investigatoremployee',
+        onFormAdded: (function(form, index) {
+            var index = this.inline_formset.forms.findIndex(function(el) {
+                return el.has(form).length;
+            });
+            form.find('input[name$=-investigator_index]').val(index);
+        }).bind(this)
+    });
+};
+ecs.InvestigatorFormset.prototype = {
+    show: function(index) {
+        jQuery('.investigator_list li').each(function(i) {
+            jQuery(this).toggleClass('active', i == index);
+        });
+
+        this.inline_formset.forms.each(function(f, i){
+            f.toggle(i == index);
+        });
     },
     add: function() {
-        this.inline_formset.add.apply(this.inline_formset, [this.container]);
-        var new_form_index = this.inline_formset.getFormCount() - 1;
-        this.inline_formset.forms[new_form_index].getElements('.errors').removeClass('errors');
+        this.inline_formset.add(this.container);
+        var index = this.inline_formset.forms.length - 1;
+        this.inline_formset.forms[index].find('.errors').removeClass('errors');
         this.generateJumpList();
-        this.show(new_form_index);
+        this.show(index);
     },
     generateJumpList: function() {
-        var ul = this.container.getElement('.'+this.options.jumpListClass);
-        ul.innerHTML = '';
+        var ul = jQuery('.investigator_list');
+        ul.html('');
 
-        if (!this.options.readonly) {
-            var li = new Element('li');
-            var a = new Element('a', {
-                href: '',
-                'class': this.options.addButtonClass+' add_row',
-                html: this.options.addButtonText,
-                events: {
-                    click: (function(){
-                        this.add();
-                        return false;
+        this.inline_formset.forms.each(function(form, i){
+            var li = jQuery('<li>');
+            li.toggleClass('readonly', this.readonly);
+            li.toggleClass('errors', !!form.find('.errors').length);
+
+            var a = jQuery('<a>', {
+                html: 'Zentrum ' + (i + 1),
+                click: (function(ev){
+                    ev.preventDefault();
+                    this.show(i);
+                }).bind(this)
+            });
+            li.append(a);
+
+            if (!this.readonly && this.inline_formset.forms.length > 1) {
+                var removeLink = jQuery('<a>', {
+                    'class': 'fa fa-times-circle remove',
+                    click: (function(ev) {
+                        ev.preventDefault();
+                        this.inline_formset.remove(i)
                     }).bind(this)
-                }
-            });
-            li.inject(ul);
-            a.inject(li);
-        }
-
-        var i = 0;
-        this.inline_formset.forms.each(function(form){
-            var li = new Element('li');
-            if (this.options.readonly) {
-                li.addClass('readonly');
+                });
+                li.append(removeLink);
             }
-            if (form.getElement('.errors')) {
-                li.addClass('errors');
-            }
-            var a = new Element('a', {
-                href: '',
-                html: this.options.investigatorTranslation+' '+(i+1),
-                events: {
-                    click: (function(index){
-                        this.show(index);
-                        return false;
-                    }).bind(this, i)
-                }
-            });
 
-            li.inject(ul);
-            a.inject(li);
-        
-            i += 1;
+            ul.append(li);
         }, this);
+
+        if (!this.readonly) {
+            var li = jQuery('<li>');
+            var a = jQuery('<a>', {
+                'class': 'fa fa-plus-circle',
+                click: (function(ev) {
+                    ev.preventDefault();
+                    this.add();
+                }).bind(this)
+            });
+            li.append(a);
+            ul.append(li);
+        }
     }
-});
+};
 
 ecs.setupDocumentUploadForms = function(){
     var form = jQuery('.document_upload form');
@@ -236,7 +181,7 @@ ecs.setupDocumentUploadForms = function(){
     var progress = form.find('progress');
     var warning = form.find('.warning');
 
-    ecs.setupFormFieldHelpers(form[0]);
+    ecs.setupFormFieldHelpers(form);
 
     upload_button.click(function(ev) {
         ev.preventDefault();
@@ -342,11 +287,8 @@ ecs.setupForms = function(){
         }
 
         var ifs = jQuery('#tabs-12');
-        if (ifs.length) {
-            var investigatorFormset = new ecs.InvestigatorFormset(ifs.get(0), {
-                readonly: readonly
-            });
-        }
+        if (ifs.length)
+            new ecs.InvestigatorFormset(ifs, readonly);
 
         setup.tabController = tabController;
     }

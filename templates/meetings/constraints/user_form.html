@@ -25,7 +25,7 @@
 <script type="text/javascript">
 jQuery(function(){
     ecs.setupForms();
-    new ecs.InlineFormSet($('constraint_formset'), {
+    new ecs.InlineFormSet('#constraint_formset', {
         prefix: '{{ formset.prefix }}',
         canDelete: true
     });

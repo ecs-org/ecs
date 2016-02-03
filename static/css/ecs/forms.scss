@@ -203,10 +203,6 @@ ul.errorlist {
         color: red;
     }
 
-    .investigator_header {
-        position: relative;
-    }
-
     ul.investigator_list {
         margin: 0 0 20px -5px !important;
 
@@ -235,6 +231,10 @@ ul.errorlist {
             }
             &.errors.active {
                 background-color: $orange;
+            }
+
+            .remove {
+                padding: 2px 0 2px 5px;
             }
         }
     }

@@ -1,196 +1,161 @@
-ecs.InlineFormSet = new Class({
-    Implements: [Options, Events],
-    options: {
+ecs.InlineFormSet = function(containers, options) {
+    var containers = jQuery(containers);
+
+    this.options = jQuery.extend({
         formSelector: '.form',
         prefix: null,
-        idPrefix: 'id_',
         addButton: true,
-        addButtonClass: 'add_row',
         addButtonText: '',
         removeButton: true,
-        removeButtonClass: 'delete_row',
-        removeButtonText: '',
-        removeButtonInject: 'bottom',
-        templateClass: 'template',
-        canDelete: false,
-        offset: 0
-    },
-    initialize: function(containers, options){
-        this.containers = $$(containers);
-        this.setOptions(options);
-        this.forms = containers.getElements(this.options.formSelector).flatten();
-        if(!this.forms.length){
-            return;
-        }
-        if(this.forms[0].hasClass(this.options.templateClass)){
-            this.template = this.forms.splice(0, 1)[0];
-            this.template.dispose();
-        }
-        else{
-            this.template = this.forms[0].clone(true, true);
-        }
-        this.isTable = this.containers[0].tagName.toUpperCase() == 'TABLE';
-        ecs.clearFormFields(this.template);
-        this.containers.each(function(container){
-            this.addContainer(container);
-        }, this);
-        this.totalForms = $(this.options.idPrefix + this.options.prefix + '-TOTAL_FORMS');
-        this.forms.each(function(form, index){
-            this.setupForm(form, index, false);
-        }, this);
-    },
+        canDelete: false
+    }, options);
+
+    this.forms = containers.find(this.options.formSelector)
+        .map(function() {
+            return jQuery(this);
+        }).get();
+    if (!this.forms.length)
+        return;
+
+    if (this.forms[0].hasClass('template')) {
+        this.template = this.forms.shift();
+        this.template.remove();
+    } else {
+        this.template = this.forms[0].clone();
+    }
+
+    /* Clear form fields. */
+    this.template.find('input[type=text], textarea').val('');
+    this.template.find('.NullBooleanField > select').val(1);
+    this.template.find('span.errors').remove();
+
+    this.isTable = containers.is('table');
+    containers.each((function(i, el) {
+        this.addContainer(jQuery(el));
+    }).bind(this))
+    this.totalForms = jQuery('#id_' + this.options.prefix + '-TOTAL_FORMS');
+    this.forms.forEach(function(form, i) {
+        this.setupForm(form, i, false);
+    }, this);
+};
+ecs.InlineFormSet.prototype = {
     createAddButton: function(container){
-        return new Element('a', {
-            html: this.options.addButtonText,
-            'class': this.options.addButtonClass,
-            events: {
-                click: this.add.bind(this, container)
-            }
+        return jQuery('<a>', {
+            'class': 'add_row',
+            text: this.options.addButtonText,
+            click: (function(ev) {
+                ev.preventDefault();
+                this.add(container);
+            }).bind(this)
         });
     },
     createRemoveButton: function(){
-        return new Element('a', {
-            html: this.options.removeButtonText,
-            'class': this.options.removeButtonClass,
-            events: {
-                click: this.onRemoveButtonClick.bind(this)
-            }
+        return jQuery('<a>', {
+            'class': 'delete_row',
+            click: (function(ev) {
+                ev.preventDefault();
+                var form = jQuery(ev.target).parents(this.options.formSelector);
+                var index = this.forms.findIndex(function(el) {
+                    return el.is(form);
+                });
+                this.remove(index);
+            }).bind(this)
         });
     },
     addContainer: function(container){
         if(this.options.addButton){
             var addButton = this.createAddButton(container);
-            if(this.isTable){
-                addButton.inject(container, 'after');
-            }
-            else{
-                container.grab(addButton);
-            }
+            container[this.isTable ? 'after' : 'append'](addButton);
         }
-        this.containers.push(container);
     },
     removeContainer: function(container){
-        this.forms.slice(0).each(function(form){
-            if(container.hasChild(form)){
-                var index = this.forms.indexOf(form);
-                this.remove(index);
+        for (var i = 0; i < this.forms.length; ) {
+            if (container.has(this.forms[i]).length) {
+                this.remove(i);
+                continue;
             }
-        }, this);
-        this.containers.erase(container);
-    },
-    getFormCount: function(){
-        return this.forms.length;
+            i++;
+        }
     },
     setupForm: function(form, index, added){
-        if(this.options.removeButton){
+        if (this.options.removeButton) {
             var removeLink = this.createRemoveButton();
-            if(this.isTable){
-                form.getElement('td').grab(removeLink);
-            }
-            else{
-                removeLink.inject(form, this.options.removeButtonInject);
+            if (this.isTable) {
+                form.find('td:first').append(removeLink);
+            } else {
+                form.append(removeLink);
             }
         }
-        if(added){
-            var idField = form.getElement('input[name$=-id]');
-            if(idField){
-                idField.value = "";
-            }
+        if (added) {
+            form.find('input[name$=-id]').val('');
             ecs.setupFormFieldHelpers(form);
         }
-        this.fireEvent('formSetup', [arguments, this].flatten());
     },
-    updateIndex: function(form, index, oldIndex){
-        var _update = (function(el, attr){
-            var value = el.getProperty(attr);
-            if(value){
-                el.setProperty(attr, value.replace(/-.+?-/, '-' + (this.options.offset + index) + '-'));
-            }
-        }).bind(this);
-        var fields = form.getElements('input,select,textarea');
-        var excluded_fields = form.getElements('.inline_formset input, .inline_formset select, .inline_formset textarea');
-        fields.filter(function(f){return !excluded_fields.contains(f)}).each(function(field){
-            _update(field, 'name');
-            _update(field, 'id');
-        }, this);
-        var labels = form.getElements('label');
-        var excluded_labels = form.getElements('.inline_formset label');
-        labels.filter(function(l){return !excluded_labels.contains(l)}).each(function(label){
-            _update(label, 'for');
-        });
-        if(oldIndex !== null){
-            this.fireEvent('formIndexChanged', [form, index, oldIndex]);
-        }
-    },
-    onRemoveButtonClick: function(e){
-        var form = e.target.getParent(this.options.formSelector);
-        this.remove(this.forms.indexOf(form));
+    updateIndex: function(form, index){
+        form.find('input, select, textarea, label')
+            .not(form.find('.inline_formset input, .inline_formset select,' +
+                '.inline_formset textarea, .inline_formset label'))
+            .each(function() {
+                var el = jQuery(this);
+
+                for (var f of ['id', 'name', 'for']) {
+                    var val = el.attr(f);
+                    if (val)
+                        el.attr(f, val.replace(/-.+?-/, '-' + index + '-'));
+                }
+            });
+
+        if (this.options.onFormIndexChanged)
+            this.options.onFormIndexChanged(form, index);
     },
     remove: function(index){
         var f = this.forms.splice(index, 1)[0];
+        this.totalForms.val(this.forms.length);
+
         if(this.options.canDelete){
-            var name = this.options.prefix + '-' + (this.options.offset + index);
-            var idField = $(this.options.idPrefix + name + '-id');
-            if(idField && idField.value){
+            var name = this.options.prefix + '-' + index;
+            if(jQuery('#id_' + name + '-id').val()){
                 var delName = name + '-DELETE';
-                var checkbox = new Element('input', {
+                var checkbox = jQuery('<input>', {
                     type: 'checkbox', 
                     style: 'display:none', 
                     name: delName, 
-                    id: this.options.idPrefix + delName, 
+                    id: 'id_' + delName,
                     checked: 'checked'
                 });
-                if(this.isTable){
-                    f.getFirst('td').grab(checkbox);
+                if (this.isTable) {
+                    f.find('td').first().append(checkbox);
+                } else {
+                    f.append(checkbox);
                 }
-                else{
-                    f.grab(checkbox);
-                }
-                f.setStyle('display', 'none');
+                f.hide();
                 return;
             }
         }
-        f.dispose();
-        for(var i = 0; i < this.forms.length; i++){
-            this.updateIndex(this.forms[i], i, i+1);
-        }
-        this.updateTotalForms(-1);
-        this.fireEvent('formRemoved', [f, index]);
-    },
-    clear: function(){
-        for(var i=this.forms.length - 1;i>=0;i--){
-            this.remove(i);
-        }
-    },
-    updateTotalForms: function(delta){
-        this.totalForms.value = parseInt(this.totalForms.value) + delta;
+        f.remove();
+
+        for (var i = index; i < this.forms.length; i++)
+            this.updateIndex(this.forms[i], i);
+
+        if (this.options.onFormRemoved)
+            this.options.onFormRemoved(f, index);
     },
     add: function(container){
         var newForm = this.template.clone(true, true);
         var index = this.forms.length;
-        this.updateIndex(newForm, index, null);
+        this.updateIndex(newForm, index);
         this.setupForm(newForm, index, true);
+
         this.forms.push(newForm);
-        this.updateTotalForms(+1);
+        this.totalForms.val(this.forms.length);
+
         if(this.isTable){
-            newForm.inject(container.getElement('tbody'));
-        }
-        else{
-            newForm.inject(container.getElements(this.options.formSelector).getLast(), 'after');
+            container.find('tbody').append(newForm);
+        } else {
+            container.find(this.options.formSelector).last().after(newForm);
         }
 
-        newForm.getElements('textarea.flext').each(function(el) {
-            new Flext(el);
-        });
-
-        this.fireEvent('formAdded', [newForm, index])
-    },
-    getIndexForElement: function(el){
-        for(var i=0;i<this.forms.length;i++){
-            if(this.forms[i].hasChild(el)){
-                return i;
-            }
-        }
-        return -1;
+        if (this.options.onFormAdded)
+            this.options.onFormAdded(newForm, index);
     }
-});
+};
