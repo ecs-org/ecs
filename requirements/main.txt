@@ -13,6 +13,8 @@ diff-match-patch		# for ecs.core.diff
 django-countries
 celery
 raven				# for sentry integration
+gunicorn    # wsgi runner
+dj-database-url     # selecting database from environment url
 
 # preprocessing, combining, compressing of js and css
 django_compressor

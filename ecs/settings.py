@@ -353,6 +353,11 @@ COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 #ECS_WORDING = True/False defaults to False if empty
 # activates django-rosetta
 
+# use environment settings if they exist
+try:
+    from defaults.env_settings import *
+except ImportError:
+    pass
 
 # use different settings if local_settings.py exists
 try:

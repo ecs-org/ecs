@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "$PACKAGES_DIR" ]; then
 	PACKAGES_DIR="$(cd ~/ecs-external/packages/ && pwd)"	# absolute path

@@ -1,0 +1,40 @@
+build:
+  image: ubuntu:wily
+  environment:
+    - http_proxy=$http_proxy
+    - DATABASE_URL=postgres://ecs:ecs@localhost:5936/
+  commands:
+    - chmod +x scripts/*.sh
+    - scripts/install-os-deps.sh
+    - scripts/install-user-deps.sh ./env
+    - . ./env/bin/activate
+    - coverage run source='.' manage.py test
+    - coverage report --omit=*settings*,*test* --fail-under 50
+
+compose:
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_USER=ecs
+      - POSTGRES_PASSWORD=ecs
+
+publish:
+  coverage:
+    labels:
+      - coverage
+      - reporting
+
+notify:
+  downstream:
+    repositories:
+      - ecs/cloneecs
+
+  irc:
+    prefix: build
+    nick: ecsdrone
+    channel: ecsdev
+    server:
+      host: irc.oftc.net
+      port: 6697
+      tls: true
+      password: $$IRCPASSWORD

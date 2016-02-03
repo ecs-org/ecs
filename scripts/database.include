@@ -1,0 +1,71 @@
+#!/bin/bash
+
+prepare_database(){
+  echo "check database access"
+  scripts/checkdb.py import ecs.settings
+  err=$?
+  firstrun=false
+
+  if test $err -ge 9; then
+    echo "Fatal Error: could not connect or parameter error ($err)"
+    exit 1
+  elif test $err -eq 8 -o $err -eq 2; then
+    if test "${ECS_RESTORE_FROM_BACKUP:-false}" = "true"; then
+      echo "FIXME Fatal: Restore from backup is unimplemented (get dump, restore dump)"
+      exit 1
+    else
+      firstrun=true
+      if test $err -eq 2; then
+        echo "Info: using empty existing database (will not recreate the database)"
+      else
+        echo "Warning: database does not exist, trying to recreate it on local machine"
+        recreatedb
+      fi
+    fi
+  elif test $err -eq 1; then
+    echo "Warning: old south migrations found, migrating up to django_migrations"
+    initialmigratedb
+  fi
+
+  echo "./manage.py migrate"
+  ./manage.py migrate --noinput
+
+  echo "./manage.py bootstrap"
+  ./manage.py bootstrap
+
+  # FIXME: add functionality example_data to manage.py
+  if test "$firstrun" = "true" -a "$ECS_EXAMPLE_DATA" = "true"; then
+    ./manage.py example_data
+  fi
+
+  if test "$ECS_USERSWITCHER" = "true"; then
+    ./manage.py userswitcher ${ECS_USERWITCHER_PARAMETER:--im}
+  fi
+}
+
+recreatedb() {
+  sudo -u postgres createuser app
+  sudo -u postgres createdb ecs -T template0 -O app -l de_DE.utf8
+  sudo -u postgres psql ecs -c "CREATE extension pg_stat_statements;"
+}
+
+initialmigratedb() {
+  echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
+  for app in auth admin contenttypes sessions sites reversion djcelery \
+    boilerplate docstash documents help meetings notifications \
+    pki scratchpad tracking users votes workflow; do
+      ./manage.py migrate --noinput --fake $app 0001_initial
+  done
+  ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249
+  ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249
+  ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249
+  ./manage.py migrate --noinput --fake core 0003_auto_20151217_1249
+  ./manage.py migrate --noinput --fake tasks 0002_auto_20151217_1249
+
+  echo "Migration to bring the legacy database up to date. This might take a couple of minutes."
+  ./manage.py migrate --noinput core 0006_production_compat3
+
+  echo "Info: NO exceptions are expected from this point on"
+  echo "Run remaining migrations, delete stale content types"
+  yes yes | ./manage.py migrate
+}
