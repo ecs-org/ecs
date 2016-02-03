@@ -244,10 +244,10 @@ ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-help"))
 STORAGE_VAULT = {
     'dir': os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault'),
     'gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-gpg'),
-    'encrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.pub'),
-    'signing_key': os.path.join(PROJECT_DIR, 'ecs_authority.sec'),
-    'decrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.sec'),
-    'verify_key':  os.path.join(PROJECT_DIR, 'ecs_authority.pub'),
+    'encrypt_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_encrypt.pub'),
+    'signing_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_sign.sec'),
+    'decrypt_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_encrypt.sec'),
+    'verify_key':  os.path.join(PROJECT_DIR, 'defaults', 'storagevault_sign.pub'),
     'encryption_uid': 'ecs_mediaserver',
     'signature_uid': 'ecs_authority',
 }
