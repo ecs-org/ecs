@@ -80,10 +80,10 @@ def login(request, *args, **kwargs):
 @readonly()
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
-    user = getattr(request, 'original_user', request.user)
+    user_id = getattr(request, 'original_user', request.user).id
     response = auth_views.logout(request, *args, **kwargs)
     if not request.user.is_authenticated():
-        LoginHistory.objects.create(type='logout', user=user,
+        LoginHistory.objects.create(type='logout', user_id=user_id,
             ip=request.META['REMOTE_ADDR'])
     return response
 
