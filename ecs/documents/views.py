@@ -23,7 +23,7 @@ def upload_document(request, template='documents/upload_form.html'):
         form = DocumentForm(prefix='document')
     return render(request, template, {
         'form': form,
-        'documents': list(documents.order_by('doctype__identifier', 'version', 'date')),
+        'documents': documents.order_by('doctype__identifier', 'date', 'name'),
     })
 
 def delete_document(request, document_pk):

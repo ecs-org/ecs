@@ -22,7 +22,7 @@ def test_pdf_html(request, submission_pk=None):
         html = template.render({
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
-            'documents': submission_form.documents.order_by('doctype__name', '-date'),
+            'documents': submission_form.documents.order_by('doctype__identifier', 'date', 'name'),
         })
     return HttpResponse(html)
 
@@ -35,7 +35,7 @@ def test_render_pdf(request, submission_pk=None):
         pdf = render_pdf_context('submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(submission_form.__class__),
             'submission_form': submission_form,
-            'documents': submission_form.documents.order_by('doctype__name', '-date'),
+            'documents': submission_form.documents.order_by('doctype__identifier', 'date', 'name'),
         })
     return pdf_response(pdf, filename='test.pdf')
 
@@ -80,7 +80,7 @@ def test_notification_pdf_html(request, notification_pk=None):
         html = tpl.render({
             'notification': notification,
             'submission_forms': submission_forms,
-            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
         })
     return HttpResponse(html)
 
@@ -94,7 +94,7 @@ def test_render_notification_pdf(request, notification_pk=None):
         pdf = render_pdf_context(tpl, {
             'notification': notification,
             'submission_forms': submission_forms,
-            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
         })
     return pdf_response(pdf, filename='test.pdf')
 
@@ -113,7 +113,7 @@ def test_notification_answer_pdf_html(request, notification_answer_pk=None):
         tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
         html = tpl.render({
             'notification': notification,
-            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
             'answer': notification_answer
         })
     return HttpResponse(html)
@@ -127,7 +127,7 @@ def test_render_notification_answer_pdf(request, notification_answer_pk=None):
         tpl = notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
         pdf = render_pdf_context(tpl, {
             'notification': notification,
-            'documents': notification.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
             'answer': notification_answer
         })
     return pdf_response(pdf, filename='test.pdf')

@@ -48,7 +48,7 @@ def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     tpl = _get_notification_template(notification, 'notifications/view/%s.html')
     return HttpResponse(tpl.render({
-        'documents': notification.documents.order_by('doctype__identifier', 'version', 'date'),
+        'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
         'notification': notification,
     }, request))
 

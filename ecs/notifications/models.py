@@ -127,7 +127,7 @@ class Notification(models.Model):
         pdf = render_pdf_context(tpl, {
             'notification': self,
             'submission_forms': submission_forms,
-            'documents': self.documents.select_related('doctype').order_by('doctype__name', 'version', 'date'),
+            'documents': self.documents.order_by('doctype__identifier', 'date', 'name'),
         })
 
         self.pdf_document = Document.objects.create_from_buffer(pdf, 
@@ -194,7 +194,7 @@ class NotificationAnswer(models.Model):
     def get_render_context(self):
         return {
             'notification': self.notification,
-            'documents': self.notification.documents.select_related('doctype').order_by('doctype__name', '-date'),
+            'documents': self.notification.documents.order_by('doctype__identifier', 'date', 'name'),
             'answer': self,
         }
 

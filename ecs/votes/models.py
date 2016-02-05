@@ -130,7 +130,7 @@ class Vote(models.Model):
             'vote': self,
             'submission': self.get_submission(),
             'form': self.submission_form,
-            'documents': self.submission_form.documents.order_by('doctype__name', '-date'),
+            'documents': self.submission_form.documents.order_by('doctype__identifier', 'date', 'name'),
             'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             'past_votes': past_votes,
         }

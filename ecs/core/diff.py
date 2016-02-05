@@ -178,18 +178,17 @@ class ListDiffNode(DiffNode):
 
 class DocumentListDiffNode(ListDiffNode):
     def _prepare(self):
+        old = set(self.old)
+        new = set(self.new)
+        changed = sorted(old ^ new,
+            key=lambda d: (d.doctype.identifier, d.date, d.name))
+
         diffs = []
-        old_docs = {}
-        for doc in self.old:
-            old_docs[doc.uuid] = doc
-        added_docs = []
-        for doc in self.new:
-            if doc.uuid in old_docs:
-                del old_docs[doc.uuid]
-            else:
+        for doc in changed:
+            if doc in new:
                 diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
-        for doc in list(old_docs.values()):
-            diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
+            elif doc in old:
+                diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
         self.diffs = diffs
 
     def html(self, plain=False):

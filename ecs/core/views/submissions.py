@@ -224,7 +224,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'documents': submission_form.documents.all().order_by('doctype__identifier', 'version', 'date'),
+        'documents': submission_form.documents.order_by('doctype__identifier', 'date', 'name'),
         'readonly': True,
         'submission': submission,
         'submission_form': submission_form,

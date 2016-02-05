@@ -543,7 +543,7 @@ class SubmissionForm(models.Model):
         pdfdata = render_pdf_context('submissions/wkhtml2pdf/view.html', {
             'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
             'submission_form': self,
-            'documents': self.documents.order_by('doctype__name', '-date'),
+            'documents': self.documents.order_by('doctype__identifier', 'date', 'name'),
         })
 
         pdf_document = Document.objects.create_from_buffer(pdfdata,
