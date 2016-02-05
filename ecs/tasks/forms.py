@@ -83,12 +83,12 @@ class TaskTypeMultipleChoiceField(forms.ModelMultipleChoiceField):
             try:
                 self.queryset.filter(workflow_node__uid=uid)
             except ValueError:
-                raise forms.ValidationError(self.error_messages['invalid_pk_value'] % pk)
+                raise forms.ValidationError(self.error_messages['invalid_pk_value'] % {'pk': pk})
         qs = self.queryset.filter(workflow_node__uid__in=value)
         uids = {force_text(o.workflow_node.uid) for o in qs}
         for val in value:
             if force_text(val) not in uids:
-                raise forms.ValidationError(self.error_messages['invalid_choice'] % val)
+                raise forms.ValidationError(self.error_messages['invalid_choice'] % {'value': val})
         return qs
 
 class TaskListFilterForm(forms.Form):
