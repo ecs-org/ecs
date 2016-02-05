@@ -320,7 +320,7 @@ class Meeting(models.Model):
         for user in self.users:
             user.constraints = constraints_by_user_id.get(user.id, [])
             users.append(user)
-        return users
+        return sorted(users, key=lambda u: (u.last_name, u.first_name, u.id))
 
     @cached_property
     def timetable_entries_which_violate_constraints(self):

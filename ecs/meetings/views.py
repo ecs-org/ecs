@@ -134,7 +134,9 @@ def tops(request, meeting=None):
         if top.submission:
             medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
                 category__in=top.submission.medical_categories.values('pk').query)
-            bms = tuple(User.objects.filter(pk__in=medical_categories.values('board_member').query).order_by('pk').distinct())
+            bms = tuple(User.objects
+                .filter(pk__in=medical_categories.values('board_member').query)
+                .order_by('last_name', 'first_name').distinct())
         else:
             bms = ()
         if bms in open_tops:
@@ -144,7 +146,8 @@ def tops(request, meeting=None):
 
     open_tops = OrderedDict(
         (k, open_tops[k])
-        for k in sorted(open_tops.keys(), key=lambda u: str(u))
+        for k in sorted(open_tops.keys(),
+            key=lambda us: tuple((u.last_name, u.first_name, u.id) for u in us))
     )
 
     return render_html(request, 'meetings/tabs/tops.html', {
