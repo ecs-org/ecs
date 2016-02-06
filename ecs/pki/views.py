@@ -15,7 +15,7 @@ from ecs.pki.forms import CertForm
 from ecs.pki.models import Certificate
 
 
-@user_group_required('EC-Signing Group')
+@user_group_required('EC-Signing Group', 'EC-Office')
 def cert_list(request, user_pk=None):
     return render(request, 'pki/cert_list.html', {
         'certs': (
@@ -51,7 +51,7 @@ def create_cert(request, user_pk=None):
 
 
 @require_POST
-@user_group_required('EC-Signing Group')
+@user_group_required('EC-Signing Group', 'EC-Office')
 def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
     cert.revoke()

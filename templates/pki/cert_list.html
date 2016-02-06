@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load i18n %}
+{% load i18n userutils %}
 
 {% block htmltitle %}{% trans "PKI" %} | {{ block.super }}{% endblock %}
 
@@ -7,7 +7,9 @@
 
 {% block content %}
 
-<a href="{% url 'ecs.pki.views.create_cert' %}">{% trans 'Create new certificate' %}</a>
+{% if user|is_member_of:'EC-Signing Group' %}
+    <a href="{% url 'ecs.pki.views.create_cert' %}">{% trans 'Create new certificate' %}</a>
+{% endif %}
 
 <table class="cert_list">
     <tr>

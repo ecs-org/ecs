@@ -92,7 +92,7 @@
                       {% endif %}
                       <li><a href="{% url 'ecs.statistics.views.stats' %}">{% trans 'Statistics' %}</a></li>
                       <li><a href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">{% trans 'Boilerplates' %}</a></li>
-                      {% if user|is_member_of:'EC-Signing Group' %}
+                      {% if user|is_member_of:'EC-Signing Group' or user|is_member_of:'EC-Office' %}
                           <li><a href="{% url 'ecs.pki.views.cert_list' %}">{% trans 'PKI' %}</a></li>
                       {% endif %}
                 {% endif %}   
