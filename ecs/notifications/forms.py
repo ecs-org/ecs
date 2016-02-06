@@ -41,7 +41,11 @@ class SafetyNotificationForm(NotificationForm):
 
     def __init__(self, *args, **kwargs):
         super(SafetyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_forms'].queryset = get_usable_submission_forms().filter(submission__susar_presenter=get_current_user())
+        queryset = get_usable_submission_forms().filter(
+            submission__susar_presenter=get_current_user())
+        self.fields['submission_forms'].queryset = queryset
+        if queryset.count() == 1:
+            self.fields['submission_forms'].initial = queryset
         
     class Meta:
         model = SafetyNotification
@@ -53,7 +57,11 @@ class SingleStudyNotificationForm(NotificationForm):
     
     def __init__(self, *args, **kwargs):
         super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
-        self.fields['submission_form'].queryset = get_usable_submission_forms().filter(submission__presenter=get_current_user(), submission__is_finished=False)
+        queryset = get_usable_submission_forms().filter(
+            submission__presenter=get_current_user(), submission__is_finished=False)
+        self.fields['submission_form'].queryset = queryset
+        if queryset.count() == 1:
+            self.fields['submission_form'].empty_label = None
 
     class Meta:
         model = Notification
