@@ -99,19 +99,6 @@
           </ul>
         </li>
     {% endif %}
-    {% if debug and user|has_flag:"is_developer" %}
-      <li>
-        <span class="togglers">{% trans "Developer" %}</span>
-        <ul class="elements">
-             <li><a href="{% url 'ecs.core.views.developer.developer_test_pdf' %}">{% trans "Submission PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer.developer_test_checklist_pdf' %}">{% trans "Checklist PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer.developer_test_notification_pdf' %}">{% trans "Notification PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer.developer_test_notification_answer_pdf' %}">{% trans "Notification Answer PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer.developer_test_vote_pdf' %}">{% trans "Vote PDF" %}</a></li>
-             <li><a href="{% url 'ecs.core.views.developer.developer_translations' %}">{% trans "Translations" %}</a></li>
-        </ul>
-      </li>
-    {% endif %} 
     {% comment %}
     <li>
       <span class="togglers">{% trans "Recent Activities" %}</span>

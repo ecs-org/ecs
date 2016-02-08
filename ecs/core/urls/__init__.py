@@ -11,5 +11,4 @@ urlpatterns = (
     url(r'^submission/', include('ecs.core.urls.submission')),
     url(r'^autocomplete/', include('ecs.core.urls.autocomplete')),
     url(r'^catalog/', include('ecs.core.urls.catalog')),
-    url(r'^developer/', include('ecs.core.urls.developer')),
 )

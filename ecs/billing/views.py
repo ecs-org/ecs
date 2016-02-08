@@ -9,7 +9,6 @@ from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
-from ecs.utils.decorators import developer
 from ecs.users.utils import user_group_required, sudo
 from ecs.utils.security import readonly
 from ecs.core.models import Submission
@@ -188,11 +187,6 @@ def invoice_list(request):
     return render(request, 'billing/invoice_list.html', {
         'invoices': invoices,
     })
-
-@developer
-def reset_external_review_payment(request):
-    ChecklistBillingState.objects.update(billed_at=None)
-    return redirect('ecs.billing.views.external_review_payment')
 
 @readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Group')
