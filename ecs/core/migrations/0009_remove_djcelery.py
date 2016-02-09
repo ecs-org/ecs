@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL('''
-            drop table
+            drop table if exists
                 djcelery_crontabschedule,
                 djcelery_intervalschedule,
                 djcelery_periodictask,
