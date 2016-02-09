@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
-    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, ExpeditedReviewCategory,
+    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, MedicalCategory,
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
@@ -67,7 +67,7 @@ class TaskQFactory(authorization.QFactory):
                 User.objects.filter(profile__is_indisposed=True).values('pk'))
         )
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
-        q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user).values('pk').query)
+        q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=MedicalCategory.objects.filter(users_for_expedited_review=user).values('pk').query)
         return q
 
 authorization.register(Task, factory=TaskQFactory)

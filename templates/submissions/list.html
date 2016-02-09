@@ -84,8 +84,8 @@
             {% endif %}
         {% endwith %}
         {% with submission.expedited_review_categories.all as er_categories %}
-            {% if categories and user|has_flag:'is_internal' %}
-                <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+            {% if er_categories and user|has_flag:'is_internal' %}
+                <div class="info">{% trans "ExpeditedReviewCategories" %}: {% for cat in er_categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}

@@ -149,7 +149,7 @@ class Task(models.Model):
     
     accepted = models.BooleanField(default=False)
 
-    expedited_review_categories = models.ManyToManyField('core.ExpeditedReviewCategory')
+    expedited_review_categories = models.ManyToManyField('core.MedicalCategory', related_name='tasks_for_expedited_review')
     
     objects = TaskManager()
 

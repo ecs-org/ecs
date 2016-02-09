@@ -4,10 +4,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import SetPasswordForm as DjangoSetPasswordForm
 from django.contrib.auth.forms import PasswordChangeForm as DjangoPasswordChangeForm
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 
 from ecs.users.models import UserProfile
-from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
+from ecs.core.models import MedicalCategory
 from ecs.core.forms.fields import AutocompleteModelChoiceField, DateTimeField
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
@@ -145,9 +144,6 @@ class UserDetailsForm(forms.ModelForm):
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
         label=_('Board Member Categories'))
-    expedited_review_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=ExpeditedReviewCategory.objects.all(),
-        label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
@@ -155,8 +151,7 @@ class UserDetailsForm(forms.ModelForm):
         model = User
         fields = (
             'gender', 'title', 'first_name', 'last_name', 'groups',
-            'medical_categories', 'expedited_review_categories', 'is_internal',
-            'is_help_writer',
+            'medical_categories', 'is_internal', 'is_help_writer',
         )
 
     def __init__(self, *args, **kwargs):
@@ -165,7 +160,6 @@ class UserDetailsForm(forms.ModelForm):
         self.fields['gender'].initial = profile.gender
         self.fields['title'].initial = profile.title
         self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
-        self.fields['expedited_review_categories'].initial = [x.pk for x in self.instance.expedited_review_categories.all()]
         self.fields['is_internal'].initial = profile.is_internal
         self.fields['is_help_writer'].initial = profile.is_help_writer
 
@@ -179,7 +173,6 @@ class UserDetailsForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         user = super(UserDetailsForm, self).save(*args, **kwargs)
         user.medical_categories = self.cleaned_data.get('medical_categories', ())
-        user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', ())
         user.save()
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
@@ -207,9 +200,6 @@ class InvitationForm(forms.Form):
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
         label=_('Board Member Categories'))
-    expedited_review_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=ExpeditedReviewCategory.objects.all(),
-        label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
     invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))
@@ -227,7 +217,6 @@ class InvitationForm(forms.Form):
         user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
         user.groups = self.cleaned_data.get('groups', [])
         user.medical_categories = self.cleaned_data.get('medical_categories', [])
-        user.expedited_review_categories = self.cleaned_data.get('expedited_review_categories', [])
         user.save()
         profile = user.profile
         profile.gender = self.cleaned_data['gender']

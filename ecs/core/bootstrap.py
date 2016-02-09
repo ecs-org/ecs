@@ -2,7 +2,7 @@ from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 
 from ecs import bootstrap
-from ecs.core.models import Submission, ExpeditedReviewCategory, MedicalCategory, EthicsCommission, AdvancedSettings
+from ecs.core.models import Submission, MedicalCategory, EthicsCommission, AdvancedSettings
 from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.workflow.patterns import Generic
@@ -238,12 +238,6 @@ def medcategories():
     )
     return categories
 
-@bootstrap.register()
-def expedited_review_categories():
-    for abbrev, name in medcategories():
-        ExpeditedReviewCategory.objects.update_or_create(
-            abbrev=abbrev, defaults={'name': name})
-
 
 @bootstrap.register()
 def medical_categories():
@@ -280,7 +274,7 @@ def auth_user_developers():
 
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
-    'ecs.core.bootstrap.expedited_review_categories', 'ecs.core.bootstrap.medical_categories'))
+    'ecs.core.bootstrap.medical_categories'))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
@@ -371,8 +365,8 @@ def auth_user_testusers():
         user.profile.save()
 
         for expcategory in expcategories:
-            e = ExpeditedReviewCategory.objects.get(abbrev=expcategory)
-            e.users.add(user)
+            e = MedicalCategory.objects.get(abbrev=expcategory)
+            e.users_for_expedited_review.add(user)
 
 @bootstrap.register()
 def ethics_commissions():

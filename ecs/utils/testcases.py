@@ -33,7 +33,6 @@ class EcsTestCase(TestCase):
         integration_bootstrap.create_settings_dirs()
         
         core_bootstrap.auth_groups()
-        core_bootstrap.expedited_review_categories()
         core_bootstrap.medical_categories()
         core_bootstrap.auth_user_testusers()
         core_bootstrap.advanced_settings()

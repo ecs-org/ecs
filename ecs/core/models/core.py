@@ -26,18 +26,11 @@ class EthicsCommission(models.Model):
     def system(self):
         return self.uuid == uuid.UUID(settings.ETHICS_COMMISSION_UUID)
 
-class ExpeditedReviewCategory(models.Model):
-    name = models.CharField(max_length=60)
-    abbrev = models.CharField(max_length=12, unique=True)
-    users = models.ManyToManyField(User, related_name='expedited_review_categories')
-
-    def __str__(self):
-        return '%s (%s)' % (self.name, self.abbrev)
-
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12, unique=True)
     users = models.ManyToManyField(User, related_name='medical_categories')
+    users_for_expedited_review = models.ManyToManyField(User, related_name='expedited_review_categories')
 
     def __str__(self):
         return '%s (%s)' % (self.name, self.abbrev)

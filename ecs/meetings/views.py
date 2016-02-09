@@ -20,7 +20,7 @@ from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, ExpeditedReviewCategory
+from ecs.core.models import Submission, MedicalCategory
 from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
@@ -671,7 +671,7 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
     form = ExpeditedReviewerInvitationForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
-        categories = ExpeditedReviewCategory.objects.filter(submissions__in=meeting.submissions.all())
+        categories = MedicalCategory.objects.filter(submissions_for_expedited_review__in=meeting.submissions.all())
         users = User.objects.filter(groups__name='Expedited Review Group', expedited_review_categories__pk__in=categories.values('pk').query)
         start = form.cleaned_data['start']
         for user in users:
