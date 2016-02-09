@@ -234,6 +234,7 @@ def medcategories():
         ('Med1Phy', 'Medizinische Physik 1'),
         ('Datenbank', 'Datenbank'),
         ('StrahlenTh', 'Strahlentherapie'),
+        ('KJP', 'Kinder- und Jugendpsychiatrie'),
     )
     return categories
 
