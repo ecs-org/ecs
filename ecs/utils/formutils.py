@@ -2,10 +2,13 @@ from importlib import import_module
 
 from django.forms.models import ModelForm, ModelFormMetaclass, ModelFormOptions
 from django.core.validators import EMPTY_VALUES
+from django.db.models import QuerySet
 
 def require_fields(form, fields):
     for f in fields:
-        if f not in form.cleaned_data or form.cleaned_data[f] in EMPTY_VALUES:
+        val = form.cleaned_data.get(f, None)
+        if val in EMPTY_VALUES or \
+            (isinstance(val, QuerySet) and not val.exists()):
             form.add_error(f, form.fields[f].error_messages['required'])
 
 class TranslatedModelFormOptions(ModelFormOptions):
