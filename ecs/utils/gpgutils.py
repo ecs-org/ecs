@@ -21,8 +21,7 @@ def reset_keystore(gpghome):
 
     :warn: deletes every file in this directory
     '''
-    if not os.path.isdir(gpghome):
-        os.makedirs(gpghome)
+    os.makedirs(gpghome, mode=0o700, exist_ok=True)
     for f in os.listdir(gpghome):
         path = os.path.join(gpghome, f);
         if os.path.isfile(path):
