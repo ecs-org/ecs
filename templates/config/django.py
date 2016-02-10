@@ -54,8 +54,7 @@ PASSWORD_RESET_SECRET = '%(auth.PASSWORD_RESET_SECRET)s'
 
 STORAGE_VAULT = {
     'dir': '%(storagevault.options.localfilestorage_root)s',
-    'encrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-encrypt', 'gpg'),
-    'decrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-decrypt', 'gpg'),
+    'gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-gpg'),
     'encrypt_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_mediaserver.pub'),
     'signing_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_authority.sec'),
     'decrypt_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_mediaserver.sec'),

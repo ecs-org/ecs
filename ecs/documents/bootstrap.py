@@ -47,17 +47,15 @@ def document_types():
             'is_downloadable': args.get('is_downloadable', True),
         })
 
-@bootstrap.register()
-def import_encryption_sign_keys():
-    gpgutils.reset_keystore(settings.STORAGE_VAULT['encrypt_gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['encrypt_key'], settings.STORAGE_VAULT['encrypt_gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['signing_key'], settings.STORAGE_VAULT['encrypt_gpghome'])
 
 @bootstrap.register()
-def import_decryption_verify_keys():
-    gpgutils.reset_keystore(settings.STORAGE_VAULT['decrypt_gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['decrypt_key'], settings.STORAGE_VAULT['decrypt_gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['verify_key'], settings.STORAGE_VAULT['decrypt_gpghome'])
+def import_keys():
+    gpgutils.reset_keystore(settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['encrypt_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['decrypt_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['signing_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['verify_key'], settings.STORAGE_VAULT['gpghome'])
+
 
 @bootstrap.register()
 def create_local_storage_vault():

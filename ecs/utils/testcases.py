@@ -39,8 +39,7 @@ class EcsTestCase(TestCase):
         core_bootstrap.advanced_settings()
 
         documents_bootstrap.document_types()
-        documents_bootstrap.import_encryption_sign_keys()
-        documents_bootstrap.import_decryption_verify_keys()
+        documents_bootstrap.import_keys()
         documents_bootstrap.create_local_storage_vault()
 
         integration_bootstrap.workflow_sync()
