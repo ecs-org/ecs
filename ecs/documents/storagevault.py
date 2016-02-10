@@ -65,14 +65,14 @@ class StorageVault(object):
         gpgutils.encrypt_sign(
             f, path,
             settings.STORAGE_VAULT['encrypt_gpghome'],
-            settings.STORAGE_VAULT['encrypt_owner'],
-            settings.STORAGE_VAULT['signing_owner']
+            settings.STORAGE_VAULT['encryption_uid'],
+            settings.STORAGE_VAULT['signature_uid']
         )
 
     def __getitem__(self, identifier):
         return gpgutils.decrypt_verify(
             self._gen_path(identifier),
             settings.STORAGE_VAULT['decrypt_gpghome'],
-            settings.STORAGE_VAULT['decrypt_owner'],
-            settings.STORAGE_VAULT['verify_owner']
+            settings.STORAGE_VAULT['encryption_uid'],
+            settings.STORAGE_VAULT['signature_uid']
         )

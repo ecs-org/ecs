@@ -13,12 +13,12 @@ class Gpgutilstest(EcsTestCase):
         super(Gpgutilstest, self).setUp()
         
         self.encrypt_gpghome = settings.STORAGE_VAULT['encrypt_gpghome']
-        self.encrypt_owner = settings.STORAGE_VAULT['encrypt_owner']
-        self.signing_owner = settings.STORAGE_VAULT['signing_owner']
+        self.encrypt_owner = settings.STORAGE_VAULT['encryption_uid']
+        self.signing_owner = settings.STORAGE_VAULT['signature_uid']
         
         self.decrypt_gpghome = settings.STORAGE_VAULT['decrypt_gpghome']
-        self.decrypt_owner = settings.STORAGE_VAULT['decrypt_owner']
-        self.verify_owner = settings.STORAGE_VAULT['verify_owner'] 
+        self.decrypt_owner = settings.STORAGE_VAULT['encryption_uid']
+        self.verify_owner = settings.STORAGE_VAULT['signature_uid']
 
 
     def fresh_temporary_entities(self):

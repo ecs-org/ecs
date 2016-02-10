@@ -246,13 +246,11 @@ STORAGE_VAULT = {
     'encrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-encrypt', 'gpg'),
     'decrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-decrypt', 'gpg'),
     'encrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.pub'),
-    'encrypt_owner': 'ecs_mediaserver',
     'signing_key': os.path.join(PROJECT_DIR, 'ecs_authority.sec'),
-    'signing_owner': 'ecs_authority',
     'decrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.sec'),
-    'decrypt_owner': 'ecs_mediaserver',
     'verify_key':  os.path.join(PROJECT_DIR, 'ecs_authority.pub'),
-    'verify_owner': 'ecs_authority',
+    'encryption_uid': 'ecs_mediaserver',
+    'signature_uid': 'ecs_authority',
 }
 
 # mail config, standard django values

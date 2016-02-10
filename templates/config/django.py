@@ -57,13 +57,11 @@ STORAGE_VAULT = {
     'encrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-encrypt', 'gpg'),
     'decrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-decrypt', 'gpg'),
     'encrypt_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_mediaserver.pub'),
-    'encrypt_owner': '%(documents.storage.encrypt_owner)s',
     'signing_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_authority.sec'),
-    'signing_owner': '%(documents.storage.signing_owner)s',
     'decrypt_key': os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_mediaserver.sec'),
-    'decrypt_owner': '%(documents.storage.decrypt_owner)s',
     'verify_key':  os.path.join(PROJECT_DIR, '..', 'ecs-conf', 'ecs_authority.pub'),
-    'verify_owner': '%(documents.storage.verify_owner)s',
+    'encryption_uid': '%(documents.storage.encrypt_owner)s',
+    'signature_uid': '%(documents.storage.signing_owner)s',
 }
 
 ALLOWED_HOSTS = ['%(hostname)s']
