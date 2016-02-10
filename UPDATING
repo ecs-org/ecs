@@ -121,4 +121,11 @@ in addition to the usual steps. In chronological order:
 
 	$ find . -name '*.pyc' -delete
 
+* 2016-02-10: Storage vault settings
+
+  All storage vault options have been moved to the settings.STORAGE_VAULT
+  dictionary. Existing configuration files that contain the STORAGE_VAULT_DIR,
+  STORAGE_ENCRYPT and STORAGE_DECRYPT settings have to be adapted. See
+  ecs/settings.py for a working configuration sample.
+
 --- Next release ---

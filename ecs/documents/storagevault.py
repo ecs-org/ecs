@@ -35,7 +35,7 @@ from ecs.utils import gpgutils
 
 
 def getVault():
-    return StorageVault(settings.STORAGE_VAULT_DIR)
+    return StorageVault(settings.STORAGE_VAULT['dir'])
 
 
 class StorageVault(object):
@@ -64,15 +64,15 @@ class StorageVault(object):
 
         gpgutils.encrypt_sign(
             f, path,
-            settings.STORAGE_ENCRYPT['gpghome'],
-            settings.STORAGE_ENCRYPT['encrypt_owner'],
-            settings.STORAGE_ENCRYPT['signing_owner']
+            settings.STORAGE_VAULT['encrypt_gpghome'],
+            settings.STORAGE_VAULT['encrypt_owner'],
+            settings.STORAGE_VAULT['signing_owner']
         )
 
     def __getitem__(self, identifier):
         return gpgutils.decrypt_verify(
             self._gen_path(identifier),
-            settings.STORAGE_DECRYPT['gpghome'],
-            settings.STORAGE_DECRYPT['decrypt_owner'],
-            settings.STORAGE_DECRYPT['verify_owner']
+            settings.STORAGE_VAULT['decrypt_gpghome'],
+            settings.STORAGE_VAULT['decrypt_owner'],
+            settings.STORAGE_VAULT['verify_owner']
         )

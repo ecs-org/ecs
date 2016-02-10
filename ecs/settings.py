@@ -241,20 +241,18 @@ ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-help"))
 
 # Storage Vault settings
-STORAGE_VAULT_DIR = os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault')
-STORAGE_ENCRYPT = {
-    "gpghome" : os.path.join(PROJECT_DIR, "..", "ecs-encrypt", "gpg"),
-    "encrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.pub"),
-    "encrypt_owner": "ecs_mediaserver",
-    "signing_key": os.path.join(PROJECT_DIR, "ecs_authority.sec"),
-    "signing_owner": "ecs_authority",
-}
-STORAGE_DECRYPT = {
-    "gpghome" : os.path.join(PROJECT_DIR, "..", "ecs-decrypt", "gpg"),
-    "decrypt_key": os.path.join(PROJECT_DIR, "ecs_mediaserver.sec"),
-    "decrypt_owner": "ecs_mediaserver",
-    "verify_key":  os.path.join(PROJECT_DIR, "ecs_authority.pub"),
-    "verify_owner": "ecs_authority",
+STORAGE_VAULT = {
+    'dir': os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault'),
+    'encrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-encrypt', 'gpg'),
+    'decrypt_gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-decrypt', 'gpg'),
+    'encrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.pub'),
+    'encrypt_owner': 'ecs_mediaserver',
+    'signing_key': os.path.join(PROJECT_DIR, 'ecs_authority.sec'),
+    'signing_owner': 'ecs_authority',
+    'decrypt_key': os.path.join(PROJECT_DIR, 'ecs_mediaserver.sec'),
+    'decrypt_owner': 'ecs_mediaserver',
+    'verify_key':  os.path.join(PROJECT_DIR, 'ecs_authority.pub'),
+    'verify_owner': 'ecs_authority',
 }
 
 # mail config, standard django values

@@ -26,7 +26,7 @@ class EcsTestCase(TestCase):
 
         get_or_create_user('root@system.local', is_superuser=True)
 
-        settings.STORAGE_VAULT_DIR = tempfile.mkdtemp()
+        settings.STORAGE_VAULT['dir'] = tempfile.mkdtemp()
         settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
         settings.LIMITED_EMAIL_BACKEND = settings.EMAIL_BACKEND
         
@@ -50,7 +50,7 @@ class EcsTestCase(TestCase):
         
     @classmethod
     def teardownClass(cls):
-        shutil.rmtree(settings.STORAGE_VAULT_DIR)
+        shutil.rmtree(settings.STORAGE_VAULT['dir'])
         super(EcsTestCase, cls).teardownClass()
     
     def setUp(self):
