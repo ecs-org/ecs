@@ -186,6 +186,22 @@ FILE_UPLOAD_HANDLERS = (
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 )
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'loggers': {
+        'django': {
+            'level': 'NOTSET',
+        },
+        'django.db.backends': {
+            # All SQL queries are logged with level DEBUG. Settings the logger
+            # level to INFO prevents those messages from being propagated to
+            # the root logger.
+            'level': 'INFO',
+        },
+    },
+}
+
 
 # ecs settings
 ##############
