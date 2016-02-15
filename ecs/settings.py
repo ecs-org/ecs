@@ -149,6 +149,7 @@ INSTALLED_APPS = (
     'haystack',
     'reversion',
     'django_countries',
+    'raven.contrib.django.raven_compat',
 
     'ecs.core',
     'ecs.checklists',

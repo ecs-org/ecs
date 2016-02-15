@@ -39,9 +39,15 @@
     <body>
       <div id="content">
         <div class="innerwrap">
-              <p><strong>Entschuldigung, ein Fehler ist aufgetreten !</strong></p>
-              <p>Der Fehler wurde protokolliert.</p>
-              <p>Um zur Hauptseite zu wechseln, <a href="/"> klicken Sie hier</a>.</p>
+            <p><strong>Entschuldigung, ein Fehler ist aufgetreten !</strong></p>
+            <p>Der Fehler wurde protokolliert.</p>
+            {% if request.sentry.id %}
+                <p>
+                    Um auf diesen Fehler Bezug zu nehmen notieren Sie sich bitte
+                    diese Nummer: <strong>{{ request.sentry.id }}</strong>.
+                </p>
+            {% endif %}
+            <p>Um zur Hauptseite zu wechseln, <a href="/"> klicken Sie hier</a>.</p>
         </div>
       </div>         
     </body>

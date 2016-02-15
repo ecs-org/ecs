@@ -64,3 +64,9 @@ STORAGE_VAULT = {
 }
 
 ALLOWED_HOSTS = ['%(hostname)s']
+
+import raven
+RAVEN_CONFIG = {
+    'dsn': '%(sentry.dsn)s',
+    'release': raven.fetch_git_sha(os.path.join(os.path.dirname(__file__), '..')),
+}
