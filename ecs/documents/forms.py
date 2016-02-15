@@ -13,7 +13,10 @@ PDF_MAGIC = b'%PDF'
 
 class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
     file = forms.FileField(required=True)
-    doctype = forms.ModelChoiceField(queryset=DocumentType.objects.exclude(is_hidden=True), required=False)
+    doctype = forms.ModelChoiceField(
+        queryset=DocumentType.objects.exclude(is_hidden=True).order_by('identifier'),
+        required=False,
+    )
     date = DateField(required=True)
 
     def clean_file(self):
