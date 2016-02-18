@@ -327,17 +327,16 @@
                 jQuery('#' + tab).find('input[type="submit"][name="complete_task"]').click();
             });
 
-            {% if review_incomplete %}
-                new MooDialog.Error('{% trans "Your review is incomplete." %}');
-            {% endif %}
             {% if review_complete %}
-                new MooDialog.Confirm('{{ _("Do you want to close the review and send it to the EC?")|escapejs }}', function(){
-                    jQuery('#checklist_{{ review_complete }}_review_form')
-                        .find('input[type="submit"][name="really_complete_task"]')
-                        .click();
-                }, null, {
-                    okText: '{{ _("Yes")|escapejs }}',
-                    cancelText: '{{ _("No")|escapejs }}'
+                ecs.confirm({
+                    question: '{{ _("Do you want to close the review and send it to the EC?")|escapejs }}',
+                    ok: '{{ _("Yes")|escapejs }}',
+                    cancel: '{{ _("No")|escapejs }}',
+                    success: function() {
+                        jQuery('#checklist_{{ review_complete }}_review_form')
+                            .find('input[type="submit"][name="really_complete_task"]')
+                            .click();
+                    }
                 })
             {% endif %}
 

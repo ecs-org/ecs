@@ -70,21 +70,31 @@
         setInterval(function(){
             $('clock').innerHTML = (new Date()).format('%H:%M');
         }, 6000);
-        $$('a.start_meeting').each(function(a){
-            a.addEvent('click', function(){
-                var href = a.getAttribute('href');
-                var widget = a.getParent('.ecs-Widget').retrieve('ecs.widgets.Widget');
-                new MooDialog.Confirm('{% trans 'Do you want to start the meeting?' %}', function(){widget.load(href);}, null, {okText: '{{ _("Start (meeting)")|escapejs }}', cancelText: '{{ _("Don't Start")|escapejs }}'});
-                return false;
+        jQuery('a.start_meeting').click(function(ev) {
+            ev.preventDefault();
+            var href = jQuery(this).attr('href');
+            var widget = jQuery(this).parents('.ecs-Widget').data('widget');
+            ecs.confirm({
+                question: '{% trans 'Do you want to start the meeting?' %}',
+                ok: '{{ _("Start (meeting)")|escapejs }}',
+                cancel: '{{ _("Don't Start")|escapejs }}',
+                success: function() {
+                    widget.load(href);
+                }
             });
-        }, this);
-        $$('a.stop_meeting').each(function(a){
-            a.addEvent('click', function(){
-                var href = a.getAttribute('href');
-                var widget = a.getParent('.ecs-Widget').retrieve('ecs.widgets.Widget');
-                new MooDialog.Confirm('{% trans 'Do you want to stop the meeting?' %}', function(){widget.load(href);}, null, {okText: '{{ _("Stop (meeting)")|escapejs }}', cancelText: '{{ _("Don't Stop")|escapejs }}'});
-                return false;
+        });
+        jQuery('a.stop_meeting').click(function(ev) {
+            ev.preventDefault();
+            var href = jQuery(this).attr('href');
+            var widget = jQuery(this).parents('.ecs-Widget').data('widget');
+            ecs.confirm({
+                question: '{% trans 'Do you want to stop the meeting?' %}',
+                ok: '{{ _("Stop (meeting)")|escapejs }}',
+                cancel: '{{ _("Don't Stop")|escapejs }}',
+                success: function() {
+                    widget.load(href);
+                }
             });
-        }, this);
+        });
     });
 </script>

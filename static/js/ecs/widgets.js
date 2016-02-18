@@ -6,6 +6,7 @@ ecs.widgets.Widget = new Class({
         options = options || {};
         this.element = $(el);
         this.element.addClass('ecs-Widget');
+        jQuery(this.element).data('widget', this);
         this.element.store('ecs.widgets.Widget', this);
         this.reload_interval = options.reload_interval;
         this.url = options.url;
@@ -82,7 +83,7 @@ ecs.widgets.Widget = new Class({
     }
 });
 
-ecs.popup = function() {
+ecs.popup = function(options) {
     var modal = jQuery('\
         <div class="modal">\
             <div class="modal-dialog">\
@@ -93,9 +94,31 @@ ecs.popup = function() {
     ');
     jQuery(document.body).append(modal);
     modal = jQuery(modal.get(0));
-    modal.modal();
+    modal.modal(options);
     modal.on('hidden.bs.modal', function() {
         modal.remove();
     });
     return modal;
+};
+
+ecs.confirm = function(options) {
+    var modal = ecs.popup();
+
+    modal.find('.modal-content').html('\
+        <div class="modal-body"><p></p></div>\
+        <div class="modal-footer">\
+            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"></button>\
+            <button type="button" class="btn btn-sm btn-primary"></button>\
+        </div>\
+    ');
+
+    modal.find('.modal-dialog').addClass('modal-sm');
+    modal.find('.modal-body p').text(options.question);
+    modal.find('button:first').text(options.cancel || 'Cancel');
+    modal.find('button:last').text(options.ok || 'OK');
+    modal.find('button:last').click(function(ev) {
+        ev.preventDefault();
+        modal.modal('hide');
+        options.success();
+    });
 };

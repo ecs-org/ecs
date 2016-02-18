@@ -392,14 +392,12 @@ table.notification td,
 }
 
 .submit_progress {
-    display: block;
     text-align: center;
-    top: 50%;
-    margin-top: -16px;
-    position: relative;
+
     img {
         vertical-align: middle;
     }
+
     .text {
         margin-left: 10px;
         vertical-align: middle;

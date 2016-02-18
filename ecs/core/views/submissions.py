@@ -14,6 +14,7 @@ from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.contrib import messages
 
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
@@ -435,7 +436,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             docstash.delete()
 
             if (complete_task or really_complete_task) and not checklist.is_complete:
-                extra_context['review_incomplete'] = True
+                messages.error(request, _('Your review is incomplete.'))
             elif really_complete_task and checklist.is_complete:
                 checklist.status = 'completed'
                 checklist.save()
@@ -662,6 +663,8 @@ def create_submission_form(request):
                     notification_type_pk=notification_type.pk)
 
             return redirect('readonly_submission_form', submission_form_pk=submission_form.submission.current_submission_form.pk)
+        elif valid and not allows_resubmission:
+            messages.error(request, _("This form can't be submitted at the moment."))
 
     context = {
         'form': form,

@@ -227,17 +227,37 @@
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
             {% if valid and allows_resubmission %}
-                new MooDialog.Confirm('{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}', function(){
-                    jQuery('#submit-button').hide();
-                    new Element('div', {'class': 'submit_progress', 'html': '<span class="fa fa-spinner fa-pulse fa-2x"></span><span class="text">{% if notification_type %}{{ _("Your are being redirected to the notification form") }}{% else %}{{ _("Your study is being submitted") }}{% endif %}&hellip;</span>'}).MooDialog();
-                    ecs.mainForm.submit('submit');
-                }, null, {
-                    okText: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
-                    cancelText: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}'
+                ecs.confirm({
+                    question: '{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}',
+                    ok: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
+                    cancel: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}',
+                    success: function() {
+                        jQuery('#submit-button').hide();
+
+                        var modal = ecs.popup({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+                        modal.find('.modal-dialog').addClass('modal-sm');
+                        modal.find('.modal-content').html('\
+                            <div class="modal-body">\
+                                <div class="submit_progress">\
+                                    <span class="fa fa-spinner fa-pulse fa-2x"></span>\
+                                    <span class="text">\
+                                        {% if notification_type %}\
+                                            {{ _("Your are being redirected to the notification form")|escapejs }}\
+                                        {% else %}\
+                                            {{ _("Your study is being submitted")|escapejs }}\
+                                        {% endif %}\
+                                        &hellip;\
+                                    </span>\
+                                </div>\
+                            </div>\
+                        ');
+
+                        ecs.mainForm.submit('submit');
+                    }
                 });
-            {% endif %}
-            {% if valid and not allows_resubmission %}
-                new MooDialog.Error('{{ _("This form can't be submitted at the moment.")|escapejs }}');
             {% endif %}
         });
     </script>

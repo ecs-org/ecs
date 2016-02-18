@@ -28,16 +28,14 @@
         var form = container.find('form');
         form.find('input[type="submit"]').click(function(ev) {
             ev.preventDefault();
-            new MooDialog.Confirm(
-                '{% trans 'Do you want to send the E-mails?' %}',
-                function() {
+            ecs.confirm({
+                question: '{% trans 'Do you want to send the E-mails?' %}',
+                ok: '{{ _("Send")|escapejs }}',
+                cancel: '{{ _("Don't Send")|escapejs }}',
+                success: function() {
                     form.submit();
-                }, null, {
-                    okText: '{{ _("Send")|escapejs }}',
-                    cancelText: '{{ _("Don't Send")|escapejs }}'
                 }
-            );
-            return false;
+            });
         });
     });
 </script>

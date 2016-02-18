@@ -152,17 +152,14 @@
 	    jQuery('a.delete_docstash').click(function(ev) {
 		ev.preventDefault();
 		var href = jQuery(this).attr('href');
-		new MooDialog.Confirm(
-		    '{% trans 'Do you want to delete the submission draft?' %}',
-		    function() {
+		ecs.confirm({
+		    question: '{% trans 'Do you want to delete the submission draft?' %}',
+                    ok: '{{ _("Delete")|escapejs }}',
+                    cancel: '{{ _("Don't Delete")|escapejs }}',
+		    success: function() {
 			window.location.href = href;
-		    },
-		    null,
-		    {
-			okText: '{{ _("Delete")|escapejs }}',
-			cancelText: '{{ _("Don't Delete")|escapejs }}'
 		    }
-		);
+		});
 	    });
         });
     </script>

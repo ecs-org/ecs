@@ -74,13 +74,18 @@
             new ecs.TabController('.tab_header_groups a');
             ecs.setupWidgets();
 
-            $$('a.send_emails').each(function(a){
-                a.addEvent('click', function(){
-                    var href = a.getAttribute('href');
-                    new MooDialog.Confirm('{% trans 'Do you want to send the E-mails?' %}', function(){window.location.href = href;}, null, {okText: '{{ _("Send")|escapejs }}', cancelText: '{{ _("Don't Send")|escapejs }}'});
-                    return false;
+            jQuery('a.send_emails').click(function(ev) {
+                ev.preventDefault();
+                var href = jQuery(this).attr('href');
+                ecs.confirm({
+                    question: '{% trans 'Do you want to send the E-mails?' %}',
+                    ok: '{{ _("Send")|escapejs }}',
+                    cancel: '{{ _("Don't Send")|escapejs }}',
+                    success: function() {
+                        window.location.href = href;
+                    }
                 });
-            }, this);
+            });
         });
     </script>
 {% endblock %}
