@@ -305,7 +305,7 @@ ecs.setupWidgets = function(){
             url: widget.data('widgetUrl'),
             reload_interval: parseInt(widget.data('widgetReloadInterval')) * 1000 || null,
         };
-        new ecs.widgets.Widget(this, options);
+        new ecs.Widget(this, options);
     });
 };
 

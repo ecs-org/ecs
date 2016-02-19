@@ -141,7 +141,7 @@ jQuery(function(){
             var fromIndex = dndInfo.startIndex;
             dndInfo.startIndex = null;
             if(fromIndex != toIndex && fromIndex !== null){
-                var widget = $('timetable_tab').getElement('.widget').retrieve('ecs.widgets.Widget');
+                var widget = jQuery('#timetable_tab .ecs-Widget').data('widget');
                 widget.load('{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
             }
         }
