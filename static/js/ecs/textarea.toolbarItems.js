@@ -1,88 +1,106 @@
 ecs.textarea.toolbarItems = {};
 
-ecs.textarea.toolbarItems.boilerplate = function(label, url){
-    return function(textarea){
-        var button = new Element('a', {title: label, 'class': 'boilerplate'});
-        textarea.addEvent('keydown', function(e){
-            if(e.alt && e.key == 'm'){
-                button.fireEvent('click');
-                return false;
-            }
-        });
-        button.addEvent('click', function(){
-            var status = {value: textarea.getSelectedText()};
-            var container = new Element('div', {'class': 'boilerplate_selector'});
-            var searchInput = new Element('input', {type: 'text', value: status.value});
-            var resultList = new Element('div', {'class': 'resultlist'});
-            container.grab(searchInput);
-            container.grab(resultList);
-            textarea.grab(container, 'before');
-            var dispose = function(){
-                window.removeEvent('click', dispose);
-                clearInterval(status.interval);
-                container.dispose();
-            };
-            var insert = function(text){
-                dispose();
-                textarea.focus();
-                textarea.insertAtCursor(text);
-                textarea.fireEvent('change');
-            };
-            var update = function(q, initial){
-                var request = new Request.JSON({
-                    url: url + '?q=' + encodeURIComponent(q),
-                    headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
-                    onSuccess: function(results){
-                        if(initial){
-                            if(results.length == 1){
-                                insert(results[0].text);
-                                return;
+ecs.textarea.toolbarItems.boilerplate = function(label, url) {
+    return function(textarea) {
+        var button = jQuery('<a>', {
+            title: label,
+            'class': 'boilerplate',
+            click: function(ev) {
+                ev.preventDefault();
+                var status = {
+                    value: textarea.val().slice(
+                        textarea.prop('selectionStart'),
+                        textarea.prop('selectionEnd'))
+                };
+                var container = jQuery('<div>', {'class': 'boilerplate_selector'});
+                var searchInput = jQuery('<input>', {type: 'text', value: status.value});
+                var resultList = jQuery('<div>', {'class': 'resultlist'});
+                container.append(searchInput);
+                container.append(resultList);
+                jQuery(textarea).before(container);
+                var dispose = function() {
+                    jQuery(window).off('click', dispose);
+                    clearInterval(status.interval);
+                    container.remove();
+                };
+                var insert = function(text) {
+                    dispose();
+                    textarea.focus();
+                    var v = textarea.val();
+                    var s = textarea.prop('selectionStart');
+                    var e = textarea.prop('selectionEnd');
+                    textarea.val(v.slice(0, s) + text + v.slice(e, -1));
+                    textarea.prop('selectionStart', s);
+                    textarea.prop('selectionEnd', s + text.length);
+                };
+                var update = function(q, initial) {
+                    jQuery.get({
+                        url: url + '?q=' + encodeURIComponent(q),
+                        headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
+                        dataType: 'json',
+                        success: function(results){
+                            if(initial){
+                                if(results.length == 1){
+                                    insert(results[0].text);
+                                    return;
+                                }
+                                jQuery(window).click(dispose);
+                                container.css('display', 'block');
+                                searchInput.focus();
                             }
-                            window.addEvent('click', dispose);
-                            container.setStyle('display', 'block');
-                            searchInput.focus();
-                        }
-                        resultList.innerHTML = '';
-                        results.each(function(text){
-                            var display = new Element('a', {html: '<strong>{slug}</strong>: {text}'.substitute(text)})
-                            display.addEvent('click', function(){
-                                insert(text.text);
-                                return false;
+                            resultList.html('');
+                            results.each(function(text) {
+                                var display = jQuery('<a>', {
+                                    html: '<strong>{slug}</strong>: {text}'.substitute(text),
+                                    click: function(ev) {
+                                        ev.preventDefault();
+                                        insert(text.text);
+                                    }
+                                });
+                                resultList.append(display);
                             });
-                            resultList.grab(display);
-                        });
+                        }
+                    });
+                };
+                update(status.value, true);
+                searchInput.keydown(function(ev) {
+                    if(ev.key == 'Enter'){
+                        ev.preventDefault();
+                        update(searchInput.val(), true);
+                    }
+                    if(ev.key == 'Escape'){
+                        ev.preventDefault();
+                        dispose();
                     }
                 });
-                request.send();
-            };
-            update(textarea.getSelectedText(), true);
-            searchInput.addEvent('keydown', function(e){
-                if(e.key == 'enter'){
-                    update(searchInput.value, true);
-                    return false;
-                }
-                if(e.key == 'esc'){
-                    dispose();
-                }
-            });
-            status.interval = setInterval(function(){
-                if(searchInput.value != status.value){
-                    status.value = searchInput.value;
-                    update(searchInput.value);
-                }
-            }, 500);
+                status.interval = setInterval(function(){
+                    if(searchInput.val() != status.value){
+                        status.value = searchInput.val();
+                        update(searchInput.val());
+                    }
+                }, 500);
+            }
+        });
+        textarea.keydown(function(ev) {
+            if (ev.altKey && ev.key == 'm') {
+                ev.preventDefault();
+                button.click();
+            }
         });
         return button;
     };
 };
 
 ecs.textarea.toolbarItems.versionHistory = function(label, url){
-    return function(textarea){
-        var button = new Element('a', {title: label, 'class': 'versions'});
-        button.addEvent('click', function(){
-            ecs.fieldhistory.show(url, textarea.name);
+    return function(textarea) {
+        return jQuery('<a>', {
+            title: label,
+            'class': 'versions',
+            click: function(ev) {
+                ev.preventDefault();
+                ecs.fieldhistory.show(url, textarea.attr('name'));
+            }
         });
-        return button;
     };
 };
 

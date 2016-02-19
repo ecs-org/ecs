@@ -103,7 +103,7 @@ ecs.textarea.TextArea = new Class({
     installToolbarItem: function(item, ta){
         ta = ta || this.textarea;
         this.toolbar.push(item);
-        this.toolbarElement.grab(item(ta));
+        this.toolbarElement.grab(item(jQuery(ta)).get(0));  /* XXX */
     },
     installToolbar: function(items, ta){
         ta = ta || this.textarea;
