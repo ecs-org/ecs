@@ -139,46 +139,43 @@
             ]);
             {% endif %}
             
-            var meetingAssistantForm = $('meeting_assistant_form');
-            {% if not submission %}
-                $('complete').addEvent('click', function(){
-                    meetingAssistantForm.submit();
-                    return false;
-                });
-            {% else %}
-                $('complete_executive').addEvent('click', function(){
-                    $('id_executive_review_required').value = '1';
-                    meetingAssistantForm.submit();
-                    return false;
-                });
-                $('complete_office').addEvent('click', function(){
-                    $('id_executive_review_required').value = '0';
-                    meetingAssistantForm.submit();
-                    return false;
-                });
-                $('save').addEvent('click', function(){
-                    $('id_close_top').value = '0';
-                    $('id_simple_save').value = '1';
-                    meetingAssistantForm.submit();
-                    return false;
-                });
-            {% endif %}
-            $$('a.textblock').each(function(link){
-                link.addEvent('click', function(){
-                    var request = new Request({
-                        url: link.href,
-                        onSuccess: function(responseText){
-                            var textarea = $('id_text');
-                            var selStart = textarea.getSelectionStart();
-                            var text = responseText + "\n";
-                            textarea.value = textarea.value.substring(0, selStart) + text + textarea.value.substring(textarea.getSelectionEnd(), textarea.value.length);
-                            var pos = selStart + text.length;
-                            textarea.selectRange(pos, pos);
-                            textarea.retrieve('ecs.textarea.TextArea').updateHeight();
-                        }
-                    });
-                    request.send();
-                    return false;
+            var meetingAssistantForm = jQuery('#meeting_assistant_form');
+            jQuery('#complete').click(function(ev) {
+                ev.preventDefault();
+                meetingAssistantForm.submit();
+            });
+            jQuery('#complete_executive').click(function(ev) {
+                ev.preventDefault();
+                jQuery('#id_executive_review_required').val('1');
+                meetingAssistantForm.submit();
+            });
+            jQuery('#complete_office').click(function(ev) {
+                ev.preventDefault();
+                jQuery('#id_executive_review_required').val('0');
+                meetingAssistantForm.submit();
+            });
+            jQuery('#save').click(function(ev) {
+                ev.preventDefault();
+                jQuery('#id_close_top').val('0');
+                jQuery('#id_simple_save').val('1');
+                meetingAssistantForm.submit();
+            });
+            jQuery('a.textblock').click(function(ev) {
+                ev.preventDefault();
+                jQuery.get({
+                    url: jQuery(this).attr('href'),
+                    success: function(text) {
+                        var textarea = jQuery('#id_text');
+                        var v = textarea.val();
+                        var s = textarea.prop('selectionStart');
+                        var e = textarea.prop('selectionEnd');
+                        text += '\n';
+                        textarea.val(v.slice(0, s) + text + v.slice(e, -1));
+                        textarea.prop('selectionStart', s + text.length);
+                        textarea.prop('selectionEnd', s + text.length);
+                        textarea.data('textarea').updateHeight();
+                        textarea.focus();
+                    }
                 });
             });
         });

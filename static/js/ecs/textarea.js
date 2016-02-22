@@ -79,6 +79,7 @@ ecs.textarea.TextArea = new Class({
         this.minHeight = options.minHeight || 20;
         this.updateHeight();
         this.textarea.store('ecs.textarea.TextArea', this);
+        jQuery(this.textarea).data('textarea', this);   /* XXX */
     },
     updateHeight: function(){
         var h = Math.max(this.minHeight, ecs.textarea.measureHeight(this.textarea));
