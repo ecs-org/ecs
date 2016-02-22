@@ -1,36 +1,20 @@
-
-ecs.datepickerInputSelector = '.DateField > input, .DateTimeField > input[name$=_0]';
-
 ecs.setupFormFieldHelpers = function(context){
-    context = jQuery(context || document.body).get(0);  /* XXX */
+    context = jQuery(context || document.body);
 
-    var datepickerTogglers = [];
-    context.getElements(ecs.datepickerInputSelector).each(function(input){
-        var toggler = new Element('span', {html: 'Kalender', 'class': 'datepicker_toggler'});
-        toggler.injectAfter(input);
-        datepickerTogglers.push(toggler);
-    });
-
-    var datepicker = new DatePicker(context.getElements(ecs.datepickerInputSelector), {
-        format: 'd.m.Y',
-        inputOutputFormat: 'd.m.Y',
-        allowEmpty: true,
-        toggleElements: context.getElements('.datepicker_toggler')
-    });
-    
-    datepickerTogglers.each(function(toggler){
-        toggler.getPrevious().addEvent('focus', function(e){
-            $(e.target).blur();
-            toggler.click();
+    jQuery(context)
+        .find('.DateField > input, .DateTimeField > input[name$=_0]')
+        .datepicker({
+            format: 'dd.mm.yyyy',
+            autoclose: true,
+            weekStart: 1
         });
-    });
 
     jQuery(context).find('select[data-ajax--url]').select2();
 
-    context.getElements('.CharField > textarea').each(function(textarea){
+    context.get(0).getElements('.CharField > textarea').each(function(textarea){    /* XXX */
         new ecs.textarea.TextArea(textarea);
     });
-    context.getElements('li,th.label').each(function(field){
+    context.get(0).getElements('li,th.label').each(function(field){                 /* XXX */
         var notes = [];
         var input = null;
         if(field.tagName == 'TH'){

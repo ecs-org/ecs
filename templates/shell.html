@@ -12,7 +12,8 @@
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2/select2.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/tether/tether.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap/bootstrap.min.css' %} />
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/font-awesome-4.5.0/css/font-awesome.min.css' %}>
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/font-awesome-4.5.0/css/font-awesome.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker3.standalone.min.css' %} />
             {% compress css %}
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/base.scss' %} />
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/core.scss' %} />
@@ -33,7 +34,6 @@
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/boilerplate.scss' %} />
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/signature.scss' %} />
                 <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/statistics.scss' %} />
-                <link rel="stylesheet" type="text/css" href={% static '3rd-party/datepicker.css' %} />
                 <style type="text/x-scss">{% sitescss %}</style>
             {% endcompress %}
         {% endblock %}         
@@ -49,10 +49,10 @@
             <script type="text/javascript" src={% static '3rd-party/select2/select2.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/tether/tether.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/bootstrap/bootstrap.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker.min.js' %}></script>
             {% compress js %}
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5-core-nc.js' %}></script>
                 <script type="text/javascript" src={% static '3rd-party/MooTools/mootools-1.2.5.1-more.js' %}></script>
-                <script type="text/javascript" src={% static '3rd-party/datepicker.js' %}></script>
 
                 <script type="text/javascript" src={% static 'js/ecs/__init__.js' %}></script>
                 <script type="text/javascript" src={% static 'js/ecs/TabController.js' %}></script>
