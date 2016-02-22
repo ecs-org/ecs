@@ -145,8 +145,8 @@ window.addEvent('domready', function(){
                 widget.load('{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
             }
         }
-        {% endif %}
     });
+    {% endif %}
 {% endif %}
 });
 </script>
