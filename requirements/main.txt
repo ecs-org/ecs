@@ -29,4 +29,4 @@ xlwt	# excel generation
 
 # django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main
 # requirements for now
-django-rosetta
+# django-rosetta
