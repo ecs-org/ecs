@@ -81,8 +81,8 @@
             {% endif %}
 
             var textarea = thread.find('textarea[name="text"]');
-            new ecs.textarea.TextArea(textarea[0]);
-            ecs.textarea.installToolbar(textarea[0], messageToolbarItems);
+            new ecs.textarea.TextArea(textarea);
+            ecs.textarea.installToolbar(textarea, messageToolbarItems);
             jQuery('select[data-ajax--url]').select2();
 
             textarea.focus();

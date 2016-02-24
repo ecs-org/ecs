@@ -1,123 +1,95 @@
 ecs.textarea = {
-    helper: null,
     fullscreenEditor: {
         textarea: null,
         screen: null,
         sourceTextarea: null,
         toolbar: null,
-        show: function(textarea){
-            if(!this.screen){
-                this.screen = new Element('div', {'class': 'ecs-FullscreenEditor'});
-                this.screen.setStyle('display', 'none');
-                this.textarea = new Element('textarea');
-                this.screen.grab(this.textarea);
-                this.textarea.addEvent('keydown', (function(e){
-                    if(e.alt && e.key == 'enter'){
-                        this.sourceTextarea.value = this.textarea.value;
-                        this.sourceTextarea.fireEvent('change');
-                        this.screen.setStyle('display', 'none');
+        show: function(textarea) {
+            if (!this.screen) {
+                this.screen = jQuery('<div/>', {'class': 'ecs-FullscreenEditor'});
+                this.screen.css('display', 'none');
+                this.textarea = jQuery('<textarea/>');
+                this.screen.append(this.textarea);
+                this.textarea.keydown((function(ev){
+                    if (ev.altKey && ev.key == 'Enter') {
+                        ev.preventDefault();
+                        this.sourceTextarea.val(this.textarea.val());
+                        this.sourceTextarea.prop('selectionStart',
+                            this.textarea.prop('selectionStart'))
+                        this.sourceTextarea.prop('selectionEnd',
+                            this.textarea.prop('selectionEnd'))
+                        this.screen.css('display', 'none');
                         this.sourceTextarea.focus();
-                        return false;
                     }
                 }).bind(this));
-                document.body.appendChild(this.screen);
+                jQuery(document.body).append(this.screen);
             }
-            if(this.toolbar){
-                this.toolbar.dispose();
-            }
+            if (this.toolbar)
+                this.toolbar.remove();
             this.sourceTextarea = textarea;
-            this.textarea.value = textarea.value;
+            this.textarea.val(textarea.val());
+            this.textarea.prop('selectionStart', textarea.prop('selectionStart'))
+            this.textarea.prop('selectionEnd', textarea.prop('selectionEnd'))
             this.toolbar = ecs.textarea.installToolbar(textarea, null, this.textarea);
-            this.screen.setStyle('display', 'block');
+            this.screen.css('display', 'block');
             this.textarea.focus();
         }
     },
-    measureHeight: function(textarea){
-        if(!this.measure_helper){
-            this.measure_helper = new Element('div');
-            this.measure_helper.setStyles({position: 'absolute', left: '-9999px', top: '0px', 'white-space': 'pre-wrap', 'word-wrap': 'break-word'});
-            //this.measure_helper.setStyles({left: '800px', 'z-index': 100000, 'background-color': '#ffffff'});
-            document.body.appendChild(this.measure_helper);
-        }
-        if(!this.width_helper){
-            this.width_helper = new Element('div');
-            this.width_helper.setStyles({position: 'absolute', left: '-9999px', top: '0px'});
-            document.body.appendChild(this.width_helper);
-        }
-        if(!textarea.isVisible()){
-            var textarea_copy = textarea.clone();
-            textarea_copy.inject(this.width_helper);
-            var width = textarea_copy.getStyle('width');
-            textarea_copy.dispose();
-        } else {
-            var width = textarea.getStyle('width');
-        }
-        this.measure_helper.setStyles(textarea.getStyles('font-family', 'letter-spacing', 'font-size', 'font-weight', 'font-variant', 'line-height', 'padding-left', 'padding-top', 'border'));
-        this.measure_helper.setStyle('width', width);
-        this.measure_helper.innerHTML = textarea.value.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g, '<br/>') + '.';
-        return this.measure_helper.getSize().y;
+    installToolbar: function(el, items, target) {
+        return jQuery(el).data('textarea').installToolbar(items, target);
     },
-    installToolbar: function(el, items, target){
-        return $(el).retrieve('ecs.textarea.TextArea').installToolbar(items, target);
-    },
-    installToolbarItem: function(el, item, target){
-        return $(el).retrieve('ecs.textarea.TextArea').installToolbarItem(item, target);
+    installToolbarItem: function(el, item, target) {
+        return jQuery(el).data('textarea').installToolbarItem(item, target);
     }
 };
 
-ecs.textarea.TextArea = new Class({
-    initialize: function(textarea, options){
-        options = options || {};
-        this.textarea = $(textarea);
-        this.toolbar = options.toolbar || [];
-        this.updater = this.updateHeight.bind(this);
-        this.textarea.addEvent('keydown', this.onKeyDown.bind(this));
-        this.textarea.addEvent('keyup', this.updater);
-        this.textarea.addEvent('change', this.updater);
-        this.textarea.setStyle('overflow', 'hidden');
-        this.interval = null;
-        this.minHeight = options.minHeight || 20;
+ecs.textarea.TextArea = function(textarea, options) {
+    options = options || {};
+    this.textarea = jQuery(textarea);
+    this.toolbar = options.toolbar || [];
+    this.textarea.on('keyup change', (function(ev) {
         this.updateHeight();
-        this.textarea.store('ecs.textarea.TextArea', this);
-        jQuery(this.textarea).data('textarea', this);   /* XXX */
-    },
-    updateHeight: function(){
-        var h = Math.max(this.minHeight, ecs.textarea.measureHeight(this.textarea));
-        this.textarea.setStyle('height', h + 'px');
-    },
-    onKeyDown: function(e){
-        if(e.alt && e.key == 'enter'){
+    }).bind(this));
+    this.textarea.on('keydown', (function(ev) {
+        if (ev.altKey && ev.key == 'Enter') {
+            ev.preventDefault();
             ecs.textarea.fullscreenEditor.show(this.textarea);
-            return false;
         }
+    }).bind(this));
+    this.textarea.css('overflow', 'hidden');
+    this.minHeight = 20;
+    this.updateHeight();
+    this.textarea.data('textarea', this);
+};
+ecs.textarea.TextArea.prototype = {
+    updateHeight: function() {
+        var scroll_parent = this.textarea.parents().filter(function() {
+            var parent = jQuery(this);
+            return /^(auto|scroll|hidden)$/.test(parent.css('overflow-y'));
+        }).eq(0);
+        var scroll_top = scroll_parent.scrollTop();
+        this.textarea.height('auto');
+        var h = Math.max(this.minHeight, this.textarea.prop('scrollHeight'));
+        this.textarea.height(h);
+        scroll_parent.scrollTop(scroll_top);
     },
-    onFocus: function(){
-        this.interval = setInterval(this.updater, 333);
-    },
-    onBlur: function(){
-        if(this.interval){
-            clearInterval(this.interval);
-            this.interval = null;
-        }
-        this.updateHeight();
-    },
-    installToolbarItem: function(item, ta){
+    installToolbarItem: function(item, ta) {
         ta = ta || this.textarea;
         this.toolbar.push(item);
-        this.toolbarElement.grab(item(jQuery(ta)).get(0));  /* XXX */
+        this.toolbarElement.append(item(jQuery(ta)));
     },
-    installToolbar: function(items, ta){
+    installToolbar: function(items, ta) {
         ta = ta || this.textarea;
         items = items || this.toolbar;
-        if(!items){
+        if (!items)
             return null;
-        }
+
         this.toolbar = [];
-        var toolbar = this.toolbarElement = new Element('div', {'class': 'ecs-TextAreaToolbar'});
+        var toolbar = this.toolbarElement = jQuery('<div/>', {'class': 'ecs-TextAreaToolbar'});
         items.each(function(item){
             this.installToolbarItem(item, ta);
         }, this);
-        toolbar.inject(ta, 'before');
+        ta.before(toolbar);
         return toolbar;
     }
-});
+};

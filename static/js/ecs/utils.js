@@ -11,9 +11,10 @@ ecs.setupFormFieldHelpers = function(context){
 
     jQuery(context).find('select[data-ajax--url]').select2();
 
-    context.get(0).getElements('.CharField > textarea').each(function(textarea){    /* XXX */
-        new ecs.textarea.TextArea(textarea);
+    context.find('.CharField > textarea').each(function() {
+        new ecs.textarea.TextArea(this);
     });
+
     context.get(0).getElements('li,th.label').each(function(field){                 /* XXX */
         var notes = [];
         var input = null;
