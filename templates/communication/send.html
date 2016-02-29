@@ -68,20 +68,21 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-      jQuery(function(){
-        var container = $$('.message_display')[0];
-        ecs.setupMessagePopup(container);
-        jQuery('select[data-ajax--url], #id_receiver_involved').select2();
+        jQuery(function(){
+            var container = jQuery('.message_display');
+            ecs.setupMessagePopup(container);
+            jQuery('select[data-ajax--url], #id_receiver_involved').select2();
 
-        var messageToolbarItems = [];
-
-        {% if user|has_flag:'is_internal' %}
-            messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
-        {% endif %}
-
-        var textarea = container.getElement('textarea[name="text"]');
-        new ecs.textarea.TextArea(textarea);
-        ecs.textarea.installToolbar(textarea, messageToolbarItems);
-      });
+            new ecs.textarea.TextArea(container.find('textarea[name="text"]'), {
+                toolbar: [
+                {% if user|has_flag:'is_internal' %}
+                    ecs.textarea.toolbarItems.boilerplate(
+                        "{{ _('Insert Boilerplate')|escapejs }}",
+                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                    )
+                {% endif %}
+                ]
+            });
+        });
     </script>
 {% endblock %}

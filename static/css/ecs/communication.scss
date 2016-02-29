@@ -237,14 +237,6 @@ ul.thread {
             .sender {
                 font-weight: bold;
             }
-
-            .message_done {
-                float: right;
-                margin-left: 5px;
-            }
-            .message_done:before {
-                content: " | ";
-            }
         }
 
         .body {
@@ -295,7 +287,10 @@ ul.thread {
         margin: -15px 10px 0 0;
     }
     .expand_collapse {
-        display: block;
+        text-align: left;
+        margin: -15px 0 0 10px;
+    }
+    .message_done {
         text-align: right;
         margin: -15px 10px 0 0;
     }

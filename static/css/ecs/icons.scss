@@ -65,7 +65,7 @@
     background-position: -320px -256px;
 }
 
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_accept, .icon_sort, .icon_send, .icon_revoke, .icon_in, .icon_out, .icon_pending, .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_send, .icon_revoke, .icon_in, .icon_out, .icon_pending, .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
     @include icon_bg_16;
     margin-right: 3px;
 }
@@ -83,13 +83,6 @@
 }
 .icon_done {
     background-position: -16px -160px;
-}
-.icon_accept {
-    background-position: -32px -160px;
-}
-.icon_accept:active,
-.icon_accept:hover {
-    background-position: 0 -160px;
 }
 .icon_sort {
     background-position: -240px -256px;

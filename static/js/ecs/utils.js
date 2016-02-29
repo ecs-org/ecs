@@ -349,45 +349,25 @@ ecs.FormFieldController.prototype = {
     }
 };
 
-ecs.setupMessagePopup = function(container, prefix) {
-    container = $(container);
-
-    var name_prefix = '';
-    var id_prefix = '#id_';
-    if (prefix) {
-        name_prefix = prefix + '-';
-        id_prefix = '#id_' + prefix + '-';
-    }
-
+ecs.setupMessagePopup = function(container) {
     function show_selected_receiver() {
-        var checked_input = container.getElement('input[name="' + name_prefix + 'receiver_type"][checked]');
-        if (!$defined(checked_input)) return;
-        var value = checked_input.value;
-        var receiver_prefix = id_prefix + 'receiver_';
+        var checked_input = container.find('input[name="receiver_type"]:checked');
+        if (!checked_input.length)
+            return;
+        var value = checked_input.val();
 
-        ['ec', 'involved', 'person'].each(function(x) {
-            var el = container.getElement(receiver_prefix+x);
-            if (x == value) {
-                if (el) {
-                    el.removeAttribute('disabled');
-                }
-                container.getElements(receiver_prefix+x+' + .errors').show();
-            } else {
-                if (el) {
-                    el.setAttribute('disabled', 'disabled');
-                }
-                container.getElements(receiver_prefix+x+' + .errors').hide();
-            }
+        ['ec', 'involved', 'person'].each(function(f) {
+            var el = container.find('#id_receiver_' + f);
+            el.prop('disabled', f != value);
+            el.find('.errors').toggle(f == value);
         });
     }
 
     show_selected_receiver();
 
-    container.getElements('input[name="' + name_prefix + 'receiver_type"]').each(function(elm){
-        elm.addEvent('change', function(){
-            show_selected_receiver();
-        });
-    }, this);
+    container.find('input[name="receiver_type"]').change(function(ev) {
+        show_selected_receiver();
+    });
 };
 
 ecs.setupSubmitLinks = function(selector){

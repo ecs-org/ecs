@@ -27,9 +27,6 @@
         <div class="head">
             <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
             <span class="preview">{{ message|preview:80 }}</span>
-            {% if not thread|closed_by:user %}
-                <span class="message_done">{% trans 'mark as done' %}: <a class="icon_accept" href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}">done</a></span>
-            {% endif %}
             <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
         </div>
         <pre class="body">{{ message.text|urlize }}</pre>
@@ -47,12 +44,15 @@
     <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
     | <a href="" class="expand_all">{% trans "Expand all" %}</a>
 </div>
+{% if not thread|closed_by:user %}
+    <div class="message_done">
+        <a href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next={{ request.path|urlencode }}"><span class="fa fa-check-square-o"></span> {% trans 'mark as done' %}</a>
+    </div>
+{% endif %}
 
 <form class="send" method="post">
     {% csrf_token %}
-    <table>
-        {{ form.as_p }}
-    </table>
+    {{ form.as_p }}
     <input type="submit" value="{% trans "Send" %}">
 </form>
 
