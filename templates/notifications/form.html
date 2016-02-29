@@ -109,37 +109,31 @@
                 ecs.mainForm.submit('submit');
             });
 
-            var submissionFormsSelect = $('id_submission_forms');
-            var submissionFormSelect = $('id_submission_form');
-            var submissionDataDisplay = new Element('div', {'class': 'submission_data'});
-            if(submissionFormSelect || submissionFormsSelect){
-                (submissionFormSelect || submissionFormsSelect).getParent('li').grab(submissionDataDisplay);
+            var submissionFormsSelect = jQuery('#id_submission_forms');
+            var submissionFormSelect = jQuery('#id_submission_form');
+            var submissionDataDisplay = jQuery('<div/>', {'class': 'submission_data'});
+
+            submissionFormsSelect.add(submissionFormSelect).parents('li')
+                .append(submissionDataDisplay);
+
+            function loadSubmissionFormData(pks) {
+                submissionDataDisplay.load(
+                    '{% url 'ecs.notifications.views.submission_data_for_notification' %}',
+                    'submission_form=' + pks.join('&submission_form=')
+                );
             }
 
-            function loadSubmissionFormData(pks){
-                var request = new Request.HTML({
-                    url: '{% url 'ecs.notifications.views.submission_data_for_notification' %}',
-                    data: 'submission_form=' + pks.join('&submission_form='),
-                    method: 'get',
-                    evalScripts: false,
-                    update: submissionDataDisplay
-                });
-                request.send();
-            }
-            if(submissionFormsSelect){
-                submissionFormsSelect.addEvent('change', function(){
-                    loadSubmissionFormData(submissionFormsSelect.getSelected().map(function(option){
-                        return option.value;
-                    }));
-                });
-                submissionFormsSelect.fireEvent('change');
-            }
-            if(submissionFormSelect){
-                submissionFormSelect.addEvent('change', function(){
-                    loadSubmissionFormData([submissionFormSelect.value])
-                });
-                submissionFormSelect.fireEvent('change');
-            }
+            submissionFormsSelect.change(function(ev) {
+                loadSubmissionFormData(submissionFormsSelect.find(':selected').map(function() {
+                    return jQuery(this).val();
+                }).get());
+            });
+            submissionFormsSelect.change()
+
+            submissionFormSelect.change(function(ev) {
+                loadSubmissionFormData([jQuery(this).val()])
+            });
+            submissionFormSelect.change()
 
             jQuery('.upload_container').load(
                 '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
