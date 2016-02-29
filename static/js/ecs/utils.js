@@ -15,38 +15,27 @@ ecs.setupFormFieldHelpers = function(context){
         new ecs.textarea.TextArea(this);
     });
 
-    context.get(0).getElements('li,th.label').each(function(field){                 /* XXX */
-        var notes = [];
+    context.find('li,th.label').each(function() {
+        var field = jQuery(this);
         var input = null;
-        if(field.tagName == 'TH'){
-            var index = field.getParent('tr').getChildren('th').indexOf(field);
-            var row = field.getParent('table').getElement('tbody > tr');
-            if(row){
-                input = row.getChildren('td')[index].getFirst('input[type=text]');
-            }
+        if (field.is('th')) {
+            var index = field.index();
+            var row = field.parents('table').find('tbody > tr');
+            if (row.length)
+                input = jQuery(row.find('td').get(index)).find('input[type=text]');
+        } else {
+            input = field.find('input[type=text]');
         }
-        else{
-            input = field.getFirst('input[type=text]');
-        }
-        if(input){
-            var maxlength = input.getProperty('maxlength');
-            if(maxlength && maxlength > 0){
-                //notes.push('max. ' +  maxlength + ' Zeichen');
+        if (input && input.length) {
+            var maxlength = input.prop('maxlength');
+            if (maxlength && maxlength > 0) {
                 var ml = 1 + parseInt(maxlength / 10)
-                if(ml == 3){
+                if (ml == 3)
                     ml = 4;
-                }
-                if(ml >= 5){
+                else if (ml >= 5)
                     ml = 6;
-                }
                 field.addClass('max' + 10*ml);
             }
-        }
-        if(notes.length){
-            (new Element('span', {
-                'class': 'notes',
-                'html': notes.join(', ')
-            })).inject(input, 'after');
         }
     });
 };
