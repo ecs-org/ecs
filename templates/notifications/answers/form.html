@@ -23,12 +23,12 @@
         jQuery(function(){
             ecs.setupFormFieldHelpers();
             var toolbar_items = [
-            {% if answer and user|has_flag:'is_internal' %}
-                ecs.textarea.toolbarItems.versionHistory(
-                    "{{ _('History')|escapejs }} ({{ answer_version }})",
-                    "{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=answer.pk %}"
-                ),
-            {% endif %}
+                {% if answer and user|has_flag:'is_internal' %}
+                    ecs.textarea.toolbarItems.versionHistory(
+                        "{{ _('History')|escapejs }} ({{ answer_version }})",
+                        "{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=answer.pk %}"
+                    ),
+                {% endif %}
                 ecs.textarea.toolbarItems.boilerplate(
                     "{{ _('Insert Boilerplate')|escapejs }}",
                     "{% url 'ecs.boilerplate.views.select_boilerplate' %}"

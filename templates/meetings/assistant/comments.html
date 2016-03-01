@@ -9,14 +9,10 @@
     </form>
 
     <script type="text/javascript">
-        $(window).addEvent('unload', function(){
-            var request = new Request({
-                url: '{{ request.path }}',
-                data: $extend($('meeting_comments_form').toQueryString().parseQueryString(), {
-                    autosave: '1'
-                })
-            });
-            request.send();
+        jQuery(window).unload(function(ev) {
+            var data = jQuery('#meeting_comments_form').serializeArray();
+            data.push({name: 'autosave', value: '1'});
+            jQuery.post('{{ request.path }}', data);
         });
     </script>
 {% endblock %}

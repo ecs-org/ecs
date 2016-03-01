@@ -38,15 +38,14 @@ ecs.textarea = {
     installToolbar: function(el, items, target) {
         return jQuery(el).data('textarea').installToolbar(items, target);
     },
-    installToolbarItem: function(el, item, target) {
+    installToolbarItem: function(el, item) {
         return jQuery(el).data('textarea').installToolbarItem(item, target);
     }
 };
 
-ecs.textarea.TextArea = function(textarea, options) {
-    options = options || {};
+ecs.textarea.TextArea = function(textarea, items) {
     this.textarea = jQuery(textarea);
-    this.toolbar = options.toolbar || [];
+    this.toolbar = [];
     this.textarea.on('keyup change', (function(ev) {
         this.updateHeight();
     }).bind(this));
@@ -60,6 +59,8 @@ ecs.textarea.TextArea = function(textarea, options) {
     this.minHeight = 20;
     this.updateHeight();
     this.textarea.data('textarea', this);
+    if (items)
+        this.installToolbar(items)
 };
 ecs.textarea.TextArea.prototype = {
     updateHeight: function() {
@@ -76,7 +77,7 @@ ecs.textarea.TextArea.prototype = {
     installToolbarItem: function(item, ta) {
         ta = ta || this.textarea;
         this.toolbar.push(item);
-        this.toolbarElement.append(item(jQuery(ta)));
+        this.toolbarElement.append(item(ta));
     },
     installToolbar: function(items, ta) {
         ta = ta || this.textarea;
@@ -86,7 +87,7 @@ ecs.textarea.TextArea.prototype = {
 
         this.toolbar = [];
         var toolbar = this.toolbarElement = jQuery('<div/>', {'class': 'ecs-TextAreaToolbar'});
-        items.each(function(item){
+        items.forEach(function(item){
             this.installToolbarItem(item, ta);
         }, this);
         ta.before(toolbar);

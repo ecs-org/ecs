@@ -74,15 +74,15 @@
             var last_message = thread.find('.message').last();
             last_message.offsetParent().scrollTop(last_message.position().top);
 
-            var messageToolbarItems = [];
-
-            {% if user|has_flag:'is_internal' %}
-                messageToolbarItems.push(ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}"));
-            {% endif %}
-
             var textarea = thread.find('textarea[name="text"]');
-            new ecs.textarea.TextArea(textarea);
-            ecs.textarea.installToolbar(textarea, messageToolbarItems);
+            new ecs.textarea.TextArea(textarea, [
+                {% if user|has_flag:'is_internal' %}
+                    ecs.textarea.toolbarItems.boilerplate(
+                        "{{ _('Insert Boilerplate')|escapejs }}",
+                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                    )
+                {% endif %}
+            ]);
             jQuery('select[data-ajax--url]').select2();
 
             textarea.focus();

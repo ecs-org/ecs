@@ -68,14 +68,14 @@
 <script type="text/javascript">
     jQuery(function(){
         setInterval(function(){
-            $('clock').innerHTML = (new Date()).format('%H:%M');
-        }, 6000);
+            jQuery('#clock').text((new Date()).format('%H:%M'));
+        }, 5000);
         jQuery('a.start_meeting').click(function(ev) {
             ev.preventDefault();
             var href = jQuery(this).attr('href');
             var widget = jQuery(this).parents('.ecs-Widget').data('widget');
             ecs.confirm({
-                question: '{% trans 'Do you want to start the meeting?' %}',
+                question: '{{ _('Do you want to start the meeting?')|escapejs }}',
                 ok: '{{ _("Start (meeting)")|escapejs }}',
                 cancel: '{{ _("Don't Start")|escapejs }}',
                 success: function() {
@@ -88,7 +88,7 @@
             var href = jQuery(this).attr('href');
             var widget = jQuery(this).parents('.ecs-Widget').data('widget');
             ecs.confirm({
-                question: '{% trans 'Do you want to stop the meeting?' %}',
+                question: '{{ _('Do you want to stop the meeting?')|escapejs }}',
                 ok: '{{ _("Stop (meeting)")|escapejs }}',
                 cancel: '{{ _("Don't Stop")|escapejs }}',
                 success: function() {

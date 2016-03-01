@@ -26,15 +26,12 @@
     {{ block.super }}
     <script type="text/javascript">
         jQuery(function(){
-            var messageToolbarItems = [
+            new ecs.textarea.TextArea('#id_invitation_text', [
                 ecs.textarea.toolbarItems.boilerplate(
                     "{% trans 'Insert Boilerplate' %}",
                     "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
                 )
-            ];
-            var textarea = jQuery('#id_invitation_text');
-            new ecs.textarea.TextArea(textarea);
-            ecs.textarea.installToolbar(textarea, messageToolbarItems);
+            ]);
 
             ecs.setupFormFieldHelpers();
         });

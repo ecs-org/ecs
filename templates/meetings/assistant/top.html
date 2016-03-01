@@ -132,11 +132,12 @@
     <script type="text/javascript">
         jQuery(function(){
             {% if submission %}
-            var textarea = $('id_text')
-            new ecs.textarea.TextArea(textarea);
-            ecs.textarea.installToolbar(textarea, [
-                ecs.textarea.toolbarItems.boilerplate("{% trans 'Insert Boilerplate' %}", "{% url 'ecs.boilerplate.views.select_boilerplate' %}")
-            ]);
+                new ecs.textarea.TextArea('#id_text', [
+                    ecs.textarea.toolbarItems.boilerplate(
+                        "{{ _('Insert Boilerplate')|escapejs }}",
+                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                    )
+                ]);
             {% endif %}
             
             var meetingAssistantForm = jQuery('#meeting_assistant_form');

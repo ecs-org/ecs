@@ -289,18 +289,15 @@
             ecs.setupForms();
             ecs.setupWidgets();
 
-            var reviewToolbarItems = [
-                {% if user|has_flag:'is_internal' %}
-                    ecs.textarea.toolbarItems.boilerplate(
-                        "{% trans 'Insert Boilerplate' %}",
-                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
-                    )
-                {% endif %}
-            ];
-
             jQuery('form.review .CharField textarea').each(function(){
-                ecs.textarea.installToolbar(this, reviewToolbarItems);
-
+                ecs.textarea.installToolbar(this, [
+                    {% if user|has_flag:'is_internal' %}
+                        ecs.textarea.toolbarItems.boilerplate(
+                            "{% trans 'Insert Boilerplate' %}",
+                            "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                        )
+                    {% endif %}
+                ]);
             });
             
             {% if user|has_flag:'is_internal' and vote_review_form and vote %}
