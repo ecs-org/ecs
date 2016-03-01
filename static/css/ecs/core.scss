@@ -156,26 +156,6 @@ input[disabled] {
     right: 10px;
 }
 
-.togglers,
-.main_item {
-    display: block;
-    cursor: pointer;
-    border-bottom: 1px solid #e3e3bf;
-}
-.togglers {
-    padding: 1px 3px;
-}
-#usermenu {
-    a {
-        display: block;
-        padding: 1px 3px;
-    }
-    a:hover,
-    .togglers:hover {
-        background: #e3e3bf;
-    }
-}
-
 .searchbox {
     margin-bottom: 10px;
 }

@@ -304,8 +304,7 @@ a.button_submit:hover,
 /* sidebar */
 
 #account,
-#usertoolbar,
-#usermenu {
+#usertoolbar {
     padding: 10px;
     border-bottom: 1px solid $grey-80;
 }
@@ -323,40 +322,7 @@ a.button_submit:hover,
     background: #ededdc;
 }
 #usermenu {
-    min-height: 300px;
-    border-bottom: none;
-}
-#usermenu .elements {
-    display: none;
-}
-#sidebar {
-    ul {
-        list-style-type: none;
-        li {
-            font-size: 14px;
-            line-height: 22px;
-        }
-        li li {
-            margin-left: 10px;
-            font-size: 10pt;
-            border-left: 1px solid #e3e3bf;
-        }
-    }
-
-    img {
-        border: none;
-    }
-    p {
-        margin: 0 0 10px;
-    }
-    a, .togglers  {
-        text-decoration: none;
-        color: $royalblue-dark;
-    }
-    a, a img {
-        text-decoration: none;
-        border: none !important;
-    }
+    padding: 10px;
 }
 
 /* general links */
