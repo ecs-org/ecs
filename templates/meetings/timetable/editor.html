@@ -100,53 +100,45 @@
 </div>
 
 <script type="text/javascript">
-jQuery(function(){
-{% if running_optimization %}
-    setTimeout(function() {
-      window.location.reload();
-    }, 10000);
-{% else %}
-    function getSortableIndex(el){
-        return $('timetable').getChildren().indexOf(el);
-    }
-    var dndInfo = {
-        startIndex: null
-    };
-    $$('.constraint_status').each(function(span){
-        var color = '#ff0000';
-        if(parseFloat(span.innerHTML) == 0){
-            color = '#00ff00';
-        }
-        span.setStyle('background-color', color);
-    });
-    $$('.entry form input').each(function(input){
-        input.addEvent('keydown', function(e){
-            if(e.code == 13){ // enter
-                input.getParent('form').submit();
+    jQuery(function(){
+    {% if running_optimization %}
+        setTimeout(function() {
+            window.location.reload();
+        }, 10000);
+    {% else %}
+        $$('.constraint_status').each(function(span){
+            var color = '#ff0000';
+            if(parseFloat(span.innerHTML) == 0){
+                color = '#00ff00';
             }
+            span.setStyle('background-color', color);
         });
-    });
-    {% if not readonly %}
-    new Sortables('timetable', {
-        clone: true,
-        opacity: 0.5,
-        revert: true,
-        handle: '.dragHandle',
-        onStart: function(el, clone){
-            clone.setStyle('z-index', 100);
-            dndInfo.startIndex = getSortableIndex(clone);
-        },
-        onComplete: function(el){
-            var toIndex = getSortableIndex(el);
-            var fromIndex = dndInfo.startIndex;
-            dndInfo.startIndex = null;
-            if(fromIndex != toIndex && fromIndex !== null){
-                var widget = jQuery('#timetable_tab .ecs-Widget').data('widget');
-                widget.load('{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex);
-            }
-        }
-    });
+        $$('.entry form input').each(function(input){
+            input.addEvent('keydown', function(e){
+                if(e.code == 13){ // enter
+                    input.getParent('form').submit();
+                }
+            });
+        });
+
+        {% if not readonly %}
+            jQuery('#timetable').sortable({
+                handle: '.dragHandle',
+                placeholder: 'entry-placeholder',
+                start: function(ev, ui) {
+                    ui.item.data('start-position', ui.item.index());
+                },
+                update: function(ev, ui) {
+                    var fromIndex = ui.item.data('start-position');
+                    ui.item.removeData('start-position');
+                    var toIndex = ui.item.index();
+                    var widget = jQuery('#timetable_tab .ecs-Widget').data('widget');
+                    widget.load(
+                        '{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex
+                    );
+                }
+            });
+        {% endif %}
     {% endif %}
-{% endif %}
-});
+    });
 </script>

@@ -9,6 +9,7 @@
         {% block htmlmeta %}{% endblock %}
         <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
         {% block htmlcss %}
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/jquery-ui/jquery-ui.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2/select2.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/tether/tether.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap/bootstrap.min.css' %} />
@@ -46,6 +47,7 @@
             <script type="text/javascript">
                 jQuery.noConflict();
             </script>
+            <script type="text/javascript" src={% static '3rd-party/jquery-ui/jquery-ui.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/select2/select2.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/tether/tether.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/bootstrap/bootstrap.min.js' %}></script>
