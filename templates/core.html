@@ -128,17 +128,6 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
-    /* prevent "Error calling method on NPObject." exception in chromium + java plugin */
-    var selectors_utils_filter = Selectors.Utils.filter;
-    Selectors.Utils.filter = function(item, parsed, local){
-        try {
-            return selectors_utils_filter(item, parsed, local);
-        } catch (e) {
-            console.log(e);
-            return false;
-        }
-    };
-
     jQuery(function(){
       var selected = '{% block menuSelection %}dashboard{% endblock %}';
       jQuery('#usermenu .nav-link.' + selected).addClass('active');
