@@ -106,19 +106,14 @@
             window.location.reload();
         }, 10000);
     {% else %}
-        $$('.constraint_status').each(function(span){
-            var color = '#ff0000';
-            if(parseFloat(span.innerHTML) == 0){
-                color = '#00ff00';
-            }
-            span.setStyle('background-color', color);
+        $('.constraint_status').each(function() {
+            var span = $(this);
+            span.css('background-color',
+                (parseFloat(span.html()) == 0) ? 'green' : 'red');
         });
-        $$('.entry form input').each(function(input){
-            input.addEvent('keydown', function(e){
-                if(e.code == 13){ // enter
-                    input.getParent('form').submit();
-                }
-            });
+        $('.entry form input').keydown(function(ev){
+            if (ev.key == 'Enter')
+                $(this).parents('form').submit();
         });
 
         {% if not readonly %}

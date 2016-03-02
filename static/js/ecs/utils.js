@@ -91,7 +91,7 @@ ecs.InvestigatorFormset.prototype = {
             $(this).toggleClass('active', i == index);
         });
 
-        this.inline_formset.forms.each(function(f, i){
+        this.inline_formset.forms.forEach(function(f, i){
             f.toggle(i == index);
         });
     },
@@ -106,7 +106,7 @@ ecs.InvestigatorFormset.prototype = {
         var ul = $('.investigator_list');
         ul.html('');
 
-        this.inline_formset.forms.each(function(form, i){
+        this.inline_formset.forms.forEach(function(form, i){
             var li = $('<li>');
             li.toggleClass('readonly', this.readonly);
             li.toggleClass('errors', !!form.find('.errors').length);
@@ -247,9 +247,8 @@ ecs.setupDocumentUploadForms = function(){
 };
 
 ecs.setupForms = function(){
-    var tabHeaders = $$('.tab_headers');
     var setup = {};
-    if (tabHeaders.length) {
+    if ($('.tab_headers').length) {
         var tabController = new ecs.TabController('.tab_header_groups a');
         var mainForm = $('.form_main');
         var readonly = !mainForm.is('form');
@@ -345,7 +344,7 @@ ecs.setupMessagePopup = function(container) {
             return;
         var value = checked_input.val();
 
-        ['ec', 'involved', 'person'].each(function(f) {
+        ['ec', 'involved', 'person'].forEach(function(f) {
             var el = container.find('#id_receiver_' + f);
             el.prop('disabled', f != value);
             el.find('.errors').toggle(f == value);

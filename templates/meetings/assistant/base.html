@@ -39,9 +39,6 @@
                 {% if meeting.ended %}
                     <li>Ende: {{ meeting.ended|date:'H:i' }} Uhr</li>
                 {% endif %}
-                <li>
-                    Aktuelle Uhrzeit: <span id="clock">{% now "H:i" %}</span> Uhr
-                </li>
             </ol>
             <div class="navigation">
               <h4>Wechsle nach:</h4>
@@ -67,9 +64,6 @@
 
 <script type="text/javascript">
     $(function(){
-        setInterval(function(){
-            $('#clock').text((new Date()).format('%H:%M'));
-        }, 5000);
         $('a.start_meeting').click(function(ev) {
             ev.preventDefault();
             var href = $(this).attr('href');

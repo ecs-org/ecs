@@ -34,9 +34,14 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                     textarea.prop('selectionEnd', s + text.length);
                 };
                 var update = function(q, initial) {
+                    var csrftoken = document.cookie.split('; ')
+                        .find(function(el) {
+                            return el.startsWith('csrftoken=');
+                        })
+                        .split('=', 2)[1];
                     $.get({
                         url: url + '?q=' + encodeURIComponent(q),
-                        headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
+                        headers: {'X-CSRFtoken': csrftoken},
                         dataType: 'json',
                         success: function(results){
                             if(initial){
@@ -49,9 +54,9 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                                 searchInput.focus();
                             }
                             resultList.html('');
-                            results.each(function(text) {
+                            results.forEach(function(text) {
                                 var display = $('<a>', {
-                                    html: '<strong>{slug}</strong>: {text}'.substitute(text),
+                                    html: '<strong>' + text.slug + '</strong>: ' + text.text,
                                     click: function(ev) {
                                         ev.preventDefault();
                                         insert(text.text);
