@@ -2,10 +2,8 @@ ecs.communication = {
     init_thread: function(container) {
         container = $(container);
 
-        var messages = container.find('.message');
-        messages.each(function(i){
+        container.find('.message').each(function(){
             var el = $(this);
-
             el.find('.head').click(function(ev) {
                 ev.preventDefault();
                 el.toggleClass('collapsed');
