@@ -128,9 +128,9 @@
 {% block jsbottom %}
   {{ block.super }}
   <script type="text/javascript">
-    jQuery(function(){
+    $(function(){
       var selected = '{% block menuSelection %}dashboard{% endblock %}';
-      jQuery('#usermenu .nav-link.' + selected).addClass('active');
+      $('#usermenu .nav-link.' + selected).addClass('active');
 
       {% if request.task_management.form %}
           ecs.init_task_form();
@@ -155,15 +155,15 @@
           win.focus();
       };
       
-      jQuery('#help_button').click(window.openHelpPage);
+      $('#help_button').click(window.openHelpPage);
 
-      jQuery('#userswitcher_input').select2();
+      $('#userswitcher_input').select2();
 
-      jQuery(document).on('click', 'a.scratchpad', function(ev) {
+      $(document).on('click', 'a.scratchpad', function(ev) {
           ev.preventDefault();
 
           var modal = ecs.popup();
-          modal.find('.modal-content').load(jQuery(this).attr('href'), function() {
+          modal.find('.modal-content').load($(this).attr('href'), function() {
               var textarea = modal.find('textarea[name="text"]')
               var len = textarea.val().length;
               textarea.focus();
@@ -173,7 +173,7 @@
           modal.on('hide.bs.modal', function() {
               var form = modal.find('form');
               if (form.length)
-                  jQuery.post(form.attr('action'), form.serialize());
+                  $.post(form.attr('action'), form.serialize());
           });
 
           modal.on('click', 'a', function(ev) {
@@ -181,9 +181,9 @@
 
               var form = modal.find('form');
               if (form.length)
-                  jQuery.post(form.attr('action'), form.serialize());
+                  $.post(form.attr('action'), form.serialize());
 
-              modal.find('.modal-content').load(jQuery(this).attr('href'));
+              modal.find('.modal-content').load($(this).attr('href'));
           });
       });
 

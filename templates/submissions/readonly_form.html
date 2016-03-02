@@ -285,11 +285,11 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 
-        jQuery(function(){
+        $(function(){
             ecs.setupForms();
             ecs.setupWidgets();
 
-            jQuery('form.review .CharField textarea').each(function(){
+            $('form.review .CharField textarea').each(function(){
                 ecs.textarea.installToolbar(this, [
                     {% if user|has_flag:'is_internal' %}
                         ecs.textarea.toolbarItems.boilerplate(
@@ -301,7 +301,7 @@
             });
             
             {% if user|has_flag:'is_internal' and vote_review_form and vote %}
-                jQuery('form.review.vote .CharField textarea').each(function(){
+                $('form.review.vote .CharField textarea').each(function(){
                     ecs.textarea.installToolbarItem(this,
                         ecs.textarea.toolbarItems.versionHistory(
                             "{% trans 'History' %} ({{ vote_version }})",
@@ -312,16 +312,16 @@
             {% endif %}
 
 
-            jQuery('.header_actions a.review[id^=save_]').click(function(ev) {
+            $('.header_actions a.review[id^=save_]').click(function(ev) {
                 ev.preventDefault();
-                var tab = jQuery(this).attr('id').substring('save_'.length);
-                jQuery('#' + tab).find('input[type="submit"][name="save"]').click();
+                var tab = $(this).attr('id').substring('save_'.length);
+                $('#' + tab).find('input[type="submit"][name="save"]').click();
             });
 
-            jQuery('.header_actions a.review[id^=close_]').click(function(ev) {
+            $('.header_actions a.review[id^=close_]').click(function(ev) {
                 ev.preventDefault();
-                var tab = jQuery(this).attr('id').substring('close_'.length);
-                jQuery('#' + tab).find('input[type="submit"][name="complete_task"]').click();
+                var tab = $(this).attr('id').substring('close_'.length);
+                $('#' + tab).find('input[type="submit"][name="complete_task"]').click();
             });
 
             {% if review_complete %}
@@ -330,20 +330,20 @@
                     ok: '{{ _("Yes")|escapejs }}',
                     cancel: '{{ _("No")|escapejs }}',
                     success: function() {
-                        jQuery('#checklist_{{ review_complete }}_review_form')
+                        $('#checklist_{{ review_complete }}_review_form')
                             .find('input[type="submit"][name="really_complete_task"]')
                             .click();
                     }
                 })
             {% endif %}
 
-            if (!jQuery('#id_invoice_differs_from_sponsor').is(':checked'))
-                jQuery('#tabs-4 .fieldset_2').hide();
+            if (!$('#id_invoice_differs_from_sponsor').is(':checked'))
+                $('#tabs-4 .fieldset_2').hide();
 
-            jQuery('#tabs_submission a').each(function() {
-                var container = jQuery(jQuery(this).attr('href'));
+            $('#tabs_submission a').each(function() {
+                var container = $($(this).attr('href'));
                 container.find('input[type="checkbox"]').each(function() {
-                    var input = jQuery(this);
+                    var input = $(this);
                     if (!input.is(':checked'))
                         input.parent('li.BooleanField').hide();
                 });

@@ -36,8 +36,8 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(function(){
-        jQuery('.communication_thread').each(function(){
+    $(function(){
+        $('.communication_thread').each(function(){
             new ecs.communication.init_thread(this);
         });
     });

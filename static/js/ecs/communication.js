@@ -1,10 +1,10 @@
 ecs.communication = {
     init_thread: function(container) {
-        container = jQuery(container);
+        container = $(container);
 
         var messages = container.find('.message');
         messages.each(function(i){
-            var el = jQuery(this);
+            var el = $(this);
 
             el.find('.head').click(function(ev) {
                 ev.preventDefault();

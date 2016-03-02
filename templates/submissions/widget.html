@@ -57,12 +57,12 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(function(){
-        var form = jQuery('#submission_list_filter');
+    $(function(){
+        var form = $('#submission_list_filter');
         var page_input = form.find('input[name="page"]');
-        jQuery('#submission_widget .paginator a').click(function(ev) {
+        $('#submission_widget .paginator a').click(function(ev) {
             ev.preventDefault();
-            page_input.val(jQuery(this).data('page'));
+            page_input.val($(this).data('page'));
             form.submit();
         });
         form.find('input').change(function(){

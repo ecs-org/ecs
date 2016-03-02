@@ -1,6 +1,6 @@
 ecs.Widget = function(el, options) {
     options = options || {};
-    this.element = jQuery(el);
+    this.element = $(el);
     this.element.addClass('ecs-Widget');
     this.element.data('widget', this);
     this.reload_interval = options.reload_interval;
@@ -9,18 +9,18 @@ ecs.Widget = function(el, options) {
     var self = this;
     this.element.on('submit', 'form.open-in-widget', function(ev) {
         ev.preventDefault();
-        self.load(null, jQuery(this));
+        self.load(null, $(this));
     });
 
     this.element.on('click', 'a.open-in-widget', function(ev) {
         ev.preventDefault();
-        var href = jQuery(this).attr('href');
+        var href = $(this).attr('href');
         self.load(href);
     });
 
     this.element.on('click', 'a.submit-in-widget', function(ev) {
         ev.preventDefault();
-        jQuery(this).parents('form.open-in-widget').submit();
+        $(this).parents('form.open-in-widget').submit();
     });
 
     if (this.url)
@@ -38,7 +38,7 @@ ecs.Widget.prototype = {
             this.url = url;
         }
 
-        this.request = jQuery.ajax({
+        this.request = $.ajax({
             url: url || (form ? form.attr('action') : this.url),
             method: form ? form.attr('method') : 'get',
             data: form ? form.serialize() : '',
@@ -59,7 +59,7 @@ ecs.Widget.prototype = {
 };
 
 ecs.popup = function(options) {
-    var modal = jQuery('\
+    var modal = $('\
         <div class="modal">\
             <div class="modal-dialog">\
                 <div class="modal-content">\
@@ -67,8 +67,8 @@ ecs.popup = function(options) {
             </div>\
         </div>\
     ');
-    jQuery(document.body).append(modal);
-    modal = jQuery(modal.get(0));
+    $(document.body).append(modal);
+    modal = $(modal.get(0));
     modal.modal(options);
     modal.on('hidden.bs.modal', function() {
         modal.remove();

@@ -72,10 +72,10 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function() {
-            jQuery('#show_login').click(function(ev) {
+        $(function() {
+            $('#show_login').click(function(ev) {
                 ev.preventDefault();
-                jQuery('#login_button').show();
+                $('#login_button').show();
             });
         });
     </script>

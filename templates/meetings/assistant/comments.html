@@ -9,10 +9,10 @@
     </form>
 
     <script type="text/javascript">
-        jQuery(window).unload(function(ev) {
-            var data = jQuery('#meeting_comments_form').serializeArray();
+        $(window).unload(function(ev) {
+            var data = $('#meeting_comments_form').serializeArray();
             data.push({name: 'autosave', value: '1'});
-            jQuery.post('{{ request.path }}', data);
+            $.post('{{ request.path }}', data);
         });
     </script>
 {% endblock %}

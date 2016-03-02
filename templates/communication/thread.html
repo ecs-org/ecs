@@ -67,8 +67,8 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            var thread = jQuery('.communication_thread');
+        $(function(){
+            var thread = $('.communication_thread');
             ecs.communication.init_thread(thread);
 
             var last_message = thread.find('.message').last();
@@ -83,7 +83,7 @@
                     )
                 {% endif %}
             ]);
-            jQuery('select[data-ajax--url]').select2();
+            $('select[data-ajax--url]').select2();
 
             textarea.focus();
         });

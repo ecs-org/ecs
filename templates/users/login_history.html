@@ -38,12 +38,12 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            var form = jQuery('#event_selection_form');
+        $(function(){
+            var form = $('#event_selection_form');
             var page_input = form.find('input[name="page"]');
-            jQuery('.paginator a').click(function(ev) {
+            $('.paginator a').click(function(ev) {
                 ev.preventDefault();
-                page_input.val(jQuery(this).data('page'));
+                page_input.val($(this).data('page'));
                 form.submit();
             });
         });

@@ -135,23 +135,23 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            var form = jQuery('#submission_list_filter');
+        $(function(){
+            var form = $('#submission_list_filter');
             var page_input = form.find('input[name="page"]');
-            jQuery('.submission_list .paginator a').click(function(ev) {
+            $('.submission_list .paginator a').click(function(ev) {
                 ev.preventDefault();
-                page_input.val(jQuery(this).data('page'));
+                page_input.val($(this).data('page'));
                 form.submit();
             });
 
-	    jQuery('#submission_list_filter input').change(function() {
+	    $('#submission_list_filter input').change(function() {
 		ecs.stopPageLoad();
 		form.submit();
 	    });
 
-	    jQuery('a.delete_docstash').click(function(ev) {
+	    $('a.delete_docstash').click(function(ev) {
 		ev.preventDefault();
-		var href = jQuery(this).attr('href');
+		var href = $(this).attr('href');
 		ecs.confirm({
 		    question: '{% trans 'Do you want to delete the submission draft?' %}',
                     ok: '{{ _("Delete")|escapejs }}',

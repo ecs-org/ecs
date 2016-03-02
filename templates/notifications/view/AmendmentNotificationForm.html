@@ -31,22 +31,22 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            jQuery(function(){
-                jQuery('#diff_show_old').click(function(ev) {
+        $(function(){
+            $(function(){
+                $('#diff_show_old').click(function(ev) {
                     ev.preventDefault();
-                    jQuery('.diff .deleted').show();
-                    jQuery('.diff .inserted').hide();
+                    $('.diff .deleted').show();
+                    $('.diff .inserted').hide();
                 });
-                jQuery('#diff_show_new').click(function(ev) {
+                $('#diff_show_new').click(function(ev) {
                     ev.preventDefault();
-                    jQuery('.diff .deleted').hide();
-                    jQuery('.diff .inserted').show();
+                    $('.diff .deleted').hide();
+                    $('.diff .inserted').show();
                 });
-                jQuery('#diff_show_all').click(function(ev) {
+                $('#diff_show_all').click(function(ev) {
                     ev.preventDefault();
-                    jQuery('.diff .deleted').show();
-                    jQuery('.diff .inserted').show();
+                    $('.diff .deleted').show();
+                    $('.diff .inserted').show();
                 });
             });
         });

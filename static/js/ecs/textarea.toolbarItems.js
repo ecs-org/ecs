@@ -2,7 +2,7 @@ ecs.textarea.toolbarItems = {};
 
 ecs.textarea.toolbarItems.boilerplate = function(label, url) {
     return function(textarea) {
-        var button = jQuery('<a>', {
+        var button = $('<a>', {
             title: label,
             'class': 'boilerplate',
             click: function(ev) {
@@ -12,14 +12,14 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                         textarea.prop('selectionStart'),
                         textarea.prop('selectionEnd'))
                 };
-                var container = jQuery('<div>', {'class': 'boilerplate_selector'});
-                var searchInput = jQuery('<input>', {type: 'text', value: status.value});
-                var resultList = jQuery('<div>', {'class': 'resultlist'});
+                var container = $('<div>', {'class': 'boilerplate_selector'});
+                var searchInput = $('<input>', {type: 'text', value: status.value});
+                var resultList = $('<div>', {'class': 'resultlist'});
                 container.append(searchInput);
                 container.append(resultList);
-                jQuery(textarea).before(container);
+                $(textarea).before(container);
                 var dispose = function() {
-                    jQuery(window).off('click', dispose);
+                    $(window).off('click', dispose);
                     clearInterval(status.interval);
                     container.remove();
                 };
@@ -34,7 +34,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                     textarea.prop('selectionEnd', s + text.length);
                 };
                 var update = function(q, initial) {
-                    jQuery.get({
+                    $.get({
                         url: url + '?q=' + encodeURIComponent(q),
                         headers: {'X-CSRFtoken': Cookie.read('csrftoken')},
                         dataType: 'json',
@@ -44,13 +44,13 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                                     insert(results[0].text);
                                     return;
                                 }
-                                jQuery(window).click(dispose);
+                                $(window).click(dispose);
                                 container.css('display', 'block');
                                 searchInput.focus();
                             }
                             resultList.html('');
                             results.each(function(text) {
-                                var display = jQuery('<a>', {
+                                var display = $('<a>', {
                                     html: '<strong>{slug}</strong>: {text}'.substitute(text),
                                     click: function(ev) {
                                         ev.preventDefault();
@@ -93,7 +93,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
 
 ecs.textarea.toolbarItems.versionHistory = function(label, url){
     return function(textarea) {
-        return jQuery('<a>', {
+        return $('<a>', {
             title: label,
             'class': 'versions',
             click: function(ev) {

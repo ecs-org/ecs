@@ -1,7 +1,7 @@
 ecs.setupFormFieldHelpers = function(context){
-    context = jQuery(context || document.body);
+    context = $(context || document.body);
 
-    jQuery(context)
+    $(context)
         .find('.DateField > input, .DateTimeField > input[name$=_0]')
         .datepicker({
             format: 'dd.mm.yyyy',
@@ -9,20 +9,20 @@ ecs.setupFormFieldHelpers = function(context){
             weekStart: 1
         });
 
-    jQuery(context).find('select[data-ajax--url]').select2();
+    $(context).find('select[data-ajax--url]').select2();
 
     context.find('.CharField > textarea').each(function() {
         new ecs.textarea.TextArea(this);
     });
 
     context.find('li,th.label').each(function() {
-        var field = jQuery(this);
+        var field = $(this);
         var input = null;
         if (field.is('th')) {
             var index = field.index();
             var row = field.parents('table').find('tbody > tr');
             if (row.length)
-                input = jQuery(row.find('td').get(index)).find('input[type=text]');
+                input = $(row.find('td').get(index)).find('input[type=text]');
         } else {
             input = field.find('input[type=text]');
         }
@@ -87,8 +87,8 @@ ecs.InvestigatorFormset = function(container, readonly) {
 };
 ecs.InvestigatorFormset.prototype = {
     show: function(index) {
-        jQuery('.investigator_list li').each(function(i) {
-            jQuery(this).toggleClass('active', i == index);
+        $('.investigator_list li').each(function(i) {
+            $(this).toggleClass('active', i == index);
         });
 
         this.inline_formset.forms.each(function(f, i){
@@ -103,15 +103,15 @@ ecs.InvestigatorFormset.prototype = {
         this.show(index);
     },
     generateJumpList: function() {
-        var ul = jQuery('.investigator_list');
+        var ul = $('.investigator_list');
         ul.html('');
 
         this.inline_formset.forms.each(function(form, i){
-            var li = jQuery('<li>');
+            var li = $('<li>');
             li.toggleClass('readonly', this.readonly);
             li.toggleClass('errors', !!form.find('.errors').length);
 
-            var a = jQuery('<a>', {
+            var a = $('<a>', {
                 html: 'Zentrum ' + (i + 1),
                 click: (function(ev){
                     ev.preventDefault();
@@ -121,7 +121,7 @@ ecs.InvestigatorFormset.prototype = {
             li.append(a);
 
             if (!this.readonly && this.inline_formset.forms.length > 1) {
-                var removeLink = jQuery('<a>', {
+                var removeLink = $('<a>', {
                     'class': 'fa fa-times-circle remove',
                     click: (function(ev) {
                         ev.preventDefault();
@@ -135,8 +135,8 @@ ecs.InvestigatorFormset.prototype = {
         }, this);
 
         if (!this.readonly) {
-            var li = jQuery('<li>');
-            var a = jQuery('<a>', {
+            var li = $('<li>');
+            var a = $('<a>', {
                 'class': 'fa fa-plus-circle',
                 click: (function(ev) {
                     ev.preventDefault();
@@ -150,7 +150,7 @@ ecs.InvestigatorFormset.prototype = {
 };
 
 ecs.setupDocumentUploadForms = function(){
-    var form = jQuery('.document_upload form');
+    var form = $('.document_upload form');
     var upload_button = form.find('input[type="submit"]');
     var progress = form.find('progress');
     var warning = form.find('.warning');
@@ -179,7 +179,7 @@ ecs.setupDocumentUploadForms = function(){
             }
         }, false);
         xhr.addEventListener('load', function(ev){
-            jQuery('.upload_container').html(xhr.responseText);
+            $('.upload_container').html(xhr.responseText);
         }, false);
         xhr.addEventListener('error', function(ev){
             progress.hide();
@@ -196,8 +196,8 @@ ecs.setupDocumentUploadForms = function(){
             ecs.mainForm.autosaveDisabled = false;
     });
 
-    var file_field = jQuery('#id_document-file');
-    var name_field = jQuery('#id_document-name');
+    var file_field = $('#id_document-file');
+    var name_field = $('#id_document-name');
     file_field.change(function() {
         var name = file_field.val().split('\\').slice(0)[0];
 
@@ -209,14 +209,14 @@ ecs.setupDocumentUploadForms = function(){
             name_field.val(name);
     });
 
-    jQuery('.doclist a.replace_document').click(function(ev) {
+    $('.doclist a.replace_document').click(function(ev) {
         ev.preventDefault();
-        var link = jQuery(this);
+        var link = $(this);
 
         form.find('input[name="document-replaces_document"]')
-            .val(jQuery(this).data('documentId'));
+            .val($(this).data('documentId'));
 
-        jQuery('#replaced_document_name')
+        $('#replaced_document_name')
             .html(link.siblings('.document_display_name').html())
             .parent('li').show();
 
@@ -225,13 +225,13 @@ ecs.setupDocumentUploadForms = function(){
             .attr('disabled', true);
     });
 
-    jQuery('#tabs-11 a.new_document').click(function(ev) {
+    $('#tabs-11 a.new_document').click(function(ev) {
         ev.preventDefault();
 
         form.find('input[name="document-replaces_document"]')
             .val(null);
 
-        jQuery('#replaced_document_name')
+        $('#replaced_document_name')
             .html(null)
             .parent('li').hide();
 
@@ -240,9 +240,9 @@ ecs.setupDocumentUploadForms = function(){
             .attr('disabled', false);
     });
 
-    jQuery('.doclist a.delete_document').click(function(ev) {
+    $('.doclist a.delete_document').click(function(ev) {
         ev.preventDefault();
-        jQuery('.upload_container').load(jQuery(this).attr('href'));
+        $('.upload_container').load($(this).attr('href'));
     });
 };
 
@@ -251,7 +251,7 @@ ecs.setupForms = function(){
     var setup = {};
     if (tabHeaders.length) {
         var tabController = new ecs.TabController('.tab_header_groups a');
-        var mainForm = jQuery('.form_main');
+        var mainForm = $('.form_main');
         var readonly = !mainForm.is('form');
 
         if (mainForm.length) {
@@ -260,7 +260,7 @@ ecs.setupForms = function(){
             setup.mainForm = form;
         }
 
-        var ifs = jQuery('#tabs-12');
+        var ifs = $('#tabs-12');
         if (ifs.length)
             new ecs.InvestigatorFormset(ifs, readonly);
 
@@ -273,8 +273,8 @@ ecs.setupForms = function(){
 };
 
 ecs.setupWidgets = function(){
-    jQuery('div[data-widget-url]').each(function() {
-        var widget = jQuery(this);
+    $('div[data-widget-url]').each(function() {
+        var widget = $(this);
         var options = {
             url: widget.data('widgetUrl'),
             reload_interval: parseInt(widget.data('widgetReloadInterval')) * 1000 || null,
@@ -284,7 +284,7 @@ ecs.setupWidgets = function(){
 };
 
 ecs.FormFieldController = function(options) {
-    this.fields = jQuery(options.fields);
+    this.fields = $(options.fields);
 
     if (options.disable)
         this.setDisabled(true);
@@ -294,7 +294,7 @@ ecs.FormFieldController = function(options) {
         this.fields.change();
     };
 
-    this.sources = jQuery(options.sources);
+    this.sources = $(options.sources);
     this.sources.change((function(ev) {
         this.auto.apply(this);
     }).bind(this));
@@ -320,7 +320,7 @@ ecs.FormFieldController.prototype = {
         var enable = this.getValues().some(function(x) { return !!x;});
         this.toggleTab.tab.setDisabled(!enable);
         if (this.toggleTab.requiredFields)
-            this.requireField(jQuery(this.toggleTab.requiredFields), enable);
+            this.requireField($(this.toggleTab.requiredFields), enable);
     },
     setDisabled: function(disable) {
         this.fields.prop('disabled', disable);
@@ -331,7 +331,7 @@ ecs.FormFieldController.prototype = {
         }).bind(this)).get();
     },
     getValue: function(field) {
-        field = jQuery(field);
+        field = $(field);
         if (field.attr('type') == 'checkbox')
             return field.is(':checked');
         return field.val();
@@ -360,9 +360,9 @@ ecs.setupMessagePopup = function(container) {
 };
 
 ecs.setupSubmitLinks = function(selector){
-    jQuery(selector).click(function(ev) {
+    $(selector).click(function(ev) {
         ev.preventDefault();
-        jQuery(this).parent('form').submit();
+        $(this).parent('form').submit();
     });
 };
 

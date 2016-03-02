@@ -23,7 +23,7 @@
 {% block jsbottom %}
 {{ block.super }}
 <script type="text/javascript">
-jQuery(function(){
+$(function(){
     ecs.setupForms();
     new ecs.InlineFormSet('#constraint_formset', {
         prefix: '{{ formset.prefix }}',

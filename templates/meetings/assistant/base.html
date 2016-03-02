@@ -66,14 +66,14 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(function(){
+    $(function(){
         setInterval(function(){
-            jQuery('#clock').text((new Date()).format('%H:%M'));
+            $('#clock').text((new Date()).format('%H:%M'));
         }, 5000);
-        jQuery('a.start_meeting').click(function(ev) {
+        $('a.start_meeting').click(function(ev) {
             ev.preventDefault();
-            var href = jQuery(this).attr('href');
-            var widget = jQuery(this).parents('.ecs-Widget').data('widget');
+            var href = $(this).attr('href');
+            var widget = $(this).parents('.ecs-Widget').data('widget');
             ecs.confirm({
                 question: '{{ _('Do you want to start the meeting?')|escapejs }}',
                 ok: '{{ _("Start (meeting)")|escapejs }}',
@@ -83,10 +83,10 @@
                 }
             });
         });
-        jQuery('a.stop_meeting').click(function(ev) {
+        $('a.stop_meeting').click(function(ev) {
             ev.preventDefault();
-            var href = jQuery(this).attr('href');
-            var widget = jQuery(this).parents('.ecs-Widget').data('widget');
+            var href = $(this).attr('href');
+            var widget = $(this).parents('.ecs-Widget').data('widget');
             ecs.confirm({
                 question: '{{ _('Do you want to stop the meeting?')|escapejs }}',
                 ok: '{{ _("Stop (meeting)")|escapejs }}',

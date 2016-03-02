@@ -100,7 +100,7 @@
 </div>
 
 <script type="text/javascript">
-    jQuery(function(){
+    $(function(){
     {% if running_optimization %}
         setTimeout(function() {
             window.location.reload();
@@ -122,7 +122,7 @@
         });
 
         {% if not readonly %}
-            jQuery('#timetable').sortable({
+            $('#timetable').sortable({
                 handle: '.dragHandle',
                 placeholder: 'entry-placeholder',
                 start: function(ev, ui) {
@@ -132,7 +132,7 @@
                     var fromIndex = ui.item.data('start-position');
                     ui.item.removeData('start-position');
                     var toIndex = ui.item.index();
-                    var widget = jQuery('#timetable_tab .ecs-Widget').data('widget');
+                    var widget = $('#timetable_tab .ecs-Widget').data('widget');
                     widget.load(
                         '{% url 'ecs.meetings.views.move_timetable_entry' meeting_pk=meeting.pk %}?from_index=' + fromIndex + '&to_index=' + toIndex
                     );

@@ -68,10 +68,10 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            var container = jQuery('.message_display');
+        $(function(){
+            var container = $('.message_display');
             ecs.setupMessagePopup(container);
-            jQuery('select[data-ajax--url], #id_receiver_involved').select2();
+            $('select[data-ajax--url], #id_receiver_involved').select2();
 
             new ecs.textarea.TextArea(container.find('textarea[name="text"]'), [
                 {% if user|has_flag:'is_internal' %}

@@ -1,7 +1,7 @@
 ecs.init_task_form = function() {
-    var headerworkflow = jQuery('#headerworkflow');
+    var headerworkflow = $('#headerworkflow');
     var form = headerworkflow.find('form');
-    var data_form = jQuery('form.bound_to_task');
+    var data_form = $('form.bound_to_task');
 
     if (data_form.length) {
         form.find('input[name=task_management-save]').show();
@@ -11,7 +11,7 @@ ecs.init_task_form = function() {
         });
     }
 
-    var toggle_headerworkflow = jQuery('#toggle_headerworkflow');
+    var toggle_headerworkflow = $('#toggle_headerworkflow');
     toggle_headerworkflow.click(function(ev) {
         ev.preventDefault();
         var visible = headerworkflow.is(':visible');

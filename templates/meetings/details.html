@@ -70,13 +70,13 @@
 {% block jsbottom %}
   {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
+        $(function(){
             new ecs.TabController('.tab_header_groups a');
             ecs.setupWidgets();
 
-            jQuery('a.send_emails').click(function(ev) {
+            $('a.send_emails').click(function(ev) {
                 ev.preventDefault();
-                var href = jQuery(this).attr('href');
+                var href = $(this).attr('href');
                 ecs.confirm({
                     question: '{% trans 'Do you want to send the E-mails?' %}',
                     ok: '{{ _("Send")|escapejs }}',

@@ -54,7 +54,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 
-        jQuery(function(){
+        $(function(){
             var setup = ecs.setupForms();
 
             var formsets = [
@@ -162,7 +162,7 @@
                 auto: function(values){
                     var personal = this.sources.val() == 'personal';
                     this.setDisabled(personal);
-                    var f = jQuery('#id_study_plan_dataprotection_anonalgoritm');
+                    var f = $('#id_study_plan_dataprotection_anonalgoritm');
                     this.requireField(f, !personal);
                 }
             });
@@ -208,22 +208,22 @@
                         '#id_invoice_email';
 
                     var require = this.sources.is(':checked');
-                    jQuery('#tabs-4 .fieldset_2').toggle(require);
+                    $('#tabs-4 .fieldset_2').toggle(require);
                     this.setDisabled(!require);
-                    this.requireField(jQuery(requiredFields), require);
+                    this.requireField($(requiredFields), require);
                 }
             });
             
-            jQuery('#save-button').click(function(ev){
+            $('#save-button').click(function(ev){
                 ev.preventDefault();
                 ecs.mainForm.save();
             });
-            jQuery('#submit-button').click(function(ev){
+            $('#submit-button').click(function(ev){
                 ev.preventDefault();
                 ecs.mainForm.submit('validate');
             });
 
-            jQuery('.upload_container').load(
+            $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
             {% if valid and allows_resubmission %}
@@ -232,7 +232,7 @@
                     ok: '{% if notification_type %}{{ _("Create Notification")|escapejs }}{% else %}{{ _("Submit")|escapejs }}{% endif %}',
                     cancel: '{% if notification_type %}{{ _("Cancel")|escapejs }}{% else %}{{ _("Don't Submit")|escapejs }}{% endif %}',
                     success: function() {
-                        jQuery('#submit-button').hide();
+                        $('#submit-button').hide();
 
                         var modal = ecs.popup({
                             backdrop: 'static',

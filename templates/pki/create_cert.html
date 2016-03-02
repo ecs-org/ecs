@@ -24,8 +24,8 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            jQuery('#cert_form select[data-ajax--url]').select2();
+        $(function(){
+            $('#cert_form select[data-ajax--url]').select2();
         });
     </script>
 {% endblock %}

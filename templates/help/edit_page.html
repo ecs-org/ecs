@@ -33,8 +33,8 @@
 {% block jsbottom %}
 {{ block.super }}
 <script type="text/javascript">
-    jQuery(function(){
-        var textarea = jQuery('#id_text');
+    $(function(){
+        var textarea = $('#id_text');
 
         var csrftoken = document.cookie.split('; ')
             .find(function(el) {
@@ -42,7 +42,7 @@
             })
             .split('=', 2)[1];
 
-        jQuery('#ReST_italic').click(function(ev) {
+        $('#ReST_italic').click(function(ev) {
             ev.preventDefault();
             var text = textarea.val(), t = textarea.get(0);
             var s = t.selectionStart, e = t.selectionEnd;
@@ -51,7 +51,7 @@
             textarea.focus();
             t.setSelectionRange(s + 1, e + 1);
         });
-        jQuery('#ReST_bold').click(function(ev) {
+        $('#ReST_bold').click(function(ev) {
             ev.preventDefault();
             var text = textarea.val(), t = textarea.get(0);
             var s = t.selectionStart, e = t.selectionEnd;
@@ -60,7 +60,7 @@
             textarea.focus();
             t.setSelectionRange(s + 2, e + 2);
         });
-        jQuery('#ReST_heading').click(function(ev) {
+        $('#ReST_heading').click(function(ev) {
             ev.preventDefault();
             var text = textarea.val(), t = textarea.get(0);
             var s = t.selectionStart, e = t.selectionEnd;
@@ -74,33 +74,33 @@
             textarea.focus();
             t.setSelectionRange(s + 2, s + 2 + header.length);
         });
-        jQuery('#ReST_preview').click(function(ev) {
+        $('#ReST_preview').click(function(ev) {
             ev.preventDefault();
 
-            var preview = jQuery('#help_preview');
+            var preview = $('#help_preview');
             if (preview.length) {
                 preview.remove();
                 return;
             }
 
-            preview = jQuery('<div />', {id: 'help_preview'});
+            preview = $('<div />', {id: 'help_preview'});
             preview.css(textarea.position());
             preview.css({width: textarea.width(), height: textarea.height()});
 
-            jQuery.ajax({
+            $.ajax({
                 url: '{% url 'ecs.help.views.preview_help_page_text' %}',
                 method: 'post',
                 headers: {'X-CSRFtoken': csrftoken},
                 data: {text: textarea.val()},
                 success: function(data) {
-                    jQuery('body').append(preview);
+                    $('body').append(preview);
                     preview.html(data);
                 }
             });
         });
         
         var attachments = {
-            input: jQuery('#help_attachments_filter_input'),
+            input: $('#help_attachments_filter_input'),
             refresh: function(force){
                 if (!force && this.input.val() == this.query)
                     return;
@@ -108,17 +108,17 @@
                 this.query = this.input.val();
                 var self = this;
 
-                jQuery.ajax({
+                $.ajax({
                     url: '{% url 'ecs.help.views.find_attachments' %}',
                     method: 'get',
                     data: {q: this.query},
                     success: function(data) {
-                        var list = jQuery('#help_attachments > .list');
+                        var list = $('#help_attachments > .list');
                         list.html(data);
                         list.find('a').click(function(ev) {
                             ev.preventDefault();
-                            jQuery.get({
-                                url: jQuery(this).attr('href'),
+                            $.get({
+                                url: $(this).attr('href'),
                                 success: function() {
                                     self.refresh(true);
                                 }
@@ -126,7 +126,7 @@
                         });
                         list.find('img').click(function(ev) {
                             ev.preventDefault();
-                            var slug = jQuery(this).parent().data('slug');
+                            var slug = $(this).parent().data('slug');
 
                             var text = textarea.val(), t = textarea.get(0);
                             var s = t.selectionStart, e = t.selectionEnd;

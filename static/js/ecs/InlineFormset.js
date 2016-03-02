@@ -1,7 +1,7 @@
 ecs.InlineFormSet = function(containers, options) {
-    var containers = jQuery(containers);
+    var containers = $(containers);
 
-    this.options = jQuery.extend({
+    this.options = $.extend({
         formSelector: '.form',
         prefix: null,
         addButton: true,
@@ -12,7 +12,7 @@ ecs.InlineFormSet = function(containers, options) {
 
     this.forms = containers.find(this.options.formSelector)
         .map(function() {
-            return jQuery(this);
+            return $(this);
         }).get();
     if (!this.forms.length)
         return;
@@ -31,16 +31,16 @@ ecs.InlineFormSet = function(containers, options) {
 
     this.isTable = containers.is('table');
     containers.each((function(i, el) {
-        this.addContainer(jQuery(el));
+        this.addContainer($(el));
     }).bind(this))
-    this.totalForms = jQuery('#id_' + this.options.prefix + '-TOTAL_FORMS');
+    this.totalForms = $('#id_' + this.options.prefix + '-TOTAL_FORMS');
     this.forms.forEach(function(form, i) {
         this.setupForm(form, i, false);
     }, this);
 };
 ecs.InlineFormSet.prototype = {
     createAddButton: function(container){
-        return jQuery('<a>', {
+        return $('<a>', {
             'class': 'add_row',
             text: this.options.addButtonText,
             click: (function(ev) {
@@ -50,11 +50,11 @@ ecs.InlineFormSet.prototype = {
         });
     },
     createRemoveButton: function(){
-        return jQuery('<a>', {
+        return $('<a>', {
             'class': 'delete_row',
             click: (function(ev) {
                 ev.preventDefault();
-                var form = jQuery(ev.target).parents(this.options.formSelector);
+                var form = $(ev.target).parents(this.options.formSelector);
                 var index = this.forms.findIndex(function(el) {
                     return el.is(form);
                 });
@@ -96,7 +96,7 @@ ecs.InlineFormSet.prototype = {
             .not(form.find('.inline_formset input, .inline_formset select,' +
                 '.inline_formset textarea, .inline_formset label'))
             .each(function() {
-                var el = jQuery(this);
+                var el = $(this);
 
                 for (var f of ['id', 'name', 'for']) {
                     var val = el.attr(f);
@@ -114,9 +114,9 @@ ecs.InlineFormSet.prototype = {
 
         if(this.options.canDelete){
             var name = this.options.prefix + '-' + index;
-            if(jQuery('#id_' + name + '-id').val()){
+            if($('#id_' + name + '-id').val()){
                 var delName = name + '-DELETE';
-                var checkbox = jQuery('<input>', {
+                var checkbox = $('<input>', {
                     type: 'checkbox', 
                     style: 'display:none', 
                     name: delName, 

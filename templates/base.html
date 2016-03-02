@@ -64,12 +64,12 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function() {
-            var sidebar = jQuery('#sidebar');
-            var container = jQuery('#container');
+        $(function() {
+            var sidebar = $('#sidebar');
+            var container = $('#container');
             var duration = 150; /* ms */
 
-            jQuery('#toggle_sidebar').click(function(ev) {
+            $('#toggle_sidebar').click(function(ev) {
                 ev.preventDefault();
                 var width = sidebar.width() ? '0px' : '220px';
                 sidebar.animate({width: width}, duration);

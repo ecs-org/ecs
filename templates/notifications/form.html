@@ -81,37 +81,37 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
+        $(function(){
             ecs.setupForms();
             
-            jQuery('#diff_show_old').click(function(ev) {
+            $('#diff_show_old').click(function(ev) {
                 ev.preventDefault();
-                jQuery('.diff .deleted').show();
-                jQuery('.diff .inserted').hide();
+                $('.diff .deleted').show();
+                $('.diff .inserted').hide();
             });
-            jQuery('#diff_show_new').click(function(ev) {
+            $('#diff_show_new').click(function(ev) {
                 ev.preventDefault();
-                jQuery('.diff .deleted').hide();
-                jQuery('.diff .inserted').show();
+                $('.diff .deleted').hide();
+                $('.diff .inserted').show();
             });
-            jQuery('#diff_show_all').click(function(ev) {
+            $('#diff_show_all').click(function(ev) {
                 ev.preventDefault();
-                jQuery('.diff .deleted').show();
-                jQuery('.diff .inserted').show();
+                $('.diff .deleted').show();
+                $('.diff .inserted').show();
             });
 
-            jQuery('#save-button').click(function(ev){
+            $('#save-button').click(function(ev){
                 ev.preventDefault();
                 ecs.mainForm.save(true);
             });
-            jQuery('#submit-button').click(function(ev){
+            $('#submit-button').click(function(ev){
                 ev.preventDefault();
                 ecs.mainForm.submit('submit');
             });
 
-            var submissionFormsSelect = jQuery('#id_submission_forms');
-            var submissionFormSelect = jQuery('#id_submission_form');
-            var submissionDataDisplay = jQuery('<div/>', {'class': 'submission_data'});
+            var submissionFormsSelect = $('#id_submission_forms');
+            var submissionFormSelect = $('#id_submission_form');
+            var submissionDataDisplay = $('<div/>', {'class': 'submission_data'});
 
             submissionFormsSelect.add(submissionFormSelect).parents('li')
                 .append(submissionDataDisplay);
@@ -125,20 +125,20 @@
 
             submissionFormsSelect.change(function(ev) {
                 loadSubmissionFormData(submissionFormsSelect.find(':selected').map(function() {
-                    return jQuery(this).val();
+                    return $(this).val();
                 }).get());
             });
             submissionFormsSelect.change()
 
             submissionFormSelect.change(function(ev) {
-                loadSubmissionFormData([jQuery(this).val()])
+                loadSubmissionFormData([$(this).val()])
             });
             submissionFormSelect.change()
 
-            jQuery('.upload_container').load(
+            $('.upload_container').load(
                 '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
 
-            if (jQuery('#id_study_started').length) {
+            if ($('#id_study_started').length) {
                 new ecs.FormFieldController({
                     fields: '#id_reason_for_not_started',
                     sources: '#id_study_started',

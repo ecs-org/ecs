@@ -46,10 +46,10 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        jQuery(function(){
-            jQuery('#thread_list_filter input').change(function() {
+        $(function(){
+            $('#thread_list_filter input').change(function() {
                 ecs.stopPageLoad();
-                jQuery('#thread_list_filter').submit();
+                $('#thread_list_filter').submit();
             });
         });
     </script>

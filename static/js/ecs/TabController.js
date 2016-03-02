@@ -1,7 +1,7 @@
 ecs.Tab = function(controller, header) {
     this.controller = controller;
     this.header = header;
-    this.panel = jQuery(header.attr('href'));
+    this.panel = $(header.attr('href'));
     this.group = null;  /* set by ecs.TabGroup */
 };
 ecs.Tab.prototype = {
@@ -56,12 +56,12 @@ ecs.TabController = function(tabGroupContainers) {
     this.selectedTabGroup = null;
 
     var initialSelection = null;
-    jQuery(tabGroupContainers).each(jQuery.proxy(function(controller) {
-        var header = jQuery(this);
-        var container = jQuery(header.attr('href'));
+    $(tabGroupContainers).each($.proxy(function(controller) {
+        var header = $(this);
+        var container = $(header.attr('href'));
         var tabs = [];
         container.find('a').each(function() {
-            var link = jQuery(this);
+            var link = $(this);
             var tab = new ecs.Tab(controller, link);
             if (window.location.hash == link.attr('href'))
                 initialSelection = tab;
@@ -75,7 +75,7 @@ ecs.TabController = function(tabGroupContainers) {
     }, null, this));
     this.selectTab(initialSelection || this.tabs[0]);
 
-    jQuery(window).on('hashchange', this.onHashChange.bind(this));
+    $(window).on('hashchange', this.onHashChange.bind(this));
 };
 ecs.TabController.prototype = {
     onHashChange: function(ev) {

@@ -130,7 +130,7 @@
       </div>
 
     <script type="text/javascript">
-        jQuery(function(){
+        $(function(){
             {% if submission %}
                 new ecs.textarea.TextArea('#id_text', [
                     ecs.textarea.toolbarItems.boilerplate(
@@ -140,33 +140,33 @@
                 ]);
             {% endif %}
             
-            var meetingAssistantForm = jQuery('#meeting_assistant_form');
-            jQuery('#complete').click(function(ev) {
+            var meetingAssistantForm = $('#meeting_assistant_form');
+            $('#complete').click(function(ev) {
                 ev.preventDefault();
                 meetingAssistantForm.submit();
             });
-            jQuery('#complete_executive').click(function(ev) {
+            $('#complete_executive').click(function(ev) {
                 ev.preventDefault();
-                jQuery('#id_executive_review_required').val('1');
+                $('#id_executive_review_required').val('1');
                 meetingAssistantForm.submit();
             });
-            jQuery('#complete_office').click(function(ev) {
+            $('#complete_office').click(function(ev) {
                 ev.preventDefault();
-                jQuery('#id_executive_review_required').val('0');
+                $('#id_executive_review_required').val('0');
                 meetingAssistantForm.submit();
             });
-            jQuery('#save').click(function(ev) {
+            $('#save').click(function(ev) {
                 ev.preventDefault();
-                jQuery('#id_close_top').val('0');
-                jQuery('#id_simple_save').val('1');
+                $('#id_close_top').val('0');
+                $('#id_simple_save').val('1');
                 meetingAssistantForm.submit();
             });
-            jQuery('a.textblock').click(function(ev) {
+            $('a.textblock').click(function(ev) {
                 ev.preventDefault();
-                jQuery.get({
-                    url: jQuery(this).attr('href'),
+                $.get({
+                    url: $(this).attr('href'),
                     success: function(text) {
-                        var textarea = jQuery('#id_text');
+                        var textarea = $('#id_text');
                         var v = textarea.val();
                         var s = textarea.prop('selectionStart');
                         var e = textarea.prop('selectionEnd');

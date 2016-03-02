@@ -1,5 +1,5 @@
 ecs.TabbedForm = function(form, tabController, autosaveInterval) {
-    this.form = jQuery(form);
+    this.form = $(form);
     this.autosaveDisabled = false;
 
     tabController.tabs.forEach(function(tab) {
@@ -12,7 +12,7 @@ ecs.TabbedForm = function(form, tabController, autosaveInterval) {
     this.lastSaveData = this.form.serialize();
     if (autosaveInterval) {
         setInterval(this.autosave.bind(this), autosaveInterval * 1000);
-        jQuery(window).unload(this.autosave.bind(this));
+        $(window).unload(this.autosave.bind(this));
     }
 };
 ecs.TabbedForm.prototype = {
@@ -20,12 +20,12 @@ ecs.TabbedForm.prototype = {
         var currentData = this.form.serialize();
         this.lastSaveData = currentData;
 
-        jQuery.post({
+        $.post({
             url: window.location.href,
             data: currentData + '&' + extraParameter + '=' + extraParameter,
             success: function() {
                 var now = new Date();
-                jQuery('#header .last_save').text(
+                $('#header .last_save').text(
                     'Last save: ' +
                     ('0' + now.getHours()).slice(-2) + ':' +
                     ('0' + now.getMinutes()).slice(-2)

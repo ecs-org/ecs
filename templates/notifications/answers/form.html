@@ -20,7 +20,7 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript"> 
-        jQuery(function(){
+        $(function(){
             ecs.setupFormFieldHelpers();
             var toolbar_items = [
                 {% if answer and user|has_flag:'is_internal' %}
