@@ -41,16 +41,30 @@
               {% endif %}
             </p>
             
-            {% for investigator in sf.investigators.all %}
+            {% for investigator in sf.investigators.system_ec %}
               <div class="indented">
-              {% if investigator.ethics_commission.system or not sf.is_categorized_multicentric_and_local %}
-                <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>      
-                {% if investigator.ethics_commission.system %}
-                  <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
-                {% endif %}
-              {% endif %}
+                <p>
+                  <strong>Prüfzentrum:</strong>
+                  {{ investigator.organisation }}
+                </p>
+                <p>
+                  <strong>Verantwortliche/r Prüfärtzin/arzt:</strong>
+                  {{ investigator.contact }}
+                </p>
               </div>
             {% endfor %}
+
+            {% with sf.investigators.non_system_ec.count as other_ec_count %}
+              {% if other_ec_count %}
+                <div class="indented">
+                  {% blocktrans trimmed count other_ec_count=other_ec_count %}
+                    and one other study site
+                  {% plural %}
+                    and {{ other_ec_count }} other study sites
+                  {% endblocktrans %}
+                </div>
+              {% endif %}
+            {% endwith %}
 
           </li>
           {% endwith %}

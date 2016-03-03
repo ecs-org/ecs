@@ -12,7 +12,7 @@ from django.utils import timezone
 from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
 from ecs.documents.models import Document, DocumentType
 
-CURRENT_SERIALIZER_VERSION = '1.2'
+CURRENT_SERIALIZER_VERSION = '1.3'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'
 DATA_JSON_NAME = 'data.json'
@@ -51,6 +51,8 @@ CHANGELOG = (
     ('*', '1.1'),
     ('+', SubmissionForm, 'study_plan_alpha_sided', None),
     ('*', '1.2'),
+    ('-', SubmissionForm, 'sponsor_agrees_to_publishing', True),
+    ('*', '1.3'),
 )
 
 class FieldDocs(object):

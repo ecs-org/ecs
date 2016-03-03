@@ -25,7 +25,7 @@ VALID_SUBMISSION_FORM_DATA = {
     'study_plan_dropout_ratio': ['0'], 'german_protected_subjects_info': ['bla bla bla'], 'sponsor_contact_gender': ['f'], 
     'study_plan_misc': [''], 'german_preclinical_results': ['bla bla bla'], 'study_plan_biometric_planning': ['Mag. rer.soc.oec. Jane Doe/ Statistikerin'], 
     'investigatoremployee-0-title': [''], 'nontesteduseddrug-INITIAL_FORMS': ['0'], 'submitter_contact_last_name': ['Doe'], 
-    'investigatoremployee-0-sex': [''], 'study_plan_stratification': [''], 'sponsor_agrees_to_publishing': ['on'], 'german_recruitment_info': ['bla bla bla'], 
+    'investigatoremployee-0-sex': [''], 'study_plan_stratification': [''], 'german_recruitment_info': ['bla bla bla'], 
     'investigator-1-phone': [''], 'submitter_email': [''], 'invoice_uid': [''], 'nontesteduseddrug-0-preparation_form': [''], 
     'investigator-1-contact_first_name': ['John'], 'investigator-1-email': ['rofl@copter.com'], 'german_concurrent_study_info': ['bla bla bla'], 
     'study_plan_planned_statalgorithm': ['log rank test'], 'document-date': [''], 'medtech_reference_substance': [''], 'measure-MAX_NUM_FORMS': [''], 

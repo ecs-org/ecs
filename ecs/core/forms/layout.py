@@ -76,7 +76,6 @@ SUBMISSION_FORM_TABS = (
             'sponsor_fax', # 1.5.5
             'sponsor_email', # 1.5.6
             'sponsor_uid',
-            'sponsor_agrees_to_publishing',
             'invoice_differs_from_sponsor',
         ]),
         (_('invoice recipient'), [

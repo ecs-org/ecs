@@ -19,7 +19,10 @@ from ecs.core.models.constants import (
     SUBMISSION_TYPE_MULTICENTRIC,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
-from ecs.core.models.managers import SubmissionManager, SubmissionFormManager, TemporaryAuthorizationManager
+from ecs.core.models.managers import (
+    SubmissionManager, SubmissionFormManager, InvestigatorManager,
+    TemporaryAuthorizationManager,
+)
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document
 from ecs.users.utils import get_user, create_phantom_user, sudo
@@ -318,7 +321,6 @@ class SubmissionForm(models.Model):
     sponsor_phone = models.CharField(max_length=30, null=True)
     sponsor_fax = models.CharField(max_length=30, null=True, blank=True)
     sponsor_email = models.EmailField(null=True)
-    sponsor_agrees_to_publishing = models.BooleanField(default=True)
     sponsor_uid = models.CharField(max_length=35, null=True, blank=True)
     
     invoice_name = models.CharField(max_length=160, null=True, blank=True)
@@ -814,7 +816,7 @@ class Investigator(models.Model):
     certified = models.BooleanField(default=False, blank=True)
     subject_count = models.IntegerField()
     
-    objects = AuthorizationManager()
+    objects = InvestigatorManager()
     
     class Meta:
         ordering = ['id']

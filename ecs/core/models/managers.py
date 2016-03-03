@@ -1,3 +1,6 @@
+import uuid
+
+from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import ContentType
@@ -242,6 +245,19 @@ class SubmissionFormQuerySet(models.QuerySet):
 
 
 SubmissionFormManager = AuthorizationManager.from_queryset(SubmissionFormQuerySet)
+
+
+class InvestigatorQuerySet(models.QuerySet):
+    def system_ec(self):
+        system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
+        return self.filter(ethics_commission__uuid=system_ec_uuid)
+
+    def non_system_ec(self):
+        system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
+        return self.exclude(ethics_commission__uuid=system_ec_uuid)
+
+
+InvestigatorManager = AuthorizationManager.from_queryset(InvestigatorQuerySet)
 
 
 class TemporaryAuthorizationManager(models.Manager):

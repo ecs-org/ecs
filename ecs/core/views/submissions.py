@@ -1029,7 +1029,6 @@ def my_submissions(request):
 def catalog(request, year=None):
     with sudo():
         votes = Vote.objects.filter(result='1',
-            submission_form__sponsor_agrees_to_publishing=True,
             published_at__isnull=False, published_at__lte=timezone.now())
         votes = votes.select_related('submission_form').order_by('published_at')
         years = votes.datetimes('published_at', 'year')
@@ -1063,7 +1062,7 @@ def catalog_json(request):
     data.append(meta_dict)
     
     with sudo():
-        votes = Vote.objects.filter(result='1', submission_form__sponsor_agrees_to_publishing=True, published_at__isnull=False, published_at__lte=timezone.now())
+        votes = Vote.objects.filter(result='1', published_at__isnull=False, published_at__lte=timezone.now())
         votes = votes.select_related('submission_form').order_by('published_at')
         for vote in votes:
             sf = vote.submission_form
