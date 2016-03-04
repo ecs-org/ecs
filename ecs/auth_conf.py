@@ -67,7 +67,10 @@ class TaskQFactory(authorization.QFactory):
                 User.objects.filter(profile__is_indisposed=True).values('pk'))
         )
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
-        q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=MedicalCategory.objects.filter(users_for_expedited_review=user).values('pk').query)
+        exp_q = ~self.make_q(expedited_review_categories__gt=0)
+        if user.profile.is_expedited_reviewer:
+            exp_q |= self.make_q(expedited_review_categories__in=user.medical_categories.values('pk'))
+        q &= exp_q
         return q
 
 authorization.register(Task, factory=TaskQFactory)

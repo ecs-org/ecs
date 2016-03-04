@@ -365,8 +365,8 @@ def auth_user_testusers():
         user.profile.save()
 
         for expcategory in expcategories:
-            e = MedicalCategory.objects.get(abbrev=expcategory)
-            e.users_for_expedited_review.add(user)
+            m = MedicalCategory.objects.get(abbrev=expcategory)
+            m.users.add(user)
 
 @bootstrap.register()
 def ethics_commissions():
