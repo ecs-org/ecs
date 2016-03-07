@@ -16,7 +16,7 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
 
     class Meta:
         model = Submission
-        fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',
+        fields = ('workflow_lane', 'medical_categories', 'remission',
             'legal_and_patient_review_required', 'statistical_review_required', 'insurance_review_required',
             'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers', 'executive_comment')
         widgets = {
@@ -29,7 +29,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
         labels = {
             'workflow_lane': _('workflow lane'),
             'medical_categories': _('medical_categories'),
-            'expedited_review_categories': _('expedited_review_categories'),
             'remission': _('remission'),
             'legal_and_patient_review_required': _('legal_and_patient_review_required'),
             'statistical_review_required': _('statistical_review_required'),
@@ -54,10 +53,8 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
     def clean(self):
         cd = self.cleaned_data
         lane = cd.get('workflow_lane')
-        if lane == SUBMISSION_LANE_BOARD:
+        if lane in (SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED):
             require_fields(self, ('medical_categories',))
-        elif lane == SUBMISSION_LANE_EXPEDITED:
-            require_fields(self, ('expedited_review_categories',))
         if lane != SUBMISSION_LANE_BOARD:
             cd['invite_primary_investigator_to_meeting'] = False
         return cd
