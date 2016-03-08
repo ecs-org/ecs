@@ -149,7 +149,7 @@ class Task(models.Model):
     
     accepted = models.BooleanField(default=False)
 
-    expedited_review_categories = models.ManyToManyField('core.MedicalCategory', related_name='tasks_for_expedited_review')
+    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='tasks_for_expedited_review')
     
     objects = TaskManager()
 
@@ -250,7 +250,7 @@ class Task(models.Model):
         new.created_by = user
         new.accept(user=user, check_authorization=False, commit=False)
         new.save()
-        new.expedited_review_categories = self.expedited_review_categories.all()
+        new.medical_categories = self.medical_categories.all()
         def _repeated_token_received(sender, **kwargs):
             if sender.repeated and sender.node == self.workflow_token.node:
                 new.workflow_token = sender

@@ -279,17 +279,17 @@ class ExpeditedRecommendationSplit(Generic):
             tasks = Task.objects.for_data(s).filter(
                 deleted_at__isnull=True, task_type__workflow_node__uid='expedited_recommendation')
             tasks.filter(assigned_to__isnull=True, closed_at=None).exclude(
-                expedited_review_categories__in=s.medical_categories.values('pk')).mark_deleted()
+                medical_categories__in=s.medical_categories.values('pk')).mark_deleted()
             missing_cats = s.medical_categories.all()
             for task in tasks:
-                missing_cats = missing_cats.exclude(pk__in=task.expedited_review_categories.values('pk'))
+                missing_cats = missing_cats.exclude(pk__in=task.medical_categories.values('pk'))
             missing_cats = list(missing_cats)
 
         tokens = []
         for cat in missing_cats:
             cat_tokens = super(ExpeditedRecommendationSplit, self).emit_token(*args, **kwargs)
             for token in cat_tokens:
-                token.task.expedited_review_categories = [cat]
+                token.task.medical_categories = [cat]
             tokens += cat_tokens
         return tokens
 
