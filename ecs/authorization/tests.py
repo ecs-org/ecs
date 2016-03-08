@@ -37,7 +37,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.external_review_user = self._create_test_user('external_review')
         self.anyone = self._create_test_user('anyone')
         self.board_member_user = self._create_test_user('board_member', is_board_member=True)
-        self.expedited_review_user = self._create_test_user('expedited_review', is_expedited_reviewer=True)
         self.insurance_review_user = self._create_test_user('insurance_review', is_insurance_reviewer=True)
         self.internal_user = self._create_test_user('internal', is_internal=True)
         self.primary_investigator_user = self._create_test_user('primary_investigator')
@@ -99,13 +98,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.sf.submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         self.sf.submission.save()
         with sudo(self.thesis_review_user):
-            self.assertEqual(Submission.objects.count(), 1)
-
-        with sudo(self.expedited_review_user):
-            self.assertEqual(Submission.objects.count(), 0)
-        self.sf.submission.workflow_lane = SUBMISSION_LANE_EXPEDITED
-        self.sf.submission.save()
-        with sudo(self.expedited_review_user):
             self.assertEqual(Submission.objects.count(), 1)
     
     @contextmanager

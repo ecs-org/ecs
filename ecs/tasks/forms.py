@@ -35,7 +35,6 @@ class ManageTaskForm(forms.Form):
             assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
             if task.expedited_review_categories.exists():
                 assign_to_q = assign_to_q.filter(
-                    profile__is_expedited_reviewer=True,
                     medical_categories__in=
                         task.expedited_review_categories.values('pk')
                 )

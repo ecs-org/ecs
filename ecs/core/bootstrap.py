@@ -41,7 +41,6 @@ def submission_workflow():
 
     THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
-    EXPEDITED_REVIEW_GROUP = 'Expedited Review Group'
     LOCALEC_REVIEW_GROUP = 'Local-EC Review Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
     OFFICE_GROUP = 'EC-Office'
@@ -82,7 +81,7 @@ def submission_workflow():
 
             # expedited_lane
             'expedited_recommendation_split': Args(ExpeditedRecommendationSplit, name=_("Expedited Recommendation Split")),
-            'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=EXPEDITED_REVIEW_GROUP),
+            'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=BOARD_MEMBER_GROUP),
             'expedited_vote_preparation': Args(VotePreparation, name=_("Expedited Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # local ec lane
@@ -149,7 +148,6 @@ def auth_groups():
         'EC-B2 Review Group',
         'EC-Paper Submission Review Group',
         'EC-Safety Report Review Group',
-        'Expedited Review Group',
         'Local-EC Review Group',
         'EC-Board Member',
         'GCP Review Group',
@@ -314,16 +312,9 @@ def auth_user_testusers():
          ('b.member8.neuro', ('Neuro',)),
          ('b.member9.angio', ('Angio',)),
     )
-    expeditedtestusers = (
-         ('expedited.klph', ('KlPh',)),
-         ('expedited.stats', ('Stats',)),
-         ('expedited.labor', ('Labor',)),
-         ('expedited.recht', ('Recht',)),
-    )
 
     userswitcher_group = Group.objects.get(name='userswitcher_target')
     boardmember_group = Group.objects.get(name='EC-Board Member')
-    expedited_review_group = Group.objects.get(name='Expedited Review Group')
 
     for testuser, testgroup, flags in testusers:
         for number in range(1,4):
@@ -353,19 +344,6 @@ def auth_user_testusers():
 
         for medcategory in medcategories:
             m = MedicalCategory.objects.get(abbrev=medcategory)
-            m.users.add(user)
-
-    for testuser, expcategories in expeditedtestusers:
-        user, created = get_or_create_user('{0}@example.org'.format(testuser))
-        user.groups.add(expedited_review_group)
-        user.groups.add(userswitcher_group)
-
-        user.profile.is_testuser = True
-        user.profile.is_expedited_reviewer = True
-        user.profile.save()
-
-        for expcategory in expcategories:
-            m = MedicalCategory.objects.get(abbrev=expcategory)
             m.users.add(user)
 
 @bootstrap.register()
