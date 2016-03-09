@@ -9,6 +9,7 @@
     {% else %}
         <h4 class="modal-title">{% trans "Scratchpad" %}</h4>
     {% endif %}
+    <a href="{% url 'ecs.scratchpad.views.popup_list' %}" role="button">{% trans "Show all my scratchpads" %}</a>
 </div>
 
 <div class="modal-body">
@@ -22,8 +23,7 @@
 </div>
 
 <div class="modal-footer">
-    <a class="btn btn-secondary" href="{% url 'ecs.scratchpad.views.popup_list' %}" role="button">{% trans "Show all my scratchpads" %}</a>
-    <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Save and close" %}</button>
+    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">{% trans "Save and close" %}</button>
 </div>
 
 {% if user|has_flag:'is_internal' %}
