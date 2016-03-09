@@ -1,6 +1,7 @@
 ecs.TabbedForm = function(form, tabController, autosaveInterval) {
     this.form = $(form);
     this.autosaveDisabled = false;
+    this.autosave_xhr = null;
 
     tabController.tabs.forEach(function(tab) {
         if (tab.panel.find('.errors').length) {
@@ -20,7 +21,7 @@ ecs.TabbedForm.prototype = {
         var currentData = this.form.serialize();
         this.lastSaveData = currentData;
 
-        $.post({
+        this.autosave_xhr = $.post({
             url: window.location.href,
             data: currentData + '&' + extraParameter + '=' + extraParameter,
             success: function() {
@@ -31,20 +32,28 @@ ecs.TabbedForm.prototype = {
                     ('0' + now.getMinutes()).slice(-2)
                 );
             },
+            complete: (function() {
+                this.autosave_xhr = null;
+            }).bind(this)
         });
     },
     save: function() {
         this._save('save');
     },
     autosave: function() {
-        if (this.autosaveDisabled ||
+        if (this.autosaveDisabled || this.autosave_xhr ||
             this.lastSaveData == this.form.serialize())
             return;
 
         this._save('autosave');
     },
+    toggleAutosave: function(state) {
+        this.autosaveDisabled = !state;
+        if (!state && this.autosave_xhr)
+            this.autosave_xhr.abort();
+    },
     submit: function(name) {
-        this.autosaveDisabled = true;
+        this.toggleAutosave(false);
         if (!name)
             return this.form.submit();
         this.form.find('input[type=submit][name=' + name + ']').click();

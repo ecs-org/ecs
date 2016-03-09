@@ -160,14 +160,12 @@ ecs.setupDocumentUploadForms = function(){
     upload_button.click(function(ev) {
         ev.preventDefault();
 
-        if(ecs.mainForm)
-            ecs.mainForm.autosaveDisabled = true;
-        warning.show();
-
         upload_button.hide();
+        warning.show();
         progress.show();
 
         xhr = new XMLHttpRequest();
+
         xhr.upload.addEventListener('progress', function(ev){
             if (ev.lengthComputable) {
                 progress.attr('value', ev.loaded);
@@ -178,22 +176,28 @@ ecs.setupDocumentUploadForms = function(){
                 progress.attr('max', null);
             }
         }, false);
+
         xhr.addEventListener('load', function(ev){
             $('.upload_container').html(xhr.responseText);
         }, false);
-        xhr.addEventListener('error', function(ev){
-            progress.hide();
-            upload_button.addClass('error').show();
-        }, false);
-        xhr.addEventListener('abort', function(ev){
-            progress.hide();
-            upload_button.addClass('error').show();
-        }, false);
+
+        ['abort', 'error'].forEach(function(type) {
+            xhr.addEventListener(type, function(ev){
+                warning.hide();
+                progress.hide();
+                upload_button.addClass('error').show();
+            }, false);
+        });
+
+        if (ecs.mainForm) {
+            ecs.mainForm.toggleAutosave(false);
+            xhr.addEventListener('loadend', function(ev){
+                ecs.mainForm.toggleAutosave(true);
+            }, false);
+        }
+
         xhr.open('POST', form.attr('action'));
         xhr.send(new FormData(form[0]));
-
-        if(ecs.mainForm)
-            ecs.mainForm.autosaveDisabled = false;
     });
 
     var file_field = $('#id_document-file');
