@@ -38,7 +38,7 @@ ecs.textarea = {
     installToolbar: function(el, items, target) {
         return $(el).data('textarea').installToolbar(items, target);
     },
-    installToolbarItem: function(el, item) {
+    installToolbarItem: function(el, item, target) {
         return $(el).data('textarea').installToolbarItem(item, target);
     }
 };
