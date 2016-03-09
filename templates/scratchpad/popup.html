@@ -1,4 +1,4 @@
-{% load i18n core %}
+{% load i18n core userutils %}
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -25,3 +25,14 @@
     <a class="btn btn-secondary" href="{% url 'ecs.scratchpad.views.popup_list' %}" role="button">{% trans "Show all my scratchpads" %}</a>
     <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans "Save and close" %}</button>
 </div>
+
+{% if user|has_flag:'is_internal' %}
+    <script type="text/javascript">
+        new ecs.textarea.TextArea('.modal-content textarea[name="text"]', [
+            ecs.textarea.toolbarItems.boilerplate(
+                "{{ _('Insert Boilerplate')|escapejs }}",
+                "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+            )
+        ], {update_height: false});
+    </script>
+{% endif %}
