@@ -43,24 +43,30 @@ ecs.textarea = {
     }
 };
 
-ecs.textarea.TextArea = function(textarea, items) {
+ecs.textarea.TextArea = function(textarea, items, options) {
     this.textarea = $(textarea);
     this.toolbar = [];
-    this.textarea.on('keyup change', (function(ev) {
-        this.updateHeight();
-    }).bind(this));
+    this.options = $.extend({
+        update_height: true
+    }, options);
     this.textarea.on('keydown', (function(ev) {
         if (ev.altKey && ev.key == 'Enter') {
             ev.preventDefault();
             ecs.textarea.fullscreenEditor.show(this.textarea);
         }
     }).bind(this));
-    this.textarea.css('overflow', 'hidden');
     this.minHeight = 20;
-    this.updateHeight();
     this.textarea.data('textarea', this);
     if (items)
-        this.installToolbar(items)
+        this.installToolbar(items);
+
+    if (this.options.update_height) {
+        this.textarea.css('overflow', 'hidden');
+        this.textarea.on('keyup change', (function(ev) {
+            this.updateHeight();
+        }).bind(this));
+        this.updateHeight();
+    }
 };
 ecs.textarea.TextArea.prototype = {
     updateHeight: function() {
