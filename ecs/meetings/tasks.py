@@ -84,6 +84,13 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
     finally:
         Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
 
+    # Prevent reversion from creating a Version object for every TimetableEntry
+    # in the meeting. We only have to do this for the non-async case, as the
+    # celery process is not affected by the ReversionMiddleware anyway.
+    if settings.CELERY_ALWAYS_EAGER:
+        from reversion.revisions import revision_context_manager
+        revision_context_manager._current_frame.objects.clear()
+
     return retval
 
 

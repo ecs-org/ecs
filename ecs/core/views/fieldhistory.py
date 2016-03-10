@@ -6,6 +6,7 @@ from reversion import revisions as reversion
 
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
+from ecs.meetings.models import TimetableEntry
 from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required
 from ecs.core.diff import word_diff
@@ -14,6 +15,7 @@ from ecs.core.diff import word_diff
 ALLOWED_MODEL_FIELDS = {
     'vote': (Vote, (('result', _('Vote')), ('text', _('Text')),)),
     'notification_answer': (NotificationAnswer, (('text', _('Text')),)),
+    'timetable_entry': (TimetableEntry, (('text', _('Text')),)),
 }
 
 

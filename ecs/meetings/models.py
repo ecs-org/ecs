@@ -9,6 +9,8 @@ from django.utils.translation import ugettext
 from django.conf import settings
 from django.utils import timezone
 
+from reversion import revisions as reversion
+
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
@@ -485,6 +487,7 @@ class Meeting(models.Model):
                 p.delete()
 
 
+@reversion.register(fields=('text',))
 class TimetableEntry(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='timetable_entries')
     title = models.CharField(max_length=200, blank=True)
