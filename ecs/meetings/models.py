@@ -494,6 +494,7 @@ class TimetableEntry(models.Model):
     submission = models.ForeignKey('core.Submission', null=True, related_name='timetable_entries')
     optimal_start = models.TimeField(null=True)
     is_open = models.BooleanField(default=True)
+    text = models.TextField(null=True, blank=True)
 
     objects = AuthorizationManager()
 
