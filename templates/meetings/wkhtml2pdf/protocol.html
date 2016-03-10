@@ -48,6 +48,9 @@
                 {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
             {% else %}
                 <span class="bold">{{ top.title|default:'<i>No title.</i>' }}</span><br />
+                {% if top.text %}
+                    {{ top.text|linebreaksbr }}<br />
+                {% endif %}
                 <br />
             {% endif %}
         {% endwith %}

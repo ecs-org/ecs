@@ -152,3 +152,9 @@ ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=
 
 class ExpeditedReviewerInvitationForm(forms.Form):
     start = DateTimeField(initial=lambda: timezone.now() + timedelta(days=7))
+
+
+class ManualTimetableEntryCommentForm(forms.ModelForm):
+    class Meta:
+        model = TimetableEntry
+        fields = ('text',)

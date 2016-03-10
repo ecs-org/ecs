@@ -19,6 +19,10 @@
         </span>
     {% if not submission %}
         <div class="meeting_assistant_block">
+            {% if not top.is_break %}
+                {{ form.text }}
+            {% endif %}
+
             <div class="block_left">
                 {% if top.is_break %}
                     <div style="font-size:80px;color:#cc0000;position:relative">PAUSE<div style="font-size:80px;color:#ff6600;position:absolute;left:-3px;top:-3px">PAUSE</div></div>
@@ -133,6 +137,17 @@
         $(function(){
             {% if submission %}
                 new ecs.textarea.TextArea('#id_text', [
+                    ecs.textarea.toolbarItems.boilerplate(
+                        "{{ _('Insert Boilerplate')|escapejs }}",
+                        "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                    )
+                ]);
+            {% elif not top.is_break %}
+                new ecs.textarea.TextArea('#id_text', [
+                    ecs.textarea.toolbarItems.versionHistory(
+                        "{{ _('History')|escapejs }} ({{ answer_version }})",
+                        "{% url 'ecs.core.views.fieldhistory.field_history' model_name='timetable_entry' pk=top.pk %}"
+                    ),
                     ecs.textarea.toolbarItems.boilerplate(
                         "{{ _('Insert Boilerplate')|escapejs }}",
                         "{% url 'ecs.boilerplate.views.select_boilerplate' %}"

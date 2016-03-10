@@ -35,7 +35,7 @@ from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_to
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet,
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
-    ExpeditedReviewerInvitationForm)
+    ExpeditedReviewerInvitationForm, ManualTimetableEntryCommentForm)
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
 from ecs.meetings.cache import cache_meeting_page
@@ -545,6 +545,13 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
                 meeting_pk=meeting.pk, top_pk=top.pk)
     elif top.submission and not top.is_open:
         form = VoteForm(None, instance=vote, readonly=True)
+    elif not top.submission and not top.is_break:
+        form = ManualTimetableEntryCommentForm(request.POST or None, instance=top)
+        if form.is_valid():
+            form.save()
+            top.is_open = False
+            top.save()
+            return next_top_redirect()
     elif request.method == 'POST':
         top.is_open = False
         top.save()
