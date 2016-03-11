@@ -35,7 +35,7 @@ from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_to
 from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet,
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
-    ExpeditedReviewerInvitationForm, ManualTimetableEntryCommentForm)
+    ExpeditedReviewerInvitationForm, ManualTimetableEntryCommentForm, ManualTimetableEntryCommentFormset)
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
 from ecs.meetings.cache import cache_meeting_page
@@ -688,13 +688,35 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
         'meeting': meeting,
     })
 
+
+@user_group_required('EC-Office')
+def edit_protocol(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, ended__isnull=False,
+        protocol_sent_at=None)
+
+    formset = ManualTimetableEntryCommentFormset(
+        request.POST or None,
+        prefix='protocol',
+        queryset=meeting.timetable_entries.filter(submission=None, is_break=False)
+    )
+
+    if request.method == 'POST' and formset.is_valid():
+        formset.save()
+
+    return render(request, 'meetings/tabs/protocol.html', {
+        'meeting': meeting,
+        'formset': formset,
+    })
+
+
 @readonly()
 @user_group_required('EC-Office')
 def send_protocol(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    assert meeting.protocol_sent_at is None
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, protocol_sent_at=None)
+
     meeting.protocol_sent_at = timezone.now()
     meeting.save()
+
     protocol_pdf = meeting.get_protocol_pdf(request)
     protocol_filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
     attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)

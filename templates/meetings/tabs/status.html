@@ -52,12 +52,8 @@
         <th>{% trans "Protocol" %}:</th>
         <td>
             <a href="{% url 'ecs.meetings.views.protocol_pdf' meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a>
-            {% if user|is_member_of:'EC-Office' %}
-                {% if meeting.protocol_sent_at %}
-                    ({% trans 'Sent at' %}: {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
-                {% else %}
-                    | <a class="send_emails" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
-                {% endif %}
+            {% if user|is_member_of:'EC-Office' and meeting.protocol_sent_at %}
+                ({% trans 'Sent at' %}: {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
             {% endif %}
         </td>
     </tr>

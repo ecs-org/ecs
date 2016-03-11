@@ -17,6 +17,9 @@
         {% if user|has_flag:'is_internal' or user|has_flag:'is_board_member' or user|has_flag:'is_resident_member' %}
             <a href="#submissions_tab">{% trans "Submissions" %}</a>
         {% endif %}
+        {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
+            <a href="#protocol_tab">{% trans 'Protocol' %}</a>
+        {% endif %}
     </div>
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
         <div id="tabs_planning" class="tab_headers collapse">
@@ -50,6 +53,11 @@
             <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
+    {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
+        <div id="protocol_tab" class="collapse">
+            <div data-widget-url="{% url 'ecs.meetings.views.edit_protocol' meeting_pk=meeting.pk %}"></div>
+        </div>
+    {% endif %}
 
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
         <div id="experts_tab" class="collapse">
@@ -74,7 +82,7 @@
             new ecs.TabController('.tab_header_groups a');
             ecs.setupWidgets();
 
-            $('a.send_emails').click(function(ev) {
+            $('#content').on('click', 'a.send_emails', function(ev) {
                 ev.preventDefault();
                 var href = $(this).attr('href');
                 ecs.confirm({

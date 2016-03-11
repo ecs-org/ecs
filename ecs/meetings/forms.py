@@ -158,3 +158,11 @@ class ManualTimetableEntryCommentForm(forms.ModelForm):
     class Meta:
         model = TimetableEntry
         fields = ('text',)
+
+    def __init__(self, *args, **kwargs):
+        super(ManualTimetableEntryCommentForm, self).__init__(*args, **kwargs)
+        self.fields['text'].widget.attrs['class'] = 'form-control'
+
+
+ManualTimetableEntryCommentFormset = modelformset_factory(TimetableEntry,
+    form=ManualTimetableEntryCommentForm, extra=0)

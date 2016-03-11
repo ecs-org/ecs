@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<form action="{{ request.path }}" method="post" class="open-in-widget">
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    {% for form in formset.forms %}
+        <fieldset class="form-group">
+            {{ form.id }}
+            {{ form.text.errors }}
+            <label for="{{ form.text.id_for_label }}">
+                {{ form.instance }}, {{ form.instance.title }}
+            </label>
+            {{ form.text }}
+        </fieldset>
+    {% endfor %}
+
+    <a href="" class="btn btn-primary submit-in-widget">Speichern</a>
+    <a class="send_emails btn btn-danger" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
+</form>
+
+<script type="text/javascript">
+    (function() {
+        {% for form in formset.forms %}
+            new ecs.textarea.TextArea('#{{ form.text.id_for_label }}', [
+                ecs.textarea.toolbarItems.versionHistory(
+                    "{{ _('History')|escapejs }} ({{ answer_version }})",
+                    "{% url 'ecs.core.views.fieldhistory.field_history' model_name='timetable_entry' pk=form.instance.pk %}"
+                ),
+                ecs.textarea.toolbarItems.boilerplate(
+                    "{{ _('Insert Boilerplate')|escapejs }}",
+                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                )
+            ]);
+        {% endfor %}
+    })();
+</script>
