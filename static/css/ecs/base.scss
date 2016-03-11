@@ -126,7 +126,7 @@ h5 {
     margin-bottom: 10px;
 }
 
-a {
+a:not(.btn) {
     text-decoration: none;
     color: $royalblue-dark;
 
@@ -246,7 +246,7 @@ select:focus {
     box-shadow: 0 0 6px $grey-80;
 }
 
-input[type=submit],
+input[type=submit]:not(.btn),
 .cancel a,
 a.button_submit,
 #content a.button_submit {
@@ -258,7 +258,7 @@ a.button_submit,
     border: 1px solid #bbb;
     border-radius: 3px;
 }
-input[type=submit] {
+input[type=submit]:not(.btn) {
     height: 26px;
     padding: 3px 5px 5px;
 }
@@ -268,7 +268,7 @@ a.button_submit,
     min-height: 16px;
     padding: 4px 7px 2px;
 }
-input[type=submit]:active,
+input[type=submit]:not(.btn):active,
 #content .cancel a:active,
 a.button_submit:active,
 #content a.button_submit:active {
@@ -278,7 +278,7 @@ a.button_submit:active,
     display: block;
 }
 
-input[type=submit]:hover,
+input[type=submit]:not(.btn):hover,
 #content .cancel a:hover,
 a.button_submit:hover,
 #content a.button_submit:hover {
