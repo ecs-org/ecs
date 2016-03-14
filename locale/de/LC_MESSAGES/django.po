@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-17 12:03+0100\n"
+"POT-Creation-Date: 2016-03-14 13:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr "Statistikergebnis"
 msgid "amt."
 msgstr "Anz."
 
-#: ecs/billing/views.py:115 ecs/core/models/submissions.py:94
+#: ecs/billing/views.py:115 ecs/core/models/submissions.py:97
 msgid "EC-Number"
 msgstr "EK-Number"
 
@@ -91,8 +91,8 @@ msgstr "UID-Nr."
 msgid "Eudract-Nr."
 msgstr "Eudract-Nr."
 
-#: ecs/billing/views.py:115 ecs/core/forms/layout.py:90
-#: ecs/core/forms/layout.py:91
+#: ecs/billing/views.py:115 ecs/core/forms/layout.py:89
+#: ecs/core/forms/layout.py:90
 msgid "applicant"
 msgstr "Antragsteller"
 
@@ -186,7 +186,7 @@ msgstr "Gutachten Überprüfung"
 msgid "comment/reasoning"
 msgstr "Kommentar/Begründung"
 
-#: ecs/checklists/models.py:43 ecs/core/models/submissions.py:163
+#: ecs/checklists/models.py:43 ecs/core/models/submissions.py:166
 #: ecs/help/models.py:20 templates/boilerplate/list.html:10
 #: templates/meetings/tabs/status.html:16
 msgid "New"
@@ -283,7 +283,7 @@ msgstr "Einreichung Formale Prüfung"
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-#: ecs/core/bootstrap.py:68 templates/submissions/readonly_form.html:90
+#: ecs/core/bootstrap.py:68 templates/submissions/readonly_form.html:88
 msgid "Categorization Review"
 msgstr "Einstufung und Zuteilung"
 
@@ -339,14 +339,14 @@ msgid "No Information"
 msgstr "Keine Angaben"
 
 #: ecs/core/diff.py:226 ecs/core/forms/fields.py:44
-#: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:497
-#: templates/submissions/readonly_form.html:348
+#: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:498
+#: templates/submissions/readonly_form.html:330
 msgid "Yes"
 msgstr "Ja"
 
 #: ecs/core/diff.py:228 ecs/core/forms/fields.py:44
-#: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:497
-#: templates/submissions/readonly_form.html:349
+#: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:498
+#: templates/submissions/readonly_form.html:331
 msgid "No"
 msgstr "Nein"
 
@@ -426,17 +426,17 @@ msgstr "Zumindest ein Zentrum ist verpflichtend anzugeben."
 msgid "Please select exactly one primary investigator."
 msgstr "Bitte wählen Sie genau eine/n koordinierende/n Prüfärztin/arzt."
 
-#: ecs/core/forms/forms.py:340 ecs/meetings/views.py:77 templates/core.html:74
+#: ecs/core/forms/forms.py:340 ecs/meetings/views.py:78 templates/core.html:76
 #: templates/tasks/tasks.inc:21 templates/tasks/tasks_full.inc:20
 msgid "Past Meetings"
 msgstr "Vergangene Sitzungen"
 
-#: ecs/core/forms/forms.py:341 templates/core.html:71
+#: ecs/core/forms/forms.py:341 templates/core.html:73
 #: templates/tasks/tasks.inc:22 templates/tasks/tasks_full.inc:21
 msgid "Next Meeting"
 msgstr "Nächste Sitzung"
 
-#: ecs/core/forms/forms.py:342 ecs/meetings/views.py:72 templates/core.html:73
+#: ecs/core/forms/forms.py:342 ecs/meetings/views.py:73 templates/core.html:75
 #: templates/tasks/tasks.inc:23 templates/tasks/tasks_full.inc:22
 msgid "Upcoming Meetings"
 msgstr "Kommende Sitzungen"
@@ -446,18 +446,18 @@ msgstr "Kommende Sitzungen"
 msgid "No Meeting"
 msgstr "Keine Sitzung"
 
-#: ecs/core/forms/forms.py:345 ecs/core/forms/layout.py:97
-#: ecs/core/forms/layout.py:99 ecs/core/models/submissions.py:726
+#: ecs/core/forms/forms.py:345 ecs/core/forms/layout.py:96
+#: ecs/core/forms/layout.py:98 ecs/core/models/submissions.py:728
 #: templates/meetings/tabs/status.html:76
-#: templates/submissions/readonly_form.html:244 templates/tasks/tasks.inc:27
+#: templates/submissions/readonly_form.html:229 templates/tasks/tasks.inc:27
 #: templates/tasks/tasks_full.inc:26
 msgid "AMG"
 msgstr "AMG"
 
-#: ecs/core/forms/forms.py:346 ecs/core/forms/layout.py:106
-#: ecs/core/forms/layout.py:108 ecs/core/models/submissions.py:728
+#: ecs/core/forms/forms.py:346 ecs/core/forms/layout.py:105
+#: ecs/core/forms/layout.py:107 ecs/core/models/submissions.py:730
 #: templates/meetings/tabs/status.html:81
-#: templates/submissions/readonly_form.html:246 templates/tasks/tasks.inc:28
+#: templates/submissions/readonly_form.html:231 templates/tasks/tasks.inc:28
 #: templates/tasks/tasks_full.inc:27
 msgid "MPG"
 msgstr "MPG"
@@ -569,87 +569,87 @@ msgstr "Kurzfassung"
 msgid "sponsor"
 msgstr "Sponsor"
 
-#: ecs/core/forms/layout.py:82
+#: ecs/core/forms/layout.py:81
 msgid "invoice recipient"
 msgstr "Rechnungsempfänger"
 
-#: ecs/core/forms/layout.py:98
+#: ecs/core/forms/layout.py:97
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
 
-#: ecs/core/forms/layout.py:107
+#: ecs/core/forms/layout.py:106
 msgid "Medical Device Study"
 msgstr "Medizinproduktestudie"
 
-#: ecs/core/forms/layout.py:113
+#: ecs/core/forms/layout.py:112
 msgid "measures"
 msgstr "Maßnahmen"
 
-#: ecs/core/forms/layout.py:116 ecs/core/forms/layout.py:117
+#: ecs/core/forms/layout.py:115 ecs/core/forms/layout.py:116
 msgid "biometrics"
 msgstr "Biometrie"
 
-#: ecs/core/forms/layout.py:123
+#: ecs/core/forms/layout.py:122
 msgid "study plan"
 msgstr "Studienplanung"
 
-#: ecs/core/forms/layout.py:127
+#: ecs/core/forms/layout.py:126
 msgid "planned statistical analysis"
 msgstr "Geplante statistische Analyse"
 
-#: ecs/core/forms/layout.py:131
+#: ecs/core/forms/layout.py:130
 msgid "documentation form / data management"
 msgstr "Dokumentationsbögen / Datenmanagement"
 
-#: ecs/core/forms/layout.py:134
+#: ecs/core/forms/layout.py:133
 msgid "persons in charge"
 msgstr "Verantwortliche und Qualifikation"
 
-#: ecs/core/forms/layout.py:137
+#: ecs/core/forms/layout.py:136
 msgid "information privacy"
 msgstr "Datenschutz"
 
-#: ecs/core/forms/layout.py:141 ecs/core/forms/layout.py:142
+#: ecs/core/forms/layout.py:140 ecs/core/forms/layout.py:141
 msgid "insurance"
 msgstr "Versicherung"
 
-#: ecs/core/forms/layout.py:147 ecs/core/forms/layout.py:167
-#: ecs/core/forms/layout.py:176 ecs/core/forms/layout.py:185
-#: ecs/core/forms/layout.py:210 ecs/core/forms/layout.py:230
+#: ecs/core/forms/layout.py:146 ecs/core/forms/layout.py:166
+#: ecs/core/forms/layout.py:175 ecs/core/forms/layout.py:184
+#: ecs/core/forms/layout.py:209 ecs/core/forms/layout.py:229
 msgid "documents"
 msgstr "Unterlagen"
 
-#: ecs/core/forms/layout.py:148
+#: ecs/core/forms/layout.py:147
 msgid "centres"
 msgstr "Zentren"
 
-#: ecs/core/forms/layout.py:162 ecs/core/forms/layout.py:163
-#: ecs/core/forms/layout.py:171 ecs/core/forms/layout.py:172
-#: ecs/core/forms/layout.py:180 ecs/core/forms/layout.py:181
-#: ecs/core/forms/layout.py:189 ecs/core/forms/layout.py:190
-#: ecs/core/forms/layout.py:214 ecs/core/forms/layout.py:215
+#: ecs/core/forms/layout.py:161 ecs/core/forms/layout.py:162
+#: ecs/core/forms/layout.py:170 ecs/core/forms/layout.py:171
+#: ecs/core/forms/layout.py:179 ecs/core/forms/layout.py:180
+#: ecs/core/forms/layout.py:188 ecs/core/forms/layout.py:189
+#: ecs/core/forms/layout.py:213 ecs/core/forms/layout.py:214
 msgid "General information"
 msgstr "Allgemeine Angaben"
 
-#: ecs/core/forms/layout.py:194
+#: ecs/core/forms/layout.py:193
 msgid "Made Changes"
 msgstr "Vorgenommene Änderungen"
 
-#: ecs/core/forms/layout.py:199 ecs/core/forms/layout.py:219
+#: ecs/core/forms/layout.py:198 ecs/core/forms/layout.py:218
 msgid "Study status"
 msgstr "Studienstatus"
 
-#: ecs/core/forms/layout.py:203 ecs/core/forms/layout.py:223
+#: ecs/core/forms/layout.py:202 ecs/core/forms/layout.py:222
 msgid "participants"
 msgstr "Teilnehmer/innen"
 
-#: ecs/core/forms/layout.py:206
+#: ecs/core/forms/layout.py:205
 msgid "SAE / SUSAR"
 msgstr "SAE / SUSAR"
 
-#: ecs/core/forms/layout.py:220 templates/meetings/details.html:9
+#: ecs/core/forms/layout.py:219 templates/meetings/details.html:12
 #: templates/meetings/tabs/status.html:9
-#: templates/submissions/readonly_form.html:59
+#: templates/submissions/readonly_form.html:68
 msgid "Status"
 msgstr "Status"
 
@@ -730,74 +730,74 @@ msgstr "Expedited"
 msgid "retrospective thesis"
 msgstr "Retrospektive Diplomarbeiten/Dissertationen"
 
-#: ecs/core/models/names.py:37 ecs/core/models/submissions.py:851
+#: ecs/core/models/names.py:37 ecs/core/models/submissions.py:853
 #: ecs/users/forms.py:50 ecs/users/models.py:30
 msgid "Ms"
 msgstr "Frau"
 
-#: ecs/core/models/names.py:37 ecs/core/models/submissions.py:851
+#: ecs/core/models/names.py:37 ecs/core/models/submissions.py:853
 #: ecs/users/forms.py:50 ecs/users/models.py:30
 msgid "Mr"
 msgstr "Herr"
 
-#: ecs/core/models/submissions.py:156
+#: ecs/core/models/submissions.py:159
 msgid "Finished"
 msgstr "Beendet"
 
-#: ecs/core/models/submissions.py:158
+#: ecs/core/models/submissions.py:161
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: ecs/core/models/submissions.py:160
+#: ecs/core/models/submissions.py:163
 msgid "Active"
 msgstr "Aktiv"
 
-#: ecs/core/models/submissions.py:162
+#: ecs/core/models/submissions.py:165
 msgid "Acknowledged"
 msgstr "Bestätigt"
 
-#: ecs/core/models/submissions.py:455 ecs/core/paper_forms.py:229
+#: ecs/core/models/submissions.py:457 ecs/core/paper_forms.py:229
 msgid "open"
 msgstr "offen"
 
-#: ecs/core/models/submissions.py:455 ecs/core/paper_forms.py:233
+#: ecs/core/models/submissions.py:457 ecs/core/paper_forms.py:233
 msgid "blind"
 msgstr "blind"
 
-#: ecs/core/models/submissions.py:455 ecs/core/paper_forms.py:237
+#: ecs/core/models/submissions.py:457 ecs/core/paper_forms.py:237
 msgid "double-blind"
 msgstr "doppelblind"
 
-#: ecs/core/models/submissions.py:455
+#: ecs/core/models/submissions.py:457
 msgid "not applicable"
 msgstr "nicht zutreffend"
 
-#: ecs/core/models/submissions.py:476
+#: ecs/core/models/submissions.py:478
 msgid "single-sided"
 msgstr "einseitig"
 
-#: ecs/core/models/submissions.py:476
+#: ecs/core/models/submissions.py:478
 msgid "double-sided"
 msgstr "zweiseitig"
 
-#: ecs/core/models/submissions.py:732
-#: templates/submissions/readonly_form.html:248
+#: ecs/core/models/submissions.py:734
+#: templates/submissions/readonly_form.html:233
 msgid "minors"
 msgstr "Minderjährige"
 
-#: ecs/core/models/submissions.py:734
+#: ecs/core/models/submissions.py:736
 msgid "Investigator invited"
 msgstr "Prüfer eingeladen"
 
-#: ecs/core/models/submissions.py:736
+#: ecs/core/models/submissions.py:738
 msgid "NIS"
 msgstr ""
 
-#: ecs/core/models/submissions.py:885
+#: ecs/core/models/submissions.py:887
 msgid "only study-related"
 msgstr "ausschließlich studienbezogen"
 
-#: ecs/core/models/submissions.py:885
+#: ecs/core/models/submissions.py:887
 msgid "for routine purposes"
 msgstr "zu Routinezwecken"
 
@@ -983,7 +983,7 @@ msgid "fax"
 msgstr "FAX"
 
 #: ecs/core/paper_forms.py:114 ecs/core/paper_forms.py:126
-#: ecs/core/paper_forms.py:282 ecs/core/paper_forms.py:309
+#: ecs/core/paper_forms.py:282 ecs/core/paper_forms.py:305
 msgid "e-mail"
 msgstr "E-Mail"
 
@@ -1281,7 +1281,7 @@ msgstr "Eine Versicherung ist nicht erforderlich"
 msgid "insurance company"
 msgstr "Versicherungsgesellschaft"
 
-#: ecs/core/paper_forms.py:198 ecs/core/paper_forms.py:306
+#: ecs/core/paper_forms.py:198 ecs/core/paper_forms.py:302
 msgid "phone"
 msgstr "Telefon"
 
@@ -1657,17 +1657,17 @@ msgstr "Wie erfolgt die Anonymisierung?"
 msgid "salutation"
 msgstr "Anrede"
 
-#: ecs/core/paper_forms.py:279 ecs/core/paper_forms.py:319
+#: ecs/core/paper_forms.py:279 ecs/core/paper_forms.py:315
 #: ecs/meetings/forms.py:26 ecs/meetings/forms.py:41 ecs/users/forms.py:148
 #: ecs/users/forms.py:213
 msgid "title"
 msgstr "Titel"
 
-#: ecs/core/paper_forms.py:280 ecs/core/paper_forms.py:320
+#: ecs/core/paper_forms.py:280 ecs/core/paper_forms.py:316
 msgid "first name"
 msgstr "Vorname"
 
-#: ecs/core/paper_forms.py:281 ecs/core/paper_forms.py:321
+#: ecs/core/paper_forms.py:281 ecs/core/paper_forms.py:317
 msgid "last name"
 msgstr "Nachname"
 
@@ -1699,87 +1699,67 @@ msgstr "Sponsor bzw. Vertreter/in des Sponsors"
 msgid "person/organization authorized by the sponsor"
 msgstr "vom Sponsor autorisierte Person/Organisation"
 
-#: ecs/core/paper_forms.py:291
-msgid "The sponsor agrees with the publication."
-msgstr "Der Sponsor stimmt der Veröffentlichung zu."
-
-#: ecs/core/paper_forms.py:293
-msgid ""
-"The sponsor agrees with the publication of following data by the Ethics "
-"Commission as appropiate: EC-Number, Submission Date, Project Title, Main "
-"Investigator, Sponsor/CRO and the Centres"
-msgstr ""
-"Der Sponsor stimmt zu, dass die folgenden Daten des Antrags ggf. durch die "
-"Ethikkommission veröffentlicht werden, um die Anträge nach Zahl und Inhalt "
-"transparent zu machen: EK-Nummer, Einreichdatum, Projekttitel, "
-"Koordinierende/r Prüfärztin/arzt, Sponsor/CRO und weitere Zentren"
-
-#: ecs/core/paper_forms.py:294
-msgid ""
-"(Die Zustimmung zum Register ist verpflichtend, wenn die MUW Sponsor ist.)"
-msgstr ""
-
-#: ecs/core/paper_forms.py:299
+#: ecs/core/paper_forms.py:295
 msgid "study site"
 msgstr "Prüfzentrum"
 
-#: ecs/core/paper_forms.py:300
+#: ecs/core/paper_forms.py:296
 msgid "ethics commission"
 msgstr "Ethik-Kommission"
 
-#: ecs/core/paper_forms.py:301
+#: ecs/core/paper_forms.py:297
 msgid "principal investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
-#: ecs/core/paper_forms.py:302
+#: ecs/core/paper_forms.py:298
 msgid "salutation of the Investigator"
 msgstr "Anrede des Prüfarztes"
 
-#: ecs/core/paper_forms.py:303
+#: ecs/core/paper_forms.py:299
 msgid "title of the Investigator"
 msgstr "Titel des Prüfarztes"
 
-#: ecs/core/paper_forms.py:304
+#: ecs/core/paper_forms.py:300
 msgid "first name of the Investigator"
 msgstr "Vorname des Prüfarztes"
 
-#: ecs/core/paper_forms.py:305
+#: ecs/core/paper_forms.py:301
 msgid "last name of the Investigator"
 msgstr "Nachname des Prüfarztes"
 
-#: ecs/core/paper_forms.py:307
+#: ecs/core/paper_forms.py:303
 msgid "mobile"
 msgstr "\"Pieps\"/Mobil"
 
-#: ecs/core/paper_forms.py:308
+#: ecs/core/paper_forms.py:304
 msgid "FAX"
 msgstr "FAX"
 
-#: ecs/core/paper_forms.py:310
+#: ecs/core/paper_forms.py:306
 msgid "Jus practicandi"
 msgstr ""
 
-#: ecs/core/paper_forms.py:311
+#: ecs/core/paper_forms.py:307
 msgid "specialist for"
 msgstr "Facharzt für"
 
-#: ecs/core/paper_forms.py:312
+#: ecs/core/paper_forms.py:308
 msgid "certified"
 msgstr "Prüfärztekurs"
 
-#: ecs/core/paper_forms.py:314
+#: ecs/core/paper_forms.py:310
 msgid "number of participants"
 msgstr "Anzahl Teilnehmer/innen"
 
-#: ecs/core/paper_forms.py:318
+#: ecs/core/paper_forms.py:314
 msgid "Ms/Mr"
 msgstr "Fr/Hr"
 
-#: ecs/core/paper_forms.py:322
+#: ecs/core/paper_forms.py:318
 msgid "Institution"
 msgstr "Institution"
 
-#: ecs/core/paper_forms.py:326
+#: ecs/core/paper_forms.py:322
 msgid "exemption of fees"
 msgstr "Gebührenbefreiung"
 
@@ -1844,29 +1824,37 @@ msgstr "Votum"
 msgid "Text"
 msgstr ""
 
-#: ecs/core/views/submissions.py:782 ecs/statistics/stats.py:39
-#: templates/meetings/details.html:15
+#: ecs/core/views/submissions.py:439
+msgid "Your review is incomplete."
+msgstr "Das Gutachten ist nicht vollständig."
+
+#: ecs/core/views/submissions.py:667
+msgid "This form can't be submitted at the moment."
+msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
+
+#: ecs/core/views/submissions.py:785 ecs/statistics/stats.py:39
+#: templates/meetings/details.html:18
 #: templates/meetings/tabs/submissions.html:3
 msgid "Submissions"
 msgstr "Einreichungen"
 
-#: ecs/core/views/submissions.py:894 templates/core.html:48
+#: ecs/core/views/submissions.py:897 templates/core.html:50
 msgid "All Studies"
 msgstr "Alle Studien"
 
-#: ecs/core/views/submissions.py:931
+#: ecs/core/views/submissions.py:934
 msgid "This document is an old version."
 msgstr "Das Dokument liegt in einer veralteten Form vor."
 
-#: ecs/core/views/submissions.py:1002
+#: ecs/core/views/submissions.py:1005
 msgid "Study Search"
 msgstr "Studien-Suche"
 
-#: ecs/core/views/submissions.py:1011 templates/core.html:51
+#: ecs/core/views/submissions.py:1014 templates/core.html:53
 msgid "Assigned Studies"
 msgstr "Mir zugeordnete Studien"
 
-#: ecs/core/views/submissions.py:1021 templates/core.html:54
+#: ecs/core/views/submissions.py:1024 templates/core.html:56
 msgid "My Studies"
 msgstr "Meine Studien"
 
@@ -2033,6 +2021,12 @@ msgstr ""
 msgid "Ready for Review"
 msgstr "Gutachten Statistik"
 
+#: ecs/help/views.py:201
+#, fuzzy
+#| msgid "Study Search"
+msgid "Search"
+msgstr "Studien-Suche"
+
 #: ecs/meetings/forms.py:25
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -2105,28 +2099,36 @@ msgstr "unmöglich"
 msgid "unfavorable"
 msgstr "ungünstig"
 
-#: ecs/meetings/views.py:58 templates/core.html:69
+#: ecs/meetings/views.py:59 templates/core.html:71
 #: templates/submissions/list.html:93
 msgid "Meetings"
 msgstr "Sitzungen"
 
-#: ecs/meetings/views.py:259
+#: ecs/meetings/views.py:260
 msgid "only tops without associated submission can be deleted"
 msgstr ""
 
-#: ecs/meetings/views.py:406
+#: ecs/meetings/views.py:354
+msgid ""
+"The constraints have been saved. The constraints will be taken into account "
+"when optimizing the timetable."
+msgstr ""
+"Die Einschränkungen wurden gespeichert. Sie werden bei der Optimierung der "
+"Zeitplanung berücksichtigt werden."
+
+#: ecs/meetings/views.py:405
 msgid "This meeting has ended."
 msgstr "Diese Sitzung wurde beendet."
 
-#: ecs/meetings/views.py:416
+#: ecs/meetings/views.py:415
 msgid "No TOPs are assigned to this meeting."
 msgstr "Dieser Sitzung sind keine TOPs zugeordnet."
 
-#: ecs/meetings/views.py:422
+#: ecs/meetings/views.py:421
 msgid "This meeting has not yet started."
 msgstr "Diese Sitzung wurde noch nicht begonnen."
 
-#: ecs/meetings/views.py:437
+#: ecs/meetings/views.py:436
 msgid ""
 "There are open recommendations. You can start the meeting assistant when all "
 "recommendations are done."
@@ -2134,7 +2136,7 @@ msgstr ""
 "Es sind noch nicht alle Empfehlungen fertig abgegeben. Sie können die "
 "Sitzung erst nach dem erfolgten Abschluss der Empfehlungen starten."
 
-#: ecs/meetings/views.py:445
+#: ecs/meetings/views.py:444
 msgid ""
 "There are open vote preparations. You can start the meeting assistant when "
 "all vote preparations are done."
@@ -2142,31 +2144,40 @@ msgstr ""
 "Es sind noch nicht alle Votumsvorbereitungen fertig. Sie können die Sitzung "
 "erst nach dem erfolgten Abschluss der Votumsvorbereitungen starten."
 
-#: ecs/meetings/views.py:458
+#: ecs/meetings/views.py:457
 msgid "unfinished meetings cannot be stopped"
 msgstr "nicht abgeschlossene Sitzungen können nicht beendet werden"
 
-#: ecs/meetings/views.py:602 ecs/meetings/views.py:613
+#: ecs/meetings/views.py:601 ecs/meetings/views.py:612
 msgid "agenda"
 msgstr "Tagesordnung"
 
-#: ecs/meetings/views.py:615 ecs/meetings/views.py:718
+#: ecs/meetings/views.py:614 ecs/meetings/views.py:717
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#: ecs/meetings/views.py:620
+#: ecs/meetings/views.py:619
 #, python-format
 msgid "EC Meeting %s"
 msgstr "EK Sitzung %s"
 
-#: ecs/meetings/views.py:672
+#: ecs/meetings/views.py:671
 #, python-brace-format
 msgid "Expedited Review at {0}"
 msgstr "Expedited Review am {0}"
 
-#: ecs/meetings/views.py:698
+#: ecs/meetings/views.py:697
 msgid "Meeting Protocol"
 msgstr "Sitzungsprotokoll"
+
+#: ecs/meetings/views.py:753
+msgid ""
+"The expert assignment has been saved. The experts will be invited to the "
+"meeting when you send the agenda to the board."
+msgstr ""
+"Die Spezialistenzuordnung wurde gespeichert. Die Spezialisten werden zu der "
+"Sitzung eingeladen, wenn Sie die Tagesordnung an die Sitzungsmitglieder "
+"versenden."
 
 #: ecs/notifications/bootstrap.py:85
 msgid "Safety Review"
@@ -2237,8 +2248,8 @@ msgstr "Neue Meldungsantwort"
 msgid "Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung."
 msgstr ""
 
-#: ecs/notifications/views.py:33 templates/core.html:63
-#: templates/submissions/readonly_form.html:149
+#: ecs/notifications/views.py:33 templates/core.html:65
+#: templates/submissions/readonly_form.html:134
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -2565,22 +2576,26 @@ msgstr "Frau"
 msgid "Mr."
 msgstr "Herr"
 
-#: ecs/users/views.py:124
+#: ecs/users/views.py:125
 msgid "ECS - Registration"
 msgstr "ECS - Anmeldung"
 
-#: ecs/users/views.py:193
+#: ecs/users/views.py:194
 msgid "ECS - Password Reset"
 msgstr "ECS - Passwort zurücksetzen"
 
-#: ecs/users/views.py:272
+#: ecs/users/views.py:273
 #, python-brace-format
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
 
-#: ecs/users/views.py:307 ecs/users/views.py:410
+#: ecs/users/views.py:306 ecs/users/views.py:409
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
+
+#: ecs/users/views.py:307
+msgid "The change of the user has been saved."
+msgstr "Die Änderungen an dem Benutzer wurden gespeichert."
 
 #: ecs/votes/bootstrap.py:24
 msgid "Executive Vote Finalization"
@@ -2693,7 +2708,7 @@ msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
 
 #: templates/administration/advanced_settings.html:6
-#: templates/administration/advanced_settings.html:9 templates/core.html:91
+#: templates/administration/advanced_settings.html:9 templates/core.html:92
 msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
@@ -2709,13 +2724,13 @@ msgstr "Votenempfänger"
 msgid "Save"
 msgstr "Speichern"
 
-#: templates/administration/detail.html:7
-#: templates/administration/detail.html:20 templates/core.html:84
+#: templates/administration/detail.html:6
+#: templates/administration/detail.html:18 templates/core.html:86
 #: templates/users/details.html:6
 msgid "Administration"
 msgstr "Verwaltung"
 
-#: templates/administration/detail.html:9 templates/core.html:88
+#: templates/administration/detail.html:9 templates/core.html:89
 #: templates/users/administration.html:4 templates/users/details.html:4
 msgid "User Administration"
 msgstr "Benutzerverwaltung"
@@ -2816,7 +2831,7 @@ msgid "New Boilerplate"
 msgstr "Neuer Textbaustein"
 
 #: templates/boilerplate/list.html:5 templates/boilerplate/list.html.py:6
-#: templates/core.html:94
+#: templates/core.html:95
 msgid "Boilerplates"
 msgstr "Textbausteine"
 
@@ -2824,9 +2839,9 @@ msgstr "Textbausteine"
 msgid "edit"
 msgstr "Bearbeiten"
 
-#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:6
+#: templates/boilerplate/list.html:16 templates/documents/upload_form.html:15
 #: templates/notifications/stashed_notification_list.html:15
-#: templates/submissions/list.html:36 templates/submissions/list.html:162
+#: templates/submissions/list.html:36 templates/submissions/list.html:157
 msgid "Delete"
 msgstr "Löschen"
 
@@ -2912,7 +2927,7 @@ msgstr ""
 "    "
 
 #: templates/communication/list.html:6 templates/communication/list.html:7
-#: templates/core.html:40 templates/submissions/readonly_form.html:120
+#: templates/core.html:42 templates/submissions/readonly_form.html:62
 msgid "Communication"
 msgstr "Nachrichten"
 
@@ -2932,7 +2947,7 @@ msgstr "Gelesen"
 msgid "Task"
 msgstr "Aufgabe"
 
-#: templates/communication/list.html:40 templates/communication/thread.html:31
+#: templates/communication/list.html:40 templates/communication/thread.html:49
 #: templates/communication/widgets/messages.inc:21
 msgid "mark as done"
 msgstr "als erledigt markieren"
@@ -2951,10 +2966,10 @@ msgstr "Zurück zur Nachrichtenübersicht"
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
-#: templates/communication/send.html:79 templates/communication/thread.html:80
-#: templates/meetings/assistant/top.html:139
-#: templates/notifications/answers/form.html:26
-#: templates/submissions/readonly_form.html:309
+#: templates/communication/send.html:79 templates/communication/thread.html:81
+#: templates/meetings/assistant/top.html:137
+#: templates/notifications/answers/form.html:33
+#: templates/submissions/readonly_form.html:296
 #: templates/users/invitation/invite_user.html:31
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -2982,16 +2997,16 @@ msgstr "Zur Studie"
 msgid "Me"
 msgstr "Ich"
 
-#: templates/communication/thread.html:47
+#: templates/communication/thread.html:44
 msgid "Collapse all"
 msgstr "Alle einklappen"
 
-#: templates/communication/thread.html:48
+#: templates/communication/thread.html:45
 msgid "Expand all"
 msgstr "Alle ausklappen"
 
-#: templates/communication/thread.html:56 templates/meetings/details.html:98
-#: templates/meetings/expedited_reviewer_invitation.html:30
+#: templates/communication/thread.html:56 templates/meetings/details.html:82
+#: templates/meetings/expedited_reviewer_invitation.html:33
 #: templates/users/login_history.html:15
 msgid "Send"
 msgstr "Abschicken"
@@ -3064,74 +3079,74 @@ msgstr "Systemnachrichten werden nicht angezeigt."
 msgid "Show system messages"
 msgstr "Systemnachrichten anzeigen"
 
-#: templates/core.html:22
+#: templates/core.html:24
 msgid "Click here to get help."
 msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
 
-#: templates/core.html:24
+#: templates/core.html:26
 #, python-format
 msgid "Show my scratchpad for submission %(ec_number)s"
 msgstr "Notizblock für die Studie %(ec_number)s aufschlagen"
 
-#: templates/core.html:24
+#: templates/core.html:26
 msgid "Show my scratchpad"
 msgstr "Notizblock aufschlagen"
 
-#: templates/core.html:24
+#: templates/core.html:26
 msgid "Empty"
 msgstr "Leer"
 
-#: templates/core.html:39 templates/dashboard/dashboard.html:6
+#: templates/core.html:41 templates/dashboard/dashboard.html:6
 #: templates/dashboard/dashboard.html:8
 msgid "Dashboard"
 msgstr "Übersicht"
 
-#: templates/core.html:42 templates/tasks/list.html:6
+#: templates/core.html:44 templates/tasks/list.html:6
 #: templates/tasks/list.html.py:7 templates/tasks/tasks.inc:5
 msgid "Tasks"
 msgstr "Aufgaben"
 
-#: templates/core.html:45 templates/submissions/widget.html:3
+#: templates/core.html:47 templates/submissions/widget.html:3
 msgid "Studies"
 msgstr "Studien"
 
-#: templates/core.html:56 templates/submissions/form.html:9
+#: templates/core.html:58 templates/submissions/form.html:9
 msgid "New Submission"
 msgstr "Neuer Antrag"
 
-#: templates/core.html:57 templates/submissions/import.html:4
+#: templates/core.html:59 templates/submissions/import.html:4
 #: templates/submissions/import.html:5
 msgid "Import"
 msgstr "Import"
 
-#: templates/core.html:61
+#: templates/core.html:63
 msgid "Study Notifications"
 msgstr "Studien Meldungen"
 
-#: templates/core.html:64 templates/notifications/form.html:7
+#: templates/core.html:66 templates/notifications/form.html:6
 #: templates/notifications/select_creation_type.html:4
 msgid "New Notification"
 msgstr "Neue Meldung"
 
-#: templates/core.html:76
+#: templates/core.html:78
 msgid "New Meeting"
 msgstr "Neue Sitzung"
 
-#: templates/core.html:89
+#: templates/core.html:90
 msgid "Accounting of fees"
 msgstr "Gebührenabrechnung"
 
-#: templates/core.html:93 templates/meetings/tabs/status.html:66
+#: templates/core.html:94 templates/meetings/tabs/status.html:66
 msgid "Statistics"
 msgstr "Statistik"
 
-#: templates/core.html:96 templates/pki/cert_list.html:4
+#: templates/core.html:97 templates/pki/cert_list.html:4
 #: templates/pki/cert_list.html.py:6 templates/pki/create_cert.html:4
 #: templates/pki/create_cert.html.py:6
 msgid "PKI"
 msgstr ""
 
-#: templates/core.html:113
+#: templates/core.html:108
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
 
@@ -3148,56 +3163,69 @@ msgstr ""
 "zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
 "      "
 
-#: templates/documents/compact_list.html:24 templates/documents/iframe.html:18
+#: templates/documents/compact_list.html:21
+#: templates/documents/upload_form.html:12
 #: templates/submissions/diff/document.inc:14
-#: templates/submissions/readonly_form.html:217
+#: templates/submissions/readonly_form.html:202
 msgid "Download"
 msgstr "Download"
 
-#: templates/documents/compact_list.html:26 templates/documents/iframe.html:20
+#: templates/documents/compact_list.html:23
+#: templates/documents/upload_form.html:14
 #: templates/submissions/diff/document.inc:12
 msgid "View"
 msgstr "Ansicht"
 
-#: templates/documents/upload_form.html:7
+#: templates/documents/upload_form.html:16
 msgid "Replace"
 msgstr "Ersetzen"
 
-#: templates/documents/upload_form.html:37
+#: templates/documents/upload_form.html:54
 msgid "Use the calendar icon to select a date."
 msgstr "Verwenden Sie das Kalendersymbol um ein Datum auszuwählen."
 
-#: templates/documents/upload_form.html:40
+#: templates/documents/upload_form.html:57
 msgid "Replaces document"
 msgstr "Ersetzt Dokument"
 
-#: templates/documents/upload_form.html:41
+#: templates/documents/upload_form.html:58
 msgid "New Document"
 msgstr "Neues Dokument"
 
-#: templates/documents/upload_form.html:44
+#: templates/documents/upload_form.html:61
 msgid "Upload"
 msgstr "Hochladen"
 
-#: templates/documents/upload_form.html:46
+#: templates/documents/upload_form.html:65
 msgid "Please be patient, the file is being uploaded and processed"
 msgstr ""
 "Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns "
 "weiterverarbeitet"
 
-#: templates/field_history/diff.html:13
+#: templates/field_history/diff.html:7
+#, fuzzy
+#| msgid "version"
+msgid "Vote versions"
+msgstr "Version"
+
+#: templates/field_history/diff.html:24
 msgid "No text"
 msgstr "Kein Text"
+
+#: templates/field_history/diff.html:34
+#: templates/scratchpad/popup_list.html:28 templates/tasks/manage_task.html:21
+msgid "Close"
+msgstr "Schließen"
 
 #: templates/forms/field.html:20
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
 
-#: templates/help/view_page.html:38
+#: templates/help/view_page.html:33
 msgid "last edited"
 msgstr "zuletzt bearbeitet"
 
-#: templates/help/view_page.html:38
+#: templates/help/view_page.html:33
 msgid "ago by"
 msgstr ""
 
@@ -3209,15 +3237,15 @@ msgstr "Kommentare"
 msgid "Ret. Thesis/Expedited"
 msgstr "Weitere TOPs"
 
-#: templates/meetings/assistant/base.html:77
+#: templates/meetings/assistant/base.html:72
 msgid "Do you want to start the meeting?"
 msgstr "Wollen Sie die Sitzung starten?"
 
-#: templates/meetings/assistant/base.html:77
+#: templates/meetings/assistant/base.html:73
 msgid "Start (meeting)"
 msgstr "Starten"
 
-#: templates/meetings/assistant/base.html:77
+#: templates/meetings/assistant/base.html:74
 msgid "Don't Start"
 msgstr "Nicht Starten"
 
@@ -3225,11 +3253,11 @@ msgstr "Nicht Starten"
 msgid "Do you want to stop the meeting?"
 msgstr "Wollen Sie die Sitzung beenden?"
 
-#: templates/meetings/assistant/base.html:85
+#: templates/meetings/assistant/base.html:86
 msgid "Stop (meeting)"
 msgstr "Beenden"
 
-#: templates/meetings/assistant/base.html:85
+#: templates/meetings/assistant/base.html:87
 msgid "Don't Stop"
 msgstr "Nicht Beenden"
 
@@ -3302,35 +3330,22 @@ msgstr "Pos. kopieren"
 msgid "copy negative"
 msgstr "Neg. kopieren"
 
-#: templates/meetings/constraints/user_form.html:33
-#: templates/meetings/details.html:92 templates/users/details.html:33
-msgid "form saved"
-msgstr "Formular gespeichert"
-
-#: templates/meetings/constraints/user_form.html:33
-msgid ""
-"The constraints have been saved. The constraints will be taken into account "
-"when optimizing the timetable."
-msgstr ""
-"Die Einschränkungen wurden gespeichert. Sie werden bei der Optimierung der "
-"Zeitplanung berücksichtigt werden."
-
-#: templates/meetings/details.html:7
+#: templates/meetings/details.html:6
 msgid "Overview"
 msgstr "Übersicht"
 
-#: templates/meetings/details.html:11 templates/tasks/tasks.inc:89
+#: templates/meetings/details.html:8
+msgid "Planning"
+msgstr "Planung"
+
+#: templates/meetings/details.html:14 templates/tasks/tasks.inc:89
 #: templates/tasks/tasks_full.inc:88
 msgid "Open Tasks"
 msgstr "Offene Aufgaben"
 
-#: templates/meetings/details.html:12
+#: templates/meetings/details.html:15
 msgid "TOPs"
 msgstr ""
-
-#: templates/meetings/details.html:21
-msgid "Planning"
-msgstr "Planung"
 
 #: templates/meetings/details.html:23
 msgid "Spezialistenzuordnung"
@@ -3344,22 +3359,13 @@ msgstr "Zeitplanung"
 msgid "Sitzungsassistent"
 msgstr ""
 
-#: templates/meetings/details.html:92
-msgid ""
-"The expert assignment has been saved. The experts will be invited to the "
-"meeting when you send the agenda to the board."
-msgstr ""
-"Die Spezialistenzuordnung wurde gespeichert. Die Spezialisten werden zu der "
-"Sitzung eingeladen, wenn Sie die Tagesordnung an die Sitzungsmitglieder "
-"versenden."
-
-#: templates/meetings/details.html:98
-#: templates/meetings/expedited_reviewer_invitation.html:30
+#: templates/meetings/details.html:81
+#: templates/meetings/expedited_reviewer_invitation.html:32
 msgid "Do you want to send the E-mails?"
 msgstr "Wollen Sie die E-mails abschicken?"
 
-#: templates/meetings/details.html:98
-#: templates/meetings/expedited_reviewer_invitation.html:30
+#: templates/meetings/details.html:83
+#: templates/meetings/expedited_reviewer_invitation.html:34
 msgid "Don't Send"
 msgstr "Nicht Abschicken"
 
@@ -3580,7 +3586,7 @@ msgid "Next TOPs"
 msgstr "Nächste TOPs"
 
 #: templates/meetings/tabs/tops.html:15 templates/meetings/tabs/tops.html:41
-#: templates/scratchpad/popup.html:7
+#: templates/scratchpad/popup.html:10
 msgid "Scratchpad"
 msgstr "Notizblock"
 
@@ -3638,50 +3644,44 @@ msgstr "Verteilen"
 
 #: templates/notifications/answers/form.html:28
 #: templates/notifications/answers/view.html:20
-#: templates/submissions/readonly_form.html:180
-#: templates/submissions/readonly_form.html:219
-#: templates/submissions/readonly_form.html:318
+#: templates/submissions/readonly_form.html:165
+#: templates/submissions/readonly_form.html:204
+#: templates/submissions/readonly_form.html:307
 msgid "History"
 msgstr ""
 
 #: templates/notifications/answers/view.html:8
 #: templates/submissions/list.html:69
-#: templates/submissions/readonly_form.html:267
+#: templates/submissions/readonly_form.html:252
 #: templates/submissions/tabs/status.html:12
 #: templates/submissions/tabs/status.html:54
 msgid "Download PDF"
 msgstr "Als PDF herunterladen"
 
-#: templates/notifications/form.html:25 templates/submissions/form.html:33
-#: templates/submissions/form.html:114
+#: templates/notifications/form.html:25 templates/submissions/form.html:34
+#: templates/submissions/form.html:232
 msgid "Submit"
 msgstr "Einreichen"
 
-#: templates/notifications/form.html:38 templates/signature/batch.html:5
-#: templates/signature/batch_base.html:21
-#: templates/submissions/base_form.html:76
-msgid "Your browser does not support iframes."
-msgstr ""
-
-#: templates/notifications/form.html:46
+#: templates/notifications/form.html:45
 #: templates/notifications/view/AmendmentNotificationForm.html:15
 #: templates/submissions/diff/diff.html:16
 msgid "old"
 msgstr "alt"
 
-#: templates/notifications/form.html:47
+#: templates/notifications/form.html:46
 #: templates/notifications/view/AmendmentNotificationForm.html:16
 #: templates/submissions/diff/diff.html:17
 msgid "new"
 msgstr "neu"
 
-#: templates/notifications/form.html:48
+#: templates/notifications/form.html:47
 #: templates/notifications/view/AmendmentNotificationForm.html:17
 #: templates/submissions/diff/diff.html:18
 msgid "all"
 msgstr "alle"
 
-#: templates/notifications/form.html:54
+#: templates/notifications/form.html:53
 #: templates/notifications/view/AmendmentNotificationForm.html:23
 #: templates/submissions/diff/diff.html:25
 msgid "No changes."
@@ -3756,35 +3756,39 @@ msgstr "Widerrufen"
 msgid "Create Certificate"
 msgstr "Zertifikat Erstellen"
 
-#: templates/scratchpad/popup.html:5 templates/scratchpad/popup_list.html:11
+#: templates/scratchpad/popup.html:8 templates/scratchpad/popup_list.html:15
 #, python-format
 msgid "Scratchpad for submission %(ec_number)s"
 msgstr "Notizblock für die Studie %(ec_number)s"
 
-#: templates/scratchpad/popup.html:10
-msgid "Show all my scratchpads"
-msgstr "Zur Liste der Notizblöcke"
-
-#: templates/scratchpad/popup.html:17 templates/scratchpad/popup_list.html:16
+#: templates/scratchpad/popup.html:20 templates/scratchpad/popup_list.html:20
 #, python-format
 msgid "Last Change: %(modified_at)s"
 msgstr "Letzte Änderung: %(modified_at)s"
 
-#: templates/scratchpad/popup.html:20
+#: templates/scratchpad/popup.html:25
+msgid "Show all my scratchpads"
+msgstr "Zur Liste der Notizblöcke"
+
+#: templates/scratchpad/popup.html:26
 msgid "Save and close"
 msgstr "Speichern und schließen"
 
-#: templates/scratchpad/popup_list.html:4
+#: templates/scratchpad/popup_list.html:7
 msgid "List of scratchpads"
 msgstr "Liste der Notizblöcke"
 
-#: templates/scratchpad/popup_list.html:13
+#: templates/scratchpad/popup_list.html:17
 msgid "Global scratchpad"
 msgstr "Allgemeiner Notizblock"
 
-#: templates/scratchpad/popup_list.html:19
+#: templates/scratchpad/popup_list.html:23
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
+
+#: templates/signature/batch.html:5 templates/signature/batch_base.html:21
+msgid "Your browser does not support iframes."
+msgstr ""
 
 #: templates/signature/batch_base.html:4 templates/signature/batch_base.html:5
 msgid "Batch Signature"
@@ -3798,7 +3802,7 @@ msgstr "Überspringen"
 msgid "Push back"
 msgstr "Zurückwerfen"
 
-#: templates/signature/batch_base.html:14 templates/submissions/form.html:115
+#: templates/signature/batch_base.html:14 templates/submissions/form.html:233
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -3838,23 +3842,26 @@ msgstr ""
 msgid "See"
 msgstr "Siehe"
 
-#: templates/submissions/base_form.html:12
+#: templates/submissions/base_form.html:11
 msgid "Submission"
 msgstr "Einreichung"
 
-#: templates/submissions/base_form.html:72
+#: templates/submissions/base_form.html:74
 msgid "At least on protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
-#: templates/submissions/base_form.html:260
-msgid "This tab may only be used when 2.1.2 is selected."
-msgstr "Dieses Tab kann nur verwendet werden, wenn 2.1.2 ausgewählt ist."
-
-#: templates/submissions/catalog.html:28
+#: templates/submissions/catalog.html:15
 msgid "Catalog of Approved Studies"
 msgstr "Register der befürworteten Studien"
 
-#: templates/submissions/catalog.html:81
+#: templates/submissions/catalog.html:60
+#, python-format
+msgid "and one other study site"
+msgid_plural "and %(other_ec_count)s other study sites"
+msgstr[0] "und ein weiteres Prüfzentrum"
+msgstr[1] "und %(other_ec_count)s weitere Prüfzentren"
+
+#: templates/submissions/catalog.html:82
 msgid "licensed data, Copyright Ethicscommission"
 msgstr ""
 "Inhalt lizensiert unter CC-SA-BY-3.0 Lizenz, (C) Copyright Ethikkommission "
@@ -3930,58 +3937,54 @@ msgstr ""
 "neu einreichen.\n"
 "    "
 
-#: templates/submissions/form.html:24
+#: templates/submissions/form.html:25
 msgid "Just Save"
 msgstr "Nur Speichern"
 
-#: templates/submissions/form.html:28
+#: templates/submissions/form.html:29
 msgid "Submit Amendment"
 msgstr "Änderungen absenden"
 
-#: templates/submissions/form.html:30
+#: templates/submissions/form.html:31
 msgid "Resubmit"
 msgstr "Neu Einreichen"
 
-#: templates/submissions/form.html:58 templates/submissions/form.html.py:59
-#: templates/submissions/form.html:60
+#: templates/submissions/form.html:61 templates/submissions/form.html.py:62
+#: templates/submissions/form.html:63
 msgid "Add new measure"
 msgstr "Neue Maßnahme hinzufügen"
 
-#: templates/submissions/form.html:61
+#: templates/submissions/form.html:64
 msgid "Add new foreign particiating centre"
 msgstr "Neues Zentrum im Ausland hinzufügen"
 
-#: templates/submissions/form.html:109
+#: templates/submissions/form.html:231
 msgid ""
 "You filled out the form correctly. Do you want to create a notification now?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie nun eine Meldung "
 "erstellen?"
 
-#: templates/submissions/form.html:109
+#: templates/submissions/form.html:231
 msgid "You filled out the form correctly. Do want to submit the study?"
 msgstr ""
 "Sie haben das Formular korrekt ausgefüllt. Wollen Sie die Studie einreichen?"
 
-#: templates/submissions/form.html:111
-msgid "Your are being redirected to the notification form"
-msgstr "Sie werden zum Meldungsformular weitergeleitet"
-
-#: templates/submissions/form.html:111
-msgid "Your study is being submitted"
-msgstr "Ihre Studie wird eingereicht"
-
-#: templates/submissions/form.html:114
+#: templates/submissions/form.html:232
 msgid "Create Notification"
 msgstr "Meldung Erstellen"
 
-#: templates/submissions/form.html:115
+#: templates/submissions/form.html:233
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:119
-msgid "This form can't be submitted at the moment."
-msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
+#: templates/submissions/form.html:248
+msgid "Your are being redirected to the notification form"
+msgstr "Sie werden zum Meldungsformular weitergeleitet"
+
+#: templates/submissions/form.html:250
+msgid "Your study is being submitted"
+msgstr "Ihre Studie wird eingereicht"
 
 #: templates/submissions/list.html:35 templates/submissions/list.html.py:67
 #: templates/submissions/readonly_form.html:20
@@ -4024,7 +4027,7 @@ msgstr "Keine Einreichung."
 msgid "Do you want to delete the submission draft?"
 msgstr "Wollen Sie den Einreichungsentwurf löschen?"
 
-#: templates/submissions/list.html:163
+#: templates/submissions/list.html:158
 msgid "Don't Delete"
 msgstr "Nicht Löschen"
 
@@ -4087,108 +4090,104 @@ msgstr "%(review)s speichern"
 msgid "complete %(review)s"
 msgstr "%(review)s abschicken"
 
-#: templates/submissions/readonly_form.html:56
+#: templates/submissions/readonly_form.html:55
 msgid "General"
 msgstr "Generell"
 
-#: templates/submissions/readonly_form.html:63
+#: templates/submissions/readonly_form.html:58
+msgid "Evaluations"
+msgstr "Beurteilungen"
+
+#: templates/submissions/readonly_form.html:60
+msgid "Votes"
+msgstr "Voten"
+
+#: templates/submissions/readonly_form.html:61
+msgid "Notifications"
+msgstr "Meldungen"
+
+#: templates/submissions/readonly_form.html:70
 msgid "Workflow"
 msgstr "Arbeitsablauf"
 
-#: templates/submissions/readonly_form.html:67
+#: templates/submissions/readonly_form.html:72
 msgid "Workflow Log"
 msgstr "Arbeitsablauf Protokoll"
 
-#: templates/submissions/readonly_form.html:73
+#: templates/submissions/readonly_form.html:76
 #: templates/submissions/tabs/involved_parties.html:2
 msgid "Involved Parties"
 msgstr "Beteiligte Parteien"
 
-#: templates/submissions/readonly_form.html:83
-msgid "Evaluations"
-msgstr "Beurteilungen"
-
-#: templates/submissions/readonly_form.html:86
+#: templates/submissions/readonly_form.html:85
 msgid "Checklist Summary"
 msgstr "Übersicht"
 
-#: templates/submissions/readonly_form.html:102
-msgid "Votes"
-msgstr "Voten"
-
-#: templates/submissions/readonly_form.html:109
-#: templates/submissions/readonly_form.html:211
+#: templates/submissions/readonly_form.html:100
+#: templates/submissions/readonly_form.html:196
 msgid "Published Votes"
 msgstr "Veröffentlichte Voten"
 
-#: templates/submissions/readonly_form.html:113
-msgid "Notifications"
-msgstr "Meldungen"
-
-#: templates/submissions/readonly_form.html:115
+#: templates/submissions/readonly_form.html:104
 msgid "Pending Notifications"
 msgstr "Ausstehende Meldungen"
 
-#: templates/submissions/readonly_form.html:116
-#: templates/submissions/readonly_form.html:171
+#: templates/submissions/readonly_form.html:105
+#: templates/submissions/readonly_form.html:156
 msgid "Answered Notifications"
 msgstr "Beantwortete Meldungen"
 
-#: templates/submissions/readonly_form.html:122
+#: templates/submissions/readonly_form.html:109
 msgid "My Communication"
 msgstr "Meine Nachrichten"
 
-#: templates/submissions/readonly_form.html:124
+#: templates/submissions/readonly_form.html:111
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-#: templates/submissions/readonly_form.html:160
+#: templates/submissions/readonly_form.html:145
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine offenen Meldungen."
 
-#: templates/submissions/readonly_form.html:167
-#: templates/submissions/readonly_form.html:189
+#: templates/submissions/readonly_form.html:152
+#: templates/submissions/readonly_form.html:174
 msgid "Create a new notification"
 msgstr "Eine neue Meldung erstellen"
 
-#: templates/submissions/readonly_form.html:178
+#: templates/submissions/readonly_form.html:163
 msgid "rejected"
 msgstr "abgelehnt"
 
-#: templates/submissions/readonly_form.html:186
+#: templates/submissions/readonly_form.html:171
 msgid "There are no answered notifications."
 msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 
-#: templates/submissions/readonly_form.html:195
+#: templates/submissions/readonly_form.html:180
 msgid "Changed after voting"
 msgstr "Nach der Abstimmung geändert"
 
-#: templates/submissions/readonly_form.html:216
+#: templates/submissions/readonly_form.html:201
 msgid "valid until"
 msgstr "gültig bis"
 
-#: templates/submissions/readonly_form.html:225
+#: templates/submissions/readonly_form.html:210
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
-#: templates/submissions/readonly_form.html:239
-#: templates/submissions/readonly_form.html:259
+#: templates/submissions/readonly_form.html:224
+#: templates/submissions/readonly_form.html:244
 msgid "Reopen"
 msgstr "Neu öffnen"
 
-#: templates/submissions/readonly_form.html:267
+#: templates/submissions/readonly_form.html:252
 msgid "Download unpublished Version as PDF"
 msgstr "Unveröffentlichte Version als PDF herunterladen"
 
-#: templates/submissions/readonly_form.html:280
+#: templates/submissions/readonly_form.html:265
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:342
-msgid "Your review is incomplete."
-msgstr "Das Gutachten ist nicht vollständig."
-
-#: templates/submissions/readonly_form.html:345
+#: templates/submissions/readonly_form.html:329
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
@@ -4318,10 +4317,6 @@ msgstr ""
 "Abgeschlossene Aufgaben sind ausgegraut, gelöschte Aufgaben sind "
 "durchgestrichen"
 
-#: templates/tasks/manage_task.html:21
-msgid "Close"
-msgstr "Schließen"
-
 #: templates/tasks/manage_task.html:34
 msgid "Delegate"
 msgstr "Abgeben"
@@ -4392,11 +4387,11 @@ msgstr ""
 msgid "Bookmark"
 msgstr "Lesezeichen"
 
-#: templates/tasks/tasks_js.inc:18
+#: templates/tasks/tasks_js.inc:19
 msgid "Collapse"
 msgstr "weniger"
 
-#: templates/tasks/tasks_js.inc:22
+#: templates/tasks/tasks_js.inc:23
 msgid "Expand"
 msgstr "mehr"
 
@@ -4452,10 +4447,6 @@ msgstr "Zurücksetzen"
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
 
-#: templates/users/details.html:33
-msgid "The change of the user has been saved."
-msgstr "Die Änderungen an dem Benutzer wurden gespeichert."
-
 #: templates/users/indisposed_proxy.txt:5
 #, python-format
 msgid ""
@@ -4477,23 +4468,23 @@ msgstr "Abwesenheit"
 msgid "Invite"
 msgstr "Einladen"
 
-#: templates/users/invitation/set_password_form.html:16
+#: templates/users/invitation/set_password_form.html:8
 msgid "Set Password"
 msgstr "Passwort setzen"
 
-#: templates/users/login.html:60
+#: templates/users/login.html:45
 msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
-#: templates/users/login.html:61
+#: templates/users/login.html:46
 msgid "Online Help Pages"
 msgstr "Hilfe/Anleitungen"
 
-#: templates/users/login.html:62
+#: templates/users/login.html:47
 msgid "Site Notice"
 msgstr "Impressum"
 
-#: templates/users/login.html:75
+#: templates/users/login.html:60
 msgid "Your username and password did not match. Please try again."
 msgstr ""
 
