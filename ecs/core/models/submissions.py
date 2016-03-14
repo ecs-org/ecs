@@ -376,11 +376,11 @@ class SubmissionForm(models.Model):
     already_voted = models.BooleanField(default=False)
     
     # 2.9
-    subject_count = models.IntegerField()
+    subject_count = models.PositiveIntegerField()
 
     # 2.10
-    subject_minage = models.IntegerField(null=True, blank=True)
-    subject_maxage = models.IntegerField(null=True, blank=True)
+    subject_minage = models.PositiveIntegerField(null=True, blank=True)
+    subject_maxage = models.PositiveIntegerField(null=True, blank=True)
     subject_noncompetents = models.BooleanField(default=False)
     subject_males = models.BooleanField(default=False)
     subject_females = models.BooleanField(default=False)
@@ -814,7 +814,7 @@ class Investigator(models.Model):
     jus_practicandi = models.BooleanField(default=False, blank=True)
     specialist = models.CharField(max_length=80, blank=True)
     certified = models.BooleanField(default=False, blank=True)
-    subject_count = models.IntegerField()
+    subject_count = models.PositiveIntegerField()
     
     objects = InvestigatorManager()
     
