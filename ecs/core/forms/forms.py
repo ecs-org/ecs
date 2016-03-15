@@ -446,6 +446,11 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
     start = DateTimeField(initial=timezone.now)
     end = DateTimeField(initial=lambda: timezone.now() + timedelta(days=30))
 
+    def __init__(self, *args, **kwargs):
+        super(TemporaryAuthorizationForm, self).__init__(*args, **kwargs)
+        self.fields['user'].queryset = \
+            self.fields['user'].queryset.select_related('profile')
+
     class Meta:
         model = TemporaryAuthorization
         exclude = ('submission',)
