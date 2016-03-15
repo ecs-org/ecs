@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
@@ -60,7 +61,11 @@ authorization.register(Vote, factory=VoteQFactory)
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__groups__in=user.groups.values('pk').query) & (self.make_q(assigned_to=None) | self.make_q(assigned_to__profile__is_indisposed=True))
+        q = self.make_q(task_type__in=user.groups.values('task_types__pk')) & (
+            self.make_q(assigned_to=None) |
+            self.make_q(assigned_to__in=
+                User.objects.filter(profile__is_indisposed=True).values('pk'))
+        )
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
         q &= ~self.make_q(expedited_review_categories__gt=0) | self.make_q(expedited_review_categories__in=ExpeditedReviewCategory.objects.filter(users=user).values('pk').query)
         return q
