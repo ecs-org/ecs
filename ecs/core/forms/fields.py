@@ -65,7 +65,6 @@ class AutocompleteMixin(object):
             'ecs.core.views.autocomplete.autocomplete',
             kwargs={'queryset_name': self.queryset_name}
         )
-        attrs['data-placeholder'] = _('Start typing to receive suggestions.')
         return super(AutocompleteMixin, self).render(name, value, attrs=attrs)
 
     def render_option(self, selected_choices, option_value, option_label):
