@@ -13,7 +13,10 @@ from reversion import revisions as reversion
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC
+from ecs.core.models.constants import (
+    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_RETROSPECTIVE_THESIS,
+    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
+)
 from ecs.utils import cached_property
 from ecs.utils.viewutils import render_pdf
 from ecs.tasks.models import Task, TaskType
@@ -246,10 +249,12 @@ class Meeting(models.Model):
     def create_boardmember_reviews(self):
         task_type_uid = 'board_member_review'
         task_type = TaskType.objects.get(workflow_node__uid=task_type_uid, workflow_node__graph__auto_start=True)
-        for amc in self.medical_categories.all():
-            if not amc.board_member:
-                continue
-            for entry in self.timetable_entries.filter(submission__medical_categories=amc.category).distinct():
+        for amc in self.medical_categories.exclude(board_member=None):
+            entries = self.timetable_entries.filter(
+                submission__workflow_lane=SUBMISSION_LANE_BOARD,
+                submission__medical_categories=amc.category
+            ).distinct()
+            for entry in entries:
                 # add participations for all timetable entries with matching categories.
                 participation, created = Participation.objects.get_or_create(medical_category=amc.category, entry=entry, user=amc.board_member)
                 if created:
@@ -464,26 +469,31 @@ class Meeting(models.Model):
             'meeting': self,
             'timetable': timetable,
         })
-        
-    def get_medical_categories(self):
-        return MedicalCategory.objects.filter(submissions__timetable_entries__meeting=self)
-        
+
     def update_assigned_categories(self):
         old_assignments = {}
-        for amc in AssignedMedicalCategory.objects.filter(meeting=self):
+        for amc in self.medical_categories.all():
             old_assignments[amc.category_id] = amc
-        new_assignments = {}
-        for cat in self.get_medical_categories():
+
+        new_mc = MedicalCategory.objects.filter(
+            submissions=self.submissions.for_board_lane().values('pk'))
+
+        for cat in new_mc:
             if cat.pk in old_assignments:
                 del old_assignments[cat.pk]
             else:
                 AssignedMedicalCategory.objects.get_or_create(meeting=self, category=cat)
-        AssignedMedicalCategory.objects.filter(pk__in=[amc.pk for amc in old_assignments.values()]).delete()
-        Participation.objects.filter(entry__meeting=self).filter(medical_category__pk__in=list(old_assignments.keys())).delete()
+
+        AssignedMedicalCategory.objects.filter(
+            pk__in=[amc.pk for amc in old_assignments.values()]).delete()
+        Participation.objects.filter(entry__meeting=self).filter(
+            medical_category__in=old_assignments.keys()).delete()
         
         # delete Participation entries where med-cat is not inside the referenced study anymore
         for p in Participation.objects.filter(entry__meeting=self):
-            if not p.entry.submission.medical_categories.filter(id=p.medical_category_id).exists():
+            submission = p.entry.submission
+            if submission.workflow_lane != SUBMISSION_LANE_BOARD or \
+                not submission.medical_categories.filter(id=p.medical_category_id).exists():
                 p.delete()
 
 
@@ -592,7 +602,7 @@ class TimetableEntry(models.Model):
         return self.start + self.duration
 
     @cached_property
-    def medical_categories(self):
+    def medical_categories(self):   # XXX: where is this used?
         if not self.submission:
             return MedicalCategory.objects.none()
         return MedicalCategory.objects.filter(submissions__timetable_entries=self)
