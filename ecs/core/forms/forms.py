@@ -58,13 +58,9 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
     substance_registered_in_countries = forms.MultipleChoiceField(
-        choices=countries, required=False,
-        widget=MultiAutocompleteWidget('countries')
-    )
+        choices=countries, required=False)
     substance_p_c_t_countries = forms.MultipleChoiceField(
-        choices=countries, required=False,
-        widget=MultiAutocompleteWidget('countries')
-    )
+        choices=countries, required=False)
 
     medtech_certified_for_exact_indications = NullBooleanField(required=False)
     medtech_certified_for_other_indications = NullBooleanField(required=False)

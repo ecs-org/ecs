@@ -21,8 +21,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
             'statistical_review_required': BooleanWidget,
             'insurance_review_required': BooleanWidget,
             'gcp_review_required': BooleanWidget,
-            'medical_categories': MultiAutocompleteWidget('medical-categories'),
-            'expedited_review_categories': MultiAutocompleteWidget('expedited-review-categories'),
             'external_reviewers': MultiAutocompleteWidget('external-reviewers'),
         }
         labels = {

@@ -243,15 +243,6 @@ class SubmissionViewsTestCase(LoginTestCase):
         response = self.client.get(target_url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['form'].initial.get('project_title'), submission_form.project_title)
-        
-    def test_autocomplete(self):
-        '''Tests the autocompletion feature of the system by comparing the count of objects returned by the autocompletion view.
-        '''
-        
-        medical_categories_count = MedicalCategory.objects.all().count()
-        response = self.client.get(reverse('ecs.core.views.autocomplete.autocomplete', kwargs={'queryset_name': 'medical-categories'}))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(json.loads(response.content.decode('utf-8'))['results']), medical_categories_count)
 
     def test_initial_review(self):
         submission_form = create_submission_form(presenter=self.user)

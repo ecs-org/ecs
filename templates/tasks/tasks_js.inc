@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
   $(function(){
-      $('#{{ form_id }} select[data-ajax--url]').select2();
+      $('#{{ form_id }} select[name=task_types]').select2();
 
       $('#{{ form_id }}').find('select, input').change(function() {
           ecs.stopPageLoad();

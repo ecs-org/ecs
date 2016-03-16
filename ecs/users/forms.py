@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
-from ecs.core.forms.fields import MultiAutocompleteWidget, AutocompleteWidget, DateTimeField
+from ecs.core.forms.fields import AutocompleteWidget, DateTimeField
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
 from ecs.users.models import LOGIN_HISTORY_TYPES
@@ -133,13 +133,9 @@ class AdministrationFilterForm(forms.Form):
         ('inactive', _('inactive')),
     ))
     groups = forms.ModelMultipleChoiceField(
-        required=False, queryset=Group.objects.all(),
-        widget=MultiAutocompleteWidget('groups')
-    )
+        required=False, queryset=Group.objects.all())
     medical_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=MedicalCategory.objects.all(),
-        widget=MultiAutocompleteWidget('medical-categories')
-    )
+        required=False, queryset=MedicalCategory.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
     keyword = forms.CharField(required=False)
 
@@ -148,14 +144,10 @@ class UserDetailsForm(forms.ModelForm):
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
-        label=_('Board Member Categories'),
-        widget=MultiAutocompleteWidget('medical-categories')
-    )
+        label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=ExpeditedReviewCategory.objects.all(),
-        label=_('Expedited Categories'),
-        widget=MultiAutocompleteWidget('expedited-review-categories')
-    )
+        label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
@@ -166,9 +158,6 @@ class UserDetailsForm(forms.ModelForm):
             'medical_categories', 'expedited_review_categories', 'is_internal',
             'is_help_writer',
         )
-        widgets = {
-            'groups': MultiAutocompleteWidget('groups'),
-        }
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
@@ -214,19 +203,13 @@ class InvitationForm(forms.Form):
     first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
     last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
     groups = forms.ModelMultipleChoiceField(
-        required=False, queryset=Group.objects.all(), label=_('Groups'),
-        widget=MultiAutocompleteWidget('groups')
-    )
+        required=False, queryset=Group.objects.all(), label=_('Groups'))
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
-        label=_('Board Member Categories'),
-        widget=MultiAutocompleteWidget('medical-categories')
-    )
+        label=_('Board Member Categories'))
     expedited_review_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=ExpeditedReviewCategory.objects.all(),
-        label=_('Expedited Categories'),
-        widget=MultiAutocompleteWidget('expedited-review-categories')
-    )
+        label=_('Expedited Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
     invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))

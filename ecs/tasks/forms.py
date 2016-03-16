@@ -8,7 +8,6 @@ from django.utils.encoding import force_text
 from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import TaskType
-from ecs.core.forms.fields import MultiAutocompleteWidget
 from ecs.users.utils import get_current_user
 
 class DeclineTaskForm(forms.Form):
@@ -95,8 +94,9 @@ class TaskListFilterForm(forms.Form):
     ), initial='deadline')
 
     task_types = forms.ModelMultipleChoiceField(required=False,
-        queryset=TaskType.objects.all(),
-        widget=MultiAutocompleteWidget('task-types')
+        queryset=TaskType.objects
+            .order_by('workflow_node__uid', '-pk')
+            .distinct('workflow_node__uid')
     )
 
     @property

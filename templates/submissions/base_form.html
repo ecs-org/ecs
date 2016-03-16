@@ -222,4 +222,14 @@
      </div>
 {% endblock %}
 
+{% block jsbottom %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function(){
+            $('#id_substance_registered_in_countries').select2();
+            $('#id_substance_p_c_t_countries').select2();
+        });
+    </script>
+{% endblock %}
+
 {% block menuSelection %}submissions{% endblock %}
