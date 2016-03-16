@@ -15,8 +15,8 @@ from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, 
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
 from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
-from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, MultiAutocompleteWidget, ReadonlyTextarea, ReadonlyTextInput, \
-    EmailUserSelectWidget, AutocompleteWidget, DateTimeField
+from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyTextarea, ReadonlyTextInput, \
+    EmailUserSelectWidget, AutocompleteModelChoiceField, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 
@@ -236,8 +236,9 @@ class PresenterChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PresenterChangeForm, self).__init__(*args, **kwargs)
         if get_current_user().profile.is_internal:
-            self.fields['presenter'].widget = \
-                AutocompleteWidget('users')
+            self.fields['presenter'] = AutocompleteModelChoiceField(
+                'users', User.objects.filter(is_active=True),
+                label=_('Presenter'))
 
 class SusarPresenterChangeForm(forms.ModelForm):
     susar_presenter = forms.ModelChoiceField(
@@ -254,8 +255,9 @@ class SusarPresenterChangeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
         if get_current_user().profile.is_internal:
-            self.fields['susar_presenter'].widget = \
-                AutocompleteWidget('users')
+            self.fields['susar_presenter'] = AutocompleteModelChoiceField(
+                'users', User.objects.filter(is_active=True),
+                label=_('Susar Presenter'))
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
     def save(self, commit=True):
@@ -441,18 +443,11 @@ class SubmissionImportForm(forms.Form):
 class TemporaryAuthorizationForm(TranslatedModelForm):
     start = DateTimeField(initial=timezone.now)
     end = DateTimeField(initial=lambda: timezone.now() + timedelta(days=30))
-
-    def __init__(self, *args, **kwargs):
-        super(TemporaryAuthorizationForm, self).__init__(*args, **kwargs)
-        self.fields['user'].queryset = \
-            self.fields['user'].queryset.select_related('profile')
+    user = AutocompleteModelChoiceField('users', User.objects.all())
 
     class Meta:
         model = TemporaryAuthorization
         exclude = ('submission',)
-        widgets = {
-            'user': AutocompleteWidget('users'),
-        }
         labels = {
             'user': _('User'),
             'start': _('Start'),
@@ -460,12 +455,12 @@ class TemporaryAuthorizationForm(TranslatedModelForm):
         }
 
 class AdvancedSettingsForm(TranslatedModelForm):
+    default_contact = AutocompleteModelChoiceField(
+        'internal-users', User.objects.all())
+
     class Meta:
         model = AdvancedSettings
         fields = ('default_contact',)
-        widgets = {
-            'default_contact': AutocompleteWidget('internal-users'),
-        }
         labels = {
             'default_contact': _('Default Contact'),
         }

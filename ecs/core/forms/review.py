@@ -1,15 +1,19 @@
 from django import forms
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import User
 
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import MultiAutocompleteWidget, BooleanWidget
+from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField, BooleanWidget
 from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
 from ecs.users.utils import get_current_user
 
 class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, TranslatedModelForm):
+    external_reviewers = AutocompleteModelMultipleChoiceField(
+        'external-reviewers', User.objects, required=False)
+
     class Meta:
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'expedited_review_categories', 'remission',
@@ -21,7 +25,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
             'statistical_review_required': BooleanWidget,
             'insurance_review_required': BooleanWidget,
             'gcp_review_required': BooleanWidget,
-            'external_reviewers': MultiAutocompleteWidget('external-reviewers'),
         }
         labels = {
             'workflow_lane': _('workflow lane'),
@@ -39,16 +42,12 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
 
     def __init__(self, *args, **kwargs):
         super(CategorizationReviewForm, self).__init__(*args, **kwargs)
-
         try:
             submission = self.instance
             submission_form = submission.current_submission_form
             user = get_current_user()
             if not user.profile.is_internal or user in submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter]):
                 del self.fields['external_reviewers']
-            else:
-                self.fields['external_reviewers'].queryset = \
-                    self.fields['external_reviewers'].queryset.select_related('profile')
         except AttributeError:
             pass        # workaround for old docstashes; remove in 2013 when no old docstashes are left
 
@@ -65,14 +64,9 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
 
 
 class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(BefangeneReviewForm, self).__init__(*args, **kwargs)
-        self.fields['befangene'].queryset = \
-            self.fields['befangene'].queryset.select_related('profile')
+    befangene = AutocompleteModelMultipleChoiceField(
+        'board-members', User.objects, required=False)
 
     class Meta:
         model = Submission
         fields = ('befangene',)
-        widgets = {
-            'befangene': MultiAutocompleteWidget('board-members'),
-        }

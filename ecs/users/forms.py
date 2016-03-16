@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory, ExpeditedReviewCategory
-from ecs.core.forms.fields import AutocompleteWidget, DateTimeField
+from ecs.core.forms.fields import AutocompleteModelChoiceField, DateTimeField
 from ecs.utils.formutils import TranslatedModelForm, require_fields
 from ecs.users.utils import get_user, create_user
 from ecs.users.models import LOGIN_HISTORY_TYPES
@@ -246,11 +246,8 @@ class InvitationForm(forms.Form):
 
 class IndispositionForm(forms.ModelForm):
     is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
-    communication_proxy = forms.ModelChoiceField(
-        queryset=User.objects.all().select_related('profile'), required=False,
-        label=_('communication_proxy'),
-        widget=AutocompleteWidget('users')
-    )
+    communication_proxy = AutocompleteModelChoiceField(
+        'users', User.objects.all(), required=False, label=_('communication_proxy'))
 
     class Meta:
         model = UserProfile

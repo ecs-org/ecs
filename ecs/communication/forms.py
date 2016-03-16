@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_office_user, get_current_user
-from ecs.core.forms.fields import AutocompleteWidget
+from ecs.core.forms.fields import AutocompleteModelChoiceField
 
 
 class InvolvedPartiesChoiceField(forms.ModelChoiceField):
@@ -27,10 +27,8 @@ class InvolvedPartiesChoiceField(forms.ModelChoiceField):
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield()
     receiver_involved = InvolvedPartiesChoiceField(required=False)
-    receiver_person = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_active=True), required=False,
-        widget=AutocompleteWidget('users')
-    )
+    receiver_person = AutocompleteModelChoiceField(
+        'users', User.objects.filter(is_active=True), required=False)
     receiver_type = forms.ChoiceField(
         choices=(('ek', _('Ethics Commission')),), widget=forms.RadioSelect(),
         initial='ek'
@@ -104,11 +102,9 @@ class ReplyDelegateForm(forms.Form):
     def __init__(self, user, *args, **kwargs):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.profile.is_internal:
-            self.fields['to'] = forms.ModelChoiceField(
-                User.objects.filter(is_active=True), required=False,
-                label=_('Delegate to'),
-                widget=AutocompleteWidget('users')
-            )
+            self.fields['to'] = AutocompleteModelChoiceField(
+                'users', User.objects.filter(is_active=True), required=False,
+                label=_('Delegate to'))
             self.fields['text'] = self.fields.pop('text')       # change order
 
 

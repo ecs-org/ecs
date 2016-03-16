@@ -4,16 +4,15 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from ecs.core.forms.fields import AutocompleteWidget
+from ecs.core.forms.fields import AutocompleteModelChoiceField
 from ecs.pki.models import Certificate
 
 mandatory = getattr(settings, 'ECS_MANDATORY_CLIENT_CERTS', False)
-user_queryset_name = 'users' if mandatory else 'internal-users'
 
 class CertForm(forms.Form):
-    user = forms.ModelChoiceField(
-        queryset=User.objects.filter(is_active=True) if mandatory else User.objects.filter(is_active=True, profile__is_internal=True),
-        widget=AutocompleteWidget(user_queryset_name)
+    user = AutocompleteModelChoiceField(
+        'users' if mandatory else 'internal-users',
+        User.objects.filter(is_active=True) if mandatory else User.objects.filter(is_active=True, profile__is_internal=True)
     )
     cn = forms.CharField()
     passphrase = forms.CharField(widget=forms.PasswordInput(), min_length=12)

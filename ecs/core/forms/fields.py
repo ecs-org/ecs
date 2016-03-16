@@ -55,28 +55,43 @@ class NullBooleanField(forms.NullBooleanField):
         super(NullBooleanField, self).__init__(*args, **kwargs)
 
 
-class AutocompleteMixin(object):
-    def __init__(self, queryset_name, *args, **kwargs):
-        self.queryset_name = queryset_name
-        return super(AutocompleteMixin, self).__init__(*args, **kwargs)
+class AutocompleteWidgetMixin(object):
+    def __init__(self, field):
+        self.field = field
+        return super(AutocompleteWidgetMixin, self).__init__()
 
     def render(self, name, value, attrs=None, choices=()):
         attrs['data-ajax--url'] = reverse(
             'ecs.core.views.autocomplete.autocomplete',
-            kwargs={'queryset_name': self.queryset_name}
+            kwargs={'queryset_name': self.field.queryset_name}
         )
-        return super(AutocompleteMixin, self).render(name, value, attrs=attrs)
+        return super(AutocompleteWidgetMixin, self).render(name, value, attrs=attrs)
 
-    def render_option(self, selected_choices, option_value, option_label):
-        if force_text(option_value or '') not in selected_choices:
-            return ''
-        return super(AutocompleteMixin, self).render_option(selected_choices, option_value, option_label)
+    def render_options(self, choices, selected_choices):
+        selected_choices = set(force_text(v) for v in selected_choices if v != '')
+        output = []
+        objs = self.field.queryset.filter(pk__in=selected_choices)
+        for obj in objs:
+            option_value = self.field.prepare_value(obj)
+            option_label = self.field.label_from_instance(obj)
+            output.append(self.render_option(selected_choices, option_value, option_label))
+        return '\n'.join(output)
 
-class MultiAutocompleteWidget(AutocompleteMixin, forms.SelectMultiple):
-    pass
 
-class AutocompleteWidget(AutocompleteMixin, forms.Select):
-    pass
+class AutocompleteFieldMixin:
+    def __init__(self, queryset_name, queryset, **kwargs):
+        self.queryset_name = queryset_name
+        kwargs['widget'] = self.widget(self)
+        super(AutocompleteFieldMixin, self).__init__(queryset, **kwargs)
+
+class AutocompleteModelChoiceField(AutocompleteFieldMixin, forms.ModelChoiceField):
+    class widget(AutocompleteWidgetMixin, forms.Select):
+        pass
+
+
+class AutocompleteModelMultipleChoiceField(AutocompleteFieldMixin, forms.ModelMultipleChoiceField):
+    class widget(AutocompleteWidgetMixin, forms.SelectMultiple):
+        pass
 
 
 from django.utils.safestring import mark_safe
