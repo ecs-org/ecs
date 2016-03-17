@@ -1,0 +1,23 @@
+{% extends "core.html" %}
+{% load core i18n %}
+
+{% block headertitle %}{% trans 'Tags' %}{% endblock %}
+{% block htmltitle %}{% trans 'Tags' %} | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <p>
+        {% for tag in tags %}
+            <div class="tag" style="{{ tag.css }}">
+                <a href="{% url 'ecs.tags.views.edit' pk=tag.pk %}">
+                    {{ tag.name }}
+                </a>
+            </div>
+        {% empty %}
+            <em>{% trans 'No tags yet.' %}</em>
+        {% endfor %}
+    </p>
+
+    <a class="btn btn-sm btn-primary" href="{% url 'ecs.tags.views.edit' %}">{% trans 'New Tag' %}</a>
+{% endblock %}
+
+{% block menuSelection %}administration{% endblock %}

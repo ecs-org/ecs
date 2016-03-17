@@ -11,6 +11,16 @@
         {% endfor %}
     </ul>
     {% endfor %}
+    {% if filterform.tags %}
+    <ul class="submission_list_choose">
+        <li>
+            <label for="{{ filterform.tags.id_for_label }}">
+                <span class="submission_tags">{{ filterform.tags.label }}</span>
+            </label>
+            {{ filterform.tags }}
+        </li>
+    </ul>
+    {% endif %}
     {{ filterform.page }}
 </form>
 

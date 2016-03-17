@@ -40,6 +40,12 @@
             {% endif %}
         {% endwith %}
         {% endwith %}
+
+        {% if user|has_flag:'is_internal' %}
+            <div>
+                {% include 'tags/list.inc' with tags=submission.tags.all only %}
+            </div>
+        {% endif %}
     {% endif %}
     </li>
 {% empty %}

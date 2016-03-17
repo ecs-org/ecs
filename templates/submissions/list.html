@@ -94,6 +94,11 @@
                 <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
             </div>
         {% endif %}
+        {% if user|has_flag:'is_internal' %}
+            <div>
+                {% include 'tags/list.inc' with tags=submission.tags.all only %}
+            </div>
+        {% endif %}
         {% if submission.resubmission_task %}
             <div>
                 <span class="submission_resubmission"></span>
@@ -139,7 +144,9 @@
                 form.submit();
             });
 
-	    $('#submission_list_filter input').change(function() {
+            form.find('select[name="tags"]').select2();
+
+	    $('#submission_list_filter').find('input, select').change(function() {
 		ecs.stopPageLoad();
 		form.submit();
 	    });

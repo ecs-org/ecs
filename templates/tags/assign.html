@@ -1,0 +1,26 @@
+{% load i18n %}
+
+{% with tags=submission.tags.all %}
+    {% if tags %}
+        {% include 'tags/list.inc' with tags=tags only %}
+    {% else %}
+        <em>{% trans 'No tags yet.' %}</em>
+    {% endif %}
+{% endwith %}
+
+<a data-toggle="collapse" href="#tag_assign_form">
+    <span class="fa fa-pencil"></span>
+    {% trans 'edit' %}
+</a>
+
+<div id="tag_assign_form" class="collapse">
+    <form action="{{ request.path }}" method="POST" class="open-in-widget">
+        {% csrf_token %}
+        {{ form.tags }}
+        <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'save' %}"/>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('#{{ form.tags.id_for_label|escapejs }}').select2();
+</script>

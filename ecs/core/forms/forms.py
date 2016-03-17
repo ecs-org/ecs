@@ -19,6 +19,7 @@ from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyT
     EmailUserSelectWidget, AutocompleteModelChoiceField, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
+from ecs.tags.forms import TagMultipleChoiceField
 
 
 def _unpickle(f, args, kwargs):
@@ -420,6 +421,14 @@ class MySubmissionsFilterForm(SubmissionFilterForm):
 
 class AllSubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
+    tags = TagMultipleChoiceField(label=_('Tags'), required=False)
+
+    def filter_submissions(self, submissions, user):
+        submissions = (super(AllSubmissionsFilterForm, self)
+            .filter_submissions(submissions, user))
+        if self.cleaned_data.get('tags'):
+            submissions = submissions.filter(tags__in=self.cleaned_data['tags'])
+        return submissions
 
 
 import_error_logger = logging.getLogger('ecx-import')

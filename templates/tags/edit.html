@@ -1,0 +1,27 @@
+{% extends "core.html" %}
+{% load core i18n %}
+
+{% block headertitle %}{% trans 'Tags' %}{% endblock %}
+{% block htmltitle %}{% trans 'Tags' %} | {{ block.super }}{% endblock %}
+
+{% block content %}
+    <p>
+        <a href="{% url 'ecs.tags.views.index' %}">
+            <span class="fa fa-chevron-left"></span>
+            {% trans 'Back to the tag list' %}
+        </a>
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-sm btn-primary" value="{% trans 'save' %}"/>
+        {% if form.instance.pk %}
+            <a class="btn btn-sm btn-danger" href="{% url 'ecs.tags.views.delete' pk=form.instance.pk %}">
+                {% trans 'delete' %}
+            </a>
+        {% endif %}
+    </form>
+{% endblock %}
+
+{% block menuSelection %}administration{% endblock %}

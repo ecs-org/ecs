@@ -175,6 +175,7 @@ INSTALLED_APPS = (
     'ecs.scratchpad',
     'ecs.pki',
     'ecs.statistics',
+    'ecs.tags',
 )
 
 # authenticate with email address

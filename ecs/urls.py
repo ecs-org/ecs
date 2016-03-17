@@ -46,6 +46,7 @@ urlpatterns = [
     url(r'^notification/', include('ecs.notifications.urls')),
     url(r'^signature/', include('ecs.signature.urls')),
     url(r'^statistics/', include('ecs.statistics.urls')),
+    url(r'^tags/', include('ecs.tags.urls')),
     url(r'^', include('ecs.pki.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

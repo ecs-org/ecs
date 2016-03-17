@@ -1,5 +1,11 @@
 {% load i18n userutils core %}
 <table>
+    <tr>
+        <th>{% trans 'Tags' %}</th>
+        <td>
+            <div data-widget-url="{% url 'ecs.tags.views.assign' submission_pk=submission.pk %}"></div>
+        </td>
+    </tr>
     <tr><th>Formulare:</th><td colspan="3">
         <table>
             <tr>

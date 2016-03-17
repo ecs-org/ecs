@@ -291,10 +291,13 @@ table.notification td,
     }
 }
 
-/* list cycles */
+/*
+ * list cycles
+ * XXX: This should all be replaced with bootstrap's table-striped class. Sigh.
+ */
 
 #content ol.submission_list li:nth-of-type(1) ,
-.submission_list li:nth-of-type(1) ,
+.submission_list > form > ul > li:nth-of-type(1) ,
 .submission_item:nth-of-type(1) ,
 #involved_parties_tab tr:nth-of-type(1) ,
 .notification_list li:nth-of-type(1) ,
@@ -310,7 +313,7 @@ table.notification td,
     border-top: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(odd) ,
-.submission_list li:nth-child(odd) ,
+.submission_list > form > ul > li:nth-child(odd) ,
 .submission_item:nth-child(odd) ,
 #involved_parties_tab tr:nth-child(odd) ,
 .notification_list li:nth-child(odd) ,
@@ -329,7 +332,7 @@ table.notification td,
     border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:nth-child(even) ,
-.submission_list li:nth-child(even) ,
+.submission_list > form > ul > li:nth-child(even) ,
 .submission_item:nth-child(even) ,
 #involved_parties_tab tr:nth-child(even) ,
 .notification_list li:nth-child(even) ,
@@ -348,7 +351,7 @@ table.notification td,
     border-bottom: 1px solid $wheatbrown;
 }
 #content ol.submission_list li:hover,
-.submission_list li:hover,
+.submission_list > form > ul > li:hover,
 .submission_item:hover,
 .notification_list li:hover,
 .dashboard_widget .messages li:hover,
@@ -365,7 +368,7 @@ table.notification td,
     background: #fefefe;
 }
 
-.submission_list_choose li {
+.submission_list_choose > li {
     background: none !important;
     border-top: none !important;
     border-bottom: none !important;

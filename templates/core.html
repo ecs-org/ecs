@@ -96,6 +96,7 @@
                     {% if user|is_member_of:'EC-Signing Group' or user|is_member_of:'EC-Office' %}
                         <a class="dropdown-item" href="{% url 'ecs.pki.views.cert_list' %}">{% trans 'PKI' %}</a>
                     {% endif %}
+		    <a class="dropdown-item" href="{% url 'ecs.tags.views.index' %}">{% trans "Tags" %}</a>
                 </div>
             </div>
         {% endif %}

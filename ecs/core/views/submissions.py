@@ -794,6 +794,9 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by(*order_by)
     submissions = submissions.select_related('current_submission_form')
 
+    if request.user.profile.is_internal:
+        submissions = submissions.prefetch_related('tags')
+
     if stashed_submission_forms:
         submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)
 
@@ -846,6 +849,9 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 
 
     # save the filter in the user settings
+    if 'tags' in filterform.cleaned_data:
+        filterform.cleaned_data['tags'] = \
+            [t.pk for t in filterform.cleaned_data['tags']]
     setattr(usersettings, filtername, filterform.cleaned_data)
     usersettings.save()
     
@@ -982,6 +988,7 @@ def all_submissions(request):
 
             if request.user.profile.is_internal:
                 q |= _external_reviewer_query(Q(first_name__icontains=k)|Q(last_name__icontains=k))
+                q |= _query('tags__name', k)
 
             if '@' in keyword:
                 for f in ('presenter', 'susar_presenter'):
