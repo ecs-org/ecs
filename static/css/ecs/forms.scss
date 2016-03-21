@@ -65,7 +65,7 @@ ul.errorlist {
         background: #eee;
     }
 
-    ul li {
+    ul li.not(.select2-selection__choice) {
         list-style: circle;
     }
 
