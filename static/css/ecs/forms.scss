@@ -181,7 +181,7 @@ ul.errorlist {
     input#id_title {
         width: 350px;
     }
-    input[type=submit] {
+    input[type=submit].not(.btn) {
         margin: 10px 10px 10px 240px;
         display: block;
     }
