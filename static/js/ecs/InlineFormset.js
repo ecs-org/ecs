@@ -35,7 +35,7 @@ ecs.InlineFormSet = function(containers, options) {
     }).bind(this))
     this.totalForms = $('#id_' + this.options.prefix + '-TOTAL_FORMS');
     this.forms.forEach(function(form, i) {
-        this.setupForm(form, i, false);
+        this.setupForm(form);
     }, this);
 };
 ecs.InlineFormSet.prototype = {
@@ -77,7 +77,7 @@ ecs.InlineFormSet.prototype = {
             i++;
         }
     },
-    setupForm: function(form, index, added){
+    setupForm: function(form){
         if (this.options.removeButton) {
             var removeLink = this.createRemoveButton();
             if (this.isTable) {
@@ -85,10 +85,6 @@ ecs.InlineFormSet.prototype = {
             } else {
                 form.append(removeLink);
             }
-        }
-        if (added) {
-            form.find('input[name$=-id]').val('');
-            ecs.setupFormFieldHelpers(form);
         }
     },
     updateIndex: function(form, index){
@@ -144,7 +140,8 @@ ecs.InlineFormSet.prototype = {
         var newForm = this.template.clone(true, true);
         var index = this.forms.length;
         this.updateIndex(newForm, index);
-        this.setupForm(newForm, index, true);
+        this.setupForm(newForm);
+        newForm.find('input[name$=-id]').val('');
 
         this.forms.push(newForm);
         this.totalForms.val(this.forms.length);
@@ -154,6 +151,8 @@ ecs.InlineFormSet.prototype = {
         } else {
             container.find(this.options.formSelector).last().after(newForm);
         }
+
+        ecs.setupFormFieldHelpers(newForm);
 
         if (this.options.onFormAdded)
             this.options.onFormAdded(newForm, index);
