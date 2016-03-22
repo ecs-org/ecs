@@ -55,13 +55,15 @@ ecs.textarea.TextArea = function(textarea, items, options) {
             ecs.textarea.fullscreenEditor.show(this.textarea);
         }
     }).bind(this));
-    this.minHeight = 20;
     this.textarea.data('textarea', this);
     if (items)
         this.installToolbar(items);
 
     if (this.options.update_height) {
-        this.textarea.css('overflow', 'hidden');
+        this.textarea.css({
+            'overflow': 'hidden',
+            'resize': 'none',
+        });
         this.textarea.on('keydown keyup change', (function(ev) {
             this.updateHeight();
         }).bind(this));
@@ -70,15 +72,7 @@ ecs.textarea.TextArea = function(textarea, items, options) {
 };
 ecs.textarea.TextArea.prototype = {
     updateHeight: function() {
-        var scroll_parent = this.textarea.parents().filter(function() {
-            var parent = $(this);
-            return /^(auto|scroll|hidden)$/.test(parent.css('overflow-y'));
-        }).eq(0);
-        var scroll_top = scroll_parent.scrollTop();
-        this.textarea.height('auto');
-        var h = Math.max(this.minHeight, this.textarea.prop('scrollHeight'));
-        this.textarea.height(h);
-        scroll_parent.scrollTop(scroll_top);
+        this.textarea.height(0).height(this.textarea.prop('scrollHeight'));
     },
     installToolbarItem: function(item, ta) {
         ta = ta || this.textarea;
