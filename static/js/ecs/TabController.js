@@ -18,6 +18,12 @@ ecs.Tab.prototype = {
             var title = document.title.split(' | ');
             title[0] = this.header.html();
             document.title = title.join(' | ');
+
+            this.panel.find('textarea').each(function() {
+                var textarea = $(this).data('textarea');
+                if (textarea)
+                    textarea.updateHeight();
+            });
         }
     },
     setDisabled: function(disabled) {
