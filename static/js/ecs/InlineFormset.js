@@ -25,7 +25,8 @@ ecs.InlineFormSet = function(containers, options) {
     }
 
     /* Clear form fields. */
-    this.template.find('input[type=text], textarea').val('');
+    this.template.find('input[type=text]').val('');
+    this.template.find('textarea').html('');
     this.template.find('.NullBooleanField > select').val(1);
     this.template.find('span.errors').remove();
 
