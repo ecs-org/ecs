@@ -11,21 +11,18 @@ from ecs.meetings.models import Meeting, TimetableEntry, Constraint, AssignedMed
 from ecs.core.forms.fields import DateTimeField, TimeField
 from ecs.votes.models import Vote
 
-from ecs.utils.formutils import TranslatedModelForm
 
-class MeetingForm(TranslatedModelForm):
-    start = DateTimeField(initial=timezone.now)
-    deadline = DateTimeField(initial=timezone.now)
-    deadline_diplomathesis = DateTimeField(initial=timezone.now)
+class MeetingForm(forms.ModelForm):
+    start = DateTimeField(initial=timezone.now, label=_('date and time'))
+    deadline = DateTimeField(initial=timezone.now, label=_('deadline'))
+    deadline_diplomathesis = DateTimeField(initial=timezone.now,
+        label=_('deadline thesis'))
 
     class Meta:
         model = Meeting
         fields = ('start', 'title', 'deadline', 'deadline_diplomathesis')
         labels = {
-            'start': _('date and time'),
             'title': _('title'),
-            'deadline': _('deadline'),
-            'deadline_diplomathesis': _('deadline thesis'),
         }
 
 class TimetableEntryForm(forms.Form):

@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.users.models import UserProfile
 from ecs.core.models import MedicalCategory
 from ecs.core.forms.fields import AutocompleteModelChoiceField, DateTimeField
-from ecs.utils.formutils import TranslatedModelForm, require_fields
+from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_user, create_user
 from ecs.users.models import LOGIN_HISTORY_TYPES
 from ecs.meetings.models import AssignedMedicalCategory
@@ -65,16 +65,20 @@ class ActivationForm(forms.Form):
 class RequestPasswordResetForm(forms.Form):
     email = forms.EmailField()
 
-class ProfileForm(TranslatedModelForm):
-    first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, required=False)
-    last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length)
+class ProfileForm(forms.ModelForm):
+    first_name = forms.CharField(
+        max_length=User._meta.get_field('first_name').max_length,
+        required=False, label=_('First Name'))
+    last_name = forms.CharField(
+        max_length=User._meta.get_field('last_name').max_length,
+        label=_('Last Name'))
     forward_messages_after_minutes = forms.ChoiceField(choices=(
         (0, _('Never')),
         (5, _('after 5 minutes')),
         (360, _('after {0} hours').format(6)),
         (1440, _('after {0} hours').format(24)),
         (4320, _('after {0} hours').format(72)),
-    ), initial=0)
+    ), initial=0, label=_('Forwarding of unread messages'))
 
     def __init__(self, *args, **kwargs):
         rval = super(ProfileForm, self).__init__(*args, **kwargs)
@@ -108,8 +112,6 @@ class ProfileForm(TranslatedModelForm):
         labels = {
             'gender': _('Gender'),
             'title': _('Title'),
-            'first_name': _('First Name'),
-            'last_name': _('Last Name'),
             'organisation': _('Organisation'),
             'jobtitle': _('Job Title'),
             'swift_bic': _('SWIFT-BIC'),
@@ -121,7 +123,6 @@ class ProfileForm(TranslatedModelForm):
             'phone': _('Phone'),
             'fax': _('Fax'),
             'social_security_number': _('Social Security Number'),
-            'forward_messages_after_minutes': _('Forwarding of unread messages'),
         }
 
 

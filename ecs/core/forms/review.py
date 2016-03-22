@@ -1,5 +1,4 @@
 from django import forms
-from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
@@ -7,12 +6,14 @@ from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField, BooleanWidget
-from ecs.utils.formutils import ModelFormPickleMixin, TranslatedModelForm, require_fields
+from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.users.utils import get_current_user
 
-class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, TranslatedModelForm):
+
+class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
     external_reviewers = AutocompleteModelMultipleChoiceField(
-        'external-reviewers', User.objects, required=False)
+        'external-reviewers', User.objects, required=False,
+        label=_('external_reviewers'))
 
     class Meta:
         model = Submission
@@ -35,7 +36,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, Translat
             'insurance_review_required': _('insurance_review_required'),
             'gcp_review_required': _('gcp_review_required'),
             'invite_primary_investigator_to_meeting': _('invite_primary_investigator_to_meeting'),
-            'external_reviewers': _('external_reviewers'),
             'executive_comment': _('executive_comment'),
         }
 

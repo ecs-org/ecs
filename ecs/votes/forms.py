@@ -2,7 +2,6 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.utils.formutils import TranslatedModelForm
 from ecs.votes.models import Vote
 from ecs.votes.constants import VOTE_PREPARATION_CHOICES, B2_VOTE_PREPARATION_CHOICES
 from ecs.users.utils import get_current_user
@@ -37,7 +36,7 @@ class VoteForm(SaveVoteForm):
         if self.readonly:
             mark_readonly(self)
 
-class VoteReviewForm(ReadonlyFormMixin, TranslatedModelForm):
+class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Vote
         fields = ('text', 'is_final_version')

@@ -1,10 +1,10 @@
 import logging
 from datetime import timedelta
+
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
 from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils import timezone
@@ -14,7 +14,7 @@ from django_countries import countries
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
-from ecs.utils.formutils import ModelFormPickleMixin, require_fields, TranslatedModelForm
+from ecs.utils.formutils import ModelFormPickleMixin, require_fields
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, AutocompleteModelChoiceField, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
@@ -440,29 +440,23 @@ class SubmissionImportForm(forms.Form):
         f.seek(0)
         return f
 
-class TemporaryAuthorizationForm(TranslatedModelForm):
-    start = DateTimeField(initial=timezone.now)
-    end = DateTimeField(initial=lambda: timezone.now() + timedelta(days=30))
-    user = AutocompleteModelChoiceField('users', User.objects.all())
+class TemporaryAuthorizationForm(forms.ModelForm):
+    start = DateTimeField(initial=timezone.now, label=_('Start'))
+    end = DateTimeField(initial=lambda: timezone.now() + timedelta(days=30),
+        label=_('End'))
+    user = AutocompleteModelChoiceField('users', User.objects.all(),
+        label=_('User'))
 
     class Meta:
         model = TemporaryAuthorization
         exclude = ('submission',)
-        labels = {
-            'user': _('User'),
-            'start': _('Start'),
-            'end': _('End'),
-        }
 
-class AdvancedSettingsForm(TranslatedModelForm):
+class AdvancedSettingsForm(forms.ModelForm):
     default_contact = AutocompleteModelChoiceField(
-        'internal-users', User.objects.all())
+        'internal-users', User.objects.all(), label=_('Default Contact'))
 
     class Meta:
         model = AdvancedSettings
         fields = ('default_contact',)
-        labels = {
-            'default_contact': _('Default Contact'),
-        }
 
 EthicsCommissionFormSet = modelformset_factory(EthicsCommission, fields=('vote_receiver',), extra=0)
