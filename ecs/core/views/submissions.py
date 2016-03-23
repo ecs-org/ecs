@@ -1,8 +1,7 @@
 import tempfile
 import re
-import json
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, JsonResponse
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
@@ -1069,16 +1068,28 @@ def catalog(request, year=None):
 @readonly()
 @forceauth.exempt
 def catalog_json(request):
-    data = []
-    meta_dict = {'version': '1.0',
-        'copyright': 'CC BY-SA 3.0', 
-        'copyright_url': 'http://creativecommons.org/licenses/by-sa/3.0/at/'
-    }
-    data.append(meta_dict)
+    data = [{
+        'version': '2.0',
+        'copyright': 'CC BY-SA 3.0',
+        'copyright_url': 'http://creativecommons.org/licenses/by-sa/3.0/at/',
+    }]
     
     with sudo():
-        votes = Vote.objects.filter(result='1', published_at__isnull=False, published_at__lte=timezone.now())
-        votes = votes.select_related('submission_form').order_by('published_at')
+        votes = (Vote.objects
+            .filter(result='1', published_at__lte=timezone.now())
+            .select_related('submission_form', 'submission_form__submission')
+            .prefetch_related(
+                Prefetch('submission_form__investigators',
+                    Investigator.objects.system_ec(),
+                    to_attr='system_ec_investigators'),
+                Prefetch('submission_form__investigators',
+                    Investigator.objects.non_system_ec(),
+                    to_attr='non_system_ec_investigators')
+            ).annotate(
+                first_meeting_start=
+                    Min('submission_form__submission__meetings__start')
+            ).order_by('published_at')
+        )
         for vote in votes:
             sf = vote.submission_form
             item = {
@@ -1087,25 +1098,23 @@ def catalog_json(request):
                 'ec_number': sf.submission.get_ec_number_display(),
                 'sponsor': sf.sponsor_name,
                 'date_of_vote': vote.published_at.strftime('%Y-%m-%d'),
-                'date_of_first_meeting': sf.submission.get_first_meeting().start.strftime('%Y-%m-%d'),
-                'project_type': 'Studie',
+                'date_of_first_meeting': vote.first_meeting_start.strftime('%Y-%m-%d'),
+                'other_investigators_count': len(sf.non_system_ec_investigators),
             }
             if sf.project_type_education_context:
                 item.update({
                     'project_type': sf.get_project_type_education_context_display(),
                     'submitter': str(sf.submitter_contact),
                 })
-            investigators = []
-            for i in sf.investigators.all():
-                investigators.append({
-                    'organisation': i.organisation,
-                    'name': str(i.contact) if (i.ethics_commission.system) else "",
-                    'ethics_commission': str(i.ethics_commission),
-                })
-            item['investigators'] = investigators
+
+            item['investigators'] = [{
+                'organisation': i.organisation,
+                'name': str(i.contact),
+            } for i in sf.system_ec_investigators]
+
             data.append(item)
-            
-    return HttpResponse(json.dumps(data, indent=4), content_type='application/json')
+
+    return JsonResponse(data, safe=False)
 
 
 @user_flag_required('is_executive_board_member')
