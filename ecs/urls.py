@@ -16,14 +16,14 @@ def handler500(request):
     return HttpResponseServerError(t.render({'request': request}))
 
 def fake404handler(request):
-    ''' 404 error fake handler to be called via /trigger404 ''' 
-    return render(request, '404.html', {}) 
+    ''' 404 error fake handler to be called via /trigger404 '''
+    return render(request, '404.html', {})
     from django.template import loader
     from django.http import HttpResponseNotFound
 
-    t = loader.get_template('404.html') 
+    t = loader.get_template('404.html')
     return HttpResponseNotFound(t.render({'request': request}))
-    
+
 
 urlpatterns = [
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
@@ -57,7 +57,8 @@ urlpatterns = [
 ]
 
 
-if settings.DEBUG:
+# XXX: do not bind to settings.DEBUG, to test working sentry on DEBUG:False
+if 'ecs.userswitcher' in settings.INSTALLED_APPS:
     from django.http import HttpResponse
     import logging
     logger = logging.getLogger(__name__)

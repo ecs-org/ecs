@@ -2,8 +2,8 @@
 
 prepare_database(){
   echo "check database access"
-  scripts/checkdb.py import ecs.settings
-  err=$?
+  # get errorcode regardless if "set -e" is active or not
+  scripts/checkdb.py import ecs.settings && err=$? || err=$?
   firstrun=false
 
   if test $err -ge 9; then
@@ -39,7 +39,7 @@ prepare_database(){
   fi
 
   if test "$ECS_USERSWITCHER" = "true"; then
-    ./manage.py userswitcher ${ECS_USERWITCHER_PARAMETER:--im}
+    ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--im}
   fi
 }
 
@@ -51,19 +51,20 @@ recreatedb() {
 
 initialmigratedb() {
   echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
+
   for app in auth admin contenttypes sessions sites reversion djcelery \
     boilerplate docstash documents help meetings notifications \
     pki scratchpad tracking users votes workflow; do
-      ./manage.py migrate --noinput --fake $app 0001_initial
+      ./manage.py migrate --noinput --fake $app 0001_initial || true
   done
-  ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249
-  ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249
-  ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249
-  ./manage.py migrate --noinput --fake core 0003_auto_20151217_1249
-  ./manage.py migrate --noinput --fake tasks 0002_auto_20151217_1249
+  ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249 || true
+  ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249 || true
+  ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249 || true
+  ./manage.py migrate --noinput --fake core 0003_auto_20151217_1249 || true
+  ./manage.py migrate --noinput --fake tasks 0002_auto_20151217_1249 || true
 
   echo "Migration to bring the legacy database up to date. This might take a couple of minutes."
-  ./manage.py migrate --noinput core 0006_production_compat3
+  ./manage.py migrate --noinput core 0006_production_compat3 || true
 
   echo "Info: NO exceptions are expected from this point on"
   echo "Run remaining migrations, delete stale content types"

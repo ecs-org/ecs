@@ -1,4 +1,5 @@
 import os
+import ast
 import dj_database_url
 
 def str2bool(text):
@@ -30,16 +31,31 @@ if os.getenv('MEMCACHED_URL'):
 if os.getenv('DEBUG'):
     DEBUG = str2bool(os.getenv('DEBUG'))
 
-if os.getenv('ECS_LOGO_BORDER_COLOR'):
-    ECS_LOGO_BORDER_COLOR = os.getenv('ECS_LOGO_BORDER_COLOR')
+if os.getenv('SENTRY_DSN'):
+    SENTRY_DSN = os.getenv('SENTRY_DSN')
+
+if os.getenv('SECURE_PROXY_SSL'):
+    SECURE_PROXY_SSL = str2bool(os.getenv('SECURE_PROXY_SSL', False))
+
+if os.getenv('ALLOWED_HOSTS'):
+    try:
+        ALLOWED_HOSTS = ast.literal_eval(os.getenv('ALLOWED_HOSTS','[]'))
+    except ValueError:
+        ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS'),]
 
 if os.getenv('ABSOLUTE_URL_PREFIX'):
     ABSOLUTE_URL_PREFIX = os.getenv('ABSOLUTE_URL_PREFIX')
 
-ECSMAIL_OVERRIDE = {}
-if os.getenv('ECS_AUTHORITATIVE_DOMAIN'):
-    ECSMAIL_OVERRIDE['authoritative_domain']= \
-        os.getenv('ECS_AUTHORITATIVE_DOMAIN')
+if os.getenv('AUTHORITATIVE_DOMAIN'):
+    AUTHORITATIVE_DOMAIN = os.getenv('AUTHORITATIVE_DOMAIN')
+    ECSMAIL_OVERRIDE = {}
+    ECSMAIL_OVERRIDE['authoritative_domain']= AUTHORITATIVE_DOMAIN
+
+if os.getenv('ECS_USERSWITCHER'):
+    ECS_USERSWITCHER = os.getenv('ECS_USERSWITCHER')
+
+if os.getenv('ECS_LOGO_BORDER_COLOR'):
+    ECS_LOGO_BORDER_COLOR = os.getenv('ECS_LOGO_BORDER_COLOR')
 
 if os.getenv('ECS_FILTER_OUTGOING_MAIL'):
     ECSMAIL_OVERRIDE['filter_outgoing_smtp']= \

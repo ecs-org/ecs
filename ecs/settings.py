@@ -11,7 +11,6 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # admins is used to send django 500, 404 and celery error messages per email, DEBUG needs to be false for this
 MANAGERS = ADMINS = ()
-# eg. this could be MANAGERS = ADMINS = (('Felix Erkinger', 'felix@erkinger.at'),)
 MAIL_ADMINS = False
 
 # Default is DEBUG, others may override it later
@@ -270,26 +269,29 @@ STORAGE_VAULT = {
     'signature_uid': 'ecs_authority',
 }
 
+# domain to use
+AUTHORITATIVE_DOMAIN= "localhost"
+
+# absolute URL prefix w/out trailing slash
+ABSOLUTE_URL_PREFIX = "http://"+ AUTHORITATIVE_DOMAIN+ ":8000"
+
 # mail config, standard django values
 EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND     # used if ECSMAIL['filter_outgoing_smtp'] == True
+LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND # used if ECSMAIL['filter_outgoing_smtp'] == True
 # EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
 
 # ecsmail server settings
 ECSMAIL = {
     'addr': ('127.0.0.1', 8823),
     'undeliverable_maildir': os.path.join(PROJECT_DIR, '..', 'ecs-undeliverable-mail'),
-    'authoritative_domain': 'localhost',
+    'authoritative_domain': AUTHORITATIVE_DOMAIN,
     'filter_outgoing_smtp': False,
     # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND,
     # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND
     # this is used only for ecs.users.views. register and request_password_reset
 }
-
-# absolute URL prefix w/out trailing slash
-ABSOLUTE_URL_PREFIX = "http://localhost:8000"
 
 
 # thirdparty settings
@@ -339,7 +341,7 @@ COMPRESS_PRECOMPILERS = (
 )
 
 COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
-
+COMPRESS_OFFLINE = False if DEBUG else True
 
 # settings override
 ###################
@@ -354,22 +356,25 @@ COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
 #ECS_WORDING = True/False defaults to False if empty
 # activates django-rosetta
 
-# use environment settings if they exist
-try:
-    from defaults.env_settings import *
-except ImportError:
-    pass
-
-# use different settings if local_settings.py exists
+# overwrite settings from local_settings.py if it exists
 try:
     from ecs.local_settings import *
 except ImportError:
     pass
 
-# load config from ecs-config/django.py
-_config_file = os.path.join(ECS_CONFIG_DIR, 'django.py')
-if os.path.exists(_config_file):
-    exec(compile(open(_config_file).read(), _config_file, 'exec'))
+# overwrite settings from environment if they exist
+try:
+    from defaults.env_settings import *
+except ImportError:
+    pass
+
+# try to get ECS_VERSION, ECS_GIT_REV from version.py
+if not all([k in locals() for k in ['ECS_VERSION', 'ECS_GIT_REV']]):
+    try:
+        from ecs.version import ECS_VERSION, ECS_GIT_REV
+    except ImportError:
+        ECS_VERSION = 'unknown'
+        ECS_GIT_REV = 'badbadbadbadbadbadbadbadbadbadbadbadbad0'
 
 # apply local overrides
 local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
@@ -386,11 +391,23 @@ DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domai
 # TODO: get this from bootstrap_settings.py
 DEFAULT_REPLY_TO   = 'ethik-kom@meduniwien.ac.at'
 
-# get version of the Programm from version.py if exists (gets updated on deployment)
-try:
-    from ecs.version import *
-except ImportError:
-    ECS_VERSION = 'unknown'
+# https
+if 'SECURE_PROXY_SSL' in locals() and SECURE_PROXY_SSL:
+  CSRF_COOKIE_SECURE= True
+  SESSION_COOKIE_SECURE = True
+  SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# sentry/raven
+if 'SENTRY_DSN' in locals():
+    import raven
+    from raven.transport.threaded_requests import ThreadedRequestsHTTPTransport
+    from raven.transport.requests import RequestsHTTPTransport
+    RAVEN_CONFIG = {
+        'dsn': SENTRY_DSN,
+        'release': ECS_GIT_REV,
+        'transport': ThreadedRequestsHTTPTransport,
+        'site': AUTHORITATIVE_DOMAIN,
+    }
 
 # user switcher
 if 'ECS_USERSWITCHER' not in locals():

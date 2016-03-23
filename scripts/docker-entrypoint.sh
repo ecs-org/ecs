@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+echo "docker-entrypoint.sh called with:\"$@\""
 
 selfname=`echo $(cd $(dirname "$0") && pwd -L)/$(basename "$0")`
 selfpath=`dirname $selfname`
@@ -11,9 +12,6 @@ if test "$1" = "web"; then
 
   echo "activate environment"
   . /app/env/bin/activate
-
-  echo "collect static"
-  ./manage.py collectstatic --noinput
 
   echo "prepare database"
   prepare_database
