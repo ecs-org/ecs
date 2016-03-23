@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms.models import model_to_dict
-from django.db.models import Q
+from django.db.models import Q, Prefetch, Min
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -19,7 +19,9 @@ from django.contrib import messages
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
 from ecs.utils.viewutils import redirect_to_next_url
-from ecs.core.models import Submission, SubmissionForm, TemporaryAuthorization
+from ecs.core.models import (
+    Submission, SubmissionForm, Investigator, TemporaryAuthorization,
+)
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 
 from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
@@ -1028,9 +1030,22 @@ def my_submissions(request):
 @forceauth.exempt
 def catalog(request, year=None):
     with sudo():
-        votes = Vote.objects.filter(result='1',
-            published_at__isnull=False, published_at__lte=timezone.now())
-        votes = votes.select_related('submission_form').order_by('published_at')
+        votes = (Vote.objects
+            .filter(result='1', published_at__lte=timezone.now())
+            .select_related('submission_form', 'submission_form__submission')
+            .prefetch_related(
+                Prefetch('submission_form__investigators',
+                    Investigator.objects.system_ec(),
+                    to_attr='system_ec_investigators'),
+                Prefetch('submission_form__investigators',
+                    Investigator.objects.non_system_ec(),
+                    to_attr='non_system_ec_investigators')
+            ).annotate(
+                first_meeting_start=
+                    Min('submission_form__submission__meetings__start')
+            ).order_by('published_at')
+        )
+
         years = votes.datetimes('published_at', 'year')
         if year is None:
             try:

@@ -34,14 +34,14 @@
             {% endif %}
             
             <p><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}
-              <span class="border_right"></span><strong>Sitzung:</strong> {{ sf.submission.get_first_meeting.start|date:'d.m.Y' }}
+              <span class="border_right"></span><strong>Sitzung:</strong> {{ vote.first_meeting_start|date:'d.m.Y' }}
               <span class="border_right"></span><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}
               {% if sf.is_categorized_multicentric_and_local %}
                  <span class="border_right"></span> (lokale EK nach §41b AMG)
               {% endif %}
             </p>
             
-            {% for investigator in sf.investigators.system_ec %}
+            {% for investigator in sf.system_ec_investigators %}
               <div class="indented">
                 <p>
                   <strong>Prüfzentrum:</strong>
@@ -54,7 +54,7 @@
               </div>
             {% endfor %}
 
-            {% with sf.investigators.non_system_ec.count as other_ec_count %}
+            {% with sf.non_system_ec_investigators|length as other_ec_count %}
               {% if other_ec_count %}
                 <div class="indented">
                   {% blocktrans trimmed count other_ec_count=other_ec_count %}
