@@ -101,36 +101,11 @@ class TaskQuerySet(models.QuerySet):
     def for_submission(self, submission, related=True):
         return self.for_submissions([submission.id], related=related)
 
-class TaskManager(AuthorizationManager):
+class TaskManager(AuthorizationManager.from_queryset(TaskQuerySet)):
     def get_base_queryset(self):
         # XXX: We really shouldn't be using distinct() here - it hurts
-        # performance. Also, it prevents us from simply replacing the
-        # TaskManager with AuthorizationManager.from_queryset(TaskQuerySet).
+        # performance.
         return TaskQuerySet(self.model).distinct()
-
-    def for_data(self, data):
-        return self.all().for_data(data)
-
-    def acceptable_for_user(self, user):
-        return self.all().acceptable_for_user(user)
-
-    def for_user(self, *args, **kwargs):
-        return self.all().for_user(*args, **kwargs)
-
-    def for_widget(self, user):
-        return self.all().for_widget(user)
-
-    def for_submissions(self, submissions, related=True):
-        return self.all().for_submissions(submissions, related=related)
-
-    def for_submission(self, submission, related=True):
-        return self.all().for_submission(submission, related=related)
-        
-    def open(self):
-        return self.all().open()
-
-    def closed(self):
-        return self.all().closed()
 
 class Task(models.Model):
     task_type = models.ForeignKey(TaskType, related_name='tasks')

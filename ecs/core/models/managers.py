@@ -145,91 +145,11 @@ class SubmissionQuerySet(models.QuerySet):
         return self.filter(ec_number__gte=year*10000, ec_number__lt=(year+1)*10000)
 
 
-class SubmissionManager(AuthorizationManager):
+class SubmissionManager(AuthorizationManager.from_queryset(SubmissionQuerySet)):
     def get_base_queryset(self):
         # XXX: We really shouldn't be using distinct() here - it hurts
-        # performance. Also, it prevents us from simply replacing the
-        # SubmissionManager with
-        # AuthorizationManager.from_queryset(SubmissionQuerySet).
+        # performance.
         return SubmissionQuerySet(self.model).distinct()
-
-    def amg(self):
-        return self.all().amg()
-
-    def mpg(self):
-        return self.all().mpg()
-
-    def amg_mpg(self):
-        return self.all().amg_mpg()
-        
-    def not_amg_and_not_mpg(self):
-        return self.all().not_amg_and_not_mpg()
-
-    def with_vote(self, **kwargs):
-        return self.all().with_vote(**kwargs)
-
-    def new(self):
-        return self.all().new()
-
-    def b1(self):
-        return self.all().b1()
-
-    def b2(self):
-        return self.all().b2()
-
-    def b3(self):
-        return self.all().b3()
-
-    def b4(self):
-        return self.all().b4()
-
-    def b5(self):
-        return self.all().b5()
-
-    def thesis(self):
-        return self.all().thesis()
-
-    def retrospective(self):
-        return self.all().retrospective()
-
-    def retrospective_thesis(self):
-        return self.all().retrospective_thesis()
-
-    def expedited(self):
-        return self.all().expedited()
-
-    def localec(self):
-        return self.all().localec()
-
-    def past_meetings(self):
-        return self.all().past_meetings()
-
-    def upcoming_meetings(self):
-        return self.all().upcoming_meetings()
-
-    def next_meeting(self):
-        return self.all().next_meeting()
-
-    def no_meeting(self):
-        return self.all().no_meeting()
-
-    def mine(self, user):
-        return self.all().mine(user)
-
-    def reviewed_by_user(self, user):
-        return self.all().reviewed_by_user(user)
-
-    def none(self):
-        return self.all().none()
-        
-    def for_thesis_lane(self):
-        return self.all().for_thesis_lane()
-        
-    def for_board_lane(self):
-        return self.all().for_board_lane()
-
-    def for_year(self, year):
-        return self.all().for_year(year)
 
 
 class SubmissionFormQuerySet(models.QuerySet):

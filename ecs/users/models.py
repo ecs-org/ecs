@@ -76,15 +76,11 @@ class InvitationQuerySet(models.QuerySet):
     def new(self):
         return self.filter(is_accepted=False)
 
-class InvitationManager(models.Manager):
+class InvitationManager(models.Manager.from_queryset(InvitationQuerySet)):
     def get_queryset(self):
         # XXX: We really shouldn't be using distinct() here - it hurts
-        # performance. Also, it prevents us from simply replacing the
-        # InvitationManager with InvitationQuerySet.as_manager().
+        # performance.
         return InvitationQuerySet(self.model).distinct()
-
-    def new(self):
-        return self.all().new()
 
 class Invitation(models.Model):
     user = models.ForeignKey(User, related_name='ecs_invitations')
