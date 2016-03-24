@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+from functools import reduce
 
 from django import forms
 from django.forms.formsets import BaseFormSet, formset_factory
@@ -7,6 +8,7 @@ from django.forms.models import modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.db.models import Q
 from django.utils import timezone
 
 from django_countries import countries
@@ -306,31 +308,12 @@ InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=
 _queries = {
     'past_meetings':    lambda s,u: s.past_meetings(),
     'next_meeting':     lambda s,u: s.next_meeting(),
-    'upcoming_meetings':lambda s,u: s.upcoming_meetings().exclude(pk__in=s.next_meeting().values('pk').query),
+    'upcoming_meetings':lambda s,u: s.upcoming_meetings().exclude(pk__in=s.next_meeting().values('pk')),
     'no_meeting':       lambda s,u: s.no_meeting(),
-
-    'amg':              lambda s,u: s.amg(),
-    'mpg':              lambda s,u: s.mpg(),
-    'other':            lambda s,u: s.not_amg_and_not_mpg(),
-
-    # lane filters
-    'not_categorized':  lambda s,u: s.filter(workflow_lane=None),
-    'board':            lambda s,u: s.for_board_lane(),
-    'thesis':           lambda s,u: s.for_thesis_lane(),
-    'expedited':        lambda s,u: s.expedited(),
-    'local_ec':         lambda s,u: s.localec(),
-
-    # vote filters
-    'b2':               lambda s,u: s.b2(include_pending=u.profile.is_internal),
-    'b3':               lambda s,u: s.b3(include_pending=u.profile.is_internal),
-    'other_votes':      lambda s,u: s.b1(include_pending=u.profile.is_internal) |
-        s.b4(include_pending=u.profile.is_internal) |
-        s.b5(include_pending=u.profile.is_internal),
-    'no_votes':         lambda s,u: s.without_vote(include_pending=u.profile.is_internal),
 
     'mine':             lambda s,u: s.mine(u),
     'assigned':         lambda s,u: s.reviewed_by_user(u),
-    'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk').query).exclude(pk__in=s.reviewed_by_user(u).values('pk').query),
+    'other_studies':    lambda s,u: s.exclude(pk__in=s.mine(u).values('pk')).exclude(pk__in=s.reviewed_by_user(u).values('pk')),
 }
 
 _labels = {
@@ -384,20 +367,89 @@ class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
         data = data or filter_defaults
         return super(SubmissionFilterForm, self).__init__(data, *args, **kwargs)
 
+    def _filter_by_type(self, submissions, user):
+        qs = []
+        if self.cleaned_data['amg']:
+            qs.append(
+                Q(current_submission_form__project_type_non_reg_drug=True) |
+                Q(current_submission_form__project_type_reg_drug=True)
+            )
+        if self.cleaned_data['mpg']:
+            qs.append(Q(current_submission_form__project_type_medical_device=True))
+        if self.cleaned_data['other']:
+            qs.append(
+                Q(current_submission_form__project_type_non_reg_drug=False) &
+                Q(current_submission_form__project_type_reg_drug=False) &
+                Q(current_submission_form__project_type_medical_device=False)
+            )
+        return submissions.filter(reduce(lambda x, y: x | y, qs))
+
+    def _filter_by_lane(self, submissions, user):
+        from ecs.core.models.constants import (
+            SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
+            SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
+        )
+        lanes = []
+        if self.cleaned_data['board']:
+            lanes.append(SUBMISSION_LANE_BOARD)
+        if self.cleaned_data['thesis']:
+            lanes.append(SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+        if self.cleaned_data['expedited']:
+            lanes.append(SUBMISSION_LANE_EXPEDITED)
+        if self.cleaned_data['local_ec']:
+            lanes.append(SUBMISSION_LANE_LOCALEC)
+        new = submissions.filter(workflow_lane__in=lanes)
+        if self.cleaned_data['not_categorized']:
+            new |= submissions.filter(workflow_lane=None)
+        return new
+
+    def _filter_by_votes(self, submissions, user):
+        results = []
+        if self.cleaned_data['b2']:
+            results.append('2')
+        if self.cleaned_data['b3']:
+            results += ['3a', '3b']
+        if self.cleaned_data['other_votes']:
+            results += ['1', '4', '5']
+
+        qs = []
+        if results:
+            q = Q(current_submission_form__current_published_vote__result__in=results)
+            if user.profile.is_internal:
+                q |= Q(current_submission_form__current_pending_vote__result__in=results)
+            qs.append(q)
+
+        if self.cleaned_data['no_votes']:
+            q = ~Q(forms__current_published_vote__isnull=False)
+            if user.profile.is_internal:
+                q &= ~Q(forms__current_pending_vote__isnull=False)
+            qs.append(q & Q(current_submission_form__isnull=False))
+
+        return submissions.filter(reduce(lambda x, y: x | y, qs))
+
     def filter_submissions(self, submissions, user):
         self.is_valid()   # force clean
 
         for row in self.layout:
-            new = submissions.none()
-            if all(self.cleaned_data[f] for f in row):
-                new = submissions.all()
-            else:
-                for f in row:
-                    if self.cleaned_data[f]:
-                        new |= _queries[f](submissions, user)
-            submissions = new
+            active = sum(1 for f in row if self.cleaned_data[f])
+            if not active:
+                return submissions.none()
+            elif active != len(row):
+                if row == FILTER_TYPE:
+                    submissions = self._filter_by_type(submissions, user)
+                elif row == FILTER_LANE:
+                    submissions = self._filter_by_lane(submissions, user)
+                elif row == FILTER_VOTES:
+                    submissions = self._filter_by_votes(submissions, user)
+                else:
+                    new = submissions.none()
+                    for f in row:
+                        if self.cleaned_data[f]:
+                            new |= _queries[f](submissions, user)
+                    submissions = new
 
         return submissions
+
 
 FILTER_MEETINGS = ('past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting')
 FILTER_TYPE = ('amg', 'mpg', 'other')

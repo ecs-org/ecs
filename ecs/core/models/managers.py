@@ -49,33 +49,6 @@ class SubmissionQuerySet(models.QuerySet):
         from ecs.core.models import SubmissionForm
         return self.filter(id__in=SubmissionForm.objects.with_vote(**kwargs).values('submission_id').query)
 
-    def _with_explicit_vote(self, *results, **kwargs):
-        q = Q(current_submission_form__current_published_vote__isnull=False, current_submission_form__current_published_vote__result__in=results)
-        if kwargs.get('include_pending', True):
-            q |= Q(current_submission_form__current_pending_vote__isnull=False, current_submission_form__current_pending_vote__result__in=results)
-        return self.filter(q, current_submission_form__isnull=False)
-
-    def b1(self, include_pending=True):
-        return self._with_explicit_vote('1', include_pending=include_pending)
-
-    def b2(self, include_pending=True):
-        return self._with_explicit_vote('2', include_pending=include_pending)
-
-    def b3(self, include_pending=True):
-        return self._with_explicit_vote('3a', '3b', include_pending=include_pending)
-
-    def b4(self, include_pending=True):
-        return self._with_explicit_vote('4', include_pending=include_pending)
-
-    def b5(self, include_pending=True):
-        return self._with_explicit_vote('5', include_pending=include_pending)
-        
-    def without_vote(self, include_pending=True):
-        q = ~Q(forms__current_published_vote__isnull=False)
-        if include_pending:
-            q &= Q(forms__current_pending_vote__isnull=True)
-        return self.filter(q, current_submission_form__isnull=False)
-
     def expedited(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
 
