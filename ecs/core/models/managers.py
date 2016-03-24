@@ -76,18 +76,6 @@ class SubmissionQuerySet(models.QuerySet):
             q &= Q(forms__current_pending_vote__isnull=True)
         return self.filter(q, current_submission_form__isnull=False)
 
-    def new(self):
-        return self.filter(meetings__isnull=True)
-
-    def thesis(self):
-        return self.exclude(current_submission_form__project_type_education_context=None)
-
-    def retrospective(self):
-        return self.filter(current_submission_form__project_type_retrospective=True)
-
-    def retrospective_thesis(self):
-        return self.filter(Q(pk__in=self.thesis().values('pk').query) & Q(pk__in=self.retrospective().values('pk').query))
-
     def expedited(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
 

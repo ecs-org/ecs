@@ -308,8 +308,6 @@ _queries = {
     'next_meeting':     lambda s,u: s.next_meeting(),
     'upcoming_meetings':lambda s,u: s.upcoming_meetings().exclude(pk__in=s.next_meeting().values('pk').query),
     'no_meeting':       lambda s,u: s.no_meeting(),
-    'new':              lambda s,u: s.new(),
-    'other_meetings':   lambda s,u: s.exclude(pk__in=s.new().values('pk').query).exclude(pk__in=s.next_meeting().values('pk').query),
 
     'amg':              lambda s,u: s.amg(),
     'mpg':              lambda s,u: s.mpg(),
