@@ -32,6 +32,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                     textarea.val(v.slice(0, s) + text + v.slice(e, -1));
                     textarea.prop('selectionStart', s);
                     textarea.prop('selectionEnd', s + text.length);
+                    textarea.trigger('input');
                 };
                 var update = function(q, initial) {
                     var csrftoken = document.cookie.split('; ')

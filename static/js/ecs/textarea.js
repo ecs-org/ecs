@@ -64,7 +64,7 @@ ecs.textarea.TextArea = function(textarea, items, options) {
             'overflow': 'hidden',
             'resize': 'none',
         });
-        this.textarea.on('keydown keyup change', (function(ev) {
+        this.textarea.on('input', (function(ev) {
             this.updateHeight();
         }).bind(this));
         this.updateHeight();

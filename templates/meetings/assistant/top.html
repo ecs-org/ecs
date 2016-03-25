@@ -189,7 +189,7 @@
                         textarea.val(v.slice(0, s) + text + v.slice(e, -1));
                         textarea.prop('selectionStart', s + text.length);
                         textarea.prop('selectionEnd', s + text.length);
-                        textarea.data('textarea').updateHeight();
+                        textarea.trigger('input');
                         textarea.focus();
                     }
                 });
