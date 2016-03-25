@@ -82,7 +82,7 @@ BROWSER_FILTER_RULES = (
     android_quirks,
     supported_starting('Safari', '7'),
     supported_starting('Microsoft Internet Explorer', '11'),
-    supported_starting('MSEdge', '20'),
+    supported_starting('MSEdge', '12.10240'),   # Edge 20 (first public release)
     crawler_detected,
     crawler_quirks,
 )
