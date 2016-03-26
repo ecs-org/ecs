@@ -165,7 +165,7 @@
 
           var modal = ecs.popup();
           modal.find('.modal-content').load($(this).attr('href'), function() {
-              var textarea = modal.find('textarea[name="text"]')
+              var textarea = modal.find('textarea[name="text"]');
               var len = textarea.val().length;
               textarea.focus();
               textarea.get(0).setSelectionRange(len, len);
