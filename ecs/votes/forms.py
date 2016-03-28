@@ -12,7 +12,7 @@ def ResultField(**kwargs):
 
 class SaveVoteForm(forms.ModelForm):
     result = ResultField(required=False)
-    close_top = forms.BooleanField(required=False)
+    close_top = forms.BooleanField(required=False, widget=forms.HiddenInput())
     executive_review_required = forms.NullBooleanField(widget=forms.HiddenInput())
 
     class Meta:
