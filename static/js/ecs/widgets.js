@@ -59,14 +59,14 @@ ecs.Widget.prototype = {
 };
 
 ecs.popup = function(options) {
-    var modal = $('\
-        <div class="modal">\
-            <div class="modal-dialog">\
-                <div class="modal-content">\
-                </div>\
-            </div>\
-        </div>\
-    ');
+    var modal = $([
+        '<div class="modal">',
+        '    <div class="modal-dialog">',
+        '        <div class="modal-content">',
+        '        </div>',
+        '    </div>',
+        '</div>'
+    ].join('\n'));
     $(document.body).append(modal);
     modal = $(modal.get(0));
     modal.modal(options);
@@ -79,13 +79,13 @@ ecs.popup = function(options) {
 ecs.confirm = function(options) {
     var modal = ecs.popup();
 
-    modal.find('.modal-content').html('\
-        <div class="modal-body"><p></p></div>\
-        <div class="modal-footer">\
-            <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"></button>\
-            <button type="button" class="btn btn-sm btn-primary"></button>\
-        </div>\
-    ');
+    modal.find('.modal-content').html([
+        '<div class="modal-body"><p></p></div>',
+        '<div class="modal-footer">',
+        '    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"></button>',
+        '    <button type="button" class="btn btn-sm btn-primary"></button>',
+        '</div>'
+    ].join('\n'));
 
     modal.find('.modal-dialog').addClass('modal-sm');
     modal.find('.modal-body p').text(options.question);
