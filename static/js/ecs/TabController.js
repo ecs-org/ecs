@@ -38,8 +38,8 @@ ecs.TabGroup = function(controller, header, container, tabs) {
     this.container = container;
     this.tabs = tabs;
     this.selectedTab = tabs[0];
-    for (var tab of tabs)
-        tab.group = this;
+    for (var i = 0; i < tabs.length; i++)
+        tabs[i].group = this;
 
     this.header.click((function(ev) {
         ev.preventDefault();

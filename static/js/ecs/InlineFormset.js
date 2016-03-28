@@ -95,11 +95,11 @@ ecs.InlineFormSet.prototype = {
             .each(function() {
                 var el = $(this);
 
-                for (var f of ['id', 'name', 'for']) {
+                ['id', 'name', 'for'].forEach(function(f) {
                     var val = el.attr(f);
                     if (val)
                         el.attr(f, val.replace(/-.+?-/, '-' + index + '-'));
-                }
+                });
             });
 
         if (this.options.onFormIndexChanged)
