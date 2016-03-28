@@ -164,7 +164,7 @@ ecs.setupDocumentUploadForms = function(){
         warning.show();
         progress.show();
 
-        xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
 
         xhr.upload.addEventListener('progress', function(ev){
             if (ev.lengthComputable) {
