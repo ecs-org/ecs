@@ -15,9 +15,9 @@ ecs.textarea = {
                         ev.preventDefault();
                         this.sourceTextarea.val(this.textarea.val());
                         this.sourceTextarea.prop('selectionStart',
-                            this.textarea.prop('selectionStart'))
+                            this.textarea.prop('selectionStart'));
                         this.sourceTextarea.prop('selectionEnd',
-                            this.textarea.prop('selectionEnd'))
+                            this.textarea.prop('selectionEnd'));
                         this.screen.css('display', 'none');
                         this.sourceTextarea.focus();
                     }
@@ -28,8 +28,8 @@ ecs.textarea = {
                 this.toolbar.remove();
             this.sourceTextarea = textarea;
             this.textarea.val(textarea.val());
-            this.textarea.prop('selectionStart', textarea.prop('selectionStart'))
-            this.textarea.prop('selectionEnd', textarea.prop('selectionEnd'))
+            this.textarea.prop('selectionStart', textarea.prop('selectionStart'));
+            this.textarea.prop('selectionEnd', textarea.prop('selectionEnd'));
             this.toolbar = ecs.textarea.installToolbar(textarea, null, this.textarea);
             this.screen.css('display', 'block');
             this.textarea.focus();

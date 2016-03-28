@@ -29,7 +29,7 @@ ecs.setupFormFieldHelpers = function(context){
         if (input && input.length) {
             var maxlength = input.prop('maxlength');
             if (maxlength && maxlength > 0) {
-                var ml = 1 + parseInt(maxlength / 10)
+                var ml = 1 + parseInt(maxlength / 10);
                 if (ml == 3)
                     ml = 4;
                 else if (ml >= 5)
@@ -41,7 +41,7 @@ ecs.setupFormFieldHelpers = function(context){
 };
 
 ecs.InvestigatorFormset = function(container, readonly) {
-    this.container = container
+    this.container = container;
     this.readonly = readonly;
 
     this.inline_formset = new ecs.InlineFormSet(this.container, {
@@ -125,7 +125,7 @@ ecs.InvestigatorFormset.prototype = {
                     'class': 'fa fa-times-circle remove',
                     click: (function(ev) {
                         ev.preventDefault();
-                        this.inline_formset.remove(i)
+                        this.inline_formset.remove(i);
                     }).bind(this)
                 });
                 li.append(removeLink);

@@ -33,7 +33,7 @@ ecs.InlineFormSet = function(containers, options) {
     this.isTable = containers.is('table');
     containers.each((function(i, el) {
         this.addContainer($(el));
-    }).bind(this))
+    }).bind(this));
     this.totalForms = $('#id_' + this.options.prefix + '-TOTAL_FORMS');
     this.forms.forEach(function(form, i) {
         this.setupForm(form);
