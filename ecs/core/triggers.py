@@ -118,22 +118,28 @@ def on_initial_review(sender, **kwargs):
 
 LANE_TASKS = {
     SUBMISSION_LANE_RETROSPECTIVE_THESIS : (
-        'initial_thesis_review',    # XXX: compat
+        'initial_thesis_review',        # XXX: compat
         'thesis_recommendation',
         'thesis_recommendation_review',
-        'thesis_vote_preparation',
+        'thesis_vote_preparation',      # XXX: compat
     ),
     SUBMISSION_LANE_EXPEDITED : (
         'expedited_recommendation',
-        'expedited_vote_preparation',
+        'expedited_vote_preparation',   # XXX: compat
     ),
     SUBMISSION_LANE_BOARD : (
         'board_member_review',
     ),
     SUBMISSION_LANE_LOCALEC : (
         'localec_recommendation',
-        'localec_vote_preparation',
+        'localec_vote_preparation',     # XXX: compat
     ),
+}
+
+VOTE_PREPARATION_SOURCES = {
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS: 'thesis_recommendation_review',
+    SUBMISSION_LANE_EXPEDITED: 'expedited_recommendation',
+    SUBMISSION_LANE_LOCALEC: 'localec_recommendation',
 }
 
 
@@ -155,6 +161,13 @@ def on_categorization_review(sender, **kwargs):
             for task in tasks.filter(task_type__workflow_node__uid='initial_review'):
                 if task.workflow_node.graph.nodes.filter(uid='initial_thesis_review').exists():
                     task.mark_deleted()
+
+        vote_preparation_tasks = tasks.filter(
+            task_type__workflow_node__uid='vote_preparation')
+        source_uid = VOTE_PREPARATION_SOURCES.get(submission.workflow_lane)
+        for task in vote_preparation_tasks:
+            if task.workflow_token.source.uid != source_uid:
+                task.mark_deleted()
 
 
 @connect(signals.on_b2_upgrade)

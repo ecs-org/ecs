@@ -49,7 +49,6 @@ def submission_workflow():
     INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
     GCP_REVIEW_GROUP = 'GCP Review Group'
     PAPER_GROUP = 'EC-Paper Submission Review Group'
-    VOTE_PREPARATION_GROUP = 'EC-Vote Preparation Group'
     B2_REVIEW_GROUP = 'EC-B2 Review Group'
 
     setup_workflow_graph(Submission,
@@ -74,16 +73,16 @@ def submission_workflow():
             # retrospective thesis lane
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
-            'thesis_vote_preparation': Args(VotePreparation, name=_("Thesis Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # expedited_lane
             'expedited_recommendation_split': Args(ExpeditedRecommendationSplit, name=_("Expedited Recommendation Split")),
             'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=BOARD_MEMBER_GROUP),
-            'expedited_vote_preparation': Args(VotePreparation, name=_("Expedited Vote Preparation"), group=VOTE_PREPARATION_GROUP),
 
             # local ec lane
             'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
-            'localec_vote_preparation': Args(VotePreparation, name=_("Local EC Vote Preparation"), group=VOTE_PREPARATION_GROUP),
+
+            # retrospective thesis, expedited and local ec lanes
+            'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
         },
         edges={
             ('start', 'initial_review'): None,
@@ -102,19 +101,19 @@ def submission_workflow():
             ('initial_review_barrier', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
-            ('thesis_recommendation_review', 'thesis_vote_preparation'): Args(guard=has_thesis_recommendation),
+            ('thesis_recommendation_review', 'vote_preparation'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
             ('categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
 
             # expedited lane
             ('categorization_review', 'expedited_recommendation_split'): None,
             ('expedited_recommendation_split', 'expedited_recommendation'): Args(guard=is_expedited),
-            ('expedited_recommendation', 'expedited_vote_preparation'): Args(guard=needs_expedited_vote_preparation),
+            ('expedited_recommendation', 'vote_preparation'): Args(guard=needs_expedited_vote_preparation),
             ('expedited_recommendation', 'categorization_review'): Args(guard=needs_expedited_recategorization),
 
             # local ec lane
             ('categorization_review', 'localec_recommendation'): Args(guard=needs_localec_recommendation),
-            ('localec_recommendation', 'localec_vote_preparation'): Args(guard=needs_localec_vote_preparation),
+            ('localec_recommendation', 'vote_preparation'): Args(guard=needs_localec_vote_preparation),
             ('localec_recommendation', 'categorization_review'): Args(guard=has_localec_recommendation, negated=True),
 
             ('categorization_review', 'insurance_review'): Args(guard=needs_insurance_review),
@@ -146,7 +145,6 @@ def auth_groups():
         'translators',
         'External Reviewer',
         'External Review Review Group',
-        'EC-Vote Preparation Group',
         'Amendment Receiver Group',
         'Meeting Protocol Receiver Group',
         'Resident Board Member Group',
@@ -288,7 +286,6 @@ def auth_user_testusers():
         ('ext.rev.rev', 'External Review Review Group', {'is_internal': True}),
         ('paper.rev', 'EC-Paper Submission Review Group', {'is_internal': True}),
         ('safety.rev', 'EC-Safety Report Review Group', {'is_internal': True}),
-        ('vote.prep', 'EC-Vote Preparation Group', {'is_internal': True}),
     )
 
     boardtestusers = (
