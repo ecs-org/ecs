@@ -378,7 +378,7 @@ def initial_review(request, submission_pk=None):
     return readonly_submission_form(request, submission_form=submission.current_submission_form)
 
 
-@user_flag_required('is_internal', 'is_thesis_reviewer')
+@user_flag_required('is_internal')
 @with_task_management
 def paper_submission_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)

@@ -16,7 +16,6 @@ class UserProfile(models.Model):
 
     is_board_member = models.BooleanField(default=False)
     is_executive_board_member = models.BooleanField(default=False)
-    is_thesis_reviewer = models.BooleanField(default=False)
     is_insurance_reviewer = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
     is_resident_member = models.BooleanField(default=False)

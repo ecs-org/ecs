@@ -181,7 +181,6 @@ class UserDetailsForm(forms.ModelForm):
         profile.external_review = user.groups.filter(name='External Reviewer').exists()
         profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
         profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
-        profile.is_thesis_reviewer = user.groups.filter(name='EC-Thesis Review Group').exists()
         profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
         profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
         for k in ('is_internal', 'is_help_writer'):
@@ -223,7 +222,6 @@ class InvitationForm(forms.Form):
         profile.title = self.cleaned_data['title']
         profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
         profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
-        profile.is_thesis_reviewer = user.groups.filter(name='EC-Thesis Review Group').exists()
         profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
         profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
         profile.forward_messages_after_minutes = 5

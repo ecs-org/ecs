@@ -7,7 +7,6 @@ from django.utils import timezone
 from ecs.utils.testcases import EcsTestCase
 from ecs.core.tests.test_submissions import create_submission_form
 from ecs.core.models import Submission
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_EXPEDITED
 from ecs.meetings.models import Meeting
 from ecs.users.utils import sudo, create_user
 
@@ -42,7 +41,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         self.primary_investigator_user = self._create_test_user('primary_investigator')
         self.sponsor_user = self._create_test_user('sponsor')
         self.submitter_user = self._create_test_user('submitter')
-        self.thesis_review_user = self._create_test_user('thesis_review', is_thesis_reviewer=True)
         self.another_board_member_user = self._create_test_user('another_board_member', is_board_member=True)
     
         sf = create_submission_form()
@@ -93,13 +91,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         with sudo(self.another_board_member_user):
             self.assertEqual(Submission.objects.count(), 0)
 
-        with sudo(self.thesis_review_user):
-            self.assertEqual(Submission.objects.count(), 0)
-        self.sf.submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
-        self.sf.submission.save()
-        with sudo(self.thesis_review_user):
-            self.assertEqual(Submission.objects.count(), 1)
-    
     @contextmanager
     def _login(self, user):
         self.client.login(email=user.email, password=user.email)
