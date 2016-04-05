@@ -46,7 +46,7 @@
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle submissions" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Studies" %}</a>
             <div class="dropdown-menu">
-                {% if user|has_flag:"is_internal" or user|is_member_of:"EC-Thesis Review Group" %}
+                {% if user|has_flag:"is_internal" %}
                     <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.all_submissions' %}">{% trans "All Studies" %}</a>
                 {% endif %}
                 {% if user|has_assigned_submissions %}

@@ -8,7 +8,7 @@ from ecs.utils import Args
 from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
-from ecs.core.workflow import (InitialReview, InitialThesisReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
+from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
@@ -39,7 +39,6 @@ def submission_workflow():
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
 
-    THESIS_REVIEW_GROUP = 'EC-Thesis Review Group'
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
     LOCALEC_REVIEW_GROUP = 'Local-EC Review Group'
     EXECUTIVE_GROUP = 'EC-Executive Board Group'
@@ -73,8 +72,6 @@ def submission_workflow():
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP),
 
             # retrospective thesis lane
-            'initial_thesis_review': Args(InitialThesisReview, name=_("Initial Thesis Review"), group=THESIS_REVIEW_GROUP),
-            'initial_thesis_review_barrier': Args(Generic, name=_('Initial Thesis Review Split')),
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
             'thesis_vote_preparation': Args(VotePreparation, name=_("Thesis Vote Preparation"), group=VOTE_PREPARATION_GROUP),
@@ -89,10 +86,10 @@ def submission_workflow():
             'localec_vote_preparation': Args(VotePreparation, name=_("Local EC Vote Preparation"), group=VOTE_PREPARATION_GROUP),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
+            ('start', 'initial_review'): None,
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
-            ('initial_review_barrier', 'categorization_review'): None,
+            ('initial_review_barrier', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
             ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
             ('b2_resubmission', 'b2_review'): None,
             ('b2_review', 'insurance_b2_review'): Args(guard=needs_insurance_b2_review),
@@ -102,12 +99,7 @@ def submission_workflow():
             ('executive_b2_review', 'b2_review'): None,
 
             # retrospective thesis lane
-            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
-            ('initial_thesis_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_thesis_review', 'initial_thesis_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
-            ('initial_thesis_review_barrier', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
-            ('initial_thesis_review_barrier', 'paper_submission_review'): Args(guard=is_retrospective_thesis),
-            ('initial_thesis_review_barrier', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
+            ('initial_review_barrier', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
             ('thesis_recommendation_review', 'thesis_vote_preparation'): Args(guard=has_thesis_recommendation),
@@ -143,7 +135,6 @@ def auth_groups():
         'EC-Statistic Group',
         'EC-Notification Review Group',
         'EC-Insurance Reviewer',
-        'EC-Thesis Review Group',
         'EC-Thesis Executive Group',
         'EC-B2 Review Group',
         'EC-Paper Submission Review Group',
@@ -289,7 +280,6 @@ def auth_user_testusers():
         ('statistic.rev', 'EC-Statistic Group', {'is_internal': False}),
         ('notification.rev', 'EC-Notification Review Group', {'is_internal': True, }),
         ('insurance.rev', 'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
-        ('thesis.rev', 'EC-Thesis Review Group', {'is_internal': False, 'is_thesis_reviewer': True, }),
         ('external.reviewer', None, {}),
         ('gcp.reviewer', 'GCP Review Group', {'is_internal': False}),
         ('localec.rev', 'Local-EC Review Group', {'is_internal': True}),

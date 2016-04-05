@@ -1,7 +1,7 @@
 from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
-from ecs.core.workflow import InitialReview, InitialThesisReview
+from ecs.core.workflow import InitialReview
 from ecs.core import signals
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
@@ -29,7 +29,7 @@ def on_study_change(sender, **kwargs):
     else:
         with sudo():
             if not submission.votes.filter(is_draft=False, result__in=FINAL_VOTE_RESULTS).exists():
-                initial_review_tasks = get_obj_tasks((InitialReview, InitialThesisReview), submission)
+                initial_review_tasks = get_obj_tasks((InitialReview,), submission)
                 try:
                     initial_review_task = initial_review_tasks.exclude(closed_at__isnull=True).order_by('-created_at')[0]
                 except IndexError:
@@ -85,7 +85,13 @@ def on_susar_presenter_change(sender, **kwargs):
 @connect(signals.on_initial_review)
 def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
+
     if submission_form.is_acknowledged:
+        if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
+            with sudo():
+                meeting = submission.schedule_to_meeting()
+                meeting.update_assigned_categories()
+
         send_submission_message(submission, submission.presenter, _('Acknowledgement of Receipt'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             current_vote = submission.current_submission_form.current_vote
@@ -108,15 +114,6 @@ def on_initial_review(sender, **kwargs):
                 send_submission_message(submission, u, _('Changes to study EC-Nr. {ec_number}'), 'submissions/change_message.txt', reply_receiver=get_office_user(submission=submission))
     else:
         send_submission_message(submission, submission.presenter, _('Submission not accepted'), 'submissions/decline_message.txt')
-
-
-@connect(signals.on_initial_thesis_review)
-def on_initial_thesis_review(sender, **kwargs):
-    submission, submission_form = kwargs['submission'], kwargs['form']
-    if submission_form.is_acknowledged:
-        with sudo():
-            meeting = submission.schedule_to_meeting()
-            meeting.update_assigned_categories()
 
 
 LANE_TASKS = {

@@ -7,7 +7,7 @@ from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
-from ecs.core.signals import on_initial_review, on_initial_thesis_review, on_categorization_review, on_b2_upgrade
+from ecs.core.signals import on_initial_review, on_categorization_review, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
@@ -137,9 +137,11 @@ def needs_executive_b2_review(wf):
     vote = wf.data.get_most_recent_vote()
     return vote.executive_review_required
 
+
 ##############
 # Activities #
 ##############
+
 class InitialReview(Activity):
     class Meta:
         model = Submission
@@ -163,11 +165,6 @@ class InitialReview(Activity):
         sf.save()
         on_initial_review.send(Submission, submission=s, form=sf)
 
-class InitialThesisReview(InitialReview):
-    def pre_perform(self, choice):
-        super(InitialThesisReview, self).pre_perform(choice)
-        s = Submission.objects.get(pk=self.workflow.data.pk)
-        on_initial_thesis_review.send(Submission, submission=s, form=s.newest_submission_form)
 
 class Resubmission(Activity):
     class Meta:
