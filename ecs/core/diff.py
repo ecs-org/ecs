@@ -16,7 +16,8 @@ from django.contrib.auth.models import User
 from django.utils.html import escape
 
 from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
-    Measure, NonTestedUsedDrug, ForeignParticipatingCenter, InvestigatorEmployee
+    Measure, NonTestedUsedDrug, ParticipatingCenterNonSubject, \
+    ForeignParticipatingCenter, InvestigatorEmployee
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
@@ -406,14 +407,18 @@ _differs = {
             'pdf_document', 'is_acknowledged',
             'created_at', 'presenter', 'sponsor', 'submitter', 'is_transient',
             'is_notification_update',),
-        follow=('foreignparticipatingcenter_set', 'investigators', 'measures',
-            'nontesteduseddrug_set', 'documents'),
+        follow=(
+            'participatingcenternonsubject_set',
+            'foreignparticipatingcenter_set', 'investigators', 'measures',
+            'nontesteduseddrug_set', 'documents',
+        ),
         node_map={
             'documents': DocumentListDiffNode,
         },
         label_map=dict([
-            ('foreignparticipatingcenter_set', _('Auslandszentren')),
-            ('investigators', _('Zentren')),
+            ('participatingcenternonsubject_set', _('centers (non subject)')),
+            ('foreignparticipatingcenter_set', _('centers abroad')),
+            ('investigators', _('centers (subject)')),
             ('measures', _('Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
             ('nontesteduseddrug_set',
                 _('Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
@@ -443,6 +448,11 @@ _differs = {
         exclude=('id', 'submission_form'),
         match_fields=('generic_name', 'preparation_form'),
         identify='generic_name',
+    ),
+    ParticipatingCenterNonSubject: ModelDiffer(ParticipatingCenterNonSubject,
+        exclude=('id', 'submission_form',),
+        match_fields=('name', 'ethics_commission'),
+        identify='name',
     ),
     ForeignParticipatingCenter: ModelDiffer(ForeignParticipatingCenter,
         exclude=('id', 'submission_form',),
