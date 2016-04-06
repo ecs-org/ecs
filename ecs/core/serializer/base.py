@@ -11,8 +11,8 @@ from django.contrib.postgres.fields import ArrayField
 
 from ecs.core.models import (
     SubmissionForm, Submission, EthicsCommission, Investigator,
-    InvestigatorEmployee, Measure, ForeignParticipatingCenter,
-    NonTestedUsedDrug,
+    InvestigatorEmployee, Measure, ParticipatingCenterNonSubject,
+    ForeignParticipatingCenter, NonTestedUsedDrug,
 )
 from ecs.documents.models import Document, DocumentType
 from ecs.core.paper_forms import get_field_info
@@ -419,6 +419,7 @@ _serializers = {
             'is_acknowledged',
         ),
         follow = (
+            'participatingcenternonsubject_set',
             'foreignparticipatingcenter_set', 'investigators', 'measures',
             'documents', 'nontesteduseddrug_set',
         ),
@@ -432,6 +433,10 @@ _serializers = {
         exclude=('id', 'investigator')
     ),
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
+    ParticipatingCenterNonSubject: ModelSerializer(
+        ParticipatingCenterNonSubject,
+        exclude=('id', 'submission_form')
+    ),
     ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter,
         exclude=('id', 'submission_form')
     ),
