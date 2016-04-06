@@ -24,17 +24,15 @@ class PriceManager(models.Manager):
     def get_for_submission(self, submission, review=False):
         if submission.remission:
             return self.get(category=STUDY_PRICING_REMISSION)
-        if submission.current_submission_form.is_amg and submission.is_multicentric:
-            main_ec = submission.main_ethics_commission
-            if main_ec and main_ec.system:
-                return self.get(category=STUDY_PRICING_MULTICENTRIC_AMG_MAIN)
-            else:
-                return self.get(category=STUDY_PRICING_MULTICENTRIC_AMG_LOCAL)
+        elif submission.current_submission_form.is_categorized_multicentric_and_main:
+            return self.get(category=STUDY_PRICING_MULTICENTRIC_AMG_MAIN)
+        elif submission.current_submission_form.is_categorized_multicentric_and_local:
+            return self.get(category=STUDY_PRICING_MULTICENTRIC_AMG_LOCAL)
         return self.get(category=STUDY_PRICING_OTHER)
-        
+
     def get_review_price(self):
         return self.get(category=EXTERNAL_REVIEW_PRICING)
-        
+
 
 class Price(models.Model):
     category = models.SmallIntegerField(choices=PRICE_CATEGORIES, unique=True, db_index=True)
