@@ -28,10 +28,16 @@ from ecs.core.models import (
 from ecs.checklists.models import ChecklistBlueprint, Checklist
 from ecs.meetings.models import Meeting
 
-from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
-    ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
-    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
-    PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
+from ecs.core.forms import (
+    SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet,
+    NonTestedUsedDrugFormSet, ParticipatingCenterNonSubjectFormSet,
+    ForeignParticipatingCenterFormSet, InvestigatorFormSet,
+    InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
+    SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm,
+    SubmissionWidgetFilterForm, PresenterChangeForm, SusarPresenterChangeForm,
+    AssignedSubmissionsFilterForm, MySubmissionsFilterForm,
+    AllSubmissionsFilterForm,
+)
 from ecs.core.forms.review import CategorizationForm, BiasedBoardMemberForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
@@ -64,6 +70,7 @@ def get_submission_formsets(data=None, initial=None, readonly=False):
         ('measure', MeasureFormSet),
         ('routinemeasure', RoutineMeasureFormSet),
         ('nontesteduseddrug', NonTestedUsedDrugFormSet),
+        ('participatingcenternonsubject', ParticipatingCenterNonSubjectFormSet),
         ('foreignparticipatingcenter', ForeignParticipatingCenterFormSet),
         ('investigator', InvestigatorFormSet),
         ('investigatoremployee', InvestigatorEmployeeFormSet),
@@ -86,6 +93,7 @@ def get_submission_formsets_initial(instance):
         ('measure', lambda sf: sf.measures.filter(category='6.1')),
         ('routinemeasure', lambda sf: sf.measures.filter(category='6.2')),
         ('nontesteduseddrug', lambda sf: sf.nontesteduseddrug_set.all()),
+        ('participatingcenternonsubject', lambda sf: sf.participatingcenternonsubject_set.all()),
         ('foreignparticipatingcenter', lambda sf: sf.foreignparticipatingcenter_set.all()),
         ('investigator', lambda sf: sf.investigators.all()),
     ]

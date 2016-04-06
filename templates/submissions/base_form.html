@@ -78,7 +78,7 @@
                     {% endif %}
 
                     {% if tab.slug == 'centers' %}
-                        <h3>Zentren</h3>
+                        <h3>{% trans 'centers (subject)' %}</h3>
 
                         {% if investigator_formset.non_form_errors %}
                             <div class="errors">
@@ -129,7 +129,7 @@
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <h3>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h3>
+                                    <h4>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h4>
                                     {% if investigatoremployee_formset.non_form_errors %}
                                         <div class="errors">
                                             <ul class="errorlist">
@@ -207,6 +207,11 @@
                             {% endif %}
                             {% if fields.name == 'centers_abroad' %}
                                 {% with foreignparticipatingcenter_formset as formset %}
+                                    {% include "forms/tables/inline_formset.html" %}
+                                {% endwith %}
+                            {% endif %}
+                            {% if fields.name == 'centers_non_subject' %}
+                                {% with participatingcenternonsubject_formset as formset %}
                                     {% include "forms/tables/inline_formset.html" %}
                                 {% endwith %}
                             {% endif %}

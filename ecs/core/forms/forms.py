@@ -13,8 +13,12 @@ from django.utils import timezone
 
 from django_countries import countries
 
-from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
-    NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
+from ecs.core.models import (
+    Investigator, InvestigatorEmployee, SubmissionForm, Measure,
+    ParticipatingCenterNonSubject, ForeignParticipatingCenter,
+    NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings,
+    EthicsCommission,
+)
 
 from ecs.utils.formutils import require_fields
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyTextarea, ReadonlyTextInput, \
@@ -175,6 +179,22 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
 
 ## ##
 
+class ParticipatingCenterNonSubjectForm(forms.ModelForm):
+    class Meta:
+        model = ParticipatingCenterNonSubject
+        fields = ('name', 'ethics_commission', 'investigator_name')
+        widgets = {
+            'name': ReadonlyTextInput(attrs={'size': 40}),
+            'investigator_name': ReadonlyTextInput(attrs={'size': 30}),
+        }
+
+class ReadonlyBaseFormSet(ReadonlyFormSetMixin, BaseFormSet):
+    def save(self, commit=True):
+        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+
+ParticipatingCenterNonSubjectFormSet = formset_factory(
+    ParticipatingCenterNonSubjectForm, formset=ReadonlyBaseFormSet, extra=0)
+
 class ForeignParticipatingCenterForm(forms.ModelForm):
     class Meta:
         model = ForeignParticipatingCenter
@@ -184,11 +204,8 @@ class ForeignParticipatingCenterForm(forms.ModelForm):
             'investigator_name': ReadonlyTextInput(attrs={'size': 40}),
         }
 
-class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, BaseFormSet):
-    def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
-
-ForeignParticipatingCenterFormSet = formset_factory(ForeignParticipatingCenterForm, formset=BaseForeignParticipatingCenterFormSet, extra=0)
+ForeignParticipatingCenterFormSet = formset_factory(
+    ForeignParticipatingCenterForm, formset=ReadonlyBaseFormSet, extra=0)
 
 class NonTestedUsedDrugForm(forms.ModelForm):
     class Meta:
@@ -200,11 +217,8 @@ class NonTestedUsedDrugForm(forms.ModelForm):
             'dosage': ReadonlyTextInput(attrs={'cols': 30}),
         }
 
-class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, BaseFormSet):
-    def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
-
-NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm, formset=BaseNonTestedUsedDrugFormSet, extra=0)
+NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm,
+    formset=ReadonlyBaseFormSet, extra=0)
 
 class MeasureForm(forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
@@ -222,12 +236,10 @@ class MeasureForm(forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ReadonlyFormSetMixin, BaseFormSet):
-    def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
-
-MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=0)
-RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=0)
+MeasureFormSet = formset_factory(MeasureForm, formset=ReadonlyBaseFormSet,
+    extra=0)
+RoutineMeasureFormSet = formset_factory(RoutineMeasureForm,
+    formset=ReadonlyBaseFormSet, extra=0)
 
 class InvestigatorForm(forms.ModelForm):
     class Meta:
@@ -279,7 +291,11 @@ class SusarPresenterChangeForm(forms.ModelForm):
 
 class BaseInvestigatorFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
+        return [
+            form.save(commit=commit)
+            for form in self.forms[:self.total_form_count()]
+            if form.is_valid() and form.has_changed()
+        ]
 
     def clean(self):
         super().clean()
@@ -292,7 +308,8 @@ class BaseInvestigatorFormSet(ReadonlyFormSetMixin, BaseFormSet):
         elif not len([f for f in self.forms[:self.total_form_count()] if f.cleaned_data.get('main', False)]) == 1:
             raise forms.ValidationError(_('Please select exactly one primary investigator.'))
 
-InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1)
+InvestigatorFormSet = formset_factory(InvestigatorForm,
+    formset=BaseInvestigatorFormSet)
 
 class InvestigatorEmployeeForm(forms.ModelForm):
     investigator_index = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
@@ -300,24 +317,22 @@ class InvestigatorEmployeeForm(forms.ModelForm):
     class Meta:
         model = InvestigatorEmployee
         exclude = ('investigator',)
-        widgets = {
-            'title': ReadonlyTextInput(attrs={'cols': 25}),
-            'firstname': ReadonlyTextInput(attrs={'cols': 20}),
-            'surname': ReadonlyTextInput(attrs={'cols': 20}),
-            'organisation': ReadonlyTextInput(attrs={'cols': 50}),
-        }
+
+    def save(self, commit=True):
+        instance = super(InvestigatorEmployeeForm, self).save(commit=commit)
+        instance.investigator_index = self.cleaned_data['investigator_index']
+        return instance
 
 class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
-        employees = []
-        for form in self.forms[:self.total_form_count()]:
-            if form.is_valid() and form.has_changed():
-                employee = form.save(commit=commit)
-                employee.investigator_index = form.cleaned_data['investigator_index']
-                employees += [employee]
-        return employees
+        return [
+            form.save(commit=commit)
+            for form in self.forms[:self.total_form_count()]
+            if form.is_valid() and form.has_changed()
+        ]
 
-InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm, formset=BaseInvestigatorEmployeeFormSet, extra=1)
+InvestigatorEmployeeFormSet = formset_factory(InvestigatorEmployeeForm,
+    formset=BaseInvestigatorEmployeeFormSet)
 
 
 _queries = {

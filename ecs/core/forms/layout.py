@@ -59,7 +59,6 @@ SUBMISSION_FORM_TABS = (
             'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females_childbearing',
             'subject_noncompetents', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
-        (_('centers abroad respectively non AMG'), NamedProxy([], 'centers_abroad')),
     ]),
     Tab('outline', _('outline'), [
         (_('outline'), [
@@ -148,7 +147,10 @@ SUBMISSION_FORM_TABS = (
         ]),
     ]),
     Tab('documents', _('documents'), []),
-    Tab('centers', _('centres'), []),
+    Tab('centers', _('centres'), [
+        (_('centers (non subject)'), NamedProxy([], 'centers_non_subject')),
+        (_('centers abroad'), NamedProxy([], 'centers_abroad')),
+    ]),
 )
 
 def get_all_used_submission_form_fields():

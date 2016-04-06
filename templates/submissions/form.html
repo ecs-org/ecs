@@ -61,6 +61,7 @@
                 '{{ measure_formset.prefix }}',
                 '{{ routinemeasure_formset.prefix }}',
                 '{{ nontesteduseddrug_formset.prefix }}',
+                '{{ participatingcenternonsubject_formset.prefix }}',
                 '{{ foreignparticipatingcenter_formset.prefix }}',
             ].map(function(prefix){
                 return new ecs.InlineFormSet('#' + prefix + '_formset', {

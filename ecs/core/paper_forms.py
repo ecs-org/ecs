@@ -2,7 +2,11 @@ from collections import OrderedDict
 
 from django.utils.translation import ugettext_lazy as _
 
-from ecs.core.models import Submission, SubmissionForm, ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator, InvestigatorEmployee
+from ecs.core.models import (
+    Submission, SubmissionForm, ParticipatingCenterNonSubject,
+    ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator,
+    InvestigatorEmployee,
+)
 from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification, SafetyNotification
 from ecs.documents.models import Document
 
@@ -76,6 +80,12 @@ FormInfo(Document, fields=(
 
 FormInfo(ForeignParticipatingCenter, fields=(
     FieldInfo(None, 'name', _('name')),
+    FieldInfo(None, 'investigator_name', _('investigator')),
+))
+
+FormInfo(ParticipatingCenterNonSubject, fields=(
+    FieldInfo(None, 'name', _('name')),
+    FieldInfo(None, 'ethics_commission', _('ethics commission')),
     FieldInfo(None, 'investigator_name', _('investigator')),
 ))
 
