@@ -6,11 +6,11 @@ from ecs.billing.models import STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_A
 @bootstrap.register()
 def prices():
     prices = {
-        STUDY_PRICING_OTHER: 1500,
-        STUDY_PRICING_MULTICENTRIC_AMG_MAIN: 4000,
-        STUDY_PRICING_MULTICENTRIC_AMG_LOCAL: 500,
+        STUDY_PRICING_OTHER: 1800,
+        STUDY_PRICING_MULTICENTRIC_AMG_MAIN: 4500,
+        STUDY_PRICING_MULTICENTRIC_AMG_LOCAL: 600,
         STUDY_PRICING_REMISSION: 0,
-        EXTERNAL_REVIEW_PRICING: Decimal('200.00'),
+        EXTERNAL_REVIEW_PRICING: 200,
     }
     for category, price in prices.items():
         Price.objects.update_or_create(category=category, defaults={
