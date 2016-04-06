@@ -152,7 +152,7 @@
                                             {% for field in investigatoremployee_formset.empty_form %}
                                                 {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                                                     {% with field|get_field_info as field_info %}
-                                                    <th>
+                                                    <th{% if field.field.required %} class="required"{% endif %}>
                                                         {{ field_info.label|default:field.label }}
                                                         {% if field_info.number %}
                                                             <span class="paperform_number">{{ field_info.number }}</span>

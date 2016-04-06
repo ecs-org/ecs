@@ -294,8 +294,21 @@ li.TypedChoiceField ul{
     margin-top: 20px;
 }
 
-table.inline_formset td {
-    vertical-align: top;
+table.inline_formset {
+    th.required:after {
+        content: " *";
+        color: $red;
+    }
+
+    td {
+        vertical-align: top;
+
+        &.required.errors {
+            textarea, input[type=text], select {
+                border: 1px solid red;
+            }
+        }
+    }
 }
 
 .form {
