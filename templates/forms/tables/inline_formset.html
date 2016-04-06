@@ -1,4 +1,5 @@
 {% load core %}
+
 {{ formset.management_form }}
 <table id="{{ formset.prefix }}_formset" class="inline_formset">
     <thead>
@@ -7,7 +8,7 @@
         {% for field in formset.empty_form %}
             {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                 {% with field|get_field_info as field_info %}
-                <th class="label">
+                <th>
                     {{ field_info.label|default:field.label }}
                     {% if field_info.number %}
                         <span class="paperform_number">{{ field_info.number }}</span>
