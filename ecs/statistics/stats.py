@@ -75,12 +75,11 @@ def collect_submission_stats_for_year(year):
     for s in submissions:
         sf = s.current_submission_form
         first_vote = s.votes.exclude(published_at=None).order_by('published_at')[0]
-        has_foreign_centers = sf.foreignparticipatingcenter_set.exists()
 
         classification = {
             'submissions.total': True,
             'submissions.no_remission': not s.remission,
-            'submissions.multicentric': sf.is_multicentric or has_foreign_centers,
+            'submissions.multicentric': sf.is_multicentric,
             'submissions.amg': sf.is_amg,
             'submissions.mpg': sf.is_mpg,
             'submissions.b1_on_first_vote': first_vote.result == '1',
@@ -89,11 +88,11 @@ def collect_submission_stats_for_year(year):
             'submissions.negative': s.current_published_vote.is_negative,
             'amg.multicentric_main':
                 sf.is_amg and sf.is_categorized_multicentric_and_main or
-                (sf.is_categorized_monocentric and has_foreign_centers),
+                (sf.is_categorized_monocentric and sf.is_multicentric),
             'amg.multicentric_local':
                 sf.is_amg and sf.is_categorized_multicentric_and_local,
             'amg.monocentric': sf.is_amg and
-                sf.is_categorized_monocentric and not has_foreign_centers,
+                sf.is_categorized_monocentric and sf.is_monocentric,
             'mpg.ce_certified_for_exact_indications': sf.is_mpg and
                 sf.medtech_ce_symbol and sf.medtech_certified_for_exact_indications,
             'mpg.ce_certified_for_other_indications': sf.is_mpg and

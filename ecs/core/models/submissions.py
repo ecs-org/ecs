@@ -120,12 +120,6 @@ class Submission(models.Model):
         return self.german_project_title or self.project_title
 
     @property
-    def is_multicentric(self):
-        if not self.current_submission_form:
-            return None
-        return self.current_submission_form.is_multicentric
-        
-    @property
     def is_active(self):
         return self.forms.with_vote(published=True, permanent=True, positive=True).exists()
 
@@ -569,11 +563,17 @@ class SubmissionForm(models.Model):
 
     @property
     def is_multicentric(self):
-        return self.investigators.count() > 1
+        return (
+            self.is_categorized_multicentric_and_main or
+            self.is_categorized_multicentric_and_local or
+            self.investigators.non_system_ec().exists() or
+            self.participatingcenternonsubject_set.exists() or
+            self.foreignparticipatingcenter_set.exists()
+        )
         
     @property
     def is_monocentric(self):
-        return self.investigators.count() == 1
+        return not self.is_multicentric
 
     @property
     def is_categorized_monocentric(self):
@@ -849,6 +849,18 @@ class NonTestedUsedDrug(models.Model):
     
     objects = AuthorizationManager()
     
+    class Meta:
+        ordering = ['id']
+
+
+class ParticipatingCenterNonSubject(models.Model):
+    submission_form = models.ForeignKey(SubmissionForm)
+    name = models.CharField(max_length=60)
+    ethics_commission = models.ForeignKey('core.EthicsCommission')
+    investigator_name = models.CharField(max_length=60, blank=True)
+
+    objects = AuthorizationManager()
+
     class Meta:
         ordering = ['id']
 
