@@ -5,7 +5,6 @@ ecs.InlineFormSet = function(containers, options) {
         formSelector: '.form',
         prefix: null,
         addButton: true,
-        addButtonText: '',
         removeButton: true,
         canDelete: false
     }, options);
@@ -43,7 +42,6 @@ ecs.InlineFormSet.prototype = {
     createAddButton: function(container){
         return $('<a>', {
             'class': 'add_row',
-            text: this.options.addButtonText,
             click: (function(ev) {
                 ev.preventDefault();
                 this.add(container);
