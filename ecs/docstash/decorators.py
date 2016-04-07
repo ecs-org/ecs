@@ -1,42 +1,24 @@
 from django.utils.functional import wraps
-from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
 
 from ecs.docstash.models import DocStash
-from ecs.docstash.exceptions import ConcurrentModification, UnknownVersion
 
-def with_docstash_transaction(*args, **kwargs):
-    def decorator(view):
-        view_name = kwargs.get('group', "%s.%s" % (view.__module__, view.__name__))
+
+def with_docstash(group=None):
+    def _decorator(view):
+        view_name = group or '.'.join((view.__module__, view.__name__))
 
         @wraps(view)
-        def decorated(request, docstash_key=None, **kwargs):
+        def _inner(request, docstash_key=None, **kwargs):
             if not docstash_key:
                 docstash = DocStash.objects.create(group=view_name, owner=request.user)
-                kwargs['docstash_key'] = docstash.key
-                response = redirect(view_name, **kwargs)
-            else:
-                docstash = get_object_or_404(DocStash, group=view_name, owner=request.user, key=docstash_key)
-                request.docstash = docstash
-                # XXX: this is a simplification and only sufficient for our single-user application (FMD2)
-                version = docstash.current_version 
-                try:
-                    docstash.start_transaction(version)
-                except UnknownVersion as e:
-                    raise Http404(str(e))
-                try:
-                    response = view(request, **kwargs)
-                    try:
-                        docstash.commit_transaction()
-                    except ConcurrentModification:
-                        # XXX: concurrent updates are not possible (FMD2)
-                        raise
-                except:
-                    docstash.rollback_transaction()
-                    raise
-            return response
-        return decorated
-    
-    if args:
-        return decorator(args[0])
-    return decorator   
+                return redirect(view_name, docstash_key=docstash.key, **kwargs)
+
+            docstash = get_object_or_404(DocStash, group=view_name,
+                owner=request.user, key=docstash_key)
+            request.docstash = docstash
+            return view(request, **kwargs)
+
+        return _inner
+
+    return _decorator

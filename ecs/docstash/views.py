@@ -10,7 +10,7 @@ from ecs.documents.views import handle_download
 @readonly()
 def download_document(request, docstash_key=None, document_pk=None, view=False):
     docstash = get_object_or_404(DocStash, key=docstash_key, owner=request.user)
-    if int(document_pk) not in docstash.current_value['document_pks']:
+    if int(document_pk) not in docstash.value['document_pks']:
         raise Http404()
     return handle_download(request, Document.objects.get(pk=document_pk), view=view)
 

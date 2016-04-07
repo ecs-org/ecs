@@ -20,6 +20,7 @@ def upload_document(request, template='documents/upload_form.html'):
         documents |= Document.objects.filter(pk=new_document.pk)
         documents = documents.exclude(pk__in=documents.exclude(replaces_document=None).values('replaces_document').query)
         request.docstash['document_pks'] = [d.pk for d in documents]
+        request.docstash.save()
         form = DocumentForm(prefix='document')
     return render(request, template, {
         'form': form,
@@ -31,6 +32,7 @@ def delete_document(request, document_pk):
     if document_pk in document_pks:
         document_pks.remove(document_pk)
     request.docstash['document_pks'] = list(document_pks)
+    request.docstash.save()
 
 
 def handle_download(request, doc, view=False):

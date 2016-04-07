@@ -3,7 +3,6 @@ import re
 
 from django.http import HttpResponse, Http404, JsonResponse
 from django.core.urlresolvers import reverse
-from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms.models import model_to_dict
 from django.db.models import Q, Prefetch, Min
@@ -38,7 +37,7 @@ from ecs.core.workflow import ChecklistReview, RecommendationReview
 
 from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
-from ecs.docstash.decorators import with_docstash_transaction
+from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
@@ -99,10 +98,11 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         created = True
     else:
         for docstash in DocStash.objects.filter(group='ecs.notifications.views.create_notification', owner=request.user):
-            with docstash.transaction():
-                sf = docstash.get('extra', {}).get('old_submission_form')
-                if sf and sf.submission == submission_form.submission and docstash['type_id'] == notification_type_pk:
-                    return redirect('ecs.notifications.views.create_notification', docstash_key=docstash.key, notification_type_pk=notification_type_pk)
+            sf = docstash.get('extra', {}).get('old_submission_form')
+            if sf and sf.submission == submission_form.submission and docstash['type_id'] == notification_type_pk:
+                return redirect('ecs.notifications.views.create_notification',
+                    docstash_key=docstash.key,
+                    notification_type_pk=notification_type_pk)
 
         docstash, created = DocStash.objects.get_or_create(
             group='ecs.core.views.submissions.create_submission_form',
@@ -111,22 +111,23 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
             object_id=submission_form.submission.pk,
         )
 
-    with docstash.transaction():
-        docstash.update({
-            'notification_type': notification_type,
-        })
-        if created:
-            docstash.update({
-                'form': SubmissionFormForm(data=None, initial=submission_form_to_dict(submission_form)),
-                'formsets': get_submission_formsets(instance=submission_form),
-                'submission': submission_form.submission if not delete else None,
-                'document_pks': [d.pk for d in submission_form.documents.all()],
-            })
-            docstash.name = "%s" % submission_form.project_title
-        if delete:
-            submission_form.submission.delete()
+    if created:
+        docstash.name = submission_form.project_title
+        docstash.value = {
+            'form': SubmissionFormForm(data=None, initial=submission_form_to_dict(submission_form)),
+            'formsets': get_submission_formsets(instance=submission_form),
+            'submission': submission_form.submission if not delete else None,
+            'document_pks': [d.pk for d in submission_form.documents.all()],
+        }
 
-    return redirect('ecs.core.views.submissions.create_submission_form', docstash_key=docstash.key)
+    docstash['notification_type'] = notification_type
+    docstash.save()
+
+    if delete:
+        submission_form.submission.delete()
+
+    return redirect('ecs.core.views.submissions.create_submission_form',
+        docstash_key=docstash.key)
 
 
 @readonly()
@@ -209,7 +210,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     stashed_notifications = []
     for d in DocStash.objects.filter(owner=request.user, group='ecs.notifications.views.create_notification'):
         try:
-            if str(submission_form.pk) in d.current_value['form'].data['submission_forms']:
+            if str(submission_form.pk) in d.value['form'].data['submission_forms']:
                 stashed_notifications.append(d)
         except KeyError:
             pass
@@ -314,14 +315,14 @@ def categorization_review(request, submission_form_pk=None):
         object_id=task.pk,
     )
 
-    with docstash.transaction():
-        form = docstash.get('form')
-        if request.method == 'POST' or form is None:
-            form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
-            docstash['form'] = form
-        if request.method == 'POST' and form.is_valid():
-            form.save()
-            docstash.delete()
+    form = docstash.get('form')
+    if request.method == 'POST' or form is None:
+        form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
+        docstash['form'] = form
+        docstash.save()
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        docstash.delete()
 
     form.bound_to_task = task
 
@@ -410,44 +411,43 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         object_id=related_task.pk,
     )
 
-    with docstash.transaction():
-        form = docstash.get('form')
-        if request.method == 'POST' or form is None:
-            form = make_checklist_form(checklist)(request.POST or None)
-            docstash['form'] = form
-        form.related_task = related_task
+    form = docstash.get('form')
+    if request.method == 'POST' or form is None:
+        form = make_checklist_form(checklist)(request.POST or None)
+        docstash['form'] = form
+        docstash.save()
+    form.related_task = related_task
 
-        task = request.task_management.task
-        if task:
-            form.bound_to_task = task
-        extra_context = {}
+    task = request.task_management.task
+    if task:
+        form.bound_to_task = task
+    extra_context = {}
 
-        if request.method == 'POST' and form.is_valid():
-            complete_task = request.POST.get('complete_task') == 'complete_task'
-            really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
+    if request.method == 'POST' and form.is_valid():
+        complete_task = request.POST.get('complete_task') == 'complete_task'
+        really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
 
-            for question in blueprint.questions.all().order_by('index'):
-                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-                answer.answer = form.cleaned_data['q%s' % question.index]
-                answer.comment = form.cleaned_data['c%s' % question.index]
-                answer.save()
+        for question in blueprint.questions.all().order_by('index'):
+            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+            answer.answer = form.cleaned_data['q%s' % question.index]
+            answer.comment = form.cleaned_data['c%s' % question.index]
+            answer.save()
 
-            checklist.save() # touch the checklist instance to trigger the post_save signal
+        checklist.save() # touch the checklist instance to trigger the post_save signal
 
-            docstash.delete()
+        docstash.delete()
 
-            if (complete_task or really_complete_task) and not checklist.is_complete:
-                messages.error(request, _('Your review is incomplete.'))
-            elif really_complete_task and checklist.is_complete:
-                checklist.status = 'completed'
-                checklist.save()
-                if checklist.blueprint.allow_pdf_download:
-                    checklist.render_pdf()
-                related_task.done(request.user)
-                return redirect(related_task.afterlife_url)
-            elif complete_task and checklist.is_complete:
-                extra_context['review_complete'] = checklist.pk
-
+        if (complete_task or really_complete_task) and not checklist.is_complete:
+            messages.error(request, _('Your review is incomplete.'))
+        elif really_complete_task and checklist.is_complete:
+            checklist.status = 'completed'
+            checklist.save()
+            if checklist.blueprint.allow_pdf_download:
+                checklist.render_pdf()
+            related_task.done(request.user)
+            return redirect(related_task.afterlife_url)
+        elif complete_task and checklist.is_complete:
+            extra_context['review_complete'] = checklist.pk
 
     return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)
 
@@ -553,16 +553,17 @@ def b2_vote_preparation(request, submission_form_pk=None):
     return response
 
 
-@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+@with_docstash(group='ecs.core.views.submissions.create_submission_form')
 def upload_document_for_submission(request):
     return upload_document(request, 'submissions/upload_form.html')
 
-@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+@with_docstash(group='ecs.core.views.submissions.create_submission_form')
 def delete_document_from_submission(request):
     delete_document(request, int(request.GET['document_pk']))
-    return redirect('ecs.core.views.submissions.upload_document_for_submission', docstash_key=request.docstash.key)
+    return redirect('ecs.core.views.submissions.upload_document_for_submission',
+        docstash_key=request.docstash.key)
 
-@with_docstash_transaction
+@with_docstash()
 def create_submission_form(request):
     form = request.docstash.get('form')
     documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
@@ -598,11 +599,6 @@ def create_submission_form(request):
         submit = request.POST.get('submit', False)
         save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
-
-        request.docstash.update({
-            'form': form,
-            'formsets': formsets,
-        })
         
         # set docstash name
         project_title_german = request.POST.get('german_project_title', '')
@@ -610,6 +606,12 @@ def create_submission_form(request):
             request.docstash.name = project_title_german
         else:
             request.docstash.name = request.POST.get('project_title', '')
+
+        request.docstash.update({
+            'form': form,
+            'formsets': formsets,
+        })
+        request.docstash.save()
 
         if save or autosave:
             return HttpResponse('save successfull')
@@ -737,7 +739,7 @@ def change_submission_susar_presenter(request, submission_pk=None):
     return render(request, 'submissions/change_susar_presenter.html', {'form': form, 'submission': submission})
 
 
-@with_docstash_transaction(group='ecs.core.views.submissions.create_submission_form')
+@with_docstash(group='ecs.core.views.submissions.create_submission_form')
 def delete_docstash_entry(request):
     request.docstash.delete()
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
@@ -798,7 +800,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         submissions = submissions.prefetch_related('tags')
 
     if stashed_submission_forms:
-        submissions = [x for x in stashed_submission_forms if x.current_value] + list(submissions)
+        submissions = list(stashed_submission_forms) + list(submissions)
 
     paginator = Paginator(submissions, limit, allow_empty_first_page=True)
     try:
@@ -879,8 +881,11 @@ def submission_widget(request, template='submissions/widget.html'):
             'filter_form': SubmissionWidgetFilterForm,
         })
     else:
-        stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
-        stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
+        stashed = (DocStash.objects
+            .filter(group='ecs.core.views.submissions.create_submission_form',
+                owner=request.user, object_id__isnull=True, current_version__gte=0)
+            .order_by('-modtime')
+        )
         data.update({
             'submissions': Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user),
             'stashed_submission_forms': stashed,
@@ -1026,8 +1031,11 @@ def assigned_submissions(request):
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
 
-    stashed = list(DocStash.objects.filter(group='ecs.core.views.submissions.create_submission_form', owner=request.user, object_id__isnull=True))
-    stashed = list(sorted([s for s in stashed if s.modtime], key=lambda s: s.modtime, reverse=True)) + [s for s in stashed if not s.modtime]
+    stashed = (DocStash.objects
+        .filter(group='ecs.core.views.submissions.create_submission_form',
+            owner=request.user, object_id__isnull=True, current_version__gte=0)
+        .order_by('-modtime')
+    )
 
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=MySubmissionsFilterForm, title=_('My Studies'))
 

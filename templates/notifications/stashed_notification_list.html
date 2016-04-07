@@ -1,14 +1,14 @@
 {% load i18n %}
 <ol>
     {% for docstash in stashed_notifications %}
-        {% if docstash.current_value %}
+        {% if docstash.value %}
             <li>
-                <a href="{% url 'ecs.notifications.views.create_notification' notification_type_pk=docstash.current_value.type_id docstash_key=docstash.key %}">
-                    {{ docstash.current_name|default:"<em>Unbenannt</em>" }}
+                <a href="{% url 'ecs.notifications.views.create_notification' notification_type_pk=docstash.value.type_id docstash_key=docstash.key %}">
+                    {{ docstash.name|default:"<em>Unbenannt</em>" }}
                 </a>
                 ({{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr) (Version {{ docstash.current_version }})
-                {% if docstash.current_value.submission_forms %}
-                    für {% for submission_form in docstash.current_value.submission_forms %}
+                {% if docstash.value.submission_forms %}
+                    für {% for submission_form in docstash.value.submission_forms %}
                         <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
                     {% endfor %}
                 {% endif %}

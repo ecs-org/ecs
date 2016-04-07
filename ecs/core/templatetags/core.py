@@ -5,11 +5,10 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.cache import cache
 from django.conf import settings
-from django.db.models import F
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission
-from ecs.docstash.models import DocStash, DocStashData
+from ecs.docstash.models import DocStash
 
 register = Library()
 
@@ -93,9 +92,13 @@ def class_for_field(field):
 
 @register.filter
 def has_submissions(user):
-    return Submission.objects.mine(user).exists() or bool([
-        d for d in DocStashData.objects.filter(stash__group='ecs.core.views.submissions.create_submission_form', stash__owner=user, version=F('stash__current_version')).only('value') if d.value
-    ])
+    return (
+        Submission.objects.mine(user).exists() or
+        DocStash.objects.filter(
+            group='ecs.core.views.submissions.create_submission_form',
+            owner=user, current_version__gte=0
+        ).exists()
+    )
 
 @register.filter
 def has_assigned_submissions(user):

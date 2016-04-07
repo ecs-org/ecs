@@ -9,7 +9,7 @@ from django.db import models
 
 from ecs.utils.viewutils import render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
-from ecs.docstash.decorators import with_docstash_transaction
+from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.models import SubmissionForm
@@ -33,7 +33,8 @@ def open_notifications(request):
     title = _('Open Notifications')
     notifications =  Notification.objects.pending().annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
     stashed_notifications = DocStash.objects.filter(
-        owner=request.user, group='ecs.notifications.views.create_notification')
+        owner=request.user, group='ecs.notifications.views.create_notification',
+        current_version__gte=0)
     context = {
         'title': title,
         'notifs': notifications,
@@ -92,10 +93,11 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
     old_submission_form = new_submission_form.submission.current_submission_form
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     
-    docstash = DocStash.objects.create(group='ecs.notifications.views.create_notification', owner=request.user)
-    
-    with docstash.transaction():
-        docstash.update({
+    docstash = DocStash.objects.create(
+        group='ecs.notifications.views.create_notification',
+        name='%s für %s'.format(notification_type.name, old_submission_form),
+        owner=request.user,
+        value={
             'form': notification_type.form_cls(),
             'type_id': notification_type_pk,
             'documents': [],
@@ -104,12 +106,14 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
                 'old_submission_form': old_submission_form,
                 'new_submission_form': new_submission_form,
             }
-        })
-        docstash.name = "%s für %s" % (notification_type.name, old_submission_form)
-    return redirect('ecs.notifications.views.create_notification', docstash_key=docstash.key, notification_type_pk=notification_type.pk)
+        }
+    )
+
+    return redirect('ecs.notifications.views.create_notification',
+        docstash_key=docstash.key, notification_type_pk=notification_type.pk)
 
 
-@with_docstash_transaction(group='ecs.notifications.views.create_notification')
+@with_docstash(group='ecs.notifications.views.create_notification')
 def delete_docstash_entry(request):
     for sf in request.docstash.get('submission_forms', []):
         if sf.is_notification_update:
@@ -117,17 +121,18 @@ def delete_docstash_entry(request):
     request.docstash.delete()
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
-@with_docstash_transaction(group='ecs.notifications.views.create_notification')
+@with_docstash(group='ecs.notifications.views.create_notification')
 def upload_document_for_notification(request):
     return upload_document(request, 'notifications/upload_form.html')
 
-@with_docstash_transaction(group='ecs.notifications.views.create_notification')
+@with_docstash(group='ecs.notifications.views.create_notification')
 def delete_document_from_notification(request):
     delete_document(request, int(request.GET['document_pk']))
-    return redirect('ecs.notifications.views.upload_document_for_notification', docstash_key=request.docstash.key)
+    return redirect('ecs.notifications.views.upload_document_for_notification',
+        docstash_key=request.docstash.key)
 
 @tracking_hint(vary_on=['notification_type_pk'])
-@with_docstash_transaction
+@with_docstash()
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     request.docstash['type_id'] = notification_type_pk
@@ -141,11 +146,12 @@ def create_notification(request, notification_type_pk=None):
         save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
         
+        request.docstash.name = notification_type.name
         request.docstash.update({
             'form': form,
             'submission_forms': list(SubmissionForm.objects.filter(pk__in=form.data.getlist('submission_forms'))), # we cannot use cleaned_data as the form may not validate
         })
-        request.docstash.name = "%s" % notification_type.name
+        request.docstash.save()
         
         if save or autosave:
             return HttpResponse(_('save successful'))
@@ -165,7 +171,6 @@ def create_notification(request, notification_type_pk=None):
             on_notification_submit.send(type(notification), notification=notification)
 
             return redirect('ecs.notifications.views.view_notification', notification_pk=notification.pk)
-            
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,
