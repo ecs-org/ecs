@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core.files.uploadedfile import UploadedFile
 
-from ecs.utils.formutils import ModelFormPickleMixin
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import decrypt_pdf
@@ -11,7 +10,7 @@ from ecs.utils.formutils import require_fields
 
 PDF_MAGIC = b'%PDF'
 
-class DocumentForm(ModelFormPickleMixin, forms.ModelForm):
+class DocumentForm(forms.ModelForm):
     file = forms.FileField(required=True)
     doctype = forms.ModelChoiceField(
         queryset=DocumentType.objects.exclude(is_hidden=True).order_by('identifier'),

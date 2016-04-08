@@ -98,13 +98,11 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
         name='%s für %s'.format(notification_type.name, old_submission_form),
         owner=request.user,
         value={
-            'form': notification_type.form_cls(),
             'type_id': notification_type_pk,
-            'documents': [],
-            'submission_forms': [old_submission_form],
+            'submission_form_ids': [old_submission_form.id],
             'extra': {
-                'old_submission_form': old_submission_form,
-                'new_submission_form': new_submission_form,
+                'old_submission_form_id': old_submission_form.id,
+                'new_submission_form_id': new_submission_form.id,
             }
         }
     )
@@ -136,21 +134,20 @@ def delete_document_from_notification(request):
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
     request.docstash['type_id'] = notification_type_pk
-    
-    form = request.docstash.get('form')
-    if request.method == 'POST' or form is None:
-        form = notification_type.form_cls(request.POST or None)
+
+    form = notification_type.form_cls(request.POST or request.docstash.POST)
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
         save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
         
-        request.docstash.name = notification_type.name
-        request.docstash.update({
-            'form': form,
-            'submission_forms': list(SubmissionForm.objects.filter(pk__in=form.data.getlist('submission_forms'))), # we cannot use cleaned_data as the form may not validate
-        })
+        if not request.docstash.name:
+            request.docstash.name = notification_type.name
+        # we cannot use cleaned_data as the form may not validate
+        request.docstash['submission_form_ids'] = \
+            [int(pk) for pk in form.data.getlist('submission_forms')]
+        request.docstash.POST = request.POST
         request.docstash.save()
         
         if save or autosave:
@@ -169,8 +166,8 @@ def create_notification(request, notification_type_pk=None):
             request.docstash.delete()
             
             on_notification_submit.send(type(notification), notification=notification)
-
-            return redirect('ecs.notifications.views.view_notification', notification_pk=notification.pk)
+            return redirect('ecs.notifications.views.view_notification',
+                notification_pk=notification.pk)
 
     return render(request, 'notifications/form.html', {
         'notification_type': notification_type,

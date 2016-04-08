@@ -51,44 +51,56 @@ from ecs.documents.views import upload_document, delete_document
 from ecs.core.workflow import CategorizationReview
 
 
-def get_submission_formsets(data=None, instance=None, readonly=False):
+def get_submission_formsets(data=None, initial=None, readonly=False):
     formset_classes = [
-        # (prefix, formset_class, callable SubmissionForm -> initial data)
-        ('measure', MeasureFormSet, lambda sf: sf.measures.filter(category='6.1')),
-        ('routinemeasure', RoutineMeasureFormSet, lambda sf: sf.measures.filter(category='6.2')),
-        ('nontesteduseddrug', NonTestedUsedDrugFormSet, lambda sf: sf.nontesteduseddrug_set.all()),
-        ('foreignparticipatingcenter', ForeignParticipatingCenterFormSet, lambda sf: sf.foreignparticipatingcenter_set.all()),
-        ('investigator', InvestigatorFormSet, lambda sf: sf.investigators.all()),
+        ('measure', MeasureFormSet),
+        ('routinemeasure', RoutineMeasureFormSet),
+        ('nontesteduseddrug', NonTestedUsedDrugFormSet),
+        ('foreignparticipatingcenter', ForeignParticipatingCenterFormSet),
+        ('investigator', InvestigatorFormSet),
+        ('investigatoremployee', InvestigatorEmployeeFormSet),
     ]
     formsets = {}
-    for name, formset_cls, initial in formset_classes:
-        kwargs = {'prefix': name, 'readonly': readonly, 'initial': []}
+    for name, formset_cls in formset_classes:
+        kwargs = {
+            'prefix': name,
+            'readonly': readonly,
+            'initial': initial.get(name) if initial else None,
+        }
         if readonly:
             kwargs['extra'] = 0
-        if instance:
-            kwargs['initial'] = [model_to_dict(obj, exclude=('id',)) for obj in initial(instance).order_by('id')]
         formsets[name] = formset_cls(data, **kwargs)
+    return formsets
 
-    employees = []
+
+def get_submission_formsets_initial(instance):
+    formset_initializers = [
+        ('measure', lambda sf: sf.measures.filter(category='6.1')),
+        ('routinemeasure', lambda sf: sf.measures.filter(category='6.2')),
+        ('nontesteduseddrug', lambda sf: sf.nontesteduseddrug_set.all()),
+        ('foreignparticipatingcenter', lambda sf: sf.foreignparticipatingcenter_set.all()),
+        ('investigator', lambda sf: sf.investigators.all()),
+    ]
+    formsets = {}
+    for name, initial in formset_initializers:
+        formsets[name] = [
+            model_to_dict(obj, exclude=('id',))
+            for obj in initial(instance).order_by('id')
+        ]
+
+    initial = []
     if instance:
         for index, investigator in enumerate(instance.investigators.order_by('id')):
             for employee in investigator.employees.order_by('id'):
                 employee_dict = model_to_dict(employee, exclude=('id', 'investigator'))
                 employee_dict['investigator_index'] = index
-                employees.append(employee_dict)
-    kwargs = {'prefix': 'investigatoremployee', 'readonly': readonly}
-    if readonly:
-        kwargs['extra'] = 0
-    formsets['investigatoremployee'] = InvestigatorEmployeeFormSet(data, initial=employees or [], **kwargs)
+                initial.append(employee_dict)
+    formsets['investigatoremployee'] = initial
     return formsets
 
 
 def copy_submission_form(request, submission_form_pk=None, notification_type_pk=None, delete=False):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk, submission__presenter=request.user)
-    if notification_type_pk:
-        notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)
-    else:
-        notification_type = None
 
     if delete:
         docstash = DocStash.objects.create(
@@ -98,11 +110,13 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         created = True
     else:
         for docstash in DocStash.objects.filter(group='ecs.notifications.views.create_notification', owner=request.user):
-            sf = docstash.get('extra', {}).get('old_submission_form')
-            if sf and sf.submission == submission_form.submission and docstash['type_id'] == notification_type_pk:
-                return redirect('ecs.notifications.views.create_notification',
-                    docstash_key=docstash.key,
-                    notification_type_pk=notification_type_pk)
+            sf_id = docstash.get('extra', {}).get('old_submission_form_id')
+            if sf_id and docstash['type_id'] == notification_type_pk:
+                sf = SubmissionForm.objects.get(id=sf_id)
+                if sf.submission == submission_form.submission:
+                    return redirect('ecs.notifications.views.create_notification',
+                        docstash_key=docstash.key,
+                        notification_type_pk=notification_type_pk)
 
         docstash, created = DocStash.objects.get_or_create(
             group='ecs.core.views.submissions.create_submission_form',
@@ -112,15 +126,19 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         )
 
     if created:
-        docstash.name = submission_form.project_title
-        docstash.value = {
-            'form': SubmissionFormForm(data=None, initial=submission_form_to_dict(submission_form)),
-            'formsets': get_submission_formsets(instance=submission_form),
-            'submission': submission_form.submission if not delete else None,
-            'document_pks': [d.pk for d in submission_form.documents.all()],
-        }
+        docstash.name = submission_form.german_project_title
 
-    docstash['notification_type'] = notification_type
+        initial = get_submission_formsets_initial(submission_form)
+        initial['submission_form'] = submission_form_to_dict(submission_form)
+        docstash.value = {
+            'initial': initial,
+            'document_pks': list(submission_form.documents.values_list('pk', flat=True)),
+        }
+        if not delete:
+            docstash['submission_id'] = submission_form.submission.id
+
+    if notification_type_pk:
+        docstash['notification_type_id'] = notification_type_pk
     docstash.save()
 
     if delete:
@@ -150,7 +168,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     form = SubmissionFormForm(initial=submission_form_to_dict(submission_form), readonly=True)
-    formsets = get_submission_formsets(instance=submission_form, readonly=True)
+    formsets = get_submission_formsets(
+        initial=get_submission_formsets_initial(submission_form),
+        readonly=True)
     vote = submission_form.current_vote
     submission = submission_form.submission
     profile = request.user.profile
@@ -315,18 +335,21 @@ def categorization_review(request, submission_form_pk=None):
         object_id=task.pk,
     )
 
-    form = docstash.get('form')
-    if request.method == 'POST' or form is None:
-        form = CategorizationReviewForm(request.POST or None, instance=submission_form.submission)
-        docstash['form'] = form
-        docstash.save()
-    if request.method == 'POST' and form.is_valid():
-        form.save()
-        docstash.delete()
+    form = CategorizationReviewForm(request.POST or docstash.POST,
+        instance=submission_form.submission)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            docstash.delete()
+        else:
+            docstash.POST = request.POST
+            docstash.save()
 
     form.bound_to_task = task
 
-    response = readonly_submission_form(request, submission_form=submission_form, extra_context={'categorization_review_form': form,})
+    response = readonly_submission_form(request,
+        submission_form=submission_form,
+        extra_context={'categorization_review_form': form,})
     if request.method == 'POST' and not form.is_valid():
         response.has_errors = True
     return response
@@ -411,45 +434,46 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         object_id=related_task.pk,
     )
 
-    form = docstash.get('form')
-    if request.method == 'POST' or form is None:
-        form = make_checklist_form(checklist)(request.POST or None)
-        docstash['form'] = form
-        docstash.save()
+    form = make_checklist_form(checklist)(request.POST or docstash.POST)
     form.related_task = related_task
 
     task = request.task_management.task
     if task:
         form.bound_to_task = task
+
     extra_context = {}
 
-    if request.method == 'POST' and form.is_valid():
-        complete_task = request.POST.get('complete_task') == 'complete_task'
-        really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
+    if request.method == 'POST':
+        if form.is_valid():
+            complete_task = request.POST.get('complete_task') == 'complete_task'
+            really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
 
-        for question in blueprint.questions.all().order_by('index'):
-            answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-            answer.answer = form.cleaned_data['q%s' % question.index]
-            answer.comment = form.cleaned_data['c%s' % question.index]
-            answer.save()
+            for question in blueprint.questions.all().order_by('index'):
+                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
+                answer.answer = form.cleaned_data['q%s' % question.index]
+                answer.comment = form.cleaned_data['c%s' % question.index]
+                answer.save()
 
-        checklist.save() # touch the checklist instance to trigger the post_save signal
+            checklist.save() # touch the checklist instance to trigger the post_save signal
+            docstash.delete()
 
-        docstash.delete()
+            if (complete_task or really_complete_task) and not checklist.is_complete:
+                messages.error(request, _('Your review is incomplete.'))
+            elif really_complete_task and checklist.is_complete:
+                checklist.status = 'completed'
+                checklist.save()
+                if checklist.blueprint.allow_pdf_download:
+                    checklist.render_pdf()
+                related_task.done(request.user)
+                return redirect(related_task.afterlife_url)
+            elif complete_task and checklist.is_complete:
+                extra_context['review_complete'] = checklist.pk
+        else:
+            docstash.POST = request.POST
+            docstash.save()
 
-        if (complete_task or really_complete_task) and not checklist.is_complete:
-            messages.error(request, _('Your review is incomplete.'))
-        elif really_complete_task and checklist.is_complete:
-            checklist.status = 'completed'
-            checklist.save()
-            if checklist.blueprint.allow_pdf_download:
-                checklist.render_pdf()
-            related_task.done(request.user)
-            return redirect(related_task.afterlife_url)
-        elif complete_task and checklist.is_complete:
-            extra_context['review_complete'] = checklist.pk
-
-    return readonly_submission_form(request, submission_form=submission_form, checklist_overwrite={checklist: form}, extra_context=extra_context)
+    return readonly_submission_form(request, submission_form=submission_form,
+        checklist_overwrite={checklist: form}, extra_context=extra_context)
 
 
 @user_flag_required('is_internal')
@@ -565,52 +589,61 @@ def delete_document_from_submission(request):
 
 @with_docstash()
 def create_submission_form(request):
-    form = request.docstash.get('form')
+    if request.method == 'POST' and 'initial' in request.docstash:
+        del request.docstash['initial']
+        # XXX: docstash will be saved further down
+
+    form = SubmissionFormForm(request.POST or request.docstash.POST,
+        initial=request.docstash.get('initial', {}).get('submission_form'))
+    formsets = get_submission_formsets(request.POST or request.docstash.POST,
+        initial=request.docstash.get('initial'))
+
     documents = Document.objects.filter(pk__in=request.docstash.get('document_pks', []))
     protocol_uploaded = documents.filter(doctype__identifier='protocol').exists()
-    if request.method == 'POST' or form is None:
-        form = SubmissionFormForm(request.POST or None)
-        if request.method == 'GET':
-            protocol_uploaded = True    # don't show error on completely new
-                                        # submission
 
-    formsets = request.docstash.get('formsets')
-    if request.method == 'POST' or formsets is None:
-        formsets = get_submission_formsets(request.POST or None)
-        if request.method == 'GET':
-            # neither docstash nor POST data: this is a completely new submission
-            # => prepopulate submitter_* fields with the presenters data
-            profile = request.user.profile
-            form.initial.update({
-                'submitter_contact_first_name': request.user.first_name,
-                'submitter_contact_last_name': request.user.last_name,
-                'submitter_email': request.user.email,
-                'submitter_contact_gender': profile.gender,
-                'submitter_contact_title': profile.title,
-                'submitter_organisation': profile.organisation,
-                'submitter_jobtitle': profile.jobtitle,
-            })
+    if request.method == 'GET' and not request.docstash.POST and \
+        not 'initial' in request.docstash:
 
-    notification_type = request.docstash.get('notification_type', None)
+        protocol_uploaded = True    # don't show error on completely new
+                                    # submission
+
+        # neither docstash nor POST data: this is a completely new submission
+        # => prepopulate submitter_* fields with the presenters data
+        profile = request.user.profile
+        form.initial.update({
+            'submitter_contact_first_name': request.user.first_name,
+            'submitter_contact_last_name': request.user.last_name,
+            'submitter_email': request.user.email,
+            'submitter_contact_gender': profile.gender,
+            'submitter_contact_title': profile.title,
+            'submitter_organisation': profile.organisation,
+            'submitter_jobtitle': profile.jobtitle,
+        })
+
+    if 'notification_type_id' in request.docstash:
+        notification_type = NotificationType.objects.get(
+            id=request.docstash['notification_type_id'])
+    else:
+        notification_type = None
+
+    if 'submission_id' in request.docstash:
+        submission = Submission.objects.get(
+            id=request.docstash['submission_id'])
+    else:
+        submission = None
+
     valid = False
-    allows_resubmission = True
 
     if request.method == 'POST':
         submit = request.POST.get('submit', False)
         save = request.POST.get('save', False)
         autosave = request.POST.get('autosave', False)
-        
-        # set docstash name
-        project_title_german = request.POST.get('german_project_title', '')
-        if project_title_german:
-            request.docstash.name = project_title_german
-        else:
-            request.docstash.name = request.POST.get('project_title', '')
 
-        request.docstash.update({
-            'form': form,
-            'formsets': formsets,
-        })
+        request.docstash.name = (
+            request.POST.get('german_project_title') or
+            request.POST.get('project_title')
+        )
+        request.docstash.POST = request.POST
         request.docstash.save()
 
         if save or autosave:
@@ -621,12 +654,14 @@ def create_submission_form(request):
 
         formsets_valid = all([formset.is_valid() for formset in formsets.values()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
-        submission = request.docstash.get('submission')
-        if submission:   # refetch submission object because it could have changed
-            submission = Submission.objects.get(pk=submission.pk)
-            allows_resubmission = bool(notification_type) or submission.current_submission_form.allows_resubmission(request.user)
+        if valid and submission and not notification_type and \
+            not submission.current_submission_form.allows_resubmission(request.user):
 
-        if submit and valid and allows_resubmission:
+            messages.error(request,
+                _("This form can't be submitted at the moment."))
+            valid = False
+
+        if submit and valid:
             if not submission:
                 submission = Submission.objects.create()
             submission_form = form.save(commit=False)
@@ -641,7 +676,6 @@ def create_submission_form(request):
                 doc.parent_object = submission_form
                 doc.save()
         
-            formsets = formsets.copy()
             investigators = formsets.pop('investigator').save(commit=False)
             employees = formsets.pop('investigatoremployee').save(commit=False)
             for investigator in investigators:
@@ -665,16 +699,14 @@ def create_submission_form(request):
                     submission_form_pk=submission_form.pk,
                     notification_type_pk=notification_type.pk)
 
-            return redirect('readonly_submission_form', submission_form_pk=submission_form.submission.current_submission_form.pk)
-        elif valid and not allows_resubmission:
-            messages.error(request, _("This form can't be submitted at the moment."))
+            return redirect('readonly_submission_form',
+                submission_form_pk=submission_form.submission.current_submission_form.pk)
 
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
         'valid': valid,
-        'allows_resubmission': allows_resubmission,
-        'submission': request.docstash.get('submission', None),
+        'submission': submission,
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
     }

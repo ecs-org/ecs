@@ -1,10 +1,11 @@
 import uuid
 
 from django.db import models
+from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
-from picklefield.fields import PickledObjectField
+from django_extensions.db.fields.json import JSONField
 
 
 class DocStash(models.Model):
@@ -17,7 +18,7 @@ class DocStash(models.Model):
     owner = models.ForeignKey(User)
     modtime = models.DateTimeField(auto_now=True)
     name = models.TextField(blank=True, null=True)
-    value = PickledObjectField(compress=True, default=dict)
+    value = JSONField(null=False)
     
     content_type = models.ForeignKey(ContentType, null=True)
     object_id = models.PositiveIntegerField(null=True)
@@ -26,21 +27,30 @@ class DocStash(models.Model):
     class Meta:
         unique_together = ('group', 'owner', 'content_type', 'object_id')
 
-    def __getitem__(self, name):
-        return self.value[name]
+    def __getitem__(self, key):
+        return self.value[key]
 
-    def __setitem__(self, name, value):
-        val = self.value
-        val[name] = value
-        self.value = val
+    def __setitem__(self, key, value):
+        self.value[key] = value
+
+    def __delitem__(self, key):
+        del self.value[key]
+
+    def __contains__(self, key):
+        return key in self.value
 
     def get(self, name, default=None):
         return self.value.get(name, default)
 
-    def update(self, d):
-        val = self.value
-        val.update(d)
-        self.value = val
+    @property
+    def POST(self):
+        if 'POST' in self.value:
+            return QueryDict(self.value['POST'])
+        return None
+
+    @POST.setter
+    def POST(self, data):
+        self.value['POST'] = data.urlencode()
 
     def save(self, **kwargs):
         if DocStash.objects.filter(key=self.key).exists():

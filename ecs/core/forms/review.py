@@ -6,11 +6,11 @@ from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField, BooleanWidget
-from ecs.utils.formutils import ModelFormPickleMixin, require_fields
+from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_current_user
 
 
-class CategorizationReviewForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
+class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
     external_reviewers = AutocompleteModelMultipleChoiceField(
         'external-reviewers', User.objects, required=False,
         label=_('external_reviewers'))

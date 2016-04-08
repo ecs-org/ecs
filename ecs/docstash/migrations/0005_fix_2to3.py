@@ -1,11 +1,60 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import base64
+import json
 import pickle
 import struct
 import zlib
 
 from django.db import migrations, models
+
+
+def _model_form_unpickle(module, cls_name, args, kwargs):
+    assert((module, cls_name) in (
+        ('ecs.core.forms.forms', 'SubmissionFormForm'),
+        ('ecs.core.forms.review', 'CategorizationReviewForm'),
+        ('ecs.notifications.forms', 'SafetyNotificationForm'),
+        ('ecs.notifications.forms', 'ProgressReportNotificationForm'),
+        ('ecs.notifications.forms', 'CompletionReportNotificationForm'),
+        ('ecs.notifications.forms', 'AmendmentNotificationForm'),
+    ))
+    assert(args == ())
+    assert(kwargs['prefix'] is None)
+    del kwargs['prefix']
+    if kwargs['data']:
+        kwargs['data'] = kwargs['data'].urlencode()
+    return kwargs
+
+
+def _model_formset_unpickle(name, args, kwargs):
+    assert(name.endswith('FormSet'))
+    assert(args == ())
+    del kwargs['prefix']
+    if kwargs['data']:
+        kwargs['data'] = kwargs['data'].urlencode()
+    return kwargs
+
+
+def _checklist_form_unpickle(checklist_pk, args, kwargs):
+    assert(args == ())
+    assert(kwargs['prefix'] is None)
+    del kwargs['prefix']
+    kwargs['checklist_pk'] = checklist_pk
+    if kwargs['data']:
+        kwargs['data'] = kwargs['data'].urlencode()
+    return kwargs
+
+
+def _model_unpickle(model, args, factory):
+    assert(model == None)
+    assert(args == [])
+    class FakeModel(object):
+        pass
+    return FakeModel()
+
+
+class _ModelState(object):
+    pass
 
 
 def fix_2to3(apps, schema_editor):
@@ -44,10 +93,88 @@ def fix_2to3(apps, schema_editor):
             value = value[:i] + new + value[i + 13:]
             i += 13
 
+
+        # Force all composite objects in the serialized data to be loaded as
+        # plain python objects.
+
+        value = value.replace(
+            b'cecs.utils.formutils\n_unpickle\n',
+            b'cecs.docstash.migrations.0005_fix_2to3\n_model_form_unpickle\n'
+        ).replace(
+            b'cecs.core.forms.forms\n_unpickle\n',
+            b'cecs.docstash.migrations.0005_fix_2to3\n_model_formset_unpickle\n'
+        ).replace(
+            b'cdjango.db.models.base\nmodel_unpickle\n',
+            b'cecs.docstash.migrations.0005_fix_2to3\n_model_unpickle\n'
+        ).replace(
+            b'cecs.notifications.models\nNotificationType\n',
+            b'N'
+        ).replace(
+            b'cecs.core.models.submissions\nSubmission\n',
+            b'N'
+        ).replace(
+            b'cecs.core.models.submissions\nSubmissionForm\n',
+            b'N'
+        ).replace(
+            b'cdjango.db.models.base\nsimple_class_factory\n',
+            b'N'
+        ).replace(
+            b'cdjango.db.models.base\nModelState\n',
+            b'cecs.docstash.migrations.0005_fix_2to3\n_ModelState\n'
+        ).replace(
+            b'cecs.checklists.forms\n_unpickle\n',
+            b'cecs.docstash.migrations.0005_fix_2to3\n_checklist_form_unpickle\n'
+        )
+
         value = pickle.loads(value, encoding='utf-8')
 
-        # Make sure the transformation worked correctly.
-        pickle.loads(pickle.dumps(value))
+        if data.stash.group == 'ecs.core.views.submissions.categorization_review':
+            if value['form']['data']:
+                value = {'POST': value['form']['data']}
+            else:
+                value = {}
+        elif data.stash.group == 'ecs.core.views.submissions.checklist_review':
+            if value['form']['data']:
+                value = {'POST': value['form']['data']}
+            else:
+                value = {}
+        elif data.stash.group == 'ecs.notifications.views.create_notification':
+            v = {
+                'type_id': value['type_id'],
+                'submission_form_ids': [sf.id for sf in value.pop('submission_forms', [])],
+            }
+            if 'extra' in value:
+                v['extra'] = {
+                    'old_submission_form_id': value['extra']['old_submission_form'].id,
+                    'new_submission_form_id': value['extra']['new_submission_form'].id,
+                }
+            if 'form' in value:
+                v['POST'] = value['form']['data']
+            value = v
+        elif data.stash.group == 'ecs.core.views.submissions.create_submission_form':
+            v = {
+                'POST': value['form']['data'],
+                'initial': {'submission_form': value['form']['initial']},
+            }
+            for key in ('measure', 'routinemeasure', 'nontesteduseddrug',
+                        'foreignparticipatingcenter', 'investigator',
+                        'investigatoremployee'):
+                assert(value['formsets'][key]['data'] == value['form']['data'])
+                v['initial'][key] = value['formsets'][key]['initial']
+            submission = value.get('submission')
+            if submission:
+                v['submission_id'] = submission.id
+            notification_type = value.get('notification_type')
+            if notification_type:
+                v['notification_type_id'] = notification_type.id
+            if 'document_pks' in value:
+                v['document_pks'] = value['document_pks']
+            value = v
+        else:
+            assert(False)
+
+        # Make sure the data is json serializable
+        assert(json.loads(json.dumps(value)) == value)
 
         data.value = PickledObject(base64.b64encode(zlib.compress(pickle.dumps(value))).decode())
         data.save()

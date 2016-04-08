@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from ecs.notifications.models import NotificationAnswer
 from ecs.core.models import SubmissionForm
 from ecs.users.utils import get_current_user
-from ecs.utils.formutils import ModelFormPickleMixin, require_fields
+from ecs.utils.formutils import require_fields
 from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
 from ecs.core.forms.fields import DateField
 
@@ -30,7 +30,7 @@ def get_usable_submission_forms():
     return submission_forms.order_by('submission__ec_number')
 
 
-class NotificationForm(ModelFormPickleMixin, forms.ModelForm):
+class NotificationForm(forms.ModelForm):
     class Meta:
         model = Notification
         exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document', 'review_lane')

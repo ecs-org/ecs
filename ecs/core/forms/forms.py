@@ -16,20 +16,12 @@ from django_countries import countries
 from ecs.core.models import Investigator, InvestigatorEmployee, SubmissionForm, Measure, ForeignParticipatingCenter, \
     NonTestedUsedDrug, Submission, TemporaryAuthorization, AdvancedSettings, EthicsCommission
 
-from ecs.utils.formutils import ModelFormPickleMixin, require_fields
+from ecs.utils.formutils import require_fields
 from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyTextarea, ReadonlyTextInput, \
     EmailUserSelectWidget, AutocompleteModelChoiceField, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
 from ecs.tags.forms import TagMultipleChoiceField
-
-
-def _unpickle(f, args, kwargs):
-    return globals()[f.replace('FormFormSet', 'FormSet')](*args, **kwargs)
-
-class ModelFormSetPickleMixin(object):
-    def __reduce__(self):
-        return (_unpickle, (self.__class__.__name__, (), {'data': self.data or None, 'prefix': self.prefix, 'initial': self.initial}))
 
 
 ## submissions ##
@@ -56,7 +48,7 @@ INVOICE_REQUIRED_FIELDS = (
     'invoice_zip_code', 'invoice_city', 'invoice_phone', 'invoice_email',
 )
 
-class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelForm):
+class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
     substance_preexisting_clinical_tries = NullBooleanField(required=False)
     substance_p_c_t_gcp_rules = NullBooleanField(required=False)
     substance_p_c_t_final_report = NullBooleanField(required=False)
@@ -160,7 +152,7 @@ class SubmissionFormForm(ReadonlyFormMixin, ModelFormPickleMixin, forms.ModelFor
 
 ## ##
 
-class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
+class ForeignParticipatingCenterForm(forms.ModelForm):
     class Meta:
         model = ForeignParticipatingCenter
         exclude = ('submission_form',)
@@ -169,13 +161,13 @@ class ForeignParticipatingCenterForm(ModelFormPickleMixin, forms.ModelForm):
             'investigator_name': ReadonlyTextInput(attrs={'size': 40}),
         }
 
-class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseForeignParticipatingCenterFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
 ForeignParticipatingCenterFormSet = formset_factory(ForeignParticipatingCenterForm, formset=BaseForeignParticipatingCenterFormSet, extra=0)
 
-class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
+class NonTestedUsedDrugForm(forms.ModelForm):
     class Meta:
         model = NonTestedUsedDrug
         exclude = ('submission_form',)
@@ -185,13 +177,13 @@ class NonTestedUsedDrugForm(ModelFormPickleMixin, forms.ModelForm):
             'dosage': ReadonlyTextInput(attrs={'cols': 30}),
         }
 
-class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseNonTestedUsedDrugFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
 NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm, formset=BaseNonTestedUsedDrugFormSet, extra=0)
 
-class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
+class MeasureForm(forms.ModelForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
 
     class Meta:
@@ -207,14 +199,14 @@ class MeasureForm(ModelFormPickleMixin, forms.ModelForm):
 class RoutineMeasureForm(MeasureForm):
     category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
 
-class BaseMeasureFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseMeasureFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms if form.is_valid()]
 
 MeasureFormSet = formset_factory(MeasureForm, formset=BaseMeasureFormSet, extra=0)
 RoutineMeasureFormSet = formset_factory(RoutineMeasureForm, formset=BaseMeasureFormSet, extra=0)
 
-class InvestigatorForm(ModelFormPickleMixin, forms.ModelForm):
+class InvestigatorForm(forms.ModelForm):
     class Meta:
         model = Investigator
         fields = ('organisation', 'subject_count', 'ethics_commission', 'main',
@@ -262,7 +254,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
                 'users', User.objects.filter(is_active=True),
                 label=_('Susar Presenter'))
 
-class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
@@ -279,7 +271,7 @@ class BaseInvestigatorFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, Bas
 
 InvestigatorFormSet = formset_factory(InvestigatorForm, formset=BaseInvestigatorFormSet, extra=1)
 
-class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
+class InvestigatorEmployeeForm(forms.ModelForm):
     investigator_index = forms.IntegerField(required=True, initial=0, widget=forms.HiddenInput())
 
     class Meta:
@@ -292,7 +284,7 @@ class InvestigatorEmployeeForm(ModelFormPickleMixin, forms.ModelForm):
             'organisation': ReadonlyTextInput(attrs={'cols': 50}),
         }
 
-class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, ModelFormSetPickleMixin, BaseFormSet):
+class BaseInvestigatorEmployeeFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
         employees = []
         for form in self.forms[:self.total_form_count()]:
