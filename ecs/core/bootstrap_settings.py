@@ -1,8 +1,6 @@
 developers = (
     ('Felix', 'Erkinger', 'felix@erkinger.at', 'm'),
-    ('Johannes', 'Dollinger', 'emulbreh@googlemail.com', 'm'),
     ('Martin', 'Natano', 'natano@natano.net', 'm'),
-    ('Ludwig', 'Hammel', 'ludwig.hammel@gmail.com', 'm'),
     ('Markus', 'Froehlich', 'froema@ep3.at', 'm'),
     ('Thomas', 'Neumann', 'tom@newtone.cc', 'm'),
     ('Esther', 'Neumann', 'es_data@yahoo.de', 'f'),
