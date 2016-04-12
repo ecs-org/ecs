@@ -9,7 +9,7 @@ from ecs.votes.models import Vote
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
 from ecs.signature.views import init_batch_sign
-from ecs.users.utils import user_group_required, user_flag_required
+from ecs.users.utils import user_group_required
 from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
@@ -55,7 +55,6 @@ def download_signed_vote(request, vote_pk=None):
         raise Http404('No signed document for vote %s available' % (vote_pk))
     return handle_download(request, signed_vote_doc)
 
-@user_flag_required('is_internal')
 @user_group_required("EC-Signing")
 @task_required
 def vote_sign(request, vote_pk=None):

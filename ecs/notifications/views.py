@@ -21,7 +21,7 @@ from ecs.notifications.models import (
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import handle_download, upload_document, delete_document
-from ecs.users.utils import user_flag_required, user_group_required
+from ecs.users.utils import user_group_required
 from ecs.tasks.utils import task_required, with_task_management
 from ecs.signature.views import init_batch_sign
 
@@ -252,7 +252,6 @@ def notification_answer_pdf(request, notification_pk=None):
     return handle_download(request, notification.answer.pdf_document)
     
 
-@user_flag_required('is_internal')
 @user_group_required("EC-Signing")
 @task_required
 def notification_answer_sign(request, notification_pk=None):

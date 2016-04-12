@@ -2,10 +2,9 @@ from django.shortcuts import render
 
 from ecs.core.models import AdvancedSettings, EthicsCommission
 from ecs.core.forms import AdvancedSettingsForm, EthicsCommissionFormSet
-from ecs.users.utils import user_flag_required, user_group_required
+from ecs.users.utils import user_group_required
 
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def advanced_settings(request):
     instance = AdvancedSettings.objects.get(pk=1)

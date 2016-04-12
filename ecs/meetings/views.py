@@ -41,7 +41,6 @@ from ecs.documents.models import Document
 from ecs.meetings.cache import cache_meeting_page
 
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def create_meeting(request):
     form = MeetingForm(request.POST or None)
@@ -224,7 +223,6 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     response['Content-Length'] = str(os.path.getsize(cache_file))
     return response
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def add_free_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -237,7 +235,6 @@ def add_free_timetable_entry(request, meeting_pk=None):
         'meeting': meeting,
     })
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def add_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -251,7 +248,6 @@ def add_timetable_entry(request, meeting_pk=None):
             Participation.objects.create(entry=entry, user=user)
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -261,7 +257,6 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     entry.delete()
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -275,7 +270,6 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
             entry.move_to_optimal_position()
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -284,7 +278,6 @@ def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
     p.save()
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def move_timetable_entry(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -294,7 +287,6 @@ def move_timetable_entry(request, meeting_pk=None):
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
 @readonly()
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -316,7 +308,6 @@ def timetable_editor(request, meeting_pk=None):
         'recommendations_not_done': recommendations_not_done,
     })
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -326,7 +317,6 @@ def optimize_timetable(request, meeting_pk=None, algorithm=None):
         optimize_timetable_task.apply_async(kwargs={'meeting_id': meeting.id, 'algorithm': algorithm})
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -339,7 +329,6 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
         }})
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -359,7 +348,6 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
     })
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -393,7 +381,6 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
     })
 
 @readonly()
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -421,7 +408,6 @@ def meeting_assistant(request, meeting_pk=None):
             'message': _('This meeting has not yet started.'),
         })
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
@@ -449,7 +435,6 @@ def meeting_assistant_start(request, meeting_pk=None):
     on_meeting_start.send(Meeting, meeting=meeting)
     return redirect('ecs.meetings.views.meeting_assistant', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_stop(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -460,7 +445,6 @@ def meeting_assistant_stop(request, meeting_pk=None):
     on_meeting_end.send(Meeting, meeting=meeting)
     return redirect('ecs.meetings.views.meeting_assistant', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_comments(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -475,7 +459,6 @@ def meeting_assistant_comments(request, meeting_pk=None):
         'form': form,
     })
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -505,7 +488,6 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
     })
 
 @readonly(methods=['GET'])
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -830,7 +812,6 @@ def meeting_details(request, meeting_pk=None, active=None):
         'active': active,
     })
 
-@user_flag_required('is_internal')
 @user_group_required('EC-Office')
 def edit_meeting(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
