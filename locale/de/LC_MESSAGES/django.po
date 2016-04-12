@@ -2503,11 +2503,6 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
-#: ecs/users/forms.py:147 ecs/users/forms.py:201
-msgid "Board Member Categories"
-msgstr "Medizinische Kategorien für Board Member Review"
-
-#: ecs/users/forms.py:148 ecs/users/forms.py:202
 msgid "Internal"
 msgstr "Intern"
 

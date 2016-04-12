@@ -142,9 +142,11 @@ class AdministrationFilterForm(forms.Form):
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
+    first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
+    last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
-        label=_('Board Member Categories'))
+        label=_('Medical Categories'))
     is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
@@ -157,12 +159,14 @@ class UserDetailsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(UserDetailsForm, self).__init__(*args, **kwargs)
-        profile = self.instance.profile
-        self.fields['gender'].initial = profile.gender
-        self.fields['title'].initial = profile.title
-        self.fields['medical_categories'].initial = [x.pk for x in self.instance.medical_categories.all()]
-        self.fields['is_internal'].initial = profile.is_internal
-        self.fields['is_help_writer'].initial = profile.is_help_writer
+        if self.instance.pk:
+            profile = self.instance.profile
+            self.fields['gender'].initial = profile.gender
+            self.fields['title'].initial = profile.title
+            self.fields['medical_categories'].initial = \
+                self.instance.medical_categories.values_list('pk', flat=True)
+            self.fields['is_internal'].initial = profile.is_internal
+            self.fields['is_help_writer'].initial = profile.is_help_writer
 
     def clean_groups(self):
         groups = self.cleaned_data.get('groups', [])
@@ -171,37 +175,33 @@ class UserDetailsForm(forms.ModelForm):
             raise forms.ValidationError(_('{0} is a specialist in following meetings: {1}').format(self.instance, ', '.join(amc.meeting.title for amc in amcs)))
         return groups
 
-    def save(self, *args, **kwargs):
-        user = super(UserDetailsForm, self).save(*args, **kwargs)
+    def save(self):
+        user = super(UserDetailsForm, self).save()
         user.medical_categories = self.cleaned_data.get('medical_categories', ())
-        user.save()
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.external_review = user.groups.filter(name='External Reviewer').exists()
+        profile.is_internal = self.cleaned_data.get('is_internal', False)
+        profile.is_help_writer = self.cleaned_data.get('is_help_writer', False)
         profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
         profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
         profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
         profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
-        for k in ('is_internal', 'is_help_writer'):
-            setattr(profile, k, self.cleaned_data.get(k, False))
         profile.save()
         return user
 
-class InvitationForm(forms.Form):
+
+class InvitationForm(UserDetailsForm):
     email = forms.EmailField(label=_('email'))
-    gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
-    title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
-    first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
-    last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
-    groups = forms.ModelMultipleChoiceField(
-        required=False, queryset=Group.objects.all(), label=_('Groups'))
-    medical_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=MedicalCategory.objects.all(),
-        label=_('Board Member Categories'))
-    is_internal = forms.BooleanField(required=False, label=_('Internal'))
-    is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
     invitation_text = forms.CharField(widget=forms.Textarea(), label=_('Invitation Text'))
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'gender', 'title', 'first_name', 'last_name', 'groups',
+            'medical_categories', 'is_internal', 'is_help_writer',
+            'invitation_text',
+        )
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -213,22 +213,14 @@ class InvitationForm(forms.Form):
         return email
 
     def save(self):
-        user = create_user(self.cleaned_data['email'], first_name=self.cleaned_data['first_name'], last_name=self.cleaned_data['last_name'])
-        user.groups = self.cleaned_data.get('groups', [])
-        user.medical_categories = self.cleaned_data.get('medical_categories', [])
-        user.save()
-        profile = user.profile
-        profile.gender = self.cleaned_data['gender']
-        profile.title = self.cleaned_data['title']
-        profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
-        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
-        profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
-        profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
-        profile.forward_messages_after_minutes = 5
-        for k in ('is_internal', 'is_help_writer'):
-            setattr(profile, k, self.cleaned_data.get(k, False))
-        profile.save()
+        self.instance = create_user(self.cleaned_data['email'],
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'])
+        user = super(InvitationForm, self).save()
+        user.profile.forward_messages_after_minutes = 5
+        user.profile.save()
         return user
+
 
 class IndispositionForm(forms.ModelForm):
     is_indisposed = forms.BooleanField(required=False, label=_('is_indisposed'))
