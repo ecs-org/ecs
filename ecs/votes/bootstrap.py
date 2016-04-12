@@ -12,10 +12,10 @@ _ = lambda s: s
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
-    EXECUTIVE_GROUP = 'EC-Executive Board Group'
+    EXECUTIVE_GROUP = 'EC-Executive Board Member'
     OFFICE_GROUP = 'EC-Office'
-    INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
-    SIGNING_GROUP = 'EC-Signing Group'
+    INTERNAL_REVIEW_GROUP = 'EC-Internal Reviewer'
+    SIGNING_GROUP = 'EC-Signing'
 
     setup_workflow_graph(Vote, 
         auto_start=True, 

@@ -45,7 +45,7 @@ def checklist_blueprints():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def checklist_workflow():
-    EXTERNAL_REVIEW_REVIEW_GROUP = 'External Review Review Group'
+    EXTERNAL_REVIEW_REVIEW_GROUP = 'External Review Reviewer'
 
     setup_workflow_graph(Checklist,
         auto_start=True, 

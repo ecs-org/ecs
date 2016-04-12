@@ -85,7 +85,7 @@
             <div class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle administration" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Administration" %}</a>
                 <div class="dropdown-menu">
-                    {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Group" %}
+                    {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Member" %}
                         <a class="dropdown-item" href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a>
                         <a class="dropdown-item" href="{% url 'ecs.billing.views.submission_billing' %}">{% trans "Accounting of fees" %}</a>
                         <a class="dropdown-item" href="{% url 'ecs.billing.views.external_review_payment' %}">Gutachter Bezahlung</a>
@@ -93,7 +93,7 @@
                     {% endif %}
                     <a class="dropdown-item" href="{% url 'ecs.statistics.views.stats' %}">{% trans 'Statistics' %}</a>
                     <a class="dropdown-item" href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">{% trans 'Boilerplates' %}</a>
-                    {% if user|is_member_of:'EC-Signing Group' or user|is_member_of:'EC-Office' %}
+                    {% if user|is_member_of:'EC-Signing' or user|is_member_of:'EC-Office' %}
                         <a class="dropdown-item" href="{% url 'ecs.pki.views.cert_list' %}">{% trans 'PKI' %}</a>
                     {% endif %}
 		    <a class="dropdown-item" href="{% url 'ecs.tags.views.index' %}">{% trans "Tags" %}</a>

@@ -184,9 +184,9 @@ class UserDetailsForm(forms.ModelForm):
         profile.is_internal = self.cleaned_data.get('is_internal', False)
         profile.is_help_writer = self.cleaned_data.get('is_help_writer', False)
         profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
-        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Group').exists()
+        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Member').exists()
         profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
-        profile.is_resident_member = user.groups.filter(name='Resident Board Member Group').exists()
+        profile.is_resident_member = user.groups.filter(name='Resident Board Member').exists()
         profile.save()
         return user
 

@@ -253,7 +253,7 @@ def notification_answer_pdf(request, notification_pk=None):
     
 
 @user_flag_required('is_internal')
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @task_required
 def notification_answer_sign(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)

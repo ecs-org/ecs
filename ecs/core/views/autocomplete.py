@@ -16,7 +16,7 @@ def autocomplete(request, queryset_name=None):
         'external-reviewers': Q(groups__name='External Reviewer'),
         'internal-users': Q(profile__is_internal=True),
         'board-members': Q(
-            groups__name__in=['EC-Board Member', 'EC-Executive Board Group']),
+            groups__name__in=['EC-Board Member', 'EC-Executive Board Member']),
     }
 
     users = (User.objects

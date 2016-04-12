@@ -46,7 +46,7 @@ def _store_sign_data(sign_data, force_mock=False):
     return sign_data
 
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 def init_batch_sign(request, task, data_func):
     if request.user.email.startswith('signing_mock') or settings.PDFAS_SERVICE == 'mock:':
         sign_data = data_func(request, task)
@@ -60,7 +60,7 @@ def init_batch_sign(request, task, data_func):
     return redirect('ecs.signature.views.batch_sign', sign_session_id=sign_session.id)
 
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @with_sign_data(data=False, session=True)
 def batch_sign(request):
     tasks = request.sign_session['tasks']
@@ -81,7 +81,7 @@ def batch_sign(request):
     })
 
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @with_sign_data(session=True)
 def batch_action(request, action=None):
     request.sign_data.delete()
@@ -103,7 +103,7 @@ def batch_action(request, action=None):
     return redirect(url)
 
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 def sign(request, sign_data, force_mock=False, force_fail=False):
     fail = force_fail or request.user.email.startswith('signing_fail')
     mock = force_mock or request.user.email.startswith('signing_mock') or settings.PDFAS_SERVICE == 'mock:'
@@ -125,12 +125,12 @@ def sign(request, sign_data, force_mock=False, force_fail=False):
 def sign_send(request):
     return HttpResponse(request.sign_data["pdf_data"], content_type='application/pdf')
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @with_sign_data()
 def sign_preview(request):
     return HttpResponse(request.sign_data["html_preview"])
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @csrf_exempt
 @with_sign_data()
 def sign_receive(request, mock=False):
@@ -185,7 +185,7 @@ def sign_receive(request, mock=False):
         return redirect(url)
 
 
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @csrf_exempt
 @with_sign_data()
 def sign_error(request, error=None, cause=None):

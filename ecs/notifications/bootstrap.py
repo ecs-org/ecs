@@ -81,11 +81,11 @@ def notification_types():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def notification_workflow():
-    EXECUTIVE_GROUP = 'EC-Executive Board Group'
+    EXECUTIVE_GROUP = 'EC-Executive Board Member'
     OFFICE_GROUP = 'EC-Office'
-    NOTIFICATION_REVIEW_GROUP = 'EC-Notification Review Group'
-    SIGNING_GROUP = 'EC-Signing Group'
-    SAFETY_GROUP = 'EC-Safety Report Review Group'
+    NOTIFICATION_REVIEW_GROUP = 'EC-Notification Reviewer'
+    SIGNING_GROUP = 'EC-Signing'
+    SAFETY_GROUP = 'EC-Safety Report Reviewer'
     INSURANCE_GROUP = 'EC-Insurance Reviewer'
 
     setup_workflow_graph(Notification,

@@ -40,16 +40,16 @@ def submission_workflow():
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
 
     THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
-    LOCALEC_REVIEW_GROUP = 'Local-EC Review Group'
-    EXECUTIVE_GROUP = 'EC-Executive Board Group'
+    LOCALEC_REVIEW_GROUP = 'Local-EC Reviewer'
+    EXECUTIVE_GROUP = 'EC-Executive Board Member'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'EC-Board Member'
     INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
-    STATISTIC_REVIEW_GROUP = 'EC-Statistic Group'
-    INTERNAL_REVIEW_GROUP = 'EC-Internal Review Group'
-    GCP_REVIEW_GROUP = 'GCP Review Group'
-    PAPER_GROUP = 'EC-Paper Submission Review Group'
-    B2_REVIEW_GROUP = 'EC-B2 Review Group'
+    STATISTIC_REVIEW_GROUP = 'EC-Statistic Reviewer'
+    INTERNAL_REVIEW_GROUP = 'EC-Internal Reviewer'
+    GCP_REVIEW_GROUP = 'GCP Reviewer'
+    PAPER_GROUP = 'EC-Paper Submission Reviewer'
+    B2_REVIEW_GROUP = 'EC-B2 Reviewer'
 
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -128,26 +128,25 @@ def submission_workflow():
 def auth_groups():
     groups = (
         'EC-Office',
-        'EC-Internal Review Group',
-        'EC-Executive Board Group',
-        'EC-Signing Group',
-        'EC-Statistic Group',
-        'EC-Notification Review Group',
+        'EC-Internal Reviewer',
+        'EC-Executive Board Member',
+        'EC-Signing',
+        'EC-Statistic Reviewer',
+        'EC-Notification Reviewer',
         'EC-Insurance Reviewer',
         'EC-Thesis Executive Group',
-        'EC-B2 Review Group',
-        'EC-Paper Submission Review Group',
-        'EC-Safety Report Review Group',
-        'Local-EC Review Group',
+        'EC-B2 Reviewer',
+        'EC-Paper Submission Reviewer',
+        'EC-Safety Report Reviewer',
+        'Local-EC Reviewer',
         'EC-Board Member',
-        'GCP Review Group',
-        'userswitcher_target',
-        'translators',
+        'GCP Reviewer',
+        'Userswitcher Target',
         'External Reviewer',
-        'External Review Review Group',
-        'Amendment Receiver Group',
-        'Meeting Protocol Receiver Group',
-        'Resident Board Member Group',
+        'External Review Reviewer',
+        'Amendment Receiver',
+        'Meeting Protocol Receiver',
+        'Resident Board Member',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -242,15 +241,12 @@ def auth_user_developers():
         # first, Last, email, gender (sic!)
         developers = (('John', 'Doe', 'developer@example.org', 'f'),)
 
-    translators_group = Group.objects.get(name='translators')
-
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
         user.last_name = last
         user.is_staff = False
         user.is_superuser = False
-        user.groups.add(translators_group)
         user.save()
 
         user.profile.is_developer = True
@@ -269,23 +265,23 @@ def auth_user_testusers():
         ('sponsor', None, {}),
         ('investigator', None, {}),
         ('office', 'EC-Office', {'is_internal': True,}),
-        ('internal.rev', 'EC-Internal Review Group', {'is_internal': True,}),
-        ('executive', 'EC-Executive Board Group', {'is_internal': True, 'is_executive_board_member': True, }),
+        ('internal.rev', 'EC-Internal Reviewer', {'is_internal': True,}),
+        ('executive', 'EC-Executive Board Member', {'is_internal': True, 'is_executive_board_member': True, }),
         ('thesis.executive', 'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False, }),
-        ('signing', 'EC-Signing Group', {'is_internal': True, }),
-        ('signing_fail', 'EC-Signing Group', {'is_internal': True }),
-        ('signing_mock', 'EC-Signing Group', {'is_internal': True }),
-        ('statistic.rev', 'EC-Statistic Group', {'is_internal': False}),
-        ('notification.rev', 'EC-Notification Review Group', {'is_internal': True, }),
+        ('signing', 'EC-Signing', {'is_internal': True, }),
+        ('signing_fail', 'EC-Signing', {'is_internal': True }),
+        ('signing_mock', 'EC-Signing', {'is_internal': True }),
+        ('statistic.rev', 'EC-Statistic Reviewer', {'is_internal': False}),
+        ('notification.rev', 'EC-Notification Reviewer', {'is_internal': True, }),
         ('insurance.rev', 'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
         ('external.reviewer', None, {}),
-        ('gcp.reviewer', 'GCP Review Group', {'is_internal': False}),
-        ('localec.rev', 'Local-EC Review Group', {'is_internal': True}),
-        ('b2.rev', 'EC-B2 Review Group', {'is_internal': True}),
+        ('gcp.reviewer', 'GCP Reviewer', {'is_internal': False}),
+        ('localec.rev', 'Local-EC Reviewer', {'is_internal': True}),
+        ('b2.rev', 'EC-B2 Reviewer', {'is_internal': True}),
         ('ext.rev', 'External Reviewer', {}),
-        ('ext.rev.rev', 'External Review Review Group', {'is_internal': True}),
-        ('paper.rev', 'EC-Paper Submission Review Group', {'is_internal': True}),
-        ('safety.rev', 'EC-Safety Report Review Group', {'is_internal': True}),
+        ('ext.rev.rev', 'External Review Reviewer', {'is_internal': True}),
+        ('paper.rev', 'EC-Paper Submission Reviewer', {'is_internal': True}),
+        ('safety.rev', 'EC-Safety Report Reviewer', {'is_internal': True}),
     )
 
     boardtestusers = (
@@ -300,7 +296,7 @@ def auth_user_testusers():
          ('b.member9.angio', ('Angio',)),
     )
 
-    userswitcher_group = Group.objects.get(name='userswitcher_target')
+    userswitcher_group = Group.objects.get(name='Userswitcher Target')
     boardmember_group = Group.objects.get(name='EC-Board Member')
 
     for testuser, testgroup, flags in testusers:

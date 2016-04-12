@@ -56,7 +56,7 @@ def download_signed_vote(request, vote_pk=None):
     return handle_download(request, signed_vote_doc)
 
 @user_flag_required('is_internal')
-@user_group_required("EC-Signing Group")
+@user_group_required("EC-Signing")
 @task_required
 def vote_sign(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)

@@ -338,7 +338,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return redirect('readonly_submission_form', submission_form_pk=submission_form_pk)
 
 
-@user_group_required('EC-Executive Board Group')
+@user_group_required('EC-Executive Board Member')
 @with_task_management
 def categorization_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)

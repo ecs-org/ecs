@@ -7,7 +7,7 @@
 
 {% block content %}
 
-{% if user|is_member_of:'EC-Signing Group' %}
+{% if user|is_member_of:'EC-Signing' %}
     <a href="{% url 'ecs.pki.views.create_cert' %}">{% trans 'Create new certificate' %}</a>
 {% endif %}
 

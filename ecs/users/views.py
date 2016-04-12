@@ -261,7 +261,7 @@ def notify_return(request):
 
 
 @readonly(methods=['GET'])
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Member')
 def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     form = IndispositionForm(request.POST or None, instance=user.profile)
@@ -280,7 +280,7 @@ def indisposition(request, user_pk=None):
 
 
 @require_POST
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Member')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -293,16 +293,16 @@ def toggle_active(request, user_pk=None):
 
 
 @readonly(methods=['GET'])
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Member')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    was_signing_user = user.groups.filter(name='EC-Signing Group').exists()
+    was_signing_user = user.groups.filter(name='EC-Signing').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
     if request.method == 'POST' and form.is_valid():
         user = form.save()
-        is_signing_user = user.groups.filter(name='EC-Signing Group').exists()
+        is_signing_user = user.groups.filter(name='EC-Signing').exists()
         if is_signing_user and not was_signing_user:
-            for u in User.objects.filter(groups__name='EC-Signing Group'):
+            for u in User.objects.filter(groups__name='EC-Signing'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
         messages.success(request, _('The change of the user has been saved.'))
 
@@ -310,7 +310,7 @@ def details(request, user_pk=None):
         'form': form,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Member')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
@@ -377,7 +377,7 @@ def administration(request, limit=20):
 
 
 @readonly(methods=['GET'])
-@user_group_required('EC-Office', 'EC-Executive Board Group')
+@user_group_required('EC-Office', 'EC-Executive Board Member')
 def invite(request):
     form = InvitationForm(request.POST or None)
     comment = None
@@ -399,8 +399,8 @@ def invite(request):
         transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
         msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
 
-        if user.groups.filter(name='EC-Signing Group').exists():
-            for u in User.objects.filter(groups__name='EC-Signing Group'):
+        if user.groups.filter(name='EC-Signing').exists():
+            for u in User.objects.filter(groups__name='EC-Signing'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
         return redirect('ecs.users.views.details', user_pk=user.pk)
 

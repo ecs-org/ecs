@@ -48,7 +48,7 @@ class UserProfile(models.Model):
         return str(self.user)
 
     def has_explicit_workflow(self):
-        return self.user.groups.exclude(name__in=['External Reviewer', 'userswitcher_target', 'translators']).exists()
+        return self.user.groups.exclude(name__in=['External Reviewer', 'Userswitcher Target']).exists()
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
