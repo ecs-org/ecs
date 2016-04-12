@@ -249,7 +249,6 @@ def auth_user_developers():
         user.is_superuser = False
         user.save()
 
-        user.profile.is_developer = True
         user.profile.is_help_writer = True
         user.profile.forward_messages_after_minutes = 30
         user.profile.gender = gender

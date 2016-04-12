@@ -21,7 +21,6 @@ class UserProfile(models.Model):
     is_resident_member = models.BooleanField(default=False)
     is_help_writer = models.BooleanField(default=False)
     is_testuser = models.BooleanField(default=False)
-    is_developer = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
 
