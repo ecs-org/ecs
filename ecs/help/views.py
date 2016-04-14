@@ -19,7 +19,7 @@ from reversion import revisions as reversion
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.tracking.models import View
-from ecs.users.utils import user_flag_required
+from ecs.users.utils import user_group_required
 from ecs.help.models import Page, Attachment
 from ecs.help.forms import HelpPageForm, AttachmentUploadForm, ImportForm
 from ecs.help.utils import publish_parts
@@ -86,7 +86,7 @@ def download_attachment(request, attachment_pk=None):
     attachment = get_object_or_404(Attachment, pk=attachment_pk)
     return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def ready_for_review(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk, review_status__in=['new', 'review_ok', 'review_fail'])
     page.review_status = 'ready_for_review'
@@ -94,21 +94,21 @@ def ready_for_review(request, page_pk=None):
     # TODO: create trac testing ticket
     return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def review_ok(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
     page.review_status = 'review_ok'
     page.save()
     return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def review_fail(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk, review_status='ready_for_review')
     page.review_status = 'review_fail'
     page.save()
     return redirect('ecs.help.views.view_help_page', page_pk=page.pk)
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def review_overview(request):
     ready_for_review = Page.objects.filter(review_status='ready_for_review')
     review_fail = Page.objects.filter(review_status='review_fail')
@@ -121,7 +121,7 @@ def review_overview(request):
         'review_ok': review_ok,
     })
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def edit_help_page(request, view_pk=None, anchor='', page_pk=None):
     if page_pk:
         page = get_object_or_404(Page, pk=page_pk)
@@ -212,7 +212,7 @@ def search(request, *args, **kwargs):
     return search_view(request, *args, **kwargs)
 
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def delete_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
     page.delete()
@@ -220,13 +220,13 @@ def delete_help_page(request, page_pk=None):
     return redirect('ecs.help.views.index')
 
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def preview_help_page_text(request):
     text = request.POST.get('text', '')
     return HttpResponse(publish_parts(text)['fragment'])
     
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def difference_help_pages(request, page_pk=None, old_version=None, new_version=None):
     from reversion.helpers import generate_patch_html
 
@@ -248,7 +248,7 @@ def difference_help_pages(request, page_pk=None, old_version=None, new_version=N
     return HttpResponse(generate_patch_html(old_content, new_content, "text"))
 
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def upload(request):
     page, view = None, None
     if 'page' in request.GET:
@@ -267,21 +267,21 @@ def upload(request):
     })
 
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def delete_attachment(request, attachment_pk):
     attachment = get_object_or_404(Attachment, pk=attachment_pk)
     attachment.delete()
     return HttpResponse('OK')
 
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def find_attachments(request):
     return render(request, 'help/attachments/find.html', {
         'attachments': Attachment.objects.filter(slug__icontains=request.GET.get('q', '')).order_by('slug')[:5]
     })
 
 
-#@user_flag_required('is_help_writer')
+#@user_group_required('Help Writer')
 @csrf_exempt
 def screenshot(request):
     dataurl = request.POST.get('image', None)
@@ -309,7 +309,7 @@ def screenshot(request):
 
     return HttpResponse('OK')
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def export(request):
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
         serializer.export(tmpfile)
@@ -318,7 +318,7 @@ def export(request):
     response['Content-Disposition'] = 'attachment;filename=help-{0}.ech'.format(timezone.now().strftime('%Y-%m-%d'))
     return response
 
-@user_flag_required('is_help_writer')
+@user_group_required('Help Writer')
 def load(request):
     form = ImportForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():

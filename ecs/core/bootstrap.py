@@ -147,6 +147,7 @@ def auth_groups():
         'Amendment Receiver',
         'Meeting Protocol Receiver',
         'Resident Board Member',
+        'Help Writer',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -241,6 +242,8 @@ def auth_user_developers():
         # first, Last, email, gender (sic!)
         developers = (('John', 'Doe', 'developer@example.org', 'f'),)
 
+    help_writer_group = Group.objects.get(name='Help Writer')
+
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
@@ -249,7 +252,7 @@ def auth_user_developers():
         user.is_superuser = False
         user.save()
 
-        user.profile.is_help_writer = True
+        user.groups.add(help_writer_group)
         user.profile.forward_messages_after_minutes = 30
         user.profile.gender = gender
         user.profile.save()
@@ -297,6 +300,7 @@ def auth_user_testusers():
 
     userswitcher_group = Group.objects.get(name='Userswitcher Target')
     boardmember_group = Group.objects.get(name='EC-Board Member')
+    help_writer_group = Group.objects.get(name='Help Writer')
 
     for testuser, testgroup in testusers:
         for number in range(1,4):
@@ -304,12 +308,11 @@ def auth_user_testusers():
             if testgroup:
                 user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(userswitcher_group)
-
-            user.profile.is_testuser = True
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
-                user.profile.is_help_writer = True
+                user.groups.add(help_writer_group)
 
+            user.profile.is_testuser = True
             user.profile.update_flags()
             user.profile.save()
 

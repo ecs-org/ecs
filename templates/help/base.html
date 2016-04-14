@@ -17,7 +17,7 @@
       <span class="max_twenty">{{ page.title }}</span>
     </div>
     <div class="pull-right">
-        {% if user|has_flag:"is_help_writer" %}
+        {% if user|is_member_of:'Help Writer' %}
             <span class="help_review_overview"><a href="{% url 'ecs.help.views.review_overview' %}">Review Übersicht</a></span>
         {% endif %}
         <span class="help_overview"><a href="{% url 'ecs.help.views.index' %}">Inhaltsverzeichnis</a></span>
@@ -25,14 +25,14 @@
     </div>
   </div>
 
-  <div id="help_nav{% if not user|has_flag:"is_help_writer" %} disabled{% endif %}" class="clearfix">
+  <div id="help_nav{% if not user|is_member_of:'Help Writer' %} disabled{% endif %}" class="clearfix">
     <div class="pull-left">
         {% block nav_left %}
         {% endblock %}
     </div>
 
     <div class="pull-right">
-        {% if user|has_flag:"is_help_writer" %}
+        {% if user|is_member_of:'Help Writer' %}
             <a href="{% url 'ecs.help.views.edit_help_page' %}">Neue Seite</a>
             | <a href="{% url 'ecs.help.views.upload' %}?next={{ request.get_full_path|urlencode }}{% block upload_params %}{% endblock %}">Upload</a>
             | <a href="{% url 'ecs.help.views.export' %}">Export</a>

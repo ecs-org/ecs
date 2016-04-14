@@ -23,7 +23,6 @@ class UserProfile(models.Model):
     has_explicit_workflow = models.BooleanField(default=False)
 
     # XXX: not backed by user groups
-    is_help_writer = models.BooleanField(default=False)
     is_testuser = models.BooleanField(default=False)
 
     session_key = models.CharField(max_length=40, null=True)
