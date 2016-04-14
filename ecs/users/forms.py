@@ -147,14 +147,13 @@ class UserDetailsForm(forms.ModelForm):
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
         label=_('Medical Categories'))
-    is_internal = forms.BooleanField(required=False, label=_('Internal'))
     is_help_writer = forms.BooleanField(required=False, label=_('Help writer'))
 
     class Meta:
         model = User
         fields = (
             'gender', 'title', 'first_name', 'last_name', 'groups',
-            'medical_categories', 'is_internal', 'is_help_writer',
+            'medical_categories', 'is_help_writer',
         )
 
     def __init__(self, *args, **kwargs):
@@ -165,7 +164,6 @@ class UserDetailsForm(forms.ModelForm):
             self.fields['title'].initial = profile.title
             self.fields['medical_categories'].initial = \
                 self.instance.medical_categories.values_list('pk', flat=True)
-            self.fields['is_internal'].initial = profile.is_internal
             self.fields['is_help_writer'].initial = profile.is_help_writer
 
     def clean_groups(self):
@@ -181,12 +179,8 @@ class UserDetailsForm(forms.ModelForm):
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
-        profile.is_internal = self.cleaned_data.get('is_internal', False)
         profile.is_help_writer = self.cleaned_data.get('is_help_writer', False)
-        profile.is_board_member = user.groups.filter(name='EC-Board Member').exists()
-        profile.is_executive_board_member = user.groups.filter(name='EC-Executive Board Member').exists()
-        profile.is_insurance_reviewer = user.groups.filter(name='EC-Insurance Reviewer').exists()
-        profile.is_resident_member = user.groups.filter(name='Resident Board Member').exists()
+        profile.update_flags()
         profile.save()
         return user
 
@@ -199,8 +193,7 @@ class InvitationForm(UserDetailsForm):
         model = User
         fields = (
             'email', 'gender', 'title', 'first_name', 'last_name', 'groups',
-            'medical_categories', 'is_internal', 'is_help_writer',
-            'invitation_text',
+            'medical_categories', 'is_help_writer', 'invitation_text',
         )
 
     def clean_email(self):

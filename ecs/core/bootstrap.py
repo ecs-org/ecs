@@ -260,27 +260,27 @@ def auth_user_developers():
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
-        ('presenter', None, {}),
-        ('sponsor', None, {}),
-        ('investigator', None, {}),
-        ('office', 'EC-Office', {'is_internal': True,}),
-        ('internal.rev', 'EC-Internal Reviewer', {'is_internal': True,}),
-        ('executive', 'EC-Executive Board Member', {'is_internal': True, 'is_executive_board_member': True, }),
-        ('thesis.executive', 'EC-Thesis Executive Group', {'is_internal': False, 'is_executive_board_member': False, }),
-        ('signing', 'EC-Signing', {'is_internal': True, }),
-        ('signing_fail', 'EC-Signing', {'is_internal': True }),
-        ('signing_mock', 'EC-Signing', {'is_internal': True }),
-        ('statistic.rev', 'EC-Statistic Reviewer', {'is_internal': False}),
-        ('notification.rev', 'EC-Notification Reviewer', {'is_internal': True, }),
-        ('insurance.rev', 'EC-Insurance Reviewer', {'is_internal': False, 'is_insurance_reviewer': True}),
-        ('external.reviewer', None, {}),
-        ('gcp.reviewer', 'GCP Reviewer', {'is_internal': False}),
-        ('localec.rev', 'Local-EC Reviewer', {'is_internal': True}),
-        ('b2.rev', 'EC-B2 Reviewer', {'is_internal': True}),
-        ('ext.rev', 'External Reviewer', {}),
-        ('ext.rev.rev', 'External Review Reviewer', {'is_internal': True}),
-        ('paper.rev', 'EC-Paper Submission Reviewer', {'is_internal': True}),
-        ('safety.rev', 'EC-Safety Report Reviewer', {'is_internal': True}),
+        ('presenter', None),
+        ('sponsor', None),
+        ('investigator', None),
+        ('office', 'EC-Office'),
+        ('internal.rev', 'EC-Internal Reviewer'),
+        ('executive', 'EC-Executive Board Member'),
+        ('thesis.executive', 'EC-Thesis Executive Group'),
+        ('signing', 'EC-Signing'),
+        ('signing_fail', 'EC-Signing'),
+        ('signing_mock', 'EC-Signing'),
+        ('statistic.rev', 'EC-Statistic Reviewer'),
+        ('notification.rev', 'EC-Notification Reviewer'),
+        ('insurance.rev', 'EC-Insurance Reviewer'),
+        ('external.reviewer', None),
+        ('gcp.reviewer', 'GCP Reviewer'),
+        ('localec.rev', 'Local-EC Reviewer'),
+        ('b2.rev', 'EC-B2 Reviewer'),
+        ('ext.rev', 'External Reviewer'),
+        ('ext.rev.rev', 'External Review Reviewer'),
+        ('paper.rev', 'EC-Paper Submission Reviewer'),
+        ('safety.rev', 'EC-Safety Report Reviewer'),
     )
 
     boardtestusers = (
@@ -298,21 +298,19 @@ def auth_user_testusers():
     userswitcher_group = Group.objects.get(name='Userswitcher Target')
     boardmember_group = Group.objects.get(name='EC-Board Member')
 
-    for testuser, testgroup, flags in testusers:
+    for testuser, testgroup in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number))
             if testgroup:
                 user.groups.add(Group.objects.get(name=testgroup))
             user.groups.add(userswitcher_group)
 
-            flags = flags.copy()
-            flags['is_testuser'] = True
+            user.profile.is_testuser = True
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
-                flags['is_help_writer'] = True
+                user.profile.is_help_writer = True
 
-            for key, value in flags.items():
-                setattr(user.profile, key, value)
+            user.profile.update_flags()
             user.profile.save()
 
     for testuser, medcategories in boardtestusers:
@@ -321,7 +319,7 @@ def auth_user_testusers():
         user.groups.add(userswitcher_group)
 
         user.profile.is_testuser = True
-        user.profile.is_board_member = True
+        user.profile.update_flags()
         user.profile.save()
 
         for medcategory in medcategories:

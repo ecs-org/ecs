@@ -14,11 +14,15 @@ class UserProfile(models.Model):
     is_indisposed = models.BooleanField(default=False)
     communication_proxy = models.ForeignKey(User, null=True)
 
+    # denormalized from user groups for faster lookup
     is_board_member = models.BooleanField(default=False)
+    is_resident_member = models.BooleanField(default=False)
     is_executive_board_member = models.BooleanField(default=False)
     is_insurance_reviewer = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
-    is_resident_member = models.BooleanField(default=False)
+    has_explicit_workflow = models.BooleanField(default=False)
+
+    # XXX: not backed by user groups
     is_help_writer = models.BooleanField(default=False)
     is_testuser = models.BooleanField(default=False)
 
@@ -46,8 +50,33 @@ class UserProfile(models.Model):
     def __str__(self):
         return str(self.user)
 
-    def has_explicit_workflow(self):
-        return self.user.groups.exclude(name__in=['External Reviewer', 'Userswitcher Target']).exists()
+    def update_flags(self):
+        groups = set(self.user.groups.values_list('name', flat=True))
+        self.is_board_member = 'EC-Board Member' in groups
+        self.is_resident_member = 'Resident Board Member' in groups
+        self.is_executive_board_member = 'EC-Executive Board Member' in groups
+        self.is_insurance_reviewer = 'EC-Insurance Reviewer' in groups
+        self.is_internal = bool(groups & {
+            'EC-Office',
+            'EC-Internal Reviewer',
+            'EC-Executive Board Member',
+            'EC-Signing',
+            'EC-Notification Reviewer',
+            'EC-Thesis Executive Group',
+            'EC-B2 Reviewer',
+            'EC-Paper Submission Reviewer',
+            'EC-Safety Report Reviewer',
+            'Local-EC Reviewer',
+            'EC-Vote Preparation',
+            'External Review Reviewer',
+        })
+        self.has_explicit_workflow = bool(groups - {
+            'External Reviewer',
+            'Userswitcher Target',
+            'Amendment Receiver',
+            'Meeting Protocol Receiver',
+        })
+
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')
