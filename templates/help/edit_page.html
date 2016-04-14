@@ -36,12 +36,6 @@
     $(function(){
         var textarea = $('#id_text');
 
-        var csrftoken = document.cookie.split('; ')
-            .find(function(el) {
-                return el.startsWith('csrftoken=');
-            })
-            .split('=', 2)[1];
-
         $('#ReST_italic').click(function(ev) {
             ev.preventDefault();
             var text = textarea.val(), t = textarea.get(0);
@@ -87,6 +81,7 @@
             preview.css(textarea.position());
             preview.css({width: textarea.width(), height: textarea.height()});
 
+            var csrftoken = document.cookie.match(/.*csrftoken=([^;]*).*/)[1];
             $.ajax({
                 url: '{% url 'ecs.help.views.preview_help_page_text' %}',
                 method: 'post',

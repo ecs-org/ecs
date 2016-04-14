@@ -35,11 +35,7 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                     textarea.trigger('input');
                 };
                 var update = function(q, initial) {
-                    var csrftoken = document.cookie.split('; ')
-                        .find(function(el) {
-                            return el.startsWith('csrftoken=');
-                        })
-                        .split('=', 2)[1];
+                    var csrftoken = document.cookie.match(/.*csrftoken=([^;]*).*/)[1];
                     $.get({
                         url: url + '?q=' + encodeURIComponent(q),
                         headers: {'X-CSRFtoken': csrftoken},

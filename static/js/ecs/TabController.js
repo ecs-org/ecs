@@ -117,8 +117,10 @@ ecs.TabController.prototype = {
             tabGroup.setSelected(true);
     },
     getTab: function(href) {
-        return this.tabs.find(function(tab) {
-            return tab.header.attr('href') == href;
-        });
+        for (var i = 0; i < this.tabs.length; i++) {
+            var tab = this.tabs[i];
+            if (tab.header.attr('href') == href)
+                return tab;
+        }
     }
 };
