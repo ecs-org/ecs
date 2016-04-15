@@ -16,7 +16,7 @@
             <b>{{ docstash.value.notification_type }}</b> für
         {% endif %}
         {{ docstash.name|default:"<i>Unbenannt</i>" }}
-        <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ docstash.current_version }})</div>
+        <div class="info">Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr</div>
         {% endwith %}
     {% else %}
     
