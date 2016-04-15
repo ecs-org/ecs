@@ -1,0 +1,15 @@
+{% extends 'notifications/answers/wkhtml2pdf/base.html' %}
+{% load notifications %}
+{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>Zentrumsschließung{% endblock %}
+
+{% block study_info %}
+    {{ block.super }}
+    <h4>Angaben zum Zentrum</h4>
+    {% with investigator=notification.centerclosenotification.investigator %}
+        <p>
+            <b>Prüfzentrum:</b> {{ investigator.organisation }}<br />
+            <b>Ethik-Kommission:</b> {{ investigator.ethics_commission.name }}<br />
+            <b>Prüfarzt:</b> {{ investigator.contact }}<br />
+        </p>
+    {% endwith %}
+{% endblock %}

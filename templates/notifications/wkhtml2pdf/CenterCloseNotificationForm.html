@@ -1,0 +1,33 @@
+{% extends 'notifications/wkhtml2pdf/base.html' %}
+
+{% block typeoptions %}
+    <h1>{{ notification.type.name }}</h1>
+{% endblock %}
+
+{% block mainitem %}
+    {{ block.super }}
+
+    <h3>4. Angaben zum Zentrum</h3>
+    {% with investigator=notification.centerclosenotification.investigator %}
+        <table class="full_width">
+            <tbody>
+                <tr>
+                    <td width="25%">4.1 Prüfzentrum</td>
+                    <td class="value">{{ investigator.organisation }}</td>
+                </tr>
+                <tr>
+                    <td width="25%">4.2 Ethik-Kommission</td>
+                    <td class="value">{{ investigator.ethics_commission.name }}</td>
+                </tr>
+                <tr>
+                    <td width="25%">4.3 Prüfarzt</td>
+                    <td class="value">{{ investigator.contact }}</td>
+                </tr>
+                <tr>
+                    <td width="25%">4.4 Datum der Schließung</td>
+                    <td class="value">{{ notification.centerclosenotification.close_date|date:'d.m.Y' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endwith %}
+{% endblock %}

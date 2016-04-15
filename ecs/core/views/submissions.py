@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404, JsonResponse
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms.models import model_to_dict
-from django.db.models import Q, Prefetch, Min
+from django.db.models import Q, Prefetch, Min, F
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
@@ -31,7 +31,9 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import make_checklist_form
-from ecs.notifications.models import Notification, NotificationType
+from ecs.notifications.models import (
+    Notification, NotificationType, CenterCloseNotification,
+)
 
 from ecs.core.workflow import ChecklistReview, RecommendationReview
 
@@ -266,6 +268,20 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'temporary_auth': submission.temp_auth.order_by('end'),
         'temporary_auth_form': TemporaryAuthorizationForm(),
     }
+
+    center_close_notifications = CenterCloseNotification.objects.filter(
+        answer__published_at__isnull=False, answer__is_rejected=False,
+        investigator__submission_form__submission_id=submission.id
+    ).annotate(
+        organisation=F('investigator__organisation'),
+        ethics_commission_id=F('investigator__ethics_commission_id')
+    ).values('organisation', 'ethics_commission_id', 'close_date')
+    for form in formsets['investigator']:
+        for n in center_close_notifications:
+            if n['organisation'] == form.initial['organisation'] and \
+                n['ethics_commission_id'] == form.initial['ethics_commission']:
+                form.close_date = n['close_date']
+                break
 
     presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:

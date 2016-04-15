@@ -11,6 +11,7 @@ urlpatterns = (
     url(r'^doc/upload/(?P<docstash_key>.+)/$', views.upload_document_for_notification),
     url(r'^doc/delete/(?P<docstash_key>.+)/$', views.delete_document_from_notification),
     url(r'^submission_data_for_notification/$', views.submission_data_for_notification),
+    url(r'^investigators_for_notification/$', views.investigators_for_notification),
     url(r'^(?P<notification_pk>\d+)/$', views.view_notification),
     url(r'^(?P<notification_pk>\d+)/pdf/$', views.notification_pdf),
     url(r'^(?P<notification_pk>\d+)/doc/(?P<document_pk>\d+)/$', views.download_document),

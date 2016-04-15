@@ -1,0 +1,5 @@
+{% for investigator in investigators %}
+    <option value="{{ investigator.pk }}">
+        {{ investigator.organisation }} (Prüfarzt: {{ investigator.contact }})
+    </option>
+{% endfor %}

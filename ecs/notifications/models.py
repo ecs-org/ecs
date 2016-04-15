@@ -170,6 +170,11 @@ class SafetyNotification(Notification):
     reviewer = models.ForeignKey('auth.User', null=True)
 
 
+class CenterCloseNotification(Notification):
+    investigator = models.ForeignKey('core.Investigator', related_name="closed_by_notification")
+    close_date = models.DateField()
+
+
 @reversion.register(fields=('text',))
 class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
@@ -248,5 +253,5 @@ class NotificationAnswer(models.Model):
 
 NOTIFICATION_MODELS = (
     Notification, CompletionReportNotification, ProgressReportNotification,
-    AmendmentNotification, SafetyNotification
+    AmendmentNotification, SafetyNotification, CenterCloseNotification,
 )

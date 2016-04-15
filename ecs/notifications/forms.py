@@ -2,10 +2,13 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.notifications.models import NotificationAnswer
-from ecs.core.models import SubmissionForm
+from ecs.core.models import SubmissionForm, Investigator
 from ecs.users.utils import get_current_user
 from ecs.utils.formutils import require_fields
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, AmendmentNotification, SafetyNotification
+from ecs.notifications.models import (
+    Notification, CompletionReportNotification, ProgressReportNotification,
+    AmendmentNotification, SafetyNotification, CenterCloseNotification,
+)
 from ecs.core.forms.fields import DateField
 
 
@@ -102,6 +105,22 @@ class CompletionReportNotificationForm(SingleStudyNotificationForm):
 
     class Meta:
         model = CompletionReportNotification
+        exclude = SingleStudyNotificationForm._meta.exclude
+
+
+class CenterCloseNotificationForm(SingleStudyNotificationForm):
+    close_date = DateField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        super(CenterCloseNotificationForm, self).__init__(*args, **kwargs)
+        queryset = Investigator.objects.filter(
+            submission_form_id__in=get_usable_submission_forms().values('id'))
+        self.fields['investigator'].queryset = queryset
+        if queryset.count() == 1:
+            self.fields['investigator'].empty_label = None
+
+    class Meta:
+        model = CenterCloseNotification
         exclude = SingleStudyNotificationForm._meta.exclude
 
 

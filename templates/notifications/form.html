@@ -112,6 +112,7 @@
             var submissionFormsSelect = $('#id_submission_forms');
             var submissionFormSelect = $('#id_submission_form');
             var submissionDataDisplay = $('<div/>', {'class': 'submission_data'});
+            var investigatorSelect = $('#id_investigator');
 
             submissionFormsSelect.add(submissionFormSelect).parents('li')
                 .append(submissionDataDisplay);
@@ -131,9 +132,23 @@
             submissionFormsSelect.change()
 
             submissionFormSelect.change(function(ev) {
-                loadSubmissionFormData([$(this).val()])
+                var pk = submissionFormSelect.val();
+                var investigator_pk = investigatorSelect.val();
+                loadSubmissionFormData([pk]);
+                if (investigatorSelect.length) {
+                    investigatorSelect.html('');
+                    if (pk) {
+                        investigatorSelect.load(
+                            '{% url 'ecs.notifications.views.investigators_for_notification' %}',
+                            'submission_form=' + pk,
+                            function() {
+                                investigatorSelect.val(investigator_pk);
+                            }
+                        );
+                    }
+                }
             });
-            submissionFormSelect.change()
+            submissionFormSelect.change();
 
             $('.upload_container').load(
                 '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');

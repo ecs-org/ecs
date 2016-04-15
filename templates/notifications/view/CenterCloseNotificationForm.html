@@ -1,0 +1,32 @@
+{% extends 'notifications/view/base.html' %}
+{% load i18n %}
+
+{% block notification_header %}
+    {% trans 'Type' %}: {{ notification.safetynotification.get_safety_type_display }}</h3>
+{% endblock %}
+
+{% block table_rows %}
+    <tr>
+        <th>Zentrum</th>
+        <td>
+            {% with investigator=notification.centerclosenotification.investigator %}
+                <dl>
+                    <dt>Prüfzentrum</dt>
+                    <dd>{{ investigator.organisation }}</dd>
+
+                    <dt>Ethik-Kommission</dt>
+                    <dd>{{ investigator.ethics_commission.name }}</dd>
+
+                    <dt>Prüfarzt</dt>
+                    <dd>{{ investigator.contact }}</dd>
+
+                </dl>
+            {% endwith %}
+        </td>
+    </tr>
+        <th>Datum der Schließung</th>
+        <td>{{ notification.centerclosenotification.close_date|date:'d.m.Y' }}</td>
+    <tr>
+
+    {{ block.super }}
+{% endblock %}

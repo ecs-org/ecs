@@ -7,7 +7,7 @@ from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
     SafetyNotificationReview, FinalAmendmentReview, FinalAmendmentSigningReview,
     SignNotificationAnswer, AmendmentReview, SimpleNotificationReview, is_susar,
-    is_report, is_amendment, is_rejected, is_rejected_and_final,
+    is_report, is_center_close, is_amendment, is_rejected, is_rejected_and_final,
     needs_further_review, needs_executive_group_review, needs_insurance_group_review,
     needs_notification_group_review,
 )
@@ -59,6 +59,16 @@ def notification_types():
             finishes_study = False,
             position = 4,
         ),
+        dict(
+            name = "Zentrumsschließung",
+            form = "ecs.notifications.forms.CenterCloseNotificationForm",
+            default_response = "Die Kommission nimmt diese Meldung ohne Einspruch zur Kenntnis.",
+            includes_diff = False,
+            grants_vote_extension = False,
+            is_rejectable = True,
+            finishes_study = False,
+            position = 5,
+        ),
     )
 
     objs = set()
@@ -102,6 +112,7 @@ def notification_workflow():
         edges={
             ('start', 'safety_review'): Args(guard=is_susar),
             ('start', 'office_report_review'): Args(guard=is_report),
+            ('start', 'office_report_review'): Args(guard=is_center_close),
             ('start', 'initial_amendment_review'): Args(guard=is_amendment),
 
             # safety reports

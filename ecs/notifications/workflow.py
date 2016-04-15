@@ -3,7 +3,10 @@ from django.utils.translation import ugettext as _
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
-from ecs.notifications.models import Notification, CompletionReportNotification, ProgressReportNotification, SafetyNotification, NOTIFICATION_MODELS
+from ecs.notifications.models import (
+    Notification, CompletionReportNotification, ProgressReportNotification,
+    SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
+)
 from ecs.notifications.signals import on_safety_notification_review
 from ecs.notifications.constants import NOTIFICATION_REVIEW_LANE_CHOICES
 
@@ -31,6 +34,10 @@ def is_susar(wf):
 @guard(model=Notification)
 def is_report(wf):
     return CompletionReportNotification.objects.filter(pk=wf.data.pk).exists() or ProgressReportNotification.objects.filter(pk=wf.data.pk).exists()
+
+@guard(model=Notification)
+def is_center_close(wf):
+    return CenterCloseNotification.objects.filter(pk=wf.data.pk).exists()
 
 @guard(model=Notification)
 def is_amendment(wf):

@@ -5,17 +5,19 @@ from django.core.urlresolvers import reverse
 from django.template import loader
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
-from django.db import models
+from django.db.models import Min, Q
 
 from ecs.utils.viewutils import render_html, render_pdf, redirect_to_next_url
 from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
-from ecs.core.models import SubmissionForm
+from ecs.core.models import SubmissionForm, Investigator
 from ecs.documents.models import Document
 from ecs.tracking.decorators import tracking_hint
-from ecs.notifications.models import Notification, NotificationType, NotificationAnswer
+from ecs.notifications.models import (
+    Notification, NotificationType, NotificationAnswer, CenterCloseNotification,
+)
 from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
 from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import handle_download, upload_document, delete_document
@@ -31,7 +33,7 @@ def _get_notification_template(notification, pattern):
 @readonly()
 def open_notifications(request):
     title = _('Open Notifications')
-    notifications =  Notification.objects.pending().annotate(min_ecn=models.Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+    notifications =  Notification.objects.pending().annotate(min_ecn=Min('submission_forms__submission__ec_number')).order_by('min_ecn')
     stashed_notifications = DocStash.objects.filter(
         owner=request.user, group='ecs.notifications.views.create_notification',
         current_version__gte=0)
@@ -78,6 +80,31 @@ def submission_data_for_notification(request):
     submission_forms = list(SubmissionForm.objects.filter(pk__in=pks))
     return render(request, 'notifications/submission_data.html', {
         'submission_forms': submission_forms,
+    })
+
+
+@readonly()
+def investigators_for_notification(request):
+    submission_form = get_object_or_404(SubmissionForm, pk=request.GET['submission_form'])
+
+    investigators = submission_form.investigators.all()
+
+    closed_investigators = Investigator.objects.filter(
+        submission_form__submission_id=submission_form.submission.id,
+        id__in=CenterCloseNotification.objects.filter(
+            Q(answer__published_at=None) |
+            Q(answer__published_at__isnull=False, answer__is_rejected=False)
+        ).values('investigator_id')
+    ).values('organisation', 'ethics_commission_id')
+
+    for inv in closed_investigators:
+        investigators = investigators.exclude(
+            organisation=inv['organisation'],
+            ethics_commission_id=inv['ethics_commission_id']
+        )
+
+    return render(request, 'notifications/investigators.html', {
+        'investigators': investigators,
     })
 
 

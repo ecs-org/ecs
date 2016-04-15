@@ -1,7 +1,11 @@
 from django.utils.translation import ugettext as _
 
-from ecs.notifications.forms import (NotificationForm, ProgressReportNotificationForm,
-    CompletionReportNotificationForm, SingleStudyNotificationForm, AmendmentNotificationForm, SafetyNotificationForm)
+from ecs.notifications.forms import (
+    NotificationForm, ProgressReportNotificationForm,
+    CompletionReportNotificationForm, SingleStudyNotificationForm,
+    AmendmentNotificationForm, SafetyNotificationForm,
+    CenterCloseNotificationForm,
+)
 
 
 class Tab(object):
@@ -224,6 +228,15 @@ NOTIFICATION_FORM_TABS[ProgressReportNotificationForm] = [
         ]),
         ('SAE / SUSAR', [
             'SAE_count', 'SUSAR_count',
+        ]),
+    ]),
+    Tab('documents', _('documents'), []),
+]
+
+NOTIFICATION_FORM_TABS[CenterCloseNotificationForm] = [
+    Tab('general_information', _('General information'), [
+        (_('General information'), [
+            'submission_form', 'investigator', 'close_date', 'comments',
         ]),
     ]),
     Tab('documents', _('documents'), []),

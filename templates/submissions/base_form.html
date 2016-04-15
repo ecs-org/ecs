@@ -112,6 +112,13 @@
                                     </div>
                                 {% endif %}
                                 <div class="field">
+                                    {% if form.close_date %}
+                                        <p class="text-xs-center font-weight-bold">
+                                            <span class="fa fa-info"></span>
+                                            Dieses Zentrum wurde am {{ form.close_date|date:'d.m.Y' }} geschlossen.
+                                        </p>
+                                    {% endif %}
+
                                     <div class="investigator_form">
                                         {% for hidden in form.hidden_fields %}
                                             {{ hidden }}
