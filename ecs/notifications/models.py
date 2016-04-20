@@ -242,13 +242,12 @@ class NotificationAnswer(models.Model):
             if finish:
                 submission.finish()
             presenting_parties = submission.current_submission_form.get_presenting_parties()
-            cc_groups = settings.ECS_AMENDMENT_RECEIVER_GROUPS if self.notification.type.includes_diff else ()
             _ = ugettext
             presenting_parties.send_message(_('New Notification Answer'), 'notifications/answers/new_message.txt', context={
                 'notification': self.notification,
                 'answer': self,
                 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
-            }, submission=submission, cc_groups=cc_groups)
+            }, submission=submission)
 
 
 NOTIFICATION_MODELS = (

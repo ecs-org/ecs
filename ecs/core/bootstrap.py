@@ -144,7 +144,6 @@ def auth_groups():
         'Userswitcher Target',
         'External Reviewer',
         'External Review Reviewer',
-        'Amendment Receiver',
         'Meeting Protocol Receiver',
         'Resident Board Member',
         'Help Writer',

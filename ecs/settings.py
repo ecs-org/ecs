@@ -225,7 +225,6 @@ ETHICS_COMMISSION_UUID = '23d805c6b5f14d8b9196a12005fd2961'
 # users in these groups receive messages even when they are not related to studies
 ECS_MEETING_AGENDA_RECEIVER_GROUPS = ('Resident Board Member',)
 ECS_MEETING_PROTOCOL_RECEIVER_GROUPS = ('Meeting Protocol Receiver', 'Resident Board Member')
-ECS_AMENDMENT_RECEIVER_GROUPS = ('Amendment Receiver',)
 
 ECS_AMG_MPG_VOTE_RECEIVERS = ('BASG.EKVoten@ages.at',)
 

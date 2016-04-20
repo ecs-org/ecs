@@ -72,7 +72,6 @@ class UserProfile(models.Model):
         self.has_explicit_workflow = bool(groups - {
             'External Reviewer',
             'Userswitcher Target',
-            'Amendment Receiver',
             'Meeting Protocol Receiver',
         })
 
