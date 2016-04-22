@@ -203,7 +203,7 @@ ecs.setupDocumentUploadForms = function(){
     var file_field = $('#id_document-file');
     var name_field = $('#id_document-name');
     file_field.change(function() {
-        var name = file_field.val().split('\\').slice(0)[0];
+        var name = file_field.val().split('\\').pop();
 
         var dot_offset = name.lastIndexOf('.');
         if (dot_offset >= 0)
