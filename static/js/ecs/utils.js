@@ -209,8 +209,7 @@ ecs.setupDocumentUploadForms = function(){
         if (dot_offset >= 0)
             name = name.substring(0, dot_offset);
 
-        if (!name_field.attr('disabled'))
-            name_field.val(name);
+        name_field.val(name);
     });
 
     $('.doclist a.replace_document').click(function(ev) {
@@ -226,7 +225,7 @@ ecs.setupDocumentUploadForms = function(){
 
         form.find('select[name="document-doctype"]')
             .val(link.data('documentType'))
-            .attr('disabled', true);
+            .attr('readonly', true);
     });
 
     $('#tabs-11 a.new_document').click(function(ev) {
@@ -241,7 +240,7 @@ ecs.setupDocumentUploadForms = function(){
 
         form.find('select[name="document-doctype"]')
             .val(null)
-            .attr('disabled', false);
+            .attr('readonly', false);
     });
 
     $('.doclist a.delete_document').click(function(ev) {

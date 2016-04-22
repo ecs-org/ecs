@@ -13,9 +13,7 @@ PDF_MAGIC = b'%PDF'
 class DocumentForm(forms.ModelForm):
     file = forms.FileField(required=True)
     doctype = forms.ModelChoiceField(
-        queryset=DocumentType.objects.exclude(is_hidden=True).order_by('identifier'),
-        required=False,
-    )
+        queryset=DocumentType.objects.exclude(is_hidden=True).order_by('identifier'))
     date = DateField(required=True)
 
     def clean_file(self):
@@ -39,16 +37,9 @@ class DocumentForm(forms.ModelForm):
 
     def clean(self):
         cd = super(DocumentForm, self).clean()
-        replaced_document = cd.get('replaces_document', None)
-
-        if not replaced_document:
-            require_fields(self, ('doctype',))
-            self.fields['doctype'].required = True
-            if 'doctype' in cd.keys() and not cd['doctype']:
-                del cd['doctype']
-        else:
-            cd['doctype'] = getattr(replaced_document, 'doctype')
-
+        replaced_document = cd.get('replaces_document')
+        if replaced_document:
+            cd['doctype'] = replaced_document.doctype
         return cd
 
     def save(self, commit=True):
