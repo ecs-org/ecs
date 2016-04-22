@@ -3695,14 +3695,6 @@ msgstr "Es existieren derzeit keine Studienmeldungen."
 msgid "Changes"
 msgstr "Änderungen"
 
-#: templates/notifications/view/AmendmentNotificationForm.html:10
-msgid "Old Version"
-msgstr "Alte Version"
-
-#: templates/notifications/view/AmendmentNotificationForm.html:11
-msgid "New Version"
-msgstr "Neue Version"
-
 #: templates/notifications/view/ReportNotificationForm.html:5
 msgid "Has the study been started?"
 msgstr "Wurde die Studie begonnen?"
