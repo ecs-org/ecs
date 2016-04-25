@@ -142,22 +142,31 @@ class ListDiffNode(DiffNode):
             differ = _differs[self.old[0].__class__]
         elif self.new:
             differ = _differs[self.new[0].__class__]
+        else:
+            self.diffs = []
+            return
 
-        if differ:
-            fields = differ.get_field_names()
-            key = lambda x: [getattr(x, f) for f in fields]
-            self.old = sorted(self.old, key=key)
-            self.new = sorted(self.new, key=key)
+        fields = differ.get_field_names()
+        key = lambda x: [getattr(x, f) for f in fields]
+        self.old = sorted(self.old, key=key)
+        self.new = sorted(self.new, key=key)
 
         diffs = []
-        for old, new in zip(self.old, self.new):
+        for old in self.old:
+            omf = [getattr(old, f) for f in differ.match_fields]
+            for new in self.new:
+                nmf = [getattr(new, f) for f in differ.match_fields]
+                if omf == nmf:
+                    self.new.remove(new)
+                    break
+            else:
+                diffs.append(('-', diff_model_instances(old, None, ignore_new=True)))
+                continue
             item_diff = diff_model_instances(old, new, ignore_old=self.ignore_old, ignore_new=self.ignore_new)
             if item_diff:
                 diffs.append(('~', item_diff))
-            
-        common_len = min(len(self.old), len(self.new))
-        diffs += [('-', diff_model_instances(old, None, ignore_new=True)) for old in self.old[common_len:]]
-        diffs += [('+', diff_model_instances(None, new, ignore_old=True)) for new in self.new[common_len:]]
+
+        diffs += [('+', diff_model_instances(None, new, ignore_old=True)) for new in self.new]
         
         diffs.sort(key=lambda d: d[1].identity)
         self.diffs = diffs
@@ -238,17 +247,22 @@ def _render_value(val):
 class ModelDiffer(object):
     exclude = ()
     fields = ()
+    match_fields = None
     follow = ()
     identify = None
     label_map = {}
 
-    def __init__(self, model=None, exclude=None, fields=None, follow=None, identify=None, label_map=None, node_map=None):
+    def __init__(self, model=None, exclude=None, fields=None, match_fields=None,
+        follow=None, identify=None, label_map=None, node_map=None):
+
         if model:
             self.model = model
         if exclude:
             self.exclude = exclude
         if fields:
             self.fields = fields
+        if match_fields:
+            self.match_fields = match_fields
         if follow:
             self.follow = follow
         if identify:
@@ -394,7 +408,8 @@ _differs = {
         ]),
     ),
     Investigator: ModelDiffer(Investigator,
-        exclude=('id', 'submission_form',),
+        exclude=('id', 'submission_form'),
+        match_fields=('organisation', 'ethics_commission'),
         follow=('employees',),
         identify='organisation',
         label_map={
@@ -403,18 +418,22 @@ _differs = {
     ),
     InvestigatorEmployee: ModelDiffer(InvestigatorEmployee,
         exclude=('id', 'investigator'), 
+        match_fields=('firstname', 'surname'),
         identify='full_name',
     ),
     Measure: ModelDiffer(Measure, 
         exclude=('id', 'submission_form'), 
+        match_fields=('category', 'type'),
         identify='type',
     ),
     NonTestedUsedDrug: ModelDiffer(NonTestedUsedDrug,
         exclude=('id', 'submission_form'),
+        match_fields=('generic_name', 'preparation_form'),
         identify='generic_name',
     ),
     ForeignParticipatingCenter: ModelDiffer(ForeignParticipatingCenter,
         exclude=('id', 'submission_form',),
+        match_fields=('name',),
         identify='name',
     ),
     EthicsCommission: AtomicModelDiffer(),
