@@ -90,7 +90,7 @@ def decrypt_verify(sourcefile, gpghome, decrypt_owner, verify_owner=None):
     p = subprocess.Popen(cmd, stdout=destfile, stderr=subprocess.PIPE)
     out, err = p.communicate()
     if p.returncode != 0:
-        raise subprocess.CalledProcessError(p.returncode, cmd)
+        raise subprocess.CalledProcessError(p.returncode, 'gpg')
 
     if verify_owner is not None:
         err = err.decode('utf-8')
