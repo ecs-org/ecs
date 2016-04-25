@@ -862,14 +862,10 @@ class InvestigatorEmployee(models.Model):
     
     @property
     def full_name(self):
-        name = []
+        name = [self.firstname, self.surname]
         if self.title:
-            name.append(self.title)
-        if self.firstname:
-            name.append(self.firstname)
-        if self.surname:
-            name.append(self.surname)
-        return " ".join(name)
+            name.insert(0, self.title)
+        return ' '.join(name)
     
     @property
     def geschlecht_string(self):
