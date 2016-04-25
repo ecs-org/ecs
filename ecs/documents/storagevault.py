@@ -27,7 +27,6 @@ Usage
 '''
 
 import os
-import errno
 
 from django.conf import settings
 
@@ -55,12 +54,7 @@ class StorageVault(object):
     def __setitem__(self, identifier, f):
         path = self._gen_path(identifier)
         assert not os.path.exists(path)
-
-        try:
-            os.makedirs(os.path.dirname(path))
-        except OSError as e:
-            if not e.errno == errno.EEXIST:
-                raise
+        os.makedirs(os.path.dirname(path), exist_ok=True)
 
         gpgutils.encrypt_sign(
             f, path,
