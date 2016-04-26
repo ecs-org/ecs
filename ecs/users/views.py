@@ -316,8 +316,8 @@ def administration(request, limit=20):
 
     filter_defaults = {
         'page': '1',
-        'groups': '',
-        'medical_categories': '',
+        'groups': [],
+        'medical_categories': [],
         'activity': 'active',
         'keyword': '',
     }
