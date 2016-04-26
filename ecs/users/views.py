@@ -328,9 +328,6 @@ def administration(request, limit=20):
 
     users = User.objects.all()
 
-    import logging
-    logging.info('GROUPS {!r}'.format(filterform.cleaned_data['groups']))
-
     if filterform.cleaned_data['activity'] == 'active':
         users = users.filter(is_active=True)
     elif filterform.cleaned_data['activity'] == 'inactive':
@@ -370,8 +367,6 @@ def administration(request, limit=20):
     userfilter['medical_categories'] = list(userfilter['medical_categories'].values_list('pk', flat=True))
     usersettings.useradministration_filter = userfilter
     usersettings.save()
-
-    logging.info('USERFILTER {!r}'.format(userfilter))
 
     return render(request, 'users/administration.html', {
         'users': users,
