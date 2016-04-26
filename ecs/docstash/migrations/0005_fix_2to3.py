@@ -177,7 +177,7 @@ def fix_2to3(apps, schema_editor):
         assert(json.loads(json.dumps(value)) == value)
 
         data.value = PickledObject(base64.b64encode(zlib.compress(pickle.dumps(value))).decode())
-        data.save()
+        data.save(update_fields=['value'])
 
 
 class Migration(migrations.Migration):

@@ -14,7 +14,7 @@ def pickle_to_json(apps, schema_editor):
     for docstash in DocStash.objects.all():
         value = pickle.loads(zlib.decompress(base64.b64decode(docstash.old_value)))
         docstash.value = value
-        docstash.save()
+        docstash.save(update_fields=['value'])
 
 
 class Migration(migrations.Migration):
