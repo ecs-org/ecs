@@ -23,7 +23,7 @@
   </form>
   <a href="" id="help_button" class="help_trigger icon_help" title="{% trans "Click here to get help." %}">help</a>
   {% get_scratchpad as scratchpad %}
-  <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="scratchpad{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %} {% if not scratchpad or scratchpad.is_empty %} ({% trans "Empty" %}){% endif %}">S</a>
+  <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" id="scratchpad_button" class="scratchpad{% if not scratchpad or scratchpad.is_empty %} empty{% endif %}" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %}">S</a>
   {% if user|has_flag:"is_internal" %}
     {% get_breadcrumbs as crumbs %}
     {% if crumbs %}
