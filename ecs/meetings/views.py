@@ -14,19 +14,20 @@ from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.core.cache import cache
-from django.db.models import Q
+from django.db.models import Q, Max, Prefetch
 from django.utils import timezone
 from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, MedicalCategory
+from ecs.core.models import Submission, SubmissionForm, MedicalCategory
 from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
 from ecs.tasks.models import Task
 from ecs.communication.mailutils import deliver
+from ecs.notifications.models import NotificationAnswer, AmendmentNotification
 
 from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
@@ -169,6 +170,49 @@ def submission_list(request, meeting=None):
         'tops': tops,
         'active_top_pk': active_top_pk,
     })
+
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
+def notification_list(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
+    b1ized = Vote.unfiltered.filter(
+        result='1', upgrade_for__result='2', published_at__isnull=False
+    ).select_related(
+        'submission_form', 'submission_form__submission',
+        'submission_form__submitter', 'submission_form__submitter__profile',
+    ).order_by('submission_form__submission__ec_number')
+
+    answers = NotificationAnswer.unfiltered.exclude(
+        notification__in=AmendmentNotification.unfiltered.all(), signed_at__isnull=False
+    ).exclude(published_at=None).select_related(
+        'notification', 'notification__type',
+        'notification__safetynotification',
+        'notification__centerclosenotification'
+    ).prefetch_related(
+        Prefetch('notification__submission_forms',
+            queryset=SubmissionForm.unfiltered.select_related('submission'))
+    ).order_by(
+        'notification__type__position',
+        'notification__safetynotification__safety_type', 'published_at'
+    )
+
+    start = Meeting.objects.filter(start__lt=meeting.start).aggregate(
+        Max('protocol_sent_at'))['protocol_sent_at__max']
+    if start:
+        b1ized = b1ized.filter(published_at__gt=start)
+        answers = answers.filter(published_at__gt=start)
+
+    end = meeting.protocol_sent_at
+    if end:
+        b1ized = b1ized.filter(published_at__lte=end)
+        answers = answers.filter(published_at__lte=end)
+
+    return render(request, 'meetings/tabs/notifications.html', {
+        'meeting': meeting,
+        'b1ized': b1ized,
+        'answers': answers,
+    })
+
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):

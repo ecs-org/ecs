@@ -31,6 +31,7 @@ class Vote(models.Model):
     changed_after_voting = models.BooleanField(default=False)
     
     objects = VoteManager()
+    unfiltered = models.Manager()
 
     class Meta:
         get_latest_by = 'published_at'

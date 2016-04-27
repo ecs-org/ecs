@@ -85,6 +85,7 @@ class Notification(models.Model):
     review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)
     
     objects = NotificationManager()
+    unfiltered = models.Manager()
     
     def __str__(self):
         return "%s für %s" % (self.type, " + ".join(str(sf.submission) for sf in self.submission_forms.all()))
@@ -187,6 +188,7 @@ class NotificationAnswer(models.Model):
     published_at = models.DateTimeField(null=True)
     
     objects = AuthorizationManager()
+    unfiltered = models.Manager()
 
     @property
     def version_number(self):

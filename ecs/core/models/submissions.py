@@ -307,6 +307,7 @@ class SubmissionForm(models.Model):
     current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     objects = SubmissionFormManager()
+    unfiltered = models.Manager()
     
     # 1.4 (via self.documents)
 
