@@ -368,11 +368,12 @@ except ImportError:
     pass
 
 # try to get ECS_VERSION, ECS_GIT_REV from version.py
-if not all([k in locals() for k in ['ECS_VERSION', 'ECS_GIT_REV']]):
+if not all([k in locals() for k in ['ECS_VERSION', 'ECS_GIT_REV', 'ECS_GIT_BRANCH']]):
     try:
-        from ecs.version import ECS_VERSION, ECS_GIT_REV
+        from ecs.version import ECS_VERSION, ECS_GIT_REV, ECS_GIT_BRANCH
     except ImportError:
         ECS_VERSION = 'unknown'
+        ECS_GIT_BRANCH = 'unknown'
         ECS_GIT_REV = 'badbadbadbadbadbadbadbadbadbadbadbadbad0'
 
 # apply local overrides
@@ -400,13 +401,14 @@ if 'SECURE_PROXY_SSL' in locals() and SECURE_PROXY_SSL:
 if 'SENTRY_DSN' in locals():
     import raven
     from raven.transport.threaded_requests import ThreadedRequestsHTTPTransport
-    from raven.transport.requests import RequestsHTTPTransport
+    # if no threading support: from raven.transport.requests import RequestsHTTPTransport
     RAVEN_CONFIG = {
         'dsn': SENTRY_DSN,
         'release': ECS_GIT_REV,
         'transport': ThreadedRequestsHTTPTransport,
         'site': AUTHORITATIVE_DOMAIN,
     }
+    SENTRY_CLIENT = 'ecs.utils.ravenutils.DjangoClient'
 
 # user switcher
 if 'ECS_USERSWITCHER' not in locals():
