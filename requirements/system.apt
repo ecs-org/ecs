@@ -49,3 +49,9 @@ ghostscript
 gnupg
 pdftk
 qpdf
+
+# webserver
+nginx
+
+# container process control
+supervisor
