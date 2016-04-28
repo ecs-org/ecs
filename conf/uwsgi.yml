@@ -1,0 +1,9 @@
+uwsgi:
+  master: true
+  workers: 4
+  enable-threads: true
+  uwsgi-socket: 127.0.0.1:8000
+  pidfile: /app/uwsgi.pid
+  buffer-size: 8192
+  chdir: /app/ecs
+  module: ecs.wsgi
