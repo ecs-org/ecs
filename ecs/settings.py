@@ -257,10 +257,10 @@ ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-help"))
 STORAGE_VAULT = {
     'dir': os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault'),
     'gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-gpg'),
-    'encrypt_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_encrypt.pub'),
-    'signing_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_sign.sec'),
-    'decrypt_key': os.path.join(PROJECT_DIR, 'defaults', 'storagevault_encrypt.sec'),
-    'verify_key':  os.path.join(PROJECT_DIR, 'defaults', 'storagevault_sign.pub'),
+    'encrypt_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_encrypt.pub'),
+    'signing_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_sign.sec'),
+    'decrypt_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_encrypt.sec'),
+    'verify_key':  os.path.join(PROJECT_DIR, 'conf', 'storagevault_sign.pub'),
     'encryption_uid': 'ecs_mediaserver',
     'signature_uid': 'ecs_authority',
 }
@@ -360,7 +360,7 @@ except ImportError:
 
 # overwrite settings from environment if they exist
 try:
-    from defaults.env_settings import *
+    from ecs.env_settings import *
 except ImportError:
     pass
 
