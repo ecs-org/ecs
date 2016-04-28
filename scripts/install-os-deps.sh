@@ -1,7 +1,6 @@
 #!/bin/bash
 
-selfname=`echo $(cd $(dirname "$0") && pwd -L)/$(basename "$0")`
-selfpath=`dirname $selfname`
+realpath=`dirname $(readlink -e "$0")`
 arch=$(dpkg --print-architecture)
 
 function filter_list(){
@@ -18,7 +17,7 @@ apt-get -y install python-pip
 pip install --upgrade pip
 
 echo "install system dependencies"
-filter_list ${selfpath}/../requirements/system.apt | xargs apt-get install -y;
+filter_list ${realpath}/../requirements/system.apt | xargs apt-get install -y;
 
 if test "$1" = "--with-postgres-server"; then
   echo "install a postgres server"

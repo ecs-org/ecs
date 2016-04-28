@@ -1,8 +1,7 @@
 #!/bin/bash
 
-selfname=`echo $(cd $(dirname "$0") && pwd -L)/$(basename "$0")`
-selfpath=`dirname $selfname`
-defreq="${selfpath}/../requirements/all.freeze"
+realpath=`dirname $(readlink -e "$0")`
+defreq="${realpath}/../requirements/all.freeze"
 
 if test -z "$1"; then
   cat <<EOF
