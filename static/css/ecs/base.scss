@@ -139,7 +139,7 @@ p {
     margin-bottom: 12px;
 }
 
-ul {
+ul:not(.list-group):not(.list-unstyled) {
     margin: 0 0 12px 20px;
 }
 
