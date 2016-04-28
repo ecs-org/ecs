@@ -28,6 +28,13 @@ if os.getenv('MEMCACHED_URL'):
         }
     }
 
+if os.getenv('REDIS_URL'):
+    BROKER_URL = os.getenv('REDIS_URL')
+    BROKER_TRANSPORT_OPTIONS = {'fanout_prefix': True,
+        'fanout_patterns': True}
+    CELERY_RESULT_BACKEND = os.getenv('REDIS_URL')
+    CELERY_ALWAYS_EAGER = False
+
 if os.getenv('DEBUG'):
     DEBUG = str2bool(os.getenv('DEBUG'))
 
