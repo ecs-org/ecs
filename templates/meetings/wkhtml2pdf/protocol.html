@@ -57,7 +57,7 @@
     {% endfor %}
 
     {% if b1ized.exists %}
-        <span class="bold">Folgende Tagesordnungspunkte wurden nach der Sitzung vom {{ meeting.start|date:'d.m.Y' }} von der Tagesordnung genommen und sind zwischenzeitlich positiv erledigt:</span><br />
+        <span class="bold">Folgende Tagesordnungspunkte wurden seit der letzten Sitzung positiv erledigt:</span><br />
         <br />
         {% for b1 in b1ized.all %}
             {% with b1.get_submission as submission %}
