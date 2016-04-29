@@ -32,7 +32,6 @@ from ecs.votes.models import Vote
 from ecs.notifications.models import Notification
 from ecs.users.utils import get_current_user
 from ecs.docstash.models import DocStash
-from ecs.meetings.models import Meeting
 from ecs.utils.viewutils import render_pdf_context
 from ecs.tasks.models import Task
 
@@ -242,6 +241,7 @@ class Submission(models.Model):
             duration = timedelta(minutes=7, seconds=30)
             if not visible:
                 duration = timedelta(minutes=0)
+            from ecs.meetings.models import Meeting
             meeting = Meeting.objects.next_schedulable_meeting(self)
             meeting.add_entry(submission=self, duration=duration, visible=visible)
             return meeting

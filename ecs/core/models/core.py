@@ -36,3 +36,4 @@ class MedicalCategory(models.Model):
 
 class AdvancedSettings(models.Model):
     default_contact = models.ForeignKey(User)
+    display_notifications_in_protocol = models.BooleanField(default=False)

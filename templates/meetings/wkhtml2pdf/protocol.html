@@ -1,5 +1,5 @@
 {% extends 'wkhtml2pdf/skeleton.html' %}
-{% load core %}
+{% load core i18n %}
 
 {% block title %}Meeting Agenda{% endblock %}
 
@@ -40,9 +40,7 @@
                         {% endif %}
                     {% endwith %}
                     <br />
-                {% if submission.current_submission_form.sponsor_name %}
-                    <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
-                {% endif %}<br />
+                <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}<br />
                 <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
                 <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
                 {% include 'meetings/wkhtml2pdf/protocol_submission.inc' %}
@@ -60,22 +58,66 @@
         <span class="bold">Folgende Tagesordnungspunkte wurden seit der letzten Sitzung positiv erledigt:</span><br />
         <br />
         {% for b1 in b1ized.all %}
-            {% with b1.get_submission as submission %}
-                <span class="bold">EK-Nr.:</span> {{ submission|ec_number }}<br />
+            {% with sf=b1.submission_form %}
+                <span class="bold">EK-Nr.:</span> {{ sf.submission|ec_number }}<br />
                 <span class="bold">Antragsteller:</span>
-                    {% with submission.current_submission_form.submitter as submitter %}
+                    {% with sf.submitter as submitter %}
                         {% if not submitter.first_name or not submitter.last_name %}
-                            {{ submission.current_submission_form.submitter_contact }}
+                            {{ sf.submitter_contact }}
                         {% else %}
                             {{ submitter }}
                         {% endif %}
                     {% endwith %}
                     <br />
-                {% if submission.current_submission_form.sponsor_name %}
-                    <span class="bold">Sponsor/CRO:</span> {{ submission.current_submission_form.sponsor_name }}
-                {% endif %}<br />
-                <span class="bold">Einreichendes Institut:</span> {{ submission.current_submission_form.submitter_organisation }}<br />
-                <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
+                    <span class="bold">Sponsor/CRO:</span> {{ sf.sponsor_name }}<br />
+                <span class="bold">Einreichendes Institut:</span> {{ sf.submitter_organisation }}<br />
+                <span class="bold">Projekttitel:</span> {{ sf.german_project_title|default:sf.project_title }}<br />
+                <br />
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
+
+    {% if answers %}
+        <span class="bold">Folgende Meldungen wurden seit der letzten Sitzung bearbeitet:</span><br />
+        <br />
+        {% for answer in answers %}
+            {% with notification=answer.notification %}
+                <span class="bold">{{ notification.type }}</span><br />
+                {% for sf in notification.submission_forms.all %}
+                    <span class="bold">{{ sf.submission.get_ec_number_display }}</span>
+                    {{ sf.german_project_title|default:sf.project_title }}<br />
+                {% endfor %}
+
+                {% if notification.centerclosenotification %}
+                    {% with ccn=notification.centerclosenotification %}
+                        <table class="full_width equal_columns">
+                            <thead>
+                                <th>{% trans 'Investigator Organisation' %}</th>
+                                <th>{% trans 'Ethics Commission' %}</th>
+                                <th>{% trans 'Investigator contact' %}</th>
+                            </thead>
+                            <tbody>
+                                <td>{{ ccn.investigator.organisation }}</td>
+                                <td>{{ ccn.investigator.ethics_commission }}</td>
+                                <td>{{ ccn.investigator.contact }}</td>
+                            </tbody>
+                        </table>
+                    {% endwith %}
+                {% endif %}
+
+                {% with publish_date=answer.published_at|date:'d.m.Y' %}
+                    {% if answer.is_rejected %}
+                        {% blocktrans trimmed %}
+                            <span class="bold">rejected</span>
+                            on the {{ publish_date }}
+                        {% endblocktrans %}
+                    {% else %}
+                        {% blocktrans trimmed %}
+                            <span class="bold">acknowledged</span>
+                            on the {{ publish_date }}
+                        {% endblocktrans %}
+                    {% endif %}
+                {% endwith %}<br />
                 <br />
             {% endwith %}
         {% endfor %}

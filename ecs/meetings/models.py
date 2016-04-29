@@ -1,7 +1,7 @@
 import math
 from datetime import timedelta, datetime
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Prefetch
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -19,9 +19,13 @@ from ecs.core.models.constants import (
 )
 from ecs.utils import cached_property
 from ecs.utils.viewutils import render_pdf
+from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
-from ecs.users.utils import sudo
+from ecs.core.models.core import AdvancedSettings
+from ecs.notifications.models import (
+    NotificationAnswer, AmendmentNotification, SafetyNotification,
+)
 from ecs.meetings.signals import on_meeting_top_add, on_meeting_top_delete, on_meeting_top_index_change
 
 
@@ -418,17 +422,46 @@ class Meeting(models.Model):
             models.Max('protocol_sent_at'))['protocol_sent_at__max']
         end = self.protocol_sent_at
 
-        b1ized = Vote.objects.filter(result='1', upgrade_for__result='2', published_at__isnull=False)
+        b1ized = Vote.unfiltered.filter(
+            result='1', upgrade_for__result='2', published_at__isnull=False
+        ).select_related(
+            'submission_form', 'submission_form__submission',
+            'submission_form__submitter', 'submission_form__submitter__profile',
+        ).order_by('submission_form__submission__ec_number')
         if start:
             b1ized = b1ized.filter(published_at__gt=start)
         if end:
             b1ized = b1ized.filter(published_at__lte=end)
-        b1ized = b1ized.order_by('submission_form__submission__ec_number')
+
+        if AdvancedSettings.objects.get(pk=1).display_notifications_in_protocol:
+            from ecs.core.models import SubmissionForm
+            answers = NotificationAnswer.unfiltered.exclude(
+                notification__in=AmendmentNotification.unfiltered.all(), signed_at__isnull=False
+            ).exclude(
+                notification__in=SafetyNotification.objects.all()
+            ).exclude(published_at=None).select_related(
+                'notification', 'notification__type',
+                'notification__safetynotification',
+                'notification__centerclosenotification'
+            ).prefetch_related(
+                Prefetch('notification__submission_forms',
+                    queryset=SubmissionForm.unfiltered.select_related('submission'))
+            ).order_by(
+                'notification__type__position',
+                'notification__safetynotification__safety_type', 'published_at'
+            )
+            if start:
+                answers = answers.filter(published_at__gt=start)
+            if end:
+                answers = answers.filter(published_at__lte=end)
+        else:
+            answers = None
 
         return render_pdf(request, 'meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
             'b1ized': b1ized,
+            'answers': answers,
         })
 
     def _get_timeframe_for_user(self, user):
