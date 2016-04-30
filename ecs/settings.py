@@ -207,9 +207,6 @@ LOGGING = {
 # ecs settings
 ##############
 
-# directory for generated config files
-ECS_CONFIG_DIR = os.path.join(PROJECT_DIR, '..', 'ecs-conf')
-
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', 'ecs-ca')
 
