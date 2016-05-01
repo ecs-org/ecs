@@ -8,6 +8,9 @@ build:
     - scripts/install-os-deps.sh
     - scripts/install-user-deps.sh ./env
     - . ./env/bin/activate
+    - for a in storage-vault log cache ca help gpg undeliverable-mail whoosh; do \
+          mkdir -p ecs-$a; \
+      done
     - coverage run source='.' manage.py test
     - coverage report --omit=*settings*,*test* --fail-under 50
 
