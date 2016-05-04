@@ -248,21 +248,6 @@ a.versions {
 }
 }
 
-#toggle_sidebar_button {
-    position: absolute;
-    top: 201px;
-    right: 20px;
-    z-index: 200;
-
-    a.toggle_sidebar {
-        @include icon_bg;
-        width: 24px;
-        height: 22px;
-        display: block;
-        background-position: -324px -135px;
-    }
-}
-
 .form_main .investigator .field a.delete_row,
 .inline_formset .form a.delete_row {
     @include icon_bg;

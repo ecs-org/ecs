@@ -55,27 +55,12 @@
         </div>
     {% endblock %}
 </div>
-<span id="toggle_sidebar_button">
-    <a href="#" id="toggle_sidebar" class="toggle_sidebar" title="Sidebar verstecken/wiederherstellen">toggle</a>
-</span>
-
 {% endblock %}
 
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
         $(function() {
-            var sidebar = $('#sidebar');
-            var container = $('#container');
-            var duration = 150; /* ms */
-
-            $('#toggle_sidebar').click(function(ev) {
-                ev.preventDefault();
-                var width = sidebar.width() ? '0px' : '220px';
-                sidebar.animate({width: width}, duration);
-                container.animate({right: width}, duration);
-            });
-
             $.fn.select2.defaults.set('placeholder',
                 '{{ _('Start typing to receive suggestions')|escapejs }}');
         });
