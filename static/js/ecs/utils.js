@@ -292,7 +292,8 @@ ecs.FormFieldController = function(options) {
         this.setDisabled(true);
 
     this.auto = options.auto || function() {
-        this.fields.prop('checked', this.sources.is(':checked'));
+        if (this.sources.length)
+            this.fields.prop('checked', this.sources.is(':checked'));
         this.fields.change();
     };
 
