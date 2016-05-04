@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load alert version_tag staticfiles %}
+{% load alert %}
 
 {% block htmlbody %}
 <div id="container">
@@ -30,29 +30,5 @@
             {% endblock %}
         </div>
     </div>
-
-</div>
-
-<div id="sidebar">
-    {% block sidebar %}
-        <div id="logo">
-            {% block logo %}
-                <img src={% static 'images/logo.png' %} alt="EC- Meduni Wien"/>
-                <small>{% current_version %}</small>
-            {% endblock %}
-        </div>
-        <div id="account">
-            {% block account %}
-            {% endblock %}
-        </div>
-        <div id="usertoolbar">
-            {% block usertoolbar %}
-            {% endblock %}
-        </div>
-        <div id="usermenu">
-            {% block usermenu %}
-            {% endblock %}
-        </div>
-    {% endblock %}
 </div>
 {% endblock %}

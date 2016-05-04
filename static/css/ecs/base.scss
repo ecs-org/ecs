@@ -56,24 +56,6 @@ body {
     background: $beige-light;
     min-width: 700px;
 }
-#sidebar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 220px; /* Width of frame div */
-    overflow-x: hidden;
-    overflow-y: auto;
-    color: $grey-20;
-    background: #f6f6e9;
-    word-wrap: break-word;
-    border-left: 1px solid $bisque;
-
-    .user_logout a {
-        color: #800000;
-        font-size: 13px;
-    }
-}
 
 /* general content-specific */
 
@@ -299,30 +281,6 @@ a.button_submit:hover,
         font-weight: bolder;
         letter-spacing: 1px;
     }
-}
-
-/* sidebar */
-
-#account,
-#usertoolbar {
-    padding: 10px;
-    border-bottom: 1px solid $grey-80;
-}
-#logo {
-    padding: 10px 10px 0 10px;
-    border-bottom: 1px solid $grey-80;
-    background: $white;
-}
-#account {
-    overflow-x: hidden;
-    overflow-y: visible;
-}
-#usertoolbar {
-    min-height: 10px;
-    background: #ededdc;
-}
-#usermenu {
-    padding: 10px;
 }
 
 /* general links */
