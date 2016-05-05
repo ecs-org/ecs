@@ -8,15 +8,17 @@ def fix_useradministration_filter(apps, schema_editor):
     UserSettings = apps.get_model('users', 'UserSettings')
     for us in UserSettings.objects.exclude(useradministration_filter={}):
         if 'groups' in us.useradministration_filter:
-            us.useradministration_filter['groups'] = [
-                int(pk) for pk in
-                us.useradministration_filter['groups'].split(',') if pk
-            ]
+            groups = us.useradministration_filter['groups']
+            if not isinstance(groups, list):
+                us.useradministration_filter['groups'] = [
+                    int(pk) for pk in groups.split(',') if pk
+                ]
         if 'medical_categories' in us.useradministration_filter:
-            us.useradministration_filter['medical_categories'] = [
-                int(pk) for pk in
-                us.useradministration_filter['medical_categories'].split(',') if pk
-            ]
+            medical_categories = us.useradministration_filter['medical_categories']
+            if not isinstance(medical_categories, list):
+                us.useradministration_filter['medical_categories'] = [
+                    int(pk) for pk in medical_categories.split(',') if pk
+                ]
         us.save(update_fields=['useradministration_filter'])
 
 

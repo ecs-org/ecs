@@ -46,7 +46,7 @@ def _checklist_form_unpickle(checklist_pk, args, kwargs):
 
 
 def _model_unpickle(model, args, factory):
-    assert(model == None)
+    assert(isinstance(model, tuple) or model == None)
     assert(args == [])
     class FakeModel(object):
         pass
