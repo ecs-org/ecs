@@ -109,38 +109,38 @@ def notification_workflow():
             'final_executive_office_review': Args(FinalAmendmentSigningReview, group=OFFICE_GROUP, name=_('Amendment Review')),
             'final_notification_office_review': Args(FinalAmendmentReview, group=OFFICE_GROUP, name=_('Amendment Review')),
         },
-        edges={
-            ('start', 'safety_review'): Args(guard=is_susar),
-            ('start', 'office_report_review'): Args(guard=is_report),
-            ('start', 'office_report_review'): Args(guard=is_center_close),
-            ('start', 'initial_amendment_review'): Args(guard=is_amendment),
+        edges=(
+            (('start', 'safety_review'), Args(guard=is_susar)),
+            (('start', 'office_report_review'), Args(guard=is_report)),
+            (('start', 'office_report_review'), Args(guard=is_center_close)),
+            (('start', 'initial_amendment_review'), Args(guard=is_amendment)),
 
             # safety reports
-            ('safety_review', 'distribute_notification_answer'): None,
+            (('safety_review', 'distribute_notification_answer'), None),
 
             # reports
-            ('office_report_review', 'executive_report_review'): None,
-            ('executive_report_review', 'office_report_review'): Args(guard=needs_further_review),
-            ('executive_report_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
+            (('office_report_review', 'executive_report_review'), None),
+            (('executive_report_review', 'office_report_review'), Args(guard=needs_further_review)),
+            (('executive_report_review', 'distribute_notification_answer'), Args(guard=needs_further_review, negated=True)),
 
             # amendments
-            ('initial_amendment_review', 'notification_group_review'): Args(guard=needs_notification_group_review),
-            ('initial_amendment_review', 'executive_amendment_review'): Args(guard=needs_executive_group_review),
-            ('initial_amendment_review', 'insurance_group_review'): Args(guard=needs_insurance_group_review),
-            ('initial_amendment_review', 'distribute_notification_answer'): Args(guard=is_rejected_and_final),
+            (('initial_amendment_review', 'notification_group_review'), Args(guard=needs_notification_group_review)),
+            (('initial_amendment_review', 'executive_amendment_review'), Args(guard=needs_executive_group_review)),
+            (('initial_amendment_review', 'insurance_group_review'), Args(guard=needs_insurance_group_review)),
+            (('initial_amendment_review', 'distribute_notification_answer'), Args(guard=is_rejected_and_final)),
 
-            ('notification_group_review', 'executive_amendment_review'): Args(guard=needs_executive_group_review), 
-            ('notification_group_review', 'final_notification_office_review'): Args(guard=needs_executive_group_review, negated=True),
-            ('final_notification_office_review', 'notification_group_review'): Args(guard=needs_further_review),
-            ('final_notification_office_review', 'distribute_notification_answer'): Args(guard=needs_further_review, negated=True),
+            (('notification_group_review', 'executive_amendment_review'), Args(guard=needs_executive_group_review)),
+            (('notification_group_review', 'final_notification_office_review'), Args(guard=needs_executive_group_review, negated=True)),
+            (('final_notification_office_review', 'notification_group_review'), Args(guard=needs_further_review)),
+            (('final_notification_office_review', 'distribute_notification_answer'), Args(guard=needs_further_review, negated=True)),
 
-            ('executive_amendment_review', 'notification_group_review'): Args(guard=needs_notification_group_review),
-            ('executive_amendment_review', 'final_executive_office_review'): Args(guard=needs_notification_group_review, negated=True),
-            ('final_executive_office_review', 'executive_amendment_review'): Args(guard=needs_further_review),
-            ('final_executive_office_review', 'notification_answer_signing'): Args(guard=needs_further_review, negated=True),
+            (('executive_amendment_review', 'notification_group_review'), Args(guard=needs_notification_group_review)),
+            (('executive_amendment_review', 'final_executive_office_review'), Args(guard=needs_notification_group_review, negated=True)),
+            (('final_executive_office_review', 'executive_amendment_review'), Args(guard=needs_further_review)),
+            (('final_executive_office_review', 'notification_answer_signing'), Args(guard=needs_further_review, negated=True)),
 
-            ('insurance_group_review', 'office_insurance_review'): None, 
-            ('office_insurance_review', 'insurance_group_review'): Args(guard=needs_further_review),
-            ('office_insurance_review', 'executive_amendment_review'): Args(guard=needs_further_review, negated=True),
-        }
+            (('insurance_group_review', 'office_insurance_review'), None),
+            (('office_insurance_review', 'insurance_group_review'), Args(guard=needs_further_review)),
+            (('office_insurance_review', 'executive_amendment_review'), Args(guard=needs_further_review, negated=True)),
+        )
     )
