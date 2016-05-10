@@ -15,7 +15,7 @@ def workflow_graph_needs_upgrade(graph, nodes, edges):
         except (Node.DoesNotExist, Node.MultipleObjectsReturned):
             return True
     edges = deepcopy(edges)
-    for node_names, args in edges.items():
+    for node_names, args in edges:
         if not args:
             args = Args()
         from_name, to_name = node_names
@@ -32,6 +32,8 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
     created a new workflow graph if a graph with the same structure does not already exists. 
     old graphs will loose their auto_start=True flag.
     """
+    if isinstance(edges, dict):
+        edges = edges.items()
     try:
         graph, created = Graph.objects.get_or_create(model=model, **kwargs)
     except Graph.MultipleObjectsReturned:
@@ -59,7 +61,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
             task_type = TaskType.objects.get(workflow_node=node)
             task_type.is_delegatable = is_delegatable
             task_type.save()
-    for node_names, args in edges.items():
+    for node_names, args in edges:
         if not args:
             args = Args()
         from_name, to_name = node_names
