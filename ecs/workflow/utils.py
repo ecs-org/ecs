@@ -5,7 +5,14 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
     common_edge_attrs = {'fontname': 'Helvetica', 'style': 'bold'}
     common_node_attrs = {'fontname': 'Helvetica'}
     
-    statements = []
+    statements = [
+        'label="{}"'.format(g.content_type.model_class().__name__),
+        'labelloc="t"'
+        'fontname="Helvetica"',
+        'fontsize="20"',
+        'style="bold"',
+    ]
+
     def make_attrs(attrs):
         return ", ".join('%s="%s"' % (opt, val) for opt, val in attrs.items())
         
@@ -68,4 +75,5 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
         statements.insert(0, 'rank=same')
     else:
         graphtype = 'digraph'
-    return "%s{\n\t%s;\n}" % (graphtype, ";\n\t".join(statements))
+
+    return "%s {\n\t%s;\n}" % (graphtype, ";\n\t".join(statements))
