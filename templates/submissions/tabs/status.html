@@ -9,59 +9,81 @@
         </tr>
     {% endif %}
     <tr><th>Formulare:</th><td colspan="3">
-        <table>
-            <tr>
-                <th>Version</th>
-                <th>von</th>
-                <th>am</th>
-                <th>Unterschiede</th>
-                <th>{% trans 'Amendment' %}</th>
-                <th>{% trans 'Download PDF' %}</th>
-            </tr>
-            {% with submission.get_current_docstash as docstash %}
-            {% if docstash %}
-                <tr class="version">
-                    <td>{{ submission.forms.count|add:1 }}</td>
-                    <td colspan="4"><i>{% trans "This form has not been submitted yet." %}</i></td>
-                    <td>
-                    {% if submission_form|allows_edits_by:request.user %}
-                        <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
-                    {% endif %}
-                    </td>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>von</th>
+                    <th>am</th>
+                    <th>Unterschiede</th>
+                    <th>{% trans 'Amendment' %}</th>
+                    <th></th>
                 </tr>
-            {% endif %}
-            {% endwith %}
-            {% with submission.newest_submission_form as newest_form %}
-                {% for sf in submission_forms %}
-                <tr class="version{% if not sf.is_acknowledged %} rejected{% endif %}">
-                    <td>{{ sf.version }}</td>
-                    <td>{{ sf.presenter }}</td>
-                    <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
-                    <td>
-                        {% if sf.previous_form %}
-                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a><br>
-                        {% endif %}
-                        {% if sf != newest_form %}
-                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.pk new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if sf.is_notification_update %}
-                            {% with sf.new_for_notification.all.0 as notif %}
-                                <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk %}">{{ notif }}</a>
-                            {% endwith %}
-                        {% else %}
-                            –
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if forloop.first %}
-                            <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}" class="icon_pdf">{% trans "Download PDF" %}</a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            {% endwith %}
+            </thead>
+            <tbody>
+                {% with submission.get_current_docstash as docstash %}
+                {% if docstash %}
+                    <tr>
+                        <td>{{ submission.forms.count|add:1 }}</td>
+                        <td colspan="4" class="text-xs-center">
+                            <i>{% trans "This form has not been submitted yet." %}</i>
+                        </td>
+                        <td>
+                            {% if submission_form|allows_edits_by:request.user %}
+                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
+                                    <span class="fa fa-pencil"></span>
+                                    {% trans 'Edit' %}
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
+                {% endwith %}
+                {% with submission.newest_submission_form as newest_form %}
+                    {% for sf in submission_forms %}
+                    <tr class="{% if sf == submission.current_submission_form %}table-info{% endif %} {% if not sf.is_acknowledged %}text-danger{% endif %}">
+                        <td>{{ forloop.revcounter }}</td>
+                        <td>{{ sf.presenter }}</td>
+                        <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
+                        <td>
+                            {% if sf.previous_form %}
+                                <a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">
+                                    <span class="fa fa-pencil-square-o"></span>
+                                    Unterschiede zur Vorversion
+                                </a><br>
+                            {% endif %}
+                            {% if sf != newest_form %}
+                                <a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.pk new_submission_form_pk=newest_form.pk %}">
+                                    <span class="fa fa-pencil-square-o"></span>
+                                    Unterschiede zur neuesten Version
+                                </a><br>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if sf.is_notification_update %}
+                                {% with sf.new_for_notification.all.0 as notif %}
+                                    {% if notif %}
+                                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk %}">{{ notif }}</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                {% endwith %}
+                            {% else %}
+                                –
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if forloop.first %}
+                                <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}">
+                                    <span class="fa fa-file-pdf-o"></span>
+                                    {% trans 'Download PDF' %}
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% endwith %}
+            </tbody>
         </table>
     </td></tr>
     <tr>

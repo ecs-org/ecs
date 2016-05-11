@@ -61,10 +61,6 @@ ul.errorlist {
     .narrow { width: 200px;}
     .small { width: 120px;}
 
-    tr.version:nth-of-type(2) td {
-        background: #eee;
-    }
-
     ul li.not(.select2-selection__choice) {
         list-style: circle;
     }

@@ -140,21 +140,6 @@ th, td {
     padding: 0;
 }
 
-#status_tab {
-
-    table table {
-        margin: -3px 0 3px;
-    }
-
-    tr.version.rejected {
-        color: $red;
-    }
-
-    tr.sub th {
-        min-width: 90px;
-    }
-}
-
 ol {
     @include field-list;
 }

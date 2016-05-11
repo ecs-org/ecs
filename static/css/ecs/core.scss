@@ -208,7 +208,7 @@ input[disabled] {
 
 /* table border definitions */
 
-#status_tab th,
+#status_tab > table > tbody > tr > th,
 #involved_parties_tab th,
 .messages th,
 .meeting_detail th,
@@ -221,7 +221,7 @@ table.notification th,
     border-bottom: 1px solid $wheatbrown;
     border-collapse: collapse;
 }
-#status_tab td,
+#status_tab > table > tbody > tr > td,
 #involved_parties_tab td,
 .messages td,
 .meeting_detail td,

@@ -162,16 +162,12 @@
     background-position: 0 -672px;
 }
 
-.icon_diff, .icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview, .icon_download  {
+.icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview, .icon_download  {
     @include icon_bg_16;
 }
 
-.icon_diff, .icon_comment {
+.icon_comment {
     padding: 0px;
-}
-.icon_diff {
-    padding-right: 5px;
-    background-position: -80px -240px;
 }
 .icon_comment {
     background-position: 0 -80px;
