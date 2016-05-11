@@ -8,45 +8,54 @@ realpath=`dirname $(readlink -e "$0")`
 if test -z "$1"; then
   cat << EOF
 Usage: "$0 cmd" to start
-  web       = supervisor controlled web service (nginx + uWSGI)
-              if ECS_MIGRATE_AUTO is true, first web container will do migration on startup
-  simple    = as "web", but no automatic migrations
-  worker    = celery worker daemon
-  beat      = celery beat daemon
+    web       = supervisor controlled web service (nginx + uWSGI)
+    combined  = combined web,worker,beat,smtpd container
+    simple    = as "web", but no automatic migrations
+    worker    = celery worker daemon
+    beat      = celery beat daemon
+    smtpd     = smtp daemon
 
 one time commands:
-  migrate   = run database migration
-  run \$@   = \$@ as user app in workdir with activated python environment
-  \$@       = \$@ executed as typed as user root
+    migrate   = run database migration
+    run \$@   = \$@ as user app in workdir with activated python environment
+    \$@       = \$@ executed as typed as user root
+
+Environment:
+    ECS_MIGRATE_AUTO = true
+        will migrate on startup if first container of type "web" or "combined"
 
 Examples:
-  * web
-  * run ./manage.py shell_plus
-  * migrate
-  * /bin/bash ls -la /root
+    + web
+    + run ./manage.py shell_plus
+    + migrate
+    + /bin/bash ls -la /root
 
 EOF
   exit 1
 fi
 
 
-if [[ "web simple worker beat migrate run _prepare _user" =~ $1 ]]; then
+if [[ "web combined simple worker beat smtpd migrate run _prepare _user" =~ $1 ]]; then
   cmd=$1
   shift
 
   if test "$cmd" = "web"; then
-    # change to app user, call _prepare
+    # call @app user, _prepare
     gosu app $0 _user _prepare
-    # needs running as root user
-    echo "execute supervisor"
-    exec /usr/bin/supervisord -c /app/ecs/conf/supervisord.conf
+    echo "execute supervisor (web)"
+    exec /usr/bin/supervisord -c /app/supervisord-web.conf
+
+  elif test "$cmd" = "combined"; then
+    # call @app user, _prepare
+    gosu app $0 _user _prepare
+    echo "execute supervisor (combined)"
+    exec /usr/bin/supervisord -c /app/supervisord-combined.conf
 
   elif test "$cmd" = "simple"; then
-    # needs running as root user
-    echo "execute supervisor"
-    exec /usr/bin/supervisord -c /app/ecs/conf/supervisord.conf
+    echo "execute supervisor (web)"
+    exec /usr/bin/supervisord -c /app/supervisord-web.conf
 
-  elif [[ "worker beat migrate run _prepare" =~ $cmd ]]; then
+  elif [[ "worker beat smtpd migrate run _prepare" =~ $cmd ]]; then
     # needs running as app user
     exec gosu app $0 _user $cmd "$@"
 
@@ -70,6 +79,10 @@ if [[ "web simple worker beat migrate run _prepare _user" =~ $1 ]]; then
     elif test "$cmd" = "beat"; then
       echo "execute celery beat"
       exec /app/env/bin/celery -A ecs beat -l warning
+
+    elif test "$cmd" = "smtpd"; then
+      echo "execute smtpd"
+      exec /app/ecs/manage.py smtpd
 
     elif test "$cmd" = "migrate"; then
       prepare_database
