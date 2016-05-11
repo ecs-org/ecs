@@ -14,8 +14,7 @@
                 <th>Version</th>
                 <th>von</th>
                 <th>am</th>
-                <th>zur Vorversion</th>
-                <th>zur Neuesten</th>
+                <th>Unterschiede</th>
                 <th>{% trans 'Amendment' %}</th>
                 <th>{% trans 'Download PDF' %}</th>
             </tr>
@@ -23,7 +22,7 @@
             {% if docstash %}
                 <tr class="version">
                     <td>{{ submission.forms.count|add:1 }}</td>
-                    <td colspan="5"><i>{% trans "This form has not been submitted yet." %}</i></td>
+                    <td colspan="4"><i>{% trans "This form has not been submitted yet." %}</i></td>
                     <td>
                     {% if submission_form|allows_edits_by:request.user %}
                         <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}" class="button_submit">{% trans 'Edit' %}</a>
@@ -40,10 +39,8 @@
                     <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
                     <td>
                         {% if sf.previous_form %}
-                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a>
+                            <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.previous_form.pk new_submission_form_pk=sf.pk %}">Unterschiede zur Vorversion</a><br>
                         {% endif %}
-                    </td>
-                    <td>
                         {% if sf != newest_form %}
                             <span class="icon_diff"></span><a href="{% url 'ecs.core.views.submissions.diff' old_submission_form_pk=sf.pk new_submission_form_pk=newest_form.pk %}">Unterschiede zur neuesten Version</a><br>
                         {% endif %}
