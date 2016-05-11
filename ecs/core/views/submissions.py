@@ -214,6 +214,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     submission_forms = list(submission.forms.order_by('-created_at'))
     for sf, prev in zip(submission_forms, submission_forms[1:]):
         sf.previous_form = prev
+    current_form_idx = [sf == submission.current_submission_form for sf in submission_forms].index(True)
 
     external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
     # only show selected external reviews
@@ -247,6 +248,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission': submission,
         'submission_form': submission_form,
         'submission_forms': submission_forms,
+        'current_form_idx': current_form_idx,
         'vote': vote,
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,

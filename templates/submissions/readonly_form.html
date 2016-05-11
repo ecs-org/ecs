@@ -349,6 +349,15 @@
                         input.parent('li.BooleanField').hide();
                 });
             });
+
+            $('.expand_submission_forms').click(function(ev) {
+                ev.preventDefault();
+                var tr = $(this);
+                tr.siblings().removeClass('collapse');
+                tr.remove();
+            }).hover(function(ev) {
+                $(this).toggleClass('table-active', ev.type == 'mouseenter');
+            });
         });
     </script>
 {% endblock %}

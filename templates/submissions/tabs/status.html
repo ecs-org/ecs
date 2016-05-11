@@ -41,7 +41,7 @@
                 {% endwith %}
                 {% with submission.newest_submission_form as newest_form %}
                     {% for sf in submission_forms %}
-                    <tr class="{% if sf == submission.current_submission_form %}table-info{% endif %} {% if not sf.is_acknowledged %}text-danger{% endif %}">
+                    <tr class="{% if sf == submission.current_submission_form %}table-info{% endif %} {% if not sf.is_acknowledged %}text-danger{% endif %} {% if forloop.counter0 > current_form_idx %}collapse{% endif %}">
                         <td>{{ forloop.revcounter }}</td>
                         <td>{{ sf.presenter }}</td>
                         <td>{{ sf.created_at|date:'d.m.Y, H:i' }} Uhr</td>
@@ -82,6 +82,13 @@
                         </td>
                     </tr>
                     {% endfor %}
+                    {% if current_form_idx < submission_forms|length|add:-1 %}
+                        <tr class="expand_submission_forms">
+                            <td colspan=6 class="text-xs-center text-muted">
+                                <span class="fa fa-caret-down"></span>
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endwith %}
             </tbody>
         </table>
