@@ -6,7 +6,7 @@ from django.db import migrations, models
 
 def fix_useradministration_filter(apps, schema_editor):
     UserSettings = apps.get_model('users', 'UserSettings')
-    for us in UserSettings.objects.exclude(useradministration_filter={}):
+    for us in UserSettings.objects.exclude(useradministration_filter='{}'):
         if 'groups' in us.useradministration_filter:
             groups = us.useradministration_filter['groups']
             if not isinstance(groups, list):
