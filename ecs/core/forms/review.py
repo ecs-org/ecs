@@ -19,7 +19,7 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
         model = Submission
         fields = ('workflow_lane', 'medical_categories', 'remission',
             'legal_and_patient_review_required', 'statistical_review_required', 'insurance_review_required',
-            'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers', 'executive_comment')
+            'gcp_review_required', 'invite_primary_investigator_to_meeting', 'external_reviewers')
         widgets = {
             'remission': BooleanWidget,
             'legal_and_patient_review_required': BooleanWidget,
@@ -36,7 +36,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
             'insurance_review_required': _('insurance_review_required'),
             'gcp_review_required': _('gcp_review_required'),
             'invite_primary_investigator_to_meeting': _('invite_primary_investigator_to_meeting'),
-            'executive_comment': _('executive_comment'),
         }
 
     def __init__(self, *args, **kwargs):

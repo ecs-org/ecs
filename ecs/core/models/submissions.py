@@ -43,7 +43,6 @@ class Submission(models.Model):
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     befangene = models.ManyToManyField(User, blank=True, related_name='befangen_for_submissions')
-    executive_comment = models.TextField(null=True, blank=True)
 
     legal_and_patient_review_required = models.NullBooleanField(default=False)
     statistical_review_required = models.NullBooleanField(default=False)

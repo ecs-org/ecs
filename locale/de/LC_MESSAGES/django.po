@@ -673,10 +673,6 @@ msgstr "GCP Überprüfung notwendig"
 msgid "invite_primary_investigator_to_meeting"
 msgstr "Hauptprüfer einladen"
 
-#: ecs/core/forms/review.py:39
-msgid "executive_comment"
-msgstr "Empfehlungen/Bemerkungen"
-
 #: ecs/core/models/constants.py:10 ecs/core/paper_forms.py:232
 msgid "monocentric"
 msgstr "monozentrisch"
