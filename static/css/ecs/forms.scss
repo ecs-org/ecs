@@ -40,7 +40,7 @@ ul.errorlist {
         line-break: normal;
     }
 
-    table, ol, select, option, input, textarea{
+    table, ol, select, option, input, textarea:not(.form-control) {
         font-size: 12px;
     }
 
@@ -162,7 +162,7 @@ ul.errorlist {
         margin-left: 20px;
     }
 
-    textarea {
+    textarea:not(.form-control) {
         /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
         width: 400px;
     }
