@@ -11,5 +11,6 @@ urlpatterns = (
     url(r'^autocomplete/(?P<queryset_name>[^/]+)/$', autocomplete),
 
     url(r'^submission/', include('ecs.core.urls.submission')),
+    url(r'^comments/', include('ecs.core.urls.comments')),
     url(r'^catalog/', include('ecs.core.urls.catalog')),
 )

@@ -1,0 +1,68 @@
+{% load i18n %}
+
+{% for comment in comments %}
+    <div class="card card-block comment">
+        <div class="card-text">
+            {{ comment.text|linebreaksbr }}
+        </div>
+        <div class="card-text m-t-1 text-xs-center text-muted">
+            {{ comment.author }} on the {{ comment.timestamp|date:'d.m.Y H:i' }}
+            <a class="fa fa-pencil edit" href="{% url 'ecs.core.views.comments.edit' pk=comment.pk %}"></a>
+            <span class="spinner hidden-xs-up">
+                <span class="fa fa-spinner fa-spin"></span>
+            </span>
+            <a class="fa fa-trash-o pull-right open-in-widget" href="{% url 'ecs.core.views.comments.delete' pk=comment.pk %}"></a>
+        </div>
+    </div>
+{% endfor %}
+
+<div class="card card-block new-comment-form">
+    <div class="text-xs-center">
+        <a class="btn btn-sm btn-outline-primary add-comment" href="{% url 'ecs.core.views.comments.edit' submission_pk=submission.pk %}">
+            <span class="fa fa-plus"></span>
+            {% trans 'Add Comment' %}
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.card.comment a.edit').click(function(ev) {
+        ev.preventDefault();
+        var link = $(this);
+        var container = link.parents('.card-block');
+
+        link.hide();
+        link.siblings('.spinner').removeClass('hidden-xs-up');
+        container.load(link.attr('href'), function() {
+            var textarea = container.find('textarea[name="text"]');
+            var len = textarea.val().length;
+            textarea.focus();
+            textarea.get(0).setSelectionRange(len, len);
+            new ecs.textarea.TextArea(textarea, [
+                ecs.textarea.toolbarItems.boilerplate(
+                    "{{ _('Insert Boilerplate')|escapejs }}",
+                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                )
+            ]);
+        });
+    });
+
+    $('.add-comment').click(function(ev) {
+        ev.preventDefault();
+        var link = $(this);
+        var container = link.parents('.card-block');
+
+        link.prop('disabled', true);
+        link.html('<span class="fa fa-spinner fa-spin"></span>');
+        container.load(link.attr('href'), function() {
+            var textarea = container.find('textarea[name="text"]');
+            textarea.focus();
+            new ecs.textarea.TextArea(textarea, [
+                ecs.textarea.toolbarItems.boilerplate(
+                    "{{ _('Insert Boilerplate')|escapejs }}",
+                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                )
+            ]);
+        });
+    });
+</script>
