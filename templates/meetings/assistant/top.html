@@ -23,17 +23,13 @@
                 {{ form.text }}
             {% endif %}
 
-            <div class="block_left">
+            <div class="pull-left">
                 {% if top.is_break %}
                     <div style="font-size:80px;color:#cc0000;position:relative">PAUSE<div style="font-size:80px;color:#ff6600;position:absolute;left:-3px;top:-3px">PAUSE</div></div>
                 {% endif %}
             </div>
-            <div class="block_right">
-                <div class="buttons">
-                  <ul>
-                      <li><a id="complete" href="">Fertig</a></li>
-                  </ul>
-                </div>
+            <div class="pull-left">
+                <a id="complete" class="btn btn-primary btn-sm btn-block" href="">Fertig</a>
             </div>
         </div>
     {% else %}
@@ -42,21 +38,16 @@
           <h3>Votum</h3>
             <div class="meeting_assistant_block">
                           
-              <div class="block_left">
+              <div class="pull-left">
                   {% if form.result.errors %}
                       <span class="errors">{{ form.result.errors }}</span>
                   {% endif %}
                   {{ form.result }}
               </div>
   
-              <div class="block_right">
-      
-                <div class="buttons">
-                   <ul>
-                      <li><a id="complete" href=""{% if vote and not top.is_open %} class="selected"{% endif %}>Fertig</a></li>
-                      <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
-                   </ul>
-                </div>
+              <div class="pull-left">
+                <a id="complete" class="btn btn-primary btn-sm btn-block {% if vote and not top.is_open %}active{% endif %}" href="">Fertig</a>
+                <a id="save" class="btn btn-secondary btn-sm btn-block" href="">Nur Speichern<br><small>Nicht abgeschlossen</small></a>
               </div>
               
             </div>

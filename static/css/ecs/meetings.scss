@@ -452,52 +452,6 @@
         }
     }
 
-    .buttons {
-        display: block;
-        float: left;
-        width: 100%;
-
-        ul {
-            float: left;
-            width: 100%;
-            margin-left: 10px;
-
-            li {
-                list-style: none;
-                display: block;
-                float: left;
-                clear: both;
-                font-size: 12px;
-                padding: 0;
-            }
-        }
-
-        a {
-            display: block;
-            float: left;
-            background: $grey-40;
-            color: $white;
-            margin: 0 0 5px;
-            padding: 5px;
-            border-radius: 3px;
-
-            &:hover {
-                text-decoration: none;
-                background: $grey-20;
-            }
-
-            &.selected {
-                background: #71ce09;
-                color: #253D0A;
-            }
-
-            .details {
-                display: block;
-                font-size: 10px;
-            }
-        }
-    }
-
     .search {
         float: left;
         border-top: 1px solid $grey-80;
@@ -542,18 +496,6 @@
 #content .meeting_assistant_block {
     float: left;
     width: 100%;
-
-    ul {
-        display: block;
-        margin: 0 0 20px 10px;
-    }
-    .block_left, .block_right {
-        display: block;
-        float: left;
-    }
-    .block_left {
-        margin-right: 10px;
-    }
 }
 
 #meeting_assistant .button a,
@@ -602,7 +544,7 @@
     }
 
     ul {
-        margin: 5px;
+        margin: 5px !important;
 
         li {
             display: block;
