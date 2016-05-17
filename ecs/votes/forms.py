@@ -13,12 +13,10 @@ def ResultField(**kwargs):
 class SaveVoteForm(forms.ModelForm):
     result = ResultField(required=False)
     close_top = forms.BooleanField(required=False, widget=forms.HiddenInput())
-    executive_review_required = forms.NullBooleanField(widget=forms.HiddenInput())
 
     class Meta:
         model = Vote
-        exclude = ('top', 'submission_form', 'submission', 'published_at', 'is_final_version', 'signed_at', 'valid_until', 
-            'upgrade_for', 'insurance_review_required')
+        fields = ('result', 'text')
 
     def save(self, top, *args, **kwargs):
         kwargs['commit'] = False

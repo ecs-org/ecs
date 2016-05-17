@@ -37,7 +37,6 @@
             </div>
         </div>
     {% else %}
-        <input id="id_executive_review_required" type="hidden" name="executive_review_required" value="" />
         <input id="id_close_top" type="hidden" name="close_top" value="1" />
         <input id="id_simple_save" type="hidden" name="simple_save" value="" />
           <h3>Votum</h3>
@@ -54,8 +53,7 @@
       
                 <div class="buttons">
                    <ul>
-                      <li><a id="complete_executive" href=""{% if vote and not top.is_open and form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Executive Review</span></a></li>
-                      <li><a id="complete_office" href=""{% if vote and not top.is_open and not form|form_value:'executive_review_required' %} class="selected"{% endif %}>Fertig<span class="details">Office Review</span></a></li>
+                      <li><a id="complete" href=""{% if vote and not top.is_open %} class="selected"{% endif %}>Fertig</a></li>
                       <li><a id="save" href="">Nur Speichern<span class="details">Nicht abgeschlossen</span></a></li>
                    </ul>
                 </div>
@@ -158,16 +156,6 @@
             var meetingAssistantForm = $('#meeting_assistant_form');
             $('#complete').click(function(ev) {
                 ev.preventDefault();
-                meetingAssistantForm.submit();
-            });
-            $('#complete_executive').click(function(ev) {
-                ev.preventDefault();
-                $('#id_executive_review_required').val('1');
-                meetingAssistantForm.submit();
-            });
-            $('#complete_office').click(function(ev) {
-                ev.preventDefault();
-                $('#id_executive_review_required').val('0');
                 meetingAssistantForm.submit();
             });
             $('#save').click(function(ev) {
