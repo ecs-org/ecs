@@ -15,12 +15,6 @@ def vote_workflow_start_if(vote, created):
 register(Vote, autostart_if=vote_workflow_start_if)
 
 
-# XXX: unused
-@guard(model=Vote)
-def is_executive_vote_review_required(wf):
-    return False
-
-
 @guard(model=Vote)
 def is_final(wf):
     return wf.data.is_final_version
