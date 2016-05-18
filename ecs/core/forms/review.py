@@ -59,10 +59,6 @@ class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
         return cd
 
 
-class BefangeneReviewForm(ReadonlyFormMixin, forms.ModelForm):
-    befangene = AutocompleteModelMultipleChoiceField(
+class BiasedBoardMembersReviewForm(forms.Form):
+    biased_board_members = AutocompleteModelMultipleChoiceField(
         'board-members', User.objects, required=False)
-
-    class Meta:
-        model = Submission
-        fields = ('befangene',)

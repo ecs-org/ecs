@@ -1,0 +1,56 @@
+{% load i18n %}
+
+{% if biased_users %}
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Organization' %}</th>
+                <th>{% trans 'E-Mail' %}</th>
+                <th>{% trans 'Assigned Tasks' %}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in biased_users %}
+                <tr>
+                    <td>{{ user }}</td>
+                    <td>{{ user.profile.organisation }}</td>
+                    <td>{{ user.email|default:'' }}</td>
+                    <td>
+                        <ul class="list-unstyled text-danger">
+                            {% for task in user.assigned_tasks %}
+                                <li>{{ task.task_type }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk to_user_pk=user.pk %}" target="_blank">
+                            <span class="fa fa-envelope-o"></span>
+                            {% trans "Send Message" %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <em>{% trans 'No board members selected.' %}</em>
+{% endif %}
+
+<a data-toggle="collapse" href="#biased_board_members_review_form">
+    <span class="fa fa-pencil"></span>
+    {% trans 'edit' %}
+</a>
+
+<div id="biased_board_members_review_form" class="collapse">
+    <form action="{{ request.path }}" method="POST" class="open-in-widget">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'save' %}"/>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('#{{ form.biased_board_members.id_for_label|escapejs }}').select2();
+</script>

@@ -1,5 +1,6 @@
 import tempfile
 import re
+from itertools import groupby
 
 from django.http import HttpResponse, Http404, JsonResponse
 from django.core.urlresolvers import reverse
@@ -26,7 +27,7 @@ from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFo
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
-from ecs.core.forms.review import CategorizationReviewForm, BefangeneReviewForm
+from ecs.core.forms.review import CategorizationReviewForm, BiasedBoardMembersReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
@@ -280,10 +281,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:
-        context.update({
-            'befangene_review_form': BefangeneReviewForm(instance=submission, readonly=True),
-            'vote_review_form': VoteReviewForm(instance=vote, readonly=True),
-        })
+        context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
         if profile.is_executive_board_member or not submission.external_reviewers.filter(pk=request.user.pk).exists():
             context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
@@ -381,13 +379,39 @@ def paper_submission_review(request, submission_pk=None):
 
 
 @user_flag_required('is_internal')
-def befangene_review(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    form = BefangeneReviewForm(request.POST or None, instance=submission_form.submission)
+def biased_board_members_review(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    biased_users = list(submission.befangene.select_related('profile').order_by(
+        'last_name', 'first_name', 'email'))
+
+    with sudo():
+        tasks = groupby(
+            Task.objects.for_submission(submission)
+                .filter(assigned_to__in=biased_users)
+                .exclude(workflow_token__node__uid__in=('resubmission', 'b2_resubmission'))
+                .open()
+                .order_by('assigned_to_id', 'task_type__name'),
+            lambda t: t.assigned_to_id
+        )
+        for assigned_to_id, assigned_tasks in tasks:
+            for user in biased_users:
+                if user.id == assigned_to_id:
+                    user.assigned_tasks = list(assigned_tasks)
+                    break
+
+    form = BiasedBoardMembersReviewForm(request.POST or None,
+        prefix='biased_board_members_review')
+    form.fields['biased_board_members'].initial = biased_users
+
     if request.method == 'POST' and form.is_valid():
-        form.save()
-        return redirect('readonly_submission_form', submission_form_pk=submission_form.pk)
-    return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
+        submission.befangene = form.cleaned_data['biased_board_members']
+        return redirect('ecs.core.views.submissions.biased_board_members_review',
+            submission_pk=submission_pk)
+    return render(request, 'submissions/biased_board_members_review_form.html', {
+        'submission': submission,
+        'biased_users': biased_users,
+        'form': form,
+    })
 
 
 @with_task_management
