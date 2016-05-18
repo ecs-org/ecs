@@ -1,14 +1,16 @@
 {% load i18n userutils %}
 <h3>{% trans "Involved Parties" %}</h3>
-<table>
+<table class="table table-sm">
     <thead>
-        <th>{% trans 'Involvement' %}</th>
-        <th>{% trans 'Name' %}</th>
-        <th>{% trans 'Organization' %}</th>
-        {% if user|has_flag:'is_internal' %}
-            <th>{% trans 'E-Mail' %}</th>
-        {% endif %}
-        <th></th>
+        <tr>
+            <th>{% trans 'Involvement' %}</th>
+            <th>{% trans 'Name' %}</th>
+            <th>{% trans 'Organization' %}</th>
+            {% if user|has_flag:'is_internal' %}
+                <th>{% trans 'E-Mail' %}</th>
+            {% endif %}
+            <th></th>
+        </tr>
     </thead>
     <tbody>
         {% for party in submission_form.get_involved_parties %}
@@ -22,7 +24,8 @@
                 <td>
                     {% if party.user %}
                         <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission_form.submission.pk to_user_pk=party.user.pk %}" target="_blank">
-                            <span class="icon_send"></span>{% trans "Send Message" %}
+                            <span class="fa fa-envelope-o"></span>
+                            {% trans "Send Message" %}
                         </a>
                     {% endif %}
                 </td>
@@ -33,16 +36,17 @@
 
 {% if temporary_auth or user|has_flag:'is_executive_board_member' %}
     <h3>{% trans 'Temporary Authorization' %}</h3>
-    <table>
+    <table class="table table-sm">
         <thead>
-            <th>{% trans 'Timeframe' %}</th>
-            <th>{% trans 'Name' %}</th>
-            <th>{% trans 'Organization' %}</th>
-            {% if user|has_flag:'is_internal' %}
-                <th>{% trans 'E-Mail' %}</th>
-            {% endif %}
-            <th></th>
-            <th></th>
+            <tr>
+                <th>{% trans 'Timeframe' %}</th>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Organization' %}</th>
+                {% if user|has_flag:'is_internal' %}
+                    <th>{% trans 'E-Mail' %}</th>
+                {% endif %}
+                <th></th>
+            </tr>
         </thead>
         <tbody>
             {% for ta in temporary_auth %}
@@ -55,7 +59,8 @@
                     {% endif %}
                     <td>
                         <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission_form.submission.pk to_user_pk=ta.user.pk %}" target="_blank">
-                            <span class="icon_send"></span>{% trans "Send Message" %}
+                            <span class="fa fa-envelope-o"></span>
+                            {% trans "Send Message" %}
                         </a>
                         {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
                             <td><a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}"><span class="icon_revoke"></span>{% trans 'Revoke' %}</a></td>
