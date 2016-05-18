@@ -42,7 +42,7 @@ class Submission(models.Model):
     workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES, db_index=True)
     remission = models.NullBooleanField(default=False)
     external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
-    befangene = models.ManyToManyField(User, blank=True, related_name='befangen_for_submissions')
+    biased_board_members = models.ManyToManyField(User, blank=True, related_name='biased_for_submissions')
 
     legal_and_patient_review_required = models.NullBooleanField(default=False)
     statistical_review_required = models.NullBooleanField(default=False)

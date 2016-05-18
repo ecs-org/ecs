@@ -132,7 +132,7 @@
 
 <p>
     Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der Adresse <a href="http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/">http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/</a> abrufbar.
-    Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for bef in submission.befangene.all %}{{ bef }}{% if not forloop.last %}, {% endif %}{% empty %}<strong>keine</strong>{% endfor %}
+    Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for bef in submission.biased_board_members.all %}{{ bef }}{% if not forloop.last %}, {% endif %}{% empty %}<strong>keine</strong>{% endfor %}
 </p>
 
 <p><strong>ACHTUNG:</strong> Unter Berücksichtigung der "ICH-Guideline for Good Clinical Practice" gilt dieser Beschluss <strong><u>ein Jahr ab Datum der Ausstellung</u></strong>. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit rechtzeitig zu beantragen.</p>

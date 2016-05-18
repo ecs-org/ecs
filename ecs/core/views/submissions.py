@@ -381,7 +381,7 @@ def paper_submission_review(request, submission_pk=None):
 @user_flag_required('is_internal')
 def biased_board_members_review(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    biased_users = list(submission.befangene.select_related('profile').order_by(
+    biased_users = list(submission.biased_board_members.select_related('profile').order_by(
         'last_name', 'first_name', 'email'))
 
     with sudo():
@@ -404,7 +404,7 @@ def biased_board_members_review(request, submission_pk=None):
     form.fields['biased_board_members'].initial = biased_users
 
     if request.method == 'POST' and form.is_valid():
-        submission.befangene = form.cleaned_data['biased_board_members']
+        submission.biased_board_members = form.cleaned_data['biased_board_members']
         return redirect('ecs.core.views.submissions.biased_board_members_review',
             submission_pk=submission_pk)
     return render(request, 'submissions/biased_board_members_review_form.html', {
