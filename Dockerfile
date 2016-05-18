@@ -1,19 +1,15 @@
-FROM ubuntu:wily
+FROM ubuntu:xenial
 
 # locale setup
 ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
 RUN printf %b "LANG=en_US.UTF-8\nLANGUAGE=en_US:en\nLC_MESSAGES=POSIX\n" > /etc/default/locale
 RUN locale-gen en_US.UTF-8 && dpkg-reconfigure locales
 
-# create user+home, copy source, mkdirs, chown, activate scripts
+# create user+home, copy source, chown, chmod
 ENV HOME /app
 RUN adduser --disabled-password --gecos ",,," --home "/app" app
 COPY . /app/ecs
-RUN for a in storage-vault log cache ca help gpg undeliverable-mail whoosh; do \
-      mkdir -p /app/ecs-$a; \
-    done
-RUN chown -R app /app
+RUN chown -R app:app /app
 RUN chmod +x /app/ecs/scripts/*.sh
 
 # symlink entrypoints
@@ -21,12 +17,17 @@ RUN for a in docker-entrypoint.sh start; do \
       ln -s /app/ecs/scripts/docker-entrypoint.sh /$a; \
     done
 
-# install system dependencies
-RUN cd /app/ecs && ./scripts/install-os-deps.sh
+# install system dependencies, do not upgrade packages
+RUN cd /app/ecs; ./scripts/install-os-deps.sh --no-upgrade
 
-# configure supervisord and nginx
-RUN ln -sf /app/ecs/conf/supervisord.conf /etc/supervisor/supervisord.conf && \
-    ln -sf /app/ecs/conf/nginx.conf /etc/nginx/nginx.conf && \
+# create supervisord conf files
+RUN prefix=/app/ecs/conf/supervisord.conf; \
+    scdir=/app/ecs/conf/supervisor.conf.d; \
+    cat $prefix $scdir/web.conf > $HOME/supervisord-web.conf; \
+    cat $prefix $scdir/web.conf $scdir/celery.conf $scdir/smtpd.conf > $HOME/supervisord-combined.conf
+
+# configure nginx
+RUN ln -sf /app/ecs/conf/nginx.conf /etc/nginx/nginx.conf && \
     ln -sf /dev/stdout /var/log/nginx/access.log && \
     ln -sf /dev/stderr /var/log/nginx/error.log
 
@@ -34,6 +35,7 @@ RUN ln -sf /app/ecs/conf/supervisord.conf /etc/supervisor/supervisord.conf && \
 WORKDIR /app/ecs
 USER app
 RUN ./scripts/install-user-deps.sh /app/env
+RUN ./scripts/create-dirs.sh /app
 
 # compile/compress/collect/create translations, javascript, static files
 RUN . /app/env/bin/activate; \
