@@ -1,0 +1,32 @@
+# http://editorconfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{yml,sls,rst,ini,conf}]
+indent_size = 2
+
+[*.{html,css,scss,js,sh}]
+indent_size = 4
+
+[*.py]
+indent_style = space
+indent_size = 4
+line_length = 80
+known_first_party = ecs
+multi_line_output = 3
+default_section = THIRDPARTY
+
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+[Makefile]
+indent_style = tab
