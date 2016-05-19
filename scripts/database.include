@@ -1,72 +1,194 @@
 #!/bin/bash
 
-prepare_database(){
-  echo "check database access"
-  # get errorcode regardless if "set -e" is active or not
-  scripts/checkdb.py import ecs.settings && err=$? || err=$?
-  firstrun=false
-
-  if test $err -ge 9; then
-    echo "Fatal Error: could not connect or parameter error ($err)"
-    exit 1
-  elif test $err -eq 8 -o $err -eq 2; then
-    if test "${ECS_RESTORE_FROM_BACKUP:-false}" = "true"; then
-      echo "FIXME Fatal: Restore from backup is unimplemented (get dump, restore dump)"
-      exit 1
+get_dumpfilename(){
+    # returns first existing file in order
+    if test -f "${ECS_RECOVER_DUMP_FILENAME:-/invalid}"; then
+        echo "${ECS_RECOVER_DUMP_FILENAME}"
     else
-      firstrun=true
-      if test $err -eq 2; then
-        echo "Info: using empty existing database (will not recreate the database)"
-      else
-        echo "Warning: database does not exist, trying to recreate it on local machine"
-        recreatedb
-      fi
+        for i in . ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback; do
+            if test -e $HOME/$i/ecs.pgdump; then
+                echo "$HOME/$i/ecs.pgdump"
+                break
+            fi
+        done
     fi
-  elif test $err -eq 1; then
-    echo "Warning: old south migrations found, migrating up to django_migrations"
-    initialmigratedb
-  fi
-
-  echo "./manage.py migrate"
-  ./manage.py migrate --noinput
-
-  echo "./manage.py bootstrap"
-  ./manage.py bootstrap
-
-  # FIXME: add functionality example_data to manage.py
-  if test "$firstrun" = "true" -a "$ECS_EXAMPLE_DATA" = "true"; then
-    ./manage.py example_data
-  fi
-
-  if test "$ECS_USERSWITCHER" = "true"; then
-    ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--im}
-  fi
 }
 
-recreatedb() {
-  sudo -u postgres createuser app
-  sudo -u postgres createdb ecs -T template0 -O app -l de_DE.utf8
-  sudo -u postgres psql ecs -c "CREATE extension pg_stat_statements;"
+dump_database(){
+    dbdump=$HOME/ecs.pgdump
+    if test "$1" != ""; then
+        dbdump=$1
+    fi
+    echo "create a database dump at $dbdump, this might take up to 10 minutes"
+    if pg_dump --encoding="utf-8" --format=custom -Z6 -f ${dbdump}.new -d ecs; then
+        mv ${dbdump}.new ${dbdump}
+    else
+        echo "Error: could not create dump $dbdump"
+    fi
 }
 
-initialmigratedb() {
-  echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
+recreate_database() {
+    echo "wipe out ecs-ca on database restore"
+    if test -e $HOME/ecs-ca; then rm -rf $HOME/ecs-ca; fi
 
-  for app in auth admin contenttypes sessions sites reversion djcelery \
-    boilerplate docstash documents help meetings notifications \
-    pki scratchpad tracking users votes workflow; do
-      ./manage.py migrate --noinput --fake $app 0001_initial || true
-  done
-  ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249 || true
-  ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249 || true
-  ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249 || true
-  ./manage.py migrate --noinput --fake core 0003_auto_20151217_1249 || true
-  ./manage.py migrate --noinput --fake tasks 0002_auto_20151217_1249 || true
+    echo "create user app and database ecs"
+    sudo -u postgres createuser app
+    sudo -u postgres createdb ecs -T template0 -O app -l de_DE.utf8
+    sudo -u postgres psql ecs -c "CREATE extension pg_stat_statements;"
+}
 
-  echo "Migration to bring the legacy database up to date. This might take a couple of minutes."
-  ./manage.py migrate --noinput core 0006_production_compat3 || true
+fresh_database() {
+    # to be called with: activated environment, CWD=rootdir of sourcecode
+    dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump
+    echo "destroying and recreating empty/fresh database"
+    pghero_stop
+    sudo -u postgres dropdb ecs
+    recreate_database
+    pghero_config
+    prepare_database
+    dump_database $dbdump
+    pghero_start
+}
 
-  echo "Info: NO exceptions are expected from this point on"
-  echo "Run remaining migrations, delete stale content types"
-  yes yes | ./manage.py migrate
+prepare_database() {
+    # to be called with: activated environment, CWD=rootdir of sourcecode
+    # optional parameter: $1= "--restore-dump"
+    echo "prepare database"
+    # :0 = Django migrations found
+    # :1 = south migrations found
+    # :2 = empty database
+    # :8 = could not connect to database (not existing?)
+    # :9 >= could not connect to database server
+    # :127 >= bash command error, eg. command not found
+    scripts/checkdb.py import ecs.settings && err=$? || err=$?
+    firstrun="false"
+
+    if test $err -ge 127; then
+        echo "Fatal Error: could not execute scripts/checkdb.py, please call prepare_database from the root of the ecs source directory with activated environment"
+        exit 1
+    fi
+    if test $err -ge 9; then
+        echo "Fatal Error: ecs.settings, parameter or database connection error ($err)"
+        exit 1
+    fi
+
+    if test "${ECS_RECOVER_FROM_DUMP:-false}" = "true" -o "$1" = "--restore-dump"; then
+        dumpfilename=$(get_dumpfilename)
+        if test "$dumpfilename" = "" -o ! -e "$dumpfilename"; then
+            echo "Fatal Error: restore from dump; could not find any dump: $dumpfilename"
+            exit 1
+        fi
+        if test $err -eq 0 -o $err -eq 1; then
+            echo "drop current database"
+            sudo -u postgres dropdb ecs
+        fi
+        recreate_database
+        echo "restore from dump (this might take up to 10 minutes): $dumpfilename"
+        pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
+        pghero_config
+
+    else
+        if test $err -eq 8; then
+            firstrun="true"
+            echo "Warning: database does not exist, trying to recreate it on local machine"
+            recreate_database
+        elif test $err -eq 2; then
+            firstrun="true"
+            echo "Info: using empty existing database"
+        fi
+    fi
+
+    scripts/checkdb.py import ecs.settings && err=$? || err=$?
+    if test $err -ge 8; then
+        echo "Fatal Error: could not connect to database or parameter error ($err)"
+        exit 1
+    fi
+
+    if test $err -eq 1; then
+        echo "Warning: old south migrations found, migrating up to django_migrations"
+        legacy_migrate
+    fi
+
+    echo "./manage.py migrate --noinput"
+    ./manage.py migrate --noinput
+
+    echo "./manage.py bootstrap"
+    ./manage.py bootstrap
+
+    if test "$firstrun" = "true"; then
+        if test "$ECS_FIRSTRUN_EXAMPLE_DATA" = "true"; then
+            echo "FIXME: add manage.py example_data"
+            exit 1
+        fi
+        if test "$ECS_FIRSTRUN_USER_EMAIL" != ""; then
+            echo "FIXME: add manage.py create-office with cert by email function"
+            exit 1
+        fi
+    fi
+
+    if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
+        ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
+    fi
+}
+
+legacy_migrate() {
+    echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
+
+    for app in auth admin contenttypes sessions sites reversion djcelery \
+        boilerplate docstash documents help meetings notifications \
+        pki scratchpad tracking users votes workflow; do
+            ./manage.py migrate --noinput --fake $app 0001_initial || true
+    done
+    ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249 || true
+    ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249 || true
+    ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249 || true
+    ./manage.py migrate --noinput --fake core 0003_auto_20151217_1249 || true
+    ./manage.py migrate --noinput --fake tasks 0002_auto_20151217_1249 || true
+
+    echo "Migration to bring the legacy database up to date. This might take a couple of minutes."
+    ./manage.py migrate --noinput core 0006_production_compat3 || true
+
+    echo "Info: NO exceptions are expected from this point on"
+    echo "Run remaining migrations, delete stale content types"
+    yes yes | ./manage.py migrate
+}
+
+pghero_install(){
+    if test -z "`which pghero`"; then
+        echo "pghero (currently from deb.packager.io using jessie because of systemd)"
+        wget -qO - https://deb.packager.io/key | apt-key add -
+        echo "deb http://deb.packager.io/gh/pghero/pghero jessie master" | tee /etc/apt/sources.list.d/pghero.list
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get -y update
+        apt-get -y install pghero
+        pghero scale web=1
+    fi
+}
+
+pghero_config(){
+    if test ! -z "`which pghero`"; then
+        pgheropass="$(openssl rand 8 -hex)"
+        echo "$pgheropass" > $HOME/pgheropass
+        sudo -u postgres createuser pghero
+        sudo -u postgres psql ecs -c "alter user pghero superuser;"
+        sudo -u postgres psql ecs -c "alter user pghero password '$pgheropass';"
+        sudo -u postgres psql ecs -c 'CREATE TABLE "pghero_query_stats" ("id" serial primary key, "database" text, "query" text, "total_time" float, "calls" bigint, "captured_at" timestamp);'
+        sudo -u postgres psql ecs -c 'CREATE INDEX "index_pghero_query_stats_on_database_and_captured_at" ON "pghero_query_stats" ("database", "captured_at");'
+    fi
+}
+
+pghero_stop(){
+    if test ! -z "`which pghero`"; then
+        echo "stop pghero if running"
+        sudo service pghero stop
+    fi
+}
+
+pghero_start(){
+    if test ! -z "`which pghero`"; then
+        echo "start pghero"
+        pgheropass=$(cat $HOME/pgheropass)
+        sudo pghero config:set DATABASE_URL=postgres://pghero:$pgheropass@localhost:5432/ecs
+        sudo service pghero start
+    fi
 }
