@@ -11,6 +11,9 @@ from reversion import revisions as reversion
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import on_vote_publication, on_vote_expiry, on_vote_extension
+from ecs.users.utils import get_current_user
+from ecs.documents.models import Document
+from ecs.utils.viewutils import render_pdf_context
 
 
 @reversion.register(fields=('result', 'text'))
@@ -27,6 +30,7 @@ class Vote(models.Model):
     is_expired = models.BooleanField(default=False)
     signed_at = models.DateTimeField(null=True)
     published_at = models.DateTimeField(null=True)
+    published_by = models.ForeignKey('auth.User', null=True)
     valid_until = models.DateTimeField(null=True)
     changed_after_voting = models.BooleanField(default=False)
     
@@ -68,13 +72,28 @@ class Vote(models.Model):
         return super(Vote, self).save(**kwargs)
 
     def publish(self):
-        assert self.signed_at is not None
+        assert self.published_at is None
         now = timezone.now()
+
+        if self.submission_form:
+            Vote.objects.filter(
+                _currently_published_for__submission=
+                    self.submission_form.submission
+            ).update(valid_until=now)
+
         self.published_at = now
+        self.published_by = get_current_user()
         self.valid_until = self.published_at + timedelta(days=365)
         self.save()
-        if self.submission_form:
-            Vote.objects.filter(pk__in=self.submission_form.submission.forms.values('current_published_vote__pk')).exclude(pk=self.pk).update(valid_until=now)
+
+        if not self.needs_signature:
+            template = 'meetings/wkhtml2pdf/vote.html'
+            pdf_data = render_pdf_context(template, self.get_render_context())
+
+            Document.objects.create_from_buffer(pdf_data, doctype='votes',
+                parent_object=self, original_file_name=self.pdf_filename,
+                name=str(self))
+
         on_vote_publication.send(sender=Vote, vote=self)
 
     def expire(self):
@@ -108,6 +127,21 @@ class Vote(models.Model):
     @property
     def is_recessed(self):
         return self.result in RECESSED_VOTE_RESULTS
+
+    @property
+    def needs_signature(self):
+        return self.result in ('1', '4')
+
+    @property
+    def pdf_filename(self):
+        vote_name = self.get_ec_number().replace('/', '-')
+        if self.top:
+            top = str(self.top)
+            meeting = self.top.meeting
+            filename = '%s-%s-%s-vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
+        else:
+            filename = 'vote_%s.pdf' % (vote_name)
+        return filename.replace(' ', '_')
 
     def get_render_context(self):
         past_votes = Vote.objects.filter(published_at__isnull=False, submission_form__submission=self.submission_form.submission).exclude(pk=self.pk).order_by('published_at')

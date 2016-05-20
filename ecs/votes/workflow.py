@@ -49,6 +49,14 @@ class VoteSigning(Activity):
     def get_url(self):
         return reverse('ecs.votes.views.vote_sign', kwargs={'vote_pk': self.workflow.data_id})
 
+    def receive_token(self, source, trail=(), repeated=False):
+        vote = trail[0].workflow.data
+        if vote.needs_signature:
+            return super(VoteSigning, self).receive_token(
+                source, trail=trail, repeated=repeated)
+        else:
+            vote.publish()
+
 
 class B2Resubmission(Activity):
     class Meta:

@@ -1,4 +1,5 @@
 {% extends 'wkhtml2pdf/skeleton.html' %}
+{% load userutils %}
 
 {% block title %}Votum{% endblock %}
 
@@ -137,5 +138,9 @@
 <p><strong>ACHTUNG:</strong> Unter Berücksichtigung der "ICH-Guideline for Good Clinical Practice" gilt dieser Beschluss <strong><u>ein Jahr ab Datum der Ausstellung</u></strong>. Gegebenenfalls hat der Antragsteller eine Verlängerung der Gültigkeit rechtzeitig zu beantragen.</p>
 
 <h2 class="metadata">Download</h2>
-<p>Dieses Votum ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_signed_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_signed_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
+<p>Dieses Votum ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
+
+{% if not vote.needs_signature %}
+    <p>Freigegeben von: <b>{{ vote.published_by|full_name }}</b>.</p>
+{% endif %}
 {% endblock %}

@@ -16,17 +16,6 @@ from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render_html, render_pdf, pdf_response
 
 
-def _vote_filename(vote):
-    vote_name = vote.get_ec_number().replace('/', '-')
-    if vote.top:
-        top = str(vote.top)
-        meeting = vote.top.meeting
-        filename = '%s-%s-%s-vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
-    else:
-        filename = 'vote_%s.pdf' % (vote_name)
-    return filename.replace(' ', '_')
-
-
 def show_html_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'meetings/wkhtml2pdf/vote.html'
@@ -36,13 +25,12 @@ def show_html_vote(request, vote_pk=None):
 def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'meetings/wkhtml2pdf/vote.html'
-    pdf_name = _vote_filename(vote)
     pdf_data = wkhtml2pdf(render(request, template, vote.get_render_context()).content )
-    return pdf_response(pdf_data, filename=pdf_name)
+    return pdf_response(pdf_data, filename=vote.pdf_filename)
   
 
-def download_signed_vote(request, vote_pk=None):
-    vote = get_object_or_404(Vote, pk=vote_pk, signed_at__isnull=False)
+def download_vote(request, vote_pk=None):
+    vote = get_object_or_404(Vote, pk=vote_pk, published_at__isnull=False)
 
     vote_ct = ContentType.objects.get_for_model(Vote)
     try:
@@ -70,7 +58,7 @@ def get_vote_sign_data(request, task):
         'document_name': vote.submission_form.submission.get_ec_number_display(separator='-'),
         'document_type': "votes",
         'document_version': 'signed-at',
-        'document_filename': _vote_filename(vote),
+        'document_filename': vote.pdf_filename,
         'document_barcodestamp': True,
         'html_preview': render_html(request, html_template, context),
         'pdf_data': render_pdf(request, pdf_template, context),
