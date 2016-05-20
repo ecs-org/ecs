@@ -48,7 +48,13 @@ class TaskQuerySet(models.QuerySet):
             t.mark_deleted()
 
     def acceptable_for_user(self, user):
-        return self.filter(Q(assigned_to=None) | Q(assigned_to=user, accepted=False) | Q(assigned_to__profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
+        from ecs.core.models import Submission
+        submissions = Submission.objects.exclude(biased_board_members=user)
+        return self.for_submissions(submissions).filter(
+            Q(assigned_to=None) | Q(assigned_to=user, accepted=False) |
+            Q(assigned_to__profile__is_indisposed=True),
+            deleted_at=None
+        )
 
     def for_user(self, user):
         return self.filter(

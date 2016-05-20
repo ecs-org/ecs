@@ -166,11 +166,16 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     }
 
     task_flavors = {
-        'mine': Q(assigned_to=request.user, accepted=True),
         'assigned': Q(assigned_to=request.user, accepted=False),
         'open': Q(assigned_to=None),
         'proxy': Q(assigned_to__profile__is_indisposed=True),
     }
+
+    if not filterform.is_valid() or filterform.cleaned_data['mine']:
+        data['mine_tasks'] = tasks.filter(assigned_to=request.user, accepted=True)
+
+    tasks = tasks.for_submissions(
+        Submission.objects.exclude(biased_board_members=request.user))
 
     for k, q in task_flavors.items():
         ck = '%s_tasks' % k
