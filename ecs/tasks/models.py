@@ -63,8 +63,7 @@ class TaskQuerySet(models.QuerySet):
         not_for_widget = ['resubmission', 'b2_resubmission', 'external_review', 'paper_submission_review']
         return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
 
-    def for_submissions(self, submissions, related=True):
-        # local import to prevent circular import
+    def for_submissions(self, submissions):
         from ecs.core.models import Submission
         from ecs.votes.models import Vote
         from ecs.meetings.models import Meeting, TimetableEntry
@@ -74,32 +73,31 @@ class TaskQuerySet(models.QuerySet):
         submission_ct = ContentType.objects.get_for_model(Submission)
         q = Q(content_type=submission_ct, data_id__in=submissions)
 
-        if related:
-            vote_ct = ContentType.objects.get_for_model(Vote)
-            votes = Vote.objects.filter(submission_form__submission__in=submissions)
-            q |= Q(content_type=vote_ct, data_id__in=votes.values('pk'))
+        vote_ct = ContentType.objects.get_for_model(Vote)
+        votes = Vote.objects.filter(submission_form__submission__in=submissions)
+        q |= Q(content_type=vote_ct, data_id__in=votes.values('pk'))
 
-            meeting_ct = ContentType.objects.get_for_model(Meeting)
-            entries = TimetableEntry.objects.filter(submission__in=submissions)
-            q |= Q(content_type=meeting_ct,
-                data_id__in=entries.values('meeting_id'))
+        meeting_ct = ContentType.objects.get_for_model(Meeting)
+        entries = TimetableEntry.objects.filter(submission__in=submissions)
+        q |= Q(content_type=meeting_ct,
+            data_id__in=entries.values('meeting_id'))
 
-            notification_cts = map(
-                ContentType.objects.get_for_model, NOTIFICATION_MODELS)
-            notifications = Notification.objects.filter(
-                submission_forms__submission__in=submissions)
-            q |= Q(content_type__in=notification_cts,
-                data_id__in=notifications.values('pk'))
+        notification_cts = ContentType.objects.get_for_models(
+            *NOTIFICATION_MODELS).values()
+        notifications = Notification.objects.filter(
+            submission_forms__submission__in=submissions)
+        q |= Q(content_type__in=notification_cts,
+            data_id__in=notifications.values('pk'))
 
-            checklist_ct = ContentType.objects.get_for_model(Checklist)
-            checklists = Checklist.objects.filter(submission__in=submissions)
-            q |= Q(content_type=checklist_ct,
-                data_id__in=checklists.values('pk'))
+        checklist_ct = ContentType.objects.get_for_model(Checklist)
+        checklists = Checklist.objects.filter(submission__in=submissions)
+        q |= Q(content_type=checklist_ct,
+            data_id__in=checklists.values('pk'))
             
         return self.filter(q).distinct()
 
-    def for_submission(self, submission, related=True):
-        return self.for_submissions([submission.id], related=related)
+    def for_submission(self, submission):
+        return self.for_submissions([submission.id])
 
 class TaskManager(AuthorizationManager.from_queryset(TaskQuerySet)):
     def get_base_queryset(self):
