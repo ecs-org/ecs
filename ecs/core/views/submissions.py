@@ -50,7 +50,6 @@ from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
 
 from ecs.documents.views import upload_document, delete_document
-from ecs.core.workflow import CategorizationReview
 
 
 def get_submission_formsets(data=None, initial=None, readonly=False):
@@ -285,8 +284,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         if profile.is_executive_board_member or not submission.external_reviewers.filter(pk=request.user.pk).exists():
             context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
-            tasks = list(Task.objects.for_user(request.user, activity=CategorizationReview, data=submission).order_by('-closed_at'))
-            if tasks and not [t for t in tasks if not t.closed_at]:
+            tasks = list(Task.objects.for_user(request.user).filter(
+                task_type__workflow_node__uid='categorization_review',
+                content_type=ContentType.objects.get_for_model(Submission),
+                data_id=submission.pk).order_by('-closed_at'))
+            if tasks and all(t.closed_at for t in tasks):
                 context['categorization_task'] = tasks[0]
 
     if not submission_form == submission.newest_submission_form:

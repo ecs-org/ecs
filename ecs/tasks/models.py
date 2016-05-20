@@ -50,14 +50,11 @@ class TaskQuerySet(models.QuerySet):
     def acceptable_for_user(self, user):
         return self.filter(Q(assigned_to=None) | Q(assigned_to=user, accepted=False) | Q(assigned_to__profile__is_indisposed=True)).exclude(deleted_at__isnull=False)
 
-    def for_user(self, user, activity=None, data=None):
-        qs = self.filter(Q(task_type__groups__user=user) | Q(task_type__groups__isnull=True)).exclude(deleted_at__isnull=False)
-        if activity:
-            qs = qs.filter(workflow_token__node__node_type=activity._meta.node_type)
-        if data:
-            ct = ContentType.objects.get_for_model(type(data))
-            qs = qs.filter(content_type=ct, data_id=data.pk)
-        return qs
+    def for_user(self, user):
+        return self.filter(
+            Q(task_type__groups__user=user) | Q(task_type__groups=None),
+            deleted_at=None
+        )
 
     def for_widget(self, user):
         not_for_widget = ['resubmission', 'b2_resubmission', 'external_review', 'paper_submission_review']
