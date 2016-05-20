@@ -63,12 +63,11 @@ class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
         q = self.make_q(task_type__in=user.groups.values('task_types__pk')) & (
             self.make_q(assigned_to=None) |
-            self.make_q(assigned_to__in=
-                User.objects.filter(profile__is_indisposed=True).values('pk'))
+            self.make_q(assigned_to__profile__is_indisposed=True)
         )
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
         q &= (
-            ~self.make_q(medical_categories__gt=0) |
+            self.make_q(medical_categories=None) |
             self.make_q(medical_categories__in=user.medical_categories.values('pk'))
         )
         return q
