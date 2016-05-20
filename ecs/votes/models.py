@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from reversion import revisions as reversion
 
-from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, FINAL_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
+from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
 from ecs.votes.signals import on_vote_publication, on_vote_expiry, on_vote_extension
 
@@ -84,7 +84,6 @@ class Vote(models.Model):
         on_vote_expiry.send(Vote, vote=self)
     
     def extend(self):
-        d = self.valid_until
         self.valid_until += timedelta(days=365)
         self.is_expired = False
         self.save()
@@ -103,26 +102,12 @@ class Vote(models.Model):
         return self.result in NEGATIVE_VOTE_RESULTS
         
     @property
-    def is_final(self):
-        return self.result in FINAL_VOTE_RESULTS
-        
-    @property
     def is_permanent(self):
         return self.result in PERMANENT_VOTE_RESULTS
         
     @property
     def is_recessed(self):
         return self.result in RECESSED_VOTE_RESULTS
-        
-    @property
-    def activates(self):
-        # XXX: is this used anywhere?
-        return self.result == '1'
-        
-    @property
-    def is_valid(self):
-        # XXX: is this used anywhere?
-        return self.valid_until < timezone.now()
 
     def get_render_context(self):
         past_votes = Vote.objects.filter(published_at__isnull=False, submission_form__submission=self.submission_form.submission).exclude(pk=self.pk).order_by('published_at')
