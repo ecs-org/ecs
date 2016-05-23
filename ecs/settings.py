@@ -342,7 +342,7 @@ COMPRESS_OFFLINE = False if DEBUG else True
 ###################
 #these are local fixes, they default to a sane value if unset
 
-#ECS_USERSWITCHER = True/False
+#ECS_USERSWITCHER_ENABLED = True/False
 # default to True, Userswitcher will be shown so user can switch to testusers quickly
 
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
@@ -407,10 +407,10 @@ if 'SENTRY_DSN' in locals():
     SENTRY_CLIENT = 'ecs.utils.ravenutils.DjangoClient'
 
 # user switcher
-if 'ECS_USERSWITCHER' not in locals():
-    ECS_USERSWITCHER = True
+if 'ECS_USERSWITCHER_ENABLED' not in locals():
+    ECS_USERSWITCHER_ENABLED = True
 
-if not ECS_USERSWITCHER:
+if not ECS_USERSWITCHER_ENABLED:
     MIDDLEWARE_CLASSES = tuple(item for item in MIDDLEWARE_CLASSES if item != 'ecs.userswitcher.middleware.UserSwitcherMiddleware')
 
 # django rosetta activation
