@@ -18,15 +18,14 @@ from ecs.notifications.models import NOTIFICATION_MODELS, Notification
 
 
 @user_flag_required('is_internal')
-def task_backlog(request, submission_pk=None, template='tasks/log.html'):
+def task_backlog(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
     with sudo():
-        tasks = Task.objects.all()
-        if submission_pk:
-            submission = get_object_or_404(Submission, pk=submission_pk)
-            tasks = tasks.for_submission(submission)
-        tasks = list(tasks.order_by('created_at'))
+        tasks = list(
+            Task.objects.for_submission(submission).order_by('created_at')
+        )
 
-    return render(request, template, {
+    return render(request, 'tasks/log.html', {
         'tasks': tasks,
     })
 
