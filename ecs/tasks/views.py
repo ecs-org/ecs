@@ -1,15 +1,16 @@
 import random
 
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Group
 from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission
+from ecs.core.models import Submission, MedicalCategory
 from ecs.tasks.models import Task
 from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_accepted, task_declined
@@ -22,7 +23,15 @@ def task_backlog(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     with sudo():
         tasks = list(
-            Task.objects.for_submission(submission).order_by('created_at')
+            Task.objects.for_submission(submission)
+                .select_related('task_type', 'assigned_to',
+                    'assigned_to__profile')
+                .prefetch_related(
+                    Prefetch('medical_categories',
+                        queryset=MedicalCategory.objects.order_by('abbrev')),
+                    Prefetch('task_type__groups',
+                        queryset=Group.objects.order_by('name'))
+                ).order_by('created_at')
         )
 
     return render(request, 'tasks/log.html', {
