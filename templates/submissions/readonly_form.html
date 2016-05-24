@@ -176,19 +176,17 @@
     </div>
     {% if vote_review_form %}
         <div id="vote_review_tab" class="tab collapse">
-            {% block vote_review_tab_content %}
-                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
-                <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
-                    {% csrf_token %}
-                    {% with vote_review_form as review_form %}
-                        {% if review_form.is_preparation %}
-                            {% include 'submissions/review_form.inc' %}
-                        {% else %}
-                            {% include 'submissions/vote_review_form.inc' %}
-                        {% endif %}
-                    {% endwith %}
-                </form>
-            {% endblock %}
+            <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
+            <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
+                {% csrf_token %}
+                {% with vote_review_form as review_form %}
+                    {% if review_form.is_preparation %}
+                        {% include 'submissions/review_form.inc' %}
+                    {% else %}
+                        {% include 'submissions/vote_review_form.inc' %}
+                    {% endif %}
+                {% endwith %}
+            </form>
         </div>
     {% endif %}
 
@@ -219,23 +217,21 @@
 
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab collapse">
-            {% block categorization_review_tab_content %}
-                {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
-                    <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
+            {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
+                <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
+            {% endif %}
+            <p>
+                Typ:
+                {% if submission_form.is_amg %}
+                    {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
                 {% endif %}
-                <p>
-                    Typ:
-                    {% if submission_form.is_amg %}
-                        {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
-                    {% endif %}
-                    {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
-                    {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
-                    {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
-                </p>
-                {% with categorization_review_form as review_form %}
-                    {% include 'submissions/review_form.inc' %}
-                {% endwith %}
-            {% endblock %}
+                {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
+                {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
+                {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
+            </p>
+            {% with categorization_review_form as review_form %}
+                {% include 'submissions/review_form.inc' %}
+            {% endwith %}
         </div>
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}

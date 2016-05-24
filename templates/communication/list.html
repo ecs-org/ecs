@@ -35,11 +35,9 @@
               <td>{{ thread.last_message.receiver }}</td>
           {% endblock %}
           <td>
-              {% block message_actions %}
-                  {% if not thread|closed_by:user %}
+              {% if not thread|closed_by:user %}
                   <a class="open-in-widget fa fa-check-square-o" href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next={{ request.path|urlencode }}" title="{% trans 'mark as done' %}"></a>
-                  {% endif %}
-              {% endblock %}
+              {% endif %}
           </td>
       </tr>
   {% endfor %}

@@ -90,23 +90,6 @@
               font-size: 8pt;
               display: block;
               width: 170mm;       /* = 210mm (A4) - 20mm margin on both sides */
-            }
-            #footer .left {
-              float: left;
-              width: 33%;
-              display: inline-block;
-            }
-            #footer .middle {
-              display: inline-block;
-              position: relative;
-              margin: 0 auto;
-              text-align: center;
-              width: 33%;
-            }
-            #footer .right {
-              float: right;
-              width: 33%;
-              display: inline-block;
               text-align: right;
             }
         </style>
@@ -115,11 +98,7 @@
 
     <body onload="subst()">
         <div id="footer">
-        {% block footer %}
-            <div class="left">{% block footer_left %}{% endblock %}</div>
-            <div class="middle">{% block footer_middle %}{% endblock %}</div>
-            <div class="right">{% block footer_right %}<p>{% trans "Page" %} <span class="page"></span>/<span class="topage"></span></p>{% endblock %}</div>
-        {% endblock %}
+            <p>{% trans "Page" %} <span class="page"></span>/<span class="topage"></span></p>
         </div>
     </body>
 </html>

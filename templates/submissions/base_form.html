@@ -14,13 +14,9 @@
 
     {% block tab_headers %}
         <div id="tabs_submission" class="tab_headers collapse">
-            {% block submission_tab_headers %}
-                {% for tab, fieldsets in tabs %}
-                    <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
-                {% endfor %}
-            {% endblock %}
-            {% block center_tabs %}
-            {% endblock %}
+            {% for tab, fieldsets in tabs %}
+                <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+            {% endfor %}
         </div>
     {% endblock %}
 

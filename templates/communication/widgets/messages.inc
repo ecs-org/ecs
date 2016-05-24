@@ -25,8 +25,6 @@
 </ol>
 
 <div class="paginator">
-    {% block more_link %}{% endblock %}
-
     {% if page.has_previous %}
         <a class="open-in-widget first_page" href="{{ request.path }}?p=1">first</a>
         <a class="open-in-widget prev_page" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}">previous</a>
