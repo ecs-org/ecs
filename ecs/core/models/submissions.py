@@ -62,8 +62,7 @@ class Submission(models.Model):
 
     # XXX: are this fields used?
     billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-    valid_until = models.DateField(null=True, blank=True)
-    
+
     objects = SubmissionManager()
     
     @property
