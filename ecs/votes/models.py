@@ -73,17 +73,10 @@ class Vote(models.Model):
 
     def publish(self):
         assert self.published_at is None
-        now = timezone.now()
-
-        if self.submission_form:
-            Vote.objects.filter(
-                _currently_published_for__submission=
-                    self.submission_form.submission
-            ).update(valid_until=now)
-
-        self.published_at = now
+        self.published_at = timezone.now()
         self.published_by = get_current_user()
-        self.valid_until = self.published_at + timedelta(days=365)
+        if self.result == '1':
+            self.valid_until = self.published_at + timedelta(days=365)
         self.save()
 
         if not self.needs_signature:

@@ -88,16 +88,14 @@ def send_reminder_messages(today=None):
         today = timezone.now().date()
 
     votes = (Vote.objects
-        .filter(result='1', published_at__isnull=False, valid_until__isnull=False)
+        .filter(published_at__isnull=False, valid_until__isnull=False)
         .exclude(submission_form__submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
         .exclude(submission_form__submission__is_finished=True))
     
     for vote in votes:
+        assert vote.result == '1'
         valid_until = vote.valid_until.date()
-        if today < valid_until:
-            days_valid = (valid_until - today).days
-        else:
-            days_valid = 0 - (today - valid_until).days
+        days_valid = (valid_until - today).days
 
         if days_valid == 21:
             send_vote_reminder_submitter(vote)
@@ -109,5 +107,6 @@ def send_reminder_messages(today=None):
 
 @periodic_task(run_every=crontab(hour=3, minute=58))
 def expire_votes():
-    for vote in Vote.objects.filter(valid_until__lt=timezone.now(), is_expired=False):
+    now = timezone.now()
+    for vote in Vote.objects.filter(valid_until__lt=now, is_expired=False):
         vote.expire()
