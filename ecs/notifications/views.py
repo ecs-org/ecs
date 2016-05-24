@@ -8,7 +8,6 @@ from django.utils.translation import ugettext as _
 from django.db.models import Min, Q
 
 from ecs.utils.viewutils import render_html, render_pdf, redirect_to_next_url
-from ecs.utils.security import readonly
 from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
@@ -30,7 +29,6 @@ def _get_notification_template(notification, pattern):
     template_names = [pattern % name for name in (notification.type.form_cls.__name__, 'base')]
     return loader.select_template(template_names)
 
-@readonly()
 def open_notifications(request):
     title = _('Open Notifications')
     notifications =  Notification.objects.pending().annotate(min_ecn=Min('submission_forms__submission__ec_number')).order_by('min_ecn')
@@ -45,7 +43,6 @@ def open_notifications(request):
     return render(request, 'notifications/list.html', context)
 
 
-@readonly()
 @with_task_management
 def view_notification(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
@@ -56,25 +53,21 @@ def view_notification(request, notification_pk=None):
     }, request))
 
 
-@readonly()
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return handle_download(request, notification.pdf_document)
 
 
-@readonly()
 def download_document(request, notification_pk=None, document_pk=None, view=False):
     notification = get_object_or_404(Notification, pk=notification_pk)
     document = get_object_or_404(notification.documents, pk=document_pk)
     return handle_download(request, document, view=view)
 
 
-@readonly()
 def view_document(request, notification_pk=None, document_pk=None):
     return download_document(request, notification_pk, document_pk, view=True)
 
 
-@readonly()
 def submission_data_for_notification(request):
     pks = [pk for pk in request.GET.getlist('submission_form') if pk]
     submission_forms = list(SubmissionForm.objects.filter(pk__in=pks))
@@ -83,7 +76,6 @@ def submission_data_for_notification(request):
     })
 
 
-@readonly()
 def investigators_for_notification(request):
     submission_form = get_object_or_404(SubmissionForm, pk=request.GET['submission_form'])
 
@@ -108,7 +100,6 @@ def investigators_for_notification(request):
     })
 
 
-@readonly()
 def select_notification_creation_type(request):
     return render(request, 'notifications/select_creation_type.html', {
         'notification_types': NotificationType.objects.filter(includes_diff=False).order_by('position')
@@ -237,7 +228,6 @@ def edit_notification_answer(request, notification_pk=None):
     return response
 
 
-@readonly()
 def view_notification_answer(request, notification_pk=None):
     answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
     return render(request, 'notifications/answers/view.html', {
@@ -246,7 +236,6 @@ def view_notification_answer(request, notification_pk=None):
     })
 
 
-@readonly()
 def notification_answer_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return handle_download(request, notification.answer.pdf_document)

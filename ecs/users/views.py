@@ -21,7 +21,6 @@ from django.contrib import messages
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
 from ecs.utils.ratelimitcache import ratelimit_post
-from ecs.utils.security import readonly
 from ecs.communication.mailutils import deliver
 from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordResetForm, ProfileForm, AdministrationFilterForm, \
     UserDetailsForm, InvitationForm
@@ -87,7 +86,6 @@ def login(request, *args, **kwargs):
     return response
 
 
-@readonly()
 def logout(request, *args, **kwargs):
     kwargs.setdefault('next_page', '/')
     user_id = getattr(request, 'original_user', request.user).id
@@ -98,7 +96,6 @@ def logout(request, *args, **kwargs):
     return response
 
 
-@readonly(methods=['GET'])
 def change_password(request):
     form = PasswordChangeForm(request.user, request.POST or None)
     if form.is_valid():
@@ -112,7 +109,6 @@ def change_password(request):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
-@readonly(methods=['GET'])
 def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
@@ -132,7 +128,6 @@ def register(request):
 
 
 @forceauth.exempt
-@readonly(methods=['GET'])
 def activate(request, token=None):
     try:
         data = _registration_token_factory.parse_token(token)
@@ -170,7 +165,6 @@ def activate(request, token=None):
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='email')
-@readonly(methods=['GET'])
 def request_password_reset(request):
     form = RequestPasswordResetForm(request.POST or None)
     if form.is_valid():
@@ -202,7 +196,6 @@ def request_password_reset(request):
 
 
 @forceauth.exempt
-@readonly(methods=['GET'])
 def do_password_reset(request, token=None):
     try:
         email, timestamp = _password_reset_token_factory.parse_token(token)
@@ -230,13 +223,11 @@ def do_password_reset(request, token=None):
     })
 
 
-@readonly()
 def profile(request):
     return render(request, 'users/profile.html', {
         'profile_user': request.user,
     })
 
-@readonly(methods=['GET'])
 def edit_profile(request):
     form = ProfileForm(request.POST or None, instance=request.user.profile)
     
@@ -260,7 +251,6 @@ def notify_return(request):
     return redirect('ecs.users.views.profile')
 
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -292,7 +282,6 @@ def toggle_active(request, user_pk=None):
     return redirect('ecs.users.views.administration')
 
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
@@ -376,7 +365,6 @@ def administration(request, limit=20):
     })
 
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def invite(request):
     form = InvitationForm(request.POST or None)
@@ -437,7 +425,6 @@ def accept_invitation(request, invitation_uuid=None):
         'form': form,
     })
 
-@readonly()
 @user_flag_required('is_executive_board_member')
 def login_history(request):
     end = timezone.now()

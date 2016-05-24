@@ -29,7 +29,6 @@ from ecs.tasks.models import Task
 from ecs.communication.mailutils import deliver
 from ecs.notifications.models import NotificationAnswer, AmendmentNotification
 
-from ecs.utils.security import readonly
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
     on_meeting_date_changed
@@ -52,7 +51,6 @@ def create_meeting(request):
         'form': form,
     })
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def meeting_list(request, meetings, title=None):
     if not title:
@@ -67,12 +65,10 @@ def meeting_list(request, meetings, title=None):
         'title': title,
     })
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.upcoming().order_by('start'), title=_('Upcoming Meetings'))
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member')
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.past().order_by('-start'), title=_('Past Meetings'))
@@ -330,7 +326,6 @@ def move_timetable_entry(request, meeting_pk=None):
     meeting[from_index].index = to_index
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
-@readonly()
 @user_group_required('EC-Office')
 def timetable_editor(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -391,7 +386,6 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
         'formset': formset,
     })
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office')
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -424,7 +418,6 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
         'tops': tops,
     })
 
-@readonly()
 @user_group_required('EC-Office')
 def meeting_assistant(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -531,7 +524,6 @@ def meeting_assistant_retrospective_thesis_expedited(request, meeting_pk=None):
         'localec_vote_formset': localec_vote_formset,
     })
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office')
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
@@ -626,7 +618,6 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         'checklist_review_states': list(checklist_review_states.items()),
     })
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -636,7 +627,6 @@ def agenda_pdf(request, meeting_pk=None):
     pdf = meeting.get_agenda_pdf(request)
     return pdf_response(pdf, filename=filename)
 
-#@readonly()
 @user_group_required('EC-Office')
 def send_agenda_to_board(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -689,7 +679,6 @@ def send_agenda_to_board(request, meeting_pk=None):
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office')
 def send_expedited_reviewer_invitations(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -736,7 +725,6 @@ def edit_protocol(request, meeting_pk=None):
     })
 
 
-@readonly()
 @user_group_required('EC-Office')
 def send_protocol(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, protocol_sent_at=None)
@@ -756,7 +744,6 @@ def send_protocol(request, meeting_pk=None):
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -765,7 +752,6 @@ def protocol_pdf(request, meeting_pk=None):
         pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -776,7 +762,6 @@ def timetable_pdf(request, meeting_pk=None):
         pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
 
-@readonly()
 @user_flag_required('is_internal')
 def timetable_htmlemailpart(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
@@ -785,7 +770,6 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
-@readonly()
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def next(request):
     try:
@@ -795,7 +779,6 @@ def next(request):
     else:
         return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
-@readonly(methods=['GET'])
 @user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)

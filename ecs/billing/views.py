@@ -10,7 +10,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 
 from ecs.users.utils import user_group_required, sudo
-from ecs.utils.security import readonly
 from ecs.core.models import Submission
 from ecs.checklists.models import Checklist
 from ecs.documents.models import Document
@@ -91,7 +90,6 @@ class SimpleXLS(object):
             self.sheet.row(i).height = 255 * int(math.ceil(float(characters)/80))
         self.xls.save(f)
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def submission_billing(request):
     with sudo():
@@ -161,7 +159,6 @@ def submission_billing(request):
         'submissions': unbilled_submissions,
     })
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def view_invoice(request, invoice_pk=None):
     invoice = get_object_or_404(Invoice, pk=invoice_pk)
@@ -169,13 +166,11 @@ def view_invoice(request, invoice_pk=None):
         'invoice': invoice,
     })
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def invoice_pdf(request, invoice_pk=None):
     invoice = get_object_or_404(Invoice, pk=invoice_pk)
     return handle_download(request, invoice.document)
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def invoice_list(request):
     invoices = Invoice.objects.all().order_by('-created_at')
@@ -188,7 +183,6 @@ def invoice_list(request):
         'invoices': invoices,
     })
 
-@readonly(methods=['GET'])
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def external_review_payment(request):
     checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status__in=['new', 'dropped']).filter(
@@ -242,7 +236,6 @@ def external_review_payment(request):
         'price': price,
     })
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def view_checklist_payment(request, payment_pk=None):
     payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
@@ -250,13 +243,11 @@ def view_checklist_payment(request, payment_pk=None):
         'payment': payment,
     })
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def checklist_payment_pdf(request, payment_pk=None):
     payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
     return handle_download(request, payment.document)
 
-@readonly()
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def checklist_payment_list(request):
     payments = ChecklistPayment.objects.all().order_by('-created_at')

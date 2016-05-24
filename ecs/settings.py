@@ -128,7 +128,6 @@ MIDDLEWARE_CLASSES = (
     'reversion.middleware.RevisionMiddleware',
     'ecs.tasks.middleware.RelatedTasksMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'ecs.utils.security.SecurityReviewMiddleware', # this middleware is not meant to be used in production
 )
 
 INSTALLED_APPS = (

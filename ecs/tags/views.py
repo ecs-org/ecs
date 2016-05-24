@@ -4,12 +4,10 @@ from django.utils.translation import ugettext as _
 
 from ecs.tags.models import Tag
 from ecs.tags.forms import TagForm, TagAssignForm
-from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required
 from ecs.core.models import Submission
 
 
-@readonly()
 @user_flag_required('is_internal')
 def index(request):
     return render(request, 'tags/index.html', {
@@ -43,6 +41,7 @@ def assign(request, submission_pk=None):
         'submission': submission,
         'form': form,
     })
+
 
 @user_flag_required('is_internal')
 def delete(request, pk=None):

@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 
-from ecs.utils.security import readonly
 from ecs.scratchpad.forms import ScratchPadForm
 from ecs.scratchpad.models import ScratchPad
 from ecs.core.models.submissions import Submission
@@ -28,7 +27,7 @@ def popup(request, scratchpad_pk=None):
         'submission': submission,
     })
 
-@readonly()
+
 def popup_list(request):
     scratchpads = (ScratchPad.objects
         .filter(owner=request.user, text__isnull=False)

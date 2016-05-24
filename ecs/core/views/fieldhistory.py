@@ -7,7 +7,6 @@ from reversion import revisions as reversion
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.meetings.models import TimetableEntry
-from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required
 from ecs.core.diff import word_diff
 
@@ -19,7 +18,6 @@ ALLOWED_MODEL_FIELDS = {
 }
 
 
-@readonly()
 @user_flag_required('is_internal')
 def field_history(request, model_name=None, pk=None):
     try:

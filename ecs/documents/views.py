@@ -9,7 +9,6 @@ from django.core.cache import cache
 
 from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
-from ecs.utils.security import readonly
 
 
 def upload_document(request, template='documents/upload_form.html'):
@@ -67,7 +66,6 @@ def handle_view(request, doc, page=None):
     return redirect(url)
 
 
-@readonly()
 def download_once(request, ref_key=None):
     cache_key = 'document-ref-{}'.format(ref_key)
     doc_id = cache.get(cache_key)

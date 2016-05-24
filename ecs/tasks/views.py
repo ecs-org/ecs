@@ -8,7 +8,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import redirect_to_next_url
-from ecs.utils.security import readonly
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
 from ecs.tasks.models import Task
@@ -18,7 +17,6 @@ from ecs.votes.models import Vote
 from ecs.notifications.models import NOTIFICATION_MODELS, Notification
 
 
-@readonly()
 @user_flag_required('is_internal')
 def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     with sudo():
@@ -33,7 +31,6 @@ def task_backlog(request, submission_pk=None, template='tasks/log.html'):
     })
 
 
-@readonly()
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):
     usersettings = request.user.ecs_settings
 
@@ -175,7 +172,6 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     return render(request, template, data)
 
 
-@readonly()
 def task_list(request, **kwargs):
     kwargs.setdefault('template', 'tasks/list.html')
     kwargs.setdefault('ignore_task_types', False)

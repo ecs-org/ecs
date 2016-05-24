@@ -14,7 +14,6 @@ from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
 from ecs.utils.viewutils import render_html, render_pdf, pdf_response
-from ecs.utils.security import readonly
 
 
 def _vote_filename(vote):
@@ -28,14 +27,12 @@ def _vote_filename(vote):
     return filename.replace(' ', '_')
 
 
-@readonly()
 def show_html_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'meetings/wkhtml2pdf/vote.html'
     return render(request, template, vote.get_render_context())
 
 
-@readonly()
 def show_pdf_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk)
     template = 'meetings/wkhtml2pdf/vote.html'
@@ -44,7 +41,6 @@ def show_pdf_vote(request, vote_pk=None):
     return pdf_response(pdf_data, filename=pdf_name)
   
 
-@readonly()
 def download_signed_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk, signed_at__isnull=False)
 

@@ -44,7 +44,6 @@ from ecs.docstash.models import DocStash
 from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.utils import forceauth
-from ecs.utils.security import readonly
 from ecs.users.utils import sudo, user_flag_required, user_group_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
@@ -150,14 +149,12 @@ def copy_submission_form(request, submission_form_pk=None, notification_type_pk=
         docstash_key=docstash.key)
 
 
-@readonly()
 def copy_latest_submission_form(request, submission_pk=None, **kwargs):
     submission = get_object_or_404(Submission, pk=submission_pk)
     kwargs['submission_form_pk'] = submission.newest_submission_form.pk
     return redirect('ecs.core.views.submissions.copy_submission_form', **kwargs)
 
 
-@readonly()
 def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return redirect('readonly_submission_form', submission_form_pk=submission.current_submission_form.pk)
@@ -165,7 +162,6 @@ def view_submission(request, submission_pk=None):
 CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview)
 
 
-@readonly()
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
         submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -307,25 +303,21 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     return render(request, template, context)
 
 
-@readonly()
 def submission_form_pdf(request, submission_form_pk=None, view=False):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     return handle_download(request, submission_form.pdf_document, view=view)
 
 
-@readonly()
 def submission_form_pdf_view(request, submission_form_pk=None):
     return submission_form_pdf(request, submission_form_pk, view=True)
 
 
-@readonly()
 def download_document(request, submission_form_pk=None, document_pk=None, view=False):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     document = get_object_or_404(submission_form.documents, pk=document_pk)
     return handle_download(request, document, view=view)
 
 
-@readonly()
 def view_document(request, submission_form_pk=None, document_pk=None):
     return download_document(request, submission_form_pk, document_pk, view=True)
 
@@ -399,7 +391,6 @@ def befangene_review(request, submission_form_pk=None):
     return readonly_submission_form(request, submission_form=submission_form, extra_context={'befangene_review_form': form,})
 
 
-@readonly()
 @with_task_management
 def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
@@ -793,7 +784,6 @@ def delete_docstash_entry(request):
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
 
 
-@readonly()
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
     if not submission.current_submission_form.allows_export(request.user):
@@ -817,7 +807,6 @@ def import_submission_form(request):
     })
 
 
-@readonly()
 def diff(request, old_submission_form_pk, new_submission_form_pk):
     old_submission_form = get_object_or_404(SubmissionForm, pk=old_submission_form_pk)
     new_submission_form = get_object_or_404(SubmissionForm, pk=new_submission_form_pk)
@@ -830,7 +819,6 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     })
 
 
-@readonly()
 def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
     if not title:
         title = _('Submissions')
@@ -918,7 +906,6 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     return render(request, template, data)
 
 
-@readonly()
 def submission_widget(request, template='submissions/widget.html'):
     data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
 
@@ -944,7 +931,6 @@ def submission_widget(request, template='submissions/widget.html'):
     return submission_list(request, **data)
 
 
-@readonly()
 def all_submissions(request):
     keyword = request.GET.get('keyword', None)
 
@@ -1069,13 +1055,11 @@ def all_submissions(request):
     return submission_list(request, submissions, **kwargs)
 
 
-@readonly()
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
     return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=AssignedSubmissionsFilterForm, title=_('Assigned Studies'))
 
 
-@readonly()
 def my_submissions(request):
     submissions = Submission.objects.mine(request.user)
 
@@ -1088,7 +1072,6 @@ def my_submissions(request):
     return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=MySubmissionsFilterForm, title=_('My Studies'))
 
 
-@readonly()
 @forceauth.exempt
 def catalog(request, year=None):
     with sudo():
@@ -1128,7 +1111,6 @@ def catalog(request, year=None):
     return html
 
 
-@readonly()
 @forceauth.exempt
 def catalog_json(request):
     data = [{

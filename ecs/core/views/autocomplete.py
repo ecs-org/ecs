@@ -3,10 +3,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 
 from ecs.users.utils import user_flag_required
-from ecs.utils.security import readonly
 
 
-@readonly()
 @user_flag_required('is_internal')
 def autocomplete(request, queryset_name=None):
     term = request.GET.get('term', '')
