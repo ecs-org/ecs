@@ -11,7 +11,6 @@ from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
-from ecs.votes.signals import on_vote_expiry, on_vote_extension
 
 
 def send_submission_message(submission, user, subject, template, **kwargs):
@@ -176,20 +175,3 @@ def on_b2_upgrade(sender, **kwargs):
     vote.submission_form.is_acknowledged = True
     vote.submission_form.save()
     vote.submission_form.mark_current()
-
-
-@connect(on_vote_expiry)
-def expire_submission(sender, **kwargs):
-    vote = kwargs['vote']
-    submission = vote.get_submission()
-    if submission and not submission.is_localec and vote.is_positive and vote.is_permanent:
-        submission.expire()
-
-
-@connect(on_vote_extension)
-def extend_submission(sender, **kwargs):
-    vote = kwargs['vote']
-    submission = vote.get_submission()
-    if submission:
-        submission.is_expired = False
-        submission.save()

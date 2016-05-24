@@ -10,7 +10,7 @@ from reversion import revisions as reversion
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
 from ecs.votes.managers import VoteManager
-from ecs.votes.signals import on_vote_publication, on_vote_expiry, on_vote_extension
+from ecs.votes.signals import on_vote_publication
 from ecs.users.utils import get_current_user
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
@@ -100,13 +100,19 @@ class Vote(models.Model):
         assert not self.is_expired
         self.is_expired = True
         self.save()
-        on_vote_expiry.send(Vote, vote=self)
+
+        submission = self.get_submission()
+        submission.is_expired = True
+        submission.save()
     
     def extend(self):
         self.valid_until += timedelta(days=365)
         self.is_expired = False
         self.save()
-        on_vote_extension.send(Vote, vote=self)
+
+        submission = self.get_submission()
+        submission.is_expired = False
+        submission.save()
 
     @property
     def version_number(self):

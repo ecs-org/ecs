@@ -220,10 +220,6 @@ class Submission(models.Model):
         self.is_finished = True
         self.save()
 
-    def expire(self):
-        self.is_expired = True
-        self.save()
-        
     def get_current_docstash(self):
         return DocStash.objects.get(
             group='ecs.core.views.submissions.create_submission_form',
