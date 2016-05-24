@@ -1,31 +1,51 @@
-{% extends 'base.html' %}
-{% load compress i18n userutils core scratchpad userswitcher staticfiles version_tag %}
-        
-{% block header %}
-    {{ block.super }}
-    {% if request.task_management.form %}
-        <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
-        <div id="headerworkflow">
-        {% with request.task_management.form as form %}
-            {% include 'tasks/manage_task.html' %}
-        {% endwith %}
-        </div>
-    {% endif %}
-{% endblock %}
-
-{% block headernav %}
-    {% if user.profile.is_indisposed %}
-    <div>
-      {% url 'ecs.users.views.profile' as profile_url %}
-      {% blocktrans with profile_url as profile_url %}
-          You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
-      {% endblocktrans %}
-    </div>
-    {% endif %}
-{% endblock %}
+{% extends 'shell.html' %}
+{% load alert compress i18n userutils core scratchpad userswitcher staticfiles version_tag %}
 
 {% block htmlbody %}
-    {{ block.super }}
+    <div id="container">
+        <div id="header">
+            <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
+            <div id="headernav">
+                {% block headernav %}
+                    {% if user.profile.is_indisposed %}
+                    <div>
+                      {% url 'ecs.users.views.profile' as profile_url %}
+                      {% blocktrans with profile_url as profile_url %}
+                          You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
+                      {% endblocktrans %}
+                    </div>
+                    {% endif %}
+                {% endblock %}
+            </div>
+            {% block header_actions %}
+            {% endblock %}
+
+            {% if request.task_management.form %}
+                <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
+                <div id="headerworkflow">
+                {% with request.task_management.form as form %}
+                    {% include 'tasks/manage_task.html' %}
+                {% endwith %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div id="content">
+            <div class="innerwrap">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.level|level2alert }} alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
 
     <div id="sidebar">
         <div id="logo">
