@@ -227,6 +227,22 @@ class IndispositionForm(forms.ModelForm):
         if cd.get('is_indisposed', False):
             require_fields(self, ('communication_proxy',))
 
+            if 'communication_proxy' in cd:
+                user = self.instance.user
+                proxy = cd['communication_proxy']
+                proxy_chain = [user, proxy]
+                while True:
+                    if proxy == user:
+                        self.add_error('communication_proxy',
+                            _('Circular Proxy Chain: {}').format(
+                                ' -> '.join(str(u) for u in proxy_chain)))
+                        break
+                    elif proxy.profile.is_indisposed:
+                        proxy = proxy.profile.communication_proxy
+                        proxy_chain.append(proxy)
+                    else:
+                        break
+
         return cd
 
 class SetPasswordForm(DjangoSetPasswordForm):

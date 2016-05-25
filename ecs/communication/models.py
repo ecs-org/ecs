@@ -69,38 +69,26 @@ class Thread(models.Model):
             self.save()
 
     def add_message(self, user, text, reply_to=None, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
-        if user.id == self.receiver_id:
-            receiver = self.sender
-            origin = MESSAGE_ORIGIN_BOB
-        elif user.id == self.sender_id:
+        assert user.id in (self.sender_id, self.receiver_id)
+
+        if user.id == self.sender_id:
             receiver = self.receiver
             origin = MESSAGE_ORIGIN_ALICE
         else:
-            raise ValueError("Messages for this thread must only be sent from %s or %s. Sender is %s" % (self.sender.email, self.receiver.email, user.email))
-
-        if receiver.profile.is_indisposed:
-            proxy = receiver.profile.communication_proxy
-            receiver = proxy
-            if origin == MESSAGE_ORIGIN_ALICE:
-                self.receiver = proxy
-            else:
-                self.sender = proxy
+            receiver = self.sender
+            origin = MESSAGE_ORIGIN_BOB
 
         previous_message = self.last_message
         if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
             receiver = previous_message.reply_receiver
-            if origin == MESSAGE_ORIGIN_ALICE:
-                self.receiver = previous_message.reply_receiver
-            else:
-                self.sender = previous_message.reply_receiver
 
-            if receiver.profile.is_indisposed:
-                proxy = receiver.profile.communication_proxy
-                receiver = proxy
-                if origin == MESSAGE_ORIGIN_ALICE:
-                    self.receiver = proxy
-                else:
-                    self.sender = proxy
+        while receiver.profile.is_indisposed:
+            receiver = receiver.profile.communication_proxy
+
+        if origin == MESSAGE_ORIGIN_ALICE:
+            self.receiver = receiver
+        else:
+            self.sender = receiver
 
         msg = self.messages.create(
             sender=user,
@@ -120,12 +108,13 @@ class Thread(models.Model):
         return msg
 
     def delegate(self, from_user, to_user):
+        assert from_user.id in (self.sender_id, self.receiver_id)
+
         if from_user.id == self.sender_id:
             self.sender = to_user
-        elif from_user.id == self.receiver_id:
-            self.receiver = to_user
         else:
-            raise ValueError("Threads may only be delegated by the current sender or receiver")
+            self.receiver = to_user
+
         self.save()
 
     def get_participants(self):
@@ -133,13 +122,6 @@ class Thread(models.Model):
 
     def message_list(self):
         return self.messages.order_by('timestamp')
-
-    def save(self, **kwargs):
-        if self.receiver:
-            receiver_profile = self.receiver.profile
-            if receiver_profile.is_indisposed:
-                self.receiver = receiver_profile.communication_proxy
-        return super(Thread, self).save(**kwargs)
 
 
 class MessageQuerySet(models.QuerySet):
