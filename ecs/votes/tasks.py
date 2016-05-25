@@ -9,8 +9,14 @@ from celery.schedules import crontab
 
 from ecs.votes.models import Vote
 from ecs.core.models.constants import SUBMISSION_LANE_LOCALEC
-from ecs.utils.common_messages import send_submission_message
-from ecs.users.utils import get_office_user
+from ecs.users.utils import get_user, get_office_user
+from ecs.communication.utils import send_message
+
+
+def send_submission_message(submission, subject, text, recipients):
+    sender = get_user('root@system.local')
+    for recipient in recipients:
+        send_message(sender, recipient, subject, text, submission=submission)
 
 
 def send_vote_expired(vote):
