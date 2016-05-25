@@ -72,8 +72,8 @@ class EcsMailReceiver(smtpd.SMTPServer):
             text = self._get_text(msg)
 
             orig_msg = self._find_msg(rcpttos[0])
-            orig_msg.thread.add_message(orig_msg.receiver, text,
-                reply_to=orig_msg, rawmsg=data, rawmsg_msgid=msg['Message-ID'])
+            orig_msg.thread.add_message(orig_msg.receiver, text, rawmsg=data,
+                rawmsg_msgid=msg['Message-ID'])
 
         except SMTPError as e:
             self.undeliverable_maildir.add(data)

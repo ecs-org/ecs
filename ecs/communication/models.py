@@ -68,7 +68,7 @@ class Thread(models.Model):
             self.closed_by_receiver = True
             self.save()
 
-    def add_message(self, user, text, reply_to=None, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
+    def add_message(self, user, text, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
         assert user.id in (self.sender_id, self.receiver_id)
 
         if user.id == self.sender_id:
@@ -94,7 +94,6 @@ class Thread(models.Model):
             sender=user,
             receiver=receiver,
             text=text,
-            reply_to=reply_to,
             origin=origin,
             smtp_delivery_state='new',
             rawmsg=rawmsg,
@@ -142,7 +141,6 @@ class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
     sender = models.ForeignKey(User, related_name='outgoing_messages')
     receiver = models.ForeignKey(User, related_name='incoming_messages')
-    reply_to = models.ForeignKey('self', null=True, related_name='replies')
     timestamp = models.DateTimeField(auto_now_add=True)
     unread = models.BooleanField(default=True)
     soft_bounced = models.BooleanField(default=False)

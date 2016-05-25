@@ -17,7 +17,7 @@ from ecs.users.utils import user_flag_required
 
 
 def new_thread(request, submission_pk=None, to_user_pk=None):
-    submission, task, reply_to, to_user = None, None, None, None
+    submission, task, to_user = None, None, None
 
     if submission_pk is not None:
         submission = get_object_or_404(Submission, pk=submission_pk)
