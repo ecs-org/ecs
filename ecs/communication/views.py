@@ -7,7 +7,6 @@ from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import Submission
-from ecs.tasks.models import Task
 from ecs.communication.models import Thread
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.tracking.decorators import tracking_hint
@@ -17,30 +16,24 @@ from ecs.users.utils import user_flag_required
 
 
 def new_thread(request, submission_pk=None, to_user_pk=None):
-    submission, task, to_user = None, None, None
+    submission, to_user = None, None
 
     if submission_pk is not None:
         submission = get_object_or_404(Submission, pk=submission_pk)
     
     if to_user_pk is not None:
         to_user = get_object_or_404(User, pk=to_user_pk)
-    
-    task_pk = request.GET.get('task')
-    if task_pk is not None:
-        task = get_object_or_404(Task, pk=task_pk)
-        submission = task.data.get_submission() or submission
 
     form = SendMessageForm(submission, request.POST or None, to=to_user)
     thread = None
 
     if request.method == 'POST' and form.is_valid():
-        thread = send_message(request.user, form.cleaned_data['receiver'], form.cleaned_data['subject'], form.cleaned_data['text'], submission=submission, task=task)
+        thread = send_message(request.user, form.cleaned_data['receiver'], form.cleaned_data['subject'], form.cleaned_data['text'], submission=submission)
         return redirect_to_next_url(request, reverse('ecs.communication.views.read_thread', kwargs={'thread_pk': thread.pk}))
 
     return render(request, 'communication/send.html', {
         'submission': submission,
         'to_user': to_user,
-        'task': task,
         'form': form,
         'thread': thread,
     })
@@ -69,11 +62,10 @@ def read_thread(request, thread_pk=None):
                 subject=new_subject,
                 sender=request.user,
                 receiver=delegate_to,
-                task=thread.task,
                 submission=thread.submission,
                 related_thread=thread,
             )
-        msg = thread.add_message(request.user, text=form.cleaned_data['text'])
+        msg = thread.add_message(request.user, form.cleaned_data['text'])
         form = ReplyDelegateForm(request.user, None)
 
     return render(request, 'communication/thread.html', {

@@ -43,7 +43,6 @@ class ThreadQuerySet(models.QuerySet):
 class Thread(models.Model):
     subject = models.CharField(max_length=100)
     submission = models.ForeignKey('core.Submission', null=True)
-    task = models.ForeignKey('tasks.Task', null=True)
     # sender, receiver and timestamp are denormalized intentionally
     sender = models.ForeignKey(User, related_name='outgoing_threads')
     receiver = models.ForeignKey(User, related_name='incoming_threads')
