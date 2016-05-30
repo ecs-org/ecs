@@ -35,7 +35,8 @@ def send_vote_expired(vote):
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Vote for Submission {ec_number} has expired').format(
+        ec_number=submission.get_ec_number_display())
     send_submission_message(submission, subject, text, recipients)
 
 def send_vote_reminder_submitter(vote):
@@ -66,7 +67,8 @@ das Team der Ethik-Kommission
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Vote for Submission {ec_number} will expire in three weeks').format(
+        ec_number=submission.get_ec_number_display())
     send_submission_message(submission, subject, text, recipients)
     
 def send_vote_reminder_office(vote):
@@ -84,7 +86,8 @@ def send_vote_reminder_office(vote):
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
 
-    subject = _('Ablauf des Votums für die Studie EK-Nr. %s') % submission.get_ec_number_display()
+    subject = _('Vote for Submission {ec_number} will expire in one week').format(
+        ec_number=submission.get_ec_number_display())
     send_submission_message(submission, subject, text, recipients)
 
 

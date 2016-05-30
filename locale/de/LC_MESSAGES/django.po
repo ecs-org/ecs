@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-29 13:41+0200\n"
+"POT-Creation-Date: 2016-05-30 17:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2520,7 +2520,11 @@ msgstr "Verhindert"
 msgid "communication_proxy"
 msgstr "Nachrichtenvertretung"
 
-#: ecs/users/forms.py:233 ecs/users/forms.py:237
+#: ecs/users/forms.py:237
+msgid "Circular Proxy Chain: {}"
+msgstr "Zirkuläre Vertretungs-Kette"
+
+#: ecs/users/forms.py:249 ecs/users/forms.py:253
 #, fuzzy
 msgid "New password"
 msgstr "Passwort setzen"
@@ -2631,19 +2635,19 @@ msgstr "Kommentar"
 msgid "No Result"
 msgstr ""
 
-#: ecs/votes/tasks.py:26
+#: ecs/votes/tasks.py:32
 #, python-format
 msgid ""
 "Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist "
 "abgelaufen.\n"
 msgstr ""
 
-#: ecs/votes/tasks.py:32 ecs/votes/tasks.py:63 ecs/votes/tasks.py:81
-#, python-format
-msgid "Ablauf des Votums für die Studie EK-Nr. %s"
-msgstr ""
+#: ecs/votes/tasks.py:38
+#, python-brace-format
+msgid "Vote for Submission {ec_number} has expired"
+msgstr "Das Votum für die Studie EK-Nr. {ec_number} ist abgelaufen"
 
-#: ecs/votes/tasks.py:44
+#: ecs/votes/tasks.py:51
 #, python-format
 msgid ""
 "Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in "
@@ -2669,12 +2673,22 @@ msgid ""
 "    "
 msgstr ""
 
-#: ecs/votes/tasks.py:75
+#: ecs/votes/tasks.py:70
+#, python-brace-format
+msgid "Vote for Submission {ec_number} will expire in three weeks"
+msgstr "Das Votum für die Studie EK-Nr. {ec_number} läuft in drei Wochen ab"
+
+#: ecs/votes/tasks.py:83
 #, python-format
 msgid ""
 "Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in "
 "einer Woche ab.\n"
 msgstr ""
+
+#: ecs/votes/tasks.py:89
+#, python-brace-format
+msgid "Vote for Submission {ec_number} will expire in one week"
+msgstr "Das Votum für die Studie EK-Nr. {ec_number} läuft in einer Woche ab"
 
 #: ecs/votes/triggers.py:29
 #, python-brace-format
