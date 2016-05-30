@@ -1,0 +1,14 @@
+[Unit]
+Description=ECS Developmentserver
+
+[Service]
+Type=simple
+ExecStart=/app/ecs/manage.py runserver
+WorkingDirectory=/app/ecs
+Environment="HOME=/app"
+Environment="USER=app"
+Environment="VIRTUAL_ENV=/app/env"
+Environment="PATH=/app/env/bin:$PATH"
+Restart=always
+User=app
+Group=app
