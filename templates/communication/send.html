@@ -74,7 +74,8 @@
         $(function(){
             var container = $('.message_display');
             ecs.setupMessagePopup(container);
-            $('select[data-ajax--url], #id_receiver_involved').select2();
+            $('#id_receiver_involved').select2();
+            $('#id_receiver_person').select2();
 
             new ecs.textarea.TextArea(container.find('textarea[name="text"]'), [
                 {% if user|has_flag:'is_internal' %}

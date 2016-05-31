@@ -77,8 +77,6 @@
             var form = $('#{{ form_id }}');
             var page_input = form.find('input[name="page"]');
 
-            form.find('select[data-ajax--url]').select2();
-
             ecs.setupSubmitLinks('a.submit_parent');
 
             $('.paginator a').click(function(ev) {

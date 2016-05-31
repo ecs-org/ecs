@@ -144,7 +144,7 @@
                 form.submit();
             });
 
-            form.find('select[name="tags"]').select2();
+            form.find('#id_tags').select2({'width': '250px'});
 
 	    $('#submission_list_filter').find('input, select').change(function() {
 		ecs.stopPageLoad();

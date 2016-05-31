@@ -46,11 +46,19 @@
 <div id="biased_board_members_review_form" class="collapse">
     <form action="{{ request.path }}" method="POST" class="open-in-widget">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.biased_board_members }}
         <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'save' %}"/>
     </form>
 </div>
 
 <script type="text/javascript">
-    $('#{{ form.biased_board_members.id_for_label|escapejs }}').select2();
+    /*
+     * Initialize select2 the first time the form is shown. Otherwise
+     * select2 exhibits display bugs due to the target element not being
+     * visible.
+     */
+    $('#biased_board_members_review_form').one('shown.bs.collapse', function(){
+        $('#{{ form.biased_board_members.id_for_label|escapejs }}').select2(
+            {'width': '100%'});
+    });
 </script>

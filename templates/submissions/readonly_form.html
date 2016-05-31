@@ -285,13 +285,21 @@
     {{ block.super }}
     <script type="text/javascript"> 
         $(function(){
+            /*
+             * Initialize select2 the first time the tab is shown. Otherwise
+             * select2 exhibits display bugs due to the target element not being
+             * visible.
+             */
+            $('#categorization_review_tab').one('tab-show', function() {
+                $('#id_medical_categories').select2();
+                $('#id_external_reviewers').select2();
+            });
+            $('#involved_parties_tab').one('tab-show', function() {
+                $('#id_user').select2();
+            });
+
             ecs.setupForms();
             ecs.setupWidgets();
-
-            {% if categorization_review_form %}
-                $('#id_medical_categories').select2();
-                $('#id_expedited_review_categories').select2();
-            {% endif %}
 
             $('form.review .CharField textarea').each(function(){
                 ecs.textarea.installToolbar(this, [

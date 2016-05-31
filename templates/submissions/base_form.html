@@ -229,9 +229,16 @@
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
-        $(function(){
-            $('#id_substance_registered_in_countries').select2();
-            $('#id_substance_p_c_t_countries').select2();
+        $(function() {
+            /*
+             * Initialize select2 the first time the tab is shown. Otherwise
+             * select2 exhibits display bugs due to the target element not being
+             * visible.
+             */
+            $('#tabs-6').one('tab-show', function() {
+                $('#id_substance_registered_in_countries').select2();
+                $('#id_substance_p_c_t_countries').select2();
+            });
         });
     </script>
 {% endblock %}

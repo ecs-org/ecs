@@ -9,8 +9,6 @@ ecs.setupFormFieldHelpers = function(context){
             weekStart: 1
         });
 
-    $(context).find('select[data-ajax--url]').select2();
-
     context.find('.CharField > textarea').each(function() {
         new ecs.textarea.TextArea(this);
     });

@@ -34,7 +34,7 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            ecs.setupFormFieldHelpers();
+            $('#id_advanced_settings-default_contact').select2();
         });
     </script>
 {% endblock %}
