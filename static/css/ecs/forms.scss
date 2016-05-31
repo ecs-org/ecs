@@ -57,10 +57,6 @@ ul.errorlist {
         }
     }
 
-    .wide { width: 300px;}
-    .narrow { width: 200px;}
-    .small { width: 120px;}
-
     ul li.not(.select2-selection__choice) {
         list-style: circle;
     }
@@ -106,12 +102,6 @@ ul.errorlist {
                 float: left;
             }
 
-            .notes {
-                font-size: 0.9em;
-                color: $grey-40;
-                padding-left: 10px;
-            }
-
             .help_text {
                 margin: 0 0 3px 230px;
                 display: block;
@@ -155,24 +145,11 @@ ul.errorlist {
         }
     }
 
-    #id_start_1,
-    #id_deadline_1,
-    #id_deadline_diplomathesis_1,
-    #id_end_1 {
-        margin-left: 20px;
-    }
-
     textarea:not(.form-control) {
         /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
         width: 400px;
     }
-    textarea#id_project_title, textarea#id_german_summary {
-        height: 90px;
-    }
 
-    input#id_title {
-        width: 350px;
-    }
     input[type=submit].not(.btn) {
         margin: 10px 10px 10px 240px;
         display: block;
@@ -184,9 +161,6 @@ ul.errorlist {
     table td li {
         margin: 0px;
         float: none;
-    }
-    .notes {
-        display: block;
     }
 
     ul.errorlist li {
@@ -312,9 +286,6 @@ table.inline_formset {
         margin-bottom: 10px;
         list-style-type: none;
     }
-    .form .notes {
-        margin: 0 5px;
-    }
 }
 tr.form td {
     vertical-align: top;
@@ -322,8 +293,4 @@ tr.form td {
 
 .change_presenter #id_presenter {
     width: 300px;
-}
-
-fieldset.disabled {
-    display: none;
 }

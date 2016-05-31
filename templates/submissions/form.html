@@ -237,18 +237,14 @@
                         });
                         modal.find('.modal-dialog').addClass('modal-sm');
                         modal.find('.modal-content').html('\
-                            <div class="modal-body">\
-                                <div class="submit_progress">\
-                                    <span class="fa fa-spinner fa-pulse fa-2x"></span>\
-                                    <span class="text">\
-                                        {% if notification_type %}\
-                                            {{ _("Your are being redirected to the notification form")|escapejs }}\
-                                        {% else %}\
-                                            {{ _("Your study is being submitted")|escapejs }}\
-                                        {% endif %}\
-                                        &hellip;\
-                                    </span>\
-                                </div>\
+                            <div class="modal-body text-xs-center">\
+                                <span class="fa fa-spinner fa-pulse fa-2x m-r-1"></span>\
+                                {% if notification_type %}\
+                                    {{ _("Your are being redirected to the notification form")|escapejs }}\
+                                {% else %}\
+                                    {{ _("Your study is being submitted")|escapejs }}\
+                                {% endif %}\
+                                &hellip;\
                             </div>\
                         ');
 
