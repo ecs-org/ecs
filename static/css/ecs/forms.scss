@@ -63,7 +63,7 @@ ul.errorlist {
 
     ol {
         @include field-list;
-        li {
+        & > li {
             display: block;
             clear: both;
 
