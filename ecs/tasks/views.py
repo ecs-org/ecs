@@ -13,7 +13,7 @@ from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission, MedicalCategory
 from ecs.tasks.models import Task
 from ecs.tasks.forms import TaskListFilterForm
-from ecs.tasks.signals import task_accepted, task_declined
+from ecs.tasks.signals import task_declined
 from ecs.votes.models import Vote
 from ecs.notifications.models import NOTIFICATION_MODELS, Notification
 
@@ -195,7 +195,6 @@ def task_list(request, **kwargs):
 def accept_task(request, task_pk=None, full=False):
     task = get_object_or_404(Task.objects.acceptable_for_user(request.user), pk=task_pk)
     task.accept(request.user)
-    task_accepted.send(type(task.node_controller), task=task)
 
     submission_pk = request.GET.get('submission')
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
@@ -222,7 +221,6 @@ def accept_task_type(request, flavor=None, slug=None, full=False):
 
     for task in tasks.acceptable_for_user(request.user).filter(task_type__workflow_node__uid=slug).order_by('created_at'):
         task.accept(request.user)
-        task_accepted.send(type(task.node_controller), task=task)
 
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
     return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
