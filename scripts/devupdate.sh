@@ -293,7 +293,7 @@ main(){
 
 export ECS_USERSWITCHER_ENABLED=${ECS_USERSWITCHER_ENABLED:-true}
 export ECS_DEV_AUTOSTART=${ECS_DEV_AUTOSTART:-true}
-export ECS_DEV_REBASE_TO=${ECS_DEV_REBASE_TO:-devop6}
+export ECS_DEV_REBASE_TO=${ECS_DEV_REBASE_TO:-master}
 
 # HACK: set sourcedir either to $HOME/ecs or relative to this script
 sourcedir=$HOME/ecs
