@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-01 14:47+0200\n"
+"POT-Creation-Date: 2016-06-01 14:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,13 +313,13 @@ msgstr "Keine Angaben"
 
 #: ecs/core/diff.py:235 ecs/core/forms/fields.py:44
 #: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:555
-#: templates/submissions/readonly_form.html:331
+#: templates/submissions/readonly_form.html:339
 msgid "Yes"
 msgstr "Ja"
 
 #: ecs/core/diff.py:237 ecs/core/forms/fields.py:44
 #: ecs/core/forms/fields.py:49 ecs/core/views/submissions.py:555
-#: templates/submissions/readonly_form.html:332
+#: templates/submissions/readonly_form.html:340
 msgid "No"
 msgstr "Nein"
 
@@ -2933,13 +2933,13 @@ msgid "Add Comment"
 msgstr "Kommentare"
 
 #: templates/comments/index.html:43 templates/comments/index.html.py:62
-#: templates/communication/send.html:79 templates/communication/thread.html:81
+#: templates/communication/send.html:80 templates/communication/thread.html:81
 #: templates/meetings/assistant/top.html:130
 #: templates/meetings/assistant/top.html:141
 #: templates/meetings/tabs/protocol.html:31
 #: templates/notifications/answers/form.html:33
 #: templates/scratchpad/popup.html:33
-#: templates/submissions/readonly_form.html:297
+#: templates/submissions/readonly_form.html:305
 #: templates/users/invitation/invite_user.html:31
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
@@ -3175,10 +3175,8 @@ msgid "PKI"
 msgstr ""
 
 #: templates/core.html:220
-#, fuzzy
-#| msgid "Start typing to receive suggestions."
 msgid "Start typing to receive suggestions"
-msgstr "Tippen Sie um Vorschläge zu erhalten."
+msgstr "Tippen Sie um Vorschläge zu erhalten"
 
 #: templates/documents/compact_list.html:21
 #: templates/documents/upload_form.html:12
@@ -3353,7 +3351,7 @@ msgstr "Neg. kopieren"
 #: templates/notifications/answers/view.html:20
 #: templates/submissions/readonly_form.html:165
 #: templates/submissions/readonly_form.html:202
-#: templates/submissions/readonly_form.html:308
+#: templates/submissions/readonly_form.html:316
 msgid "History"
 msgstr ""
 
@@ -4057,11 +4055,11 @@ msgstr "Meldung Erstellen"
 msgid "Don't Submit"
 msgstr "Nicht Einreichen"
 
-#: templates/submissions/form.html:245
+#: templates/submissions/form.html:243
 msgid "Your are being redirected to the notification form"
 msgstr "Sie werden zum Meldungsformular weitergeleitet"
 
-#: templates/submissions/form.html:247
+#: templates/submissions/form.html:245
 msgid "Your study is being submitted"
 msgstr "Ihre Studie wird eingereicht"
 
@@ -4253,7 +4251,7 @@ msgstr "Unveröffentlichte Version als PDF herunterladen"
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-#: templates/submissions/readonly_form.html:330
+#: templates/submissions/readonly_form.html:338
 msgid "Do you want to close the review and send it to the EC?"
 msgstr ""
 "Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
