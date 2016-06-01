@@ -59,6 +59,6 @@
      */
     $('#biased_board_members_review_form').one('shown.bs.collapse', function(){
         $('#{{ form.biased_board_members.id_for_label|escapejs }}').select2(
-            {'width': '100%'});
+            {'width': '100%', 'minimumInputLength': 3});
     });
 </script>

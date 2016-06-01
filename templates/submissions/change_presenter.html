@@ -18,7 +18,7 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('select#id_presenter').select2();
+            $('select#id_presenter').select2({'minimumInputLength': 3});
         });
     </script>
 {% endblock %}

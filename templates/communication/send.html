@@ -75,7 +75,7 @@
             var container = $('.message_display');
             ecs.setupMessagePopup(container);
             $('#id_receiver_involved').select2();
-            $('#id_receiver_person').select2();
+            $('#id_receiver_person').select2({'minimumInputLength': 3});
 
             new ecs.textarea.TextArea(container.find('textarea[name="text"]'), [
                 {% if user|has_flag:'is_internal' %}

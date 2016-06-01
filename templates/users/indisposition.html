@@ -18,7 +18,7 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#id_communication_proxy').select2();
+            $('#id_communication_proxy').select2({'minimumInputLength': 3});
         });
     </script>
 {% endblock %}
