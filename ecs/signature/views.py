@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_tasks(user):
-    return Task.objects.for_user(user).filter(closed_at__isnull=True, assigned_to=user, accepted=True)
+    return Task.objects.for_user(user).filter(closed_at=None, assigned_to=user)
 
 def _store_sign_data(sign_data, force_mock=False):
     sign_data = SigningData(sign_data)

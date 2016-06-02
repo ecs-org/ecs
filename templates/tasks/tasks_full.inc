@@ -12,7 +12,6 @@
     </div>
     <ul class="task_list_choose">
         <li>{{ filterform.mine }} <label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
-        <li>{{ filterform.assigned }} <label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
         <li>{{ filterform.open }} <label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
         <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
     </ul>
@@ -46,36 +45,15 @@
             <div class="task_item toggle_collapse">
                 <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
                 <ul> {% for task in task_type.list %} <li>
-                    <a href="{{ task.url }}">{{ task.data }}</a>{% if not forloop.last %},{% endif %}
-                </li> {% endfor %} </ul>
-                <div style="clear:both;"></div>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% if assigned_tasks %}
-    <div class="task_list">
-        <h3>{% trans "Tasks assigned to me" %}</h3>
-        {% regroup assigned_tasks by task_type.workflow_node.uid as task_type_list %}
-        {% for task_type in task_type_list %}
-            <div class="task_item toggle_collapse">
-                {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                    {% csrf_token %}
-                    <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
-                </form>
-                {% endif %}
-                <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
-                <ul> {% for task in task_type.list %} <li>
-                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
-                    {% with task.get_preview_url as preview_url %}
-                        {% if preview_url %}
-                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
-                        {% endif %}
-                    {% endwith %}
-                    | 
-                    <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{% trans "Decline" %}</a>{% csrf_token %}</form>{% if not forloop.last %}, {% endif %}
+                    <a href="{{ task.url }}">{{ task.data }}</a>
+                    {% if not task.accepted %}
+                        <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
+                        <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post">
+                            {% csrf_token %}
+                            <a class="submit_parent" href="">{% trans "Decline" %}</a>
+                        </form>
+                    {% endif %}
+                    {% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -137,7 +115,7 @@
     </div>
 {% endif %}
 
-{% if not mine_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
+{% if not mine_tasks and not open_tasks and not proxy_tasks %}
     <em>{% trans "There are no tasks for you." %}</em>
 {% endif %}
 </div>

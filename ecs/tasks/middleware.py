@@ -7,8 +7,8 @@ from ecs.utils.lazy import LazyList
 class RelatedTasksMiddleware(object):
     def _get_related_tasks(self, request):
         user_tasks = Task.objects.for_user(request.user).filter(closed_at__isnull=True).select_related('task_type')
-        accepted_tasks = user_tasks.filter(assigned_to=request.user, accepted=True, deleted_at=None)
-        for t in accepted_tasks:
+        assigned_tasks = user_tasks.filter(assigned_to=request.user, deleted_at=None)
+        for t in assigned_tasks:
             if request.path in t.get_final_urls():
                 yield t
 

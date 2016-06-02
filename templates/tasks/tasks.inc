@@ -13,7 +13,6 @@
     </div>
     <ul class="task_list_choose">
         <li>{{ filterform.mine }} <label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
-        <li>{{ filterform.assigned }} <label for="id_assigned"><span class="task_assigned"></span>{% trans "Assigned" %}</label></li>
         <li>{{ filterform.open }} <label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
         <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
     </ul>
@@ -42,41 +41,13 @@
                 <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
                 <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
                     <a href="{{ task.url }}">{{ task.data }}</a>
-                </li> {% endfor %} </ul>
-                <div style="clear:both;"></div>
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-{% if assigned_tasks %}
-    <div class="task_list">
-        <h3>{% trans "Tasks assigned to me" %}</h3>
-        {% regroup assigned_tasks by task_type.workflow_node.uid as task_type_list %}
-        {% for task_type in task_type_list %}
-            <div class="task_item toggle_collapse">
-                {% if task_type.list|length > 1 %}
-                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task_type' flavor='assigned' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                    {% csrf_token %}
-                    <a style="float:right;padding: 0 5px;" class="submit-in-widget" href="">{% trans 'Accept all' %}</a>
-                </form>
-                {% endif %}
-                <h4><span class="task_type_nr">{{ task_type.list|length }}</span> {{ task_type.grouper|task_type_name }}</h4>
-                <ul class="tasks_{{ task_type.grouper }}"> {% for task in task_type.list %} <li>
-                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                        {% csrf_token %}
-                        <a class="submit-in-widget" href="">{{ task.data }}</a>
-                    </form>
-                    {% with task.get_preview_url as preview_url %}
-                        {% if preview_url %}
-                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
-                        {% endif %}
-                    {% endwith %}
-                    | 
-                    <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.decline_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                        {% csrf_token %}
-                        <a class="submit-in-widget" href="">{% trans "Decline" %}</a>
-                    </form>
+                    {% if not task.accepted %}
+                        <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
+                        <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.decline_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                            {% csrf_token %}
+                            <a class="submit-in-widget" href="">{% trans "Decline" %}</a>
+                        </form>
+                    {% endif %}
                 </li> {% endfor %} </ul>
                 <div style="clear:both;"></div>
             </div>
@@ -148,7 +119,7 @@
     </div>
 {% endif %}
 
-{% if not mine_tasks and not assigned_tasks and not open_tasks and not proxy_tasks %}
+{% if not mine_tasks and not open_tasks and not proxy_tasks %}
     <em>{% trans "There are no tasks for you." %}</em>
 {% endif %}
 </div>

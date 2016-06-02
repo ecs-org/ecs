@@ -84,7 +84,6 @@ class TaskListFilterForm(forms.Form):
     other = forms.BooleanField(required=False, initial=True)
 
     mine = forms.BooleanField(required=False, initial=True)
-    assigned = forms.BooleanField(required=False, initial=True)
     open = forms.BooleanField(required=False, initial=True)
     proxy = forms.BooleanField(required=False, initial=True)
 

@@ -64,7 +64,10 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         sorting = filterform.cleaned_data['sorting'] or 'deadline'
     order_by = ['task_type__name', sortings[sorting], 'assigned_at']
 
-    all_tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True).select_related('task_type', 'task_type__workflow_node')
+    all_tasks = (Task.objects.for_widget(request.user)
+        .filter(closed_at__isnull=True)
+        .select_related('task_type', 'task_type__workflow_node')
+        .order_by(*order_by))
 
     submission = None
     if submission_pk:
@@ -166,13 +169,12 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     }
 
     task_flavors = {
-        'assigned': Q(assigned_to=request.user, accepted=False),
         'open': Q(assigned_to=None),
         'proxy': Q(assigned_to__profile__is_indisposed=True),
     }
 
     if not filterform.is_valid() or filterform.cleaned_data['mine']:
-        data['mine_tasks'] = tasks.filter(assigned_to=request.user, accepted=True)
+        data['mine_tasks'] = tasks.filter(assigned_to=request.user)
 
     tasks = tasks.for_submissions(
         Submission.objects.exclude(biased_board_members=request.user))
@@ -180,7 +182,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     for k, q in task_flavors.items():
         ck = '%s_tasks' % k
         on = not filterform.is_valid() or filterform.cleaned_data[k]
-        data[ck] = tasks.filter(q).order_by(*order_by) if on else tasks.none()
+        data[ck] = tasks.filter(q) if on else tasks.none()
 
     return render(request, template, data)
 
@@ -208,7 +210,6 @@ def accept_task_full(request, task_pk=None):
 def accept_task_type(request, flavor=None, slug=None, full=False):
     tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True)
     task_flavors = {
-        'assigned': tasks.filter(assigned_to=request.user, accepted=False),
         'open': tasks.filter(assigned_to=None),
         'proxy': tasks.filter(assigned_to__profile__is_indisposed=True),
     }

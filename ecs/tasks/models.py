@@ -51,8 +51,7 @@ class TaskQuerySet(models.QuerySet):
         from ecs.core.models import Submission
         submissions = Submission.objects.exclude(biased_board_members=user)
         return self.for_submissions(submissions).filter(
-            Q(assigned_to=None) | Q(assigned_to=user, accepted=False) |
-            Q(assigned_to__profile__is_indisposed=True),
+            Q(assigned_to=None) | Q(assigned_to__profile__is_indisposed=True),
             deleted_at=None
         )
 
@@ -224,8 +223,7 @@ class Task(models.Model):
             setattr(new, attr, getattr(self, attr))
         user = user or self.assigned_to
         new.created_by = user
-        new.accept(user=user, check_authorization=False, commit=False)
-        new.save()
+        new.accept(user=user, check_authorization=False)
         new.medical_categories = self.medical_categories.all()
         def _repeated_token_received(sender, **kwargs):
             if sender.repeated and sender.node == self.workflow_token.node:
@@ -254,12 +252,11 @@ class Task(models.Model):
         if commit:
             self.save()
         
-    def accept(self, user=None, commit=True, check_authorization=True):
+    def accept(self, user=None, check_authorization=True):
         if user:
             self.assign(user, commit=False, check_authorization=check_authorization)
         self.accepted = True
-        if commit:
-            self.save()
+        self.save()
         
     @property
     def trail(self):

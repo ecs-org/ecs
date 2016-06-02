@@ -9,7 +9,6 @@
             <th>{% trans "Activity" %}</th>
             <th>{% trans "Group" %}</th>
             <th>{% trans "Assigend At" %}</th>
-            <th>{% trans "Accepted" %}</th>
             <th>{% trans "Assigend To" %}</th>
         </tr>
     {% for task in tasks %}
@@ -18,8 +17,14 @@
             <td>{{ task.task_type }} {% if task.medical_categories.exists %}[{% for cat in task.medical_categories.all %}{{ cat }}{% if not forloop.last %}, {% endif %}{% endfor %}]{% endif %}</td>
             <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
             <td>{% if task.assigned_at %}{{ task.assigned_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
-            <td>{{ task.accepted|yesno }}</td>
-            <td>{% if task.assigned_to %}{{ task.assigned_to }}{% else %}-{% endif %}</td>
+            <td>
+                {% if task.assigned_to %}
+                    {{ task.assigned_to }}
+                    {% if not task.accepted %}
+                        <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
+                    {% endif %}
+                {% else %}-{% endif %}
+            </td>
         </tr>
     {% endfor %}
     </table>
