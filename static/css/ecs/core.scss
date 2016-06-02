@@ -211,7 +211,6 @@ input[disabled] {
 #status_tab > table > tbody > tr > th,
 .messages th,
 .meeting_detail th,
-.task_back_log th,
 .profile th,
 table.notif_meta th,
 table.notification th,
@@ -223,7 +222,6 @@ table.notification th,
 #status_tab > table > tbody > tr > td,
 .messages td,
 .meeting_detail td,
-.task_back_log td,
 .profile td,
 table.notif_meta td,
 table.notification td,
@@ -231,13 +229,8 @@ table.notification td,
 .catalogue_list td {
     border-bottom: 1px solid $wheatbrown;
 }
-.task_back_log {
-    tr.closed td {
-        color: $grey-60;
-    }
-    tr.deleted {
-        text-decoration: line-through;
-    }
+.task_back_log tr.deleted {
+    text-decoration: line-through;
 }
 
 
