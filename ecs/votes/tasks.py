@@ -49,7 +49,7 @@ def send_vote_reminder_submitter(vote):
     else:
         vote_date = vote.published_at
     text = _('''Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in drei Wochen ab.
-Stellen Sei bitte zeitgerecht den Antrag auf Verlängerung des Votums.
+Stellen Sie bitte zeitgerecht den Antrag auf Verlängerung des Votums.
 Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf „Studien Meldungen“ > „Neue Meldung“,
 wählen Sie dann „Verlängerung der Gültigkeit des Votums“ und machen Sie die erforderlichen Angaben.
 
