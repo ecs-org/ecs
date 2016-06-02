@@ -103,8 +103,11 @@ class ReplyDelegateForm(forms.Form):
         super(ReplyDelegateForm, self).__init__(*args, **kwargs)
         if user.profile.is_internal:
             self.fields['to'] = AutocompleteModelChoiceField(
-                'users', User.objects.filter(is_active=True), required=False,
-                label=_('Delegate to'))
+                'internal-users',
+                User.objects.filter(is_active=True, profile__is_internal=True),
+                required=False,
+                label=_('Delegate to')
+            )
             self.fields['text'] = self.fields.pop('text')       # change order
 
 
