@@ -30,8 +30,8 @@
             {% for tab in tabs %}
                 <div id="tabs-{{ forloop.counter }}" class="tab collapse">
                     {% if unacknowledged_forms %}
-                    <div class="unacknowledged_forms">
-                        <span class="icon_comment" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
+                    <div class="text-xs-center font-weight-bold m-b-1">
+                        <span class="fa fa-info text-info" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
                         {% if unacknowledged_forms == 1 %}
                             Es gibt eine neuere, unbestätigte Version.
                         {% else %}

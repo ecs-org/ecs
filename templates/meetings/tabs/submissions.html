@@ -14,7 +14,7 @@
           <li{% if meeting.started and not meeting.ended and active_top_pk == top.pk %} style="border:3px solid #6ca6cd;"{% endif %}{% if not top.is_open and not meeting.ended %} style="color:#9a9a9a;"{% endif %}>
             <span class="top">{{ top }}</span>
             {% if top.submission %}
-                <a href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"><span class="icon_download" title="{% trans 'Download documents (zip)' %}"></span></a>
+                <a class="fa fa-download text-primary" title="{% trans 'Download documents (zip)' %}" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"></a>
                 {% with top.submission.current_submission_form as sf %}
                     {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
                 {% endwith %}

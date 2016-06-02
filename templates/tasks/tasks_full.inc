@@ -33,7 +33,10 @@
         <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
     </div>
     <div class="task_bookmark" title="{% trans "Drag the bookmark link to your bookmark bar to save it." %}">
-        <a href="{{ bookmarklink }}"><span class="icon_comment"></span>{% trans "Bookmark" %}</a>
+        <a href="{{ bookmarklink }}">
+            <span class="fa fa-bookmark text-primary"></span>
+            {% trans "Bookmark" %}
+        </a>
     </div>
 </form>
 
@@ -78,7 +81,7 @@
                     <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
-                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                            <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                         {% endif %}
                     {% endwith %}
                 </li> {% endfor %} </ul>
@@ -105,7 +108,7 @@
                     <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
-                            <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                            <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                         {% endif %}
                     {% endwith %}
                 </li> {% endfor %} </ul>

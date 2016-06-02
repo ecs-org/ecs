@@ -126,8 +126,7 @@
 .task_list {
     margin: 12px 0 10px;
 
-    .task_item ul form,
-    .task_item ul a.preview {
+    .task_item ul form {
         display: inline-block;
     }
 }

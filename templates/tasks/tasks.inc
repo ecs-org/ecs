@@ -76,7 +76,7 @@
                     {% spaceless %}
                         {% with task.get_preview_url as preview_url %}
                             {% if preview_url %}
-                                <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                                <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                             {% endif %}
                         {% endwith %}
                     {% endspaceless %}
@@ -108,7 +108,7 @@
                     {% spaceless %}
                         {% with task.get_preview_url as preview_url %}
                             {% if preview_url %}
-                                <a class="preview" title="{% trans "Preview" %}" href="{{ preview_url }}">{% trans "Preview" %}</a>
+                                <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                             {% endif %}
                         {% endwith %}
                     {% endspaceless %}

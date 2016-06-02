@@ -9,7 +9,7 @@
         {% endif %}
         <label for="{{ field|id_for_label }}">
             {% if readonly and field_info.help_text %}
-                <span class="icon_comment" title="{{ field_info.help_text }}"></span>
+                <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
             {% endif %}
             {{ field_info.label|default:field.label }}
             {% if field_info.number %}

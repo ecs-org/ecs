@@ -2,6 +2,7 @@
 {% block delete_url %}{% url 'ecs.core.views.submissions.delete_document_from_submission' docstash_key=request.docstash.key %}{% endblock %}
 {% block extra_hint %}
     <div class="hint">
-        <span class="icon_comment"></span>Bitte beachten Sie, dass Name, Version und Datum Ihrer Dateien im Votum aufscheinen und niemand außer Ihnen diese Metadaten verändern kann.
+        <span class="fa fa-info text-info"></span>
+        Bitte beachten Sie, dass Name, Version und Datum Ihrer Dateien im Votum aufscheinen und niemand außer Ihnen diese Metadaten verändern kann.
     </div>
 {% endblock %}

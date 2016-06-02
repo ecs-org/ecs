@@ -25,7 +25,7 @@
 {% endfor %}
 
 <div>
-    <span class="icon_comment"></span>
+    <span class="fa fa-info text-info"></span>
     {% if show_system_messages %}
         {% trans 'System messages are shown.' %}
         <a href="{{ request.path }}" class="open-in-widget">{% trans 'Hide system messages' %}</a>

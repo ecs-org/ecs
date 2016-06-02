@@ -61,9 +61,12 @@
                         <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission_form.submission.pk to_user_pk=ta.user.pk %}" target="_blank">
                             <span class="fa fa-envelope-o"></span>
                             {% trans "Send Message" %}
-                        </a>
+                        </a><br>
                         {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
-                            <td><a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}"><span class="icon_revoke"></span>{% trans 'Revoke' %}</a></td>
+                            <a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}">
+                                <span class="fa fa-times"></span>
+                                {% trans 'Revoke' %}
+                            </a><br>
                         {% endif %}
                     </td>
                 </tr>

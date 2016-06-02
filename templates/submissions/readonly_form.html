@@ -5,7 +5,10 @@
 {% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
 
 {% block headertitle %}
-    <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}" target="_blank"><span class="preview_icon"></span> {{ submission_form.submission|ec_number }}</a> 
+    <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}" target="_blank">
+        <span class="fa fa-search"></span>
+        {{ submission_form.submission|ec_number }}
+    </a>
     {{ submission.project_title_display|default:'<em>Ohne Titel</em>' }}
     {% if submission.is_finished %}
         ({% trans 'finished' %})
@@ -243,8 +246,8 @@
             {% if review_form.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
                 {% if checklist.status == 'review_ok' or user|has_flag:'is_internal' %}
                     <p>
-                        <a class="button_submit" href="{% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk %}">
-                            <span class="icon_pdf" style="vertical-align: middle;"></span>
+                        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk %}">
+                            <span class="fa fa-file-pdf-o"></span>
                             <span>{% if checklist.status == 'review_ok' %}{% trans "Download PDF" %}{% else %}{% trans 'Download unpublished Version as PDF' %}{% endif %}<span>
                         </a>
                     </p>

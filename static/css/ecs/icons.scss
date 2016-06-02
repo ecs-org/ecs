@@ -65,31 +65,15 @@
     background-position: -320px -256px;
 }
 
-.icon_read, .icon_bump, .icon_answer, .icon_delegate, .icon_done, .icon_sort, .icon_revoke, .icon_in, .icon_out, .icon_pending, .task_mine, .task_assigned, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+.icon_done, .icon_sort, .icon_in, .icon_out, .icon_pending, .task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
     @include icon_bg_16;
     margin-right: 3px;
-}
-.icon_read {
-    background-position: -160px -128px;
-}
-.icon_bump {
-    background-position: -240px -128px;
-}
-.icon_answer {
-    background-position: -160px -64px;
-}
-.icon_delegate {
-    background-position: -240px -208px;
 }
 .icon_done {
     background-position: -16px -160px;
 }
 .icon_sort {
     background-position: -240px -256px;
-}
-.icon_revoke {
-    background-position: 0 -176px;
-    vertical-align: top;
 }
 .icon_in {
     background-position: -240px -288px;
@@ -103,9 +87,6 @@
 
 .task_mine {
     background-position: 0 -16px;
-}
-.task_assigned {
-    background-position: -80px -320px;
 }
 .task_open {
     background-position: 0 0;
@@ -158,21 +139,10 @@
     background-position: 0 -672px;
 }
 
-.icon_comment, .preview_icon, .first_page, .prev_page, .next_page, .last_page, .document_upload .icon_warning, .tab_headers li a.delete_row, .task_list .preview, .icon_download  {
+.first_page, .prev_page, .next_page, .last_page, .tab_headers li a.delete_row {
     @include icon_bg_16;
 }
 
-.icon_comment {
-    padding: 0px;
-}
-.icon_comment {
-    background-position: 0 -80px;
-    vertical-align: text-bottom;
-    margin-right: 5px;
-}
-.preview_icon {
-    background-position: 0 -1056px;
-}
 .first_page {
     background-position: -240px -80px;
 }
@@ -185,10 +155,6 @@
 .last_page {
     background-position: -240px -64px;
 }
-.document_upload .icon_warning {
-    padding-left: 5px;
-    background-position: 0 -112px;
-}
 .tab_headers li a.delete_row {
     border: none;
     background-position: 0 -128px;
@@ -197,17 +163,10 @@
     top: 3px;
     overflow: hidden;
 }
-.task_list .preview {
-    background-position: 0 -1056px;
-}
-.icon_download {
-    background-position: 0 -384px;
-}
 
 .task_complete,
 .task_reject,
-.task_delegate,
-.task_ask {
+.task_delegate {
     @include icon_bg_16;
     margin-right: 5px;
 }
@@ -219,9 +178,6 @@
 }
 .task_delegate {
     background-position: -240px -208px;
-}
-.task_ask {
-    background-position: 0 -224px;
 }
 
 
@@ -277,11 +233,4 @@ div.inline_formset .form a.delete_row {
     @include icon_bg_16;
     background-position: -160px -32px;
     margin-left: -20px;
-}
-
-.icon_pdf {
-    @include icon_bg_32;
-    border: none;
-    background-position: -320px -352px ;
-    overflow: hidden;
 }
