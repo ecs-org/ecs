@@ -12,9 +12,16 @@
 
 {% block content %}
 <div class="message_display">
-  <a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
+  <a href="{% url 'ecs.communication.views.list_threads' %}">
+      <span class="fa fa-backward"></span>
+      {% trans "Back to the communication overview" %}
+  </a>
   {% if submission %}
-      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
+      <br>
+      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab">
+          <span class="fa fa-backward"></span>
+          {% trans "Back to the Study" %}
+      </a>
   {% endif %}
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       {% csrf_token %}
@@ -56,12 +63,8 @@
       {% endif %}
 
       {% include 'communication/send_base.inc' %}
-      <input type="submit" value="Nachricht abschicken" />
+      <input type="submit" class="btn btn-sm btn-primary" value="Nachricht abschicken" />
   </form>
-  <a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "Back to the communication overview" %}</a>
-  {% if submission %}
-      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab" class="button_submit">{% trans "Back to the Study" %}</a>
-  {% endif %}
 </div>
 {% endblock %}
 

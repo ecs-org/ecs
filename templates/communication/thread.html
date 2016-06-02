@@ -16,9 +16,16 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "To the communication overview" %}</a>
+<a href="{% url 'ecs.communication.views.list_threads' %}">
+    <span class="fa fa-backward"></span>
+    {% trans "To the communication overview" %}
+</a>
 {% if thread.submission %}
-<a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
+    <br>
+    <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab">
+        <span class="fa fa-backward"></span>
+        {% trans "To the Study" %}
+    </a>
 {% endif %}
 
 <ul class="thread">
@@ -53,13 +60,8 @@
 <form class="send" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="{% trans "Send" %}">
+    <input type="submit" class="btn btn-sm btn-primary" value="{% trans "Send" %}">
 </form>
-
-<a href="{% url 'ecs.communication.views.list_threads' %}" class="button_submit">{% trans "To the communication overview" %}</a>
-{% if thread.submission %}
-<a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab" class="button_submit">{% trans "To the Study" %}</a>
-{% endif %}
 
 </div>
 {% endblock %}

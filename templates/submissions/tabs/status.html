@@ -77,7 +77,13 @@
                                 <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}">
                                     <span class="fa fa-file-pdf-o"></span>
                                     {% trans 'Download PDF' %}
-                                </a>
+                                </a><br>
+                            {% endif %}
+                            {% if sf == submission.current_submission_form and sf|allows_export_by:request.user %}
+                                <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}">
+                                    <span class="fa fa-file-archive-o"></span>
+                                    {% trans "Export" %}
+                                </a><br>
                             {% endif %}
                         </td>
                     </tr>
@@ -242,8 +248,4 @@
 
 {% if user|has_flag:'is_internal' %}
     <div data-widget-url="{% url 'ecs.core.views.comments.index' submission_pk=submission.pk %}"></div>
-{% endif %}
-
-{% if submission_form|allows_export_by:request.user %}
-    <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}" class="button_submit">{% trans "Export" %}</a>
 {% endif %}

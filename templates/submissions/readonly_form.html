@@ -152,7 +152,7 @@
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
         {% if submission.presenter == request.user or submission.susar_presenter == request.user %}
-            <a href="{% url 'ecs.notifications.views.select_notification_creation_type' %}" class="button_submit">{% trans "Create a new notification" %}</a>
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab collapse">
@@ -174,7 +174,7 @@
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
         {% if submission.presenter == request.user %}
-            <a href="{% url 'ecs.notifications.views.select_notification_creation_type' %}" class="button_submit">{% trans "Create a new notification" %}</a>
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     {% if vote_review_form %}
@@ -220,9 +220,6 @@
 
     {% if categorization_review_form %}
         <div id="categorization_review_tab" class="tab collapse">
-            {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
-                <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
-            {% endif %}
             <p>
                 Typ:
                 {% if submission_form.is_amg %}
@@ -235,13 +232,13 @@
             {% with categorization_review_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
+            {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
+                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}">{% trans 'Reopen' %}</a></p>
+            {% endif %}
         </div>
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab collapse">
-        {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
-            <p><a href="{% url 'ecs.tasks.views.reopen_task' task_pk=checklist_review_form.reopen_task.pk %}" class="button_submit">{% trans 'Reopen' %}</a></p>
-        {% endif %}
         {% with checklist_review_form as review_form %}
             {% if review_form.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
                 {% if checklist.status == 'review_ok' or user|has_flag:'is_internal' %}
@@ -255,13 +252,16 @@
             {% endif %}
             {% include 'submissions/checklist_review_form.inc' %}
         {% endwith %}
+        {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
+            <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=checklist_review_form.reopen_task.pk %}">{% trans 'Reopen' %}</a></p>
+        {% endif %}
     </div>
     {% endfor %}
     
     <div id="communication_tab" class="tab collapse">
         <div data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' submission_pk=submission.pk %}"></div>
         <div data-widget-url="{% url 'ecs.communication.views.outgoing_message_widget' submission_pk=submission.pk %}"></div>
-        <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank" class="button_submit">{% trans "Write a new message" %}</a>
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank">{% trans "Write a new message" %}</a>
     </div>
     {% if user|has_flag:'is_internal' %}
         <div id="communication_overview_tab" class="tab collapse">

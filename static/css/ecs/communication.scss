@@ -41,7 +41,7 @@
             }
         }
     }
-    span {
+    span:not(.fa) {
         display: block;
         padding: 5px 0;
     }
