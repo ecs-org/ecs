@@ -8,7 +8,7 @@ WorkingDirectory=/app/ecs
 Environment="HOME=/app"
 Environment="USER=app"
 Environment="VIRTUAL_ENV=/app/env"
-Environment="PATH=/app/env/bin:$PATH"
+Environment="PATH=/app/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 Restart=always
 User=app
 Group=app
