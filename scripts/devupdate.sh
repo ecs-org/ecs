@@ -247,6 +247,7 @@ main(){
         popd
 
     elif test "$1" = "init" -o "$1" = "pull"; then
+        pushd $sourcedir
         target_branch="$(git rev-parse --abbrev-ref HEAD)"
         err=$?
         if test "$err" -ne 0; then
@@ -256,20 +257,17 @@ main(){
         if test "$1" = "init"; then init_all=true; else init_all=false; fi
 
         if test "$1" = "pull"; then
-            pushd $sourcedir
             shift
             force=false
             if test "$1" = "--force"; then force=true; shift; fi
             if test "$1" != ""; then target_branch=$1; shift; fi
             if test "$1" = "--force"; then force=true; shift; fi
-
             abort_ifnot_cleanrepo $sourcedir $(if $force; then echo "--ignore-unpushed"; fi)
-
             echo "git fetch --all --prune"
             git fetch --all --prune
-            popd
         fi
 
+        popd
         if test "$target_branch" = ""; then
             echo "Error: Fatal, could not determine target_branch!"
             exit 1
