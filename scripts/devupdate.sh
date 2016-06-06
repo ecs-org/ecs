@@ -5,7 +5,8 @@ usage(){
 Usage:  $0 [--restore-dump] init
         $0 [--restore-dump] pull [--force] [branchname [--force]]
         $0 rebase
-        $0 {dumpdb [targetdumpname]/freshdb}
+        $0 dumpdb [targetdumpname]
+        $0 freshdb
 
 init    = run all system changes regardless of current state,
             does not touch sourcecode
@@ -129,6 +130,11 @@ dev_update(){
 
     echo "recreate directories"
     ./scripts/create-dirs.sh
+
+    # migrate symlink of bin to symlink to ~/bin/*
+    if test -L /app/bin; then rm /app/bin; fi
+    # symlink all scripts to ~/bin
+    ln -sft /app/bin /app/ecs/scripts/*
 
     # environment recreation
     if $pip_change; then

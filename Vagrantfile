@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+require 'fileutils'
+Vagrant.require_version ">= 1.6.0"
+
 # Variables, can be overwritten by vagrant-include.rb
 $cpus = 2
 $memory = 1500
@@ -9,16 +12,17 @@ $ecs_git_source = "https://github.com/ethikkom/ecs.git"
 $ecs_git_branch = "master"
 $libvirt_management_network_name = "vagrant-libvirt"
 $libvirt_management_network_address = ""
+$libvirt_management_network_mac = nil
 $libvirt_machine_virtual_size = 10
-$clouddrive_path = ""
-
-require 'fileutils'
-Vagrant.require_version ">= 1.6.0"
+$clouddrive_path = nil
+$ecs_pgdump_iso = nil
+$devserver_name = File.basename(File.expand_path(File.dirname(__FILE__)))
 
 CUSTOM_CONFIG = File.join(File.dirname(__FILE__), "vagrant-include.rb")
 if File.exist?(CUSTOM_CONFIG)
   require CUSTOM_CONFIG
 end
+
 
 Vagrant.configure(2) do |config|
 
@@ -51,9 +55,14 @@ Vagrant.configure(2) do |config|
     lv.management_network_name = $libvirt_management_network_name
     lv.management_network_address = $libvirt_management_network_address
     lv.machine_virtual_size = $libvirt_machine_virtual_size
-
+    if $libvirt_management_network_mac
+      lv.management_network_mac = $libvirt_management_network_mac
+    end
     if $clouddrive_path
       lv.storage :file, :device => :cdrom, :allow_existing => true, :path => $clouddrive_path
+    end
+    if $ecs_pgdump_iso
+      lv.storage :file, :device => :cdrom, :allow_existing => true, :path => $ecs_pgdump_iso
     end
   end
 
@@ -66,12 +75,12 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "shell", privileged:true, inline: <<-SHELL
     # https://github.com/mitchellh/vagrant/issues/5673
-    hostnamectl set-hostname ecs.local
-    echo "127.0.0.1 ecs.local" >> /etc/hosts
+    hostnamectl set-hostname #{$devserver_name}.local
+    echo "127.0.0.1 #{$devserver_name}.local ecs.local" >> /etc/hosts
+    export DEBIAN_FRONTEND=noninteractive
     export LANG=en_US.UTF-8
     printf %b "LANG=en_US.UTF-8\nLANGUAGE=en_US:en\nLC_MESSAGES=POSIX\n" > /etc/default/locale
     locale-gen en_US.UTF-8 && dpkg-reconfigure locales
-    export DEBIAN_FRONTEND=noninteractive
     echo "==> Disabling the release upgrader"
     sed -i.bak 's/^Prompt=.*$/Prompt=never/' /etc/update-manager/release-upgrades
     apt-get -y update
@@ -97,7 +106,9 @@ Vagrant.configure(2) do |config|
     echo "Defaults env_keep+=SSH_AUTH_SOCK" > /etc/sudoers.d/10-env-ssh-auth-sock
 
     # symlink scripts to ~/bin
-    ln -sf /app/ecs/scripts /app/bin
+    mkdir -p /app/bin
+    ln -sft /app/bin /app/ecs/scripts/*
+
     # chown files
     chown -R app:app /app
 
@@ -121,7 +132,7 @@ Vagrant.configure(2) do |config|
     # automount ecs-pgdump-iso if exists
     grep -Eq "LABEL=ecs-pgdump-iso" /etc/fstab
     if test $? -ne 0; then
-      echo "LABEL=ecs-pgdump-iso  /app/ecs-pgdump-iso  iso9660 defaults,ro  0 0" >> /etc/fstab
+      echo "LABEL=ecs-pgdump-iso  /app/ecs-pgdump-iso  iso9660 defaults,ro,nofail  0 0" >> /etc/fstab
       systemctl daemon-reload
     fi
 
