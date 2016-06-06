@@ -3,7 +3,7 @@ FROM ubuntu:xenial
 # locale setup
 ENV LANG en_US.UTF-8
 RUN printf %b "LANG=en_US.UTF-8\nLANGUAGE=en_US:en\nLC_MESSAGES=POSIX\n" > /etc/default/locale
-RUN locale-gen en_US.UTF-8 && dpkg-reconfigure locales
+RUN locale-gen en_US.UTF-8 && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales
 
 # create user+home, copy source, chown, chmod
 ENV HOME /app
