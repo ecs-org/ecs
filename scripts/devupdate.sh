@@ -164,7 +164,7 @@ dev_update(){
     if $ds_change; then
         echo "devserver service change"
         sudo cp -f $sourcedir/conf/devserver.service /etc/systemd/system/devserver.service
-        sudo systemctl reload devserver
+        sudo systemctl daemon-reload
         sudo systemctl enable devserver
     fi
 
