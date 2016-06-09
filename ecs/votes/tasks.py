@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.utils.translation import ugettext as _
 from django.utils import timezone
+from django.db.models import F, Func
 
 from celery.task import periodic_task
 from celery.schedules import crontab
@@ -10,6 +11,7 @@ from ecs.votes.models import Vote
 from ecs.core.models.constants import SUBMISSION_LANE_LOCALEC
 from ecs.users.utils import get_user, get_office_user
 from ecs.communication.utils import send_message
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
 def send_submission_message(submission, subject, text, recipients):
@@ -84,6 +86,53 @@ def send_vote_reminder_office(vote):
     send_submission_message(submission, subject, text, recipients)
 
 
+def send_temporary_vote_reminder_submitter(vote):
+    recipients = vote.submission_form.get_presenting_parties().get_users()
+    submission = vote.get_submission()
+
+    if vote.top:
+        vote_date = vote.top.meeting.start
+    else:
+        vote_date = vote.published_at
+
+    text = _('''There is still no permanent vote for submission {ec_number}. The current
+temporary vote was published on the {vote_date}. Please make sure you've
+sent all necessary documents to the ethics commission.
+
+Yours sincerely,
+
+the team of the ethics commission
+    ''').format(
+        ec_number=submission.get_ec_number_display(),
+        vote_date=vote_date.strftime('%d.%m.%Y')
+    )
+
+    subject = _('Temporary vote for Submission {ec_number}').format(
+        ec_number=submission.get_ec_number_display())
+    send_submission_message(submission, subject, text, recipients)
+
+
+def send_temporary_vote_reminder_office(vote):
+    recipients = [get_office_user()]
+    submission = vote.get_submission()
+
+    if vote.top:
+        vote_date = vote.top.meeting.start
+    else:
+        vote_date = vote.published_at
+
+    text = _('''There is still no permanent vote for submission {ec_number}. The current
+temporary vote was published on the {vote_date}.
+    ''').format(
+        ec_number=submission.get_ec_number_display(),
+        vote_date=vote_date.strftime('%d.%m.%Y')
+    )
+
+    subject = _('Temporary vote for Submission {ec_number}').format(
+        ec_number=submission.get_ec_number_display())
+    send_submission_message(submission, subject, text, recipients)
+
+
 @periodic_task(run_every=timedelta(days=1))
 def send_reminder_messages(today=None):
     if today is None:
@@ -105,6 +154,20 @@ def send_reminder_messages(today=None):
             send_vote_reminder_office(vote)
         elif days_valid == -1:
             send_vote_expired(vote)
+
+
+    tmp_votes = (Vote.objects
+        .exclude(result__in=PERMANENT_VOTE_RESULTS)
+        .exclude(_currently_published_for=None)
+        .annotate(published_date=Func(F('published_at'), function='DATE')))
+
+    for vote in tmp_votes.filter(
+            published_date=Func(today - timedelta(days=150), function='DATE')):
+        send_temporary_vote_reminder_submitter(vote)
+
+    for vote in tmp_votes.filter(
+            published_date=Func(today - timedelta(days=240), function='DATE')):
+        send_temporary_vote_reminder_office(vote)
 
 
 @periodic_task(run_every=crontab(hour=3, minute=58))
