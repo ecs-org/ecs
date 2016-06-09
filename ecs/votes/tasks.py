@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from django.utils.translation import ugettext as _
-from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from celery.task import periodic_task
@@ -24,13 +23,11 @@ def send_vote_expired(vote):
     recipients.add(get_office_user())
     submission = vote.get_submission()
 
-    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
     text = _('Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist abgelaufen.\n') % {
-        'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
@@ -43,7 +40,6 @@ def send_vote_reminder_submitter(vote):
     recipients = vote.submission_form.get_presenting_parties().get_users()
     submission = vote.get_submission()
 
-    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
         vote_date = vote.top.meeting.start
     else:
@@ -62,7 +58,6 @@ Mit freundlichen Grüßen,
 
 das Team der Ethik-Kommission
     ''') % {
-        'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
@@ -75,13 +70,11 @@ def send_vote_reminder_office(vote):
     recipients = [get_office_user()]
     submission = vote.get_submission()
 
-    url = reverse('readonly_submission_form', kwargs={ 'submission_form_pk': vote.submission_form.pk })
     if vote.top:
         vote_date = vote.top.meeting.start
     else:
         vote_date = vote.published_at
     text = _('Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in einer Woche ab.\n') % {
-        'url': url,
         'ec_number': submission.get_ec_number_display(),
         'vote_date': vote_date.strftime('%d.%m.%Y'),
     }
