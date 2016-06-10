@@ -123,7 +123,8 @@ class MeetingQFactory(authorization.QFactory):
         profile = user.profile
         if profile.is_internal:
             return self.make_q()
-        elif profile.is_resident_member or profile.is_board_member:
+        elif profile.is_board_member or profile.is_resident_member or \
+            profile.is_omniscient_member:
             return self.make_q(ended=None)
         else:
             return self.make_deny_q()

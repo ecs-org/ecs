@@ -113,12 +113,12 @@
                         <a class="dropdown-item" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans 'New Notification' %}</a>
                     </div>
                 </div>
-                {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member %}
+                {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member or user.profile.is_omniscient_member %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle meetings" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Meetings" %}</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{% url 'ecs.meetings.views.next' %}">{% trans "Next Meeting" %}</a>
-                            {% if user.profile.is_internal or user.profile.is_resident_member %}
+                            {% if user.profile.is_internal or user.profile.is_resident_member or user.profile.is_omniscient_member %}
                                 <a class="dropdown-item" href="{% url 'ecs.meetings.views.upcoming_meetings' %}">{% trans "Upcoming Meetings" %}</a>
                             {% endif %}
                             {% if user.profile.is_internal %}

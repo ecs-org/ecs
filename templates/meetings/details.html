@@ -14,10 +14,8 @@
             <a href="#open_tasks_tab">{% trans "Open Tasks" %}</a>
             <a href="#tops_tab">{% trans "TOPs" %}</a>
         {% endif %}
-        {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member %}
-            <a href="#submissions_tab">{% trans "Submissions" %}</a>
-            <a href="#notifications_tab">{% trans "Notifications" %}</a>
-        {% endif %}
+        <a href="#submissions_tab">{% trans "Submissions" %}</a>
+        <a href="#notifications_tab">{% trans "Notifications" %}</a>
         {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
             <a href="#protocol_tab">{% trans 'Protocol' %}</a>
         {% endif %}
@@ -49,14 +47,12 @@
             <div data-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
-    {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member %}
-        <div id="submissions_tab" class="collapse">
-            <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
-        </div>
-        <div id="notifications_tab" class="collapse">
-            <div data-widget-url="{% url 'ecs.meetings.views.notification_list' meeting_pk=meeting.pk %}"></div>
-        </div>
-    {% endif %}
+    <div id="submissions_tab" class="collapse">
+        <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
+    </div>
+    <div id="notifications_tab" class="collapse">
+        <div data-widget-url="{% url 'ecs.meetings.views.notification_list' meeting_pk=meeting.pk %}"></div>
+    </div>
     {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
         <div id="protocol_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.edit_protocol' meeting_pk=meeting.pk %}"></div>

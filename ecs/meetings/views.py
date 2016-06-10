@@ -64,7 +64,7 @@ def meeting_list(request, meetings, title=None):
         'title': title,
     })
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal', 'is_resident_member', 'is_omniscient_member')
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.upcoming().order_by('start'), title=_('Upcoming Meetings'))
 
@@ -153,7 +153,7 @@ def tops(request, meeting=None):
         'closed_tops': closed_tops,
     })
 
-@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 @cache_meeting_page()
 def submission_list(request, meeting=None):
     tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
@@ -166,7 +166,7 @@ def submission_list(request, meeting=None):
         'active_top_pk': active_top_pk,
     })
 
-@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def notification_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
@@ -210,7 +210,7 @@ def notification_list(request, meeting_pk=None):
     })
 
 
-@user_flag_required('is_internal', 'is_board_member', 'is_resident_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     
@@ -618,7 +618,7 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         'checklist_review_states': list(checklist_review_states.items()),
     })
 
-@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -744,7 +744,7 @@ def send_protocol(request, meeting_pk=None):
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
@@ -752,7 +752,7 @@ def protocol_pdf(request, meeting_pk=None):
         pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
 
-@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
     filename = '%s-%s-%s.pdf' % (
@@ -770,7 +770,7 @@ def timetable_htmlemailpart(request, meeting_pk=None):
     })
     return response
 
-@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def next(request):
     try:
         meeting = Meeting.objects.next()
@@ -779,7 +779,7 @@ def next(request):
     else:
         return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
-@user_flag_required('is_internal', 'is_resident_member', 'is_board_member')
+@user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
