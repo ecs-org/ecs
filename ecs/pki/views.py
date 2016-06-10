@@ -59,7 +59,8 @@ def revoke_cert(request, cert_pk=None):
 
 
 def authenticate(request):
-    if request.user.profile.is_internal:
+    profile = request.user.profile
+    if profile.is_internal or profile.is_omniscient_member:
         request.session['ecs_pki_authenticated'] = True
         request.session.modified = True
     return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))

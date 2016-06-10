@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from ecs.core.forms.fields import AutocompleteModelChoiceField
 from ecs.pki.models import Certificate
@@ -8,8 +9,11 @@ from ecs.pki.models import Certificate
 
 class CertForm(forms.Form):
     user = AutocompleteModelChoiceField(
-        'internal-users',
-        User.objects.filter(is_active=True, profile__is_internal=True)
+        'pki-users',
+        User.objects.filter(
+            Q(profile__is_internal=True) | Q(profile__is_omniscient_member=True),
+            is_active=True
+        )
     )
     cn = forms.CharField()
     passphrase = forms.CharField(widget=forms.PasswordInput(), min_length=12)

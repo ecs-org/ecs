@@ -15,6 +15,8 @@ def autocomplete(request, queryset_name=None):
         'internal-users': Q(profile__is_internal=True),
         'board-members': Q(
             groups__name__in=['EC-Board Member', 'EC-Executive Board Member']),
+        'pki-users':
+            Q(profile__is_internal=True) | Q(profile__is_omniscient_member=True),
     }
 
     users = (User.objects
