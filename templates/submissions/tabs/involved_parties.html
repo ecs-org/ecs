@@ -6,7 +6,7 @@
             <th>{% trans 'Involvement' %}</th>
             <th>{% trans 'Name' %}</th>
             <th>{% trans 'Organization' %}</th>
-            {% if user|has_flag:'is_internal' %}
+            {% if user.profile.is_internal %}
                 <th>{% trans 'E-Mail' %}</th>
             {% endif %}
             <th></th>
@@ -18,7 +18,7 @@
                 <td>{{ party.involvement }}</td>
                 <td>{{ party.name|default:'' }}</td>
                 <td>{{ party.organization|default:'' }}</td>
-                {% if user|has_flag:'is_internal' %}
+                {% if user.profile.is_internal %}
                     <td>{{ party.email|default:'' }}</td>
                 {% endif %}
                 <td>
@@ -34,7 +34,7 @@
     </tbody>
 </table>
 
-{% if temporary_auth or user|has_flag:'is_executive_board_member' %}
+{% if temporary_auth or user.profile.is_executive_board_member %}
     <h3>{% trans 'Temporary Authorization' %}</h3>
     <table class="table table-sm">
         <thead>
@@ -42,7 +42,7 @@
                 <th>{% trans 'Timeframe' %}</th>
                 <th>{% trans 'Name' %}</th>
                 <th>{% trans 'Organization' %}</th>
-                {% if user|has_flag:'is_internal' %}
+                {% if user.profile.is_internal %}
                     <th>{% trans 'E-Mail' %}</th>
                 {% endif %}
                 <th></th>
@@ -54,7 +54,7 @@
                     <td>{{ ta.start|date:'d.m.Y, H:i' }} Uhr – {{ ta.end|date:'d.m.Y, H:i' }} Uhr</td>
                     <td>{{ ta.user }}</td>
                     <td>{{ ta.user.profile.organisation }}</td>
-                    {% if user|has_flag:'is_internal' %}
+                    {% if user.profile.is_internal %}
                         <td>{{ ta.user.email|default:'' }}</td>
                     {% endif %}
                     <td>
@@ -62,7 +62,7 @@
                             <span class="fa fa-envelope-o"></span>
                             {% trans "Send Message" %}
                         </a><br>
-                        {% if ta.is_active and user|has_flag:'is_executive_board_member' %}
+                        {% if ta.is_active and user.profile.is_executive_board_member %}
                             <a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}">
                                 <span class="fa fa-times"></span>
                                 {% trans 'Revoke' %}
@@ -74,7 +74,7 @@
         </tbody>
     </table>
 {% endif %}
-{% if user|has_flag:'is_executive_board_member' %}
+{% if user.profile.is_executive_board_member %}
     <div>
         <form class="authorize" action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
             {% csrf_token %}
@@ -88,7 +88,7 @@
     </div>
 {% endif %}
 
-{% if user|has_flag:'is_internal' %}
+{% if user.profile.is_internal %}
     <h3>{% trans "Biased Parties" %}</h3>
     <div data-widget-url="{% url 'ecs.core.views.submissions.biased_board_members_review' submission_pk=submission.pk %}"></div>
 {% endif %}

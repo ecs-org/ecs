@@ -15,7 +15,7 @@
     {{ answer.text|linebreaksbr }}
 </div>
 
-{% if user|has_flag:'is_internal' %}
+{% if user.profile.is_internal %}
 <br/><p>
     <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
 </p>

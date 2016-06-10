@@ -8,7 +8,7 @@
 
     <div class="list_item">
         {% block actions %}
-            {% if doc.doctype.is_downloadable or user|has_flag:'is_internal' %}
+            {% if doc.doctype.is_downloadable or user.profile.is_internal %}
                 <a href="{% url 'ecs.docstash.views.download_document' docstash_key=request.docstash.key document_pk=doc.pk %}">{% trans "Download" %}</a> |
             {% endif %}
             <a href="{% url 'ecs.docstash.views.view_document' docstash_key=request.docstash.key document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> |

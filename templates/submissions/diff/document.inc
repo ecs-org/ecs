@@ -10,7 +10,7 @@
     {% if not plainhtml %}
     <span>
         <a href="{% url 'ecs.core.views.submissions.view_document' submission_form_pk=submission_form.pk document_pk=doc.pk %}" target="_blank">{% trans 'View' %}</a>
-        {% if doc.doctype.is_downloadable or user|has_flag:'is_internal' %}
+        {% if doc.doctype.is_downloadable or user.profile.is_internal %}
             | <a href="{% url 'ecs.core.views.submissions.download_document' submission_form_pk=submission_form.pk document_pk=doc.pk %}">{% trans "Download" %}</a>
         {% endif %}
     </span>

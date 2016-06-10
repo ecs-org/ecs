@@ -8,7 +8,7 @@
     <div id="tabs_administration" class="tab_headers">
         <a href="{% url 'ecs.users.views.administration' %}"{% if active == 'user_administration' %} class="active"{% endif %}>{% trans "User Administration" %}</a>
         <a href="{% url 'ecs.users.views.invite' %}"{% if active == 'user_invite' %} class="active"{% endif %}>{% trans "Invite User" %}</a>
-        {% if user|has_flag:"is_executive_board_member" %}
+        {% if user.profile.is_executive_board_member %}
             <a href="{% url 'ecs.users.views.login_history' %}"{% if active == 'login_history' %} class="active"{% endif %}>{% trans 'Login History' %}</a>
         {% endif %}
     </div>

@@ -78,7 +78,7 @@
 
             var textarea = thread.find('textarea[name="text"]');
             new ecs.textarea.TextArea(textarea, [
-                {% if user|has_flag:'is_internal' %}
+                {% if user.profile.is_internal %}
                     ecs.textarea.toolbarItems.boilerplate(
                         "{{ _('Insert Boilerplate')|escapejs }}",
                         "{% url 'ecs.boilerplate.views.select_boilerplate' %}"

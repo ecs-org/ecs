@@ -22,7 +22,7 @@
 
 <ul class="user_list">
 {% for profile in users.object_list %}
-    <li class="user collapsed{% if profile|has_flag:"is_indisposed" %} indisposed{% endif %}{% if not profile.is_active %} inactive{% endif %}">
+    <li class="user collapsed{% if profile.profile.is_indisposed %} indisposed{% endif %}{% if not profile.is_active %} inactive{% endif %}">
         <div class="head">
             <span class="username">
                 {{ profile|formal_name }}
@@ -37,7 +37,7 @@
         <div class="body">
             <a href="{% url 'ecs.users.views.details' user_pk=profile.pk %}">{% trans 'Edit Details' %}</a>
             | <a href="{% url 'ecs.users.views.indisposition' user_pk=profile.pk %}">
-                    {% if profile|has_flag:"is_indisposed" %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
+                    {% if profile.profile.is_indisposed %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
                 </a>
             | <form action="{% url 'ecs.users.views.toggle_active' user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>{% csrf_token %}</form>
             {% with profile as profile_user %}

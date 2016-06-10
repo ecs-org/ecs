@@ -82,13 +82,13 @@
             {% endif %}
         </div>
         {% with submission.medical_categories.all as categories %}
-            {% if categories and user|has_flag:'is_internal' %}
+            {% if categories and user.profile.is_internal %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% with submission.meetings.distinct as meetings %}
             {% if meetings %}
-                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user|has_flag:'is_internal' %}<a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+                <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user.profile.is_internal %}<a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% if docstash %}
@@ -97,7 +97,7 @@
                 <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete Changes' %}</a>
             </div>
         {% endif %}
-        {% if user|has_flag:'is_internal' %}
+        {% if user.profile.is_internal %}
             <div>
                 {% include 'tags/list.inc' with tags=submission.tags.all only %}
             </div>

@@ -1,6 +1,6 @@
 {% load i18n userutils core %}
 <table>
-    {% if user|has_flag:'is_internal' %}
+    {% if user.profile.is_internal %}
         <tr>
             <th>{% trans 'Tags' %}</th>
             <td>
@@ -105,7 +105,7 @@
             {% with submission.presenter.profile.organisation as organisation %}
                 {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'is_executive_board_member' or user == submission.presenter %}
+            {% if user.profile.is_executive_board_member or user == submission.presenter %}
                 | <a href="{% url 'ecs.core.views.submissions.change_submission_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -116,7 +116,7 @@
             {% with submission.susar_presenter.profile.organisation as organisation %}
                 {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
-            {% if user|has_flag:'is_executive_board_member' or user == submission.susar_presenter %}
+            {% if user.profile.is_executive_board_member or user == submission.susar_presenter %}
                 | <a href="{% url 'ecs.core.views.submissions.change_submission_susar_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -181,7 +181,7 @@
         <th>Ethikkommission:</th>
         <td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
     </tr>
-    {% if user|has_flag:'is_internal' %}
+    {% if user.profile.is_internal %}
     <tr>
         <th>Arbeitsablauf:</th>
         <td colspan="3">
@@ -199,7 +199,7 @@
             {% sudo %}{# non-internal users aren't allowed to see meetings by default (see auth_conf.py) #}
             {% for meeting in submission.meetings.all %}
                 <div>
-                    {% if user|has_flag:'is_internal' %}
+                    {% if user.profile.is_internal %}
                         <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}</a>
                     {% else %}
                         {{ meeting.start|date:'d.m.Y' }} {{ meeting.title }}{% if not forloop.last %}, {% endif %}
@@ -207,12 +207,12 @@
                 </div>
             {% endfor %}
             {% endsudo %}
-            {% if user|has_flag:'is_executive_board_member' and submission.is_reschedulable %}
+            {% if user.profile.is_executive_board_member and submission.is_reschedulable %}
                 <a href="{% url 'ecs.meetings.views.reschedule_submission' submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>
     </tr>
-    {% if user|has_flag:'is_internal' %}
+    {% if user.profile.is_internal %}
     <tr>
         <th>Voten:</th>
         <td colspan="3">
@@ -224,7 +224,7 @@
         </td>
     </tr>
     {% endif %}
-    {% if user|has_flag:'is_internal' and external_review_checklists %}
+    {% if user.profile.is_internal and external_review_checklists %}
     <tr>
         <th>Gutachten:</th>
         <td>
@@ -246,6 +246,6 @@
     {% endif %}
 </table>
 
-{% if user|has_flag:'is_internal' %}
+{% if user.profile.is_internal %}
     <div data-widget-url="{% url 'ecs.core.views.comments.index' submission_pk=submission.pk %}"></div>
 {% endif %}

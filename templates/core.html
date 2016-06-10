@@ -72,7 +72,7 @@
             <a href="" id="help_button" class="help_trigger fa fa-question-circle-o fa-2x text-info" title="{% trans "Click here to get help." %}"></a>
             {% get_scratchpad as scratchpad %}
             <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" class="fa fa-sticky-note{% if not scratchpad or scratchpad.is_empty %}-o{% endif %} fa-2x text-info scratchpad" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %}"></a>
-            {% if user|has_flag:"is_internal" %}
+            {% if user.profile.is_internal %}
               {% get_breadcrumbs as crumbs %}
               {% if crumbs %}
               <div class="breadcrumbs">
@@ -93,7 +93,7 @@
                 <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle submissions" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Studies" %}</a>
                     <div class="dropdown-menu">
-                        {% if user|has_flag:"is_internal" %}
+                        {% if user.profile.is_internal %}
                             <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.all_submissions' %}">{% trans "All Studies" %}</a>
                         {% endif %}
                         {% if user|has_assigned_submissions %}
@@ -113,15 +113,15 @@
                         <a class="dropdown-item" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans 'New Notification' %}</a>
                     </div>
                 </div>
-                {% if user|has_flag:"is_internal" or user|has_flag:"is_board_member" or user|has_flag:"is_resident_member" %}
+                {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle meetings" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Meetings" %}</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="{% url 'ecs.meetings.views.next' %}">{% trans "Next Meeting" %}</a>
-                            {% if user|has_flag:"is_internal" or user|has_flag:"is_resident_member" %}
+                            {% if user.profile.is_internal or user.profile.is_resident_member %}
                                 <a class="dropdown-item" href="{% url 'ecs.meetings.views.upcoming_meetings' %}">{% trans "Upcoming Meetings" %}</a>
                             {% endif %}
-                            {% if user|has_flag:"is_internal" %}
+                            {% if user.profile.is_internal %}
                                 <a class="dropdown-item" href="{% url 'ecs.meetings.views.past_meetings' %}">{% trans "Past Meetings" %}</a>
                             {% endif %}
                             {% if user|is_member_of:"EC-Office" %}
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                 {% endif %}
-                {% if user|has_flag:"is_internal" %}
+                {% if user.profile.is_internal %}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle administration" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Administration" %}</a>
                         <div class="dropdown-menu">

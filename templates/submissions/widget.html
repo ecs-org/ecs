@@ -44,13 +44,13 @@
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% with submission.medical_categories.all as categories %}
-            {% if categories and user|has_flag:'is_internal' %}
+            {% if categories and user.profile.is_internal %}
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
         {% endwith %}
 
-        {% if user|has_flag:'is_internal' %}
+        {% if user.profile.is_internal %}
             <div>
                 {% include 'tags/list.inc' with tags=submission.tags.all only %}
             </div>

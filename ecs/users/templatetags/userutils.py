@@ -6,10 +6,6 @@ from ecs.users.utils import get_formal_name, get_full_name, sudo
 register = Library()
 
 @register.filter
-def has_flag(user, flag):
-    return not user.is_anonymous() and getattr(user.profile, flag, False)
-
-@register.filter
 def is_member_of(user, groupname):
     return user.groups.filter(name=groupname).exists()
 

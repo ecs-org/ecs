@@ -53,7 +53,7 @@
         {% for user in thread.get_participants %}
           <p>
           <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
-          {% if user|has_flag:'is_internal' %}
+          {% if user.profile.is_internal %}
             <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
           {% else %}
             <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
@@ -78,7 +78,7 @@
             $('#id_receiver_person').select2({'minimumInputLength': 3});
 
             new ecs.textarea.TextArea(container.find('textarea[name="text"]'), [
-                {% if user|has_flag:'is_internal' %}
+                {% if user.profile.is_internal %}
                     ecs.textarea.toolbarItems.boilerplate(
                         "{{ _('Insert Boilerplate')|escapejs }}",
                         "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
