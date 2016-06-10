@@ -146,6 +146,7 @@ def auth_groups():
         'External Review Reviewer',
         'Meeting Protocol Receiver',
         'Resident Board Member',
+        'Omniscient Board Member',
         'Help Writer',
     )
     for group in groups:

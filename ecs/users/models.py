@@ -17,6 +17,7 @@ class UserProfile(models.Model):
     # denormalized from user groups for faster lookup
     is_board_member = models.BooleanField(default=False)
     is_resident_member = models.BooleanField(default=False)
+    is_omniscient_member = models.BooleanField(default=False)
     is_executive_board_member = models.BooleanField(default=False)
     is_insurance_reviewer = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
@@ -53,6 +54,7 @@ class UserProfile(models.Model):
         groups = set(self.user.groups.values_list('name', flat=True))
         self.is_board_member = 'EC-Board Member' in groups
         self.is_resident_member = 'Resident Board Member' in groups
+        self.is_omniscient_member = 'Omniscient Board Member' in groups
         self.is_executive_board_member = 'EC-Executive Board Member' in groups
         self.is_insurance_reviewer = 'EC-Insurance Reviewer' in groups
         self.is_internal = bool(groups & {
