@@ -301,4 +301,3 @@ if test -f $realpath/database.include; then
 fi
 . $sourcedir/scripts/database.include
 main $@
-exit $?
