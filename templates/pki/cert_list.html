@@ -6,39 +6,35 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
+    <table class="table table-sm cert_list">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>CN</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cert in certs %}
+                <tr class="{% if cert.revoked_at %}revoked{% endif %}">
+                    <td>{{ cert.user }}</td>
+                    <td>{{ cert.cn }}</td>
+                    <td>
+                        {% if not cert.revoked_at %}
+                        <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
+                            {% csrf_token %}
+                            <input class="btn btn-sm btn-danger" type="submit" value="{% trans 'Revoke' %}" />
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-{% if user|is_member_of:'EC-Signing' %}
-    <a href="{% url 'ecs.pki.views.create_cert' %}">{% trans 'Create new certificate' %}</a>
-{% endif %}
-
-<table class="cert_list">
-    <tr>
-        <th>User</th>
-        <th>CN</th>
-        <th></th>
-    </tr>
-    {% for cert in certs %}
-        <tr class="{% if cert.revoked_at %}revoked{% endif %}">
-            <td>{{ cert.user }}</td>
-            <td>{{ cert.cn }}</td>
-            <td>
-                {% if not cert.revoked_at %}
-                <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
-                    {% csrf_token %}
-                    <a class="submit_parent">{% trans 'Revoke' %}</a>
-                </form>
-                {% endif %}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-{% endblock %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript">
-        $(function(){
-            ecs.setupSubmitLinks('a.submit_parent');
-        });
-    </script>
+    {% if user|is_member_of:'EC-Signing' %}
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
+            {% trans 'Create new certificate' %}
+        </a>
+    {% endif %}
 {% endblock %}

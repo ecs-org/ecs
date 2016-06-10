@@ -6,19 +6,24 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
-<div>
-<form action="" method="post" class="form_main" id="cert_form" autocomplete="off">
-    {% csrf_token %}
-    <div>
-    <ol>
-        {% for field in form %}
-            {% include "forms/field.html" %}
-        {% endfor %}
-    </ol>
-    </div>
-    <span class="button"><input type="submit" value="{% trans 'Create Certificate' %}" /></span>
-</form>
-</div>
+    <a href="{% url 'ecs.pki.views.cert_list' %}">
+        <span class="fa fa-backward"></span>
+        {% trans "Back to the certificate list" %}
+    </a>
+
+    <p>
+        <form action="" method="post" class="form_main" autocomplete="off">
+            {% csrf_token %}
+            <div>
+            <ol>
+                {% for field in form %}
+                    {% include "forms/field.html" %}
+                {% endfor %}
+            </ol>
+            </div>
+            <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'Create Certificate' %}" />
+        </form>
+    </p>
 {% endblock %}
 
 {% block jsbottom %}
