@@ -117,11 +117,14 @@ class ChecklistQFactory(authorization.QFactory):
 authorization.register(Checklist, factory=ChecklistQFactory)
 authorization.register(ChecklistAnswer, lookup='checklist')
 
+
 class MeetingQFactory(authorization.QFactory):
     def get_q(self, user):
         profile = user.profile
-        if profile.is_internal or profile.is_resident_member or profile.is_board_member:
+        if profile.is_internal:
             return self.make_q()
+        elif profile.is_resident_member or profile.is_board_member:
+            return self.make_q(ended=None)
         else:
             return self.make_deny_q()
 

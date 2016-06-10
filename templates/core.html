@@ -120,10 +120,12 @@
                             <a class="dropdown-item" href="{% url 'ecs.meetings.views.next' %}">{% trans "Next Meeting" %}</a>
                             {% if user|has_flag:"is_internal" or user|has_flag:"is_resident_member" %}
                                 <a class="dropdown-item" href="{% url 'ecs.meetings.views.upcoming_meetings' %}">{% trans "Upcoming Meetings" %}</a>
+                            {% endif %}
+                            {% if user|has_flag:"is_internal" %}
                                 <a class="dropdown-item" href="{% url 'ecs.meetings.views.past_meetings' %}">{% trans "Past Meetings" %}</a>
-                                {% if user|is_member_of:"EC-Office" %}
-                                    <a class="dropdown-item" href="{% url 'ecs.meetings.views.create_meeting' %}">{% trans "New Meeting" %}</a>
-                                {% endif %}
+                            {% endif %}
+                            {% if user|is_member_of:"EC-Office" %}
+                                <a class="dropdown-item" href="{% url 'ecs.meetings.views.create_meeting' %}">{% trans "New Meeting" %}</a>
                             {% endif %}
                         </div>
                     </div>

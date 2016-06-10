@@ -51,7 +51,6 @@ def create_meeting(request):
         'form': form,
     })
 
-@user_flag_required('is_internal', 'is_resident_member')
 def meeting_list(request, meetings, title=None):
     if not title:
         title = _('Meetings')
@@ -69,7 +68,7 @@ def meeting_list(request, meetings, title=None):
 def upcoming_meetings(request):
     return meeting_list(request, Meeting.objects.upcoming().order_by('start'), title=_('Upcoming Meetings'))
 
-@user_flag_required('is_internal', 'is_resident_member')
+@user_flag_required('is_internal')
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.past().order_by('-start'), title=_('Past Meetings'))
 
@@ -192,8 +191,9 @@ def notification_list(request, meeting_pk=None):
         'notification__safetynotification__safety_type', 'published_at'
     )
 
-    start = Meeting.objects.filter(start__lt=meeting.start).aggregate(
-        Max('protocol_sent_at'))['protocol_sent_at__max']
+    with sudo():
+        start = Meeting.objects.filter(start__lt=meeting.start).aggregate(
+            Max('protocol_sent_at'))['protocol_sent_at__max']
     if start:
         b1ized = b1ized.filter(published_at__gt=start)
         answers = answers.filter(published_at__gt=start)
