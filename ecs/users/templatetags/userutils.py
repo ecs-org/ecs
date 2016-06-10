@@ -21,10 +21,6 @@ def formal_name(user):
 def full_name(user):
     return get_full_name(user)
 
-@register.filter
-def has_perm(user, permission):
-    return bool(user.has_perm(permission))
-
 @register.tag(name='sudo')
 def do_sudo(parser, token):
     nodelist = parser.parse(('endsudo',))
