@@ -214,20 +214,21 @@ main(){
     restore_dump=false
     if test "$1" = "--restore-dump"; then shift; restore_dump=true; fi
 
-    if test "$1" = "isclean"; then
+    case "$1" in
+    isclean)
         abort_ifnot_cleanrepo $sourcedir $2
-
-    elif test "$1" = "get_dumpfilename"; then
+        ;;
+    get_dumpfilename)
         get_dumpfilename
-
-    elif test "$1" = "dumpdb"; then
+        ;;
+    dumpdb)
         dump_database $2
-
-    elif test "$1" = "_selfcontinue"; then
+        ;;
+    _selfcontinue)
         echo "dev_update $2 $3 $4"
         dev_update $2 $3 $4
-
-    elif test "$1" = "freshdb"; then
+        ;;
+    freshdb)
         pushd $sourcedir
         sudo systemctl stop devserver
         . $HOME/env/bin/activate
@@ -237,17 +238,16 @@ main(){
             sudo systemctl start devserver
         fi
         popd
-
-    elif test "$1" = "rebase"; then
+        ;;
+    rebase)
         pushd $sourcedir
         abort_ifnot_cleanrepo $sourcedir --ignore-unpushed
         git fetch --all --prune
         git rebase $ECS_DEV_REBASE_TO
         git push -f "origin/$(git rev-parse --abbrev-ref HEAD)"
         popd
-
-    elif test "$1" = "init" -o "$1" = "pull"; then
-        pushd $sourcedir
+        ;;
+    init|pull)
         target_branch="$(git rev-parse --abbrev-ref HEAD)"
         err=$?
         if test "$err" -ne 0; then
@@ -282,10 +282,11 @@ main(){
         cp $realpath/devupdate.sh $tmpdir/devupdate.sh
         echo "_selfcontinue $init_all $restore_dump $target_branch"
         exec $tmpdir/devupdate.sh _selfcontinue $init_all $restore_dump $target_branch
-
-    else
+        ;;
+    *)
         usage
-    fi
+        ;;
+    esac
 }
 
 
