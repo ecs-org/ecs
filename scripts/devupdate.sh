@@ -41,21 +41,11 @@ EOF
     exit 1
 }
 
-# silence annoying stdout of current stack from pushd and popd
-pushd () {
-    command pushd "$@" > /dev/null
-}
-
-popd () {
-    command popd "$@" > /dev/null
-}
-
 dev_update(){
     # call with: $0 $init_all{true/false} $restore_dump{true/false} $target_branch{!=""}
 
     # kill whole processgroup on sigterm
     trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
-    pushd $sourcedir
 
     init_all=$1
     restore_dump=$2
@@ -175,13 +165,10 @@ dev_update(){
 
     echo "devupdate finished. git status:"
     git branch -v | grep "^\*" | sed -re "s/\* ([a-z._-]+) ([0-9a-f]+) (.{,27}).*/\1 \2 \3 /g"
-
-    popd
 }
 
 
 abort_ifnot_cleanrepo(){
-    pushd $1
     if ! git diff-files --quiet --ignore-submodules --; then
         echo "error: abort, your working directory is not clean."
         git --no-pager diff-files --name-status -r --ignore-submodules --
@@ -197,14 +184,13 @@ abort_ifnot_cleanrepo(){
         git --no-pager ls-files --other --exclude-standard --directory
         exit 1
     fi
-    if test ! "$2" = "--ignore-unpushed"; then
+    if test ! "$1" = "--ignore-unpushed"; then
         if test "$(git log --branches --not --remotes --pretty=format:'%H')" != ""; then
             echo "error: abort, there are unpushed changes"
            git --no-pager log --branches --not --remotes --pretty=oneline
            exit 1
         fi
     fi
-    popd
 }
 
 
@@ -214,9 +200,11 @@ main(){
     restore_dump=false
     if test "$1" = "--restore-dump"; then shift; restore_dump=true; fi
 
+    cd $sourcedir
+
     case "$1" in
     isclean)
-        abort_ifnot_cleanrepo $sourcedir $2
+        abort_ifnot_cleanrepo $2
         ;;
     get_dumpfilename)
         get_dumpfilename
@@ -229,7 +217,6 @@ main(){
         dev_update $2 $3 $4
         ;;
     freshdb)
-        pushd $sourcedir
         sudo systemctl stop devserver
         . $HOME/env/bin/activate
         fresh_database
@@ -237,15 +224,12 @@ main(){
         if test "$ECS_DEV_AUTOSTART" = "true"; then
             sudo systemctl start devserver
         fi
-        popd
         ;;
     rebase)
-        pushd $sourcedir
-        abort_ifnot_cleanrepo $sourcedir --ignore-unpushed
+        abort_ifnot_cleanrepo --ignore-unpushed
         git fetch --all --prune
         git rebase $ECS_DEV_REBASE_TO
         git push -f "origin/$(git rev-parse --abbrev-ref HEAD)"
-        popd
         ;;
     init|pull)
         target_branch="$(git rev-parse --abbrev-ref HEAD)"
@@ -262,12 +246,11 @@ main(){
             if test "$1" = "--force"; then force=true; shift; fi
             if test "$1" != ""; then target_branch=$1; shift; fi
             if test "$1" = "--force"; then force=true; shift; fi
-            abort_ifnot_cleanrepo $sourcedir $(if $force; then echo "--ignore-unpushed"; fi)
+            abort_ifnot_cleanrepo $(if $force; then echo "--ignore-unpushed"; fi)
             echo "git fetch --all --prune"
             git fetch --all --prune
         fi
 
-        popd
         if test "$target_branch" = ""; then
             echo "Error: Fatal, could not determine target_branch!"
             exit 1
