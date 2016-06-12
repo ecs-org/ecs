@@ -2,27 +2,30 @@
 
 <h2>{% trans 'Submissions' %}</h2>
 
-<div id="meeting_list" class="form_main">
-    <p><a href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}" class="button_submit">{% trans 'Download all documents for this meeting (zip)' %}</a></p>
-    <ol>
-    {% for top in tops %}
-          {% ifchanged top.timetable_index|is_none %}
-            {% if top.timetable_index|is_none %}
-              </ol><h2>Weitere TOPs</h2><ol>
-            {% endif %}
-          {% endifchanged %}
-          <li{% if meeting.started and not meeting.ended and active_top_pk == top.pk %} style="border:3px solid #6ca6cd;"{% endif %}{% if not top.is_open and not meeting.ended %} style="color:#9a9a9a;"{% endif %}>
-            <span class="top">{{ top }}</span>
-            {% if top.submission %}
-                <a class="fa fa-download text-primary" title="{% trans 'Download documents (zip)' %}" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"></a>
-                {% with top.submission.current_submission_form as sf %}
-                    {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
-                {% endwith %}
-                {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
-            {% else %}
-                {{ top.title }}
-            {% endif %}
-          </li>
-    {% endfor %}
-    </ol>
-</div>
+<a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}">
+    {% trans 'Download all documents for this meeting (zip)' %}
+</a>
+
+<ul class="list-group m-t-2">
+{% for top in tops %}
+    {% ifchanged top.timetable_index|is_none %}
+        {% if top.timetable_index|is_none %}
+            </ul>
+            <h2 class="m-t-2">Weitere TOPs</h2>
+            <ul class="list-group">
+        {% endif %}
+    {% endifchanged %}
+    <li class="list-group-item {% if meeting.started and not meeting.ended and active_top_pk == top.pk %}list-group-item-info{% endif %} {% if not top.is_open and not meeting.ended %}disabled{% endif %}">
+        <strong>TOP {{ forloop.counter }}</strong>
+        {% if top.submission %}
+            <a class="fa fa-download text-primary" title="{% trans 'Download documents (zip)' %}" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"></a>
+            {% with top.submission.current_submission_form as sf %}
+                {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
+            {% endwith %}
+            {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
+        {% else %}
+            {{ top.title }}
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>

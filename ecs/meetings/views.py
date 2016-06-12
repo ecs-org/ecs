@@ -156,8 +156,9 @@ def tops(request, meeting=None):
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 @cache_meeting_page()
 def submission_list(request, meeting=None):
-    tops = list(meeting.timetable_entries.filter(timetable_index__isnull=False).order_by('timetable_index'))
-    tops += list(meeting.timetable_entries.filter(timetable_index__isnull=True).order_by('pk'))
+    tops = meeting.timetable_entries.select_related(
+        'submission', 'submission__current_submission_form'
+    ).order_by('timetable_index', 'pk')
     active_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
     active_top_pk = cache.get(active_top_cache_key)
     return render_html(request, 'meetings/tabs/submissions.html', {
