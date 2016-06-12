@@ -23,6 +23,47 @@
                 {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
             {% endwith %}
             {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
+
+            {% if user.profile.is_omniscient_member %}
+                {% with doc=top.submission.current_submission_form.pdf_document %}
+                    <div class="row m-t-1">
+                        <strong class="col-md-3">{{ doc.doctype }}</strong>
+                        <div class="col-md-9">
+                            {% url 'ecs.meetings.views.download_document' meeting_pk=meeting.pk document_pk=doc.pk as download_url %}
+                            {% url 'ecs.meetings.views.view_document' meeting_pk=meeting.pk document_pk=doc.pk as view_url %}
+                            <a href="{{ view_url }}" target="_blank">
+                                {{ doc.name }}
+                            </a>
+                            - <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
+                            {% if doc.doctype.is_downloadable or user.profile.is_internal %}
+                                | <a href="{{ download_url }}">{% trans "Download" %}</a>
+                            {% endif %}
+                            <br>
+                        </div>
+                    </div>
+                {% endwith %}
+
+                {% regroup top.submission.current_submission_form.documents.all by doctype as documents %}
+                {% for document in documents %}
+                    <div class="row">
+                        <strong class="col-md-3">{{ document.grouper }}</strong>
+                        <div class="col-md-9">
+                            {% for doc in document.list %}
+                                {% url 'ecs.meetings.views.download_document' meeting_pk=meeting.pk document_pk=doc.pk as download_url %}
+                                {% url 'ecs.meetings.views.view_document' meeting_pk=meeting.pk document_pk=doc.pk as view_url %}
+                                <a href="{{ view_url }}" target="_blank">
+                                    {{ doc.name }}
+                                </a>
+                                - <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
+                                {% if doc.doctype.is_downloadable or user.profile.is_internal %}
+                                    | <a href="{{ download_url }}">{% trans "Download" %}</a>
+                                {% endif %}
+                                <br>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% else %}
             {{ top.title }}
         {% endif %}

@@ -17,6 +17,8 @@ urlpatterns = (
     url(r'^(?P<meeting_pk>\d+)/tops/$', views.tops),
     url(r'^(?P<meeting_pk>\d+)/submissions/$', views.submission_list),
     url(r'^(?P<meeting_pk>\d+)/notifications/$', views.notification_list),
+    url(r'^(?P<meeting_pk>\d+)/document/(?P<document_pk>\d+)/$', views.download_document),
+    url(r'^(?P<meeting_pk>\d+)/document/(?P<document_pk>\d+)/view/$', views.view_document),
     url(r'^(?P<meeting_pk>\d+)/documents/zip/$', views.download_zipped_documents),
     url(r'^(?P<meeting_pk>\d+)/documents/(?P<submission_pk>\d+)/zip/$', views.download_zipped_documents),
 

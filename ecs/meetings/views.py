@@ -38,6 +38,7 @@ from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEn
     ExpeditedReviewerInvitationForm, ManualTimetableEntryCommentForm, ManualTimetableEntryCommentFormset)
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
+from ecs.documents.views import handle_download
 from ecs.meetings.cache import cache_meeting_page
 
 
@@ -154,18 +155,50 @@ def tops(request, meeting=None):
     })
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
-@cache_meeting_page()
-def submission_list(request, meeting=None):
+def submission_list(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+
     tops = meeting.timetable_entries.select_related(
         'submission', 'submission__current_submission_form'
     ).order_by('timetable_index', 'pk')
+    if request.user.profile.is_omniscient_member:
+        tops = tops.select_related(
+            'submission__current_submission_form__pdf_document',
+            'submission__current_submission_form__pdf_document__doctype'
+        ).prefetch_related(
+            Prefetch('submission__current_submission_form__documents',
+                queryset=Document.objects
+                    .select_related('doctype')
+                    .order_by('doctype__identifier', 'date', 'name'))
+        )
+
     active_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
     active_top_pk = cache.get(active_top_cache_key)
-    return render_html(request, 'meetings/tabs/submissions.html', {
+
+    return render(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,
         'active_top_pk': active_top_pk,
     })
+
+
+@user_flag_required('is_omniscient_member')
+def download_document(request, meeting_pk=None, document_pk=None, view=False):
+    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    with sudo():
+        doc = get_object_or_404(
+            Document,
+            content_type=ContentType.objects.get_for_model(SubmissionForm),
+            object_id__in=SubmissionForm.objects.filter(
+                submission__in=meeting.timetable_entries.values('submission_id')),
+            pk=document_pk
+        )
+    return handle_download(request, doc, view=view)
+
+
+def view_document(request, meeting_pk=None, document_pk=None):
+    return download_document(request, meeting_pk, document_pk, view=True)
+
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def notification_list(request, meeting_pk=None):
