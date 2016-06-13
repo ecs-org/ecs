@@ -1994,6 +1994,16 @@ msgstr ""
 "Die PDF-Datei scheint beschädigt zu sein. Für mehr Information klicken Sie "
 "auf das Fragezeichen-Symbol im Seitenmenü."
 
+#: ecs/documents/tasks.py:39
+#, python-brace-format
+msgid "Large number of downloads by {user}"
+msgstr "Große Anzahl an Downloads von {user}"
+
+#: ecs/documents/tasks.py:41
+#, python-brace-format
+msgid "{user} has downloaded {count} documents during the last week."
+msgstr "{user} hat letzte Woche {count} Dokumente heruntergeladen."
+
 #: ecs/help/models.py:21
 #, fuzzy
 msgid "Ready for Review"
@@ -3796,16 +3806,20 @@ msgstr "Seite"
 msgid "of"
 msgstr "von"
 
-#: templates/pki/cert_list.html:11
-msgid "Create new certificate"
-msgstr "Neues Zertifikat erstellen"
-
-#: templates/pki/cert_list.html:28
+#: templates/pki/cert_list.html:26
 #: templates/submissions/tabs/involved_parties.html:68
 msgid "Revoke"
 msgstr "Widerrufen"
 
-#: templates/pki/create_cert.html:19
+#: templates/pki/cert_list.html:37
+msgid "Create new certificate"
+msgstr "Neues Zertifikat erstellen"
+
+#: templates/pki/create_cert.html:11
+msgid "Back to the certificate list"
+msgstr "Zurück zur Zertifikat-Liste"
+
+#: templates/pki/create_cert.html:24
 msgid "Create Certificate"
 msgstr "Zertifikat Erstellen"
 
