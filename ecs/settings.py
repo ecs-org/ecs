@@ -299,11 +299,12 @@ ECSMAIL = {
 BROKER_URL = 'amqp://ecsuser:ecspassword@localhost:5672/ecshost'
 
 CELERY_IMPORTS = (
-    'ecs.core.tests.test_tasks',
-    'ecs.meetings.tasks',
     'ecs.communication.tasks',
-    'ecs.integration.tasks',
+    'ecs.core.tests.test_tasks',
+    'ecs.documents.tasks',
     'ecs.help.tasks',
+    'ecs.integration.tasks',
+    'ecs.meetings.tasks',
 )
 CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = (CELERY_TASK_SERIALIZER,)
