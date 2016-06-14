@@ -57,20 +57,13 @@ class PageSerializer(Serializer):
         return View.objects.get_or_create(path=data['view'])[0] if data['view'] else None
 
 class AttachmentSerializer(Serializer):
-    fields = ['file', 'mimetype', 'is_screenshot', 'slug', 'view', 'page']
+    fields = ['content', 'mimetype', 'is_screenshot', 'slug', 'view', 'page']
     unique = ['slug']
     model = Attachment
 
-    def serialize_file(self, zf, instance):
+    def serialize_content(self, zf, instance):
         zip_name = 'attachments/{0}'.format(instance.slug)
-        
-#        if instance.mimetype.startswith("image/"):
-#            suffix = instance.mimetype.split("image/")[1]
-#            zip_name = u'attachments/{0}.{1}'.format(instance.slug,suffix)
-#        else:
-#            zip_name = u'attachments/{0}'.format(instance.slug)
-        
-        zf.writestr(zip_name, instance.file.read())
+        zf.writestr(zip_name, instance.content)
         return zip_name
 
     def serialize_view(self, zf, instance):
@@ -79,11 +72,12 @@ class AttachmentSerializer(Serializer):
     def serialize_page(self, zf, instance):
         return str(instance.page.pk) if instance.page else None
 
-    def load_file(self, zf, data, extra=None):
-        fname = data['file']
-        f = ContentFile(zf.read(fname))
-        f.name = fname
-        return f
+    def load_content(self, zf, data, extra=None):
+        if 'file' in data:      # compat
+            fname = data['file']
+        else:
+            fname = data['content']
+        return zf.read(fname)
 
     def load_view(self, zf, data, extra=None):
         return View.objects.get_or_create(path=data['view'])[0] if data['view'] else None

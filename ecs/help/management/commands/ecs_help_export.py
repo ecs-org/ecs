@@ -10,8 +10,5 @@ class Command(BaseCommand):
     def handle(self, **options):
         if not options['outfile']: 
             raise CommandError('Error: Outputfile "-o filename" must be specified')
-        f = file(options['outfile'], 'wb')
-        serializer.export(f) 
-        f.close()
-                
-
+        with open(options['outfile'], 'wb') as f:
+            serializer.export(f)

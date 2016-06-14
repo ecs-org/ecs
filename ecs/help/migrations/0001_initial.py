@@ -1,5 +1,4 @@
 from django.db import models, migrations
-import ecs.help.models
 
 
 class Migration(migrations.Migration):
@@ -15,7 +14,7 @@ class Migration(migrations.Migration):
             name='Attachment',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('file', models.FileField(storage=ecs.help.models.AttachmentFileStorage(), upload_to=ecs.help.models.upload_to)),
+                ('file', models.FileField()),
                 ('mimetype', models.CharField(max_length=100)),
                 ('is_screenshot', models.BooleanField(default=False)),
                 ('slug', models.CharField(unique=True, max_length=100, blank=True)),

@@ -11,6 +11,7 @@ class HelpPageForm(forms.ModelForm):
         self.fields['text'].widget.attrs['rows'] = 20
 
 class AttachmentUploadForm(forms.ModelForm):
+    file = forms.FileField()
     slug = forms.CharField(required=False)
 
     class Meta:
@@ -19,5 +20,3 @@ class AttachmentUploadForm(forms.ModelForm):
 
 class ImportForm(forms.Form):
     file = forms.FileField()
-
-

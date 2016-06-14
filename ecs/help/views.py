@@ -1,5 +1,7 @@
+import os
 import re
 import tempfile
+import mimetypes
 from base64 import b64decode
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -8,6 +10,7 @@ from django.core.urlresolvers import reverse
 from django.core.files import File
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
+from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from haystack.views import SearchView
@@ -87,7 +90,7 @@ def attachments(request):
 @forceauth.exempt
 def download_attachment(request, attachment_pk=None):
     attachment = get_object_or_404(Attachment, pk=attachment_pk)
-    return HttpResponse(attachment.file.read(), content_type=attachment.mimetype)
+    return HttpResponse(attachment.content, content_type=attachment.mimetype)
 
 @user_group_required('Help Writer')
 def ready_for_review(request, page_pk=None):
@@ -256,6 +259,21 @@ def upload(request):
         attachment = form.save(commit=False)
         attachment.page = page
         attachment.view = view
+
+        f = form.cleaned_data['file']
+        attachment.content = f.read()
+        attachment.mimetype = mimetypes.guess_type(f.name)[0]
+
+        if not attachment.slug:
+            name, ext = os.path.splitext(f.name)
+            base_slug = slugify(name)
+            slug = base_slug + ext
+            i = 1
+            while Attachment.objects.filter(slug=slug).exists():
+                slug = '{}_{:02d}{}'.format(base_slug, i, ext)
+                i += 1
+            attachment.slug = slug
+
         attachment.save()
         return redirect_to_next_url(request, reverse('ecs.help.views.index'))
     return render(request, 'help/attachments/upload.html', {

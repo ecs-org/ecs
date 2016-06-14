@@ -2,7 +2,6 @@ import os, re
 from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from ecs.help.models import Page
@@ -167,7 +166,6 @@ class Command(BaseCommand):
     def handle(self, **options):
         if not options['targetdir']: 
             raise CommandError('Error: targetdir "-t path" must be specified')
-        targetdir = settings.ECSHELP_ROOT if options['targetdir'] is None else options['targetdir']
         output_dir = os.path.join(options['targetdir'], 'src')
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)

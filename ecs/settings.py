@@ -250,9 +250,6 @@ LOGFILE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-log"))
 ECS_DOWNLOAD_CACHE_DIR = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-cache"))
 ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 
-# ecs.help system export path
-ECSHELP_ROOT = os.path.realpath(os.path.join(PROJECT_DIR, "..", "ecs-help"))
-
 # Storage Vault settings
 STORAGE_VAULT = {
     'dir': os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault'),

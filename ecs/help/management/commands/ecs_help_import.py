@@ -10,7 +10,5 @@ class Command(BaseCommand):
     def handle(self, **options):
         if not options['infile']: 
             raise CommandError('Error: Inputfile "-i filename" must be specified')
-        f = file(options['infile'], 'rb')
-        serializer.load(f) 
-        f.close()
-
+        with open(options['infile'], 'rb') as f:
+            serializer.load(f)
