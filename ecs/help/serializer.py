@@ -122,7 +122,7 @@ def export(file_like):
 
 def load(file_like):
     zf = zipfile.ZipFile(file_like, 'r')
-    data = json.loads(zf.read('data.json'))
+    data = json.loads(zf.read('data.json').decode('utf-8'))
 
     page_pks = {}
     page_serializer = PageSerializer()
