@@ -4,15 +4,23 @@
     <div class="meeting_assistant_nav">
         {% with meeting.open_tops.count as open_top_count %}
             {% if not meeting.started %}
-                <div class="button"><a class="start_meeting" href="{% url 'ecs.meetings.views.meeting_assistant_start' meeting_pk=meeting.pk %}">Sitzung starten</a></div>
+                <a class="btn btn-sm btn-block btn-primary start_meeting" href="{% url 'ecs.meetings.views.meeting_assistant_start' meeting_pk=meeting.pk %}">
+                    Sitzung starten
+                </a>
             {% else %}
                 {% if not meeting.ended and open_top_count == 0 %}
-                    <div class="button"><a class="stop_meeting" href="{% url 'ecs.meetings.views.meeting_assistant_stop' meeting_pk=meeting.pk %}">Sitzung beenden</a></div>
+                    <a class="btn btn-sm btn-block btn-primary stop_meeting" href="{% url 'ecs.meetings.views.meeting_assistant_stop' meeting_pk=meeting.pk %}">
+                        Sitzung beenden
+                    </a>
                 {% endif %}
-                <div class="button"><a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_comments' meeting_pk=meeting.pk %}">{% trans 'Comments' %}</a></div>
+                <a class="btn btn-sm btn-block btn-outline-primary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_comments' meeting_pk=meeting.pk %}">
+                    {% trans 'Comments' %}
+                </a>
                 {% if not meeting.ended %}
                 {% if meeting.retrospective_thesis_entries.exists or meeting.expedited_entries.exists or meeting.localec_entries.exists %}
-                    <div class="button"><a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited' meeting_pk=meeting.pk %}">{% trans 'Ret. Thesis/Expedited' %}</a></div>
+                    <a class="btn btn-sm btn-block btn-outline-primary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited' meeting_pk=meeting.pk %}">
+                        {% trans 'Ret. Thesis/Expedited' %}
+                    </a>
                 {% endif %}
                 {% endif %}
             {% endif %}

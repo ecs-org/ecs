@@ -383,34 +383,9 @@
     width: 100%;
 }
 
-#meeting_assistant .button a,
-#meeting_assistant .navigation a {
-    display: block;
+#meeting_assistant .navigation a.btn {
     padding: 3px;
-    margin-bottom: 7px;
-    background: $grey-40;
-    text-align: center;
-    font-size: 12px;
-    clear: both;
-    color: $white;
-    border-radius: 3px;
-
-    &:hover{
-        text-decoration: none;
-        background: $grey-20;
-    }
-}
-
-#meeting_assistant .navigation a {
-    background: $grey-80;
-    color: $grey-20;
     font-size: 10px;
-
-    &:hover {
-        text-decoration: none;
-        background: $grey-20;
-        color: $white;
-    }
 }
 
 #meeting_assistant .reviews {

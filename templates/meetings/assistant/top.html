@@ -63,19 +63,29 @@
 
 {% block meeting_assistant_navigation %}
     {% if top.next_open %}
-        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">Nächstes offenes TOP ({{ top.next_open }})</a>
+        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">
+            Nächstes offenes TOP ({{ top.next_open }})
+        </a>
     {% endif %}
     {% if top.previous_open %}
-        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">Vorheriges offenes TOP ({{ top.previous_open }})</a>
+        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">
+            Vorheriges offenes TOP ({{ top.previous_open }})
+        </a>
     {% endif %}
     {% if top.next %}
-        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">Nächstes TOP ({{ top.next }})</a>
+        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">
+            Nächstes TOP ({{ top.next }})
+        </a>
     {% endif %}
     {% if top.previous %}
-        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">Vorheriges TOP ({{ top.previous }})</a>
+        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">
+            Vorheriges TOP ({{ top.previous }})
+        </a>
     {% endif %}
     {% if last_top %}
-        <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=last_top.pk %}">Letztbesprochenes TOP ({{ last_top }})</a>
+        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=last_top.pk %}">
+            Letztbesprochenes TOP ({{ last_top }})
+        </a>
     {% endif %}
     {{ block.super }}
 {% endblock %}
