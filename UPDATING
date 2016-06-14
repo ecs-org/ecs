@@ -128,4 +128,11 @@ in addition to the usual steps. In chronological order:
   STORAGE_ENCRYPT and STORAGE_DECRYPT settings have to be adapted. See
   ecs/settings.py for a working configuration sample.
 
+* 2016-06-14: Help system attachments are now saved in the database
+
+  The help system attachments have been moved to the database. The ecs-help
+  folder can be removed after the migration has been run.
+
+	$ rm -r ~/ecs-help
+
 --- Next release ---
