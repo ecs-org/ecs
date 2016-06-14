@@ -445,6 +445,10 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
         if len(tops) == 1:
             top = tops[0]
     if top:
+        if top.timetable_index is None:
+            return redirect(
+                'ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited',
+                meeting_pk=meeting.pk)
         return redirect('ecs.meetings.views.meeting_assistant_top', meeting_pk=meeting.pk, top_pk=top.pk)
 
     return render(request, 'meetings/assistant/quickjump_error.html', {
