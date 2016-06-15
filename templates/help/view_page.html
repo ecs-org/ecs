@@ -14,12 +14,12 @@
     <div class="nav">
         <span class="prev">
         {% if nav.prev %}
-            <a href="{% url 'ecs.help.views.view_help_page' page_pk=nav.prev.pk %}" title="{{ nav.prev.title }}"><span class="prev_page"></span><span class="title max_twenty">{{ nav.prev.title }}</span></a>
+            <a href="{% url 'ecs.help.views.view_help_page' page_pk=nav.prev.pk %}" title="{{ nav.prev.title }}"><span class="fa fa-backward"></span><span class="title max_twenty">{{ nav.prev.title }}</span></a>
         {% endif %}
         </span>
         <span class="next">
         {% if nav.next %}
-            <a href="{% url 'ecs.help.views.view_help_page' page_pk=nav.next.pk %}" title="{{ nav.next.title }}"><span class="title max_twenty">{{ nav.next.title }}</span><span class="next_page"></span></a>
+            <a href="{% url 'ecs.help.views.view_help_page' page_pk=nav.next.pk %}" title="{{ nav.next.title }}"><span class="title max_twenty">{{ nav.next.title }}</span><span class="fa fa-forward"></span></a>
         {% endif %}
         </span>
     </div>

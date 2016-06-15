@@ -117,23 +117,8 @@
     background-position: 0 -672px;
 }
 
-.first_page, .prev_page, .next_page, .last_page, .tab_headers li a.delete_row {
-    @include icon_bg_16;
-}
-
-.first_page {
-    background-position: -240px -80px;
-}
-.prev_page {
-    background-position: -240px -48px;
-}
-.next_page {
-    background-position: -240px -32px;
-}
-.last_page {
-    background-position: -240px -64px;
-}
 .tab_headers li a.delete_row {
+    @include icon_bg_16;
     border: none;
     background-position: 0 -128px;
     padding: 0px;

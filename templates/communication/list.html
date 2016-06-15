@@ -41,19 +41,17 @@
   {% endfor %}
   </table>
   
-  <div class="paginator">
+  <div class="paginator text-xs-center">
       {% if page.has_previous %}
-          <a class="open-in-widget first_page" href="{{ request.path }}?p=1">first</a>
-          <a class="open-in-widget prev_page" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}">previous</a>
+          <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
+          <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
       {% endif %}
-
-      Seite {{ page.number }} von {{ page.paginator.num_pages }}
-      
+      {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
       {% if page.has_next %}
-          <a class="open-in-widget next_page" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}">next</a>
-          <a class="open-in-widget last_page" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}">last</a>
+          <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"></a>
+          <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"></a>
       {% endif %}
   </div>
-  <div class="hint">{% block hint %}{% endblock %}</div>
+  <div class="hint m-t-1">{% block hint %}{% endblock %}</div>
 
 {% endblock %}
