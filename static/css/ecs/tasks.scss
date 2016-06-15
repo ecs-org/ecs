@@ -152,16 +152,12 @@
 
 .task_list_choose {
     border-bottom: 1px solid $wheatbrown;
+    padding: 3px 0 0;
 
     label {
         display: inline-block;
         margin: 0 5px 5px 0;
         cursor: pointer;
-    }
-
-    li {
-        display: inline;
-        list-style: none;
     }
 }
 
@@ -183,13 +179,6 @@
         margin-right: 10px;
         padding: 2px 0;
     }
-}
-
-#content ul.task_list_choose, ul.task_list_choose {
-    position: relative;
-    margin: 0 0 3px;
-    line-height: 16px;
-    padding: 3px 0 0;
 }
 
 .task_type_nr {

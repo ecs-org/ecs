@@ -43,31 +43,9 @@
     background-position: -320px -256px;
 }
 
-.task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+.submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
     @include icon_bg_16;
     margin-right: 3px;
-}
-
-.task_mine {
-    background-position: 0 -16px;
-}
-.task_open {
-    background-position: 0 0;
-}
-.task_proxy {
-    background-position: 0 -48px;
-}
-.task_amg {
-    background-position: 0 -496px;
-}
-.task_mpg {
-    background-position: 0 -512px;
-}
-.task_thesis {
-    background-position: 0 -480px;
-}
-.task_other {
-    background-position: 0 -64px;
 }
 
 .submission_new {

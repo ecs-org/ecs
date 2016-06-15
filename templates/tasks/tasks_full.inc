@@ -10,25 +10,71 @@
     <div class="task_list_choose">
         <label class="task_sorting">{% trans "Sort by" %}:</label> {{ filterform.sorting }}
     </div>
-    <ul class="task_list_choose">
-        <li>{{ filterform.mine }} <label for="id_mine"><span class="task_mine"></span>{% trans "Mine" %}</label></li>
-        <li>{{ filterform.open }} <label for="id_open"><span class="task_open"></span>{% trans "Open" %}</label></li>
-        <li>{{ filterform.proxy }} <label for="id_proxy"><span class="task_proxy"></span>{% trans "Proxy" %}</label></li>
-    </ul>
-    <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        <li>{{ filterform.past_meetings }} <label for="id_past_meetings"><span class="task_past_meetings"></span>{% trans "Past Meetings" %}</label></li>
-        <li>{{ filterform.next_meeting }} <label for="id_next_meeting"><span class="task_next_meeting"></span>{% trans "Next Meeting" %}</label></li>
-        <li>{{ filterform.upcoming_meetings }} <label for="id_upcoming_meetings"><span class="task_upcoming_meetings"></span>{% trans "Upcoming Meetings" %}</label></li>
-        <li>{{ filterform.no_meeting }} <label for="id_no_meeting"><span class="task_no_meeting"></span>{% trans "No Meeting" %}</label></li>
-    </ul>
-    <ul class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        <li>{{ filterform.amg }} <label for="id_amg"><span class="task_amg"></span>{% trans "AMG" %}</label></li>
-        <li>{{ filterform.mpg }} <label for="id_mpg"><span class="task_mpg"></span>{% trans "MPG" %}</label></li>
-        <li>{{ filterform.thesis }} <label for="id_thesis"><span class="task_thesis"></span>{% trans "thesis" %}</label></li>
-        <li>{{ filterform.expedited }} <label for="id_expedited"><span class="task_expedited"></span>{% trans "expedited" %}</label></li>
-        <li>{{ filterform.local_ec }} <label for="id_local_ec"><span class="task_local_ec"></span>{% trans "local_ec" %}</label></li>
-        <li>{{ filterform.other }} <label for="id_other"><span class="task_other"></span>{% trans "Other" %}</label></li>
-    </ul>
+    <div class="task_list_choose">
+        <label>
+            {{ filterform.mine }}
+            <span class="fa fa-user"></span>
+            {% trans "Mine" %}
+        </label>
+        <label>
+            {{ filterform.open }}
+            <span class="fa fa-users"></span>
+            {% trans "Open" %}
+        </label>
+        <label>
+            {{ filterform.proxy }}
+            <span class="fa fa-user-times"></span>
+            {% trans "Proxy" %}
+        </label>
+    </div>
+    <div class="task_list_choose">
+        <label>
+            {{ filterform.past_meetings }}
+            {% trans "Past Meetings" %}
+        </label>
+        <label>
+            {{ filterform.next_meeting }}
+            {% trans "Next Meeting" %}
+        </label>
+        <label>
+            {{ filterform.upcoming_meetings }}
+            {% trans "Upcoming Meetings" %}
+        </label>
+        <label>
+            {{ filterform.no_meeting }}
+            {% trans "No Meeting" %}
+        </label>
+    </div>
+    <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
+        <label>
+            {{ filterform.amg }}
+            <span class="fa fa-flask"></span>
+            {% trans "AMG" %}
+        </label>
+        <label>
+            {{ filterform.mpg }}
+            <span class="fa fa-medkit"></span>
+            {% trans "MPG" %}
+        </label>
+        <label>
+            {{ filterform.thesis }}
+            <span class="fa fa-book"></span>
+            {% trans "thesis" %}
+        </label>
+        <label>
+            {{ filterform.expedited }}
+            {% trans "expedited" %}
+        </label>
+        <label>
+            {{ filterform.local_ec }}
+            {% trans "local_ec" %}
+        </label>
+        <label>
+            {{ filterform.other }}
+            <span class="fa fa-question-circle"></span>
+            {% trans "Other" %}
+        </label>
+    </div>
     <div class="task_list_choose task_select">
         <label class="task_types">{% trans "Task Type" %}:</label> {{ filterform.task_types }}
     </div>
