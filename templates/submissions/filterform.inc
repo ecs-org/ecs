@@ -3,23 +3,33 @@
 <form id="submission_list_filter" action="{{ request.path }}{% if keyword %}?keyword={{ keyword|urlencode }}{% endif %}" method="post" class="open-in-widget">
     {% csrf_token %}
     {% for row in filterform.layout %}
-    <ul class="submission_list_choose">
+    <div class="submission_list_choose">
         {% for name in row %}
             {% with filterform|get_field:name as field %}
-                <li>{{ field }} <label for="id_{{ name }}"><span class="submission_{{ name }}"></span>{{ field.label }}</label></li>
+                <label>
+                    {{ field }}
+                    {% if name == 'thesis' %}
+                        <span class="fa fa-book"></span>
+                    {% elif name == 'amg' %}
+                        <span class="fa fa-flask"></span>
+                    {% elif name == 'mpg' %}
+                        <span class="fa fa-medkit"></span>
+                    {% elif name == 'other' %}
+                        <span class="fa fa-question-circle"></span>
+                    {% endif %}
+                    {{ field.label }}
+                </label>
             {% endwith %}
         {% endfor %}
-    </ul>
+    </div>
     {% endfor %}
     {% if filterform.tags %}
-    <ul class="submission_list_choose">
-        <li>
-            <label for="{{ filterform.tags.id_for_label }}">
-                <span class="submission_tags">{{ filterform.tags.label }}</span>
-            </label>
-            {{ filterform.tags }}
-        </li>
-    </ul>
+    <div class="submission_list_choose">
+        <label for="{{ filterform.tags.id_for_label }}">
+            <span class="submission_tags">{{ filterform.tags.label }}</span>
+        </label>
+        {{ filterform.tags }}
+    </div>
     {% endif %}
     {{ filterform.page }}
 </form>

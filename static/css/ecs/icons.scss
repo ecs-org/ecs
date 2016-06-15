@@ -43,32 +43,11 @@
     background-position: -320px -256px;
 }
 
-.submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+.submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
     @include icon_bg_16;
     margin-right: 3px;
 }
 
-.submission_new {
-    background-position: -80px -256px;
-}
-.submission_next_meeting {
-    background-position: -80px -80px;
-}
-.submission_b2 {
-    background-position: -240px -192px;
-}
-.submission_amg {
-    background-position: 0 -496px;
-}
-.submission_mpg {
-    background-position: 0 -512px;
-}
-.submission_thesis {
-    background-position: 0 -480px;
-}
-.submission_other {
-    background-position: 0 -64px;
-}
 .submission_inprogress {
     background-position: 0 -688px;
 }
