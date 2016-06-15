@@ -133,18 +133,6 @@
     background-position: -240px -208px;
 }
 
-
-.ecs-TextAreaToolbar {
-    a.boilerplate {
-        @include icon_bg_16;
-        background-position: 0 -1072px;
-    }
-    a.versions {
-        @include icon_bg_16;
-        background-position: -80px -48px;
-    }
-}
-
 .dashboard_widget .unread {
     @include icon_bg_16;
     background-position: -160px -32px;

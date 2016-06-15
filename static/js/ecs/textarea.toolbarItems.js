@@ -4,7 +4,8 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
     return function(textarea) {
         var button = $('<a>', {
             title: label,
-            'class': 'boilerplate',
+            'class': 'fa fa-paragraph text-primary',
+            'css': {'font-size': '150%'},
             click: function(ev) {
                 ev.preventDefault();
                 var status = {
@@ -97,7 +98,8 @@ ecs.textarea.toolbarItems.versionHistory = function(label, url){
     return function(textarea) {
         return $('<a>', {
             title: label,
-            'class': 'versions',
+            'class': 'fa fa-history text-primary',
+            'css': {'font-size': '150%'},
             click: function(ev) {
                 ev.preventDefault();
                 ecs.fieldhistory.show(url, textarea.attr('name'));
