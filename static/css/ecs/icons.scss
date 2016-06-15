@@ -22,38 +22,16 @@
     width: 32px;
     height: 32px;
 }
-@mixin icon_32 {
-    width: 32px;
-    height: 32px;
-}
-@mixin icon_16 {
-    width: 16px;
-    height: 16px;
-}
 
 .icon_help,
-.icon_feedback,
-.icon_workflow,
-.icon_workflow_gray,
 .user_icon,
 #scratchpad_button,
 #scratchpad_button.empty {
-    @include icon_32;
-    @include icon_bg;
+    @include icon_bg_32;
     margin-right: 3px;
 }
 .icon_help {
     background-position: -320px -160px
-}
-.icon_feedback {
-    background-position: -320px -32px;
-    margin-left: 3px;
-}
-.icon_workflow {
-    background-position: -320px -64px;
-}
-.icon_workflow_gray {
-    background-position: -320px -96px;
 }
 .user_icon {
     background-position: -320px 0;
@@ -182,18 +160,14 @@
 
 
 .ecs-TextAreaToolbar {
-    /* a.annotations {
+    a.boilerplate {
         @include icon_bg_16;
-        background-position: 0 -1088px;
-    } */
-a.boilerplate {
-    @include icon_bg_16;
-    background-position: 0 -1072px;
-}
-a.versions {
-    @include icon_bg_16;
-    background-position: -80px -48px;
-}
+        background-position: 0 -1072px;
+    }
+    a.versions {
+        @include icon_bg_16;
+        background-position: -80px -48px;
+    }
 }
 
 .form_main .investigator .field a.delete_row,
