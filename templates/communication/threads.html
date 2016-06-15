@@ -7,12 +7,30 @@
     <form id="thread_list_filter" action="" method="post">
         {% csrf_token %}
         <div class="thread_list_choose">
-            {{ filterform.incoming }} <label for="id_incoming" class="thread_incoming"><span class="icon_in"></span>{% trans "Incoming" %}</label>
-            {{ filterform.outgoing }} <label for="id_outgoing" class="thread_outgoing"><span class="icon_out"></span>{% trans "Outgoing" %}</label>
+            {{ filterform.incoming }}
+            <label for="id_incoming">
+                <span class="fa fa-arrow-down"></span>
+                {% trans "Incoming" %}
+            </label>
+
+            {{ filterform.outgoing }}
+            <label for="id_outgoing">
+                <span class="fa fa-arrow-up"></span>
+                {% trans "Outgoing" %}
+            </label>
         </div>
         <div class="thread_list_choose">
-            {{ filterform.pending }} <label for="id_pending" class="thread_outgoing"><span class="icon_pending"></span>{% trans "Pending" %}</label>
-            {{ filterform.closed }} <label for="id_closed" class="thread_outgoing"><span class="icon_done"></span>{% trans "Closed" %}</label>
+            {{ filterform.pending }}
+            <label for="id_pending">
+                <span class="fa fa-cog"></span>
+                {% trans "Pending" %}
+            </label>
+
+            {{ filterform.closed }}
+            <label for="id_closed">
+                <span class="fa fa-check"></span>
+                {% trans "Closed" %}
+            </label>
         </div>
     </form>
     <div class="sort_options">

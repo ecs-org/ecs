@@ -1,5 +1,5 @@
 {% load i18n %}
-<span class="icon_sort">{% trans "sort" %}</span>
+<span class="fa fa-sort"></span>
 {% if not submission %}
 <a{% if widget %} class="open-in-widget"{% endif %} href="{{ request.path }}?sort={% ifequal sort 'submission' %}-{% endifequal %}submission">Studie</a> |
 {% endif %}

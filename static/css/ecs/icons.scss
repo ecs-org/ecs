@@ -43,24 +43,9 @@
     background-position: -320px -256px;
 }
 
-.icon_done, .icon_sort, .icon_in, .icon_out, .icon_pending, .task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
+.task_mine, .task_open, .task_proxy, .task_amg, .task_mpg, .task_thesis, .task_other, .submission_new, .submission_next_meeting, .submission_b2, .submission_amg, .submission_mpg, .submission_thesis, .submission_other, .submission_inprogress, .submission_resubmission, .submission_b2_resubmission, .submission_review {
     @include icon_bg_16;
     margin-right: 3px;
-}
-.icon_done {
-    background-position: -16px -160px;
-}
-.icon_sort {
-    background-position: -240px -256px;
-}
-.icon_in {
-    background-position: -240px -288px;
-}
-.icon_out {
-    background-position: -240px -272px;
-}
-.icon_pending {
-    background-position: 0 -672px;
 }
 
 .task_mine {
