@@ -15,7 +15,7 @@
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
             {% if incoming %}{% trans "von" %}{% else %}{% trans "an" %}{% endif %}: <span class="user">{% block message_user %}{% endblock %}</span>
         </span>
-        <span class="{% if thread.last_message.unread and thread.last_message.receiver == user %}unread{% endif %}"></span>
+        <span {% if thread.last_message.unread and thread.last_message.receiver == user %}class="fa fa-sun-o text-warning"{% endif %}></span>
         <a class="title" href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.pk %}" title="{{ thread.last_message|preview:80 }}">{{ thread.subject|truncatewords:10 }}</a>
         <span class="actions">
             <a class="open-in-widget fa fa-check-square-o" href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next=$CURRENT_URL$" title="{% trans 'mark as done' %}"></a>

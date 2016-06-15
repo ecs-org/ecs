@@ -11,7 +11,9 @@
     <li class="submission_item">
     {% if submission|is_docstash %}
         {% with submission as docstash %}
-        <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}"> <span class="submission_inprogress"></span> </a>
+        <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
+            <span class="fa fa-wrench text-info"></span>
+        </a>
         {% if docstash.value.notification_type %}
             <b>{{ docstash.value.notification_type }}</b> für
         {% endif %}
@@ -20,18 +22,25 @@
         {% endwith %}
     {% else %}
     
-        {% if submission.resubmission_task %}<span class="submission_resubmission"></span>{% endif %}
-        {% if submission.b2_resubmission_task %}<span class="submission_b2_resubmission"></span>{% endif %}
+        {% if submission.resubmission_task %}
+            <span class="fa fa-exclamation-triangle text-danger"></span>
+        {% endif %}
+        {% if submission.b2_resubmission_task %}
+            <span class="fa fa-exclamation-triangle text-danger"></span>
+        {% endif %}
         
         {% with submission.get_current_docstash as docstash %}
         {% if docstash %}
-            <span class="submission_inprogress"></span>
+            <span class="fa fa-wrench text-info"></span>
         {% endif %}
         {% endwith %}
 
         {% with submission.current_submission_form as submission_form %}
         {% with submission.external_review_task as external_review_task %}
-            <a href="{% url 'view_submission' submission_pk=submission.pk %}">{% if external_review_task %}<span class="submission_review"></span>{% endif %}{{ submission|ec_number }}</a>
+            <a href="{% url 'view_submission' submission_pk=submission.pk %}">
+                {% if external_review_task %}<span class="fa fa-cog text-info"></span>{% endif %}
+                {{ submission|ec_number }}
+            </a>
         {% endwith %}
         {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
         {% with submission.medical_categories.all as categories %}

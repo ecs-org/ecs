@@ -29,19 +29,19 @@
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
-            <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="icon_drag">DRAG ME</span>{% endif %}</span>
+            <span class="dragHandle">#{{ entry }} {% if not readonly %}<span class="fa fa-bars fa-2x"></span>{% endif %}</span>
             <h4>
                 {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                 {{ entry.title }}
                 {% if entry.submission %}
-                    <a class="preview" href="{% url 'view_submission' submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
+                    <a href="{% url 'view_submission' submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
                     {{ entry.submission.project_title_display|smart_truncate:40 }}
                 {% endif %}
             </h4>
             {% with entry|last_recessed_vote as vote %}{% if vote %}<span>({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})</span>{% endif %}{% endwith %}
             {% if not readonly %}
                 {% if not entry.submission %}
-                    <a class="open-in-widget remove" href="{% url 'ecs.meetings.views.remove_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}"></a>
+                    <a class="open-in-widget remove fa fa-times text-danger" href="{% url 'ecs.meetings.views.remove_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}"></a>
                 {% endif %}
                 <form action="{% url 'ecs.meetings.views.update_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}" method="post" class="open-in-widget">
                     {% csrf_token %}

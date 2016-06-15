@@ -143,15 +143,9 @@ input[disabled] {
     word-wrap: break-word;
     border-left: 1px solid $bisque;
 
-    .user_logout {
-        position: absolute;
-        top: 30px;
-        right: 10px;
-
-        a {
-            color: #800000;
-            font-size: 13px;
-        }
+    a.user_logout {
+        color: #800000;
+        font-size: 13px;
     }
 
     #account,
@@ -177,21 +171,7 @@ input[disabled] {
         padding: 10px;
     }
 
-    .user_data {
-        display: block;
-        float: left;
-        margin-bottom: 10px;
-    }
-    .user_icon {
-        float: left;
-    }
-    .user_name {
-        position: relative;
-        float: left;
-        width: 163px;
-        height: 43px;
-    }
-
+    .user_data,
     .searchbox {
         margin-bottom: 10px;
     }

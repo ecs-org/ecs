@@ -43,12 +43,14 @@
               <h4>Wechsle nach:</h4>
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
-                    <div class="search">
-                        <form action="{% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk %}" class="open-in-widget">
-                            <input type="text" name="q" placeholder="in Sitzungen suchen" />
-                            <input type="submit" value="Suchen" />
-                        </form>
-                    </div>
+                    <form action="{% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk %}" class="search open-in-widget">
+                        <div class="input-group input-group-sm">
+                            <input type="text" class="form-control" name="q" placeholder="Suche" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-secondary fa fa-search" type="submit"></button>
+                            </span>
+                        </div>
+                    </form>
                     {% endblock %}
                 {% endif %}
             </div>
