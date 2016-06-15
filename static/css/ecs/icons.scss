@@ -59,22 +59,6 @@
     background-position: 0 -672px;
 }
 
-.task_complete,
-.task_reject,
-.task_delegate {
-    @include icon_bg_16;
-    margin-right: 5px;
-}
-.task_complete {
-    background-position: -16px -160px;
-}
-.task_reject {
-    background-position: -240px -160px;
-}
-.task_delegate {
-    background-position: -240px -208px;
-}
-
 .dashboard_widget .unread {
     @include icon_bg_16;
     background-position: -160px -32px;

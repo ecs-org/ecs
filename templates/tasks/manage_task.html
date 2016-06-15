@@ -14,37 +14,36 @@
         Bitte wählen Sie eine Aktion aus.
     </span>
     {% endif %}
-    <ul>
-        {% if not form.task.choices %}
-        <li>
-            <input type="radio" name="task_management-action" id="id_action_complete" value="complete"{% if form|form_value:'action' == 'complete' %} checked="checked"{% endif %} />
-            <label for="id_action_complete"><span class="task_complete"></span>{% trans 'Close' %}</label>
-        </li>
-        {% else %}
-            {% for val, label in form.task.choices %}
-            <li>
-                <input type="radio" name="task_management-action" id="id_action_complete_{{ forloop.counter0 }}" value="complete_{{ forloop.counter0 }}" />
-                <label for="id_action_complete_{{ forloop.counter0 }}"><span class="task_reject"></span>{{ label }}</label>
-            </li>
-            {% endfor %}
+
+    {% if not form.task.choices %}
+        <label>
+            <input type="radio" name="task_management-action" value="complete"{% if form|form_value:'action' == 'complete' %} checked="checked"{% endif %} />
+            <span class="fa fa-check fa-2x text-success"></span>
+            {% trans 'Close' %}
+        </label>
+    {% else %}
+        {% for val, label in form.task.choices %}
+            <label>
+                <input type="radio" name="task_management-action" value="complete_{{ forloop.counter0 }}" />
+                <span class="fa fa-cog fa-2x text-info"></span>
+                {{ label }}
+            </label>
+        {% endfor %}
+    {% endif %}
+    {% if form.assign_to %}
+        <label>
+            <input type="radio" name="task_management-action" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
+            <span class="fa fa-share fa-2x text-info"></span>
+            {% trans 'Delegate' %}
+        </label>
+
+        <label for="id_assign_to">An</label>{{ form.assign_to }}
+        {% if form.assign_to.errors %}
+            <span class="errors">{{ form.assign_to.errors }}</span>
         {% endif %}
-        {% if form.assign_to %}
-        <li>
-            <input type="radio" name="task_management-action" id="id_action_delegate" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
-            <label for="id_action_delegate"><span class="task_delegate"></span>{% trans 'Delegate' %}</label>
-            <span class="task_delegate_assign">
-                <label for="id_assign_to">An</label>{{ form.assign_to }}
-                {% if form.assign_to.errors %}
-                    <span class="errors">{{ form.assign_to.errors }}</span>
-                {% endif %}
-            </span>
-        </li>
-        {% endif %}
-        <li>
-          <input type="submit" name="task_management-save" value="Nur Speichern">
-          <input type="submit" name="task_management-submit" value="Abschicken">
-        </li>
-    </ul>
+    {% endif %}
+    <input class="btn btn-sm btn-outline-primary" hidden type="submit" name="task_management-save" value="Nur Speichern">
+    <input class="btn btn-sm btn-primary" type="submit" name="task_management-submit" value="Abschicken">
     {{ form.post_data }}
 </form>
 </div>

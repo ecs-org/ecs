@@ -40,20 +40,6 @@
 #task_form {
     font-size: 12px;
 
-    ul {
-        float: left;
-        display: block;
-        width: 100%;
-        margin: 0;
-
-        li {
-            list-style-type: none;
-            float: left;
-            padding-top: 3px;
-            margin-right: 10px;
-        }
-    }
-
     .errors {
         color: $red;
     }
@@ -66,51 +52,13 @@
         border: 1px solid $yellow-extra-dark;
         margin: 5px 0;
     }
-    label, input[type=radio], textarea, select {
-        float: left;
-    }
 
-    textarea, select {
+    select {
         margin-bottom: 10px;
     }
 
     input[type=radio] {
         margin: 3px 5px 10px 5px;
-    }
-
-    input[type=submit] {
-        position: relative;
-        margin: 0 5px 0 0;
-        z-index: 10;
-        top: -2px;
-    }
-
-    .task_indent {
-        clear: both;
-        margin-left: 90px;
-        float: left;
-        display: block;
-        min-height: 30px;
-        label {
-            display: inline-block;
-            margin-right: 5px;
-        }
-    }
-
-    .task_delegate_assign {
-        label {
-            margin: 3px 5px 0 10px;
-        }
-        select {
-            margin-bottom: 0;
-        }
-        textarea {
-            display: inline-block;
-            float: left;
-            min-height: 60px;
-            width: 300px;
-            clear: both;
-        }
     }
 }
 
