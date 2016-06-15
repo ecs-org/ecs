@@ -117,16 +117,6 @@
     background-position: 0 -672px;
 }
 
-.tab_headers li a.delete_row {
-    @include icon_bg_16;
-    border: none;
-    background-position: 0 -128px;
-    padding: 0px;
-    position: relative;
-    top: 3px;
-    overflow: hidden;
-}
-
 .task_complete,
 .task_reject,
 .task_delegate {
@@ -153,39 +143,6 @@
         @include icon_bg_16;
         background-position: -80px -48px;
     }
-}
-
-.form_main .investigator .field a.delete_row,
-.inline_formset .form a.delete_row {
-    @include icon_bg;
-    background-position: -240px -336px;
-    height: 16px;
-    width: 20px;
-    display: inline-block;
-    overflow: hidden;
-    cursor: pointer;
-    text-indent: -9999px;
-    margin-left: -2px;
-}
-
-div.inline_formset .form a.delete_row {
-    display: block;
-    height: 20px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-}
-.form_main a.add_row,
-#meeting_constraint_editor a.add_row {
-    @include icon_bg;
-    background-position: -240px -320px;
-    width: auto;
-    height: 16px;
-    /*display: inline-block;*/
-    overflow: visible;
-    cursor: pointer;
-    text-indent: -9999px;
-    padding-left: 20px;
 }
 
 .dashboard_widget .unread {

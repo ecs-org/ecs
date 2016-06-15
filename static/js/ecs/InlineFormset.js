@@ -41,7 +41,8 @@ ecs.InlineFormSet = function(containers, options) {
 ecs.InlineFormSet.prototype = {
     createAddButton: function(container){
         return $('<a>', {
-            'class': 'add_row',
+            'class': 'fa fa-plus-circle text-success',
+            'css': {'font-size': '150%', 'margin': '.2em'},
             click: (function(ev) {
                 ev.preventDefault();
                 this.add(container);
@@ -50,7 +51,8 @@ ecs.InlineFormSet.prototype = {
     },
     createRemoveButton: function(){
         return $('<a>', {
-            'class': 'delete_row',
+            'class': 'fa fa-ban text-danger',
+            'css': {'font-size': '150%', 'margin': '.2em'},
             click: (function(ev) {
                 ev.preventDefault();
                 var form = $(ev.target).parents(this.options.formSelector);
