@@ -12,7 +12,7 @@ from ecs.users.utils import get_or_create_user, get_user
 from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
-    needs_insurance_review, needs_gcp_review, needs_legal_and_patient_review, needs_statistical_review, needs_paper_submission_review,
+    needs_paper_submission_review,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
     needs_insurance_b2_review, needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
@@ -111,11 +111,6 @@ def submission_workflow():
             ('categorization_review', 'localec_recommendation'): Args(guard=needs_localec_recommendation),
             ('localec_recommendation', 'vote_preparation'): Args(guard=needs_localec_vote_preparation),
             ('localec_recommendation', 'categorization_review'): Args(guard=has_localec_recommendation, negated=True),
-
-            ('categorization_review', 'insurance_review'): Args(guard=needs_insurance_review),
-            ('categorization_review', 'statistical_review'): Args(guard=needs_statistical_review),
-            ('categorization_review', 'legal_and_patient_review'): Args(guard=needs_legal_and_patient_review),
-            ('categorization_review', 'gcp_review'): Args(guard=needs_gcp_review),
         }
     )
 

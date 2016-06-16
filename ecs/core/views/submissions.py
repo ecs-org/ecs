@@ -216,10 +216,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         sf.previous_form = prev
     current_form_idx = [sf == submission.current_submission_form for sf in submission_forms].index(True)
 
-    external_review_checklists = Checklist.objects.filter(submission=submission, blueprint__slug='external_review')
-    # only show selected external reviews
-    external_review_checklists = external_review_checklists.filter(user__in=submission.external_reviewers.values('pk').query)
-
+    external_review_checklists = submission.checklists.filter(blueprint__slug='external_review')
     notifications = submission.notifications.order_by('-timestamp')
     votes = submission.votes
     
@@ -281,8 +278,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
-        if profile.is_executive_board_member or not submission.external_reviewers.filter(pk=request.user.pk).exists():
-            context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
+        context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
             tasks = list(Task.objects.for_user(request.user).filter(
                 task_type__workflow_node__uid='categorization_review',
@@ -429,10 +425,7 @@ def show_checklist_review(request, submission_form_pk=None, checklist_pk=None):
 def drop_checklist_review(request, submission_form_pk=None, checklist_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     checklist = get_object_or_404(Checklist, pk=checklist_pk, status__in=('new', 'review_fail'))
-    
-    if checklist.blueprint.slug == 'external_review':
-        submission_form.submission.external_reviewers.remove(checklist.user)
-    
+
     checklist.status = 'dropped'
     checklist.save()
     with sudo():

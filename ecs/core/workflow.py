@@ -12,7 +12,6 @@ from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
 from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
-from ecs.votes.models import Vote
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -60,26 +59,6 @@ def has_localec_recommendation(wf):
 #################
 # review guards #
 #################
-@guard(model=Submission)
-@block_if_task_exists('insurance_review')
-def needs_insurance_review(wf):
-    return wf.data.insurance_review_required
-
-@guard(model=Submission)
-@block_if_task_exists('statistical_review')
-def needs_statistical_review(wf):
-    return wf.data.statistical_review_required
-
-@guard(model=Submission)
-@block_if_task_exists('legal_and_patient_review')
-def needs_legal_and_patient_review(wf):
-    return wf.data.legal_and_patient_review_required
-
-@guard(model=Submission)
-@block_if_task_exists('gcp_review')
-def needs_gcp_review(wf):
-    return wf.data.gcp_review_required
-
 @guard(model=Submission)
 @block_if_task_exists('paper_submission_review')
 def needs_paper_submission_review(wf):
@@ -245,28 +224,11 @@ class CategorizationReview(Activity):
     def pre_perform(self, choice):
         s = self.workflow.data
         on_categorization_review.send(Submission, submission=s)
-        blueprint = ChecklistBlueprint.objects.get(slug='external_review')
-        for user in s.external_reviewers.all():
-            checklist, created = Checklist.objects.get_or_create(blueprint=blueprint, submission=s, user=user, defaults={'last_edited_by': user})
-            if created:
-                for question in blueprint.questions.order_by('text'):
-                    checklist.answers.get_or_create(question=question)
-            elif checklist.status == 'dropped':
-                checklist.status = 'new'
-                checklist.save()
-                with sudo():
-                    tasks = Task.objects.for_data(checklist).filter(task_type__workflow_node__uid='external_review')
-                    if not any(t for t in tasks if not t.closed_at and not t.deleted_at):
-                        tasks[0].reopen()
-        for checklist in Checklist.objects.filter(blueprint=blueprint, submission=s).exclude(user__in=s.external_reviewers.values('pk').query):
-            checklist.status = 'dropped'
-            checklist.save()
-            with sudo():
-                Task.objects.for_data(checklist).open().mark_deleted()
 
 def unlock_categorization_review(sender, **kwargs):
     kwargs['instance'].workflow.unlock(CategorizationReview)
 post_save.connect(unlock_categorization_review, sender=Submission)
+
 
 class ExpeditedRecommendationSplit(Generic):
     class Meta:

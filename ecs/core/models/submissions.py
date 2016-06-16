@@ -41,13 +41,8 @@ class Submission(models.Model):
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES, db_index=True)
     remission = models.NullBooleanField(default=False)
-    external_reviewers = models.ManyToManyField(User, blank=True, related_name='external_review_submission_set')
     biased_board_members = models.ManyToManyField(User, blank=True, related_name='biased_for_submissions')
 
-    legal_and_patient_review_required = models.NullBooleanField(default=False)
-    statistical_review_required = models.NullBooleanField(default=False)
-    insurance_review_required = models.NullBooleanField(default=False)
-    gcp_review_required = models.NullBooleanField(default=False)
     invite_primary_investigator_to_meeting = models.BooleanField(default=False)
 
     is_transient = models.BooleanField(default=False)
@@ -777,9 +772,6 @@ def _post_submission_form_save(**kwargs):
     if not old_sf:
         submission.current_submission_form = new_sf
         if new_sf.is_amg:
-            submission.legal_and_patient_review_required = True
-            submission.statistical_review_required = True
-            submission.insurance_review_required = True
             submission.invite_primary_investigator_to_meeting = True
         if new_sf.is_thesis:
             submission.remission = True

@@ -33,7 +33,6 @@ class SubmissionAuthTestCase(EcsTestCase):
     
     def setUp(self):
         super(SubmissionAuthTestCase, self).setUp()
-        self.external_review_user = self._create_test_user('external_review')
         self.anyone = self._create_test_user('anyone')
         self.board_member_user = self._create_test_user('board_member', is_board_member=True)
         self.insurance_review_user = self._create_test_user('insurance_review', is_insurance_reviewer=True)
@@ -46,7 +45,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         sf = create_submission_form()
         sf.submitter = self.submitter_user
         sf.sponsor = self.sponsor_user
-        sf.external_review_user = self.external_review_user
         sf.project_title = self.EC_NUMBER
         sf.save()
     
@@ -55,7 +53,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         investigator.save()
 
         sf.submission.ec_number = self.EC_NUMBER
-        sf.submission.external_reviewers.add(self.external_review_user)
 
         meeting = Meeting.objects.create(start=timezone.now())
         entry = meeting.add_entry(submission=sf.submission, duration=timedelta(seconds=60))
@@ -81,8 +78,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         with sudo(self.sponsor_user):
             self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.primary_investigator_user):
-            self.assertEqual(Submission.objects.count(), 1)
-        with sudo(self.external_review_user):
             self.assertEqual(Submission.objects.count(), 1)
         with sudo(self.internal_user):
             self.assertEqual(Submission.objects.count(), 1)
@@ -114,7 +109,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(True, expect404, self.submitter_user, url)
         self._check_access(True, expect404, self.sponsor_user, url)
         self._check_access(True, expect404, self.primary_investigator_user, url)
-        self._check_access(True, expect404, self.external_review_user, url)
         self._check_access(True, expect404, self.internal_user, url)
         self._check_access(True, expect404, self.board_member_user, url)
         self._check_access(False, expect404, self.another_board_member_user, url)
@@ -134,7 +128,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         self._check_access(False, True, self.sponsor_user, export_url)
         self._check_access(False, True, self.primary_investigator_user, export_url)
         self._check_access(True, True, self.internal_user, export_url)
-        self._check_access(False, True, self.external_review_user, export_url)
         self._check_access(False, True, self.board_member_user, export_url)
         self._check_access(False, True, self.another_board_member_user, export_url)
         self._check_access(True, True, self.sf.submission.presenter, export_url)
