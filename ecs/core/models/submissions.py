@@ -55,9 +55,6 @@ class Submission(models.Model):
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
 
-    # XXX: are this fields used?
-    billed_at = models.DateTimeField(null=True, default=None, blank=True, db_index=True)
-
     objects = SubmissionManager()
     
     @property

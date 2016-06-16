@@ -14,7 +14,6 @@ class ChecklistBlueprint(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=50, db_index=True, unique=True)
     multiple = models.BooleanField(default=False)
-    billing_required = models.BooleanField(default=False)
     reviewer_is_anonymous = models.BooleanField(default=False)
     allow_pdf_download = models.BooleanField(default=False)
 
