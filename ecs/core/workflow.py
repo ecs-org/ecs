@@ -345,19 +345,10 @@ def unlock_checklist_review(sender, **kwargs):
 post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
-class NonRepeatableChecklistReview(ChecklistReview):
+class RecommendationReview(ChecklistReview):
     def is_repeatable(self):
         return False
 
-    def is_reentrant(self):
-        return False
-
-def unlock_non_repeatable_checklist_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(NonRepeatableChecklistReview)
-post_save.connect(unlock_non_repeatable_checklist_review, sender=Checklist)
-
-
-class RecommendationReview(NonRepeatableChecklistReview):
     def is_reentrant(self):
         return True
 
