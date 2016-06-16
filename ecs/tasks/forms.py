@@ -33,9 +33,9 @@ class ManageTaskForm(forms.Form):
         if task.task_type.is_delegatable:
             fs['action'].choices = [('delegate', _('delegate')),('message', _('message'))]
             assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
-            if task.medical_categories.exists():
+            if task.medical_category_id:
                 assign_to_q = assign_to_q.filter(
-                    medical_categories__in=task.medical_categories.values('pk'))
+                    medical_categories=task.medical_category_id)
             fs['assign_to'].queryset = assign_to_q
         else:
             fs['action'].choices = [('message', _('message'))]

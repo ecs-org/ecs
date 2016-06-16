@@ -124,7 +124,7 @@ class Task(models.Model):
     
     accepted = models.BooleanField(default=False)
 
-    medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='tasks_for_expedited_review')
+    medical_category = models.ForeignKey('core.MedicalCategory', null=True)
     
     objects = TaskManager()
 
@@ -219,12 +219,11 @@ class Task(models.Model):
     def reopen(self, user=None):
         assert self.closed_at is not None or self.deleted_at is not None
         new = type(self)()
-        for attr in ('task_type', 'content_type', 'data_id'):
+        for attr in ('task_type', 'content_type', 'data_id', 'medical_category_id'):
             setattr(new, attr, getattr(self, attr))
         user = user or self.assigned_to
         new.created_by = user
         new.accept(user=user, check_authorization=False)
-        new.medical_categories = self.medical_categories.all()
         def _repeated_token_received(sender, **kwargs):
             if sender.repeated and sender.node == self.workflow_token.node:
                 new.workflow_token = sender

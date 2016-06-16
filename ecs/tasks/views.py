@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission, MedicalCategory
+from ecs.core.models import Submission
 from ecs.tasks.models import Task
 from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_declined
@@ -25,10 +25,8 @@ def task_backlog(request, submission_pk=None):
         tasks = list(
             Task.objects.for_submission(submission)
                 .select_related('task_type', 'assigned_to',
-                    'assigned_to__profile')
+                    'assigned_to__profile', 'medical_category')
                 .prefetch_related(
-                    Prefetch('medical_categories',
-                        queryset=MedicalCategory.objects.order_by('abbrev')),
                     Prefetch('task_type__groups',
                         queryset=Group.objects.order_by('name'))
                 ).order_by('created_at')

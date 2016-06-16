@@ -67,8 +67,8 @@ class TaskQFactory(authorization.QFactory):
         )
         q |= self.make_q(created_by=user) | self.make_q(assigned_to=user)
         q &= (
-            self.make_q(medical_categories=None) |
-            self.make_q(medical_categories__in=user.medical_categories.values('pk'))
+            self.make_q(medical_category=None) |
+            self.make_q(medical_category__in=user.medical_categories.values('pk'))
         )
         return q
 
