@@ -51,7 +51,7 @@ def checklist_workflow():
         auto_start=True, 
         nodes={
             'start': Args(Generic, start=True, name=_("Start")),
-            'external_review': Args(ExternalReview, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP, is_delegatable=False),
+            'external_review': Args(ExternalReview, name=_("External Review"), group=EXTERNAL_REVIEW_GROUP, is_delegatable=False, is_dynamic=True),
             'external_review_review': Args(ExternalReviewReview, name=_("External Review Review"), group=EXTERNAL_REVIEW_REVIEW_GROUP),
         },
         edges={

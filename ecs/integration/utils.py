@@ -52,6 +52,7 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
         args.setdefault('uid', name)
         group = args.pop('group', None)
         is_delegatable = args.pop('is_delegatable', None)
+        is_dynamic = args.pop('is_dynamic', None)
         node = args.apply(graph.create_node)
         node_instances[name] = node
         if group:
@@ -61,6 +62,10 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
         if not is_delegatable is None:
             task_type = TaskType.objects.get(workflow_node=node)
             task_type.is_delegatable = is_delegatable
+            task_type.save()
+        if not is_dynamic is None:
+            task_type = TaskType.objects.get(workflow_node=node)
+            task_type.is_dynamic = is_dynamic
             task_type.save()
     for node_names, args in edges:
         if not args:

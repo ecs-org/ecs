@@ -8,6 +8,7 @@
             <th>{% trans "Assigend At" %}</th>
             <th>{% trans "Assigend To" %}</th>
             <th>{% trans "Closed At" %}</th>
+            <th></th>
         </tr>
     {% for task in tasks %}
         <tr class="task{% if task.closed_at %} text-muted{% endif %}{% if task.deleted_at %} deleted{% endif %}">
@@ -27,6 +28,11 @@
                 {% else %}-{% endif %}
             </td>
             <td>{% if task.closed_at %}{{ task.closed_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
+            <td>
+                {% if not task.closed_at and not task.deleted_at and task.task_type.is_dynamic %}
+                    <a class="fa fa-ban text-danger open-in-widget" href="{% url 'ecs.tasks.views.delete_task' submission_pk=submission.pk task_pk=task.pk %}"></a>
+                {% endif %}
+            </td>
         </tr>
     {% endfor %}
     </table>

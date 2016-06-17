@@ -20,6 +20,7 @@ class TaskType(models.Model):
     workflow_node = models.OneToOneField(Node, null=True)
     group = models.ForeignKey(Group, related_name='task_types', null=True)
     is_delegatable = models.BooleanField(default=True)
+    is_dynamic = models.BooleanField(default=False)
     
     def __str__(self):
         if self.name:

@@ -30,7 +30,18 @@ def task_backlog(request, submission_pk=None):
 
     return render(request, 'tasks/log.html', {
         'tasks': tasks,
+        'submission': submission,
     })
+
+
+@user_flag_required('is_internal')
+def delete_task(request, submission_pk=None, task_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    with sudo():
+        task = get_object_or_404(Task.objects.for_submission(submission).open(),
+            pk=task_pk, task_type__is_dynamic=True)
+        task.mark_deleted()
+    return redirect('ecs.tasks.views.task_backlog', submission_pk=submission_pk)
 
 
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):

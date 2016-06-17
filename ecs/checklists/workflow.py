@@ -56,7 +56,7 @@ class ExternalReview(Activity):
     def receive_token(self, *args, **kwargs):
         c = self.workflow.data
         token = super(ExternalReview, self).receive_token(*args, **kwargs)
-        token.task.accept(c.user)
+        token.task.assign(c.user)
         if c.status == 'new':
             with sudo():
                 meeting = Meeting.objects.filter(

@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<h3 class="m-t-1">{% trans 'Request Checklist Review' %}</h3>
+
+<form action="{{ request.path }}" method="POST" class="open-in-widget">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        {% if form_stage2 %}
+            {{ form_stage2.as_table }}
+        {% endif %}
+    </table>
+    {% if form_stage2 %}
+        <input type="submit" class="btn btn-sm btn-primary" value="{% trans 'Request Review' %}">
+    {% endif %}
+</form>
+
+<script type="text/javascript">
+    (function(){
+        var task_type = $('#{{ form.task_type.auto_id }}');
+        var widget = task_type.parents('.ecs-Widget').first();
+
+        task_type.change(function() {
+            var url = '{{ request.path }}';
+            if (task_type.val())
+                url += '?' + task_type.serialize();
+            widget.data('widget').load(url);
+        });
+
+        {% if created %}
+            var task_widget = widget.prev('.ecs-Widget');
+            task_widget.data('widget').load(task_widget.data('widget-url'));
+        {% endif %}
+
+        {% if form_stage2 %}
+            $('#{{ form_stage2.assign_to.auto_id }}').select2(
+                {placeholder: null});
+        {% endif %}
+    })();
+</script>

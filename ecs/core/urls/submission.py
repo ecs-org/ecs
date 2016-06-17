@@ -1,12 +1,14 @@
 from django.conf.urls import url
 
 from ecs.core.views import submissions as views
-from ecs.tasks.views import task_backlog
+from ecs.tasks.views import task_backlog, delete_task
 from ecs.communication.views import new_thread
 
 
 urlpatterns = (
     url(r'^(?P<submission_pk>\d+)/tasks/log/$', task_backlog),
+    url(r'^(?P<submission_pk>\d+)/task/(?P<task_pk>\d+)/delete/$', delete_task),
+
     url(r'^(?P<submission_pk>\d+)/messages/new/$', new_thread),
 
     url(r'^list/all/$', views.all_submissions),
