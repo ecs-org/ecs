@@ -18,7 +18,7 @@ from ecs.authorization.managers import AuthorizationManager
 class TaskType(models.Model):
     name = models.CharField(max_length=100)
     workflow_node = models.OneToOneField(Node, null=True)
-    groups = models.ManyToManyField(Group, related_name='task_types', blank=True)
+    group = models.ForeignKey(Group, related_name='task_types', null=True)
     is_delegatable = models.BooleanField(default=True)
     
     def __str__(self):
@@ -57,7 +57,7 @@ class TaskQuerySet(models.QuerySet):
 
     def for_user(self, user):
         return self.filter(
-            Q(task_type__groups__user=user) | Q(task_type__groups=None),
+            Q(task_type__group__user=user) | Q(task_type__group=None),
             deleted_at=None
         )
 
@@ -235,12 +235,12 @@ class Task(models.Model):
         
     def assign(self, user, check_authorization=True, commit=True):
         if user and check_authorization:
-            groups = self.task_type.groups.all()
-            if groups and not user.groups.filter(pk__in=[g.pk for g in groups])[:1]:
-                raise ValueError(("Task %s cannot be assigned to user %s, it requires one of the following groups: %s" % (
+            group = self.task_type.group
+            if group and not user.groups.filter(pk=group.id).exists():
+                raise ValueError(("Task %s cannot be assigned to user %s, it requires the following group: %s" % (
                     self, 
                     user, 
-                    ", ".join(str(x) for x in self.task_type.groups.all()),
+                    group,
                 )).encode('ascii', 'ignore'))
         self.assigned_to = user
         self.accepted = False

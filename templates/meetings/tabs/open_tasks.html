@@ -18,7 +18,7 @@
                 {{ task.task_type }}
                 {% if task.medical_category %}- {{ task.medical_category }}{% endif %}
             </td>
-            <td>{% for group in task.task_type.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            <td>{% if task.task_type.group %}{{ task.task_type.group }}{% endif %}</td>
             <td>{% if task.assigned_at %}{{ task.assigned_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
             <td>
                 {% if task.assigned_to %}

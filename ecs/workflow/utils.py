@@ -33,7 +33,7 @@ def make_dot(g, prefix='', embed_subgraphs=True, subgraph_id=''):
     
     for node in nodes:
         try:
-            group = ', '.join(node.tasktype.groups.values_list('name', flat=True))
+            group = node.tasktype.group.name if node.tasktype.group else ''
         except TaskType.DoesNotExist:
             group = ''
 

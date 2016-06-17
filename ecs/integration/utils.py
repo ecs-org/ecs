@@ -56,7 +56,8 @@ def setup_workflow_graph(model, nodes=None, edges=None, force=True, **kwargs):
         node_instances[name] = node
         if group:
             task_type = TaskType.objects.get(workflow_node=node)
-            task_type.groups.add(Group.objects.get(name=group))
+            task_type.group = Group.objects.get(name=group)
+            task_type.save()
         if not is_delegatable is None:
             task_type = TaskType.objects.get(workflow_node=node)
             task_type.is_delegatable = is_delegatable

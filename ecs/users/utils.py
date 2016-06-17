@@ -134,7 +134,7 @@ def get_office_user(submission=None):
     from ecs.core.models import AdvancedSettings
     if submission is not None:
         with sudo():
-            tasks = Task.objects.for_submission(submission).filter(task_type__groups__name='EC-Office').exclude(assigned_to=get_current_user()).closed().order_by('-closed_at')
+            tasks = Task.objects.for_submission(submission).filter(task_type__group__name='EC-Office').exclude(assigned_to=get_current_user()).closed().order_by('-closed_at')
             try:
                 return tasks[0].assigned_to
             except IndexError:

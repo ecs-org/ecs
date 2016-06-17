@@ -61,7 +61,7 @@ authorization.register(Vote, factory=VoteQFactory)
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__in=user.groups.values('task_types__pk')) & (
+        q = self.make_q(task_type__group__in=user.groups.values('pk')) & (
             self.make_q(assigned_to=None) |
             self.make_q(assigned_to__profile__is_indisposed=True)
         )

@@ -22,7 +22,7 @@ def on_vote_published(sender, **kwargs):
         reply_receiver = None
         with sudo():
             try:
-                task = Task.objects.for_data(vote).closed().filter(task_type__groups__name='EC-Office').order_by('-closed_at')[0]
+                task = Task.objects.for_data(vote).closed().filter(task_type__group__name='EC-Office').order_by('-closed_at')[0]
                 reply_receiver = task.assigned_to
             except IndexError:
                 pass
