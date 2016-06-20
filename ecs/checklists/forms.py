@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from datetime import timedelta
 
 from django import forms
 from django.utils.translation import ugettext as _
@@ -27,6 +28,21 @@ class ChecklistTaskCreationForm(forms.Form):
     task_type = forms.ModelChoiceField(queryset=TaskType.objects.filter(
             is_dynamic=True, workflow_node__graph__auto_start=True
         ).order_by('workflow_node__uid'), label=_('Task Type'))
+    send_message_on_close = forms.BooleanField(required=False,
+        label=_('Notify me when the task has been completed'))
+    reminder_message_timeout = forms.ChoiceField(choices=(
+            (None, _('No')),
+            (1, _('After one day')),
+            (7, _('After one week')),
+            (14, _('After two week')),
+        ), required=False,
+        label=_('Remember me when the task hasn\'t been done'))
+
+    def clean_reminder_message_timeout(self):
+        days = self.cleaned_data['reminder_message_timeout']
+        if not days:
+            return None
+        return timedelta(days=int(days))
 
 
 class ChecklistTaskCreationStage2Form(forms.Form):

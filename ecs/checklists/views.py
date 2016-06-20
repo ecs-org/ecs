@@ -86,6 +86,8 @@ def create_task(request, submission_pk=None):
                 task = token.task
 
             task.created_by = request.user
+            task.send_message_on_close = form.cleaned_data['send_message_on_close']
+            task.reminder_message_timeout = form.cleaned_data['reminder_message_timeout']
             task.save()
 
             form = ChecklistTaskCreationForm(None, prefix='checklist_task')

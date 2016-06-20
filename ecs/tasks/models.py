@@ -58,7 +58,7 @@ class TaskQuerySet(models.QuerySet):
 
     def for_user(self, user):
         return self.filter(
-            Q(task_type__group__user=user) | Q(task_type__group=None),
+            Q(task_type__group__user=user) | Q(task_type__group=None) | Q(assigned_to=user),
             deleted_at=None
         )
 
@@ -126,6 +126,10 @@ class Task(models.Model):
     accepted = models.BooleanField(default=False)
 
     medical_category = models.ForeignKey('core.MedicalCategory', null=True)
+
+    send_message_on_close = models.BooleanField(default=False)
+    reminder_message_timeout = models.DurationField(null=True)
+    reminder_message_sent_at = models.DateTimeField(null=True)
     
     objects = TaskManager()
 
@@ -197,6 +201,10 @@ class Task(models.Model):
         self.closed_at = timezone.now()
         if commit:
             self.save()
+
+        if self.send_message_on_close:
+            from ecs.tasks.tasks import send_close_message
+            send_close_message(self)
         
     def done(self, choice=None, user=None, commit=True):
         if user and self.assigned_to_id != user.id:
