@@ -1,0 +1,37 @@
+{% load i18n %}
+
+<h3 class="m-t-1">{% trans 'Request Checklist Review' %}</h3>
+
+<table>
+    <tbody>
+        {% for task_type, task in tasks %}
+            <tr>
+                <th>{{ task_type }}</th>
+                <td>
+                    {% if task.closed_at %}
+                        <span class="btn btn-sm btn-outline-primary disabled">
+                            {% trans 'Closed' %}
+                        </span>
+                    {% elif task %}
+                        <span class="btn btn-sm btn-outline-primary disabled">
+                            {% trans 'Started' %}
+                        </span>
+                    {% else %}
+                        <a class="btn btn-sm btn-primary open-in-widget" href="{{ request.path }}?start={{ task_type.workflow_node.uid }}">
+                            {% trans "Start" %}
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if created %}
+<script type="text/javascript">
+    (function(){
+        var task_widget = $('#workflow_log .ecs-Widget:first');
+        task_widget.data('widget').load(task_widget.data('widget-url'));
+    })();
+</script>
+{% endif %}

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import get_object_or_404, render
 from django.utils.translation import ugettext as _
 
@@ -8,7 +8,7 @@ from ecs.checklists.forms import (
 )
 from ecs.core.models import Submission
 from ecs.documents.views import handle_download
-from ecs.tasks.models import Task
+from ecs.tasks.models import Task, TaskType
 from ecs.users.utils import user_flag_required, sudo
 
 
@@ -97,5 +97,43 @@ def create_task(request, submission_pk=None):
     return render(request, 'checklists/create_task.html', {
         'form': form,
         'form_stage2': form_stage2,
+        'created': created,
+    })
+
+
+@user_flag_required('is_internal')
+def categorization_tasks(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+
+    uids = (
+        'gcp_review',
+        'insurance_review',
+        'legal_and_patient_review',
+        'statistical_review',
+    )
+    created = False
+
+    if 'start' in request.GET:
+        uid = request.GET['start']
+        if not uid in uids:
+            raise Http404()
+
+        task_type = TaskType.objects.get(workflow_node__uid=uid,
+            workflow_node__graph__auto_start=True)
+        task_type.workflow_node.bind(
+            submission.workflow.workflows[0]).receive_token(None)
+        created = True
+
+    tasks = []
+    for uid in uids:
+        task_type = TaskType.objects.get(workflow_node__uid=uid,
+            workflow_node__graph__auto_start=True)
+        with sudo():
+            task = Task.objects.for_submission(submission).filter(
+                deleted_at=None, task_type__workflow_node__uid=uid).last()
+        tasks.append((task_type, task))
+
+    return render(request, 'checklists/categorization_tasks.html', {
+        'tasks': tasks,
         'created': created,
     })

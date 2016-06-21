@@ -235,6 +235,9 @@
             {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
                 <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}">{% trans 'Reopen' %}</a></p>
             {% endif %}
+            {% if user.profile.is_internal %}
+                <div data-widget-url="{% url 'ecs.checklists.views.categorization_tasks' submission_pk=submission.pk %}"></div>
+            {% endif %}
         </div>
     {% endif %}
     {% for checklist, checklist_review_form in checklist_reviews %}
