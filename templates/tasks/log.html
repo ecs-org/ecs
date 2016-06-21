@@ -1,4 +1,5 @@
 {% load core i18n %}
+
 <div class="task_back_log">
     <table class="table table-sm">
         <tr>
@@ -21,7 +22,10 @@
             <td>{% if task.assigned_at %}{{ task.assigned_at|date:'d.m.Y H:i' }}{% else %}-{% endif %}</td>
             <td>
                 {% if task.assigned_to %}
-                    {{ task.assigned_to }}
+                    <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk to_user_pk=task.assigned_to.pk %}" target="_blank">
+                        <span class="fa fa-envelope-o"></span>
+                        {{ task.assigned_to }}
+                    </a>
                     {% if not task.accepted %}
                         <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
                     {% endif %}
