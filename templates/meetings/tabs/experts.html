@@ -1,38 +1,35 @@
 {% load core i18n %}
-
-<div id="meeting_list">
   
 {% if expert_formset.total_form_count %}
     <form method="post">
-    {% csrf_token %}
-    {{ expert_formset.management_form }}
-    <ol>
-    {% for form in expert_formset.forms %}
-        <li>
-            <span>
-                <strong>{{ form.instance.category }}</strong>
-                [Einreichungen:
-                {% for submission in form.submissions %}
-                     <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                        {{ submission }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}]
-            </span>
-            <span>
-                {% if meeting.started %}
-                    {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
-                {% else %}
-                    {{ form.id }}
-                    {{ form.board_member }}
-                {% endif %}
-            </span>
-        </li>
-    {% endfor %}
-    </ol>
-    {% if not meeting.started %}
-        <input type="submit" value="Speichern" />
-    {% endif %}
+        {% csrf_token %}
+        {{ expert_formset.management_form }}
+        <ul class="list-group m-b-1">
+        {% for form in expert_formset.forms %}
+            <li class="list-group-item">
+                <div>
+                    <strong>{{ form.instance.category }}</strong>
+                    [Einreichungen:
+                    {% for submission in form.submissions %}
+                         <a href="{% url 'view_submission' submission_pk=submission.pk %}">
+                            {{ submission }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}]
+                </div>
+                <div>
+                    {% if meeting.started %}
+                        {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
+                    {% else %}
+                        {{ form.id }}
+                        {{ form.board_member }}
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if not meeting.started %}
+            <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'save' %}" />
+        {% endif %}
     </form>
 {% else %}
     <em>{% trans 'no board member required' %}</em>
 {% endif %}
-</div>

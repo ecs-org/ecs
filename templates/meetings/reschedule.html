@@ -7,16 +7,12 @@
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data" class="form_main">
-    {% csrf_token %}
     <h3>{{ submission }}</h3>
-    <div>
-    <ol>
-        {% for field in form %}
-            {% include "forms/field.html" %}
-        {% endfor %}
-    </ol>
-    </div>
-    <span class="button"><input type="submit" value="{% trans "Save and return to study" %}" /></span>
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input class="btn btn-sm btn-primary" type="submit" value="{% trans "Save and return to study" %}" />
 </form>
 {% endblock %}
 
