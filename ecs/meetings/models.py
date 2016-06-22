@@ -551,6 +551,8 @@ class TimetableEntry(models.Model):
         unique_together = (
             # XXX: modified in migration to be DEFERRABLE INITIALLY DEFERRED
             ('meeting', 'timetable_index'),
+
+            ('meeting', 'submission'),
         )
 
     @property
