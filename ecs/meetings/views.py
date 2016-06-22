@@ -81,21 +81,28 @@ def reschedule_submission(request, submission_pk=None):
     if form.is_valid():
         from_meeting = form.cleaned_data['from_meeting']
         to_meeting = form.cleaned_data['to_meeting']
-        old_entries = from_meeting.timetable_entries.filter(submission=submission)
 
-        for entry in old_entries:
-            Participation.objects.filter(entry=entry).delete()
-            visible = (not entry.timetable_index is None)
-            entry.submission = None
-            entry.save()
-            entry.delete() # FIXME: study gets deleted if there is a vote. We should never use delete
-            to_meeting.add_entry(submission=submission, duration=entry.duration, title=entry.title, visible=visible)
-            with sudo():
-                new_experts = list(AssignedMedicalCategory.objects.filter(meeting=to_meeting, board_member__isnull=False, category__pk__in=submission.medical_categories.values('pk').query).values_list('board_member__pk', flat=True))
-                tasks = Task.objects.for_data(submission).filter(
-                    task_type__workflow_node__uid='board_member_review').exclude(assigned_to__pk__in=new_experts).open()
-                tasks.mark_deleted()
+        old_entry = from_meeting.timetable_entries.get(submission=submission)
+        assert not hasattr(old_entry, 'vote')
+        old_entry.participations.all().delete()
+        visible = (not old_entry.timetable_index is None)
+        old_entry.delete()
+        to_meeting.add_entry(submission=submission, duration=old_entry.duration,
+            title=old_entry.title, visible=visible)
+
+        with sudo():
+            new_experts = list(to_meeting.medical_categories
+                .filter(board_member__isnull=False,
+                    category__pk__in=submission.medical_categories.values('pk'))
+                .values_list('board_member__pk', flat=True))
+
+            tasks = Task.objects.for_data(submission).filter(
+                task_type__workflow_node__uid='board_member_review'
+            ).exclude(assigned_to__pk__in=new_experts).open()
+            tasks.mark_deleted()
+
         return redirect('view_submission', submission_pk=submission.pk)
+
     return render(request, 'meetings/reschedule.html', {
         'submission': submission,
         'form': form,
@@ -836,33 +843,41 @@ def next(request):
 def meeting_details(request, meeting_pk=None, active=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    expert_formset = AssignedMedicalCategoryFormSet(request.POST or None, prefix='experts', queryset=AssignedMedicalCategory.objects.filter(meeting=meeting).distinct())
+    expert_formset = AssignedMedicalCategoryFormSet(request.POST or None,
+        prefix='experts', queryset=meeting.medical_categories.all())
 
-    if request.method == 'POST' and expert_formset.is_valid() and request.user.profile.is_internal:
-        submitted_form = request.POST.get('submitted_form')
-        if submitted_form == 'expert_formset' and expert_formset.is_valid():
-            active = 'experts'
-            messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))
-            for amc in expert_formset.save(commit=False):
-                previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
-                amc.save()
-                if previous_expert == amc.board_member:
-                    continue
-                entries = list(meeting.timetable_entries.filter(submission__medical_categories=amc.category).distinct())
-                if previous_expert:
-                    # remove all participations for a previous selected board member.
-                    # XXX: this may delete manually entered data. (FMD2)
-                    Participation.objects.filter(medical_category=amc.category, entry__meeting=meeting, user=previous_expert).delete()
+    if request.method == 'POST' and expert_formset.is_valid() and \
+        request.user.profile.is_internal:
 
-                    # delete obsolete board member review tasks
-                    for entry in entries:
-                        with sudo():
-                            tasks = Task.objects.for_data(entry.submission).filter(
-                                task_type__workflow_node__uid='board_member_review',
-                                assigned_to=previous_expert).open()
-                            tasks.mark_deleted()
-                if amc.board_member:
-                    meeting.create_boardmember_reviews()
+        for amc in expert_formset.save(commit=False):
+            previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
+            if previous_expert == amc.board_member:
+                continue
+            amc.save()
+
+            if previous_expert:
+                # remove all participations for a previous selected board member.
+                # XXX: this may delete manually entered data. (FMD2)
+                Participation.objects.filter(medical_category=amc.category,
+                    entry__meeting=meeting, user=previous_expert).delete()
+
+                entries = meeting.timetable_entries.filter(
+                    submission__medical_categories=amc.category)
+
+                with sudo():
+                    Task.objects.open().filter(
+                        content_type=
+                            ContentType.objects.get_for_model(Submission),
+                        data_id__in=entries.values('submission_id'),
+                        task_type__workflow_node__uid='board_member_review',
+                        assigned_to=previous_expert,
+                    ).mark_deleted()
+
+            if amc.board_member:
+                meeting.create_boardmember_reviews()
+
+        messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))
+        active = 'experts'
 
     with sudo():
         submissions = meeting.submissions.order_by('ec_number')

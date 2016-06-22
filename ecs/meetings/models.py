@@ -251,24 +251,32 @@ class Meeting(models.Model):
         del self.timetable_entries_which_violate_constraints
 
     def create_boardmember_reviews(self):
-        task_type_uid = 'board_member_review'
-        task_type = TaskType.objects.get(workflow_node__uid=task_type_uid, workflow_node__graph__auto_start=True)
+        task_type = TaskType.objects.get(
+            workflow_node__uid='board_member_review',
+            workflow_node__graph__auto_start=True)
+
         for amc in self.medical_categories.exclude(board_member=None):
-            entries = self.timetable_entries.filter(
-                submission__workflow_lane=SUBMISSION_LANE_BOARD,
-                submission__medical_categories=amc.category
-            ).distinct()
+            entries = (self.timetable_entries
+                .filter(submission__workflow_lane=SUBMISSION_LANE_BOARD,
+                    submission__medical_categories=amc.category)
+                .distinct())
+
             for entry in entries:
-                # add participations for all timetable entries with matching categories.
-                participation, created = Participation.objects.get_or_create(medical_category=amc.category, entry=entry, user=amc.board_member)
+                participation, created = Participation.objects.get_or_create(
+                    medical_category=amc.category, entry=entry,
+                    user=amc.board_member)
+
                 if created:
-                    # create board member review task
                     with sudo():
-                        bm_task_exists = Task.objects.for_data(entry.submission).filter(task_type__workflow_node__uid=task_type_uid, assigned_to=amc.board_member).open().exists()
+                        bm_task_exists = Task.objects.for_data(entry.submission).filter(
+                            task_type__workflow_node__uid='board_member_review',
+                            assigned_to=amc.board_member).open().exists()
                     if not bm_task_exists:
-                        token = task_type.workflow_node.bind(entry.submission.workflow.workflows[0]).receive_token(None)
+                        token = task_type.workflow_node.bind(
+                            entry.submission.workflow.workflows[0]
+                        ).receive_token(None)
                         token.task.accept(user=amc.board_member)
-            
+
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
         index = kwargs.pop('index', None)
