@@ -259,6 +259,7 @@ class Meeting(models.Model):
             entries = (self.timetable_entries
                 .filter(submission__workflow_lane=SUBMISSION_LANE_BOARD,
                     submission__medical_categories=amc.category)
+                .exclude(submission__biased_board_members=amc.board_member)
                 .distinct())
 
             for entry in entries:
