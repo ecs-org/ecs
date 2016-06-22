@@ -275,7 +275,7 @@ class Meeting(models.Model):
                         token = task_type.workflow_node.bind(
                             entry.submission.workflow.workflows[0]
                         ).receive_token(None)
-                        token.task.accept(user=amc.board_member)
+                        token.task.assign(user=amc.board_member)
 
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
