@@ -11,6 +11,7 @@ docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
 django-countries
+django-widget-tweaks
 celery[redis]
 redis
 

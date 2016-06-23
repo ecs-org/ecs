@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'reversion',
     'django_countries',
     'raven.contrib.django.raven_compat',
+    'widget_tweaks',
 
     'ecs.core',
     'ecs.checklists',

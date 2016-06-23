@@ -17,6 +17,7 @@ django-extensions==1.6.7
 django-haystack==2.4.1
 django-picklefield==0.3.2
 django-reversion==1.10.2
+django-widget-tweaks==1.4.1
 docutils==0.12
 httpagentparser==1.7.8
 ipython==4.1.1
