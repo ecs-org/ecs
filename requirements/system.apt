@@ -34,8 +34,6 @@ python3-pip
 
 # language support
 gettext
-# XXX: is language-pack-de needed ?
-language-pack-de
 
 # needed for psql, createuser, createdb, pg_dump, pg_restore
 postgresql-client
