@@ -33,7 +33,7 @@ from ecs.notifications.models import NotificationAnswer, AmendmentNotification
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
     on_meeting_date_changed
-from ecs.meetings.models import Meeting, Participation, TimetableEntry, AssignedMedicalCategory
+from ecs.meetings.models import Meeting, Participation, TimetableEntry
 from ecs.meetings.forms import (MeetingForm, TimetableEntryForm, FreeTimetableEntryForm, UserConstraintFormSet,
     SubmissionReschedulingForm, AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
     ExpeditedReviewerInvitationForm, ManualTimetableEntryCommentForm, ManualTimetableEntryCommentFormset)
@@ -90,16 +90,20 @@ def reschedule_submission(request, submission_pk=None):
         to_meeting.add_entry(submission=submission, duration=old_entry.duration,
             title=old_entry.title, visible=visible)
 
-        with sudo():
-            new_experts = list(to_meeting.medical_categories
-                .filter(board_member__isnull=False,
-                    category__pk__in=submission.medical_categories.values('pk'))
-                .values_list('board_member__pk', flat=True))
+        old_experts = set(from_meeting.medical_categories
+            .exclude(board_member=None)
+            .filter(category__in=submission.medical_categories.values('pk'))
+            .values_list('board_member_id', flat=True))
+        new_experts = set(to_meeting.medical_categories
+            .exclude(board_member=None)
+            .filter(category__in=submission.medical_categories.values('pk'))
+            .values_list('board_member_id', flat=True))
 
-            tasks = Task.objects.for_data(submission).filter(
-                task_type__workflow_node__uid='board_member_review'
-            ).exclude(assigned_to__pk__in=new_experts).open()
-            tasks.mark_deleted()
+        with sudo():
+            Task.objects.for_data(submission).filter(
+                task_type__workflow_node__uid='board_member_review',
+                assigned_to__in=(old_experts - new_experts)
+            ).open().mark_deleted()
 
         return redirect('view_submission', submission_pk=submission.pk)
 
@@ -849,32 +853,36 @@ def meeting_details(request, meeting_pk=None, active=None):
     if request.method == 'POST' and expert_formset.is_valid() and \
         request.user.profile.is_internal:
 
-        for amc in expert_formset.save(commit=False):
-            previous_expert = AssignedMedicalCategory.objects.get(pk=amc.pk).board_member
-            if previous_expert == amc.board_member:
+        previous_experts = dict(
+            meeting.medical_categories.values_list('pk', 'board_member_id'))
+
+        for amc in expert_formset.save():
+            previous_expert = previous_experts[amc.pk]
+            if not previous_expert:
                 continue
-            amc.save()
 
-            if previous_expert:
-                # remove all participations for a previous selected board member.
-                # XXX: this may delete manually entered data. (FMD2)
-                Participation.objects.filter(medical_category=amc.category,
-                    entry__meeting=meeting, user=previous_expert).delete()
+            # remove all participations for a previous selected board member.
+            # XXX: this may delete manually entered data. (FMD2)
+            Participation.objects.filter(medical_category=amc.category,
+                entry__meeting=meeting, user=previous_expert).delete()
 
-                entries = meeting.timetable_entries.filter(
-                    submission__medical_categories=amc.category)
+            entries = meeting.timetable_entries.filter(
+                submission__medical_categories=amc.category
+            ).exclude(
+                submission__medical_categories__in=
+                    meeting.medical_categories
+                        .filter(board_member=previous_expert)
+                        .values('category_id')
+            )
 
+            for entry in entries:
                 with sudo():
-                    Task.objects.open().filter(
-                        content_type=
-                            ContentType.objects.get_for_model(Submission),
-                        data_id__in=entries.values('submission_id'),
+                    Task.objects.for_data(entry.submission).filter(
                         task_type__workflow_node__uid='board_member_review',
-                        assigned_to=previous_expert,
-                    ).mark_deleted()
+                        assigned_to=previous_expert
+                    ).open().mark_deleted()
 
-            if amc.board_member:
-                meeting.create_boardmember_reviews()
+        meeting.create_boardmember_reviews()
 
         messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))
         active = 'experts'
