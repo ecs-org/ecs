@@ -87,6 +87,15 @@ prepare_database() {
         pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
         pghero_config
 
+        ecs_help_dump="`dirname $(readlink -e $dumpfilename)`/ecs-help"
+        if test "$HOME/ecs-help" != "$ecs_help_dump"; then
+            if test -d "$ecs_help_dump/images"; then
+                echo "ecs-help images found in dump, copy over to $HOME/ecs-help"
+                if test -e $HOME/ecs-help; then rm -r $HOME/ecs-help; fi
+                mkdir -p $HOME/ecs-help
+                cp -r $ecs_help_dump/images $HOME/ecs-help/images
+            fi
+        fi
     else
         if test $err -eq 8; then
             firstrun="true"
