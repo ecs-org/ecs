@@ -9,13 +9,8 @@
             <li class="list-group-item">
                 <div>
                     <strong>{{ form.instance.category }}</strong>
-                    [Einreichungen:
-                    {% for submission in form.submissions %}
-                         <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                            {{ submission }}</a>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}]
                 </div>
-                <div>
+                <div class="m-b-1">
                     {% if meeting.started %}
                         {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
                     {% else %}
@@ -23,6 +18,69 @@
                         {{ form.board_member }}
                     {% endif %}
                 </div>
+
+                {% if form.submissions_in_progress %}
+                    <div>
+                        {% trans 'Submissions with board member review (in progress)' %}:
+                        <ul class="list-inline">
+                            {% for submission in form.submissions_in_progress %}
+                                <li class="list-inline-item">
+                                    <a href="{% url 'view_submission' submission_pk=submission.pk %}" title="{{ submission.project_title_display }}">
+                                        {{ submission.get_ec_number_display }}
+                                    </a>
+                                    {% if submission.biased %}
+                                        <span class="text-danger">
+                                            <span class="fa fa-exclamation"></span>
+                                            {% trans 'biased' %}
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if form.submissions_completed %}
+                    <div>
+                        {% trans 'Submissions with board member review (completed)' %}:
+                        <ul class="list-inline">
+                            {% for submission in form.submissions_completed %}
+                                <li class="list-inline-item">
+                                    <a href="{% url 'view_submission' submission_pk=submission.pk %}" title="{{ submission.project_title_display }}">
+                                        {{ submission.get_ec_number_display }}
+                                    </a>
+                                    {% if submission.biased %}
+                                        <span class="text-danger">
+                                            <span class="fa fa-exclamation"></span>
+                                            {% trans 'biased' %}
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if form.submissions_without_review %}
+                    <div>
+                        {% trans 'Submissions without board member review' %}:
+                        <ul class="list-inline">
+                            {% for submission in form.submissions_without_review %}
+                                <li class="list-inline-item">
+                                    <a href="{% url 'view_submission' submission_pk=submission.pk %}" title="{{ submission.project_title_display }}">
+                                        {{ submission.get_ec_number_display }}
+                                    </a>
+                                    {% if submission.biased %}
+                                        <span class="text-danger">
+                                            <span class="fa fa-exclamation"></span>
+                                            {% trans 'biased' %}
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
             </li>
         {% endfor %}
         </ul>

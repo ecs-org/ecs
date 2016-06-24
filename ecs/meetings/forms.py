@@ -6,9 +6,13 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from django.utils import timezone
+from django.contrib.contenttypes.models import ContentType
 
 from ecs.meetings.models import Meeting, TimetableEntry, Constraint, AssignedMedicalCategory, WEIGHT_CHOICES
+from ecs.core.models import Submission
 from ecs.core.forms.fields import DateTimeField, TimeField
+from ecs.tasks.models import Task
+from ecs.users.utils import sudo
 from ecs.votes.models import Vote
 
 
@@ -84,6 +88,7 @@ class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, user):
         return '{0} <{1}>'.format(str(user), user.email)
 
+
 class AssignedMedicalCategoryForm(forms.ModelForm):
     board_member = UserChoiceField(required=False)
 
@@ -92,14 +97,70 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         fields = ('board_member',)
 
     def __init__(self, *args, **kwargs):
-        instance = kwargs['instance']
-        self.submissions = (instance.meeting.submissions
-            .filter(medical_categories=instance.category)
-            .for_board_lane().order_by('ec_number'))
         super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
-        self.fields['board_member'].queryset = User.objects.filter(is_active=True, medical_categories=instance.category, groups__name='EC-Board Member').order_by('email')
 
-AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory, extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
+        self.fields['board_member'].queryset = User.objects.filter(
+            is_active=True, medical_categories=self.instance.category,
+            groups__name='EC-Board Member'
+        ).order_by('email')
+
+    def _gen_submission_info(self):
+        submissions = list(self.instance.meeting.submissions
+            .filter(medical_categories=self.instance.category)
+            .for_board_lane()
+            .select_related('current_submission_form')
+            .prefetch_related('biased_board_members')
+            .order_by('ec_number'))
+
+        with sudo():
+            tasks = list(Task.objects.filter(
+                content_type=ContentType.objects.get_for_model(Submission),
+                data_id__in=[s.id for s in submissions],
+                task_type__workflow_node__uid='board_member_review',
+                assigned_to=self.instance.board_member,
+                deleted_at=None
+            ).order_by('-created_at'))
+
+        self._submissions_in_progress = []
+        self._submissions_completed = []
+        self._submissions_without_review = []
+
+        for submission in submissions:
+            for task in tasks:
+                if task.data == submission:
+                    if task.closed_at:
+                        self._submissions_completed.append(submission)
+                    else:
+                        self._submissions_in_progress.append(submission)
+                    break
+            else:
+                self._submissions_without_review.append(submission)
+
+            if self.instance.board_member in submission.biased_board_members.all():
+                submission.biased = True
+
+    @property
+    def submissions_in_progress(self):
+        if not hasattr(self, '_submissions_in_progress'):
+            self._gen_submission_info()
+        return self._submissions_in_progress
+
+    @property
+    def submissions_completed(self):
+        if not hasattr(self, '_submissions_completed'):
+            self._gen_submission_info()
+        return self._submissions_completed
+
+    @property
+    def submissions_without_review(self):
+        if not hasattr(self, '_submissions_without_review'):
+            self._gen_submission_info()
+        return self._submissions_without_review
+
+
+AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory,
+    extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
+
 
 class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
