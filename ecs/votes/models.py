@@ -6,6 +6,7 @@ from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+from reversion.models import Version
 from reversion import revisions as reversion
 
 from ecs.votes.constants import (VOTE_RESULT_CHOICES, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS, PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS)
@@ -109,7 +110,7 @@ class Vote(models.Model):
 
     @property
     def version_number(self):
-        return reversion.get_for_object(self).count()
+        return Version.objects.get_for_object(self).count()
     
     @property
     def is_positive(self):

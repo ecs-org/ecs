@@ -15,7 +15,10 @@ from haystack.forms import HighlightedSearchForm
 from haystack.query import SearchQuerySet
 from haystack.utils import Highlighter
 
+from reversion.models import Version
 from reversion import revisions as reversion
+
+from diff_match_patch import diff_match_patch
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.tracking.models import View
@@ -34,7 +37,7 @@ def redirect_to_page(page):
 @forceauth.exempt
 def view_help_page(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
-    available_versions = reversion.get_for_object(page)
+    available_versions = Version.objects.get_for_object(page)
     return render(request, 'help/view_page.html', {
         'page': page,
         'versions': available_versions.count(),
@@ -227,25 +230,18 @@ def preview_help_page_text(request):
     
 
 @user_group_required('Help Writer')
-def difference_help_pages(request, page_pk=None, old_version=None, new_version=None):
-    from reversion.helpers import generate_patch_html
-
+def difference_help_pages(request, page_pk=None):
     page = get_object_or_404(Page, pk=page_pk)
-    available_versions = \
-        reversion.get_for_object(page).order_by('revision__date_created')
-    if len(available_versions) < 2:
+    try:
+        new, old = Version.objects.get_for_object(page).order_by(
+            '-revision__date_created')[:2]
+    except ValueError:
         return HttpResponse("<html><body>no revisions</body></html>")
 
-    old_version = int(old_version or '-2')
-    new_version = int(new_version or '-1')
-    if new_version < 0:
-        new_version = len(available_versions)+ new_version
-    if old_version < 0:
-        old_version = len(available_versions)+ old_version
-
-    new_content = available_versions[new_version]
-    old_content = available_versions[old_version]
-    return HttpResponse(generate_patch_html(old_content, new_content, "text"))
+    dmp = diff_match_patch()
+    diffs = dmp.diff_main(old.field_dict['text'], new.field_dict['text'])
+    dmp.diff_cleanupSemantic(diffs)
+    return HttpResponse(dmp.diff_prettyHtml(diffs))
 
 
 @user_group_required('Help Writer')

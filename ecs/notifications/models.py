@@ -8,6 +8,7 @@ from django.template import loader
 from django.utils.text import slugify
 from django.utils import timezone
 
+from reversion.models import Version
 from reversion import revisions as reversion
 
 from ecs.documents.models import Document
@@ -192,7 +193,7 @@ class NotificationAnswer(models.Model):
 
     @property
     def version_number(self):
-        return reversion.get_for_object(self).count()
+        return Version.objects.get_for_object(self).count()
 
     @property
     def needs_further_review(self):

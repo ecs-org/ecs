@@ -19,7 +19,7 @@ urlpatterns = (
     url(r'^view/(?P<view_pk>\d+)/(?:(?P<anchor>[\w-]+)/)?$', views.find_help),
     url(r'^edit/view/(?P<view_pk>\d+)/(?:(?P<anchor>[\w-]+)/)?$', views.edit_help_page),
 
-    url(r'^diff/(?P<page_pk>\d+)/(?:(?P<old_version>-?\d+)/(?P<new_version>-?\d+)/)?$', views.difference_help_pages),
+    url(r'^diff/(?P<page_pk>\d+)/$', views.difference_help_pages),
 
     url(r'^preview/$', views.preview_help_page_text),
     url(r'^attachments/$', views.attachments),
