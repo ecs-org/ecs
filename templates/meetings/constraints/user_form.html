@@ -21,14 +21,14 @@
 {% endblock %}
 
 {% block jsbottom %}
-{{ block.super }}
-<script type="text/javascript">
-$(function(){
-    ecs.setupForms();
-    new ecs.InlineFormSet('#constraint_formset', {
-        prefix: '{{ formset.prefix }}',
-        canDelete: true
-    });
-});
-</script>
+    {{ block.super }}
+    <script type="text/javascript">
+        $(function(){
+            ecs.setupForms();
+            new ecs.InlineFormSet('#constraint_formset', {
+                prefix: '{{ formset.prefix }}',
+                canDelete: true
+            });
+        });
+    </script>
 {% endblock %}
