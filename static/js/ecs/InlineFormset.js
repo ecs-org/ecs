@@ -106,12 +106,11 @@ ecs.InlineFormSet.prototype = {
             this.options.onFormIndexChanged(form, index);
     },
     remove: function(index){
-        var f = this.forms.splice(index, 1)[0];
-        this.totalForms.val(this.forms.length);
+        var f = this.forms[index];
 
         if(this.options.canDelete){
             var name = this.options.prefix + '-' + index;
-            if($('#id_' + name + '-id').val()){
+            if ($('#id_' + name + '-id').val()) {
                 var delName = name + '-DELETE';
                 var checkbox = $('<input>', {
                     type: 'checkbox', 
@@ -129,6 +128,9 @@ ecs.InlineFormSet.prototype = {
                 return;
             }
         }
+
+        this.forms.splice(index, 1);
+        this.totalForms.val(this.forms.length);
         f.remove();
 
         for (var i = index; i < this.forms.length; i++)
