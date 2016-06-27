@@ -413,6 +413,8 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
             constraint.meeting = meeting
             constraint.user = user
             constraint.save()
+        for constraint in formset.deleted_objects:
+            constraint.delete()
         formset = UserConstraintFormSet(None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
         messages.success(request, _('The constraints have been saved. The constraints will be taken into account when optimizing the timetable.'))
     return render(request, 'meetings/constraints/user_form.html', {
