@@ -3,6 +3,7 @@ import zipfile
 import hashlib
 import os
 import os.path
+import re
 from collections import OrderedDict
 
 from django.conf import settings
@@ -424,32 +425,37 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     top = None
-    q = request.GET.get('q', '').upper()
-    explict_top = 'TOP' in q
-    q = q.replace('TOP', '').strip()
+    q = request.GET.get('q', '').strip().upper()
 
-    # if we don't explicitly look for a TOP, try an exact ec_number lookup
-    if not explict_top:
-        tops = meeting.timetable_entries.filter(submission__ec_number__endswith=q).order_by('timetable_index')
-        if len(tops) == 1:
-            top = tops[0]
-    # if we found no TOP yet, try an exact TOP index lookup
-    if not top:
+    m = re.match('(\d{4})(?:/(\d{4}))?$', q)
+    if m:
+        if m.group(2):
+            ec_number = '{}{}'.format(m.group(2), m.group(1))
+        else:
+            year = timezone.now().year
+            ec_number = '{}{}'.format(year, m.group(1))
         try:
-            top = meeting.timetable_entries.get(timetable_index=int(q)-1)
-        except (ValueError, TimetableEntry.DoesNotExist):
+            top = meeting.timetable_entries.get(submission__ec_number=ec_number)
+        except (TimetableEntry.DoesNotExist,
+                TimetableEntry.MultipleObjectsReturned):
             pass
-    # if we found no TOP yet and don't explicitly look for a TOP, try a fuzzy ec_number lookup
-    if not top and not explict_top:
-        tops = meeting.timetable_entries.filter(submission__ec_number__icontains=q).order_by('timetable_index')
-        if len(tops) == 1:
-            top = tops[0]
+
+    if not top:
+        m = re.match('(?:TOP)?(\d+)$', q)
+        if m:
+            idx = int(m.group(1)) - 1
+            try:
+                top = meeting.timetable_entries.get(timetable_index=idx)
+            except TimetableEntry.DoesNotExist:
+                pass
+
     if top:
         if top.timetable_index is None:
             return redirect(
                 'ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited',
                 meeting_pk=meeting.pk)
-        return redirect('ecs.meetings.views.meeting_assistant_top', meeting_pk=meeting.pk, top_pk=top.pk)
+        return redirect('ecs.meetings.views.meeting_assistant_top',
+            meeting_pk=meeting.pk, top_pk=top.pk)
 
     return render(request, 'meetings/assistant/quickjump_error.html', {
         'meeting': meeting,
