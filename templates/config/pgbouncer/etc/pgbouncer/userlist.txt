@@ -1,1 +1,0 @@
-"%(postgresql.username)s" "%(postgresql.password)s"
