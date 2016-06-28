@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_noop as _
+
 from ecs import bootstrap
 from ecs.notifications.models import NotificationType, Notification
 from ecs.workflow.patterns import Generic
@@ -12,9 +14,6 @@ from ecs.notifications.workflow import (
     needs_notification_group_review,
 )
 
-
-# for marking the task names translatable
-_ = lambda s: s
 
 @bootstrap.register()
 def notification_types():

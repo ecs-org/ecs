@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_noop as _
+
 from ecs import bootstrap
 from ecs.checklists.models import Checklist, ChecklistBlueprint, ChecklistQuestion
 from ecs.workflow.patterns import Generic
@@ -7,9 +9,6 @@ from ecs.utils import Args
 from ecs.checklists.workflow import ExternalReview, ExternalReviewReview
 from ecs.checklists.workflow import is_external_review_checklist, checklist_review_review_failed
 
-
-# dummy gettext
-_ = lambda s: s
 
 @bootstrap.register()
 def checklist_blueprints():

@@ -1,3 +1,5 @@
+from django.utils.translation import ugettext_noop as _
+
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.votes.models import Vote
@@ -5,9 +7,6 @@ from ecs.votes.workflow import VoteReview, VoteSigning, is_final
 from ecs.integration.utils import setup_workflow_graph
 from ecs.workflow.patterns import Generic
 
-
-# dummy gettext
-_ = lambda s: s
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():

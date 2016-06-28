@@ -2,12 +2,12 @@ import os
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import ugettext_noop as _
 
 from ecs import bootstrap
 from ecs.documents.models import DocumentType
 from ecs.utils import Args, gpgutils
 
-_ = lambda s: s     # dummy gettext for marking strings
 
 @bootstrap.register()
 def document_types():

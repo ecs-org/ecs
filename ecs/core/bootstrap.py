@@ -1,5 +1,6 @@
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
+from django.utils.translation import ugettext_noop as _
 
 from ecs import bootstrap
 from ecs.core.models import Submission, MedicalCategory, EthicsCommission, AdvancedSettings
@@ -15,11 +16,6 @@ from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expe
     needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
     needs_insurance_b2_review, needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
-
-
-# We use this helper function for marking task names as translatable, they are
-# getting translated later.
-_ = lambda s: s
 
 
 @bootstrap.register()
