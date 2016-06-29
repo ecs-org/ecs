@@ -12,7 +12,6 @@ from ecs.users.utils import get_or_create_user, get_user
 from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
     ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
-    needs_paper_submission_review,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
     needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
@@ -56,7 +55,6 @@ def submission_workflow():
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
-            'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP, is_dynamic=True),
@@ -82,21 +80,19 @@ def submission_workflow():
         edges={
             ('start', 'initial_review'): None,
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'initial_review_barrier'): Args(guard=is_acknowledged_and_initial_submission),
-            ('initial_review_barrier', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
-            ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
+            ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_initial_submission),
+            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('b2_resubmission', 'b2_review'): None,
             ('b2_review', 'executive_b2_review'): Args(guard=needs_executive_b2_review),
             ('b2_review', 'b2_resubmission'): Args(guard=is_still_b2),
             ('executive_b2_review', 'b2_review'): None,
 
             # retrospective thesis lane
-            ('initial_review_barrier', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
+            ('categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
             ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
             ('thesis_recommendation_review', 'vote_preparation'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation_review', 'categorization_review'): Args(guard=has_thesis_recommendation, negated=True),
-            ('categorization_review', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
 
             # expedited lane
             ('categorization_review', 'expedited_recommendation_split'): None,
