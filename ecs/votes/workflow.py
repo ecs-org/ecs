@@ -56,36 +56,3 @@ class VoteSigning(Activity):
                 source, trail=trail, repeated=repeated)
         else:
             vote.publish()
-
-
-class B2Resubmission(Activity):
-    class Meta:
-        model = Vote
-
-    def get_url(self):
-        submission_id = self.workflow.data.submission_form.submission_id
-        return reverse('ecs.core.views.submissions.copy_latest_submission_form', kwargs={'submission_pk': submission_id})
-
-    def get_final_urls(self):
-        s = self.workflow.data.submission_form.submission
-        return super(B2Resubmission, self).get_final_urls() + [
-            reverse('readonly_submission_form', kwargs={'submission_form_pk': sf})
-            for sf in s.forms.values_list('pk', flat=True)
-        ]
-
-    def receive_token(self, *args, **kwargs):
-        token = super(B2Resubmission, self).receive_token(*args, **kwargs)
-        token.task.assign(self.workflow.data.submission_form.submission.presenter)
-        return token
-
-
-### to be removed
-class VoteB2Review(Activity):
-    class Meta:
-        model = Vote
-
-
-### to be removed
-class VoteFinalization(Activity):
-    class Meta:
-        model = Vote

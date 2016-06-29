@@ -5,7 +5,6 @@ from ecs.utils import Args
 from ecs.votes.models import Vote
 from ecs.votes.workflow import VoteReview, VoteSigning, is_final
 from ecs.integration.utils import setup_workflow_graph
-from ecs.workflow.patterns import Generic
 
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
@@ -18,15 +17,13 @@ def vote_workflow():
     setup_workflow_graph(Vote, 
         auto_start=True, 
         nodes={
-            'start': Args(Generic, start=True, name=_("Start")),
             'executive_vote_review': Args(VoteReview, name=_("Executive Vote Review"), group=EXECUTIVE_GROUP),
             'internal_vote_review': Args(VoteReview, name=_("Internal Vote Review"), group=INTERNAL_REVIEW_GROUP),
-            'office_vote_finalization': Args(VoteReview, name=_("Office Vote Finalization"), group=OFFICE_GROUP),
+            'office_vote_finalization': Args(VoteReview, start=True, name=_("Office Vote Finalization"), group=OFFICE_GROUP),
             'final_office_vote_review': Args(VoteReview, name=_("Office Vote Review"), group=OFFICE_GROUP),
             'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
         }, 
         edges={
-            ('start', 'office_vote_finalization'): None,
             ('office_vote_finalization', 'internal_vote_review'): None,
 
             ('internal_vote_review', 'office_vote_finalization'): Args(guard=is_final, negated=True),

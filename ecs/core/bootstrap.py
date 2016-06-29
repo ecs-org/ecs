@@ -6,7 +6,6 @@ from ecs import bootstrap
 from ecs.core.models import Submission, MedicalCategory, EthicsCommission, AdvancedSettings
 from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
-from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
 from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview, PaperSubmissionReview, VotePreparation,
@@ -49,12 +48,11 @@ def submission_workflow():
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True, name=_("Start")),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
-            'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
+            'initial_review': Args(InitialReview, start=True, group=OFFICE_GROUP, name=_("Initial Review")),
             'categorization_review': Args(CategorizationReview, group=EXECUTIVE_GROUP, name=_("Categorization Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP, is_dynamic=True),
@@ -78,7 +76,6 @@ def submission_workflow():
             'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
         },
         edges={
-            ('start', 'initial_review'): None,
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_initial_submission),
