@@ -97,10 +97,12 @@
                     <a href="{{ task.url }}">{{ task.data }}</a>
                     {% if not task.accepted %}
                         <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
-                        <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post">
-                            {% csrf_token %}
-                            <a class="submit_parent" href="">{% trans "Decline" %}</a>
-                        </form>
+                        {% if task.task_type.is_delegatable %}
+                            <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post">
+                                {% csrf_token %}
+                                <a class="submit_parent" href="">{% trans "Decline" %}</a>
+                            </form>
+                        {% endif %}
                     {% endif %}
                     {% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>

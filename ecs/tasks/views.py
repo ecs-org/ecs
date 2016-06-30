@@ -232,7 +232,8 @@ def accept_task_type_full(request, flavor=None, slug=None):
 
 @require_POST
 def decline_task(request, task_pk=None, full=False):
-    task = get_object_or_404(Task.objects.filter(assigned_to=request.user), pk=task_pk)
+    task = get_object_or_404(Task.objects, assigned_to=request.user,
+        task_type__is_delegatable=True, pk=task_pk)
     task.assign(None)
     task_declined.send(type(task.node_controller), task=task)
 
