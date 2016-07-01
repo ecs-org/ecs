@@ -26,10 +26,10 @@ def remove_bugshot_group(apps, schema_editor):
 def migrate_reversion_tables(apps, schema_editor):
     with schema_editor.connection.cursor() as cursor:
         cursor.execute('''
-            select count(*) from information_schema.columns
-            where table_name='reversion_version' and column_name = 'object_id_int'
+            select count(*) from information_schema.tables
+            where table_name='south_migrationhistory'
         ''')
-        if not cursor.fetchone()[0]:
+        if cursor.fetchone()[0]:
             cursor.execute('''
                 alter table reversion_version add column object_id_int integer;
                 create index reversion_version_0c9ba3a3
