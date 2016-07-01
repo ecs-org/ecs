@@ -86,7 +86,8 @@ def needs_paper_submission_review(wf):
     return True
 
 @guard(model=Submission)
-@block_duplicate_task('expedited_vote_preparation')
+@block_duplicate_task('vote_preparation')
+@block_duplicate_task('expedited_vote_preparation')     # XXX: compat
 def needs_expedited_vote_preparation(wf):
     with sudo():
         unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
@@ -112,7 +113,8 @@ def needs_localec_recommendation(wf):
     return wf.data.is_localec
 
 @guard(model=Submission)
-@block_duplicate_task('localec_vote_preparation')
+@block_duplicate_task('vote_preparation')
+@block_duplicate_task('localec_vote_preparation')       # XXX: compat
 def needs_localec_vote_preparation(wf):
     return has_localec_recommendation(wf)
 
