@@ -69,8 +69,8 @@
     {% block tab_headers %}
         <div id="tabs_general" class="tab_headers collapse">
             <a href="#status_tab">{% trans 'Status' %}</a>
-            {% if categorization_review_form %}
-                <a href="#categorization_review_tab"{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>{% trans "Categorization Review" %}</a>
+            {% if categorization_form %}
+                <a href="#categorization_tab"{% if not categorization_form.readonly %} class="readonly_review active"{% endif %}>{% trans "Categorization" %}</a>
             {% endif %}
             {% if user.profile.show_worklow_widget %}
                 <a href="#tasks_tab">{% trans 'Tasks' %}</a>
@@ -129,8 +129,8 @@
         {% include 'submissions/tabs/status.html' %}
     </div>
 
-    {% if categorization_review_form %}
-        <div id="categorization_review_tab" class="tab collapse">
+    {% if categorization_form %}
+        <div id="categorization_tab" class="tab collapse">
             <p>
                 Typ:
                 {% if submission_form.is_amg %}
@@ -140,10 +140,10 @@
                 {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
                 {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
             </p>
-            {% with categorization_review_form as review_form %}
+            {% with categorization_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
-            {% if categorization_task and categorization_review_form.readonly and submission.allows_categorization %}
+            {% if categorization_task and categorization_form.readonly and submission.allows_categorization %}
                 <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}">{% trans 'Reopen' %}</a></p>
             {% endif %}
             {% if user.profile.is_internal %}
@@ -296,7 +296,7 @@
              * select2 exhibits display bugs due to the target element not being
              * visible.
              */
-            $('#categorization_review_tab').one('tab-show', function() {
+            $('#categorization_tab').one('tab-show', function() {
                 $('#id_medical_categories').select2();
             });
             $('#involved_parties_tab').one('tab-show', function() {

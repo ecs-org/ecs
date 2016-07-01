@@ -239,7 +239,7 @@ msgstr "Einreichung Formale Prüfung"
 msgid "Initial Review Split"
 msgstr "Formale Prüfung Einreichung"
 
-msgid "Categorization Review"
+msgid "Categorization"
 msgstr "Einstufung und Zuteilung"
 
 msgid "Paper Submission Review"

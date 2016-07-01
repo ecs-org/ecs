@@ -27,7 +27,7 @@ from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFo
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
-from ecs.core.forms.review import CategorizationReviewForm, BiasedBoardMembersReviewForm
+from ecs.core.forms.review import CategorizationForm, BiasedBoardMembersReviewForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
@@ -278,10 +278,10 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
-        context['categorization_review_form'] = CategorizationReviewForm(instance=submission, readonly=True)
+        context['categorization_form'] = CategorizationForm(instance=submission, readonly=True)
         if profile.is_executive_board_member:
             tasks = list(Task.objects.for_user(request.user).filter(
-                task_type__workflow_node__uid='categorization_review',
+                task_type__workflow_node__uid='categorization',
                 content_type=ContentType.objects.get_for_model(Submission),
                 data_id=submission.pk).order_by('-closed_at'))
             if tasks and all(t.closed_at for t in tasks):
@@ -327,19 +327,18 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
 
 @user_group_required('EC-Executive Board Member')
 @with_task_management
-def categorization_review(request, submission_form_pk=None):
-    submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+def categorization(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
     task = request.task_management.task
 
     docstash, created = DocStash.objects.get_or_create(
-        group='ecs.core.views.submissions.categorization_review',
+        group='ecs.core.views.submissions.categorization',
         owner=request.user,
         content_type=ContentType.objects.get_for_model(task.__class__),
         object_id=task.pk,
     )
 
-    form = CategorizationReviewForm(request.POST or docstash.POST,
-        instance=submission_form.submission)
+    form = CategorizationForm(request.POST or docstash.POST, instance=submission)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -351,8 +350,8 @@ def categorization_review(request, submission_form_pk=None):
     form.bound_to_task = task
 
     response = readonly_submission_form(request,
-        submission_form=submission_form,
-        extra_context={'categorization_review_form': form,})
+        submission_form=submission.current_submission_form,
+        extra_context={'categorization_form': form,})
     if request.method == 'POST' and not form.is_valid():
         response.has_errors = True
     return response

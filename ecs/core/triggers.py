@@ -102,7 +102,7 @@ def on_initial_review(sender, **kwargs):
             if vote and vote.is_recessed:
                 receivers = submission_form.get_presenting_parties().get_users()
                 with sudo():
-                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid__in=['categorization_review', 'internal_vote_review'], assigned_to__isnull=False):
+                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid__in=['categorization', 'internal_vote_review'], assigned_to__isnull=False):
                         receivers.add(task.assigned_to)
                     for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='board_member_review', assigned_to__isnull=False).open():
                         receivers.add(task.assigned_to)
@@ -142,8 +142,8 @@ VOTE_PREPARATION_SOURCES = {
 }
 
 
-@connect(signals.on_categorization_review)
-def on_categorization_review(sender, **kwargs):
+@connect(signals.on_categorization)
+def on_categorization(sender, **kwargs):
     submission = kwargs['submission']
 
     meeting = submission.schedule_to_meeting()

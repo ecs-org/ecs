@@ -7,7 +7,7 @@ from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
-from ecs.core.signals import on_initial_review, on_categorization_review, on_b2_upgrade
+from ecs.core.signals import on_initial_review, on_categorization, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
@@ -66,7 +66,7 @@ def needs_expedited_vote_preparation(wf):
         return not unfinished and not negative.exists()
 
 @guard(model=Submission)
-@block_duplicate_task('categorization_review')
+@block_duplicate_task('categorization')
 def needs_expedited_recategorization(wf):
     with sudo():
         unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
@@ -181,7 +181,7 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
                 on_b2_upgrade.send(Submission, submission=self.workflow.data, vote=vote)
 
 
-class CategorizationReview(Activity):
+class Categorization(Activity):
     class Meta:
         model = Submission
 
@@ -189,7 +189,8 @@ class CategorizationReview(Activity):
         return True
 
     def get_url(self):
-        return reverse('ecs.core.views.submissions.categorization_review', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+        return reverse('ecs.core.views.submissions.categorization',
+            kwargs={'submission_pk': self.workflow.data_id})
 
     def is_locked(self):
         with sudo():
@@ -198,11 +199,11 @@ class CategorizationReview(Activity):
 
     def pre_perform(self, choice):
         s = self.workflow.data
-        on_categorization_review.send(Submission, submission=s)
+        on_categorization.send(Submission, submission=s)
 
-def unlock_categorization_review(sender, **kwargs):
-    kwargs['instance'].workflow.unlock(CategorizationReview)
-post_save.connect(unlock_categorization_review, sender=Submission)
+def unlock_categorization(sender, **kwargs):
+    kwargs['instance'].workflow.unlock(Categorization)
+post_save.connect(unlock_categorization, sender=Submission)
 
 
 class ExpeditedRecommendationSplit(Generic):

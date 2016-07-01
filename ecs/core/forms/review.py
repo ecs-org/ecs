@@ -9,7 +9,7 @@ from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField, BooleanW
 from ecs.utils.formutils import require_fields
 
 
-class CategorizationReviewForm(ReadonlyFormMixin, forms.ModelForm):
+class CategorizationForm(ReadonlyFormMixin, forms.ModelForm):
     class Meta:
         model = Submission
         fields = (
