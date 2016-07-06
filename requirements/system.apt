@@ -58,3 +58,6 @@ nginx
 
 # container process control
 supervisor
+
+# rendering of dot graphs
+graphviz
