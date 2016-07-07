@@ -60,7 +60,7 @@ prepare_database() {
     # :8 = could not connect to database (not existing?)
     # :9 >= could not connect to database server
     # :127 >= bash command error, eg. command not found
-    scripts/checkdb.py import ecs.settings && err=$? || err=$?
+    scripts/checkdb.py module ecs.settings && err=$? || err=$?
     firstrun="false"
 
     if test $err -ge 127; then
@@ -107,7 +107,7 @@ prepare_database() {
         fi
     fi
 
-    scripts/checkdb.py import ecs.settings && err=$? || err=$?
+    scripts/checkdb.py module ecs.settings && err=$? || err=$?
     if test $err -ge 8; then
         echo "Fatal Error: could not connect to database or parameter error ($err)"
         exit 1

@@ -1,6 +1,6 @@
 import os
 import ast
-import dj_database_url
+from urllib.parse import urlparse
 
 def str2bool(text):
     if isinstance(text, bool):
@@ -16,9 +16,16 @@ def str2int(value):
         return int(value)
 
 if os.getenv('DATABASE_URL'):
+    parsed = urlparse(os.getenv('DATABASE_URL'))
     DATABASES = {}
-    DATABASES['default'] = dj_database_url.config()
-    DATABASES['default']['ATOMIC_REQUESTS'] = True
+    DATABASES['default'] = {
+        'NAME': url.path[1:] or '',
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname or '',
+        'PORT': url.port or '5432',
+        'ATOMIC_REQUESTS': True
+    }
 
 if os.getenv('MEMCACHED_URL'):
     CACHES = {

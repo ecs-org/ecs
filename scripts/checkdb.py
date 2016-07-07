@@ -4,9 +4,10 @@ import importlib
 import os
 import sys
 
+from urllib.parse import urlparse
+
 try:
     import psycopg2
-    import dj_database_url
 except ImportError as e:
     print("ERROR: fatal, could not import: {0}".format(e))
     usage()
@@ -16,8 +17,8 @@ def usage():
 
     print('''
 usage: {0} connect db_host db_name db_user db_pass
- or  : {0} url "postgres://db_user:db_pass@db_host/db_name"
- or  : {0} import "ecs.settings"
+ or  : {0} url "postgres://db_user:db_pass@db_host[:db_port]/db_name"
+ or  : {0} module "ecs.settings"
 
 program will exit with code:
 
@@ -40,36 +41,33 @@ def parse_args():
 
     cmd = sys.argv[1].lower()
 
-    if cmd not in ('connect', 'url', 'import') or \
+    if cmd not in ('connect', 'url', 'module', 'import') or \
             (len(sys.argv) == 6 and cmd != 'connect'):
         usage()
 
     if cmd == "connect":
-        ret = sys.argv[2:]
-        return ret
+        return sys.argv[2:]
 
     if cmd == "url":
-        try:
-            db = dj_database_url.config()
-        except Exception as e:
-            print('could not parse DATABASE_URL')
-            sys.exit(10)
+        url = urlparse(sys.argv[2])
+        return (url.hostname,
+                url.path[1:],
+                url.username,
+                url.password
+                )
+    try:
+        sys.path.insert(0, os.getcwd())
+        settings = importlib.import_module(sys.argv[2])
+        db = settings.DATABASES['default']
+    except ImportError as e:
+        print('could not import settings, error={0}'.format(e))
+        sys.exit(10)
 
-    else:
-        try:
-            sys.path.insert(0, os.getcwd())
-            settings = importlib.import_module(sys.argv[2])
-            db = settings.DATABASES['default']
-        except ImportError as e:
-            print('could not import settings, error={0}'.format(e))
-            sys.exit(10)
-
-    ret = (db.get('HOST', ''),
-           db.get('NAME', ''),
-           db.get('USER', ''),
-           db.get('PASSWORD', ''))
-
-    return ret
+    return (db.get('HOST', ''),
+            db.get('NAME', ''),
+            db.get('USER', ''),
+            db.get('PASSWORD', '')
+            )
 
 
 def main():

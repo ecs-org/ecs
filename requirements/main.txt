@@ -17,7 +17,6 @@ redis
 
 raven             # sentry integration
 uwsgi             # container wsgi runner
-dj-database-url   # database from environment url
 
 # preprocessing, combining, compressing of js and css
 django_compressor
