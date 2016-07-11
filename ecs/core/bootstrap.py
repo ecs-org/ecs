@@ -8,12 +8,20 @@ from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
-from ecs.core.workflow import (InitialReview, Resubmission, Categorization, PaperSubmissionReview, VotePreparation,
-    ChecklistReview, RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview, InitialB2ResubmissionReview)
-from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
-    needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
-    needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
-    needs_localec_vote_preparation)
+from ecs.core.workflow import (
+    InitialReview, Resubmission, Categorization, CategorizationReview,
+    PaperSubmissionReview, VotePreparation, ChecklistReview,
+    RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview,
+    InitialB2ResubmissionReview,
+)
+from ecs.core.workflow import (
+    is_retrospective_thesis, is_acknowledged, is_expedited,
+    has_thesis_recommendation, has_localec_recommendation,
+    needs_expedited_recategorization, is_acknowledged_and_initial_submission,
+    is_still_b2, needs_executive_b2_review,
+    needs_expedited_vote_preparation, needs_localec_recommendation,
+    needs_localec_vote_preparation, needs_categorization_review,
+)
 
 
 @bootstrap.register()
@@ -54,6 +62,7 @@ def submission_workflow():
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
             'initial_review': Args(InitialReview, start=True, group=OFFICE_GROUP, name=_("Initial Review")),
             'categorization': Args(Categorization, group=EXECUTIVE_GROUP, name=_("Categorization")),
+            'categorization_review': Args(CategorizationReview, group=OFFICE_GROUP, name=_("Categorization Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP, is_dynamic=True),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP, is_dynamic=True),
@@ -78,6 +87,7 @@ def submission_workflow():
         edges={
             ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
             ('initial_review', 'categorization'): Args(guard=is_acknowledged_and_initial_submission),
+            ('categorization', 'categorization_review'): Args(guard=needs_categorization_review),
             ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('b2_resubmission', 'b2_review'): None,
             ('b2_review', 'executive_b2_review'): Args(guard=needs_executive_b2_review),

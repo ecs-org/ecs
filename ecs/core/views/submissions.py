@@ -284,8 +284,8 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 task_type__workflow_node__uid='categorization',
                 content_type=ContentType.objects.get_for_model(Submission),
                 data_id=submission.pk).order_by('-closed_at'))
-            if tasks and all(t.closed_at for t in tasks):
-                context['categorization_task'] = tasks[0]
+            if tasks and all(t.closed_at for t in tasks):       # XXX
+                context['categorization_form'].reopen_task = tasks[0]
 
     if not submission_form == submission.newest_submission_form:
         context['unacknowledged_forms'] = submission.forms.filter(pk__gt=submission_form.pk).count()
@@ -355,6 +355,20 @@ def categorization(request, submission_pk=None):
     if request.method == 'POST' and not form.is_valid():
         response.has_errors = True
     return response
+
+
+@task_required
+@with_task_management
+def categorization_review(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    with sudo():
+        categorization_task = request.related_tasks[0].trail.get()
+    return readonly_submission_form(request,
+        submission_form=submission.current_submission_form,
+        extra_context={
+            'categorization_review': True,
+            'categorization_task': categorization_task
+        })
 
 
 @task_required

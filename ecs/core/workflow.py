@@ -100,6 +100,11 @@ def needs_executive_b2_review(wf):
     vote = wf.data.get_most_recent_vote()
     return vote.executive_review_required
 
+@guard(model=Submission)
+@block_duplicate_task('categorization_review')
+def needs_categorization_review(wf):
+    return True
+
 
 ##############
 # Activities #
@@ -204,6 +209,32 @@ class Categorization(Activity):
 def unlock_categorization(sender, **kwargs):
     kwargs['instance'].workflow.unlock(Categorization)
 post_save.connect(unlock_categorization, sender=Submission)
+
+
+class CategorizationReview(Activity):
+    class Meta:
+        model = Submission
+
+    def is_repeatable(self):
+        return True
+
+    def get_url(self):
+        return reverse('ecs.core.views.submissions.categorization_review',
+            kwargs={'submission_pk': self.workflow.data_id})
+
+    def get_choices(self):
+        return (
+            (None, _('Close')),
+            ('reopen', _('Reopen')),
+        )
+
+    def post_perform(self, choice, token=None):
+        if choice == 'reopen':
+            with sudo():
+                tasks = Task.objects.for_submission(self.workflow.data).filter(
+                    task_type__workflow_node__uid='categorization').open()
+                if not tasks.exists():
+                    token.trail.get().task.reopen()
 
 
 class ExpeditedRecommendationSplit(Generic):

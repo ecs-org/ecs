@@ -47,6 +47,7 @@ urlpatterns = (
     url(r'^form/(?P<submission_form_pk>\d+)/review/checklist/show/(?P<checklist_pk>\d+)/$', views.show_checklist_review),
     url(r'^form/(?P<submission_form_pk>\d+)/review/checklist/drop/(?P<checklist_pk>\d+)/$', views.drop_checklist_review),
     url(r'^(?P<submission_pk>\d+)/categorization/$', views.categorization),
+    url(r'^(?P<submission_pk>\d+)/review/categorization/$', views.categorization_review),
     url(r'^form/(?P<submission_pk>\d+)/review/initial/$', views.initial_review),
     url(r'^form/(?P<submission_pk>\d+)/review/paper_submission/$', views.paper_submission_review),
     url(r'^form/(?P<submission_pk>\d+)/review/biased/$', views.biased_board_members_review),

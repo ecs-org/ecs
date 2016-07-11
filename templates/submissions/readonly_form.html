@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core i18n %} 
+{% load core i18n userutils %}
 
 
 {% block htmltitle %}… | {{ submission_form.submission|ec_number }} | {{ block.super }}{% endblock %}
@@ -70,7 +70,7 @@
         <div id="tabs_general" class="tab_headers collapse">
             <a href="#status_tab">{% trans 'Status' %}</a>
             {% if categorization_form %}
-                <a href="#categorization_tab"{% if not categorization_form.readonly %} class="readonly_review active"{% endif %}>{% trans "Categorization" %}</a>
+                <a href="#categorization_tab"{% if not categorization_form.readonly or categorization_review %} class="readonly_review active"{% endif %}>{% trans "Categorization" %}</a>
             {% endif %}
             {% if user.profile.show_worklow_widget %}
                 <a href="#tasks_tab">{% trans 'Tasks' %}</a>
@@ -143,8 +143,18 @@
             {% with categorization_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
-            {% if categorization_task and categorization_form.readonly and submission.allows_categorization %}
-                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_task.pk %}">{% trans 'Reopen' %}</a></p>
+            {% if categorization_form.reopen_task and categorization_form.readonly and submission.allows_categorization %}
+                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_form.reopen_task.pk %}">{% trans 'Reopen' %}</a></p>
+            {% endif %}
+            {% if categorization_task %}
+                <p>
+                    <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk to_user_pk=categorization_task.assigned_to_id %}" target="_blank">
+                        <span class="fa fa-envelope-o"></span>
+                        {% blocktrans with user=categorization_task.assigned_to|full_name trimmed %}
+                            Send Message to {{ user }}
+                        {% endblocktrans %}
+                    </a>
+                </p>
             {% endif %}
             {% if user.profile.is_internal %}
                 <div data-widget-url="{% url 'ecs.checklists.views.categorization_tasks' submission_pk=submission.pk %}"></div>
