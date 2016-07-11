@@ -62,9 +62,13 @@ class TaskQuerySet(models.QuerySet):
             deleted_at=None
         )
 
-    def for_widget(self, user):
-        not_for_widget = ['resubmission', 'b2_resubmission', 'external_review', 'paper_submission_review']
-        return self.for_user(user).exclude(task_type__workflow_node__uid__in=not_for_widget)
+    def for_widget(self):
+        return self.exclude(task_type__workflow_node__uid__in=(
+            'resubmission',
+            'b2_resubmission',
+            'external_review',
+            'paper_submission_review',
+        ))
 
     def for_submissions(self, submissions):
         from ecs.core.models import Submission

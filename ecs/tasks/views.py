@@ -69,8 +69,8 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         sorting = filterform.cleaned_data['sorting'] or 'deadline'
     order_by = ['task_type__name', sortings[sorting], 'assigned_at']
 
-    all_tasks = (Task.objects.for_widget(request.user)
-        .filter(closed_at__isnull=True)
+    all_tasks = (Task.objects.for_user(request.user).for_widget()
+        .filter(closed_at=None)
         .select_related('task_type', 'task_type__workflow_node')
         .order_by(*order_by))
 
@@ -213,7 +213,7 @@ def accept_task_full(request, task_pk=None):
 
 @require_POST
 def accept_task_type(request, flavor=None, slug=None, full=False):
-    tasks = Task.objects.for_widget(request.user).filter(closed_at__isnull=True)
+    tasks = Task.objects.for_user(request.user).for_widget().filter(closed_at=None)
     task_flavors = {
         'open': tasks.filter(assigned_to=None),
         'proxy': tasks.filter(assigned_to__profile__is_indisposed=True),
