@@ -87,7 +87,7 @@
             <nav class="nav nav-pills nav-stacked">
                 <a class="nav-link dashboard" href="{% url 'ecs.dashboard.views.view_dashboard' %}">{% trans "Dashboard" %}</a>
                 <a class="nav-link communication" href="{% url 'ecs.communication.views.list_threads' %}">{% trans "Communication" %}</a>
-                {% if user.profile.has_explicit_workflow %}
+                {% if user.profile.show_worklow_widget %}
                     <a class="nav-link tasks" href="{% url 'ecs.tasks.views.task_list' %}">{% trans "Tasks" %}</a>
                 {% endif %}
                 <div class="nav-item dropdown">

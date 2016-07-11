@@ -15,7 +15,7 @@
         </div>
         <div class="right_column">
             <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' %}"></div>
-            {% if user.profile.has_explicit_workflow %}
+            {% if user.profile.show_worklow_widget %}
                 <div class="dashboard_widget" data-widget-url="{% url 'ecs.tasks.views.my_tasks' %}"></div>
             {% endif %}
         </div>

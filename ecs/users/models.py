@@ -77,6 +77,10 @@ class UserProfile(models.Model):
             'Meeting Protocol Receiver',
         })
 
+    def show_worklow_widget(self):
+        tasks = self.user.tasks(manager='unfiltered').open().for_widget()
+        return self.has_explicit_workflow or tasks.exists()
+
 
 class UserSettings(models.Model):
     user = models.OneToOneField(User, related_name='ecs_settings')

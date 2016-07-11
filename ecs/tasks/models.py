@@ -136,6 +136,7 @@ class Task(models.Model):
     reminder_message_sent_at = models.DateTimeField(null=True)
     
     objects = TaskManager()
+    unfiltered = TaskQuerySet.as_manager()
 
     def save(self, *args, **kwargs):
         rval = super(Task, self).save(*args, **kwargs)

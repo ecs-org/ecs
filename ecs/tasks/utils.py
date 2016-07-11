@@ -117,7 +117,7 @@ class TaskManagementData(object):
                 if submission:
                     url = reverse('view_submission', kwargs={'submission_pk': submission.pk})
                 else:
-                    if self.request.user.profile.has_explicit_workflow():
+                    if self.request.user.profile.show_worklow_widget:
                         url = reverse('ecs.tasks.views.task_list')
                     else:
                         url = reverse('ecs.dashboard.views.view_dashboard')
