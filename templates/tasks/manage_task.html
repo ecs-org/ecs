@@ -4,15 +4,15 @@
 <form action="{{ request.path }}" method="post" id="task_form">
     {% csrf_token %}
     <h4>{% trans 'Task' %}: {{ form.task }}</h4>
-    {% if form.errors|contains:'locked' %}
-    <span class="lockInfo">
-        Füllen Sie alle benötigten Felder aus um diese Aufgabe abschließen zu können.
-    </span>
+    {% if form.errors.post_data %}
+        <div class="text-danger">
+            Füllen Sie alle benötigten Felder aus um diese Aufgabe abschließen zu können.
+        </div>
     {% endif %}
-    {% if form.errors|contains:'action' %}
-    <span class="errors">
-        Bitte wählen Sie eine Aktion aus.
-    </span>
+    {% if form.errors.action %}
+        <div class="text-danger">
+            Bitte wählen Sie eine Aktion aus.
+        </div>
     {% endif %}
 
     {% if not form.task.choices %}

@@ -35,33 +35,6 @@
     margin-top: 10px;
 }
 
-/* TaskForm */
-
-#task_form {
-    font-size: 12px;
-
-    .errors {
-        color: $red;
-    }
-
-    .lockInfo {
-        display: inline-block;
-        background-color: $yellow-dark;
-        padding: 3px 5px;
-        border-radius: 3px;
-        border: 1px solid $yellow-extra-dark;
-        margin: 5px 0;
-    }
-
-    select {
-        margin-bottom: 10px;
-    }
-
-    input[type=radio] {
-        margin: 3px 5px 10px 5px;
-    }
-}
-
 .task_message .ecs-TextAreaToolbar {
     clear: both;
 }

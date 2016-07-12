@@ -8,7 +8,7 @@ from django.utils.encoding import force_text
 from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import TaskType
-from ecs.users.utils import get_current_user
+
 
 class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
@@ -26,13 +26,14 @@ class ManageTaskForm(forms.Form):
     def __init__(self, *args, **kwargs):
         task = kwargs.pop('task')
         self.task = task
+        self.user = kwargs.pop('user')
         super(ManageTaskForm, self).__init__(*args, **kwargs)
         fs = self.fields
         fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
         fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
         if task.task_type.is_delegatable:
             fs['action'].choices = [('delegate', _('delegate')),('message', _('message'))]
-            assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=get_current_user().pk)
+            assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=self.user.pk)
             if task.medical_category_id:
                 assign_to_q = assign_to_q.filter(
                     medical_categories=task.medical_category_id)
@@ -67,7 +68,8 @@ class ManageTaskForm(forms.Form):
             if 'assign_to' not in cd:
                 self.add_error('assign_to', _('You must select a user.'))
         elif action == 'complete' and self.task and self.task.is_locked:
-            self.add_error('locked', _('Fill out the form completely to complete the task.'))
+            self.add_error('post_data',
+                _('Fill out the form completely to complete the task.'))
         return cd
 
 class TaskListFilterForm(forms.Form):

@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import Task
+from ecs.tasks.forms import ManageTaskForm
 from ecs.users.utils import sudo
 from ecs.utils.viewutils import render_html
 
@@ -52,6 +53,7 @@ def with_task_management(view):
 class TaskManagementData(object):
     def __init__(self, request):
         self.request = request
+        self.user = request.user
         self.method = request.method
         self.POST = request.POST
         self.submit = self.POST.get('task_management-submit')
@@ -88,10 +90,11 @@ class TaskManagementData(object):
             form = None
             task = self.task
             if task:
-                from ecs.tasks.forms import ManageTaskForm
-                form = ManageTaskForm(None, task=task, prefix='task_management')
+                form = ManageTaskForm(None, task=task, user=self.user,
+                    prefix='task_management')
                 if self.method == 'POST' and self.submit:
-                    form = ManageTaskForm(self.POST or None, task=task, prefix='task_management')
+                    form = ManageTaskForm(self.POST or None, task=task,
+                        user=self.user, prefix='task_management')
                     form.is_valid()     # validate form, so errors are displayed
             self._form = form
         return self._form
