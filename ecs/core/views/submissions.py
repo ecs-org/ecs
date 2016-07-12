@@ -44,8 +44,9 @@ from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
+from ecs.communication.utils import send_message
 from ecs.utils import forceauth
-from ecs.users.utils import sudo, user_flag_required, user_group_required, get_user
+from ecs.users.utils import sudo, user_flag_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
 
@@ -279,13 +280,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     if not request.user in presenting_users:
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
         context['categorization_form'] = CategorizationForm(instance=submission, readonly=True)
-        if profile.is_executive_board_member:
-            tasks = list(Task.objects.for_user(request.user).filter(
+        if profile.is_executive_board_member and submission.allows_categorization():
+            reopen_task = Task.unfiltered.for_data(submission).filter(
                 task_type__workflow_node__uid='categorization',
-                content_type=ContentType.objects.get_for_model(Submission),
-                data_id=submission.pk).order_by('-closed_at'))
-            if tasks and all(t.closed_at for t in tasks):       # XXX
-                context['categorization_form'].reopen_task = tasks[0]
+                deleted_at=None,
+            ).order_by('-closed_at').first()
+            if reopen_task and reopen_task.closed_at:
+                context['categorization_form'].reopen_task = reopen_task
 
     if not submission_form == submission.newest_submission_form:
         context['unacknowledged_forms'] = submission.forms.filter(pk__gt=submission_form.pk).count()
@@ -325,7 +326,7 @@ def delete_task(request, submission_form_pk=None, task_pk=None):
     return redirect('readonly_submission_form', submission_form_pk=submission_form_pk)
 
 
-@user_group_required('EC-Executive Board Member')
+@task_required
 @with_task_management
 def categorization(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
@@ -355,6 +356,30 @@ def categorization(request, submission_pk=None):
     if request.method == 'POST' and not form.is_valid():
         response.has_errors = True
     return response
+
+
+@user_flag_required('is_executive_board_member')
+def reopen_categorization(request, submission_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+
+    task = Task.unfiltered.for_data(submission).filter(
+        task_type__workflow_node__uid='categorization',
+        deleted_at=None,
+    ).order_by('-closed_at').first()
+
+    if not task or not task.closed_at or not submission.allows_categorization():
+        raise Http404()
+
+    new_task = task.reopen(request.user)
+
+    if task.assigned_to != request.user:
+        subject = _('{task} reopened').format(task=task.task_type)
+        text = _('{user} has reopened the {task}.').format(user=request.user,
+            task=task.task_type)
+        send_message(get_user('root@system.local'), task.assigned_to, subject,
+            text, submission=submission, reply_receiver=request.user)
+
+    return redirect(new_task.url)
 
 
 @task_required

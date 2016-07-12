@@ -143,8 +143,8 @@
             {% with categorization_form as review_form %}
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
-            {% if categorization_form.reopen_task and categorization_form.readonly and submission.allows_categorization %}
-                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=categorization_form.reopen_task.pk %}">{% trans 'Reopen' %}</a></p>
+            {% if categorization_form.reopen_task %}
+                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk %}">{% trans 'Reopen' %}</a></p>
             {% endif %}
             {% if categorization_task %}
                 <p>
