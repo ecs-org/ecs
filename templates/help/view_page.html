@@ -10,7 +10,7 @@
         {{ page.publish_parts.fragment|safe }}
     </div>
 
-    {% with page|pagenav as nav %}
+    {% with page.nav as nav %}
     <div class="nav">
         <span class="prev">
         {% if nav.prev %}

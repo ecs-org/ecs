@@ -5,10 +5,6 @@ from ecs.help.models import Page
 
 register = Library()
 
-@register.filter
-def pagenav(page):
-    return page.nav
-
 @register.simple_tag
 def help_url(slug):
     try:

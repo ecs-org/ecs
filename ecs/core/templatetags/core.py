@@ -1,7 +1,6 @@
 import re
 from textwrap import dedent
 from django.template import Library, Node, TemplateSyntaxError
-from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from django.core.cache import cache
 from django.conf import settings
@@ -18,12 +17,9 @@ def getitem(obj, name):
     except KeyError:
         return None
 
-register.filter('getattr', lambda obj, name: getattr(obj, str(name)))
 register.filter('getitem', getitem)
 register.filter('type_name', lambda obj: type(obj).__name__)
-register.filter('startwith', lambda obj, start: obj.startswith(start))
 register.filter('endswith', lambda obj, end: obj.endswith(end))
-register.filter('contains', lambda obj, x: x in obj)
 register.filter('not', lambda obj: not obj)
 register.filter('multiply', lambda a, b: a * b)
 register.filter('euro', lambda val: ("€ %.2f" % float(val)).replace('.', ','))
@@ -34,11 +30,6 @@ def ec_number(submission):
     if submission:
         return submission.get_ec_number_display()
     return None
-
-@register.filter
-def repeat(s, n):
-    return mark_safe(s*n)
-repeat.is_safe = True
 
 @register.filter
 def get_field_info(formfield):
@@ -85,10 +76,6 @@ def smart_truncate(s, n):
         return s
     return "%s …" % re.match(r'(.{,%s})\b' % (n - 2), s).group(0)
     
-
-@register.filter
-def class_for_field(field):
-    return 'wide' if field.field.max_length > 50 else 'narrow'
 
 @register.filter
 def has_submissions(user):
