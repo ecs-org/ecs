@@ -21,7 +21,8 @@ def send_submission_message(submission, subject, text, recipients):
 
 
 def send_vote_expired(vote):
-    recipients = vote.submission_form.get_presenting_parties().get_users()
+    sf = vote.get_submission().current_submission_form
+    recipients = sf.get_presenting_parties().get_users()
     recipients.add(get_office_user())
     submission = vote.get_submission()
 
@@ -39,7 +40,8 @@ def send_vote_expired(vote):
     send_submission_message(submission, subject, text, recipients)
 
 def send_vote_reminder_submitter(vote):
-    recipients = vote.submission_form.get_presenting_parties().get_users()
+    sf = vote.get_submission().current_submission_form
+    recipients = sf.get_presenting_parties().get_users()
     submission = vote.get_submission()
 
     if vote.top:
@@ -87,7 +89,8 @@ def send_vote_reminder_office(vote):
 
 
 def send_temporary_vote_reminder_submitter(vote):
-    recipients = vote.submission_form.get_presenting_parties().get_users()
+    sf = vote.get_submission().current_submission_form
+    recipients = sf.get_presenting_parties().get_users()
     submission = vote.get_submission()
 
     if vote.top:
