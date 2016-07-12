@@ -22,7 +22,8 @@ def on_meeting_end(sender, **kwargs):
         vote.save() # trigger post_save for all votes
 
     for top in meeting.additional_entries.exclude(pk__in=Vote.objects.exclude(top=None).values('top__pk').query):
-        vote = Vote.objects.create(top=top, result='3a')
+        vote = Vote.objects.create(top=top, result='3a',
+            submission_form=top.submission.current_submission_form)
         top.is_open = False
         top.save()
 

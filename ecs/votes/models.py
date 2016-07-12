@@ -19,7 +19,7 @@ from ecs.utils.viewutils import render_pdf_context
 
 @reversion.register(fields=('result', 'text'))
 class Vote(models.Model):
-    submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes', null=True)
+    submission_form = models.ForeignKey('core.SubmissionForm', related_name='votes')
     top = models.OneToOneField('meetings.TimetableEntry', related_name='vote', null=True)
     upgrade_for = models.OneToOneField('self', null=True, related_name='previous')
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_('vote'))
@@ -42,10 +42,7 @@ class Vote(models.Model):
         get_latest_by = 'published_at'
 
     def get_submission(self):
-        if self.submission_form:
-            return self.submission_form.submission
-        else:
-            return None
+        return self.submission_form.submission
     
     @property
     def result_text(self):
@@ -55,22 +52,13 @@ class Vote(models.Model):
         return dict(VOTE_RESULT_CHOICES)[self.result]
 
     def get_ec_number(self):
-        if self.top and self.top.submission:
-            return self.top.submission.get_ec_number_display()
-        elif self.submission_form:
-            return self.submission_form.submission.get_ec_number_display()
-        return None
+        return self.submission_form.submission.get_ec_number_display()
         
     def __str__(self):
         ec_number = self.get_ec_number()
         if ec_number:
             return 'Votum %s' % ec_number
         return 'Votum ID %s' % self.pk
-        
-    def save(self, **kwargs):
-        if not self.submission_form_id and self.top_id:
-            self.submission_form = self.top.submission.current_submission_form
-        return super(Vote, self).save(**kwargs)
 
     def publish(self):
         assert self.published_at is None
@@ -159,8 +147,6 @@ class Vote(models.Model):
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
     submission_form = vote.submission_form
-    if submission_form is None:
-        return
     if (vote.published_at and submission_form.current_published_vote_id == vote.pk) or (not vote.published_at and submission_form.current_pending_vote_id == vote.pk):
         return
     if vote.published_at:
