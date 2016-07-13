@@ -24,7 +24,6 @@ class Vote(models.Model):
     upgrade_for = models.OneToOneField('self', null=True, related_name='previous')
     result = models.CharField(max_length=2, choices=VOTE_RESULT_CHOICES, null=True, verbose_name=_('vote'))
     executive_review_required = models.NullBooleanField(blank=True)
-    insurance_review_required = models.NullBooleanField(blank=True)
     text = models.TextField(blank=True, verbose_name=_('comment'))
     is_draft = models.BooleanField(default=False)
     is_final_version = models.BooleanField(default=False)

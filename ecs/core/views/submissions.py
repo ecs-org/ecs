@@ -574,7 +574,8 @@ def b2_vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
     submission = submission_form.submission
     try:
-        vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
+        with sudo():
+            vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
     except Vote.DoesNotExist:
         vote = submission.votes.order_by('-pk')[:1][0]
         vote = Vote.objects.create(

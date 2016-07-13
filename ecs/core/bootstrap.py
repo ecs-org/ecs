@@ -14,7 +14,7 @@ from ecs.core.workflow import (InitialReview, Resubmission, CategorizationReview
 from ecs.core.workflow import (is_retrospective_thesis, is_acknowledged, is_expedited, has_thesis_recommendation, has_localec_recommendation,
     needs_paper_submission_review,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission, is_still_b2,
-    needs_insurance_b2_review, needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
+    needs_executive_b2_review, needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation)
 
 
@@ -54,7 +54,6 @@ def submission_workflow():
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
-            'insurance_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=INSURANCE_REVIEW_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'initial_review_barrier': Args(Generic, name=_('Initial Review Split')),
@@ -87,10 +86,8 @@ def submission_workflow():
             ('initial_review_barrier', 'categorization_review'): Args(guard=is_retrospective_thesis, negated=True),
             ('initial_review_barrier', 'paper_submission_review'): Args(guard=needs_paper_submission_review),
             ('b2_resubmission', 'b2_review'): None,
-            ('b2_review', 'insurance_b2_review'): Args(guard=needs_insurance_b2_review),
             ('b2_review', 'executive_b2_review'): Args(guard=needs_executive_b2_review),
             ('b2_review', 'b2_resubmission'): Args(guard=is_still_b2),
-            ('insurance_b2_review', 'b2_review'): None,
             ('executive_b2_review', 'b2_review'): None,
 
             # retrospective thesis lane
