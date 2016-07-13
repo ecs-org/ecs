@@ -1,7 +1,7 @@
 import datetime
-import types
 import traceback
 import re
+import collections
 from collections import OrderedDict
 
 from diff_match_patch import diff_match_patch
@@ -20,8 +20,7 @@ from ecs.core.models import SubmissionForm, Investigator, EthicsCommission, \
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_html
 from ecs.core import paper_forms
-from ecs.users.utils import get_full_name
-import collections
+from ecs.users.utils import get_full_name, get_current_user
 
 
 DATETIME_FORMAT = '%d.%m.%Y %H:%M'
@@ -358,6 +357,7 @@ class DocumentDiffer(AtomicModelDiffer):
                 'doc': doc,
                 'plainhtml': plainhtml,
                 'submission_form': submission_form,
+                'user': get_current_user(),
             }
             return render_html(HttpRequest(), 'submissions/diff/document.inc', data)
         return _render
