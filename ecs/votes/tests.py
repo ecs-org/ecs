@@ -31,20 +31,11 @@ class VoteRemindersTest(CommunicationTestCase):
         submission_form.submitter_email = self.alice.email
         submission_form.save()
 
-        meeting = Meeting.objects.create(title='January Meeting',
-            start=datetime(2042, 1, 1, tzinfo=pytz.utc))
-        meeting.started = meeting.start
-        meeting.ended = meeting.start + timedelta(hours=8)
-        meeting.deadline = meeting.start - timedelta(days=7)
-        meeting.deadline_diplomathesis = meeting.start - timedelta(days=2)
-        meeting.save()
-
-        meeting.add_entry(submission=submission_form.submission, duration=timedelta(seconds=60))
-
         now = timezone.now()
         next_year = now + timedelta(days=365)
         self.valid_until = timezone.now().date() + timedelta(days=365)
-        self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1', published_at=now, valid_until=next_year)
+        self.vote = Vote.objects.create(submission_form=submission_form,
+            result='1', published_at=now, valid_until=next_year)
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.
