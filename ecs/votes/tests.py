@@ -28,17 +28,8 @@ class VoteRemindersTest(CommunicationTestCase):
         
         # there has to be a test submission
         submission_form = create_submission_form()
-        submission_form.submission.save()
-        submission_form.project_type_education_context = None
         submission_form.submitter_email = self.alice.email
         submission_form.save()
-
-        submission_form_thesis = create_submission_form()
-        submission_form_thesis.submission.is_thesis = True
-        submission_form_thesis.submission.save()
-        submission_form_thesis.project_type_education_context = 1  # "Dissertation"
-        submission_form_thesis.submitter_email = self.alice.email
-        submission_form_thesis.save()
 
         meeting = Meeting.objects.create(title='January Meeting',
             start=datetime(2042, 1, 1, tzinfo=pytz.utc))
@@ -49,26 +40,14 @@ class VoteRemindersTest(CommunicationTestCase):
         meeting.save()
 
         meeting.add_entry(submission=submission_form.submission, duration=timedelta(seconds=60))
-        meeting.add_entry(submission=submission_form_thesis.submission, duration=timedelta(seconds=60))
 
         now = timezone.now()
         next_year = now + timedelta(days=365)
         self.valid_until = timezone.now().date() + timedelta(days=365)
         self.vote = Vote.objects.create(submission_form=submission_form, top=meeting.timetable_entries.get(submission=submission_form.submission), result='1', published_at=now, valid_until=next_year)
-        self.vote_thesis = Vote.objects.create(submission_form=submission_form_thesis, top=meeting.timetable_entries.get(submission=submission_form_thesis.submission), result='1', published_at=now, valid_until=next_year)
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.
-        '''
-        
-        alice_message_count = Message.objects.filter(receiver=self.alice).count()
-        bob_message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=self.valid_until+timedelta(days=1))
-        self.assertTrue(alice_message_count < Message.objects.filter(receiver=self.alice).count())
-        self.assertTrue(bob_message_count < Message.objects.filter(receiver=self.bob).count())
-
-    def test_expiry_diplomathesis(self):
-        '''Tests that reminder messages actually get sent to submission participants in a diploma thesis submission.
         '''
         
         alice_message_count = Message.objects.filter(receiver=self.alice).count()
@@ -85,14 +64,6 @@ class VoteRemindersTest(CommunicationTestCase):
         send_reminder_messages(today=self.valid_until-timedelta(days=7))
         self.assertTrue(message_count < Message.objects.filter(receiver=self.bob).count())
 
-    def test_reminder_office_diplomathesis(self):
-        '''Tests that messages get sent to office for a thesis submission
-        '''
-        
-        message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=self.valid_until-timedelta(days=7))
-        self.assertTrue(message_count < Message.objects.filter(receiver=self.bob).count())
-
     def test_reminder_submitter(self):
         '''Tests if the submitter of a study gets a reminder message.
         '''
@@ -100,12 +71,3 @@ class VoteRemindersTest(CommunicationTestCase):
         message_count = Message.objects.filter(receiver=self.alice).count()
         send_reminder_messages(today=self.valid_until-timedelta(days=21))
         self.assertTrue(message_count < Message.objects.filter(receiver=self.alice).count())
-
-    def test_reminder_submitter_diplomathesis(self):
-        '''Tests if the submitter of a diploma thesis gets a reminder message.
-        '''
-        
-        message_count = Message.objects.filter(receiver=self.alice).count()
-        send_reminder_messages(today=self.valid_until-timedelta(days=21))
-        self.assertTrue(message_count < Message.objects.filter(receiver=self.alice).count())
-
