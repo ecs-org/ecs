@@ -22,43 +22,45 @@ class VoteRemindersTest(CommunicationTestCase):
         super(VoteRemindersTest, self).setUp(*args, **kwargs)
 
         # alice is the submitter and bob is the default contact
-        advanced_settings = AdvancedSettings.objects.get(pk=1)
-        advanced_settings.default_contact = self.bob
-        advanced_settings.save()
+        AdvancedSettings.objects.filter(pk=1).update(default_contact=self.bob)
         
         # there has to be a test submission
         submission_form = create_submission_form()
         submission_form.submitter_email = self.alice.email
         submission_form.save()
+        self.submission_form = submission_form
+        self.threads = submission_form.submission.thread_set
 
         now = timezone.now()
-        next_year = now + timedelta(days=365)
-        self.valid_until = timezone.now().date() + timedelta(days=365)
         self.vote = Vote.objects.create(submission_form=submission_form,
-            result='1', published_at=now, valid_until=next_year)
+            result='1', published_at=now, valid_until=now + timedelta(days=365))
 
     def test_expiry(self):
-        '''Tests that reminder messages actually get sent to submission participants.
-        '''
-        
-        alice_message_count = Message.objects.filter(receiver=self.alice).count()
-        bob_message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=self.valid_until+timedelta(days=1))
-        self.assertTrue(alice_message_count < Message.objects.filter(receiver=self.alice).count())
-        self.assertTrue(bob_message_count < Message.objects.filter(receiver=self.bob).count())
+        '''Tests that reminder messages actually get sent to submission participants.'''
+
+        alice_threads = self.threads.filter(receiver=self.alice)
+        bob_threads = self.threads.filter(receiver=self.bob)
+        alice_thread_count = alice_threads.count()
+        bob_thread_count = bob_threads.count()
+        send_reminder_messages(
+            today=self.vote.valid_until.date()+timedelta(days=1))
+        self.assertEqual(alice_thread_count + 1, alice_threads.count())
+        self.assertEqual(bob_thread_count + 1, bob_threads.count())
 
     def test_reminder_office(self):
-        '''Tests that messages get sent to office before the deadline
-        '''
+        '''Tests that messages get sent to office before the deadline'''
         
-        message_count = Message.objects.filter(receiver=self.bob).count()
-        send_reminder_messages(today=self.valid_until-timedelta(days=7))
-        self.assertTrue(message_count < Message.objects.filter(receiver=self.bob).count())
+        threads = self.threads.filter(receiver=self.bob)
+        thread_count = threads.count()
+        send_reminder_messages(
+            today=self.vote.valid_until.date()-timedelta(days=7))
+        self.assertEqual(thread_count + 1, threads.count())
 
     def test_reminder_submitter(self):
-        '''Tests if the submitter of a study gets a reminder message.
-        '''
-        
-        message_count = Message.objects.filter(receiver=self.alice).count()
-        send_reminder_messages(today=self.valid_until-timedelta(days=21))
-        self.assertTrue(message_count < Message.objects.filter(receiver=self.alice).count())
+        '''Tests if the submitter of a study gets a reminder message.'''
+
+        threads = self.threads.filter(receiver=self.alice)
+        thread_count = threads.count()
+        send_reminder_messages(
+            today=self.vote.valid_until.date()-timedelta(days=21))
+        self.assertEqual(thread_count + 1, threads.count())
