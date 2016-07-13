@@ -34,6 +34,8 @@ class VoteRemindersTest(CommunicationTestCase):
         now = timezone.now()
         self.vote = Vote.objects.create(submission_form=submission_form,
             result='1', published_at=now, valid_until=now + timedelta(days=365))
+        self.vote_b2 = Vote.objects.create(submission_form=submission_form,
+            result='2', published_at=now)
 
     def test_expiry(self):
         '''Tests that reminder messages actually get sent to submission participants.'''
@@ -63,4 +65,22 @@ class VoteRemindersTest(CommunicationTestCase):
         thread_count = threads.count()
         send_reminder_messages(
             today=self.vote.valid_until.date()-timedelta(days=21))
+        self.assertEqual(thread_count + 1, threads.count())
+
+    def test_temporary_reminder_submitter(self):
+        '''Tests if the submitter is reminded of a temporary vote.'''
+
+        threads = self.threads.filter(receiver=self.alice)
+        thread_count = threads.count()
+        send_reminder_messages(
+            today=self.vote_b2.published_at.date()+timedelta(days=150))
+        self.assertEqual(thread_count + 1, threads.count())
+
+    def test_temporary_reminder_office(self):
+        '''Tests if the office is reminded of a temporary vote.'''
+
+        threads = self.threads.filter(receiver=self.bob)
+        thread_count = threads.count()
+        send_reminder_messages(
+            today=self.vote_b2.published_at.date()+timedelta(days=240))
         self.assertEqual(thread_count + 1, threads.count())
