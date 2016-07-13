@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
-from django.conf import settings
+import pytz
+
 from django.utils import timezone
 
 from ecs.communication.testcases import CommunicationTestCase
@@ -39,7 +40,8 @@ class VoteRemindersTest(CommunicationTestCase):
         submission_form_thesis.submitter_email = self.alice.email
         submission_form_thesis.save()
 
-        meeting = Meeting.objects.create(title='January Meeting', start=datetime(2042, 1, 1))
+        meeting = Meeting.objects.create(title='January Meeting',
+            start=datetime(2042, 1, 1, tzinfo=pytz.utc))
         meeting.started = meeting.start
         meeting.ended = meeting.start + timedelta(hours=8)
         meeting.deadline = meeting.start - timedelta(days=7)
