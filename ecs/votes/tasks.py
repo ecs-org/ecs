@@ -141,22 +141,27 @@ def send_reminder_messages(today=None):
     if today is None:
         today = timezone.now().date()
 
+
     votes = (Vote.objects
         .filter(published_at__isnull=False, valid_until__isnull=False)
         .exclude(submission_form__submission__workflow_lane=SUBMISSION_LANE_LOCALEC)
-        .exclude(submission_form__submission__is_finished=True))
-    
-    for vote in votes:
-        assert vote.result == '1'
-        valid_until = vote.valid_until.date()
-        days_valid = (valid_until - today).days
+        .exclude(submission_form__submission__is_finished=True)
+        .annotate(valid_until_date=Func(F('valid_until'), function='DATE')))
 
-        if days_valid == 21:
-            send_vote_reminder_submitter(vote)
-        elif days_valid == 7:
-            send_vote_reminder_office(vote)
-        elif days_valid == -1:
-            send_vote_expired(vote)
+    for vote in votes.filter(
+            valid_until_date=Func(today + timedelta(days=21), function='DATE')):
+        assert vote.result == '1'
+        send_vote_reminder_submitter(vote)
+
+    for vote in votes.filter(
+            valid_until_date=Func(today + timedelta(days=7), function='DATE')):
+        assert vote.result == '1'
+        send_vote_reminder_office(vote)
+
+    for vote in votes.filter(
+            valid_until_date=Func(today - timedelta(days=1), function='DATE')):
+        assert vote.result == '1'
+        send_vote_expired(vote)
 
 
     tmp_votes = (Vote.objects
