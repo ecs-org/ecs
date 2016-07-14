@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-14 14:37+0200\n"
+"POT-Creation-Date: 2016-07-15 18:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -154,15 +154,13 @@ msgid "Remember me when the task hasn't been done"
 msgstr "Erinnerung wenn die Aufgabe nicht abgeschlossen wurde"
 
 msgid "Assign to"
-msgstr "Zugeteilen an"
+msgstr "Zuteilen an"
 
 msgid "<group>"
 msgstr "<Gruppe>"
 
-#, fuzzy
-#| msgid "This field is required."
 msgid "This user is biased."
-msgstr "Dieses Feld ist erforderlich"
+msgstr "Dieses Sitzungsmitglied ist befangen."
 
 msgid "New"
 msgstr "Neu"
@@ -235,12 +233,11 @@ msgstr "B2 Änderungsbewertung"
 msgid "Initial Review"
 msgstr "Einreichung Formale Prüfung"
 
-#, fuzzy
-msgid "Initial Review Split"
-msgstr "Formale Prüfung Einreichung"
-
 msgid "Categorization"
-msgstr "Einstufung und Zuteilung"
+msgstr "Einstufung"
+
+msgid "Categorization Review"
+msgstr "Einstufung Überprüfung"
 
 msgid "Paper Submission Review"
 msgstr "Unterschrift Prüfung"
@@ -491,7 +488,7 @@ msgid "medical_categories"
 msgstr "Medizinische Kategorien"
 
 msgid "remission"
-msgstr "Gebührenbefreiung"
+msgstr "Gebührenbefreit"
 
 msgid "invite_primary_investigator_to_meeting"
 msgstr "Hauptprüfer einladen"
@@ -1310,9 +1307,6 @@ msgstr "Fr/Hr"
 msgid "Institution"
 msgstr "Institution"
 
-msgid "exemption of fees"
-msgstr "Gebührenbefreiung"
-
 msgid "Submitter"
 msgstr "Antragsteller"
 
@@ -1358,6 +1352,14 @@ msgstr "Votum"
 msgid "Text"
 msgstr ""
 
+#, python-brace-format
+msgid "{task} reopened"
+msgstr "{task} neu geöffnet"
+
+#, python-brace-format
+msgid "{user} has reopened the {task}."
+msgstr "{user} hat die Aufgabe \"{task}\" neu geöffnet."
+
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
@@ -1393,6 +1395,12 @@ msgstr "Fertig"
 
 msgid "Executive Review"
 msgstr "Begutachtung Executive"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Reopen"
+msgstr "Neu öffnen"
 
 msgid "Covering Letter"
 msgstr "Covering Letter"
@@ -2056,6 +2064,30 @@ msgid "Vote for Submission {ec_number} will expire in one week"
 msgstr "Das Votum für die Studie EK-Nr. {ec_number} läuft in einer Woche ab"
 
 #, python-brace-format
+msgid ""
+"There is still no permanent vote for submission {ec_number}. The current\n"
+"temporary vote was published on the {vote_date}. Please make sure you've\n"
+"sent all necessary documents to the ethics commission.\n"
+"\n"
+"Yours sincerely,\n"
+"\n"
+"the team of the ethics commission\n"
+"    "
+msgstr ""
+
+#, fuzzy, python-brace-format
+#| msgid "Vote for Submission {ec_number} has expired"
+msgid "Temporary vote for Submission {ec_number}"
+msgstr "Das Votum für die Studie EK-Nr. {ec_number} ist abgelaufen"
+
+#, python-brace-format
+msgid ""
+"There is still no permanent vote for submission {ec_number}. The current\n"
+"temporary vote was published on the {vote_date}.\n"
+"    "
+msgstr ""
+
+#, python-brace-format
 msgid "Vote {ec_number}"
 msgstr "Votum {ec_number}"
 
@@ -2153,21 +2185,14 @@ msgstr "Löschen"
 msgid "No boilerplate yet!"
 msgstr "Es gibt nocht keinen Textbaustein!"
 
-#, fuzzy
-#| msgid "Request for review"
-msgid "Request Checklist Review"
-msgstr "Bitte um Begutachtung"
+msgid "Request Review"
+msgstr "Begutachtung anfordern"
 
 msgid "Closed"
 msgstr "Erledigt"
 
 msgid "Started"
 msgstr "Gestartet"
-
-#, fuzzy
-#| msgid "Request for review"
-msgid "Request Review"
-msgstr "Bitte um Begutachtung"
 
 #, python-format
 msgid ""
@@ -2448,9 +2473,6 @@ msgstr "Version"
 
 msgid "No text"
 msgstr "Kein Text"
-
-msgid "Close"
-msgstr "Schließen"
 
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
@@ -2954,18 +2976,14 @@ msgstr "Organisation"
 msgid "E-Mail"
 msgstr "E-Mail"
 
-#, fuzzy
-#| msgid "Assigned"
 msgid "Assigned Tasks"
-msgstr "Übernommen"
+msgstr "Zugeteilte Aufgaben"
 
 msgid "Send Message"
 msgstr "Nachricht senden"
 
-#, fuzzy
-#| msgid "no board member required"
 msgid "No board members selected."
-msgstr "kein Sitzungsmitglied erforderlich"
+msgstr "Kein Sitzungsmitglied ausgewählt."
 
 msgid "Catalog of Approved Studies"
 msgstr "Register der befürworteten Studien"
@@ -3176,8 +3194,9 @@ msgstr "Meine Nachrichten"
 msgid "Communication Overview"
 msgstr "Nachrichten Überblick"
 
-msgid "Reopen"
-msgstr "Neu öffnen"
+#, python-format
+msgid "Send Message to %(user)s"
+msgstr "Nachricht an %(user)s senden"
 
 msgid "There are no open notifications."
 msgstr "Es existieren derzeit keine offenen Meldungen."

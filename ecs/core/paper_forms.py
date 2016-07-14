@@ -319,7 +319,7 @@ FormInfo(InvestigatorEmployee, fields=(
 ))
 
 FormInfo(Submission, fields=(
-    FieldInfo(None, 'remission', _('exemption of fees')),
+    FieldInfo(None, 'remission', _('remission')),
 ))
 
 def get_field_info_for_model(model):
