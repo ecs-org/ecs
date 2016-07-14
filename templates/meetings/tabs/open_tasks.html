@@ -1,4 +1,4 @@
-{% load core i18n userutils %}
+{% load core i18n %}
 
 {% for top, tasks in open_tasks.items %}
 <h3>{{ top }}: <a href="{% url 'view_submission' submission_pk=top.submission.pk %}" target="_blank">{{ top.submission|ec_number }}</a> {{ top.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}</h3>

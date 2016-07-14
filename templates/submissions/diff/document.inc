@@ -1,4 +1,4 @@
-{% load core i18n userutils %}
+{% load core i18n %}
 
 <div style="display:inline-block;vertical-align:top;color:black;">
     {{doc.doctype}}: {{ doc.name }}<br />
