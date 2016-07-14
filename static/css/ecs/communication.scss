@@ -100,9 +100,6 @@
             margin: 0 10px 0 0;
         }
     }
-    .ecs-Autocomplete {
-        display: inline;
-    }
     .boilerplate_selector {
         left: 80px;
     }
@@ -294,7 +291,7 @@ ul.thread {
         text-align: right;
         margin: -15px 10px 0 0;
     }
-    label, .ecs-Autocomplete, .ecs-TextAreaToolbar {
+    label, .ecs-TextAreaToolbar {
         display: inline-block;
     }
     label {
@@ -304,13 +301,6 @@ ul.thread {
     .ecs-TextAreaToolbar {
         margin-left: 10px;
         vertical-align: bottom;
-    }
-    .ecs-Autocomplete {
-        display: block;
-
-        input[type="text"] {
-            width: 300px;
-        }
     }
     .boilerplate_selector {
         left: 80px;
