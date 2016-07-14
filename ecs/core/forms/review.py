@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField
 from ecs.utils.formutils import require_fields
 
 
@@ -33,6 +32,14 @@ class CategorizationForm(ReadonlyFormMixin, forms.ModelForm):
         return cd
 
 
-class BiasedBoardMembersReviewForm(forms.Form):
-    biased_board_members = AutocompleteModelMultipleChoiceField(
-        'board-members', User.objects, required=False)
+class BiasedBoardMemberForm(forms.Form):
+    biased_board_member = forms.ModelChoiceField(queryset=User.objects
+        .filter(is_active=True, groups__name='Board Member')
+        .select_related('profile')
+        .order_by('last_name', 'first_name', 'email'))
+
+    def __init__(self, *args, submission=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        f = self.fields['biased_board_member']
+        f.queryset = f.queryset.exclude(
+            id__in=submission.biased_board_members.values('id'))

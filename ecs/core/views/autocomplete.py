@@ -12,8 +12,6 @@ def autocomplete(request, queryset_name=None):
     USER_QUERY = {
         'users': Q(),
         'internal-users': Q(profile__is_internal=True),
-        'board-members': Q(
-            groups__name__in=['Board Member', 'EC-Executive Board Member']),
         'pki-users':
             Q(profile__is_internal=True) | Q(profile__is_omniscient_member=True),
     }

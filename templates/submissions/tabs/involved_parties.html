@@ -90,5 +90,5 @@
 
 {% if user.profile.is_internal %}
     <h3>{% trans "Biased Parties" %}</h3>
-    <div data-widget-url="{% url 'ecs.core.views.submissions.biased_board_members_review' submission_pk=submission.pk %}"></div>
+    <div data-widget-url="{% url 'ecs.core.views.submissions.biased_board_members' submission_pk=submission.pk %}"></div>
 {% endif %}

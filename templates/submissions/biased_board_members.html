@@ -9,6 +9,7 @@
                 <th>{% trans 'E-Mail' %}</th>
                 <th>{% trans 'Assigned Tasks' %}</th>
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -30,6 +31,9 @@
                             {% trans "Send Message" %}
                         </a>
                     </td>
+                    <td>
+                        <a class="fa fa-ban text-danger open-in-widget" href="{% url 'ecs.core.views.submissions.remove_biased_board_member' submission_pk=submission.pk user_pk=user.pk %}"></a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -38,27 +42,12 @@
     <em>{% trans 'No board members selected.' %}</em>
 {% endif %}
 
-<a data-toggle="collapse" href="#biased_board_members_review_form">
-    <span class="fa fa-pencil"></span>
-    {% trans 'edit' %}
-</a>
-
-<div id="biased_board_members_review_form" class="collapse">
-    <form action="{{ request.path }}" method="POST" class="open-in-widget">
-        {% csrf_token %}
-        {{ form.biased_board_members }}
-        <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'save' %}"/>
-    </form>
-</div>
+<form action="{{ request.path }}" method="POST" class="open-in-widget">
+    {% csrf_token %}
+    {{ form.biased_board_member }}
+    <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'Add' %}"/>
+</form>
 
 <script type="text/javascript">
-    /*
-     * Initialize select2 the first time the form is shown. Otherwise
-     * select2 exhibits display bugs due to the target element not being
-     * visible.
-     */
-    $('#biased_board_members_review_form').one('shown.bs.collapse', function(){
-        $('#{{ form.biased_board_members.id_for_label|escapejs }}').select2(
-            {'width': '100%', 'minimumInputLength': 3});
-    });
+    $('#{{ form.biased_board_member.id_for_label|escapejs }}').select2();
 </script>

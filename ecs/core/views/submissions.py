@@ -31,7 +31,7 @@ from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFo
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm, SubmissionWidgetFilterForm, 
     PresenterChangeForm, SusarPresenterChangeForm, AssignedSubmissionsFilterForm, MySubmissionsFilterForm, AllSubmissionsFilterForm)
-from ecs.core.forms.review import CategorizationForm, BiasedBoardMembersReviewForm
+from ecs.core.forms.review import CategorizationForm, BiasedBoardMemberForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
@@ -414,7 +414,7 @@ def paper_submission_review(request, submission_pk=None):
 
 
 @user_flag_required('is_internal')
-def biased_board_members_review(request, submission_pk=None):
+def biased_board_members(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     biased_users = list(submission.biased_board_members.select_related('profile').order_by(
         'last_name', 'first_name', 'email'))
@@ -434,19 +434,26 @@ def biased_board_members_review(request, submission_pk=None):
                     user.assigned_tasks = list(assigned_tasks)
                     break
 
-    form = BiasedBoardMembersReviewForm(request.POST or None,
-        prefix='biased_board_members_review')
-    form.fields['biased_board_members'].initial = biased_users
+    form = BiasedBoardMemberForm(request.POST or None, submission=submission,
+        prefix='add_biased_board_member')
 
     if request.method == 'POST' and form.is_valid():
-        submission.biased_board_members = form.cleaned_data['biased_board_members']
-        return redirect('ecs.core.views.submissions.biased_board_members_review',
+        submission.biased_board_members.add(form.cleaned_data['biased_board_member'])
+        return redirect('ecs.core.views.submissions.biased_board_members',
             submission_pk=submission_pk)
-    return render(request, 'submissions/biased_board_members_review_form.html', {
+    return render(request, 'submissions/biased_board_members.html', {
         'submission': submission,
         'biased_users': biased_users,
         'form': form,
     })
+
+
+@user_flag_required('is_internal')
+def remove_biased_board_member(request, submission_pk=None, user_pk=None):
+    submission = get_object_or_404(Submission, pk=submission_pk)
+    submission.biased_board_members.remove(user_pk)
+    return redirect('ecs.core.views.submissions.biased_board_members',
+        submission_pk=submission_pk)
 
 
 @with_task_management
