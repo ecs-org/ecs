@@ -40,7 +40,7 @@ class Submission(models.Model):
     ec_number = models.PositiveIntegerField(unique=True, db_index=True)
     medical_categories = models.ManyToManyField('core.MedicalCategory', related_name='submissions', blank=True)
     workflow_lane = models.SmallIntegerField(null=True, choices=SUBMISSION_LANE_CHOICES, db_index=True)
-    remission = models.NullBooleanField(default=False)
+    remission = models.BooleanField(default=False)
     biased_board_members = models.ManyToManyField(User, blank=True, related_name='biased_for_submissions')
 
     invite_primary_investigator_to_meeting = models.BooleanField(default=False)

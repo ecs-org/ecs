@@ -39,11 +39,6 @@ class TimeField(forms.TimeField):
         kwargs.setdefault('widget', LooseTimeWidget())
         super(TimeField, self).__init__(*args, **kwargs)
         
-class BooleanWidget(forms.widgets.Select):
-    def __init__(self, attrs=None):
-        choices = ((True, _('Yes')), (False, _('No')))
-        super(BooleanWidget, self).__init__(attrs, choices)
-
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):
         choices = (('1', '-'), ('2', _('Yes')), ('3', _('No')))

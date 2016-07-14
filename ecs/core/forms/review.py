@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
-from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField, BooleanWidget
+from ecs.core.forms.fields import AutocompleteModelMultipleChoiceField
 from ecs.utils.formutils import require_fields
 
 
@@ -16,9 +16,6 @@ class CategorizationForm(ReadonlyFormMixin, forms.ModelForm):
             'workflow_lane', 'medical_categories', 'remission',
             'invite_primary_investigator_to_meeting',
         )
-        widgets = {
-            'remission': BooleanWidget,
-        }
         labels = {
             'workflow_lane': _('workflow lane'),
             'medical_categories': _('medical_categories'),
