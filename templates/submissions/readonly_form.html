@@ -73,9 +73,9 @@
                 <a href="#categorization_review_tab"{% if not categorization_review_form.readonly %} class="readonly_review active"{% endif %}>{% trans "Categorization Review" %}</a>
             {% endif %}
             {% if user.profile.show_worklow_widget %}
-                <a href="#workflow_tab">{% trans 'Workflow' %}</a>
+                <a href="#tasks_tab">{% trans 'Tasks' %}</a>
                 {% if user.profile.is_internal %}
-                    <a href="#workflow_log">{% trans 'Workflow Log' %}</a>
+                    <a href="#workflow_log">{% trans 'Workflow' %}</a>
                 {% endif %}
             {% endif %}
             {% if not user|is_presenting_party:submission_form %}
@@ -274,7 +274,7 @@
         </div>
     {% endif %}
     {% if user.profile.show_worklow_widget %}
-        <div id="workflow_tab" class="tab collapse">
+        <div id="tasks_tab" class="tab collapse">
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>
         {% if user.profile.is_internal %}
