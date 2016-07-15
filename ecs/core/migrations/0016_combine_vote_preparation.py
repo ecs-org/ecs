@@ -38,7 +38,7 @@ def combine_vote_preparation(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0015_combine_initial_review'),
+        ('core', '0015_remove_initial_thesis_review_barrier'),
         ('users', '0008_remove_userprofile_is_thesis_reviewer'),
         ('auth', '0006_require_contenttypes_0002'),
         ('workflow', '0001_initial'),

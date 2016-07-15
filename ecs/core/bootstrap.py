@@ -6,6 +6,7 @@ from ecs import bootstrap
 from ecs.core.models import Submission, MedicalCategory, EthicsCommission, AdvancedSettings
 from ecs.checklists.models import ChecklistBlueprint
 from ecs.utils import Args
+from ecs.workflow.patterns import Generic
 from ecs.integration.utils import setup_workflow_graph
 from ecs.users.utils import get_or_create_user, get_user
 from ecs.core.workflow import (
@@ -56,11 +57,13 @@ def submission_workflow():
     setup_workflow_graph(Submission,
         auto_start=True,
         nodes={
+            'start': Args(Generic, start=True, name="Start"),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
             'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
-            'initial_review': Args(InitialReview, start=True, group=OFFICE_GROUP, name=_("Initial Review")),
+            'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
+            'initial_review_barrier': Args(Generic, name="Initial Review Barrier"),
             'categorization': Args(Categorization, group=EXECUTIVE_GROUP, name=_("Categorization")),
             'categorization_review': Args(CategorizationReview, group=OFFICE_GROUP, name=_("Categorization Review")),
             'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
@@ -71,6 +74,7 @@ def submission_workflow():
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP, is_dynamic=True),
 
             # retrospective thesis lane
+            'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=OFFICE_GROUP),
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
             'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
@@ -85,10 +89,15 @@ def submission_workflow():
             'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
         },
         edges={
-            ('initial_review', 'resubmission'): Args(guard=is_acknowledged, negated=True),
-            ('initial_review', 'categorization'): Args(guard=is_acknowledged_and_initial_submission),
+            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
+            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
+
+            ('initial_review', 'initial_review_barrier'): None,
+            ('initial_thesis_review', 'initial_review_barrier'): None,
+            ('initial_review_barrier', 'resubmission'): Args(guard=is_acknowledged, negated=True),
+            ('initial_review_barrier', 'categorization'): Args(guard=is_acknowledged_and_initial_submission),
             ('categorization', 'categorization_review'): Args(guard=needs_categorization_review),
-            ('initial_review', 'paper_submission_review'): Args(guard=is_acknowledged_and_initial_submission),
+            ('initial_review_barrier', 'paper_submission_review'): Args(guard=is_acknowledged_and_initial_submission),
             ('b2_resubmission', 'b2_review'): None,
             ('b2_review', 'executive_b2_review'): Args(guard=needs_executive_b2_review),
             ('b2_review', 'b2_resubmission'): Args(guard=is_still_b2),

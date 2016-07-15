@@ -117,7 +117,7 @@ def on_initial_review(sender, **kwargs):
 
 LANE_TASKS = {
     SUBMISSION_LANE_RETROSPECTIVE_THESIS : (
-        'initial_thesis_review',        # XXX: compat
+        'initial_thesis_review',
         'thesis_recommendation',
         'thesis_recommendation_review',
         'thesis_vote_preparation',      # XXX: compat
@@ -155,7 +155,6 @@ def on_categorization(sender, **kwargs):
             if not submission.workflow_lane == lane:
                 tasks.filter(task_type__workflow_node__uid__in=uids).mark_deleted()
 
-        # XXX: compat
         if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
             for task in tasks.filter(task_type__workflow_node__uid='initial_review'):
                 if task.workflow_node.graph.nodes.filter(uid='initial_thesis_review').exists():

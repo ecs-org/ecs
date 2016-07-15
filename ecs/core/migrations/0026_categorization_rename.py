@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0026_remove_start_node'),
+        ('core', '0025_workflow_cleanup'),
         ('docstash', '0008_remove_empty_POST'),
         ('tasks', '0008_auto_20160621_0926'),
         ('workflow', '0001_initial'),

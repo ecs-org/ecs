@@ -12,7 +12,7 @@ from ecs.core.signals import on_initial_review, on_categorization, on_b2_upgrade
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
-from ecs.tasks.utils import block_duplicate_task
+from ecs.tasks.utils import block_duplicate_task, block_if_task_exists
 
 register(Submission, autostart_if=lambda s, created: bool(s.current_submission_form_id) and not s.workflow and not s.is_transient)
 
@@ -24,9 +24,12 @@ def is_acknowledged(wf):
     return wf.data.newest_submission_form.is_acknowledged
 
 @guard(model=Submission)
+def is_initial_submission(wf):
+    return wf.data.forms.filter(is_acknowledged=True).count() == 1
+
+@guard(model=Submission)
 def is_acknowledged_and_initial_submission(wf):
-    return is_acknowledged(wf) and \
-        wf.data.forms.filter(is_acknowledged=True).count() == 1
+    return is_acknowledged(wf) and is_initial_submission(wf)
 
 ###############
 # lane guards #
@@ -58,6 +61,11 @@ def has_localec_recommendation(wf):
 # review guards #
 #################
 @guard(model=Submission)
+@block_if_task_exists('paper_submission_review')
+def needs_paper_submission_review(wf):
+    return True
+
+@guard(model=Submission)
 @block_duplicate_task('vote_preparation')
 @block_duplicate_task('expedited_vote_preparation')     # XXX: compat
 def needs_expedited_vote_preparation(wf):
@@ -73,6 +81,11 @@ def needs_expedited_recategorization(wf):
         unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
         negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
         return not unfinished and negative.exists()
+
+@guard(model=Submission)
+def has_expedited_recommendation(wf):
+    ''' legacy: to be removed '''
+    return not needs_expedited_recategorization(wf)
 
 @guard(model=Submission)
 @block_duplicate_task('localec_recommendation')
@@ -333,3 +346,12 @@ class VotePreparation(Activity):
 
     def get_url(self):
         return reverse('ecs.core.views.submissions.vote_preparation', kwargs={'submission_form_pk': self.workflow.data.current_submission_form_id})
+
+
+### to be deleted
+class WaitForMeeting(Generic):
+    class Meta:
+        model = Submission
+
+    def is_locked(self):
+        return True

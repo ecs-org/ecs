@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0025_remove_insurance_b2_review'),
-        ('core', '0028_auto_20160714_1619'),
+        ('core', '0027_auto_20160714_1619'),
     ]
 
     operations = [
