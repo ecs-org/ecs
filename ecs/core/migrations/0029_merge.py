@@ -7,9 +7,8 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('votes', '0005_remove_vote_insurance_review_required'),
-        ('votes', '0005_auto_20160712_1725'),
-        ('votes', '0005_remove_start_node'),
+        ('core', '0025_remove_insurance_b2_review'),
+        ('core', '0028_auto_20160714_1619'),
     ]
 
     operations = [
