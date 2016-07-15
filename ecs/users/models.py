@@ -68,7 +68,6 @@ class UserProfile(models.Model):
             'EC-Paper Submission Reviewer',
             'EC-Safety Report Reviewer',
             'Local-EC Reviewer',
-            'EC-Vote Preparation',
             'External Review Reviewer',
         })
         self.has_explicit_workflow = bool(groups - {
