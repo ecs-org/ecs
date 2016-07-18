@@ -72,12 +72,22 @@ in addition to the usual steps. In chronological order:
 	# Fake apply initial migrations. Answer 'no' when asked whether to
 	# delete stale content types. Ignore the error messages regarding the
 	# failed creation of content types.
-	$ for app in auth admin contenttypes sessions sites reversion \
+	$ for app in auth admin contenttypes sessions sites \
 		boilerplate docstash documents help meetings notifications \
 		pki scratchpad tracking users votes workflow
 	  do
 		./manage.py migrate --fake $app 0001_initial
 	  done
+
+	# For fake-applying the initial migration of the reversion app, we first
+	# have to move the squashed migration aside, in order for the
+	# (intermediate) target migration to show up.
+	$ p="$(python -c 'import sys; print(sys.path[-1])')"
+	$ f="$p/reversion/migrations/0001_squashed_0004_auto_20160611_1202.py"
+	$ mv "$f" "$f.disabled"
+	$ ./manage.py migrate --fake reversion 0001_initial
+	$ mv "$f.disabled" "$f"
+
 	$ ./manage.py migrate --fake billing 0002_auto_20151217_1249
 	$ ./manage.py migrate --fake checklists 0002_auto_20151217_1249
 	$ ./manage.py migrate --fake communication 0003_auto_20151217_1249
