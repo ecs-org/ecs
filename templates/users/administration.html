@@ -11,6 +11,7 @@
     <ul class="useradministration_choose">
         <li><label for="id_activity">{% trans "Activity" %}:</label> {{ filterform.activity }}</li>
         <li><label for="id_groups">{% trans "Groups" %}:</label> {{ filterform.groups }}</li>
+        <li><label for="id_task_types">{% trans "Task Types" %}:</label> {{ filterform.task_types }}</li>
         <li><label for="id_medical_categories">{% trans "Medical Categories" %}:</label> {{ filterform.medical_categories }}</li>
         <li><label for="id_keyword">{% trans "Name/Email" %}:</label> {{ filterform.keyword }}</li>
         <li><input type="submit" value="suchen" title="suchen" /></li>
@@ -93,7 +94,7 @@
                 });
             });
 
-            $('#id_groups, #id_medical_categories').select2();
+            $('#id_groups, #id_task_types, #id_medical_categories').select2();
         });
     </script>
 {% endblock %}

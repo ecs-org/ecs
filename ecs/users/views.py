@@ -327,6 +327,12 @@ def administration(request, limit=20):
     if filterform.cleaned_data['medical_categories']:
         users = users.filter(medical_categories__in=filterform.cleaned_data['medical_categories'])
 
+    if filterform.cleaned_data['task_types']:
+        users = users.filter(profile__task_uids__overlap=list(
+            filterform.cleaned_data['task_types']
+                .values_list('workflow_node__uid', flat=True)
+        ))
+
     keyword = filterform.cleaned_data['keyword']
     if keyword:
         keyword_q = Q(username__icontains=keyword) | Q(email__icontains=keyword)
@@ -353,6 +359,7 @@ def administration(request, limit=20):
     userfilter = filterform.cleaned_data
     userfilter['groups'] = list(userfilter['groups'].values_list('pk', flat=True))
     userfilter['medical_categories'] = list(userfilter['medical_categories'].values_list('pk', flat=True))
+    userfilter['task_types'] = list(userfilter['task_types'].values_list('pk', flat=True))
     usersettings.useradministration_filter = userfilter
     usersettings.save()
 

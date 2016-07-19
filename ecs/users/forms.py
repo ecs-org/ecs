@@ -12,6 +12,7 @@ from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_user, create_user
 from ecs.users.models import LOGIN_HISTORY_TYPES
 from ecs.meetings.models import AssignedMedicalCategory
+from ecs.tasks.models import TaskType
 
 
 class EmailLoginForm(forms.Form):
@@ -134,6 +135,13 @@ class AdministrationFilterForm(forms.Form):
     ))
     groups = forms.ModelMultipleChoiceField(
         required=False, queryset=Group.objects.all())
+    task_types = forms.ModelMultipleChoiceField(required=False,
+        queryset=TaskType.objects
+            .filter(group__name__in=(
+                'EC-Executive Board Member', 'EC-Office', 'EC-Signing'))
+            .order_by('workflow_node__uid', '-pk')
+            .distinct('workflow_node__uid')
+    )
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all())
     page = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -144,6 +152,14 @@ class UserDetailsForm(forms.ModelForm):
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
     first_name = forms.CharField(max_length=User._meta.get_field('first_name').max_length, label=_('First name'))
     last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
+    task_types = forms.ModelMultipleChoiceField(required=False,
+        queryset=TaskType.objects
+            .filter(group__name__in=(
+                'EC-Executive Board Member', 'EC-Office', 'EC-Signing'))
+            .order_by('workflow_node__uid', '-pk')
+            .distinct('workflow_node__uid'),
+        label=_('Task Types')
+    )
     medical_categories = forms.ModelMultipleChoiceField(
         required=False, queryset=MedicalCategory.objects.all(),
         label=_('Medical Categories'))
@@ -152,7 +168,7 @@ class UserDetailsForm(forms.ModelForm):
         model = User
         fields = (
             'gender', 'title', 'first_name', 'last_name', 'groups',
-            'medical_categories',
+            'task_types', 'medical_categories',
         )
 
     def __init__(self, *args, **kwargs):
@@ -161,6 +177,11 @@ class UserDetailsForm(forms.ModelForm):
             profile = self.instance.profile
             self.fields['gender'].initial = profile.gender
             self.fields['title'].initial = profile.title
+            self.fields['task_types'].initial = (
+                self.fields['task_types'].queryset
+                    .filter(workflow_node__uid__in=profile.task_uids)
+                    .values_list('pk', flat=True)
+            )
             self.fields['medical_categories'].initial = \
                 self.instance.medical_categories.values_list('pk', flat=True)
 
@@ -178,6 +199,8 @@ class UserDetailsForm(forms.ModelForm):
         profile.gender = self.cleaned_data['gender']
         profile.title = self.cleaned_data['title']
         profile.update_flags()
+        profile.task_uids = list(self.cleaned_data['task_types'].values_list(
+            'workflow_node__uid', flat=True))
         profile.save()
         return user
 
