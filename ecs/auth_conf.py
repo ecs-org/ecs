@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
@@ -6,7 +7,7 @@ from ecs.core.models import (Submission, SubmissionForm, Investigator, Investiga
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
-from ecs.tasks.models import Task
+from ecs.tasks.models import Task, TaskType
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
@@ -56,7 +57,14 @@ authorization.register(Vote, factory=VoteQFactory)
 
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
-        q = self.make_q(task_type__group__in=user.groups.values('pk')) & (
+        task_types = TaskType.objects.filter(
+            ~Q(group__name__in=(
+                'EC-Executive Board Member', 'EC-Office', 'EC-Signing')) |
+            Q(workflow_node__uid__in=user.profile.task_uids),
+            group__in=user.groups.values('pk')
+        )
+
+        q = self.make_q(task_type__in=task_types.values('pk')) & (
             self.make_q(assigned_to=None) |
             self.make_q(assigned_to__profile__is_indisposed=True)
         ) & (

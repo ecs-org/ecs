@@ -172,7 +172,7 @@ class NotificationFormTest(LoginTestCase):
         executive = self.create_user('text_executive', profile_extra={'is_internal': True, 'is_executive_board_member': True})
         executive.groups.add(
             Group.objects.get(name='EC-Executive Board Member'),
-            Group.objects.get(name='EC-Notification Reviewer'),
+            Group.objects.get(name='EC-Office'),
         )
 
         sf = create_submission_form(presenter=presenter)

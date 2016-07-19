@@ -82,16 +82,14 @@ def notification_types():
 def notification_workflow():
     EXECUTIVE_GROUP = 'EC-Executive Board Member'
     OFFICE_GROUP = 'EC-Office'
-    NOTIFICATION_REVIEW_GROUP = 'EC-Notification Reviewer'
     SIGNING_GROUP = 'EC-Signing'
-    SAFETY_GROUP = 'EC-Safety Report Reviewer'
-    INSURANCE_GROUP = 'EC-Insurance Reviewer'
+    INSURANCE_GROUP = 'Insurance Reviewer'
 
     setup_workflow_graph(Notification,
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name=_('Start')),
-            'safety_review': Args(SafetyNotificationReview, group=SAFETY_GROUP, name=_('Safety Review')),
+            'safety_review': Args(SafetyNotificationReview, group=OFFICE_GROUP, name=_('Safety Review')),
             'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
@@ -101,7 +99,7 @@ def notification_workflow():
 
             # amendments
             'initial_amendment_review': Args(InitialAmendmentReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
-            'notification_group_review': Args(AmendmentReview, group=NOTIFICATION_REVIEW_GROUP, name=_('Amendment Review')),
+            'notification_group_review': Args(AmendmentReview, group=OFFICE_GROUP, name=_('Amendment Review')),
             'executive_amendment_review': Args(AmendmentReview, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
             'insurance_group_review': Args(SimpleNotificationReview, group=INSURANCE_GROUP, name=_('Amendment Review')),
             'office_insurance_review': Args(EditNotificationAnswer, group=OFFICE_GROUP, name=_('Amendment Review')),

@@ -29,7 +29,7 @@ class Command(BaseCommand):
             raise CommandError("nobody to remove")
 
         group = Group.objects.get(name='Userswitcher Target')
-        boardmember_group = Group.objects.get(name="EC-Board Member")
+        boardmember_group = Group.objects.get(name='Board Member')
         internal_users = User.objects.filter(profile__is_internal=True).exclude(profile__is_testuser=True)
         testusers = User.objects.filter(profile__is_testuser=True)
         boardmembers = User.objects.filter(groups=boardmember_group.id)

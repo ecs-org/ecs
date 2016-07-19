@@ -4,6 +4,7 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django_extensions.db.fields.json import JSONField
 from django.utils.translation import ugettext_lazy as _
 
@@ -48,33 +49,27 @@ class UserProfile(models.Model):
     # 0 = never send messages, is editable via profile, activate via registration sets this to 5 minutes
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
 
+    task_uids = ArrayField(models.CharField(max_length=100), default=list)
+
     def __str__(self):
         return str(self.user)
 
     def update_flags(self):
         groups = set(self.user.groups.values_list('name', flat=True))
-        self.is_board_member = 'EC-Board Member' in groups
+        self.is_board_member = 'Board Member' in groups
         self.is_resident_member = 'Resident Board Member' in groups
         self.is_omniscient_member = 'Omniscient Board Member' in groups
         self.is_executive_board_member = 'EC-Executive Board Member' in groups
-        self.is_insurance_reviewer = 'EC-Insurance Reviewer' in groups
+        self.is_insurance_reviewer = 'Insurance Reviewer' in groups
         self.is_internal = bool(groups & {
-            'EC-Office',
-            'EC-Internal Reviewer',
             'EC-Executive Board Member',
+            'EC-Office',
             'EC-Signing',
-            'EC-Notification Reviewer',
-            'EC-Thesis Executive Group',
-            'EC-B2 Reviewer',
-            'EC-Paper Submission Reviewer',
-            'EC-Safety Report Reviewer',
-            'Local-EC Reviewer',
-            'External Review Reviewer',
         })
         self.has_explicit_workflow = bool(groups - {
             'External Reviewer',
-            'Userswitcher Target',
             'Meeting Protocol Receiver',
+            'Userswitcher Target',
         })
 
     def show_worklow_widget(self):

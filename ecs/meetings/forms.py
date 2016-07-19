@@ -101,7 +101,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
 
         self.fields['board_member'].queryset = User.objects.filter(
             is_active=True, medical_categories=self.instance.category,
-            groups__name='EC-Board Member'
+            groups__name='Board Member'
         ).order_by('email')
 
     def _gen_submission_info(self):

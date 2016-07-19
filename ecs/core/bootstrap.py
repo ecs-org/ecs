@@ -42,17 +42,12 @@ def submission_workflow():
     boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
 
-    THESIS_EXECUTIVE_GROUP = 'EC-Thesis Executive Group'
-    LOCALEC_REVIEW_GROUP = 'Local-EC Reviewer'
     EXECUTIVE_GROUP = 'EC-Executive Board Member'
     OFFICE_GROUP = 'EC-Office'
-    BOARD_MEMBER_GROUP = 'EC-Board Member'
-    INSURANCE_REVIEW_GROUP = 'EC-Insurance Reviewer'
-    STATISTIC_REVIEW_GROUP = 'EC-Statistic Reviewer'
-    INTERNAL_REVIEW_GROUP = 'EC-Internal Reviewer'
+    BOARD_MEMBER_GROUP = 'Board Member'
+    INSURANCE_REVIEW_GROUP = 'Insurance Reviewer'
+    STATISTIC_REVIEW_GROUP = 'Statistic Reviewer'
     GCP_REVIEW_GROUP = 'GCP Reviewer'
-    PAPER_GROUP = 'EC-Paper Submission Reviewer'
-    B2_REVIEW_GROUP = 'EC-B2 Reviewer'
 
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -60,14 +55,14 @@ def submission_workflow():
             'start': Args(Generic, start=True, name="Start"),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
-            'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=B2_REVIEW_GROUP),
+            'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=OFFICE_GROUP),
             'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'initial_review_barrier': Args(Generic, name="Initial Review Barrier"),
             'categorization': Args(Categorization, group=EXECUTIVE_GROUP, name=_("Categorization")),
             'categorization_review': Args(CategorizationReview, group=OFFICE_GROUP, name=_("Categorization Review")),
-            'paper_submission_review': Args(PaperSubmissionReview, group=PAPER_GROUP, name=_("Paper Submission Review")),
-            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=INTERNAL_REVIEW_GROUP, is_dynamic=True),
+            'paper_submission_review': Args(PaperSubmissionReview, group=OFFICE_GROUP, name=_("Paper Submission Review")),
+            'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=OFFICE_GROUP, is_dynamic=True),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP, is_dynamic=True),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP, is_dynamic=True),
             'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP, is_delegatable=False, is_dynamic=True),
@@ -75,7 +70,7 @@ def submission_workflow():
 
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=OFFICE_GROUP),
-            'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=THESIS_EXECUTIVE_GROUP),
+            'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=OFFICE_GROUP),
             'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
             # expedited_lane
@@ -83,7 +78,7 @@ def submission_workflow():
             'expedited_recommendation': Args(ChecklistReview, data=expedited_review_checklist_blueprint, name=_("Expedited Recommendation"), group=BOARD_MEMBER_GROUP),
 
             # local ec lane
-            'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=LOCALEC_REVIEW_GROUP),
+            'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=EXECUTIVE_GROUP),
 
             # retrospective thesis, expedited and local ec lanes
             'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
@@ -127,27 +122,19 @@ def submission_workflow():
 @bootstrap.register()
 def auth_groups():
     groups = (
-        'EC-Office',
-        'EC-Internal Reviewer',
+        'Board Member',
         'EC-Executive Board Member',
+        'EC-Office',
         'EC-Signing',
-        'EC-Statistic Reviewer',
-        'EC-Notification Reviewer',
-        'EC-Insurance Reviewer',
-        'EC-Thesis Executive Group',
-        'EC-B2 Reviewer',
-        'EC-Paper Submission Reviewer',
-        'EC-Safety Report Reviewer',
-        'Local-EC Reviewer',
-        'EC-Board Member',
-        'GCP Reviewer',
-        'Userswitcher Target',
         'External Reviewer',
-        'External Review Reviewer',
-        'Meeting Protocol Receiver',
-        'Resident Board Member',
-        'Omniscient Board Member',
+        'GCP Reviewer',
         'Help Writer',
+        'Insurance Reviewer',
+        'Meeting Protocol Receiver',
+        'Omniscient Board Member',
+        'Resident Board Member',
+        'Statistic Reviewer',
+        'Userswitcher Target',
     )
     for group in groups:
         Group.objects.get_or_create(name=group)
@@ -258,8 +245,14 @@ def auth_user_developers():
         user.profile.save()
 
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',
-    'ecs.core.bootstrap.medical_categories'))
+@bootstrap.register(depends_on=(
+    'ecs.core.bootstrap.auth_groups',
+    'ecs.core.bootstrap.medical_categories',
+    'ecs.checklists.bootstrap.checklist_workflow',
+    'ecs.core.bootstrap.submission_workflow',
+    'ecs.notifications.bootstrap.notification_workflow',
+    'ecs.votes.bootstrap.vote_workflow',
+))
 def auth_user_testusers():
     ''' Test User Creation, target to userswitcher'''
     testusers = (
@@ -267,23 +260,15 @@ def auth_user_testusers():
         ('sponsor', None),
         ('investigator', None),
         ('office', 'EC-Office'),
-        ('internal.rev', 'EC-Internal Reviewer'),
         ('executive', 'EC-Executive Board Member'),
-        ('thesis.executive', 'EC-Thesis Executive Group'),
         ('signing', 'EC-Signing'),
         ('signing_fail', 'EC-Signing'),
         ('signing_mock', 'EC-Signing'),
-        ('statistic.rev', 'EC-Statistic Reviewer'),
-        ('notification.rev', 'EC-Notification Reviewer'),
-        ('insurance.rev', 'EC-Insurance Reviewer'),
+        ('statistic.rev', 'Statistic Reviewer'),
+        ('insurance.rev', 'Insurance Reviewer'),
         ('external.reviewer', None),
         ('gcp.reviewer', 'GCP Reviewer'),
-        ('localec.rev', 'Local-EC Reviewer'),
-        ('b2.rev', 'EC-B2 Reviewer'),
         ('ext.rev', 'External Reviewer'),
-        ('ext.rev.rev', 'External Review Reviewer'),
-        ('paper.rev', 'EC-Paper Submission Reviewer'),
-        ('safety.rev', 'EC-Safety Report Reviewer'),
     )
 
     boardtestusers = (
@@ -299,14 +284,21 @@ def auth_user_testusers():
     )
 
     userswitcher_group = Group.objects.get(name='Userswitcher Target')
-    boardmember_group = Group.objects.get(name='EC-Board Member')
+    boardmember_group = Group.objects.get(name='Board Member')
     help_writer_group = Group.objects.get(name='Help Writer')
 
-    for testuser, testgroup in testusers:
+    for testuser, group in testusers:
         for number in range(1,4):
             user, created = get_or_create_user('{0}{1}@example.org'.format(testuser, number))
-            if testgroup:
-                user.groups.add(Group.objects.get(name=testgroup))
+            if group:
+                group = Group.objects.get(name=group)
+                user.groups.add(group)
+                if group.name in ('EC-Executive Board Member', 'EC-Office', 'EC-Signing'):
+                    uids = set(user.profile.task_uids)
+                    uids.update(group.task_types.values_list(
+                        'workflow_node__uid', flat=True).distinct())
+                    user.profile.task_uids = list(uids)
+
             user.groups.add(userswitcher_group)
             if number == 3:
                 # XXX set every third userswitcher user to be included in help_writer group
