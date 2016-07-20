@@ -366,7 +366,6 @@ def administration(request, limit=20):
     return render(request, 'users/administration.html', {
         'users': users,
         'filterform': filterform,
-        'form_id': 'useradministration_filter_%s' % random.randint(1000000, 9999999),
         'active': 'user_administration',
     })
 

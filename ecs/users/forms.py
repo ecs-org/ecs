@@ -132,20 +132,21 @@ class AdministrationFilterForm(forms.Form):
         ('both', _('Both')),
         ('active', _('active')),
         ('inactive', _('inactive')),
-    ))
-    groups = forms.ModelMultipleChoiceField(
-        required=False, queryset=Group.objects.all())
+    ), label=_('Activity'))
+    groups = forms.ModelMultipleChoiceField(required=False,
+        queryset=Group.objects.all(), label=_('Groups'))
     task_types = forms.ModelMultipleChoiceField(required=False,
         queryset=TaskType.objects
             .filter(group__name__in=(
                 'EC-Executive Board Member', 'EC-Office', 'EC-Signing'))
             .order_by('workflow_node__uid', '-pk')
-            .distinct('workflow_node__uid')
+            .distinct('workflow_node__uid'),
+        label=_('Task Types')
     )
-    medical_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=MedicalCategory.objects.all())
+    medical_categories = forms.ModelMultipleChoiceField(required=False,
+        queryset=MedicalCategory.objects.all(), label=_('Medical Categories'))
+    keyword = forms.CharField(required=False, label=_('Name/Email'))
     page = forms.CharField(required=False, widget=forms.HiddenInput())
-    keyword = forms.CharField(required=False)
 
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))

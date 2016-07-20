@@ -12,14 +12,12 @@
 <p><a href="{% url 'ecs.users.views.administration' %}">{% trans "Back to the List of Users" %}</a></p>
 <form action="" method="post">
     {% csrf_token %}
-    <div>
     <ol>
         {% for field in form %}
             {% include "forms/field.html" %}
         {% endfor %}
     </ol>
-    </div>
-    <span class="button"><input type="submit" value="Speichern" /></span>
+    <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'Save' %}" />
 </form>
 </div>
 {% endblock %}
