@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import random
+from collections import defaultdict
 
 from django.http import Http404, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -26,7 +27,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation, LoginHistory
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm, LoginHistoryFilterForm
 from ecs.users.utils import get_user, create_user, user_flag_required, user_group_required
-from ecs.communication.utils import send_system_message_template
+from ecs.communication.utils import send_message, send_system_message_template
 from ecs.utils.browserutils import UA
 from ecs.help.models import Page
 
@@ -284,14 +285,42 @@ def toggle_active(request, user_pk=None):
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
-    was_signing_user = user.groups.filter(name='EC-Signing').exists()
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
     if request.method == 'POST' and form.is_valid():
+        was_signing_user = user.groups.filter(name='EC-Signing').exists()
+        old_task_uids = set(user.profile.task_uids)
+
         user = form.save()
+
+        new_task_uids = set(user.profile.task_uids)
+        if old_task_uids != new_task_uids:
+            msgs = defaultdict(lambda: {'added': [], 'removed': []})
+            changed_task_types = form.fields['task_types'].queryset.filter(
+                workflow_node__uid__in=
+                    old_task_uids.symmetric_difference(new_task_uids)
+            )
+            for task_type in changed_task_types:
+                if task_type.workflow_node.uid in new_task_uids:
+                    what = 'added'
+                else:
+                    what = 'removed'
+                for u in task_type.group.user_set.filter(is_active=True):
+                    msgs[u][what].append(task_type)
+
+            for recipient, changes in msgs.items():
+                send_system_message_template(recipient,
+                    _('Division of work with {user}').format(user=user),
+                    'users/division_of_work.txt', {
+                        'user': user,
+                        'added': changes['added'],
+                        'removed': changes['removed'],
+                    })
+
         is_signing_user = user.groups.filter(name='EC-Signing').exists()
         if is_signing_user and not was_signing_user:
             for u in User.objects.filter(groups__name='EC-Signing'):
                 send_system_message_template(u, _('New Signing User'), 'users/new_signing_user.txt', {'user': user})
+
         messages.success(request, _('The change of the user has been saved.'))
 
     return render(request, 'users/details.html', {

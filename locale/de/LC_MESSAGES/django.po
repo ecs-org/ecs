@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-20 12:23+0200\n"
+"POT-Creation-Date: 2016-07-20 14:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1914,8 +1914,20 @@ msgstr "aktiv"
 msgid "inactive"
 msgstr "inaktiv"
 
+msgid "Activity"
+msgstr "Tätigkeit"
+
+msgid "Groups"
+msgstr "Gruppen"
+
+msgid "Task Types"
+msgstr "Aufgabenarten"
+
 msgid "Medical Categories"
 msgstr "Medizinische Kategorien"
+
+msgid "Name/Email"
+msgstr "Name/Email"
 
 #, python-brace-format
 msgid "{0} is a specialist in following meetings: {1}"
@@ -1968,6 +1980,10 @@ msgstr "ECS - Passwort zurücksetzen"
 #, python-brace-format
 msgid "{user} indisposed"
 msgstr "{user} verhindert"
+
+#, python-brace-format
+msgid "Division of work with {user}"
+msgstr "Arbeitsteilung mit {user}"
 
 msgid "New Signing User"
 msgstr "Neuer Zeichnungsberechtigter"
@@ -2677,9 +2693,6 @@ msgstr "<span class=\"text-success\">bestätigt</span> am %(publish_date)s"
 msgid "Created At"
 msgstr "Erstellt"
 
-msgid "Activity"
-msgstr "Tätigkeit"
-
 msgid "Group"
 msgstr "Gruppe"
 
@@ -3384,15 +3397,6 @@ msgstr "mehr"
 msgid "List of Users"
 msgstr "Liste der Benutzer"
 
-msgid "Groups"
-msgstr "Gruppen"
-
-msgid "Task Types"
-msgstr "Aufgabenarten"
-
-msgid "Name/Email"
-msgstr "Name/Email"
-
 msgid "phantom"
 msgstr "phantom"
 
@@ -3422,6 +3426,16 @@ msgstr "Zurücksetzen"
 
 msgid "Back to the List of Users"
 msgstr "Zurück zur Benutzer-Liste"
+
+#, python-format
+msgid "The assignment of task types for %(user)s has changed."
+msgstr "Die Zuordnung der Aufgaben für %(user)s hat sich geändert."
+
+msgid "Added task types"
+msgstr "Hinzugefügte Aufgabenarten"
+
+msgid "Removed task types"
+msgstr "Entfernte Aufgabenarten"
 
 #, python-format
 msgid ""
