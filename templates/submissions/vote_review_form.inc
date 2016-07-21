@@ -19,7 +19,7 @@
 {% with review_form.result as field %}
 {% if field %}
     <li>
-        <label for="{{ field.id_for_label }}">{% trans 'Vote' %}:</label> B{{ vote.result}}
+        <label for="{{ field.id_for_label }}">{% trans 'Vote' %}:</label> B{{ review_form.instance.result }}
         <a onclick="$(this).hide(); $('#vote_result_change').show(); return false;">{% trans 'change' %}</a>
     </li>
     <li id="vote_result_change" class="{{ field.field|type_name }}{% if field.errors %} errors{% endif %}" style="display:none;">

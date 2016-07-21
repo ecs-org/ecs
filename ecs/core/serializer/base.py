@@ -398,7 +398,7 @@ _serializers = {
             'study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject',
         ),
         exclude = (
-            'pdf_document', 'id', 'current_pending_vote', 'current_published_vote', 'primary_investigator', 'submitter', 'sponsor', 
+            'pdf_document', 'id', 'primary_investigator', 'submitter', 'sponsor',
             'presenter', 'is_transient', 'is_notification_update',
         ),
         follow = {

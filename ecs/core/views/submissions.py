@@ -170,14 +170,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     formsets = get_submission_formsets(
         initial=get_submission_formsets_initial(submission_form),
         readonly=True)
-    vote = submission_form.current_vote
     submission = submission_form.submission
-    profile = request.user.profile
-    if profile.is_internal or profile.is_insurance_reviewer:
-        try:
-            vote = submission.votes.get(is_draft=True, upgrade_for__isnull=False)
-        except Vote.DoesNotExist:
-            pass
 
     crumbs_key = 'submission_breadcrumbs-user_{0}'.format(request.user.pk)
     crumbs = cache.get(crumbs_key, [])
@@ -247,7 +240,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'submission_form': submission_form,
         'submission_forms': submission_forms,
         'current_form_idx': current_form_idx,
-        'vote': vote,
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
         'open_checklist': any(not f.readonly for c,f in checklist_reviews),
@@ -278,9 +270,11 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:
+        vote = submission.current_pending_vote or submission.current_published_vote
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
         context['categorization_form'] = CategorizationForm(instance=submission, readonly=True)
-        if profile.is_executive_board_member and submission.allows_categorization():
+        if request.user.profile.is_executive_board_member and \
+            submission.allows_categorization():
             reopen_task = Task.unfiltered.for_data(submission).filter(
                 task_type__workflow_node__uid='categorization',
                 deleted_at=None,
@@ -543,7 +537,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
 @with_task_management
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
-    vote = submission_form.current_vote
+    vote = submission_form.submission.current_pending_vote
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
@@ -565,12 +559,12 @@ def vote_review(request, submission_form_pk=None):
 @with_task_management
 def vote_preparation(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
+    vote = submission_form.submission.current_pending_vote
 
     # TODO: prevent race condition where new version is submitted while the
     # vote preparation is done
     assert submission_form.is_current
 
-    vote = submission_form.current_vote
     if submission_form.submission.is_expedited:
         blueprint_slug = 'expedited_review'
     elif submission_form.submission.is_localec:

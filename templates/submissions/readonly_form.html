@@ -213,7 +213,9 @@
     </div>
     {% if vote_review_form %}
         <div id="vote_review_tab" class="tab collapse">
-            <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
+            {% with vote=vote_review_form.instance %}
+                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
+            {% endwith %}
             <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
                 {% csrf_token %}
                 {% with vote_review_form as review_form %}
@@ -327,12 +329,12 @@
                 ]);
             });
             
-            {% if user.profile.is_internal and vote_review_form and vote %}
+            {% if user.profile.is_internal and vote_review_form and vote_review_form.instance.pk %}
                 $('form.review.vote .CharField textarea').each(function(){
                     ecs.textarea.installToolbarItem(this,
                         ecs.textarea.toolbarItems.versionHistory(
                             "{% trans 'History' %} ({{ vote_version }})",
-                            "{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}"
+                            "{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote_review_form.instance.pk %}"
                         )
                     );
                 });

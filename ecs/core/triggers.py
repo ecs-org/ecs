@@ -93,12 +93,12 @@ def on_initial_review(sender, **kwargs):
 
         send_submission_message(submission, submission.presenter, _('Acknowledgement of Receipt'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
-            current_vote = submission.current_submission_form.current_vote
-            if current_vote and current_vote.is_draft:
-                current_vote.submission_form = submission_form
-                current_vote.save()
+            pending_vote = submission.current_pending_vote
+            if pending_vote and pending_vote.is_draft:
+                pending_vote.submission_form = submission_form
+                pending_vote.save()
             submission_form.mark_current()
-            vote = submission.get_most_recent_vote(is_draft=False, published_at__isnull=False)
+            vote = submission.current_published_vote
             if vote and vote.is_recessed:
                 receivers = submission_form.get_presenting_parties().get_users()
                 with sudo():

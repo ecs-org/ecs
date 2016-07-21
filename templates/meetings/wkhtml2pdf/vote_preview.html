@@ -56,7 +56,7 @@
         <b>Ergänzende Kommentare {% if vote.top %} der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}:</b><br>
         <p>{{ vote.text|linebreaksbr }}</p>
     {% endfor %}
-    {{ submission.current_submission_form.current_published_vote.text|linebreaksbr }}
+    {{ submission.current_published_vote.text|linebreaksbr }}
 {% endif %}
 
 {% if vote.text %}

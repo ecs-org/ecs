@@ -406,15 +406,15 @@ class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
 
         qs = []
         if results:
-            q = Q(current_submission_form__current_published_vote__result__in=results)
+            q = Q(current_published_vote__result__in=results)
             if user.profile.is_internal:
-                q |= Q(current_submission_form__current_pending_vote__result__in=results)
+                q |= Q(current_pending_vote__result__in=results)
             qs.append(q)
 
         if self.cleaned_data['no_votes']:
-            q = ~Q(forms__current_published_vote__isnull=False)
+            q = Q(current_published_vote=None)
             if user.profile.is_internal:
-                q &= ~Q(forms__current_pending_vote__isnull=False)
+                q &= Q(current_pending_vote=None)
             qs.append(q & Q(current_submission_form__isnull=False))
 
         return submissions.filter(reduce(lambda x, y: x | y, qs))

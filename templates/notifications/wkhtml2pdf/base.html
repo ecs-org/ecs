@@ -32,7 +32,7 @@
 <tr>
     <td>{{ sf.submission.main_ethics_commission }}</td>
     <td>{{ sf.submission|ec_number }}</a></td>
-    <td>{{ sf.current_published_vote.signed_at|date:'d.m.Y' }}</td>
+    <td>{{ sf.submission.current_published_vote.signed_at|date:'d.m.Y' }}</td>
     <td>{{ sf.submission.primary_investigator.organisation|default:'<i>nicht vorhanden</i>' }}</td>
     <td>{{ sf.submission.primary_investigator.user|default:'<i>nicht vorhanden</i>' }}</td>
 </tr>

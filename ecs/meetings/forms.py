@@ -181,8 +181,8 @@ class ExpeditedVoteForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not self.instance.submission.current_submission_form.current_vote:
-            self.fields['accept_prepared_vote'].initial=False
+        if not self.instance.submission.current_pending_vote:
+            self.fields['accept_prepared_vote'].initial = False
         
     def has_changed(self):
         # FIXME: this should not be a model form: if no data has_changed(), save() won't be called (#3457)
@@ -191,7 +191,7 @@ class ExpeditedVoteForm(forms.ModelForm):
     def save(self, commit=True):
         if self.cleaned_data.get('accept_prepared_vote', False):
             submission_form = self.instance.submission.current_submission_form
-            vote = submission_form.current_vote
+            vote = submission_form.submission.current_pending_vote
             if vote is None:
                 vote = Vote.objects.create(submission_form=submission_form, result='3a', is_draft=True)
             vote.top = self.instance

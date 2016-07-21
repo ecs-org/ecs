@@ -28,7 +28,7 @@ class SubmissionQFactory(authorization.QFactory):
         ### permissions until final vote is published
         until_vote_q = self.make_q(pk__in=Checklist.objects.values('submission__pk').query)
         until_vote_q |= self.make_q(pk__in=Task.objects.filter(content_type=ContentType.objects.get_for_model(Submission)).values('data_id').query)
-        q |= until_vote_q & ~self.make_q(forms__current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
+        q |= until_vote_q & ~self.make_q(current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
 
         notification_cts = map(ContentType.objects.get_for_model,
             (AmendmentNotification, SafetyNotification))

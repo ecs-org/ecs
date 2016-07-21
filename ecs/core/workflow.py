@@ -96,20 +96,14 @@ def needs_localec_recommendation(wf):
 def needs_localec_vote_preparation(wf):
     return has_localec_recommendation(wf)
 
-# b2 guards
-@guard(model=Submission)
-@block_duplicate_task('b2_resubmission')
-def is_b2(wf):
-    return wf.data.get_most_recent_vote().result == '2'
-
 @guard(model=Submission)
 def is_still_b2(wf):
-    vote = wf.data.get_most_recent_vote()
+    vote = wf.data.current_pending_vote
     return vote.result == '2' and not vote.executive_review_required
 
 @guard(model=Submission)
 def needs_executive_b2_review(wf):
-    vote = wf.data.get_most_recent_vote()
+    vote = wf.data.current_pending_vote
     return vote.executive_review_required
 
 @guard(model=Submission)
@@ -184,7 +178,7 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
         )
         
     def pre_perform(self, choice):
-        vote = self.workflow.data.get_most_recent_vote()
+        vote = self.workflow.data.current_pending_vote
         if choice == 'exerev':
             vote.executive_review_required = True
             vote.save()

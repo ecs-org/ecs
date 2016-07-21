@@ -390,7 +390,7 @@ class SubmissionFormDiffer(ModelDiffer):
 _differs = {
     SubmissionForm: SubmissionFormDiffer(SubmissionForm,
         exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
-            'pdf_document', 'current_pending_vote', 'current_published_vote', 'is_acknowledged',
+            'pdf_document', 'is_acknowledged',
             'created_at', 'presenter', 'sponsor', 'submitter', 'is_transient',
             'is_notification_update',),
         follow=('foreignparticipatingcenter_set', 'investigators', 'measures',

@@ -76,6 +76,13 @@ class Vote(models.Model):
                 parent_object=self, original_file_name=self.pdf_filename,
                 name=str(self))
 
+        submission = self.get_submission()
+        assert submission.current_pending_vote_id == self.id
+        submission.current_pending_vote = None
+        submission.current_published_vote = self
+        submission.save(
+            update_fields=('current_pending_vote', 'current_published_vote'))
+
         on_vote_publication.send(sender=Vote, vote=self)
 
     def expire(self):
@@ -147,15 +154,7 @@ class Vote(models.Model):
 @receiver(post_save, sender=Vote)
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
-    submission_form = vote.submission_form
-    if (vote.published_at and submission_form.current_published_vote_id == vote.pk) or (not vote.published_at and submission_form.current_pending_vote_id == vote.pk):
-        return
-    if vote.published_at:
-        if submission_form.current_pending_vote_id == vote.pk:
-            submission_form.current_pending_vote = None
-        submission_form.current_published_vote = vote
-    else:
-        # handle Vote.submission_form changes (happens on b2 upgrades)
-        submission_form.submission.forms.filter(current_pending_vote=vote).exclude(pk=submission_form.pk).update(current_pending_vote=None)
-        submission_form.current_pending_vote = vote
-    submission_form.save(force_update=True)
+    submission = vote.submission_form.submission
+    if not vote.published_at and submission.current_pending_vote != vote:
+        submission.current_pending_vote = vote
+        submission.save(update_fields=('current_pending_vote',))

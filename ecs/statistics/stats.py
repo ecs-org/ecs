@@ -75,7 +75,6 @@ def collect_submission_stats_for_year(year):
     for s in submissions:
         sf = s.current_submission_form
         first_vote = s.votes.exclude(published_at=None).order_by('published_at')[0]
-        current_vote = s.get_most_recent_vote()
         has_foreign_centers = sf.foreignparticipatingcenter_set.exists()
 
         classification = {
@@ -87,7 +86,7 @@ def collect_submission_stats_for_year(year):
             'submissions.b1_on_first_vote': first_vote.result == '1',
             'submissions.b2_on_first_vote': first_vote.result == '2',
             'submissions.recessed_on_first_vote': first_vote.is_recessed,
-            'submissions.negative': current_vote.is_negative,
+            'submissions.negative': s.current_published_vote.is_negative,
             'amg.multicentric_main':
                 sf.is_amg and sf.is_categorized_multicentric_and_main or
                 (sf.is_categorized_monocentric and has_foreign_centers),

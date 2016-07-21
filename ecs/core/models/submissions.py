@@ -55,6 +55,8 @@ class Submission(models.Model):
 
     # denormalization
     current_submission_form = models.OneToOneField('core.SubmissionForm', null=True, related_name='current_for_submission')
+    current_published_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_published_for')
+    current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     objects = SubmissionManager()
     
@@ -162,7 +164,7 @@ class Submission(models.Model):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.primary_investigator
-    
+
     @property
     def has_permanent_vote(self):
         return self.votes.filter(result__in=PERMANENT_VOTE_RESULTS, published_at__isnull=False).exists()
@@ -173,18 +175,6 @@ class Submission(models.Model):
         except IndexError:
             return None
             
-    def get_most_recent_vote(self, **kwargs):
-        votes = self.votes.order_by('-pk')
-        if kwargs:
-            votes = votes.filter(**kwargs)
-        try:
-            return votes[:1].get()
-        except Vote.DoesNotExist:
-            return None
-            
-    def get_first_meeting(self):
-        return self.meetings.order_by('start')[:1][0]
-
     def save(self, **kwargs):
         if not self.presenter_id:
             self.presenter = get_current_user()
@@ -245,7 +235,7 @@ class Submission(models.Model):
                 duration = timedelta(minutes=0)
             top.refresh(duration=duration, visible=visible)
         else:
-            last_vote = self.get_most_recent_vote()
+            last_vote = self.current_pending_vote or self.current_published_vote
             if last_vote and last_vote.is_recessed:
                 return _schedule()
         return top.meeting
@@ -287,8 +277,6 @@ class SubmissionForm(models.Model):
     
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
-    current_published_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_published_for')
-    current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     objects = SubmissionFormManager()
     unfiltered = models.Manager()
@@ -566,7 +554,7 @@ class SubmissionForm(models.Model):
         with sudo():
             if s.meetings.filter(started__isnull=False, ended=None).exists():
                 return False
-        pending_vote = self.current_pending_vote
+        pending_vote = s.current_pending_vote
         has_unpublished_vote = pending_vote and not pending_vote.is_draft
         return self.allows_edits(user) and not has_unpublished_vote
         
@@ -682,10 +670,6 @@ class SubmissionForm(models.Model):
             return self.primary_investigator.ethics_commission
         except Investigator.DoesNotExist:
             return None
-
-    @property
-    def current_vote(self):
-        return self.current_pending_vote or self.current_published_vote
 
     def get_involved_parties(self):
         current_user = get_current_user()
