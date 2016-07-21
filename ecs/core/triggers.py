@@ -120,18 +120,15 @@ LANE_TASKS = {
         'initial_thesis_review',
         'thesis_recommendation',
         'thesis_recommendation_review',
-        'thesis_vote_preparation',      # XXX: compat
     ),
     SUBMISSION_LANE_EXPEDITED : (
         'expedited_recommendation',
-        'expedited_vote_preparation',   # XXX: compat
     ),
     SUBMISSION_LANE_BOARD : (
         'board_member_review',
     ),
     SUBMISSION_LANE_LOCALEC : (
         'localec_recommendation',
-        'localec_vote_preparation',     # XXX: compat
     ),
 }
 

@@ -47,4 +47,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(combine_vote_preparation),
+        migrations.RunSQL('''
+            update workflow_node
+                set uid = 'vote_preparation'
+                where uid in ('thesis_vote_preparation',
+                              'expedited_vote_preparation',
+                              'localec_vote_preparation');
+        '''),
     ]
