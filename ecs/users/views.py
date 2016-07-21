@@ -341,7 +341,9 @@ def administration(request, limit=20):
 
     filterdict = request.POST or usersettings.useradministration_filter or filter_defaults
     filterform = AdministrationFilterForm(filterdict)
-    filterform.is_valid()  # force clean
+    if not filterform.is_valid():
+        filterform = AdministrationFilterForm(filter_defaults)
+        filterform.is_valid()   # force clean
 
     users = User.objects.all()
 
@@ -382,8 +384,6 @@ def administration(request, limit=20):
     except (EmptyPage, InvalidPage):
         users = paginator.page(1)
         filterform.cleaned_data['page'] = 1
-        filterform = AdministrationFilterForm(filterform.cleaned_data)
-        filterform.is_valid()
 
     userfilter = filterform.cleaned_data
     userfilter['groups'] = list(userfilter['groups'].values_list('pk', flat=True))
