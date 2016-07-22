@@ -12,14 +12,14 @@ from ecs.users.utils import get_or_create_user, get_user
 from ecs.core.workflow import (
     InitialReview, Resubmission, Categorization, CategorizationReview,
     PaperSubmissionReview, VotePreparation, ChecklistReview,
-    RecommendationReview, ExpeditedRecommendationSplit, B2ResubmissionReview,
+    ExpeditedRecommendationSplit, B2ResubmissionReview,
     InitialB2ResubmissionReview,
 )
 from ecs.core.workflow import (
     is_retrospective_thesis, is_acknowledged, is_expedited,
     has_thesis_recommendation, has_localec_recommendation,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission,
-    is_still_b2, needs_executive_b2_review,
+    is_still_b2, needs_executive_b2_review, needs_thesis_vote_preparation,
     needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation, needs_categorization_review,
 )
@@ -71,7 +71,6 @@ def submission_workflow():
             # retrospective thesis lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=OFFICE_GROUP),
             'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=OFFICE_GROUP),
-            'thesis_recommendation_review': Args(RecommendationReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation Review"), group=EXECUTIVE_GROUP),
 
             # expedited_lane
             'expedited_recommendation_split': Args(ExpeditedRecommendationSplit, name=_("Expedited Recommendation Split")),
@@ -100,10 +99,8 @@ def submission_workflow():
 
             # retrospective thesis lane
             ('categorization', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
-            ('thesis_recommendation', 'thesis_recommendation_review'): Args(guard=has_thesis_recommendation),
             ('thesis_recommendation', 'categorization'): Args(guard=has_thesis_recommendation, negated=True),
-            ('thesis_recommendation_review', 'vote_preparation'): Args(guard=has_thesis_recommendation),
-            ('thesis_recommendation_review', 'categorization'): Args(guard=has_thesis_recommendation, negated=True),
+            ('thesis_recommendation', 'vote_preparation'): Args(guard=needs_thesis_vote_preparation),
 
             # expedited lane
             ('categorization', 'expedited_recommendation_split'): None,

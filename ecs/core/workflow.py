@@ -67,6 +67,11 @@ def needs_paper_submission_review(wf):
 
 @guard(model=Submission)
 @block_duplicate_task('vote_preparation')
+def needs_thesis_vote_preparation(wf):
+    return has_thesis_recommendation(wf)
+
+@guard(model=Submission)
+@block_duplicate_task('vote_preparation')
 def needs_expedited_vote_preparation(wf):
     with sudo():
         unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
@@ -80,11 +85,6 @@ def needs_expedited_recategorization(wf):
         unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
         negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
         return not unfinished and negative.exists()
-
-@guard(model=Submission)
-def has_expedited_recommendation(wf):
-    ''' legacy: to be removed '''
-    return not needs_expedited_recategorization(wf)
 
 @guard(model=Submission)
 @block_duplicate_task('localec_recommendation')
@@ -318,18 +318,6 @@ class ChecklistReview(Activity):
 @receiver(post_save, sender=Checklist)
 def unlock_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ChecklistReview)
-
-
-class RecommendationReview(ChecklistReview):
-    def is_repeatable(self):
-        return False
-
-    def is_reentrant(self):
-        return True
-
-@receiver(post_save, sender=Checklist)
-def unlock_recommendation_review(sender, **kwargs):
-    kwargs['instance'].submission.workflow.unlock(RecommendationReview)
 
 
 class VotePreparation(Activity):

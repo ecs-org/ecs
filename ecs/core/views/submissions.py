@@ -198,6 +198,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
             task = (get_obj_tasks((ChecklistReview,), submission, data=checklist.blueprint)
                 .filter(assigned_to=request.user, deleted_at__isnull=True)
+                .exclude(task_type__workflow_node__uid='thesis_recommendation_review')  # XXX: legacy
                 .order_by('-closed_at')
                 .first())
 
