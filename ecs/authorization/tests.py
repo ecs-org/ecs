@@ -35,7 +35,6 @@ class SubmissionAuthTestCase(EcsTestCase):
         super().setUp()
         self.anyone = self._create_test_user('anyone')
         self.board_member_user = self._create_test_user('board_member', is_board_member=True)
-        self.insurance_review_user = self._create_test_user('insurance_review', is_insurance_reviewer=True)
         self.internal_user = self._create_test_user('internal', is_internal=True)
         self.primary_investigator_user = self._create_test_user('primary_investigator')
         self.sponsor_user = self._create_test_user('sponsor')

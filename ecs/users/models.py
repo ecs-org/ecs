@@ -21,7 +21,6 @@ class UserProfile(models.Model):
     is_resident_member = models.BooleanField(default=False)
     is_omniscient_member = models.BooleanField(default=False)
     is_executive_board_member = models.BooleanField(default=False)
-    is_insurance_reviewer = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
     has_explicit_workflow = models.BooleanField(default=False)
 
@@ -60,7 +59,6 @@ class UserProfile(models.Model):
         self.is_resident_member = 'Resident Board Member' in groups
         self.is_omniscient_member = 'Omniscient Board Member' in groups
         self.is_executive_board_member = 'EC-Executive Board Member' in groups
-        self.is_insurance_reviewer = 'Insurance Reviewer' in groups
         self.is_internal = bool(groups & {
             'EC-Executive Board Member',
             'EC-Office',
