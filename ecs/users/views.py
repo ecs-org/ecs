@@ -345,7 +345,7 @@ def administration(request, limit=20):
         filterform = AdministrationFilterForm(filter_defaults)
         filterform.is_valid()   # force clean
 
-    users = User.objects.all()
+    users = User.objects.distinct()
 
     if filterform.cleaned_data['activity'] == 'active':
         users = users.filter(is_active=True)
