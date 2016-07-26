@@ -8,24 +8,11 @@ from ecs.notifications.models import (
     SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
 )
 from ecs.notifications.signals import on_safety_notification_review
-from ecs.notifications.constants import NOTIFICATION_REVIEW_LANE_CHOICES
 
 
 for cls in NOTIFICATION_MODELS:
     register(cls, autostart_if=lambda n, created: n.submission_forms.exists() and not n.workflow.workflows.exists())
 
-
-@guard(model=Notification)
-def needs_executive_group_review(wf):
-    return wf.data.review_lane == 'exerev'
-
-@guard(model=Notification)
-def needs_notification_group_review(wf):
-    return wf.data.review_lane == 'notrev'
-
-@guard(model=Notification)
-def needs_insurance_group_review(wf):
-    return wf.data.review_lane == 'insrev'
 
 @guard(model=Notification)
 def is_susar(wf):
@@ -42,11 +29,7 @@ def is_center_close(wf):
 @guard(model=Notification)
 def is_amendment(wf):
     return wf.data.type.name == "Amendment"
-    
-@guard(model=Notification)
-def is_rejected(wf):
-    return wf.data.answer.is_rejected
-    
+
 @guard(model=Notification)
 def needs_further_review(wf):
     return wf.data.answer.needs_further_review
@@ -63,24 +46,19 @@ class BaseNotificationReview(Activity):
         return super().get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
 
 
-class InitialNotificationReview(BaseNotificationReview):
-    class Meta:
-        model = Notification
-
-
-class InitialAmendmentReview(InitialNotificationReview):
+class InitialAmendmentReview(BaseNotificationReview):
     class Meta:
         model = Notification
         
     def get_choices(self):
-        return ((None, _('Reject')),) + NOTIFICATION_REVIEW_LANE_CHOICES
+        return (
+            (True, _('Acknowledge')),
+            (False, _('Reject')),
+        )
 
     def pre_perform(self, choice):
-        n = self.workflow.data
-        n.review_lane = choice
-        n.save()
-        if choice is None:
-            answer = n.answer
+        if not choice:
+            answer = self.workflow.data.answer
             answer.is_valid = True
             answer.is_rejected = True
             answer.is_final_version = True
@@ -106,57 +84,6 @@ class EditNotificationAnswer(BaseNotificationReview):
 class SimpleNotificationReview(BaseNotificationReview):
     class Meta:
         model = Notification
-
-
-class AmendmentReview(BaseNotificationReview):
-    class Meta:
-        model = Notification
-        
-    def get_choices(self):
-        options = ('notrev', 'exerev')
-        choices = [(None, _('Ready'))]
-        n = self.workflow.data
-        lane = n.review_lane
-        if lane == 'insrev':
-            lane = 'exerev'
-        for value, label in NOTIFICATION_REVIEW_LANE_CHOICES:
-            if value in options and value != lane:
-                choices.append((value, label))
-        return choices
-        
-    def pre_perform(self, choice):
-        if choice:
-            n = self.workflow.data
-            n.review_lane = choice
-            n.save()
-
-
-class FinalAmendmentReview(EditNotificationAnswer):
-    class Meta:
-        model = Notification
-
-    def is_repeatable(self):
-        return True
-
-    def get_choices(self):
-        return (
-            (True, _('Publish')),
-            (False, _('Needs further review')),
-        )
-
-
-class FinalAmendmentSigningReview(EditNotificationAnswer):
-    class Meta:
-        model = Notification
-
-    def is_repeatable(self):
-        return True
-
-    def get_choices(self):
-        return (
-            (True, _('Sign')),
-            (False, _('Needs further review')),
-        )
 
 
 class SafetyNotificationReview(Activity):

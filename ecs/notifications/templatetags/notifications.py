@@ -9,11 +9,12 @@ register = template.Library()
 
 @register.filter
 def amendment_reviewer(notification):
-    reviewer = None
     with sudo():
         closed_tasks = Task.objects.for_data(notification.amendmentnotification).closed()
         try:
-            task = closed_tasks.filter(task_type__workflow_node__uid__in=['notification_group_review', 'executive_amendment_review']).order_by('-created_at')[0]
+            task = closed_tasks.filter(
+                task_type__workflow_node__uid='executive_amendment_review'
+            ).order_by('-created_at')[0]
             return task.assigned_to
         except IndexError:
             pass
