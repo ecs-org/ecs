@@ -30,6 +30,13 @@ class VoteReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.submissions.vote_review', kwargs={'submission_form_pk': self.workflow.data.submission_form_id})
 
+    def receive_token(self, source, trail=(), repeated=False):
+        token = super().receive_token(source, trail=trail, repeated=repeated)
+        if trail:
+            token.task.review_for = trail[0].task
+            token.task.save()
+        return token
+
 
 class VoteSigning(Activity):
     class Meta:

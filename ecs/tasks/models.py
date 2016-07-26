@@ -132,6 +132,8 @@ class Task(models.Model):
 
     medical_category = models.ForeignKey('core.MedicalCategory', null=True)
 
+    review_for = models.ForeignKey('self', null=True)
+
     send_message_on_close = models.BooleanField(default=False)
     reminder_message_timeout = models.DurationField(null=True)
     reminder_message_sent_at = models.DateTimeField(null=True)

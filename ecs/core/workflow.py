@@ -166,6 +166,13 @@ class B2ResubmissionReview(Activity):
     def get_url(self):
         return reverse('ecs.core.views.submissions.b2_vote_preparation', kwargs={'submission_form_pk': self.workflow.data.newest_submission_form.pk})
 
+    def receive_token(self, source, trail=(), repeated=False):
+        token = super().receive_token(source, trail=trail, repeated=repeated)
+        if trail[0].node.uid != 'b2_resubmission':
+            token.task.review_for = trail[0].task
+            token.task.save()
+        return token
+
 
 class InitialB2ResubmissionReview(B2ResubmissionReview):
     class Meta:
@@ -212,6 +219,14 @@ class Categorization(Activity):
         s = self.workflow.data
         on_categorization.send(Submission, submission=s)
 
+    def emit_token(self, deadline=False, trail=()):
+        tokens = super().emit_token(deadline=deadline, trail=trail)
+        with sudo():
+            Task.objects.for_data(self.workflow.data).filter(
+                task_type__workflow_node__uid='categorization_review'
+            ).open().update(review_for=trail[0].task)
+        return tokens
+
 @receiver(post_save, sender=Submission)
 def unlock_categorization(sender, **kwargs):
     kwargs['instance'].workflow.unlock(Categorization)
@@ -236,11 +251,7 @@ class CategorizationReview(Activity):
 
     def post_perform(self, choice, token=None):
         if choice == 'reopen':
-            with sudo():
-                tasks = Task.objects.for_submission(self.workflow.data).filter(
-                    task_type__workflow_node__uid='categorization').open()
-                if not tasks.exists():
-                    token.trail.get().task.reopen()
+            token.task.review_for.reopen()
 
 
 class ExpeditedRecommendationSplit(Generic):

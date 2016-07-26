@@ -70,7 +70,7 @@ class TaskQFactory(authorization.QFactory):
         ) & (
             self.make_q(medical_category=None) |
             self.make_q(medical_category__in=user.medical_categories.values('pk'))
-        )
+        ) & ~self.make_q(review_for__assigned_to=user)
         q |= self.make_q(assigned_to=user)
         return q
 
