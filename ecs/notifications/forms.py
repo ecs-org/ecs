@@ -26,6 +26,25 @@ class RejectableNotificationAnswerForm(NotificationAnswerForm):
         fields = ('is_rejected', 'is_final_version', 'text',)
 
 
+class AmendmentAnswerForm(RejectableNotificationAnswerForm):
+    is_substantial = forms.BooleanField(required=False, label=_('Substantial'))
+    needs_signature = forms.BooleanField(required=False, label=_('Needs signature'))
+
+    class Meta:
+        model = NotificationAnswer
+        fields = (
+            'is_rejected', 'is_final_version', 'is_substantial',
+            'needs_signature', 'text',
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            amendment = self.instance.notification.amendmentnotification
+            self.fields['is_substantial'].initial = amendment.is_substantial
+            self.fields['needs_signature'].initial = amendment.needs_signature
+
+
 def get_usable_submission_forms():
     submission_forms = (SubmissionForm.objects
         .with_any_vote(permanent=True, positive=True, published=True)
@@ -36,7 +55,7 @@ def get_usable_submission_forms():
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document', 'review_lane')
+        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document')
 
 
 class SafetyNotificationForm(NotificationForm):
@@ -127,4 +146,7 @@ class CenterCloseNotificationForm(SingleStudyNotificationForm):
 class AmendmentNotificationForm(NotificationForm):
     class Meta:
         model = AmendmentNotification
-        exclude = NotificationForm._meta.exclude + ('submission_forms', 'old_submission_form', 'new_submission_form', 'diff')
+        exclude = NotificationForm._meta.exclude + (
+            'submission_forms', 'old_submission_form', 'new_submission_form',
+            'diff', 'is_substantial', 'meeting', 'needs_signature',
+        )

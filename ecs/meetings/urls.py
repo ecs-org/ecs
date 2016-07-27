@@ -38,7 +38,7 @@ urlpatterns = (
     url(r'^(?P<meeting_pk>\d+)/assistant/(?P<top_pk>\d+)/$', views.meeting_assistant_top),
     url(r'^(?P<meeting_pk>\d+)/assistant/quickjump/$', views.meeting_assistant_quickjump),
     url(r'^(?P<meeting_pk>\d+)/assistant/comments/$', views.meeting_assistant_comments),
-    url(r'^(?P<meeting_pk>\d+)/assistant/retrospective_thesis_expedited/$', views.meeting_assistant_retrospective_thesis_expedited),
+    url(r'^(?P<meeting_pk>\d+)/assistant/other_tops/$', views.meeting_assistant_other_tops),
 
     url(r'^(?P<meeting_pk>\d+)/agenda/pdf/$', views.agenda_pdf),
     url(r'^(?P<meeting_pk>\d+)/agenda/send/$', views.send_agenda_to_board),

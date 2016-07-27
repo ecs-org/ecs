@@ -6,9 +6,3 @@ SAFETY_TYPE_CHOICES = (
     ('asr', _('Annual Safety Report')),
     ('other', _('Other Safety Report')),
 )
-
-NOTIFICATION_REVIEW_LANE_CHOICES = (
-    ('exerev', 'Executive Review'),
-    ('notrev', 'Notification Group Review'),
-    ('insrev', 'Insurance Group Review'),
-)

@@ -17,7 +17,10 @@ from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import (
     Notification, NotificationType, NotificationAnswer, CenterCloseNotification,
 )
-from ecs.notifications.forms import NotificationAnswerForm, RejectableNotificationAnswerForm
+from ecs.notifications.forms import (
+    NotificationAnswerForm, RejectableNotificationAnswerForm,
+    AmendmentAnswerForm,
+)
 from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import handle_download, upload_document, delete_document
 from ecs.users.utils import user_group_required
@@ -206,7 +209,9 @@ def edit_notification_answer(request, notification_pk=None):
         kwargs['initial'] = {'text': notification.type.default_response}
     
     form_cls = NotificationAnswerForm
-    if notification.type.is_rejectable:
+    if hasattr(notification, 'amendmentnotification'):
+        form_cls = AmendmentAnswerForm
+    elif notification.type.is_rejectable:
         form_cls = RejectableNotificationAnswerForm
     
     form = form_cls(request.POST or None, instance=answer, **kwargs)
@@ -217,6 +222,11 @@ def edit_notification_answer(request, notification_pk=None):
         answer = form.save(commit=False)
         answer.notification = notification
         answer.save()
+        if hasattr(notification, 'amendmentnotification'):
+            an = notification.amendmentnotification
+            an.is_substantial = form.cleaned_data.get('is_substantial', False)
+            an.needs_signature = form.cleaned_data.get('needs_signature', False)
+            an.save()
 
     response = render(request, 'notifications/answers/form.html', {
         'notification': notification,

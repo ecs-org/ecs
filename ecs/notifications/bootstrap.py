@@ -8,8 +8,9 @@ from ecs.utils import Args
 from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
     SafetyNotificationReview, SignNotificationAnswer, SimpleNotificationReview,
+    WaitForMeeting,
     is_susar, is_report, is_center_close, is_amendment, is_rejected_and_final,
-    needs_further_review,
+    is_substantial, needs_further_review, needs_signature, needs_distribution,
 )
 
 
@@ -85,9 +86,8 @@ def notification_workflow():
     setup_workflow_graph(Notification,
         auto_start=True,
         nodes={
-            'start': Args(Generic, start=True, name=_('Start')),
+            'start': Args(Generic, start=True, name='Start'),
             'safety_review': Args(SafetyNotificationReview, group=OFFICE_GROUP, name=_('Safety Review')),
-            'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
             # reports
@@ -97,6 +97,9 @@ def notification_workflow():
             # amendments
             'initial_amendment_review': Args(InitialAmendmentReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),
             'executive_amendment_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
+            'wait_for_meeting': Args(WaitForMeeting, name='Wait For Meeting'),
+            'amendment_split': Args(Generic, name='Amendment Split'),
+            'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
         },
         edges=(
             (('start', 'safety_review'), Args(guard=is_susar)),
@@ -116,6 +119,11 @@ def notification_workflow():
             (('initial_amendment_review', 'executive_amendment_review'), Args(guard=is_rejected_and_final, negated=True)),
             (('initial_amendment_review', 'distribute_notification_answer'), Args(guard=is_rejected_and_final)),
             (('executive_amendment_review', 'initial_amendment_review'), Args(guard=needs_further_review)),
-            (('executive_amendment_review', 'notification_answer_signing'), Args(guard=needs_further_review, negated=True)),
+            (('executive_amendment_review', 'amendment_split'), Args(guard=needs_further_review, negated=True)),
+            (('amendment_split', 'wait_for_meeting'), Args(guard=is_substantial)),
+            (('amendment_split', 'notification_answer_signing'), Args(guard=needs_signature)),
+            (('amendment_split', 'distribute_notification_answer'), Args(guard=needs_distribution)),
+            (('wait_for_meeting', 'initial_amendment_review'), Args(guard=needs_further_review)),
+            (('wait_for_meeting', 'notification_answer_signing'), Args(guard=needs_further_review, negated=True)),
         )
     )

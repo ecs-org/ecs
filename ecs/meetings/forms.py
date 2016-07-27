@@ -14,6 +14,7 @@ from ecs.core.forms.fields import DateTimeField, TimeField
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo
 from ecs.votes.models import Vote
+from ecs.notifications.models import AmendmentNotification
 
 
 class MeetingForm(forms.ModelForm):
@@ -209,6 +210,30 @@ class BaseExpeditedVoteFormSet(BaseModelFormSet):
         super().__init__(*args, **kwargs)
     
 ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
+
+
+class AmendmentVoteForm(forms.ModelForm):
+    accept_prepared_answer = forms.BooleanField(required=False, initial=True)
+
+    class Meta:
+        model = AmendmentNotification
+        fields = ('accept_prepared_answer',)
+
+    def has_changed(self):
+        # XXX: If nothing has changed, save() won't be called.
+        return True
+
+    def save(self, commit=True):
+        if self.cleaned_data.get('accept_prepared_answer', False):
+            answer = self.instance.answer
+            answer.is_valid = True
+            answer.save()
+            return answer
+        return None
+
+AmendmentVoteFormSet = modelformset_factory(AmendmentNotification, extra=0,
+    can_delete=False, form=AmendmentVoteForm)
+
 
 class ExpeditedReviewerInvitationForm(forms.Form):
     start = DateTimeField(initial=lambda: timezone.now() + timedelta(days=7))

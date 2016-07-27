@@ -13,7 +13,7 @@ from reversion import revisions as reversion
 
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
-from ecs.notifications.constants import SAFETY_TYPE_CHOICES, NOTIFICATION_REVIEW_LANE_CHOICES
+from ecs.notifications.constants import SAFETY_TYPE_CHOICES
 from ecs.notifications.managers import NotificationManager
 from ecs.authorization.managers import AuthorizationManager
 
@@ -82,8 +82,6 @@ class Notification(models.Model):
     date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True)
-    
-    review_lane = models.CharField(max_length=6, null=True, db_index=True, choices=NOTIFICATION_REVIEW_LANE_CHOICES)
     
     objects = NotificationManager()
     unfiltered = models.Manager()
@@ -163,7 +161,16 @@ class ProgressReportNotification(ReportNotification):
 
 
 class AmendmentNotification(DiffNotification, Notification):
-    pass
+    is_substantial = models.BooleanField(default=False)
+    meeting = models.ForeignKey('meetings.Meeting', null=True,
+        related_name='amendments')
+    needs_signature = models.BooleanField(default=False)
+
+    def schedule_to_meeting(self):
+        from ecs.meetings.models import Meeting
+        meeting = Meeting.objects.filter(started=None).order_by('start').first()
+        self.meeting = meeting
+        self.save()
 
 
 class SafetyNotification(Notification):
@@ -182,7 +189,7 @@ class NotificationAnswer(models.Model):
     notification = models.OneToOneField(Notification, related_name="answer")
     text = models.TextField()
     is_valid = models.BooleanField(default=True)
-    is_final_version = models.BooleanField(default=False, verbose_name=_('Proofread')) # informal
+    is_final_version = models.BooleanField(default=False, verbose_name=_('Proofread'))
     is_rejected = models.BooleanField(default=False, verbose_name=_('rate negative'))
     pdf_document = models.OneToOneField(Document, related_name='_notification_answer', null=True)
     signed_at = models.DateTimeField(null=True)
@@ -194,10 +201,6 @@ class NotificationAnswer(models.Model):
     @property
     def version_number(self):
         return Version.objects.get_for_object(self).count()
-
-    @property
-    def needs_further_review(self):
-        return not self.is_valid
 
     def get_render_context(self):
         return {

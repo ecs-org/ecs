@@ -2,7 +2,7 @@
 {% load core i18n %}
 
 {% block meeting_assistant_body %}
-    <form action="{% url 'ecs.meetings.views.meeting_assistant_retrospective_thesis_expedited' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
+    <form action="{% url 'ecs.meetings.views.meeting_assistant_other_tops' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         {% if retrospective_thesis_entries %}
@@ -67,7 +67,52 @@
             {% endwith %}
         </div>
 
-        <input type="submit" value="{% trans "Approve" %}" />
+        <h3>{% trans 'Amendments' %}</h3>
+        {% if amendment_entries %}
+            <div class="inline_element odd">
+                <h4>{% trans "Approved" %}</h4>
+                <ul>
+                    {% for entry in amendment_entries %}
+                        <li {% if entry.answer.is_rejected %}class="text-danger"{% endif %}>
+                            {% with submission=entry.get_submission %}
+                                {{ submission.get_ec_number_display }}
+                                {{ submission.project_title_display }}
+                            {% endwith %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="inline_element even">
+            <h4>{% trans "Not Approved" %}</h4>
+            {{ amendment_vote_formset.management_form }}
+            <table>
+                {% for form in amendment_vote_formset.forms %}
+                    <tr {% if form.instance.answer.is_rejected %}class="text-danger"{% endif %}>
+                        <td>
+                            {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+                            {{ form.accept_prepared_answer }}
+                        </td>
+                        <td>
+                            {% with submission=form.instance.get_submission %}
+                                {{ submission.get_ec_number_display }}
+                                {{ submission.project_title_display }}
+                            {% endwith %}<br>
+                            {% with answer=form.instance.answer %}
+                                {% trans 'Reject' %}: {{ answer.is_rejected|yesno }}
+                                {% if answer.text %}
+                                    <p>{{ answer.text|linebreaksbr }}</p>
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <input class="btn btn-sm btn-primary" type="submit" value="{% trans "Approve" %}" />
         <a class="open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant' meeting_pk=meeting.pk %}">{% trans "Go Back" %}</a>
     </form>
 {% endblock %}

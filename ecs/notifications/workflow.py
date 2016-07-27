@@ -1,11 +1,14 @@
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.dispatch import receiver
 
 from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
+from ecs.meetings.signals import on_meeting_start, on_meeting_end
 from ecs.notifications.models import (
     Notification, CompletionReportNotification, ProgressReportNotification,
-    SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
+    SafetyNotification, CenterCloseNotification, AmendmentNotification,
+    NOTIFICATION_MODELS,
 )
 from ecs.notifications.signals import on_safety_notification_review
 
@@ -32,11 +35,25 @@ def is_amendment(wf):
 
 @guard(model=Notification)
 def needs_further_review(wf):
-    return wf.data.answer.needs_further_review
+    return not wf.data.answer.is_valid
 
 @guard(model=Notification)
 def is_rejected_and_final(wf):
     return (wf.data.answer.is_rejected and wf.data.answer.is_final_version)
+
+@guard(model=Notification)
+def is_substantial(wf):
+    return wf.data.amendmentnotification.is_substantial
+
+@guard(model=Notification)
+def needs_signature(wf):
+    amendment = wf.data.amendmentnotification
+    return amendment.needs_signature and not amendment.is_substantial
+
+@guard(model=Notification)
+def needs_distribution(wf):
+    amendment = wf.data.amendmentnotification
+    return not amendment.is_substantial and not amendment.needs_signature
 
 class BaseNotificationReview(Activity):
     def get_url(self):
@@ -96,6 +113,35 @@ class SafetyNotificationReview(Activity):
     def pre_perform(self, choice):
         notification = self.workflow.data
         on_safety_notification_review.send(type(notification), notification=notification)
+
+
+class WaitForMeeting(Generic):
+    class Meta:
+        model = Notification
+
+    def receive_token(self, source, trail=()):
+        notification = self.workflow.data
+        notification.amendmentnotification.schedule_to_meeting()
+        return super().receive_token(source, trail=trail)
+
+    def is_locked(self):
+        return not self.workflow.data.amendmentnotification.meeting.ended
+
+    @staticmethod
+    @receiver(on_meeting_start)
+    def on_meeting_start(sender, **kwargs):
+        meeting = kwargs['meeting']
+        for amendment in meeting.amendments.all():
+            amendment.answer.is_valid = False
+            amendment.answer.save()
+
+    @staticmethod
+    @receiver(on_meeting_end)
+    def on_meeting_end(sender, **kwargs):
+        meeting = kwargs['meeting']
+        for amendment in meeting.amendments.all():
+            amendment.workflow.unlock(WaitForMeeting)
+        meeting.amendments.filter(answer__is_valid=False).update(meeting=None)
 
 
 class SignNotificationAnswer(Activity):

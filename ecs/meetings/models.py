@@ -443,7 +443,7 @@ class Meeting(models.Model):
         if AdvancedSettings.objects.get(pk=1).display_notifications_in_protocol:
             from ecs.core.models import SubmissionForm
             answers = NotificationAnswer.unfiltered.exclude(
-                notification__in=AmendmentNotification.unfiltered.all(), signed_at__isnull=False
+                notification__in=AmendmentNotification.unfiltered.filter(is_substantial=True)
             ).exclude(
                 notification__in=SafetyNotification.objects.all()
             ).exclude(published_at=None).select_related(

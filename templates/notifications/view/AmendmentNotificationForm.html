@@ -3,10 +3,10 @@
 
 {% block table_rows %}
     {{ block.super }}
-    <tr>
-        <th>{% trans 'Changes' %}</th>
-        <td>
-            {% with notification.amendmentnotification as notification %}
+    {% with notification.amendmentnotification as notification %}
+        <tr>
+            <th>{% trans 'Changes' %}</th>
+            <td>
                 {% with notification|diff as diff %}
                 {% if diff %}
                     <div class="diff_toggles">
@@ -21,9 +21,24 @@
                     <em>{% trans 'No changes.' %}</em>
                 {% endif %}
                 {% endwith %}
-            {% endwith %}
-        </td>
-    </tr>
+            </td>
+        </tr>
+        {% if user.profile.is_internal %}
+            <tr>
+                <th>{% trans 'Substantial' %}</th>
+                <td>{{ notification.is_substantial|yesno }}</td>
+            </td>
+            {% if notification.meeting %}
+                <tr>
+                    <th>{% trans 'Meeting' %}</th>
+                    <td>
+                        {{ notification.meeting.start|date:'d.m.Y' }}
+                        {{ notification.meeting.title }}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
 {% endblock %}
 
 {% block jsbottom %}
