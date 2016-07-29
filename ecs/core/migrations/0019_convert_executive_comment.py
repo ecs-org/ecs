@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                     on t.task_type_id = tt.id and tt.name = 'Categorization Review'
                 inner join core_submission s on s.id = t.data_id and
                     s.executive_comment is not null and s.executive_comment != ''
+                where t.closed_at is not null
                 order by s.id, t.closed_at desc;
         '''),
         migrations.RemoveField(
