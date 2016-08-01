@@ -507,10 +507,15 @@ class AdvancedSettingsForm(forms.ModelForm):
 
     class Meta:
         model = AdvancedSettings
-        fields = ('default_contact', 'display_notifications_in_protocol')
+        fields = (
+            'default_contact', 'display_notifications_in_protocol',
+            'display_biased_in_amendment_answer_pdf',
+        )
         labels = {
             'display_notifications_in_protocol':
                 _('Display Notifications in Protocol'),
+            'display_biased_in_amendment_answer_pdf':
+                _('Display biased board member in amendment answer PDF'),
         }
 
 EthicsCommissionFormSet = modelformset_factory(EthicsCommission, fields=('vote_receiver',), extra=0)

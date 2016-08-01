@@ -37,3 +37,4 @@ class MedicalCategory(models.Model):
 class AdvancedSettings(models.Model):
     default_contact = models.ForeignKey(User)
     display_notifications_in_protocol = models.BooleanField(default=False)
+    display_biased_in_amendment_answer_pdf = models.BooleanField(default=True)

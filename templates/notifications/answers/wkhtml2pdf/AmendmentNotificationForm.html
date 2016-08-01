@@ -11,3 +11,24 @@
         </div>
     {% endwith %}
 {% endblock %}
+
+{% block content %}
+    {{ block.super }}
+    {% if notification.amendmentnotification.is_substantial and advanced_settings.display_biased_in_amendment_answer_pdf %}
+        <p>
+            Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der
+            Adresse
+            <a href="http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/">
+                http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/
+            </a> abrufbar.
+            Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt
+            als befangen anzusehen waren und daher laut Geschäftsordnung an der
+            Entscheidungsfindung/Abstimmung nicht teilgenommen haben:
+            {% for bef in notification.get_submission.biased_board_members.all %}
+                {{ bef }}{% if not forloop.last %},{% endif %}
+            {% empty %}
+                <strong>keine</strong>
+            {% endfor %}
+        </p>
+    {% endif %}
+{% endblock %}
