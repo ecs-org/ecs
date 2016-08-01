@@ -184,6 +184,13 @@ class Migration(migrations.Migration):
                             model = 'notification'
                     )
                 );
+
+            update workflow_node
+                set uid = 'initial_amendment_review'
+                where uid in ('notification_group_review',
+                              'office_insurance_review',
+                              'final_executive_office_review',
+                              'final_notification_office_review');
         '''),
         migrations.RemoveField(
             model_name='notification',
