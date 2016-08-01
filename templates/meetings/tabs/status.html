@@ -136,3 +136,22 @@
         <td>{% with b3_not_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
     </tr>
 </table>
+<table>
+    <tr>
+        <th>{% trans 'Substantial amendments' %}</th>
+        <td>{{ substantial_amendments.count }}</td>
+        <td>
+            {% for amendment in substantial_amendments %}
+                {% with submission=amendment.get_submission %}
+                    {% if user.profile.is_internal %}
+                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=amendment.pk %}" target="_blank">
+                            {{ submission.get_ec_number_display }}
+                        </a>{% if not forloop.last %}, {% endif %}
+                    {% else %}
+                        {{ submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </td>
+    </tr>
+</table>

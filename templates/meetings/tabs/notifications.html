@@ -1,5 +1,20 @@
 {% load i18n %}
 
+{% if substantial_amendments.exists %}
+    <h2>Substanzielle Amendments</h2>
+
+    <ul class="list-group m-b-2">
+        {% for amendment in substantial_amendments %}
+            <li class="list-group-item">
+                {% with submission=amendment.get_submission %}
+                    <strong>{{ submission.get_ec_number_display }}</strong>
+                    {{ submission.project_title_display }}
+                {% endwith %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
 {% if b1ized.exists %}
     <h2>Zwischenzeitlich positiv erledigte Einreichungen</h2>
 

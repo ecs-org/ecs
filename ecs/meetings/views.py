@@ -228,7 +228,7 @@ def notification_list(request, meeting_pk=None):
     ).order_by('submission_form__submission__ec_number')
 
     answers = NotificationAnswer.unfiltered.exclude(
-        notification__in=AmendmentNotification.unfiltered.all(), signed_at__isnull=False
+        notification__amendmentnotification__is_substantial=True
     ).exclude(published_at=None).select_related(
         'notification', 'notification__type',
         'notification__safetynotification',
@@ -255,6 +255,9 @@ def notification_list(request, meeting_pk=None):
 
     return render(request, 'meetings/tabs/notifications.html', {
         'meeting': meeting,
+        'substantial_amendments':
+            meeting.amendments
+                .order_by('submission_forms__submission__ec_number'),
         'b1ized': b1ized,
         'answers': answers,
     })
@@ -939,6 +942,9 @@ def meeting_details(request, meeting_pk=None, active=None):
         'billable_submissions': submissions.exclude(remission=True),
         'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
         'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
+        'substantial_amendments':
+            meeting.amendments
+                .order_by('submission_forms__submission__ec_number'),
 
         'meeting': meeting,
         'expert_formset': expert_formset,

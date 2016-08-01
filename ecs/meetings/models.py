@@ -443,7 +443,7 @@ class Meeting(models.Model):
         if AdvancedSettings.objects.get(pk=1).display_notifications_in_protocol:
             from ecs.core.models import SubmissionForm
             answers = NotificationAnswer.unfiltered.exclude(
-                notification__in=AmendmentNotification.unfiltered.filter(is_substantial=True)
+                notification__amendmentnotification__is_substantial=True
             ).exclude(
                 notification__in=SafetyNotification.objects.all()
             ).exclude(published_at=None).select_related(
@@ -467,6 +467,9 @@ class Meeting(models.Model):
         return render_pdf(request, 'meetings/wkhtml2pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
+            'substantial_amendments':
+                self.amendments
+                    .order_by('submission_forms__submission__ec_number'),
             'b1ized': b1ized,
             'answers': answers,
         })

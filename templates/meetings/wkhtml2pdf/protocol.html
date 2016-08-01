@@ -54,6 +54,36 @@
         {% endwith %}
     {% endfor %}
 
+    {% if substantial_amendments.exists %}
+        <h2>Substanzielle Amendments</h2>
+        {% for amendment in substantial_amendments %}
+            {% with submission=amendment.get_submission %}
+                <span class="bold">EK Nr.:</span> {{ submission|ec_number }}<br />
+                <span class="bold">Projekttitel:</span> {{ submission.project_title_display }}<br />
+            {% endwith %}
+            {% with answer=amendment.answer %}
+                <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
+                <table class="withborders">
+                    <tr>
+                        <td width="3%">[X]</td>
+                        <td>
+                            {% if answer.is_rejected %}
+                                Der Antrag wird von der Ethik-Kommission abgelehnt.
+                            {% else %}
+                                Es besteht kein Einwand gegen die Änderung.
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+                {% if answer.text %}
+                    <span class="bold">Kommentar:</span><br />
+                    {{ answer.text|linebreaksbr }}<br />
+                {% endif %}
+                <br />
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
+
     {% if b1ized.exists %}
         <span class="bold">Folgende Tagesordnungspunkte wurden seit der letzten Sitzung positiv erledigt:</span><br />
         <br />
