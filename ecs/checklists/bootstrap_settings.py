@@ -13,16 +13,7 @@ checklist_questions = {
         Args('6', 'Ist die Größe der Stichprobe ausreichend begründet?'),
     ],
     'legal_review': [
-        Args( '1', "Anrede: entspricht?"),
-        Args( '2', "Hinweis auf Freiwilligkeit: entspricht?"),
-        Args( '3', "Hinweis auf jederzeitigen Abbruch: entspricht?"),
-        Args( '4', "Schwangerschaftspassus: entspricht?"),
-        Args( '5', "Versicherungspassus: entspricht?"),
-        Args( '6', "Name und Erreichbarkeit des Prüfarztes: entspricht?"),
-        Args( '7', "Hinweis auf Patientenanwaltschaft: entspricht?"),
-        Args( '8', "Vermeidung von Fremdwörtern: entspricht?"),
-        Args( '9', "Rechtschreibung und Grammatik: entspricht?"),
-        Args('10', "Die Patienteninformation entspricht in allen anderen Punkten den Anforderungen?"),
+        Args('1', 'Entspricht die Patienteninformation in allen Punkten den Anforderungen?'),
     ],
     'insurance_review': [
         Args('1', "Sind die vorgelegten Unterlagen zur Versicherung vollständig und akzeptabel?"),
