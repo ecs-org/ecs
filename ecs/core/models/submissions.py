@@ -112,12 +112,14 @@ class Submission(models.Model):
     def votes(self):
         return Vote.objects.filter(submission_form__submission=self)
 
+    # XXX: Is this used anywhere?
     @property
     def project_title(self):
         if not self.current_submission_form:
             return None
         return self.current_submission_form.project_title
-        
+
+    # XXX: Is this used anywhere?
     @property
     def german_project_title(self):
         if not self.current_submission_form:
@@ -125,13 +127,8 @@ class Submission(models.Model):
         return self.current_submission_form.german_project_title
 
     def project_title_display(self):
-        if self.german_project_title:
-            return self.german_project_title
-        elif self.project_title:
-            return self.project_title
-        else:
-            return None
-        
+        return self.german_project_title or self.project_title
+
     @property
     def is_multicentric(self):
         if not self.current_submission_form:

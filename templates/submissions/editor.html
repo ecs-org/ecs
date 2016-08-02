@@ -8,9 +8,9 @@ Edit {{ submission }}
 
 {% block content %}
 
-<h3>{{ submission.project_title }}</h3>
+<h3>{{ submission.current_submission_form.project_title }}</h3>
 <div>
-    {{ submission.german_project_title }}
+    {{ submission.current_submission_form.german_project_title }}
 </div>
 <form action="" method="post">
     {% csrf_token %}

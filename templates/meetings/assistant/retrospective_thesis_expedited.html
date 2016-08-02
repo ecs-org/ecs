@@ -12,7 +12,7 @@
             {% for entry in retrospective_thesis_entries %}
                 <li>
                     {{ entry.submission|ec_number }}
-                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                    {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>
@@ -33,7 +33,7 @@
             {% for entry in expedited_entries %}
                 <li>
                     {{ entry.submission|ec_number }}
-                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                    {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>
@@ -54,7 +54,7 @@
             {% for entry in localec_entries %}
                 <li>
                     {{ entry.submission|ec_number }}
-                    {{ entry.submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}
+                    {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>

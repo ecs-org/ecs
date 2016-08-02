@@ -22,7 +22,7 @@
 
 <p>
     <b>EK Nr:</b> <b>{{ vote.get_ec_number }}</b><br />
-    <b>Projekttitel:</b> {{ submission.project_title_display|default:'<i>{% trans "No title." %}</i>' }}<br />
+    <b>Projekttitel:</b> {{ submission.project_title_display }}<br />
     <b>Antragsteller:</b> {{ form.submitter }}<br />
     <b>Institution:</b> {{ form.submitter_organisation }}<br />
     <b>Sponsor:</b> {{ form.sponsor_name }}<br />

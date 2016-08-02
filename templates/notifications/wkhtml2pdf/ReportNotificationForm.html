@@ -21,7 +21,7 @@
                 <td class="value">{% if sf.primary_investigator %}{{ sf.primary_investigator.user }} ({{ sf.primary_investigator.organisation }}){% else %}<i>nicht vorhanden</i>{% endif %}</td>
             </tr>
             <tr>
-                <td colspan="2">2.3 Projekttitel: <span class="value">{{ sf.submission.project_title_display|default:'<i>nicht vorhanden</i>' }}</span></td>
+                <td colspan="2">2.3 Projekttitel: <span class="value">{{ sf.submission.project_title_display }}</span></td>
             </tr>
             <tr>
                 <td>2.4 EK Nr:</td>

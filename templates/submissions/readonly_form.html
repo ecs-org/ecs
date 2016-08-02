@@ -9,7 +9,7 @@
         <span class="fa fa-search"></span>
         {{ submission_form.submission|ec_number }}
     </a>
-    {{ submission.project_title_display|default:'<em>Ohne Titel</em>' }}
+    {{ submission.project_title_display }}
     {% if submission.is_finished %}
         ({% trans 'finished' %})
     {% endif %}
