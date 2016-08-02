@@ -2,6 +2,7 @@ import imp
 from importlib import import_module
 
 from django.conf import settings
+from django.dispatch import receiver
 from django.db.models.signals import post_save, class_prepared
 from django.db.models import Model
 from django.contrib.contenttypes.models import ContentType
@@ -33,6 +34,7 @@ def autodiscover():
             continue
         module = import_module("%s.workflow" % app)
 
+@receiver(post_save)
 def _post_save(sender, **kwargs):
     if _autostart_disabled or sender not in _registered_models:
         return
@@ -46,7 +48,6 @@ def _post_save(sender, **kwargs):
         for graph in graphs:
             wf = graph.create_workflow(data=obj)
             wf.start()
-post_save.connect(_post_save)
 
 
 # HACK

@@ -1,3 +1,4 @@
+from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
@@ -6,7 +7,6 @@ from ecs.core import signals
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user
-from ecs.utils import connect
 from ecs.users.utils import get_office_user
 from ecs.votes.constants import FINAL_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
@@ -17,7 +17,7 @@ def send_submission_message(submission, user, subject, template, **kwargs):
     send_system_message_template(user, subject.format(ec_number=submission.get_ec_number_display()), template, None, submission=submission, **kwargs)
 
 
-@connect(signals.on_study_change)
+@receiver(signals.on_study_change)
 def on_study_change(sender, **kwargs):
     submission = kwargs['submission']
     old_sf, new_sf = kwargs['old_form'], kwargs['new_form']
@@ -38,7 +38,7 @@ def on_study_change(sender, **kwargs):
                         initial_review_task.reopen()
 
 
-@connect(signals.on_study_submit)
+@receiver(signals.on_study_submit)
 def on_study_submit(sender, **kwargs):
     submission = kwargs['submission']
     submission_form = kwargs['form']
@@ -55,7 +55,7 @@ def on_study_submit(sender, **kwargs):
         b2_resubmission_task.done(user)
 
 
-@connect(signals.on_presenter_change)
+@receiver(signals.on_presenter_change)
 def on_presenter_change(sender, **kwargs):
     submission = kwargs['submission']
     user = kwargs['user']
@@ -70,7 +70,7 @@ def on_presenter_change(sender, **kwargs):
             task.assign(new_presenter)
 
 
-@connect(signals.on_susar_presenter_change)
+@receiver(signals.on_susar_presenter_change)
 def on_susar_presenter_change(sender, **kwargs):
     submission = kwargs['submission']
     user = kwargs['user']
@@ -81,7 +81,7 @@ def on_susar_presenter_change(sender, **kwargs):
         send_submission_message(submission, old_susar_presenter, _('Studie {ec_number}'), 'submissions/susar_presenter_change_previous.txt')
 
 
-@connect(signals.on_initial_review)
+@receiver(signals.on_initial_review)
 def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
 
@@ -142,7 +142,7 @@ VOTE_PREPARATION_SOURCES = {
 }
 
 
-@connect(signals.on_categorization)
+@receiver(signals.on_categorization)
 def on_categorization(sender, **kwargs):
     submission = kwargs['submission']
 
@@ -169,7 +169,7 @@ def on_categorization(sender, **kwargs):
                 task.mark_deleted()
 
 
-@connect(signals.on_b2_upgrade)
+@receiver(signals.on_b2_upgrade)
 def on_b2_upgrade(sender, **kwargs):
     submission, vote = kwargs['submission'], kwargs['vote']
     vote.submission_form.is_acknowledged = True

@@ -1,5 +1,6 @@
+from django.dispatch import receiver
+
 from ecs.meetings import signals
-from ecs.utils import connect
 from ecs.votes.models import Vote
 from ecs.meetings.cache import flush_meeting_page_cache
 
@@ -9,12 +10,12 @@ def _flush_cache(meeting):
     flush_meeting_page_cache(meeting, submission_list)
     flush_meeting_page_cache(meeting, tops)
 
-@connect(signals.on_meeting_start)
+@receiver(signals.on_meeting_start)
 def on_meeting_start(sender, **kwargs):
     meeting = kwargs['meeting']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_end)
+@receiver(signals.on_meeting_end)
 def on_meeting_end(sender, **kwargs):
     meeting = kwargs['meeting']
 
@@ -29,30 +30,30 @@ def on_meeting_end(sender, **kwargs):
 
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_date_changed)
+@receiver(signals.on_meeting_date_changed)
 def on_meeting_date_changed(sender, **kwargs):
     meeting = kwargs['meeting']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_top_jump)
+@receiver(signals.on_meeting_top_jump)
 def on_meeting_top_jump(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_top_add)
+@receiver(signals.on_meeting_top_add)
 def on_meeting_top_add(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_top_delete)
+@receiver(signals.on_meeting_top_delete)
 def on_meeting_top_delete(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']
     _flush_cache(meeting)
 
-@connect(signals.on_meeting_top_index_change)
+@receiver(signals.on_meeting_top_index_change)
 def on_meeting_top_index_change(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']

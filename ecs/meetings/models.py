@@ -2,6 +2,7 @@ import math
 from datetime import timedelta, datetime
 from django.db import models
 from django.db.models import F, Prefetch
+from django.dispatch import receiver
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
@@ -737,6 +738,7 @@ class TimetableEntry(models.Model):
         self.meeting._clear_caches()
         self.meeting.create_boardmember_reviews()
 
+@receiver(post_delete, sender=TimetableEntry)
 def _timetable_entry_post_delete(sender, **kwargs):
     entry = kwargs['instance']
     if not entry.timetable_index is None:
@@ -746,12 +748,11 @@ def _timetable_entry_post_delete(sender, **kwargs):
     entry.meeting.update_assigned_categories()
     on_meeting_top_delete.send(Meeting, meeting=entry.meeting, timetable_entry=entry)
 
+@receiver(post_save, sender=TimetableEntry)
 def _timetable_entry_post_save(sender, **kwargs):
     entry = kwargs['instance']
     entry.meeting.update_assigned_categories()
 
-post_delete.connect(_timetable_entry_post_delete, sender=TimetableEntry)
-post_save.connect(_timetable_entry_post_save, sender=TimetableEntry)
 
 class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')

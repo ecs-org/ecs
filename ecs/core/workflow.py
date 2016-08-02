@@ -1,3 +1,4 @@
+from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -206,9 +207,9 @@ class Categorization(Activity):
         s = self.workflow.data
         on_categorization.send(Submission, submission=s)
 
+@receiver(post_save, sender=Submission)
 def unlock_categorization(sender, **kwargs):
     kwargs['instance'].workflow.unlock(Categorization)
-post_save.connect(unlock_categorization, sender=Submission)
 
 
 class CategorizationReview(Activity):
@@ -309,9 +310,9 @@ class ChecklistReview(Activity):
             checklist.status = 'completed'
             checklist.save()
 
+@receiver(post_save, sender=Checklist)
 def unlock_checklist_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(ChecklistReview)
-post_save.connect(unlock_checklist_review, sender=Checklist)
 
 
 class RecommendationReview(ChecklistReview):
@@ -321,9 +322,9 @@ class RecommendationReview(ChecklistReview):
     def is_reentrant(self):
         return True
 
+@receiver(post_save, sender=Checklist)
 def unlock_recommendation_review(sender, **kwargs):
     kwargs['instance'].submission.workflow.unlock(RecommendationReview)
-post_save.connect(unlock_recommendation_review, sender=Checklist)
 
 
 class VotePreparation(Activity):

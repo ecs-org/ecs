@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.dispatch import receiver
 from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext as _
@@ -67,15 +68,15 @@ class ExternalReview(Activity):
             send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX, 'url': url}, submission=c.submission)
         return token
 
+@receiver(post_save, sender=Checklist)
 def unlock_external_review(sender, **kwargs):
     kwargs['instance'].workflow.unlock(ExternalReview)
-post_save.connect(unlock_external_review, sender=Checklist)
 
 # treat declined external review tasks as if the deadline was reached
+@receiver(task_declined, sender=ExternalReview)
 def external_review_declined(sender, **kwargs):
     task = kwargs['task']
     task.node_controller.progress(task.workflow_token, deadline=True)
-task_declined.connect(external_review_declined, sender=ExternalReview)
 
 class ExternalReviewReview(Activity):
     class Meta:

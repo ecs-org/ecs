@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
@@ -757,6 +758,7 @@ def attach_to_submissions(user):
         inv.save()
 
 
+@receiver(post_save, sender=SubmissionForm)
 def _post_submission_form_save(**kwargs):
     new_sf = kwargs['instance']
 
@@ -778,8 +780,6 @@ def _post_submission_form_save(**kwargs):
         submission.save()
 
     on_study_change.send(Submission, submission=submission, old_form=old_sf, new_form=new_sf)
-
-post_save.connect(_post_submission_form_save, sender=SubmissionForm)
 
 
 class Investigator(models.Model):
@@ -821,6 +821,8 @@ class Investigator(models.Model):
             self.user = user
         return super(Investigator, self).save(**kwargs)
 
+
+@receiver(post_save, sender=Investigator)
 def _post_investigator_save(sender, **kwargs):
     investigator = kwargs['instance']
     if not investigator.main:
@@ -828,7 +830,6 @@ def _post_investigator_save(sender, **kwargs):
     investigator.submission_form.primary_investigator = investigator
     investigator.submission_form.save()
     
-post_save.connect(_post_investigator_save, sender=Investigator)
 
 class InvestigatorEmployee(models.Model):
     investigator = models.ForeignKey(Investigator, related_name='employees')

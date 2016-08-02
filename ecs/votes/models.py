@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.db import models
+from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
@@ -143,6 +144,7 @@ class Vote(models.Model):
         }
 
 
+@receiver(post_save, sender=Vote)
 def _post_vote_save(sender, **kwargs):
     vote = kwargs['instance']
     submission_form = vote.submission_form
@@ -157,5 +159,3 @@ def _post_vote_save(sender, **kwargs):
         submission_form.submission.forms.filter(current_pending_vote=vote).exclude(pk=submission_form.pk).update(current_pending_vote=None)
         submission_form.current_pending_vote = vote
     submission_form.save(force_update=True)
-
-post_save.connect(_post_vote_save, sender=Vote)

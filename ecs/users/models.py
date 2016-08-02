@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django_extensions.db.fields.json import JSONField
@@ -93,13 +94,12 @@ class UserSettings(models.Model):
     communication_filter = JSONField()
     useradministration_filter = JSONField()
 
+@receiver(post_save, sender=User)
 def _post_user_save(sender, **kwargs):
     # XXX: 'raw' is passed during fixture loading, but that's an undocumented feature - see django bug #13299 (FMD1)
     if kwargs['created'] and not kwargs.get('raw'):
         UserProfile.objects.create(user=kwargs['instance'])
         UserSettings.objects.create(user=kwargs['instance'])
-
-post_save.connect(_post_user_save, sender=User)
 
 
 class InvitationQuerySet(models.QuerySet):

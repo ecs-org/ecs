@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.db import models
 from django.db.models import Q
+from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
@@ -287,6 +288,7 @@ class Task(models.Model):
         return "%s %s" % (self.data, self.task_type)
 
 # workflow integration:
+@receiver(token_received)
 def workflow_token_received(sender, **kwargs):
     if sender.repeated:
         return
@@ -296,23 +298,21 @@ def workflow_token_received(sender, **kwargs):
     except TaskType.DoesNotExist:
         pass
 
+@receiver(token_consumed)
 def workflow_token_consumed(sender, **kwargs):
     for task in Task.objects.filter(workflow_token=sender, closed_at__isnull=True):
         task.close()
 
+@receiver(token_marked_deleted)
 def workflow_token_marked_deleted(sender, **kwargs):
     for task in Task.objects.filter(workflow_token=sender, deleted_at__isnull=True):
         task.deleted_at = timezone.now()
         task.save()
 
+@receiver(post_save, sender=Node)
 def node_saved(sender, **kwargs):
     node, created = kwargs['instance'], kwargs['created']
     if not created or not node.node_type.is_activity:
         return
     name = node.name or node.node_type.name or node.node_type.implementation
     task_type, created = TaskType.objects.get_or_create(workflow_node=node, name=name)
-        
-token_received.connect(workflow_token_received)
-token_consumed.connect(workflow_token_consumed)
-token_marked_deleted.connect(workflow_token_marked_deleted)
-post_save.connect(node_saved, sender=Node)

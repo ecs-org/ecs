@@ -1,10 +1,10 @@
+from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import slugify
 from django.template import loader
 
-from ecs.utils import connect
 from ecs.votes import signals
 from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
@@ -13,7 +13,7 @@ from ecs.documents.models import Document
 from ecs.communication.mailutils import deliver
 
 
-@connect(signals.on_vote_publication)
+@receiver(signals.on_vote_publication)
 def on_vote_published(sender, **kwargs):
     vote = kwargs['vote']
     sf = vote.submission_form

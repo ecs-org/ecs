@@ -1,4 +1,5 @@
 from django.db import models
+from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from django.utils.translation import ugettext_lazy as _
 
@@ -90,13 +91,13 @@ class Attachment(models.Model):
     page = models.ForeignKey(Page, null=True, blank=True)
 
 
+@receiver(post_delete, sender=Page)
 def _post_page_delete(sender, **kwargs):
     from ecs.help.search_indexes import HelpPageIndex
     HelpPageIndex().remove_object(kwargs['instance'])
-    
+
+
+@receiver(post_save, sender=Page)
 def _post_page_save(sender, **kwargs):
     from ecs.help.tasks import index_help_page
     index_help_page.apply_async(args=[kwargs['instance'].pk])
-
-post_delete.connect(_post_page_delete, sender=Page)
-post_save.connect(_post_page_save, sender=Page)

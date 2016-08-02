@@ -1,8 +1,8 @@
-from ecs.workflow import register, Activity, guard
+from django.dispatch import Signal, receiver
 
+from ecs.workflow import register, Activity, guard
 from ecs.workflow.tests.models import Foo, FooReview
 from ecs.workflow.patterns import Generic
-from django.dispatch import Signal
 
 register(Foo)
 
@@ -36,10 +36,10 @@ class F(Generic):
         model = Foo
         signals = (foo_change,)
 
+@receiver(foo_change)
 def on_foo_change(sender, **kwargs):
     sender.workflow.unlock(D)
     sender.workflow.unlock(F)
-foo_change.connect(on_foo_change)
 
 class E(Activity):
     class Meta:
