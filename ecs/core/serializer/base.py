@@ -421,6 +421,7 @@ _serializers = {
             'pdf_document', 'id', 'current_pending_vote',
             'current_published_vote', 'primary_investigator', 'submitter',
             'sponsor', 'presenter', 'is_transient', 'is_notification_update',
+            'is_acknowledged',
         ),
         follow = (
             'foreignparticipatingcenter_set', 'investigators', 'measures',
