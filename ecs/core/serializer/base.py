@@ -88,12 +88,13 @@ class FieldDocs(object):
             c.append("max. {} characters".format(self.field.max_length))
         elif isinstance(self.field, models.FileField):
             c.append("valid internal zip file path")
-        if self.field.null:
+        if self.field and self.field.null:
             c.append("may be null")
         return c
             
     def paperform_info(self):
-        return get_field_info(self.model, self.field.name)
+        if self.field:
+            return get_field_info(self.model, self.field.name)
 
 
 class SkipInstance(Exception): pass
