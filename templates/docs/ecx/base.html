@@ -59,9 +59,7 @@
     <span class="key">data</span> OBJECT
     <div class="subset">
     {% for name, info in fields.items %}
-        {% with "docs/ecx/object.html" as object_template %}
-            {% include object_template %}
-        {% endwith %}
+        {% include "docs/ecx/object.html" %}
     {% endfor %}
 </div>
 </body>

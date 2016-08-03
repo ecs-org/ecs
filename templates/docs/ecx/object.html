@@ -20,9 +20,7 @@
         <div class="subset">
         {% for name, info in info.items %}
             {% if name != 'array' %}
-                {% with "docs/ecx/object.html" as object_template %}
-                    {% include object_template %}
-                {% endwith %}
+                {% include "docs/ecx/object.html" %}
             {% endif %}
         {% endfor %}
         </div>
