@@ -302,7 +302,7 @@ class ModelSerializer(object):
             return FieldDocs(self.model, field)
         except models.FieldDoesNotExist:
             try:
-                model = getattr(self.model, fieldname).related.model
+                model = getattr(self.model, fieldname).related.related_model
                 spec = _serializers[model].docs()
                 spec['array'] = True
                 return spec
