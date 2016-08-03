@@ -427,7 +427,7 @@ _serializers = {
             'documents', 'nontesteduseddrug_set',
         ),
     ),
-    Submission: SubmissionSerializer(fields=('ec_number')),
+    Submission: SubmissionSerializer(fields=('ec_number',)),
     Investigator: ModelSerializer(Investigator,
         exclude=('id', 'submission_form', 'user'),
         follow=('employees',)
