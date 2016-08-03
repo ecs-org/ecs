@@ -60,7 +60,12 @@ def on_vote_published(sender, **kwargs):
                 tasks[0].reopen()
     elif vote.is_permanent:
         with sudo():
-            Task.objects.for_data(sf.submission).exclude(task_type__workflow_node__uid='b2_review').open().mark_deleted()
+            Task.objects.for_data(sf.submission).exclude(
+                task_type__workflow_node__uid='b2_review').open().mark_deleted()
     elif vote.result == '2':
+        with sudo():
+            Task.objects.for_submission(sf.submission).filter(
+                task_type__is_dynamic=True).open().mark_deleted()
+
         task_type = TaskType.objects.get(workflow_node__uid='b2_resubmission', workflow_node__graph__auto_start=True)
         task_type.workflow_node.bind(sf.submission.workflow.workflows[0]).receive_token(None)
