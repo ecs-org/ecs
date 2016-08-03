@@ -8,8 +8,13 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
 
-from ecs.core.models import SubmissionForm, Submission, EthicsCommission, Investigator, InvestigatorEmployee, Measure, ForeignParticipatingCenter, NonTestedUsedDrug
+from ecs.core.models import (
+    SubmissionForm, Submission, EthicsCommission, Investigator,
+    InvestigatorEmployee, Measure, ForeignParticipatingCenter,
+    NonTestedUsedDrug,
+)
 from ecs.documents.models import Document, DocumentType
+from ecs.core.paper_forms import get_field_info
 
 CURRENT_SERIALIZER_VERSION = '1.3'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
@@ -81,11 +86,12 @@ class FieldDocs(object):
         if self.constraint:
             c.append(self.constraint)
         if isinstance(self.field, models.DateTimeField):
-            c.append("RFC 3339 with timezone UTC+1 (e.g. 2010-07-14T16:04:35+01:00)")
+            c.append(
+                "RFC 3339 with timezone UTC+1 (e.g. 2010-07-14T16:04:35+01:00)")
         elif isinstance(self.field, models.DateField):
             c.append("ISO 8601 with timezone UTC+1 (e.g. 2010-07-14)")
         elif isinstance(self.field, models.CharField):
-            c.append("max. {0} characters".format(self.field.max_length))
+            c.append("max. {} characters".format(self.field.max_length))
         elif isinstance(self.field, models.FileField):
             c.append("valid internal zip file path")
         if self.field.null:
@@ -93,7 +99,6 @@ class FieldDocs(object):
         return c
             
     def paperform_info(self):
-        from ecs.core.paper_forms import get_field_info
         return get_field_info(self.model, self.field.name)
 
 
@@ -178,7 +183,8 @@ class ModelSerializer(object):
                         pass
                 return result
             except ValueError as e:
-                raise ValueError("cannot dump {0}.{1}: {2}".format(self.model.__name__, fieldname, e))
+                raise ValueError("cannot dump {}.{}: {}".format(
+                    self.model.__name__, fieldname, e))
         
         field = self.model._meta.get_field(fieldname)
 
@@ -186,11 +192,12 @@ class ModelSerializer(object):
             return dump_model_instance(val, zf)
         elif isinstance(field, models.FileField):
             name, ext = os.path.splitext(val.name)
-            zip_name = 'attachments/{0}{1}'.format(uuid4(), ext)
+            zip_name = 'attachments/{}{}'.format(uuid4(), ext)
             zf.write(val.path, zip_name)
             return zip_name
         else:
-            raise ValueError("cannot serialize objects of type {0}".format(type(val)))
+            raise ValueError(
+                "cannot serialize objects of type {}".format(type(val)))
         
         return val
 
@@ -210,7 +217,8 @@ class ModelSerializer(object):
         result = []
         for data in val:
             try:
-                result.append(load_model_instance(model, data, zf, version, commit=commit))
+                result.append(load_model_instance(
+                    model, data, zf, version, commit=commit))
             except SkipInstance:
                 pass
         return result
@@ -234,12 +242,14 @@ class ModelSerializer(object):
                 val = self.load_many(field.related_model, val, zf, version)
                 deferr = True
             elif isinstance(field, models.ManyToOneRel):
-                val = self.load_many(field.related_model, val, zf, version, commit=False)
+                val = self.load_many(field.related_model, val, zf, version,
+                    commit=False)
                 deferr = True
             elif isinstance(field, models.ForeignKey):
                 val = load_model_instance(field.rel.to, val, zf, version)
             elif isinstance(field, GenericRelation):
-                val = self.load_many(field.rel.to, val, zf, version, commit=False)
+                val = self.load_many(field.rel.to, val, zf, version,
+                    commit=False)
                 deferr = True
         elif isinstance(val, list):
             rel_model = getattr(self.model, fieldname).related.related_model
@@ -330,7 +340,10 @@ class DocumentTypeSerializer(object):
             raise ValueError("no such doctype: {1}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"{0}"'.format(doctype.name), doctype.name) for doctype in DocumentType.objects.all()])
+        return FieldDocs(choices=[
+            ('"{}"'.format(doctype.name), doctype.name)
+            for doctype in DocumentType.objects.all()
+        ])
         
     def dump(self, obj, zf):
         return obj.name
@@ -342,7 +355,7 @@ class DocumentSerializer(ModelSerializer):
 
         d = super().dump(obj, zf)
 
-        zip_name = 'attachments/{0}'.format(uuid4())
+        zip_name = 'attachments/{}'.format(uuid4())
         if obj.mimetype == 'application/pdf':
             zip_name += '.pdf'
         f = obj.retrieve_raw()
@@ -368,10 +381,13 @@ class EthicsCommissionSerializer(object):
         try:
             return EthicsCommission.objects.get(uuid=data)
         except EthicsCommission.DoesNotExist:
-            raise ValueError("no such ethicscommission: {0}".format(data))
+            raise ValueError("no such ethicscommission: {}".format(data))
             
     def docs(self):
-        return FieldDocs(choices=[('"{0}"'.format(ec.uuid.hex), ec.name) for ec in EthicsCommission.objects.all()])
+        return FieldDocs(choices=[
+            ('"{}"'.format(ec.uuid.hex), ec.name)
+            for ec in EthicsCommission.objects.all()
+        ])
         
     def dump(self, obj, zf):
         return obj.uuid.hex
@@ -395,11 +411,13 @@ class SubmissionFormSerializer(ModelSerializer):
 _serializers = {
     SubmissionForm: SubmissionFormSerializer(SubmissionForm,
         groups = (
-            'study_plan', 'insurance', 'sponsor', 'invoice', 'german', 'submitter', 'project_type', 'medtech', 'substance', 'subject',
+            'study_plan', 'insurance', 'sponsor', 'invoice', 'german',
+            'submitter', 'project_type', 'medtech', 'substance', 'subject',
         ),
         exclude = (
-            'pdf_document', 'id', 'primary_investigator', 'submitter', 'sponsor',
-            'presenter', 'is_transient', 'is_notification_update',
+            'pdf_document', 'id', 'current_pending_vote',
+            'current_published_vote', 'primary_investigator', 'submitter',
+            'sponsor', 'presenter', 'is_transient', 'is_notification_update',
         ),
         follow = {
             'foreignparticipatingcenter_set': 'submission_form',
@@ -410,24 +428,39 @@ _serializers = {
         },
     ),
     Submission: SubmissionSerializer(fields=('ec_number')),
-    Investigator: ModelSerializer(Investigator, exclude=('id', 'submission_form', 'user'), follow={'employees': 'investigator'}),
-    InvestigatorEmployee: ModelSerializer(InvestigatorEmployee, exclude=('id', 'investigator')),
+    Investigator: ModelSerializer(Investigator,
+        exclude=('id', 'submission_form', 'user'),
+        follow={'employees': 'investigator'}
+    ),
+    InvestigatorEmployee: ModelSerializer(InvestigatorEmployee,
+        exclude=('id', 'investigator')
+    ),
     Measure: ModelSerializer(Measure, exclude=('id', 'submission_form')),
-    ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter, exclude=('id', 'submission_form')),
-    NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug, exclude=('id', 'submission_form')),
-    Document: DocumentSerializer(Document, fields=('doctype', 'name', 'original_file_name', 'date', 'version', 'mimetype')),
+    ForeignParticipatingCenter: ModelSerializer(ForeignParticipatingCenter,
+        exclude=('id', 'submission_form')
+    ),
+    NonTestedUsedDrug: ModelSerializer(NonTestedUsedDrug,
+        exclude=('id', 'submission_form')
+    ),
+    Document: DocumentSerializer(Document,
+        fields=(
+            'doctype', 'name', 'original_file_name', 'date', 'version',
+            'mimetype',
+        )
+    ),
     DocumentType: DocumentTypeSerializer(),
     EthicsCommission: EthicsCommissionSerializer(),
 }
 
 def load_model_instance(model, data, zf, version, commit=True):
     if model not in _serializers:
-        raise ValueError("cannot load objects of type {0}".format(model))
+        raise ValueError("cannot load objects of type {}".format(model))
     return _serializers[model].load(data, zf, version, commit=commit)
 
 def dump_model_instance(obj, zf):
     if obj.__class__ not in _serializers:
-        raise ValueError("cannot serialize objecs of type {0}".format(obj.__class__))
+        raise ValueError(
+            "cannot serialize objecs of type {}".format(obj.__class__))
     return _serializers[obj.__class__].dump(obj, zf)
     
 class _JsonEncoder(json.JSONEncoder):
@@ -444,7 +477,8 @@ class Serializer(object):
     def read(self, file_like):
         zf = zipfile.ZipFile(file_like, 'r')
         data = json.loads(zf.read(DATA_JSON_NAME).decode('utf-8'))
-        submission_form = _serializers[SubmissionForm].load(data['data'], zf, data['version'])
+        submission_form = _serializers[SubmissionForm].load(
+            data['data'], zf, data['version'])
         return submission_form
     
     def write(self, submission_form, file_like):
