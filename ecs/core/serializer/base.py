@@ -404,6 +404,11 @@ class SubmissionSerializer(ModelSerializer):
         
 
 class SubmissionFormSerializer(ModelSerializer):
+    def dump_field(self, fieldname, val, zf, obj):
+        if fieldname == 'documents':
+            val = val.filter(doctype__is_downloadable=True)
+        return super().dump_field(fieldname, val, zf, obj)
+
     def load(self, data, zf, version, commit=True):
         obj = super().load(data, zf, version, commit=False)
         obj.is_transient = True
