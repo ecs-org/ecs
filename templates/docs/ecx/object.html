@@ -3,9 +3,11 @@
     {% if info.value %}
         {{ info.json_type }}
         {% for constraint in info.constraints %}{{ constraint }}{% if not forloop.last %}, {% endif %}{% endfor %}
-        <span class="paperform">
-            ({{ info.paperform_info.number|default:'' }} {{ info.paperform_info.label }})
-        </span>
+        {% if info.paperform_info %}
+            <span class="paperform">
+                ({{ info.paperform_info.number|default:'' }} {{ info.paperform_info.label }})
+            </span>
+        {% endif %}
         {% if info.choices %}
         - choices:
         <dl class="choices">
