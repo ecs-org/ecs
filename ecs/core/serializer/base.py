@@ -323,16 +323,16 @@ class ModelSerializer(object):
             return spec
         
     def docs(self):
-        d = {}
-        for name in self.get_field_names():
+        d = OrderedDict()
+        for name in sorted(self.get_field_names()):
             prefix, key = self.split_prefix(name)
             info = self.get_field_docs(name)
             if prefix:
-                d.setdefault(prefix, {})
+                d.setdefault(prefix, OrderedDict())
                 d[prefix][key] = info
             else:
                 d[name] = info
-        return OrderedDict(sorted(d.items()))
+        return d
 
 
 class DocumentTypeSerializer(object):
@@ -490,7 +490,7 @@ class Serializer(object):
             'data': dump_model_instance(submission_form, zf),
         }
         zf.writestr(DATA_JSON_NAME,
-            json.dumps(data, cls=_JsonEncoder, indent=2).encode('utf-8'))
+            json.dumps(data, cls=_JsonEncoder, indent=2, sort_keys=True).encode('utf-8'))
     
     def docs(self):
         return _serializers[SubmissionForm].docs()
