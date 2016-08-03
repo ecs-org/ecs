@@ -62,16 +62,12 @@ CHANGELOG = (
 class FieldDocs(object):
     value = True
 
-    def __init__(self, model=None, field=None, constraint=None, json_type=None, choices=None):
+    def __init__(self, model=None, field=None, choices=None):
         self.model = model
         self.field = field
-        self.constraint = constraint
-        self._json_type = json_type
         self.choices = choices
 
     def json_type(self):
-        if self._json_type:
-            return self._json_type
         if isinstance(self.field, models.BooleanField):
             return "BOOLEAN"
         elif isinstance(self.field, models.IntegerField):
@@ -83,8 +79,6 @@ class FieldDocs(object):
             
     def constraints(self):
         c = []
-        if self.constraint:
-            c.append(self.constraint)
         if isinstance(self.field, models.DateTimeField):
             c.append(
                 "RFC 3339 with timezone UTC+1 (e.g. 2010-07-14T16:04:35+01:00)")
