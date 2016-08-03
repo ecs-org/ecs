@@ -111,9 +111,6 @@ class FieldDocs(object):
             return get_field_info(self.model, self.field.name)
 
 
-class SkipInstance(Exception): pass
-
-
 class ModelSerializer(object):
     exclude = ('id',)
     groups = ()
@@ -182,10 +179,7 @@ class ModelSerializer(object):
             try:
                 result = []
                 for x in val.all():
-                    try:
-                        result.append(dump_model_instance(x, zf))
-                    except SkipInstance:
-                        pass
+                    result.append(dump_model_instance(x, zf))
                 return result
             except ValueError as e:
                 raise ValueError("cannot dump {}.{}: {}".format(
@@ -221,11 +215,8 @@ class ModelSerializer(object):
     def load_many(self, model, val, zf, version, commit=True):
         result = []
         for data in val:
-            try:
-                result.append(load_model_instance(
-                    model, data, zf, version, commit=commit))
-            except SkipInstance:
-                pass
+            result.append(load_model_instance(
+                model, data, zf, version, commit=commit))
         return result
         
     def load_field(self, fieldname, val, zf, version):
@@ -353,8 +344,7 @@ class DocumentTypeSerializer(object):
 
 class DocumentSerializer(ModelSerializer):
     def dump(self, obj, zf):
-        if not obj.doctype.is_downloadable:
-            raise SkipInstance
+        assert obj.doctype.is_downloadable
 
         d = super().dump(obj, zf)
 
