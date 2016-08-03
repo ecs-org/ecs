@@ -1,7 +1,7 @@
 <div class="item">
     <span class="key">{{ name }}</span>
     {% if info.value %}
-        {{ info.json_type }}
+        {{ info.json_type }}{% if info.array %}[]{% endif %}
         {% for constraint in info.constraints %}{{ constraint }}{% if not forloop.last %}, {% endif %}{% endfor %}
         {% if info.paperform_info %}
             <span class="paperform">

@@ -7,6 +7,7 @@ from collections import OrderedDict
 from django.db import models
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
+from django.contrib.postgres.fields import ArrayField
 
 from ecs.core.models import (
     SubmissionForm, Submission, EthicsCommission, Investigator,
@@ -64,8 +65,13 @@ class FieldDocs(object):
 
     def __init__(self, model=None, field=None, choices=None):
         self.model = model
-        self.field = field
-        self.choices = choices
+        if isinstance(field, ArrayField):
+            self.field = field.base_field
+            self.array = True
+        else:
+            self.field = field
+            self.array = False
+        self._choices = choices
 
     def json_type(self):
         if isinstance(self.field, models.BooleanField):
@@ -91,6 +97,14 @@ class FieldDocs(object):
         if self.field and self.field.null:
             c.append("may be null")
         return c
+
+    def choices(self):
+        if self._choices:
+            cs = self._choices
+        elif self.field:
+            cs = self.field.choices
+        if cs:
+            return [(json.dumps(k), v) for k, v in cs]
             
     def paperform_info(self):
         if self.field:
@@ -330,7 +344,7 @@ class DocumentTypeSerializer(object):
             
     def docs(self):
         return FieldDocs(choices=[
-            ('"{}"'.format(doctype.name), doctype.name)
+            (doctype.name, doctype.name)
             for doctype in DocumentType.objects.all()
         ])
         
@@ -374,7 +388,7 @@ class EthicsCommissionSerializer(object):
             
     def docs(self):
         return FieldDocs(choices=[
-            ('"{}"'.format(ec.uuid.hex), ec.name)
+            (ec.uuid.hex, ec.name)
             for ec in EthicsCommission.objects.all()
         ])
         
