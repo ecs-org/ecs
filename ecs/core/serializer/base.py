@@ -295,23 +295,21 @@ class ModelSerializer(object):
         try:
             field = self.model._meta.get_field(fieldname)
             if isinstance(field, models.ForeignKey):
-                try:
-                    return _serializers[field.rel.to].docs()
-                except KeyError:
-                    print(fieldname, self.model)
-            if isinstance(field, models.ManyToManyField):
+                return _serializers[field.rel.to].docs()
+            elif isinstance(field, models.ManyToManyField):
                 spec = _serializers[field.rel.to].docs()
+                spec['array'] = True
+                return spec
+            elif isinstance(field, models.ManyToOneRel):
+                spec = _serializers[field.related_model].docs()
                 spec['array'] = True
                 return spec
             return FieldDocs(self.model, field)
         except models.FieldDoesNotExist:
-            try:
-                model = getattr(self.model, fieldname).related.related_model
-                spec = _serializers[model].docs()
-                spec['array'] = True
-                return spec
-            except AttributeError:
-                raise
+            model = getattr(self.model, fieldname).related.related_model
+            spec = _serializers[model].docs()
+            spec['array'] = True
+            return spec
         
     def docs(self):
         d = {}
