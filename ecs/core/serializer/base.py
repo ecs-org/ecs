@@ -103,7 +103,7 @@ class SkipInstance(Exception): pass
 class ModelSerializer(object):
     exclude = ('id',)
     groups = ()
-    follow = {}
+    follow = ()
     fields = ()
 
     def __init__(self, model, groups=None, exclude=None, follow=None, fields=None):
@@ -151,11 +151,7 @@ class ModelSerializer(object):
         names = set(f.name for f in self.model._meta.fields if f.name not in self.exclude)
         if self.fields:
             names = names.intersection(self.fields)
-
-        return names.union(self.follow.keys())
-        
-    def get_reverse_name(self, follow_name):
-        return self.follow.get(follow_name)
+        return names.union(self.follow)
         
     def split_prefix(self, name):
         prefix, key = None, name
@@ -412,18 +408,15 @@ _serializers = {
             'current_published_vote', 'primary_investigator', 'submitter',
             'sponsor', 'presenter', 'is_transient', 'is_notification_update',
         ),
-        follow = {
-            'foreignparticipatingcenter_set': 'submission_form',
-            'investigators': 'submission_form',
-            'measures': 'submission_form',
-            'documents': '_submission_forms',
-            'nontesteduseddrug_set': 'submission_form',
-        },
+        follow = (
+            'foreignparticipatingcenter_set', 'investigators', 'measures',
+            'documents', 'nontesteduseddrug_set',
+        ),
     ),
     Submission: SubmissionSerializer(fields=('ec_number')),
     Investigator: ModelSerializer(Investigator,
         exclude=('id', 'submission_form', 'user'),
-        follow={'employees': 'investigator'}
+        follow=('employees',)
     ),
     InvestigatorEmployee: ModelSerializer(InvestigatorEmployee,
         exclude=('id', 'investigator')
