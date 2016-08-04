@@ -4,10 +4,10 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from reversion.models import Version
 
+from ecs.checklists.models import ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.notifications.models import NotificationAnswer
 from ecs.meetings.models import TimetableEntry
-from ecs.users.utils import user_flag_required
 from ecs.core.diff import word_diff
 
 
@@ -28,7 +28,6 @@ def _render_value(val):
     }.get(val, str(val))
 
 
-@user_flag_required('is_internal')
 def field_history(request, model_name=None, pk=None):
     try:
         model, fields = ALLOWED_MODEL_FIELDS[model_name]
@@ -36,6 +35,10 @@ def field_history(request, model_name=None, pk=None):
         raise Http404()
     
     obj = get_object_or_404(model, pk=pk)
+
+    if (model != ChecklistAnswer or request.user != obj.checklist.last_edited_by) and \
+            not request.user.profile.is_internal:
+        raise Http404()
 
     history = []
     last_value = {fieldname: '' for fieldname, label in fields}

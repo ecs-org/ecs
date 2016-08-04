@@ -338,7 +338,22 @@
                     {% endif %}
                 ]);
             });
-            
+
+            {% for checklist, formset in checklist_reviews %}
+                {% if not formset.readonly %}
+                    {% if user.profile.is_internal or checklist.last_edited_by == user %}
+                        {% for form in formset %}
+                            ecs.textarea.installToolbarItem('#{{ form.comment.id_for_label }}',
+                                ecs.textarea.toolbarItems.versionHistory(
+                                    "{% trans 'History' %}",
+                                    "{% url 'ecs.core.views.fieldhistory.field_history' model_name='checklist_answer' pk=form.instance.pk %}"
+                                )
+                            );
+                        {% endfor %}
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+
             {% if user.profile.is_internal and vote_review_form and vote_review_form.instance.pk %}
                 $('form.review.vote .CharField textarea').each(function(){
                     ecs.textarea.installToolbarItem(this,

@@ -5,6 +5,8 @@ from django.db.models import Q, F
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.utils.text import slugify
 
+from reversion import revisions as reversion
+
 from ecs.authorization import AuthorizationManager
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
@@ -129,6 +131,7 @@ class Checklist(models.Model):
         return self.submission
 
 
+@reversion.register(fields=('answer', 'comment'))
 class ChecklistAnswer(models.Model):
     checklist = models.ForeignKey(Checklist, related_name='answers')
     question = models.ForeignKey(ChecklistQuestion)

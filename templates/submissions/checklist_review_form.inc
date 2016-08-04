@@ -26,6 +26,11 @@
                 <label for="{{ form.comment.id_for_label }}">
                     {{ form.comment.label }}
                 </label>
+                {% if formset.readonly %}
+                    {% url 'ecs.core.views.fieldhistory.field_history' model_name='checklist_answer' pk=form.instance.pk as history_url %}
+                    <a class="fa fa-history text-primary" style="font-size:150%;" href="javascript:void(ecs.fieldhistory.show('{{ history_url }}'))"></a>
+                    <br>
+                {% endif %}
                 {{ form.comment }}
                 {% if form.comment.errors %}
                     {{ form.comment.errors }}
