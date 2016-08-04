@@ -254,23 +254,33 @@
         </div>
     {% endif %}
 
-    {% for checklist, checklist_review_form in checklist_reviews %}
+    {% for checklist, formset in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab collapse">
-        {% with checklist_review_form as review_form %}
-            {% if review_form.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
-                {% if checklist.status == 'review_ok' or user.profile.is_internal %}
-                    <p>
-                        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk %}">
-                            <span class="fa fa-file-pdf-o"></span>
-                            <span>{% if checklist.status == 'review_ok' %}{% trans "Download PDF" %}{% else %}{% trans 'Download unpublished Version as PDF' %}{% endif %}<span>
-                        </a>
-                    </p>
-                {% endif %}
+        {% if formset.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
+            {% if checklist.status == 'review_ok' or user.profile.is_internal %}
+                {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
+                <p>
+                    <a class="btn btn-sm btn-outline-primary" href="{{ pdf_url }}">
+                        <span class="fa fa-file-pdf-o"></span>
+                        <span>
+                            {% if checklist.status == 'review_ok' %}
+                                {% trans "Download PDF" %}
+                            {% else %}
+                                {% trans 'Download unpublished Version as PDF' %}
+                            {% endif %}
+                        <span>
+                    </a>
+                </p>
             {% endif %}
-            {% include 'submissions/checklist_review_form.inc' %}
-        {% endwith %}
-        {% if checklist_review_form.reopen_task and checklist_review_form.readonly %}
-            <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.tasks.views.reopen_task' task_pk=checklist_review_form.reopen_task.pk %}">{% trans 'Reopen' %}</a></p>
+        {% endif %}
+        {% include 'submissions/checklist_review_form.inc' %}
+        {% if formset.reopen_task and formset.readonly %}
+            {% url 'ecs.tasks.views.reopen_task' task_pk=formset.reopen_task.pk as reopen_url %}
+            <p>
+                <a class="btn btn-sm btn-outline-primary" href="{{ reopen_url }}">
+                    {% trans 'Reopen' %}
+                </a>
+            </p>
         {% endif %}
     </div>
     {% endfor %}

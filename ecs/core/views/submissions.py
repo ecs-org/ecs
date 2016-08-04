@@ -25,7 +25,7 @@ from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import (
     Submission, SubmissionForm, Investigator, TemporaryAuthorization,
 )
-from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
+from ecs.checklists.models import ChecklistBlueprint, Checklist
 
 from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
@@ -36,7 +36,7 @@ from ecs.core.forms.layout import SUBMISSION_FORM_TABS
 from ecs.votes.forms import VoteReviewForm, VotePreparationForm, B2VotePreparationForm
 from ecs.core.forms.utils import submission_form_to_dict
 from ecs.core.paper_forms import get_field_info
-from ecs.checklists.forms import make_checklist_form
+from ecs.checklists.forms import ChecklistAnswerFormSet
 from ecs.notifications.models import (
     Notification, NotificationType, CenterCloseNotification,
 )
@@ -192,15 +192,25 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     checklist_reviews = []
     for checklist in checklists:
         if checklist_overwrite and checklist in checklist_overwrite:
-            checklist_form = checklist_overwrite[checklist]
+            checklist_formset = checklist_overwrite[checklist]
         else:
-            reopen_task = None
-            tasks = list(get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint).filter(assigned_to=request.user, deleted_at__isnull=True).order_by('-closed_at'))
-            if (tasks and not any(t for t in tasks if not t.closed_at and not
-                t.task_type.workflow_node.uid in ('thesis_recommendation', 'expedited_recommendation', 'localec_recommendation')) and not submission.meetings.filter(started__isnull=True).exists()):
-                reopen_task = tasks[0]
-            checklist_form = make_checklist_form(checklist)(readonly=True, reopen_task=reopen_task)
-        checklist_reviews.append((checklist, checklist_form))
+            checklist_formset = ChecklistAnswerFormSet(None, readonly=True,
+                prefix='checklist{}'.format(checklist.id),
+                queryset=checklist.answers.order_by('question__index'))
+
+            task = (get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint)
+                .filter(assigned_to=request.user, deleted_at__isnull=True)
+                .order_by('-closed_at')
+                .first())
+
+            if task and task.closed_at and (
+                task.task_type.workflow_node.uid not in (
+                    'thesis_recommendation', 'expedited_recommendation',
+                    'localec_recommendation',
+                ) or submission.meetings.filter(started=None).exists()
+            ):
+                checklist_formset.reopen_task = task
+        checklist_reviews.append((checklist, checklist_formset))
 
     checklist_summary = []
     for checklist in checklists:
@@ -503,28 +513,23 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         object_id=related_task.pk,
     )
 
-    form = make_checklist_form(checklist)(request.POST or docstash.POST)
-    form.related_task = related_task
-
-    task = request.task_management.task
-    if task:
-        form.bound_to_task = task
+    formset = ChecklistAnswerFormSet(request.POST or docstash.POST,
+        prefix='checklist{}'.format(checklist.id),
+        queryset=checklist.answers.order_by('question__index'))
+    formset.related_task = related_task
+    formset.bound_to_task = request.task_management.task
 
     extra_context = {}
 
     if request.method == 'POST':
-        if form.is_valid():
+        if formset.is_valid():
             complete_task = request.POST.get('complete_task') == 'complete_task'
             really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
 
-            for question in blueprint.questions.all().order_by('index'):
-                answer = ChecklistAnswer.objects.get(checklist=checklist, question=question)
-                answer.answer = form.cleaned_data['q%s' % question.index]
-                answer.comment = form.cleaned_data['c%s' % question.index]
-                answer.save()
-
-            checklist.save() # touch the checklist instance to trigger the post_save signal
+            formset.save()
             docstash.delete()
+
+            checklist.save()    # XXX: trigger post_save signal
 
             if (complete_task or really_complete_task) and not checklist.is_complete:
                 messages.error(request, _('Your review is incomplete.'))
@@ -542,7 +547,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             docstash.save()
 
     return readonly_submission_form(request, submission_form=submission_form,
-        checklist_overwrite={checklist: form}, extra_context=extra_context)
+        checklist_overwrite={checklist: formset}, extra_context=extra_context)
 
 
 @user_flag_required('is_internal')

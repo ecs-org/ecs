@@ -1,26 +1,39 @@
-from collections import OrderedDict
 from datetime import timedelta
 
 from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 
-from ecs.core.forms.utils import ReadonlyFormMixin
+from ecs.checklists.models import ChecklistAnswer
+from ecs.core.forms.utils import ReadonlyFormSetMixin
 from ecs.core.forms.fields import NullBooleanField
 from ecs.tasks.models import TaskType
 
 
-def make_checklist_form(checklist):
-    fields = OrderedDict()
-    blueprint = checklist.blueprint
-    for question in blueprint.questions.all().order_by('index'):
-        answer = checklist.answers.get(question=question)
-        fullquestion = '{num}. {text}\n{desc}'.format(num=question.number, text=question.text, desc=question.description)
-        fields['q%s' % question.index] = NullBooleanField(initial=answer.answer, label=fullquestion, help_text=fullquestion, required=False)
-        fields['c%s' % question.index] = forms.CharField(initial=answer.comment, label=_('comment/reasoning'), required=question.requires_comment, widget=forms.Textarea())
-    form_class = type('Checklist%sForm' % checklist.pk, (ReadonlyFormMixin, forms.BaseForm,), {'base_fields': fields})
-    form_class.checklist = checklist
-    return form_class
+class ChecklistAnswerForm(forms.ModelForm):
+    answer = NullBooleanField(required=False)
+
+    class Meta:
+        model = ChecklistAnswer
+        fields = ('answer', 'comment')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        question = self.instance.question
+        fullquestion = '{num}. {text}\n{desc}'.format(num=question.number,
+            text=question.text, desc=question.description)
+        self.fields['answer'].label = fullquestion
+        self.fields['answer'].help_text = fullquestion
+        self.fields['comment'].required = question.requires_comment
+        self.fields['comment'].label = _('comment/reasoning')
+
+
+class BaseChecklistAnswerFormSet(ReadonlyFormSetMixin, forms.BaseModelFormSet):
+    pass
+
+
+ChecklistAnswerFormSet = forms.modelformset_factory(ChecklistAnswer,
+    formset=BaseChecklistAnswerFormSet, extra=0, form=ChecklistAnswerForm)
 
 
 class ChecklistTaskCreationForm(forms.Form):
