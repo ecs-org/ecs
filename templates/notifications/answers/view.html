@@ -17,7 +17,7 @@
 
 {% if user.profile.is_internal %}
 <br/><p>
-    <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}', 'text'))">{% trans 'History' %}</a>
+    <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">{% trans 'History' %}</a>
 </p>
 {% endif %}
 

@@ -102,7 +102,7 @@ ecs.textarea.toolbarItems.versionHistory = function(label, url){
             'css': {'font-size': '150%'},
             click: function(ev) {
                 ev.preventDefault();
-                ecs.fieldhistory.show(url, textarea.attr('name'));
+                ecs.fieldhistory.show(url);
             }
         });
     };
