@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from reversion.models import Version
 
@@ -12,10 +12,20 @@ from ecs.core.diff import word_diff
 
 
 ALLOWED_MODEL_FIELDS = {
+    'checklist_answer': (ChecklistAnswer,
+        (('answer', _('Answer')), ('comment', _('Comment')),)),
     'vote': (Vote, (('result', _('Vote')), ('text', _('Text')),)),
     'notification_answer': (NotificationAnswer, (('text', _('Text')),)),
     'timetable_entry': (TimetableEntry, (('text', _('Text')),)),
 }
+
+
+def _render_value(val):
+    return {
+        None: '',
+        False: ugettext('No'),
+        True: ugettext('Yes'),
+    }.get(val, str(val))
 
 
 @user_flag_required('is_internal')
@@ -28,15 +38,14 @@ def field_history(request, model_name=None, pk=None):
     obj = get_object_or_404(model, pk=pk)
 
     history = []
-    last_value = dict((fieldname, '') for fieldname, label in fields)
+    last_value = {fieldname: '' for fieldname, label in fields}
     last_change = None
-    versions = list(
-        Version.objects.get_for_object(obj).order_by('revision__date_created')
-    )
+    versions = Version.objects.get_for_object(obj).order_by(
+        'revision__date_created')
     for change in versions:
         diffs = []
         for fieldname, label in fields:
-            value = change.field_dict[fieldname] or ''
+            value = _render_value(change.field_dict[fieldname])
             diffs += [(label, word_diff(last_value[fieldname], value))]
             last_value[fieldname] = value
 
