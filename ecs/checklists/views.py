@@ -24,7 +24,8 @@ def checklist_comments(request, checklist_pk=None, flavour='negative'):
 
 
 def checklist_pdf(request, checklist_pk=None):
-    checklist = get_object_or_404(Checklist, pk=checklist_pk)
+    checklist = get_object_or_404(Checklist, pk=checklist_pk,
+        blueprint__allow_pdf_download=True)
     return handle_download(request, checklist.pdf_document)
 
 
