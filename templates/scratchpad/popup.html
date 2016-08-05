@@ -1,4 +1,4 @@
-{% load i18n core %}
+{% load i18n core widget_tweaks %}
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -15,7 +15,7 @@
 <div class="modal-body">
     <form id="scratchpad_form" action="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post">
         {% csrf_token %}
-        {{ form.text }}
+        {{ form.text|add_class:'form-control' }}
     </form>
 
     <span class="modified_at">{% blocktrans with scratchpad.modified_at|date:"d.m.Y, H:i:s" as modified_at %}Last Change: {{ modified_at }}{% endblocktrans %}</span>

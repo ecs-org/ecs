@@ -201,12 +201,7 @@ class HelpSearchView(SearchView):
         if self.searchqueryset is not None:
             kwargs['searchqueryset'] = self.searchqueryset
 
-        form = self.form_class(data, **kwargs)
-        form.fields['q'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': _('Search'),
-        })
-        return form
+        return self.form_class(data, **kwargs)
 
 
 def search(request, *args, **kwargs):

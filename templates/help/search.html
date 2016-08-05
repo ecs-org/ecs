@@ -1,11 +1,12 @@
 {% extends 'help/base.html' %}
-{% load highlight %}
+{% load i18n highlight widget_tweaks %}
 
 {% block content %}
 <h2>Suche</h2>
   <form action="" method="get">
     <div class="searchbox input-group input-group-sm">
-      {{ form.q }}
+      {% trans 'Search' as placeholder %}
+      {% render_field form.q class+='form-control' placeholder=placeholder %}
       <span class="input-group-btn">
         <button class="btn btn-secondary fa fa-search" type="submit"></button>
       </span>

@@ -1,7 +1,7 @@
-{% load i18n %}
+{% load i18n widget_tweaks %}
 
 <form action="{{ request.path }}" method="POST" class="open-in-widget">
     {% csrf_token %}
-    {{ form.text }}
+    {{ form.text|add_class:'form-control' }}
     <button type="submit" class="btn btn-sm btn-primary btn-block">{% trans 'save' %}</button>
 </form>

@@ -1,5 +1,5 @@
 {% extends "help/base.html" %}
-{% load staticfiles %}
+{% load staticfiles widget_tweaks %}
 
 {% block upload_params %}{% if page.view_id %}&amp;view={{ page.view_id }}{% endif %}&amp;page={{ page.id }}{% endblock %}
 
@@ -12,7 +12,7 @@
             View: {{ form.view }}
             Anchor: {{ form.anchor }}
         </div>
-        <div class="title">{{ form.title }}</div>
+        <div class="title">{{ form.title|add_class:'form-control'|attr:'placeholder:Title' }}</div>
         <div class="text">
             <div class="options">
             <a id="ReST_italic" class="fa fa-italic" title="Italic"></a>
@@ -20,9 +20,9 @@
             | <a id="ReST_heading" class="fa fa-header" title="Header"></a>
             | <a id="ReST_preview">Vorschau</a>
             </div>
-            {{ form.text }}
+            {{ form.text|add_class:'form-control'|attr:'rows:20' }}
         </div>
-        <input type="submit" value="Speichern" />
+        <input class="btn btn-sm btn-primary m-t-1" type="submit" value="Speichern" />
     </form>
     <div id="help_attachments">
         <label>Filter <input type="text" id="help_attachments_filter_input"/></label>

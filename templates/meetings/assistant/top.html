@@ -1,5 +1,5 @@
 {% extends 'meetings/assistant/base.html' %}
-{% load core i18n userutils meetingutils %}
+{% load core i18n userutils meetingutils widget_tweaks %}
 
 {% block meeting_assistant_body %}
   <div class="column_main">
@@ -20,7 +20,7 @@
     {% if not submission %}
         <div class="meeting_assistant_block">
             {% if not top.is_break %}
-                {{ form.text }}
+                {{ form.text|add_class:'form-control' }}
             {% endif %}
 
             <div class="pull-left">
@@ -52,8 +52,7 @@
               
             </div>
             
-            {{ form.text }}
-            
+            {{ form.text|add_class:'form-control' }}
     {% endif %}
 
     </form>
