@@ -10,13 +10,13 @@
 {% endif %}
 
 <ol>
-{% with review_form|getitem:'text' as field %}
+{% with review_form.text as field %}
     {% include "submissions/review_field.inc" %}
 {% endwith %}
-{% with review_form|getitem:'is_final_version' as field %}
+{% with review_form.is_final_version as field %}
     {% include "submissions/review_field.inc" %}
 {% endwith %}
-{% with review_form|getitem:'result' as field %}
+{% with review_form.result as field %}
 {% if field %}
     <li>
         <label for="{{ field.id_for_label }}">{% trans 'Vote' %}:</label> B{{ vote.result}}

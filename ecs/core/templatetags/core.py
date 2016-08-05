@@ -9,21 +9,22 @@ from ecs.core import paper_forms
 from ecs.core.models import Submission
 from ecs.docstash.models import DocStash
 
+
 register = Library()
 
-def getitem(obj, name):
-    try:
-        return obj[name]
-    except KeyError:
-        return None
-
-register.filter('getitem', getitem)
 register.filter('type_name', lambda obj: type(obj).__name__)
 register.filter('endswith', lambda obj, end: obj.endswith(end))
 register.filter('not', lambda obj: not obj)
 register.filter('multiply', lambda a, b: a * b)
 register.filter('euro', lambda val: ("€ %.2f" % float(val)).replace('.', ','))
 register.filter('is_none', lambda obj: obj is None)
+
+@register.filter
+def getitem(obj, name):
+    try:
+        return obj[name]
+    except KeyError:
+        return None
 
 @register.filter
 def ec_number(submission):
@@ -88,10 +89,6 @@ def has_assigned_submissions(user):
 @register.filter
 def is_docstash(obj):
     return isinstance(obj, DocStash)
-
-@register.filter
-def get_field(form, fname):
-    return form[fname]
 
 @register.filter
 def yes_no_unknown(v):

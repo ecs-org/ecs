@@ -5,7 +5,7 @@
     {% for row in filterform.layout %}
     <div class="submission_list_choose">
         {% for name in row %}
-            {% with filterform|get_field:name as field %}
+            {% with filterform|getitem:name as field %}
                 <label>
                     {{ field }}
                     {% if name == 'thesis' %}
