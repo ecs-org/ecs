@@ -52,7 +52,6 @@ class VoteSigning(Activity):
     def receive_token(self, source, trail=(), repeated=False):
         vote = trail[0].workflow.data
         if vote.needs_signature:
-            return super(VoteSigning, self).receive_token(
-                source, trail=trail, repeated=repeated)
+            return super().receive_token(source, trail=trail, repeated=repeated)
         else:
             vote.publish()

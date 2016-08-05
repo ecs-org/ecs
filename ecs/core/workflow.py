@@ -143,13 +143,13 @@ class Resubmission(Activity):
         return reverse('ecs.core.views.submissions.copy_latest_submission_form', kwargs={'submission_pk': self.workflow.data_id})
 
     def get_final_urls(self):
-        return super(Resubmission, self).get_final_urls() + [
+        return super().get_final_urls() + [
             reverse('readonly_submission_form', kwargs={'submission_form_pk': sf})
             for sf in self.workflow.data.forms.values_list('pk', flat=True)
         ]
 
     def receive_token(self, *args, **kwargs):
-        token = super(Resubmission, self).receive_token(*args, **kwargs)
+        token = super().receive_token(*args, **kwargs)
         token.task.assign(self.workflow.data.presenter)
         return token
 
@@ -254,7 +254,7 @@ class ExpeditedRecommendationSplit(Generic):
 
         tokens = []
         for cat in missing_cats:
-            cat_tokens = super(ExpeditedRecommendationSplit, self).emit_token(*args, **kwargs)
+            cat_tokens = super().emit_token(*args, **kwargs)
             for token in cat_tokens:
                 token.task.medical_category = cat
                 token.task.save()

@@ -36,14 +36,14 @@ class DocumentForm(forms.ModelForm):
         return UploadedFile(f, content_type='application/pdf', name='upload.pdf')
 
     def clean(self):
-        cd = super(DocumentForm, self).clean()
+        cd = super().clean()
         replaced_document = cd.get('replaces_document')
         if replaced_document:
             cd['doctype'] = replaced_document.doctype
         return cd
 
     def save(self, commit=True):
-        obj = super(DocumentForm, self).save(commit=False)
+        obj = super().save(commit=False)
         obj.original_file_name = self.cleaned_data.get('original_file_name')
         if commit:
             obj.save()

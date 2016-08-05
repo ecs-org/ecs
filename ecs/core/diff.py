@@ -102,7 +102,7 @@ class AtomicDiffNode(DiffNode):
 
 class ModelDiffNode(DiffNode):
     def __init__(self, old, new, field_diffs, **kwargs):
-        super(ModelDiffNode, self).__init__(old, new, **kwargs)
+        super().__init__(old, new, **kwargs)
         self.field_diffs = field_diffs
         
     def __bool__(self):
@@ -132,7 +132,7 @@ class ListDiffNode(DiffNode):
     }
     
     def __init__(self, old, new, **kwargs):
-        super(ListDiffNode, self).__init__(old, new, **kwargs)
+        super().__init__(old, new, **kwargs)
         self._prepare()
         
     def _prepare(self):
@@ -372,7 +372,7 @@ class UserDiffer(AtomicModelDiffer):
 
 class SubmissionFormDiffer(ModelDiffer):
     def get_field_names(self):
-        names = super(SubmissionFormDiffer, self).get_field_names()
+        names = super().get_field_names()
         if 'documents' in names:
             names.remove('documents')
             names.insert(0, 'documents')
@@ -384,7 +384,7 @@ class SubmissionFormDiffer(ModelDiffer):
             new_val = getattr(new, name, None)
             return CountryListDiffNode(old_val, new_val, **kwargs)
         else:
-            return super(SubmissionFormDiffer, self).diff_field(name, old, new, **kwargs)
+            return super().diff_field(name, old, new, **kwargs)
 
 
 _differs = {

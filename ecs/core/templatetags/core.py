@@ -158,7 +158,7 @@ class SiteSCSSNode(Node):
 
 class BreadcrumbsNode(Node):
     def __init__(self, varname):
-        super(BreadcrumbsNode, self).__init__()
+        super().__init__()
         self.varname = varname
 
     def render(self, context):

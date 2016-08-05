@@ -24,20 +24,20 @@ class DateField(forms.DateField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_INPUT_FORMATS)
         kwargs.setdefault('error_messages', {'invalid': _('Please enter a date in the format dd.mm.yyyy.')})
-        super(DateField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 class DateTimeField(forms.DateTimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('input_formats', DATE_TIME_INPUT_FORMATS)
         kwargs.setdefault('widget', forms.SplitDateTimeWidget(date_format=DATE_INPUT_FORMATS[0]))
         kwargs.setdefault('error_messages', {'invalid': _('Please enter a date in dd.mm.yyyy format and time in format HH:MM.')})
-        super(DateTimeField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 class TimeField(forms.TimeField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('error_messages', {'invalid': _('Please enter a time in the format HH: MM.')})
         kwargs.setdefault('widget', LooseTimeWidget())
-        super(TimeField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         
 class NullBooleanWidget(forms.widgets.NullBooleanSelect):
     def __init__(self, attrs=None):
@@ -47,20 +47,20 @@ class NullBooleanWidget(forms.widgets.NullBooleanSelect):
 class NullBooleanField(forms.NullBooleanField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('widget', NullBooleanWidget)
-        super(NullBooleanField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 
 class AutocompleteWidgetMixin(object):
     def __init__(self, field):
         self.field = field
-        return super(AutocompleteWidgetMixin, self).__init__()
+        return super().__init__()
 
     def render(self, name, value, attrs=None, choices=()):
         attrs['data-ajax--url'] = reverse(
             'ecs.core.views.autocomplete.autocomplete',
             kwargs={'queryset_name': self.field.queryset_name}
         )
-        return super(AutocompleteWidgetMixin, self).render(name, value, attrs=attrs)
+        return super().render(name, value, attrs=attrs)
 
     def render_options(self, choices, selected_choices):
         selected_choices = set(force_text(v) for v in selected_choices if v != '')
@@ -77,7 +77,7 @@ class AutocompleteFieldMixin:
     def __init__(self, queryset_name, queryset, **kwargs):
         self.queryset_name = queryset_name
         kwargs['widget'] = self.widget(self)
-        super(AutocompleteFieldMixin, self).__init__(queryset, **kwargs)
+        super().__init__(queryset, **kwargs)
 
 class AutocompleteModelChoiceField(AutocompleteFieldMixin, forms.ModelChoiceField):
     class widget(AutocompleteWidgetMixin, forms.Select):
@@ -95,7 +95,7 @@ from django.utils.html import conditional_escape
 
 class ReadonlyTextMixin(object):
     def __init__(self, *args, **kwargs):
-        super(ReadonlyTextMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.readonly = False
 
     def mark_readonly(self):
@@ -103,7 +103,7 @@ class ReadonlyTextMixin(object):
 
     def render(self, name, value, attrs=None):
         if not self.readonly:
-            return super(ReadonlyTextMixin, self).render(name, value, attrs=attrs)
+            return super().render(name, value, attrs=attrs)
         else:
             if value is None: value = ''
             if attrs is None: attrs = {}
@@ -118,7 +118,7 @@ class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
         if attrs is None: attrs = {}
         if self.readonly:
             attrs['class'] = 'oneline'
-        return super(ReadonlyTextInput, self).render(name, value, attrs=attrs)
+        return super().render(name, value, attrs=attrs)
 
 class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
     def render(self, name, value, attrs=None):
@@ -127,11 +127,11 @@ class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
             attrs['class'] = 'multiline'
             if not 'cols' in attrs and not 'cols' in self.attrs:
                 attrs['cols'] = 100
-        return super(ReadonlyTextarea, self).render(name, value, attrs=attrs)
+        return super().render(name, value, attrs=attrs)
 
 class StrippedTextInput(ReadonlyTextInput):
     def value_from_datadict(self, *args, **kwargs):
-        v = super(StrippedTextInput, self).value_from_datadict(*args, **kwargs)
+        v = super().value_from_datadict(*args, **kwargs)
         if v is not None:
             v = v.strip()
         return v
@@ -142,7 +142,7 @@ class EmailUserSelectWidget(forms.TextInput):
             value = ''
         else:
             value = User.objects.get(pk=value).email
-        return super(EmailUserSelectWidget, self).render(name, value, attrs=attrs)
+        return super().render(name, value, attrs=attrs)
 
     def value_from_datadict(self, data, files, name):
         val = data.get(name, '')

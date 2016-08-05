@@ -20,7 +20,7 @@ class NodeTypeManager(models.Manager):
         data_type = kwargs.get('data_type', None)
         if isinstance(data_type, models.base.ModelBase):
             kwargs['data_type'] = ContentType.objects.get_for_model(data_type)
-        return super(NodeTypeManager, self).create(**kwargs)
+        return super().create(**kwargs)
 
 class NodeType(models.Model):
     CATEGORIES = (
@@ -40,7 +40,7 @@ class NodeType(models.Model):
     def save(self, **kwargs):
         if not self.implementation and self.is_subgraph:
             self.implementation = 'ecs.workflow.patterns.Subgraph'
-        super(NodeType, self).save(**kwargs)
+        super().save(**kwargs)
     
     @property
     def is_subgraph(self):
@@ -64,7 +64,7 @@ class GraphManager(models.Manager):
         model = kwargs.pop('model', None)
         if model:
             kwargs['content_type'] = ContentType.objects.get_for_model(model)
-        return super(GraphManager, self).create(**kwargs)
+        return super().create(**kwargs)
     
     def _prep_get_kwargs(self, kwargs):
         model = kwargs.pop('model', None)
@@ -73,10 +73,10 @@ class GraphManager(models.Manager):
         return kwargs
     
     def get(self, **kwargs):
-        return super(GraphManager, self).get(**self._prep_get_kwargs(kwargs))
+        return super().get(**self._prep_get_kwargs(kwargs))
         
     def get_or_create(self, **kwargs):
-        return super(GraphManager, self).get_or_create(**self._prep_get_kwargs(kwargs))
+        return super().get_or_create(**self._prep_get_kwargs(kwargs))
 
 class Graph(NodeType):
     auto_start = models.BooleanField(default=False)
@@ -86,7 +86,7 @@ class Graph(NodeType):
     def save(self, **kwargs):
         if not self.category:
             self.category = NODE_TYPE_CATEGORY_SUBGRAPH
-        super(Graph, self).save(**kwargs)
+        super().save(**kwargs)
     
     @property
     def start_nodes(self):
@@ -193,7 +193,7 @@ class WorkflowManager(models.Manager):
         if data:
             kwargs['content_type'] = ContentType.objects.get_for_model(type(data))
             kwargs['data_id'] = data.pk
-        workflow = super(WorkflowManager, self).create(**kwargs)
+        workflow = super().create(**kwargs)
         workflow.data = data
         return workflow
 

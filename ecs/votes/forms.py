@@ -20,7 +20,7 @@ class SaveVoteForm(forms.ModelForm):
 
     def save(self, top, *args, **kwargs):
         kwargs['commit'] = False
-        instance = super(SaveVoteForm, self).save(*args, **kwargs)
+        instance = super().save(*args, **kwargs)
         instance.submission_form = top.submission.current_submission_form
         instance.top = top
         instance.save()
@@ -31,7 +31,7 @@ class VoteForm(SaveVoteForm):
 
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
-        super(VoteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.readonly:
             mark_readonly(self)
 
@@ -44,13 +44,13 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(VoteReviewForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         user = get_current_user()
         if not self.readonly and user.profile.is_executive_board_member:
             self.fields['result'] = ResultField(required=True, initial=self.instance.result)
 
     def clean(self):
-        cleaned_data = super(VoteReviewForm, self).clean()
+        cleaned_data = super().clean()
         if 'result' in self.fields:
             original_result = self.instance.result
             result = cleaned_data['result']
@@ -59,7 +59,7 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        instance = super(VoteReviewForm, self).save(commit=False)
+        instance = super().save(commit=False)
         if 'result' in self.fields:
             original_result = instance.result
             instance.result = self.cleaned_data['result']
@@ -78,7 +78,7 @@ class VotePreparationForm(forms.ModelForm):
         fields = ('result', 'text')
 
     def save(self, commit=True):
-        vote = super(VotePreparationForm, self).save(commit=False)
+        vote = super().save(commit=False)
         vote.is_draft = True
         if commit:
             vote.save()

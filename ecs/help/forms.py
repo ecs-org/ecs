@@ -7,7 +7,7 @@ class HelpPageForm(forms.ModelForm):
         exclude = ('review_status',)
 
     def __init__(self, *args, **kwargs):
-        super(HelpPageForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['text'].widget.attrs['rows'] = 20
 
 class AttachmentUploadForm(forms.ModelForm):

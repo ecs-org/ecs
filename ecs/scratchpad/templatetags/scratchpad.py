@@ -6,7 +6,7 @@ register = Library()
 
 class ScratchpadNode(Node):
     def __init__(self, varname):
-        super(ScratchpadNode, self).__init__()
+        super().__init__()
         self.varname = varname
 
     def render(self, context):

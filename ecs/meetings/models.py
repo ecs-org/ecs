@@ -220,10 +220,7 @@ class Meeting(models.Model):
 
     def __str__(self):
         return "%s: %s" % (self.start, self.title)
-        
-    def save(self, **kwargs):
-        return super(Meeting, self).save(**kwargs)
-        
+
     @cached_property
     def duration(self):
         sum_ = self.timetable_entries.aggregate(sum=models.Sum('duration'))['sum']

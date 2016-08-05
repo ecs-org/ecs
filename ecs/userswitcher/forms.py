@@ -10,7 +10,7 @@ class _UserSwitcherChoiceField(forms.ModelChoiceField):
         }
         for k, v in defaults.items():
             kwargs.setdefault(k, v)
-        super(_UserSwitcherChoiceField, self).__init__(queryset, *args, **kwargs)
+        super().__init__(queryset, *args, **kwargs)
 
     def label_from_instance(self, user):
         label = str(user.email)

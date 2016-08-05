@@ -14,14 +14,14 @@ class CleanupTest(EcsTestCase):
     Tests for consistency of the cleanup functionality of the tracking module.'''
     
     def setUp(self):
-        super(CleanupTest, self).setUp()
+        super().setUp()
         self.original_tracking_status = getattr(settings, 'ECS_TRACKING_ENABLED', False)
         settings.ECS_TRACKING_ENABLED = True
         self._original_max_requests = tasks.MAX_REQUESTS_PER_USER
         tasks.MAX_REQUESTS_PER_USER = 3
         
     def tearDown(self):
-        super(CleanupTest, self).tearDown()
+        super().tearDown()
         tasks.MAX_REQUESTS_PER_USER = self._original_max_requests
         settings.ECS_TRACKING_ENABLED = self.original_tracking_status
     

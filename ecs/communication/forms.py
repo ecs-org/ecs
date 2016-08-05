@@ -12,7 +12,7 @@ from ecs.core.forms.fields import AutocompleteModelChoiceField
 
 class InvolvedPartiesChoiceField(forms.ModelChoiceField):
     def __init__(self, *args, **kwargs):
-        super(InvolvedPartiesChoiceField, self).__init__(User.objects.none(), *args, **kwargs)
+        super().__init__(User.objects.none(), *args, **kwargs)
 
     def set_submission(self, submission):
         self.involved_parties = submission.current_submission_form.get_involved_parties()
@@ -44,7 +44,7 @@ class SendMessageForm(forms.ModelForm):
 
     def __init__(self, submission, *args, **kwargs):
         self.to_user = kwargs.pop('to', None)
-        super(SendMessageForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.submission = submission
 
@@ -100,7 +100,7 @@ class ReplyDelegateForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(), label=_('Answer'))
 
     def __init__(self, user, *args, **kwargs):
-        super(ReplyDelegateForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if user.profile.is_internal:
             self.fields['to'] = AutocompleteModelChoiceField(
                 'internal-users',

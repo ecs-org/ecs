@@ -27,7 +27,7 @@ class ManageTaskForm(forms.Form):
         task = kwargs.pop('task')
         self.task = task
         self.user = kwargs.pop('user')
-        super(ManageTaskForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         fs = self.fields
         fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
         fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)

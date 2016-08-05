@@ -140,7 +140,7 @@ class Task(models.Model):
     unfiltered = TaskQuerySet.as_manager()
 
     def save(self, *args, **kwargs):
-        rval = super(Task, self).save(*args, **kwargs)
+        rval = super().save(*args, **kwargs)
         if self.workflow_token and not self.workflow_token.deadline:
             self.workflow_token.deadline = timezone.now() + timedelta(days=30)
             self.workflow_token.save()

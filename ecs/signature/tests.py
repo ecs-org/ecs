@@ -41,7 +41,7 @@ class SignatureTest(LoginTestCase):
     '''
     
     def setUp(self, *args, **kwargs):
-        rval = super(SignatureTest, self).setUp(*args, **kwargs)
+        rval = super().setUp(*args, **kwargs)
         self.user = self.create_user('unittest-signing', profile_extra={'is_internal': True})
         self.user.groups.add(Group.objects.get(name='EC-Signing'))
         self.client.login(email='unittest-signing@example.com', password='password')

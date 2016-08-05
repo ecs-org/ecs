@@ -201,7 +201,7 @@ class Submission(models.Model):
                     max_num = year * 10000 + max(num, MIN_EC_NUMBER)
                 # XXX: this breaks if there are more than 9999 studies per year (FMD2)
                 self.ec_number = max_num + 1
-        return super(Submission, self).save(**kwargs)
+        return super().save(**kwargs)
         
     def __str__(self):
         return self.get_ec_number_display()
@@ -520,7 +520,7 @@ class SubmissionForm(models.Model):
                         profile.organisation = getattr(self, org)
                         profile.save()
                     setattr(self, x, user)
-        return super(SubmissionForm, self).save(**kwargs)
+        return super().save(**kwargs)
 
     def render_pdf(self):
         from ecs.core import paper_forms
@@ -816,7 +816,7 @@ class Investigator(models.Model):
                 profile.organisation = self.organisation
                 profile.save()
             self.user = user
-        return super(Investigator, self).save(**kwargs)
+        return super().save(**kwargs)
 
 
 @receiver(post_save, sender=Investigator)

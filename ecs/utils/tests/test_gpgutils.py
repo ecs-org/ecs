@@ -11,7 +11,7 @@ class Gpgutilstest(EcsTestCase):
     '''
     
     def setUp(self):
-        super(Gpgutilstest, self).setUp()
+        super().setUp()
         self.gpghome = settings.STORAGE_VAULT['gpghome']
         self.encryption_uid = settings.STORAGE_VAULT['encryption_uid']
         self.signature_uid = settings.STORAGE_VAULT['signature_uid']

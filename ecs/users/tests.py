@@ -127,7 +127,7 @@ class MiddlewareTest(EcsTestCase):
         testuser.set_password('4223')
         testuser.save()
 
-        return super(MiddlewareTest, self).setUp(*args, **kwargs)
+        return super().setUp(*args, **kwargs)
 
     def test_single_login(self):
         '''makes sure that a single user can only be logged in

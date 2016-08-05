@@ -46,7 +46,7 @@ class Request(models.Model):
     def save(self, **kwargs):
         if not self.view_id:
             self.view, created = View.objects.get_or_create_for_url(self.url)
-        super(Request, self).save(**kwargs)
+        super().save(**kwargs)
     
     def __str__(self):
         return "%s %s <-> %s" % (self.method, self.url, self.view.path)

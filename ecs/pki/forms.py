@@ -20,7 +20,7 @@ class CertForm(forms.Form):
     passphrase2 = forms.CharField(widget=forms.PasswordInput())
     
     def clean(self):
-        cd = super(CertForm, self).clean()
+        cd = super().clean()
         
         user = cd.get('user')
         if user:

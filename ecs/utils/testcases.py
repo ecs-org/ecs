@@ -19,7 +19,7 @@ from ecs.workflow.controllers import clear_caches as clear_workflow_caches
 class EcsTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        super(EcsTestCase, cls).setUpClass()
+        super().setUpClass()
 
         ContentType.objects.clear_cache()
         clear_workflow_caches()
@@ -49,7 +49,7 @@ class EcsTestCase(TestCase):
     @classmethod
     def teardownClass(cls):
         shutil.rmtree(settings.STORAGE_VAULT['dir'])
-        super(EcsTestCase, cls).teardownClass()
+        super().teardownClass()
     
     def setUp(self):
         self.logger = logging.getLogger() 
@@ -89,10 +89,10 @@ class EcsTestCase(TestCase):
 
 class LoginTestCase(EcsTestCase):
     def setUp(self):
-        super(LoginTestCase, self).setUp()
+        super().setUp()
         self.user = get_user('unittest@example.com')
         self.client.login(email='unittest@example.com', password='password')
     
     def tearDown(self):
         self.client.logout()
-        super(LoginTestCase, self).tearDown()
+        super().tearDown()

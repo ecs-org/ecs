@@ -23,7 +23,7 @@ class ViewTestCase(EcsTestCase):
     '''
     
     def setUp(self):
-        super(ViewTestCase, self).setUp()
+        super().setUp()
         self.start = datetime(2020, 2, 20, 20, 20)
         self.user = self.create_user('unittest-office', profile_extra={'is_internal': True})
         self.user.groups.add(Group.objects.get(name='EC-Office'))
@@ -31,7 +31,7 @@ class ViewTestCase(EcsTestCase):
 
     def tearDown(self):
         self.client.logout()
-        super(ViewTestCase, self).tearDown()
+        super().tearDown()
 
     def refetch(self, obj):
         return obj.__class__.objects.get(pk=obj.pk)

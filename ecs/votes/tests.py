@@ -19,7 +19,7 @@ class VoteRemindersTest(CommunicationTestCase):
     '''
     
     def setUp(self, *args, **kwargs):
-        super(VoteRemindersTest, self).setUp(*args, **kwargs)
+        super().setUp(*args, **kwargs)
 
         # alice is the submitter and bob is the default contact
         AdvancedSettings.objects.filter(pk=1).update(default_contact=self.bob)

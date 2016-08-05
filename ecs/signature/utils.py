@@ -13,7 +13,7 @@ def _total_seconds(td): # work around python < 2.7
 
 class SigningData(dict):
     def __init__(self, *args, **kwargs):
-        super(SigningData, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.id = None
 
     def _gen_id(self):

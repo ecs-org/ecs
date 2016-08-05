@@ -22,7 +22,7 @@ class EmailLoginForm(forms.Form):
     def __init__(self, request=None, *args, **kwargs):
         self.request = request
         self.user_cache = None
-        return super(EmailLoginForm, self).__init__(*args, **kwargs)
+        return super().__init__(*args, **kwargs)
 
     def clean(self):
         email = self.cleaned_data.get('username')
@@ -81,7 +81,7 @@ class ProfileForm(forms.ModelForm):
     ), initial=0, label=_('Forwarding of unread messages'))
 
     def __init__(self, *args, **kwargs):
-        rval = super(ProfileForm, self).__init__(*args, **kwargs)
+        rval = super().__init__(*args, **kwargs)
 
         if self.instance:
             self.fields['forward_messages_after_minutes'].initial = self.instance.forward_messages_after_minutes
@@ -91,7 +91,7 @@ class ProfileForm(forms.ModelForm):
         return rval
 
     def save(self, *args, **kwargs):
-        instance = super(ProfileForm, self).save(*args, **kwargs)
+        instance = super().save(*args, **kwargs)
 
         forward_messages_minutes = self.cleaned_data.get('forward_messages_after_minutes', 0)
         instance.forward_messages_after_minutes = int(forward_messages_minutes)
@@ -156,7 +156,7 @@ class UserDetailsForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        super(UserDetailsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.instance.pk:
             profile = self.instance.profile
             self.fields['gender'].initial = profile.gender
@@ -172,7 +172,7 @@ class UserDetailsForm(forms.ModelForm):
         return groups
 
     def save(self):
-        user = super(UserDetailsForm, self).save()
+        user = super().save()
         user.medical_categories = self.cleaned_data.get('medical_categories', ())
         profile = user.profile
         profile.gender = self.cleaned_data['gender']
@@ -206,7 +206,7 @@ class InvitationForm(UserDetailsForm):
         self.instance = create_user(self.cleaned_data['email'],
             first_name=self.cleaned_data['first_name'],
             last_name=self.cleaned_data['last_name'])
-        user = super(InvitationForm, self).save()
+        user = super().save()
         user.profile.forward_messages_after_minutes = 5
         user.profile.save()
         return user
@@ -222,7 +222,7 @@ class IndispositionForm(forms.ModelForm):
         fields = ('is_indisposed', 'communication_proxy')
 
     def clean(self):
-        cd = super(IndispositionForm, self).clean()
+        cd = super().clean()
 
         if cd.get('is_indisposed', False):
             require_fields(self, ('communication_proxy',))
@@ -261,7 +261,7 @@ class LoginHistoryFilterForm(forms.Form):
     page = forms.IntegerField(initial=1, widget=forms.HiddenInput())
 
     def clean(self):
-        super(LoginHistoryFilterForm, self).clean()
+        super().clean()
         start = self.cleaned_data.get('start')
         end = self.cleaned_data.get('end')
         if start and end and start >= end:

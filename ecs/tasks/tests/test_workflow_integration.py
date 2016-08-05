@@ -17,7 +17,7 @@ class WorkflowIntegrationTest(WorkflowTestCase):
     '''
     
     def setUp(self):
-        super(WorkflowIntegrationTest, self).setUp()
+        super().setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
 
         g = Graph.objects.create(content_type=self.foo_ct, auto_start=True)

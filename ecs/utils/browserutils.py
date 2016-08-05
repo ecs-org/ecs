@@ -26,7 +26,7 @@ class Version(tuple):
                 version.append(bit)
         else:
             version = [0,]
-        instance = super(Version, cls).__new__(cls, version)
+        instance = super().__new__(cls, version)
         return instance
 
 def parse_ua(ua_str):

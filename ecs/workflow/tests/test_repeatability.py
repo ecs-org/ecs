@@ -15,7 +15,7 @@ class RepeatabilityTest(WorkflowTestCase):
     '''
     
     def setUp(self):
-        super(RepeatabilityTest, self).setUp()
+        super().setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_unrepeatable(self):

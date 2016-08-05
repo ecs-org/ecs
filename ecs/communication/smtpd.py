@@ -13,7 +13,7 @@ from ecs.communication.mailutils import html2text
 
 class SMTPError(Exception):
     def __init__(self, code, description):
-        super(SMTPError, self).__init__('{} {}'.format(code, description))
+        super().__init__('{} {}'.format(code, description))
         self.code = code
         self.description = description
 

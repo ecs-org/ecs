@@ -85,7 +85,7 @@ class SubmissionViewsTestCase(LoginTestCase):
     '''
     
     def setUp(self):
-        super(SubmissionViewsTestCase, self).setUp()
+        super().setUp()
         checklists_bootstrap.checklist_blueprints()
         bootstrap.ethics_commissions()
         VALID_SUBMISSION_FORM_DATA['investigator-0-ethics_commission'] = [str(EthicsCommission.objects.all()[0].pk)]

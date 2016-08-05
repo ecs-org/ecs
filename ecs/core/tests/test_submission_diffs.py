@@ -12,7 +12,7 @@ class SubmissionFormDiffTest(EcsTestCase):
     '''
     
     def setUp(self, *args, **kwargs):
-        rval = super(SubmissionFormDiffTest, self).setUp(*args, **kwargs)
+        rval = super().setUp(*args, **kwargs)
         self.old_sf = create_submission_form()
         self.new_sf = create_submission_form()
 

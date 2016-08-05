@@ -53,7 +53,7 @@ class PartyList(list):
         
     def __contains__(self, u):
         if isinstance(u, Party):
-            return super(PartyList, self).__contains__(u)
+            return super().__contains__(u)
         return any(p.user == u for p in self)
 
     def send_message(self, *args, **kwargs):

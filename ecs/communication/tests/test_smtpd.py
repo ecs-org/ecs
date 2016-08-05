@@ -15,7 +15,7 @@ from ecs.communication.smtpd import EcsMailReceiver
 class SmtpdTest(CommunicationTestCase):
     @classmethod
     def setUpClass(cls):
-        super(SmtpdTest, cls).setUpClass()
+        super().setUpClass()
         cls.tmpdir = tempfile.mkdtemp()
         ECSMAIL = {
             'addr': ('127.0.0.1', 8824),
@@ -31,7 +31,7 @@ class SmtpdTest(CommunicationTestCase):
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir)
         settings.ECSMAIL = cls.OLD_ECSMAIL
-        super(SmtpdTest, cls).tearDownClass()
+        super().tearDownClass()
 
     def process_message(self, recipients, msg):
         ret = self.mail_receiver.process_message(None, None, recipients,

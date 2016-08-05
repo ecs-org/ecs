@@ -60,7 +60,7 @@ class BaseNotificationReview(Activity):
         return reverse('ecs.notifications.views.edit_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
 
     def get_final_urls(self):
-        return super(BaseNotificationReview, self).get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
+        return super().get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
 
 
 class InitialNotificationReview(BaseNotificationReview):
@@ -197,4 +197,4 @@ class AutoDistributeNotificationAnswer(Generic):
         answer = self.workflow.data.answer
         answer.distribute()
         answer.render_pdf() # xxx need to render pdf after distribute, to have new vote extension date already set
-        super(AutoDistributeNotificationAnswer, self).handle_token(token)
+        super().handle_token(token)

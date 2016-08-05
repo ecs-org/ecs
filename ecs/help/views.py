@@ -170,7 +170,7 @@ HIGHLIGHT_PREFIX_WORD_COUNT = 3
 
 class HelpHighlighter(Highlighter):
     def find_window(self, highlight_locations):
-        best_start, best_end = super(HelpHighlighter, self).find_window(highlight_locations)
+        best_start, best_end = super().find_window(highlight_locations)
         return (max(0, best_start - 1 - len(' '.join(self.text_block[:best_start].rsplit(' ', HIGHLIGHT_PREFIX_WORD_COUNT + 1)[1:]))), best_end)
 
 
@@ -178,7 +178,7 @@ class HelpSearchView(SearchView):
     session_key = 'ecs.help.views.search:q'
 
     def get_query(self):
-        q = super(HelpSearchView, self).get_query()
+        q = super().get_query()
         self.request.session[self.session_key] = q
         return q
 

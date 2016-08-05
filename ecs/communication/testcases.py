@@ -12,7 +12,7 @@ class MailTestCase(EcsTestCase):
 
     def setUp(self):
         mail.outbox = []
-        super(MailTestCase, self).setUp()
+        super().setUp()
 
     @staticmethod
     def get_mimeparts(msg, maintype="*", subtype="*"):
@@ -32,7 +32,7 @@ class CommunicationTestCase(MailTestCase):
     additions: self.alice, self.bob, self.thread, self.last_message
     '''
     def setUp(self):
-        super(CommunicationTestCase, self).setUp()
+        super().setUp()
         self.alice = get_user('alice@example.com')
         self.bob = get_user('bob@example.com')
 

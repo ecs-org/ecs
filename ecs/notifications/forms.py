@@ -43,7 +43,7 @@ class SafetyNotificationForm(NotificationForm):
     comments = forms.CharField(widget=forms.Textarea(), initial=_('Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des Nutzen/Risikoverhältnisses.'))
 
     def __init__(self, *args, **kwargs):
-        super(SafetyNotificationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         queryset = get_usable_submission_forms().filter(
             submission__susar_presenter=get_current_user())
         self.fields['submission_forms'].queryset = queryset
@@ -59,7 +59,7 @@ class SingleStudyNotificationForm(NotificationForm):
     submission_form = forms.ModelChoiceField(queryset=SubmissionForm.objects.all(), label=_('Study'))
     
     def __init__(self, *args, **kwargs):
-        super(SingleStudyNotificationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         queryset = get_usable_submission_forms().filter(
             submission__presenter=get_current_user(), submission__is_finished=False)
         self.fields['submission_form'].queryset = queryset
@@ -74,7 +74,7 @@ class SingleStudyNotificationForm(NotificationForm):
         return self.cleaned_data['submission_form']
     
     def save(self, commit=True):
-        obj = super(SingleStudyNotificationForm, self).save(commit=commit)
+        obj = super().save(commit=commit)
         if commit:
             obj.submission_forms = [self.get_submission_form()]
         else:
@@ -94,7 +94,7 @@ class ProgressReportNotificationForm(SingleStudyNotificationForm):
         exclude = SingleStudyNotificationForm._meta.exclude
 
     def clean(self):
-        cleaned_data = super(ProgressReportNotificationForm, self).clean()
+        cleaned_data = super().clean()
         if not cleaned_data.get('study_started', False):
             require_fields(self, ('reason_for_not_started',))
         return cleaned_data
@@ -112,7 +112,7 @@ class CenterCloseNotificationForm(SingleStudyNotificationForm):
     close_date = DateField(required=True)
 
     def __init__(self, *args, **kwargs):
-        super(CenterCloseNotificationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         queryset = Investigator.objects.filter(
             submission_form_id__in=get_usable_submission_forms().values('id'))
         self.fields['investigator'].queryset = queryset

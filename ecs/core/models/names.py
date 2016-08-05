@@ -23,7 +23,7 @@ class Name(object):
 class NameField(object):
     def __init__(self, required=None):
         self.required = required or []
-        return super(NameField, self).__init__()
+        return super().__init__()
 
     def __get__(self, obj, obj_type=None):
         if not obj:

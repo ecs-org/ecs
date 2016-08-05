@@ -108,7 +108,7 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
         ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
     def __init__(self, *args, **kwargs):
-        rval = super(SubmissionFormForm, self).__init__(*args, **kwargs)
+        rval = super().__init__(*args, **kwargs)
         for field in self.fields.values():
             if isinstance(field, forms.EmailField):
                 field.widget = StrippedTextInput()
@@ -117,7 +117,7 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
         return rval
 
     def clean(self):
-        cleaned_data = super(SubmissionFormForm, self).clean()
+        cleaned_data = super().clean()
         cleaned_data['project_type_reg_drug'] = any(self.cleaned_data.get(f, False) for f in ('project_type_reg_drug_within_indication', 'project_type_reg_drug_not_within_indication'))
         cleaned_data['project_type_medical_device'] = any(self.cleaned_data.get(f, False) for f in ('project_type_medical_device_with_ce', 'project_type_medical_device_without_ce', 'project_type_medical_device_performance_evaluation'))
 
@@ -229,7 +229,7 @@ class PresenterChangeForm(forms.ModelForm):
         fields = ('presenter',)
 
     def __init__(self, *args, **kwargs):
-        super(PresenterChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if get_current_user().profile.is_internal:
             self.fields['presenter'] = AutocompleteModelChoiceField(
                 'users', User.objects.filter(is_active=True),
@@ -248,7 +248,7 @@ class SusarPresenterChangeForm(forms.ModelForm):
         fields = ('susar_presenter',)
 
     def __init__(self, *args, **kwargs):
-        super(SusarPresenterChangeForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if get_current_user().profile.is_internal:
             self.fields['susar_presenter'] = AutocompleteModelChoiceField(
                 'users', User.objects.filter(is_active=True),
@@ -259,7 +259,7 @@ class BaseInvestigatorFormSet(ReadonlyFormSetMixin, BaseFormSet):
         return [form.save(commit=commit) for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
 
     def clean(self):
-        super(BaseInvestigatorFormSet, self).clean()
+        super().clean()
         changed_forms = [form for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
         if len(changed_forms) < 1:
             raise forms.ValidationError(_('At least one centre is required.'))
@@ -336,7 +336,7 @@ _labels = {
 
 class SubmissionFilterFormMetaclass(forms.forms.DeclarativeFieldsMetaclass):
     def __new__(cls, name, bases, attrs):
-        newcls = super(SubmissionFilterFormMetaclass, cls).__new__(cls, name, bases, attrs)
+        newcls = super().__new__(cls, name, bases, attrs)
         for row in attrs['layout']:
             for name in row:
                 if not hasattr(newcls, name):
@@ -357,7 +357,7 @@ class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
             filter_defaults[key] = 'on'
 
         data = data or filter_defaults
-        return super(SubmissionFilterForm, self).__init__(data, *args, **kwargs)
+        return super().__init__(data, *args, **kwargs)
 
     def _filter_by_type(self, submissions, user):
         qs = []
@@ -466,8 +466,7 @@ class AllSubmissionsFilterForm(SubmissionFilterForm):
     tags = TagMultipleChoiceField(label=_('Tags'), required=False)
 
     def filter_submissions(self, submissions, user):
-        submissions = (super(AllSubmissionsFilterForm, self)
-            .filter_submissions(submissions, user))
+        submissions = super().filter_submissions(submissions, user)
         if self.cleaned_data.get('tags'):
             submissions = submissions.filter(tags__in=self.cleaned_data['tags'])
         return submissions

@@ -17,5 +17,5 @@ class AuthorizationManager(models.Manager):
         return qs.filter(q_factory(user)).distinct()
     
     def get_base_queryset(self):
-        return super(AuthorizationManager, self).get_queryset()
+        return super().get_queryset()
         

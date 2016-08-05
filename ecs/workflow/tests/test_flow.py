@@ -15,7 +15,7 @@ class FlowTest(WorkflowTestCase):
     '''
     
     def setUp(self):
-        super(FlowTest, self).setUp()
+        super().setUp()
         self.foo_ct = ContentType.objects.get_for_model(Foo)
         
     def test_sequence(self):

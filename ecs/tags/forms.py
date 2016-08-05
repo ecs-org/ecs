@@ -16,7 +16,7 @@ class ColorField(forms.Field):
 
     def __init__(self, *args, **kwargs):
         kwargs['initial'] = lambda: random.randint(0, 0xffffff)
-        super(ColorField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def to_python(self, value):
         try:
@@ -46,7 +46,7 @@ class TagForm(forms.ModelForm):
 
 class TagMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, **kwargs):
-        super(TagMultipleChoiceField, self).__init__(Tag.objects, **kwargs)
+        super().__init__(Tag.objects, **kwargs)
 
     def label_from_instance(self, obj):
         return obj.name

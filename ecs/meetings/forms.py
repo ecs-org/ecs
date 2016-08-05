@@ -52,7 +52,7 @@ class FreeTimetableEntryForm(forms.Form):
 class BaseConstraintFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('queryset', Constraint.objects.none())
-        super(BaseConstraintFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
 class ConstraintForm(forms.ModelForm):
     start_time = TimeField(label=_('from (time)'), required=True)
@@ -72,7 +72,7 @@ class SubmissionReschedulingForm(forms.Form):
     
     def __init__(self, *args, **kwargs):
         submission = kwargs.pop('submission')
-        super(SubmissionReschedulingForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         current_meetings = submission.meetings.filter(started=None).order_by('start')
         self.fields['from_meeting'].queryset = current_meetings
         self.fields['to_meeting'].queryset = Meeting.objects.filter(started=None).exclude(pk__in=[m.pk for m in current_meetings]).order_by('start')
@@ -83,7 +83,7 @@ class UserChoiceField(forms.ModelChoiceField):
         queryset = kwargs.pop('queryset', None)
         if queryset is None:
             queryset = User.objects.filter(is_active=True)
-        super(UserChoiceField, self).__init__(queryset, *args, **kwargs)
+        super().__init__(queryset, *args, **kwargs)
 
     def label_from_instance(self, user):
         return '{0} <{1}>'.format(str(user), user.email)
@@ -97,7 +97,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
         fields = ('board_member',)
 
     def __init__(self, *args, **kwargs):
-        super(AssignedMedicalCategoryForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.fields['board_member'].queryset = User.objects.filter(
             is_active=True, medical_categories=self.instance.category,
@@ -164,7 +164,7 @@ AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory,
 
 class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
     def __init__(self, *args, **kwargs):
-        super(_EntryMultipleChoiceField, self).__init__(TimetableEntry.objects, *args, **kwargs)
+        super().__init__(TimetableEntry.objects, *args, **kwargs)
 
     def label_from_instance(self, obj):
         s = obj.submission
@@ -179,7 +179,7 @@ class ExpeditedVoteForm(forms.ModelForm):
         fields = ('accept_prepared_vote',)
 
     def __init__(self, *args, **kwargs):
-        super(ExpeditedVoteForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if not self.instance.submission.current_submission_form.current_vote:
             self.fields['accept_prepared_vote'].initial=False
         
@@ -206,7 +206,7 @@ class BaseExpeditedVoteFormSet(BaseModelFormSet):
         queryset = kwargs.get('queryset', TimetableEntry.objects.all())
         queryset = queryset.filter(Q(vote__isnull=True) | Q(vote__is_draft=True)).order_by('submission__ec_number')
         kwargs['queryset'] = queryset
-        super(BaseExpeditedVoteFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
     
 ExpeditedVoteFormSet = modelformset_factory(TimetableEntry, extra=0, can_delete=False, form=ExpeditedVoteForm, formset=BaseExpeditedVoteFormSet)
 
@@ -220,7 +220,7 @@ class ManualTimetableEntryCommentForm(forms.ModelForm):
         fields = ('text',)
 
     def __init__(self, *args, **kwargs):
-        super(ManualTimetableEntryCommentForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['text'].widget.attrs['class'] = 'form-control'
 
 

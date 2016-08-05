@@ -44,7 +44,7 @@ class NodeControllerOptions(object):
 class NodeControllerBase(type):
     def __new__(cls, name, bases, attrs):
         attr_meta = attrs.pop('Meta', None)
-        newcls = super(NodeControllerBase, cls).__new__(cls, name, bases, attrs)
+        newcls = super().__new__(cls, name, bases, attrs)
         parents = [b for b in bases if isinstance(b, NodeControllerBase)]
         if not parents:
             return newcls
@@ -198,11 +198,11 @@ class Activity(NodeController):
 
 class FlowController(NodeController):
     def receive_token(self, source, trail=None):
-        token = super(FlowController, self).receive_token(source, trail=trail)
+        token = super().receive_token(source, trail=trail)
         if token and not self.is_locked():
             self.handle_token(token)
 
     def unlock_token(self, token):
-        if super(FlowController, self).unlock_token(token):
+        if super().unlock_token(token):
             self.handle_token(token)
     

@@ -2,7 +2,7 @@ from functools import partial
 
 class LazyList(object):
     def __init__(self, fn, *args, **kwargs):
-        super(LazyList, self).__init__()
+        super().__init__()
         self.fn = partial(fn, *args, **kwargs)
         self._L = None
 

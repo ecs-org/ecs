@@ -341,7 +341,7 @@ class DocumentSerializer(ModelSerializer):
         if not obj.doctype.is_downloadable:
             raise SkipInstance
 
-        d = super(DocumentSerializer, self).dump(obj, zf)
+        d = super().dump(obj, zf)
 
         zip_name = 'attachments/{0}'.format(uuid4())
         if obj.mimetype == 'application/pdf':
@@ -354,7 +354,7 @@ class DocumentSerializer(ModelSerializer):
         return d
 
     def load(self, data, zf, version, commit=True):
-        obj = super(DocumentSerializer, self).load(data, zf, version, commit=commit)
+        obj = super().load(data, zf, version, commit=commit)
         if commit:
             with TemporaryFile() as f:
                 f.write(zf.read(data['file']))
@@ -379,7 +379,7 @@ class EthicsCommissionSerializer(object):
         
 class SubmissionSerializer(ModelSerializer):
     def __init__(self, **kwargs):
-        super(SubmissionSerializer, self).__init__(Submission, **kwargs)
+        super().__init__(Submission, **kwargs)
         
     def load(self, data, zf, version, commit=False):
         return Submission.objects.create(is_transient=True)
@@ -387,7 +387,7 @@ class SubmissionSerializer(ModelSerializer):
 
 class SubmissionFormSerializer(ModelSerializer):
     def load(self, data, zf, version, commit=True):
-        obj = super(SubmissionFormSerializer, self).load(data, zf, version, commit=False)
+        obj = super().load(data, zf, version, commit=False)
         obj.is_transient = True
         if commit:
             obj.save()
@@ -437,7 +437,7 @@ class _JsonEncoder(json.JSONEncoder):
             return obj.astimezone(timezone.utc).strftime(DATETIME_FORMAT)
         elif isinstance(obj, datetime.date):
             return obj.strftime(DATE_FORMAT)
-        return super(Encoder, self).default(obj)
+        return super().default(obj)
 
 class Serializer(object):
     version = CURRENT_SERIALIZER_VERSION

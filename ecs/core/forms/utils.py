@@ -16,7 +16,7 @@ class ReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
         self.reopen_task = kwargs.pop('reopen_task', None)
-        super(ReadonlyFormMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.readonly:
             for field in self.fields.values():
                 if isinstance(field.widget, forms.TextInput):
@@ -35,7 +35,7 @@ class ReadonlyFormSetMixin(object):
         extra = kwargs.pop('extra', None)
         if extra is not None:
             self.extra = extra
-        super(ReadonlyFormSetMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if self.readonly:
             for form in self.forms:
                 for field in form.fields.values():

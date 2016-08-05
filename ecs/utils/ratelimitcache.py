@@ -101,7 +101,7 @@ class ratelimit_post(ratelimit):
     
     def key_extra(self, request):
         # IP address and key_field (if it is set)
-        extra = super(ratelimit_post, self).key_extra(request)
+        extra = super().key_extra(request)
         if self.key_field:
             value = sha1(request.POST.get(self.key_field, '').encode('utf-8')).hexdigest()
             extra += '-' + value
