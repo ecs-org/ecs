@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-20 14:10+0200\n"
+"POT-Creation-Date: 2016-08-07 15:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -53,7 +53,7 @@ msgid "amt."
 msgstr "Anz."
 
 msgid "EC-Number"
-msgstr "EK-Number"
+msgstr "EK-Nummer"
 
 msgid "company"
 msgstr "Firma"
@@ -1372,6 +1372,24 @@ msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
 msgid "Submissions"
 msgstr "Einreichungen"
 
+msgid "Medical Categories"
+msgstr "Medizinische Kategorien"
+
+msgid "valid until"
+msgstr "gültig bis"
+
+msgid "first acknowledged form"
+msgstr "Datum der Erstbestätigung"
+
+msgid "email"
+msgstr "E-Mail"
+
+msgid "contact person"
+msgstr "Kontaktperson"
+
+msgid "same as sponsor"
+msgstr "wie Sponsor"
+
 msgid "All Studies"
 msgstr "Alle Studien"
 
@@ -1847,9 +1865,6 @@ msgstr "Vorname"
 msgid "Last name"
 msgstr "Nachname"
 
-msgid "email"
-msgstr "E-Mail"
-
 msgid "Password (again)"
 msgstr "Passwort wiederholen"
 
@@ -1922,9 +1937,6 @@ msgstr "Gruppen"
 
 msgid "Task Types"
 msgstr "Aufgabenarten"
-
-msgid "Medical Categories"
-msgstr "Medizinische Kategorien"
 
 msgid "Name/Email"
 msgstr "Name/Email"
@@ -3100,8 +3112,16 @@ msgstr "Sie werden zum Meldungsformular weitergeleitet"
 msgid "Your study is being submitted"
 msgstr "Ihre Studie wird eingereicht"
 
+msgid "Export"
+msgstr "Export"
+
 msgid "Edit"
 msgstr "Bearbeiten"
+
+#, fuzzy
+#| msgid "title"
+msgid "No title."
+msgstr "Titel"
 
 msgid "Categories"
 msgstr "Fachgebiete"
@@ -3229,9 +3249,6 @@ msgstr "Ex existieren derzeit keine beantworteten Meldungen."
 msgid "Changed after voting"
 msgstr "Nach der Abstimmung geändert"
 
-msgid "valid until"
-msgstr "gültig bis"
-
 msgid "There are no published votes."
 msgstr "Es existieren derzeit keine veröffentlichten Voten."
 
@@ -3285,14 +3302,8 @@ msgstr "Befangene Parteien"
 msgid "This form has not been submitted yet."
 msgstr "Dieses Formular wurde noch nicht eingereicht."
 
-msgid "Export"
-msgstr "Export"
-
 msgid "change"
 msgstr "ändern"
-
-msgid "same as sponsor"
-msgstr "wie Sponsor"
 
 msgid "No Primary Investigator"
 msgstr "Kein/e koordinierende/r Prüfärztin/arzt"

@@ -12,6 +12,7 @@ urlpatterns = (
     url(r'^(?P<submission_pk>\d+)/messages/new/$', new_thread),
 
     url(r'^list/all/$', views.all_submissions),
+    url(r'^list/xls/$', views.xls_export),
     url(r'^list/assigned/$', views.assigned_submissions),
     url(r'^list/mine/$', views.my_submissions),
     url(r'^list/widget/$', views.submission_widget),

@@ -14,6 +14,14 @@
 
 {% include 'paginator.inc' with page=submissions %}
 
+{% if allow_export %}
+    {% url 'ecs.core.views.submissions.xls_export' as export_url %}
+    <a class="btn btn-sm btn-outline-primary" href="{{ export_url }}">
+        <span "fa fa-file-o-xls"></span>
+        {% trans 'Export' %}
+    </a>
+{% endif %}
+
 {% if warning %}
     <div class="warning">
         {{ warning }}
