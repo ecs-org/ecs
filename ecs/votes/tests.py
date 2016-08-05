@@ -1,15 +1,11 @@
-from datetime import datetime, timedelta
-
-import pytz
+from datetime import timedelta
 
 from django.utils import timezone
 
 from ecs.communication.testcases import CommunicationTestCase
 from ecs.core.tests.test_submissions import create_submission_form
 from ecs.votes.tasks import send_reminder_messages
-from ecs.meetings.models import Meeting
 from ecs.votes.models import Vote
-from ecs.communication.models import Message
 from ecs.core.models import AdvancedSettings
 
 class VoteRemindersTest(CommunicationTestCase):

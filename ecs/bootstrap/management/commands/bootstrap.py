@@ -1,6 +1,5 @@
 import imp
 from importlib import import_module
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction

@@ -1,5 +1,4 @@
 from django.utils.translation import ugettext as _
-from django.contrib.auth.models import User
 from django.utils import timezone
 
 from ecs.users.utils import sudo, get_current_user

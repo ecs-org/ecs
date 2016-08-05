@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import UploadedFile
 from ecs.core.forms.fields import DateField
 from ecs.documents.models import Document, DocumentType
 from ecs.utils.pdfutils import decrypt_pdf
-from ecs.utils.formutils import require_fields
+
 
 PDF_MAGIC = b'%PDF'
 

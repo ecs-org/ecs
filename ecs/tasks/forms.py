@@ -4,8 +4,6 @@ from django import forms
 from django.http import QueryDict
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import force_text
-from django.core.urlresolvers import reverse
 
 from ecs.tasks.models import TaskType
 

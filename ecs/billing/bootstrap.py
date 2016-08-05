@@ -1,7 +1,7 @@
-from decimal import Decimal
 from ecs import bootstrap
 from ecs.billing.models import Price
 from ecs.billing.models import STUDY_PRICING_OTHER, STUDY_PRICING_MULTICENTRIC_AMG_MAIN, STUDY_PRICING_MULTICENTRIC_AMG_LOCAL, STUDY_PRICING_REMISSION, EXTERNAL_REVIEW_PRICING
+
 
 @bootstrap.register()
 def prices():

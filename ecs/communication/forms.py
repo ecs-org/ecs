@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
-from django.core.urlresolvers import reverse
 
 from ecs.communication.models import Message, Thread
 from ecs.utils.formutils import require_fields

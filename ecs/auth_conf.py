@@ -1,9 +1,8 @@
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
-    Measure, ForeignParticipatingCenter, NonTestedUsedDrug, MedicalCategory,
+    Measure, ForeignParticipatingCenter, NonTestedUsedDrug,
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote

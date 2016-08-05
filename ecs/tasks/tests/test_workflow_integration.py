@@ -6,7 +6,6 @@ from ecs.workflow.tests.models import Foo
 from ecs.workflow.tests import flow_declarations as decl
 from ecs.workflow.tests import WorkflowTestCase
 
-from ecs.utils.testcases import EcsTestCase
 from ecs.tasks.models import Task, TaskType
 
 

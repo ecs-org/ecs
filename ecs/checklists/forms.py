@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 
 from ecs.core.forms.utils import ReadonlyFormMixin
 from ecs.core.forms.fields import NullBooleanField
-from ecs.core.models import MedicalCategory
 from ecs.tasks.models import TaskType
 
 

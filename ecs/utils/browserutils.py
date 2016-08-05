@@ -1,5 +1,4 @@
 import logging, traceback
-from functools import wraps
 
 import httpagentparser
 from django.conf import settings

@@ -1,7 +1,6 @@
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
 from ecs.utils.gpgutils import gen_keypair
-import logging
 
 
 class Command(BaseCommand):

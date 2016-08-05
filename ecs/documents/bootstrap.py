@@ -1,7 +1,6 @@
 import os
 
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext_noop as _
 
 from ecs import bootstrap

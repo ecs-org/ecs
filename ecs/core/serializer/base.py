@@ -5,7 +5,6 @@ from uuid import uuid4
 from collections import OrderedDict
 
 from django.db import models
-from django.core.files.base import ContentFile
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils import timezone
 

@@ -1,8 +1,6 @@
 import json
 import zipfile
 
-from django.core.files.base import ContentFile
-
 from ecs.help.models import Page, Attachment
 from ecs.tracking.models import View
 

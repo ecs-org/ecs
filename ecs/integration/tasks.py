@@ -1,6 +1,6 @@
 import logging
 
-from celery.signals import task_failure, worker_process_init
+from celery.signals import task_failure
 
 
 logger = logging.getLogger('task')
