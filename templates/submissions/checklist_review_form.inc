@@ -14,7 +14,7 @@
   {% for field_name in review_form.fields %}
       {% with review_form|getitem:field_name as field %}
           {% if forloop.counter0|divisibleby:2 %}
-              <label for="{{ field|id_for_label }}">
+              <label for="{{ field.id_for_label }}">
                   {{ field.label|linebreaksbr }}
               </label>
               <span class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
@@ -25,7 +25,7 @@
               </span>
           {% else %}
               <span class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
-              <label for="{{ field|id_for_label }}">
+              <label for="{{ field.id_for_label }}">
                   {{ field.label }}
               </label>
               {{ field }}

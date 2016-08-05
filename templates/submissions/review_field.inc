@@ -7,7 +7,7 @@
                 {{ field_info.help_text }}
             </span>
         {% endif %}
-        <label for="{{ field|id_for_label }}">
+        <label for="{{ field.id_for_label }}">
             {% if readonly and field_info.help_text %}
                 <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
             {% endif %}
