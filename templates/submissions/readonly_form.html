@@ -19,10 +19,10 @@
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-        {% if submission_form|allows_edits_by:request.user %}
+        {% if submission_form|allows_edits_by:user %}
             <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">{% trans 'Edit' %}</a>
         {% endif %}
-        {% if submission_form|allows_amendments_by:request.user %}
+        {% if submission_form|allows_amendments_by:user %}
             {% for notification_type in diff_notification_types %}
                 <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
             {% endfor %}
@@ -185,7 +185,7 @@
             <h3>Nicht eingereichte Meldungen</h3>
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
-        {% if submission.presenter == request.user or submission.susar_presenter == request.user %}
+        {% if submission.presenter == user or submission.susar_presenter == user %}
             <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
@@ -207,7 +207,7 @@
         {% else %}
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
-        {% if submission.presenter == request.user %}
+        {% if submission.presenter == user %}
             <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>

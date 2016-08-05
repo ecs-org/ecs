@@ -29,7 +29,7 @@
                             <i>{% trans "This form has not been submitted yet." %}</i>
                         </td>
                         <td>
-                            {% if submission_form|allows_edits_by:request.user %}
+                            {% if submission_form|allows_edits_by:user %}
                                 <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
                                     <span class="fa fa-pencil"></span>
                                     {% trans 'Edit' %}
@@ -79,7 +79,7 @@
                                     {% trans 'Download PDF' %}
                                 </a><br>
                             {% endif %}
-                            {% if sf == submission.current_submission_form and sf|allows_export_by:request.user %}
+                            {% if sf == submission.current_submission_form and sf|allows_export_by:user %}
                                 <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}">
                                     <span class="fa fa-file-archive-o"></span>
                                     {% trans "Export" %}
@@ -236,7 +236,7 @@
             {% endfor %}
         </td>
     </tr>
-    {% elif not request.user|is_presenting_party:submission_form %}
+    {% elif not user|is_presenting_party:submission_form %}
         <tr>
             <th>Gutachten erforderlich:</th>
             <td>{{ external_review_checklists|yesno }}</td>

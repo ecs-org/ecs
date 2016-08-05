@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="profile">
-<h2>{% blocktrans with request.user as user %}Profile of {{ user }}{% endblocktrans %}</h2>
+<h2>{% blocktrans %}Profile of {{ user }}{% endblocktrans %}</h2>
 
 <form action="" method="post">
     {% csrf_token %}

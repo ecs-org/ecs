@@ -46,7 +46,7 @@
 {% endblock %}
 
 {% block extra_message_table_cells %}
-    {% if thread.last_message.sender == request.user %}
+    {% if thread.last_message.sender == user %}
         <td>{% trans "an" %} {{ thread.last_message.receiver }}</td>
     {% else %}
         <td>{% trans "von" %} {{ thread.last_message.sender }}</td>

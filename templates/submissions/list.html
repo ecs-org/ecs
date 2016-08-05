@@ -70,7 +70,7 @@
             {{ submission.project_title_display }}
         {% endif %}
         <div class="actions">
-            {% if submission_form|allows_edits_by:request.user %}
+            {% if submission_form|allows_edits_by:user %}
                 <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
             {% endif %}
              <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=submission_form.pk %}">{% trans "Download PDF" %}</a>
@@ -79,7 +79,7 @@
                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>
                 {% endif %}
             {% endwith %}
-            {% if submission_form|allows_amendments_by:request.user and not docstash.value.notification_type %}
+            {% if submission_form|allows_amendments_by:user and not docstash.value.notification_type %}
                 {% for notification_type in diff_notification_types %}
                     | <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
                 {% endfor %}
