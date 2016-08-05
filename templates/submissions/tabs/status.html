@@ -236,7 +236,7 @@
             {% endfor %}
         </td>
     </tr>
-    {% elif not user|is_presenting_party:submission_form %}
+    {% elif user not in submission_form.get_presenting_parties %}
         <tr>
             <th>Gutachten erforderlich:</th>
             <td>{{ external_review_checklists|yesno }}</td>

@@ -78,7 +78,7 @@
                     <a href="#workflow_log">{% trans 'Workflow' %}</a>
                 {% endif %}
             {% endif %}
-            {% if not user|is_presenting_party:submission_form %}
+            {% if user not in submission_form.get_presenting_parties %}
                 <a href="#involved_parties_tab">{% trans 'Involved Parties' %}</a>
             {% endif %}
         </div>
@@ -162,7 +162,7 @@
         </div>
     {% endif %}
 
-    {% if not user|is_presenting_party:submission_form %}
+    {% if user not in submission_form.get_presenting_parties %}
         <div id="involved_parties_tab" class="collapse">
             {% include 'submissions/tabs/involved_parties.html' %}
         </div>

@@ -118,10 +118,6 @@ def allows_edits_by(sf, user):
 def allows_export_by(sf, user):
     return sf.allows_export(user)
 
-@register.filter
-def is_presenting_party(user, sf):
-    return user in sf.get_presenting_parties()
-
 @register.tag(name='strip')
 def do_strip(parser, token):
     nodelist = parser.parse(('endstrip',))
