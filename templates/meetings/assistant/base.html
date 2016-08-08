@@ -52,14 +52,22 @@
               <h4>Wechsle nach:</h4>
                 {% if meeting.started %}
                     {% block meeting_assistant_navigation %}
-                    <form action="{% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk %}" class="search open-in-widget">
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control" name="q" placeholder="Suche" />
-                            <span class="input-group-btn">
-                                <button class="btn btn-secondary fa fa-search" type="submit"></button>
-                            </span>
-                        </div>
-                    </form>
+                        {% if last_top %}
+                            {% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=last_top.pk as last_top_url %}
+                            <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{{ last_top_url }}">
+                                Letztbesprochenes TOP ({{ last_top }})
+                            </a>
+                        {% endif %}
+
+                        {% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk as quickjump_url%}
+                        <form action="{{ quickjump_url }}" class="open-in-widget m-t-1">
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" name="q" placeholder="Suche" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-secondary fa fa-search" type="submit"></button>
+                                </span>
+                            </div>
+                        </form>
                     {% endblock %}
                 {% endif %}
             </div>

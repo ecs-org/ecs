@@ -14,7 +14,6 @@ from django.utils.translation import ugettext as _
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
-from django.core.cache import cache
 from django.db.models import Q, Max, Prefetch
 from django.utils import timezone
 from django.contrib import messages
@@ -188,13 +187,12 @@ def submission_list(request, meeting_pk=None):
                     .order_by('doctype__identifier', 'date', 'name'))
         )
 
-    active_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
-    active_top_pk = cache.get(active_top_cache_key)
+    active_top = meeting.active_top
 
     return render(request, 'meetings/tabs/submissions.html', {
         'meeting': meeting,
         'tops': tops,
-        'active_top_pk': active_top_pk,
+        'active_top_pk': active_top.pk if active_top else None,
     })
 
 
@@ -479,6 +477,7 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
     return render(request, 'meetings/assistant/quickjump_error.html', {
         'meeting': meeting,
         'tops': tops,
+        'last_top': meeting.active_top,
     })
 
 @user_group_required('EC-Office')
@@ -492,9 +491,9 @@ def meeting_assistant(request, meeting_pk=None):
                 'message': _('This meeting has ended.'),
             })
         try:
-            top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
-            top_pk = cache.get(top_cache_key) or meeting[0].pk
-            return redirect('ecs.meetings.views.meeting_assistant_top', meeting_pk=meeting.pk, top_pk=top_pk)
+            top = meeting.active_top or meeting[0]
+            return redirect('ecs.meetings.views.meeting_assistant_top',
+                meeting_pk=meeting.pk, top_pk=top.pk)
         except IndexError:
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
@@ -558,6 +557,7 @@ def meeting_assistant_comments(request, meeting_pk=None):
         return redirect('ecs.meetings.views.meeting_assistant', meeting_pk=meeting.pk)
     return render(request, 'meetings/assistant/comments.html', {
         'meeting': meeting,
+        'last_top': meeting.active_top,
         'form': form,
     })
 
@@ -615,6 +615,7 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
                 answer__is_valid=True
             ).order_by('submission_forms__submission__ec_number'),
         'meeting': meeting,
+        'last_top': meeting.active_top,
         'thesis_vote_formset': thesis_vote_formset,
         'expedited_vote_formset': expedited_vote_formset,
         'localec_vote_formset': localec_vote_formset,
@@ -672,13 +673,9 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
         top.save()
         return next_top_redirect()
 
-    last_top_cache_key = 'meetings:{0}:assistant:top_pk'.format(meeting.pk)
-    last_top = None
-    last_top_pk = cache.get(last_top_cache_key)
-    if not last_top_pk is None:
-        last_top = TimetableEntry.objects.get(pk=last_top_pk)
-    cache.set(last_top_cache_key, top.pk, 60*60*24*2)
-    if not last_top == top:
+    last_top = meeting.active_top
+    meeting.active_top = top
+    if last_top != top:
         on_meeting_top_jump.send(Meeting, meeting=meeting, timetable_entry=top)
 
     checklist_review_states = OrderedDict()

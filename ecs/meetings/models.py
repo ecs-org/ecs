@@ -1,5 +1,7 @@
 import math
 from datetime import timedelta, datetime
+
+from django.core.cache import cache
 from django.db import models
 from django.db.models import F, Prefetch
 from django.dispatch import receiver
@@ -538,6 +540,19 @@ class Meeting(models.Model):
             if submission.workflow_lane != SUBMISSION_LANE_BOARD or \
                 not submission.medical_categories.filter(id=p.medical_category_id).exists():
                 p.delete()
+
+    @property
+    def active_top(self):
+        key = 'meetings:{}:assistant:top_pk'.format(self.pk)
+        pk = cache.get(key)
+        if pk:
+            return TimetableEntry.objects.get(pk=pk)
+
+    @active_top.setter
+    def active_top(self, top):
+        key = 'meetings:{}:assistant:top_pk'.format(self.pk)
+        old_val = cache.get(key)
+        cache.set(key, top.pk, 60*60*24*2)
 
 
 @reversion.register(fields=('text',))
