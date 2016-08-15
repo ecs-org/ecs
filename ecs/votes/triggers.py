@@ -10,6 +10,7 @@ from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.documents.models import Document
+from ecs.checklists.models import Checklist
 from ecs.communication.mailutils import deliver
 
 
@@ -62,6 +63,11 @@ def on_vote_published(sender, **kwargs):
         with sudo():
             Task.objects.for_data(sf.submission).exclude(
                 task_type__workflow_node__uid='b2_review').open().mark_deleted()
+
+            Task.objects.filter(
+                content_type=ContentType.objects.get_for_model(Checklist),
+                data_id__in=sf.submission.checklists.values('id')
+            ).open().mark_deleted()
     elif vote.result == '2':
         with sudo():
             Task.objects.for_submission(sf.submission).filter(
