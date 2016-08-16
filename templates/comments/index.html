@@ -1,48 +1,63 @@
 {% load i18n %}
 
 {% for comment in comments %}
-    <div class="card card-block comment">
-        <div class="card-text">
-            {{ comment.text|linebreaksbr }}
-        </div>
-        <div class="card-text m-t-1 text-xs-center text-muted">
+    <div class="card comment">
+        <div class="card-header">
             {{ comment.author }} on the {{ comment.timestamp|date:'d.m.Y H:i' }}
-            <a class="fa fa-pencil edit" href="{% url 'ecs.core.views.comments.edit' pk=comment.pk %}"></a>
-            <span class="spinner hidden-xs-up">
-                <span class="fa fa-spinner fa-spin"></span>
-            </span>
-            <a class="fa fa-trash-o pull-right open-in-widget" href="{% url 'ecs.core.views.comments.delete' pk=comment.pk %}"></a>
+
+            {% url 'ecs.core.views.comments.edit' pk=comment.pk as edit_url %}
+            <a class="fa fa-pencil edit" href="{{ edit_url }}"></a>
+
+            {% url 'ecs.core.views.comments.delete' pk=comment.pk as delete_url %}
+            <a class="pull-right open-in-widget" href="{{ delete_url }}">&times;</a>
+        </div>
+        <div class="card-block">
+            <p class="card-text">
+                {{ comment.text|linebreaksbr }}
+            </p>
+            {% if comment.attachment %}
+                <hr>
+                {% trans 'Attachment' %}:
+                {% url 'ecs.core.views.comments.download_attachment' pk=comment.pk as download_url %}
+                <a href="{{ download_url }}">{{ comment.attachment.name }}</a>
+                {% if comment.attachment.mimetype == 'application/pdf' %}
+                    {% url 'ecs.core.views.comments.view_attachment' pk=comment.pk as view_url %}
+                    | <a href="{{ view_url }}" target="_blank">{% trans 'View' %}</a>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endfor %}
 
-<div class="card card-block new-comment-form">
-    <div class="text-xs-center">
-        <a class="btn btn-sm btn-outline-primary add-comment" href="{% url 'ecs.core.views.comments.edit' submission_pk=submission.pk %}">
-            <span class="fa fa-plus"></span>
-            {% trans 'Add Comment' %}
-        </a>
+<div class="card hidden-xs-up new-comment-form">
+    <div class="card-block text-xs-center">
+        <span class="fa fa-2x fa-spinner fa-spin"></span>
     </div>
 </div>
+
+{% url 'ecs.core.views.comments.edit' submission_pk=submission.pk as create_url %}
+<a class="btn btn-sm btn-primary btn-block add-comment" href="{{ create_url }}">
+    <span class="fa fa-plus"></span>
+    {% trans 'Add Comment' %}
+</a>
 
 <script type="text/javascript">
     $('.card.comment a.edit').click(function(ev) {
         ev.preventDefault();
         var link = $(this);
-        var container = link.parents('.card-block');
+        var container = link.parents('.card');
 
-        link.hide();
-        link.siblings('.spinner').removeClass('hidden-xs-up');
+        link.replaceWith('<span class="fa fa-spinner fa-spin"></span>');
         container.load(link.attr('href'));
     });
 
     $('.add-comment').click(function(ev) {
         ev.preventDefault();
         var link = $(this);
-        var container = link.parents('.card-block');
+        var container = $('.new-comment-form');
 
-        link.prop('disabled', true);
-        link.html('<span class="fa fa-spinner fa-spin"></span>');
+        link.remove();
+        container.removeClass('hidden-xs-up');
         container.load(link.attr('href'));
     });
 </script>

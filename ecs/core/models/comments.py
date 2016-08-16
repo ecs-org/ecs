@@ -6,3 +6,4 @@ class Comment(models.Model):
     author = models.ForeignKey('auth.User')
     timestamp = models.DateTimeField(auto_now=True)
     text = models.TextField()
+    attachment = models.ForeignKey('documents.Document', null=True)
