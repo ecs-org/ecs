@@ -23,7 +23,16 @@
         )
     ]);
 
+    function check_empty() {
+        var empty = !textarea.val();
+        button.prop('disabled', empty);
+        textarea.parents('.form-group').toggleClass('has-danger', empty);
+    }
+    textarea.on('input', check_empty);
+    check_empty();
+
     button.click(function() {
+        textarea.off('input', check_empty);
         button.prop('disabled', true);
         button.html('<span class="fa fa-spinner fa-spin"></span>');
     });
