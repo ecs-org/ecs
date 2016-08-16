@@ -38,10 +38,13 @@ ecs.Widget.prototype = {
             this.url = url;
         }
 
+        var data = form ? new FormData(form[0]) : '';
         this.request = $.ajax({
             url: url || (form ? form.attr('action') : this.url),
             method: form ? form.attr('method') : 'get',
-            data: form ? form.serialize() : '',
+            data: data,
+            processData: false,
+            contentType: false,
             context: this,
             success: function(data) {
                 this.element.html(data);
