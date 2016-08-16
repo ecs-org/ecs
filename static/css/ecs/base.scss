@@ -197,19 +197,19 @@ ol.submission_list {
 
 /* input fields and buttons */
 
-input,
-input[type=file],
-textarea,
-select {
+input:not(.form-control),
+input[type=file]:not(.form-control),
+textarea:not(.form-control),
+select:not(.form-control) {
     border: 1px solid #b7b7b7;
     padding: 2px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
 }
-input:focus,
-input[type=file]:focus,
-textarea:focus,
-select:focus {
+input:not(.form-control):focus,
+input[type=file]:not(.form-control):focus,
+textarea:not(.form-control):focus,
+select:not(.form-control):focus {
     box-shadow: 0 0 6px $grey-80;
 }
 
