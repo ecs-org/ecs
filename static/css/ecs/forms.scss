@@ -57,7 +57,7 @@ ul.errorlist {
         }
     }
 
-    ul li.not(.select2-selection__choice) {
+    ul li:not(.select2-selection__choice) {
         list-style: circle;
     }
 
@@ -150,7 +150,7 @@ ul.errorlist {
         width: 400px;
     }
 
-    input[type=submit].not(.btn) {
+    input[type=submit]:not(.btn) {
         margin: 10px 10px 10px 240px;
         display: block;
     }
