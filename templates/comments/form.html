@@ -2,6 +2,29 @@
 
 <form action="{{ request.path }}" method="POST" class="open-in-widget">
     {% csrf_token %}
-    {{ form.text|add_class:'form-control' }}
+    <div class="form-group">
+        {{ form.text|add_class:'form-control' }}
+    </div>
     <button type="submit" class="btn btn-sm btn-primary btn-block">{% trans 'save' %}</button>
 </form>
+
+<script type="text/javascript">
+    var textarea = $('#{{ form.text.id_for_label }}');
+    var button = textarea.parents('form').find('button[type="submit"]');
+
+    var len = textarea.val().length;
+    textarea.focus();
+    textarea.get(0).setSelectionRange(len, len);
+
+    new ecs.textarea.TextArea(textarea, [
+        ecs.textarea.toolbarItems.boilerplate(
+            "{{ _('Insert Boilerplate')|escapejs }}",
+            "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+        )
+    ]);
+
+    button.click(function() {
+        button.prop('disabled', true);
+        button.html('<span class="fa fa-spinner fa-spin"></span>');
+    });
+</script>

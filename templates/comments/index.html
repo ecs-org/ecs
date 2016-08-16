@@ -33,18 +33,7 @@
 
         link.hide();
         link.siblings('.spinner').removeClass('hidden-xs-up');
-        container.load(link.attr('href'), function() {
-            var textarea = container.find('textarea[name="text"]');
-            var len = textarea.val().length;
-            textarea.focus();
-            textarea.get(0).setSelectionRange(len, len);
-            new ecs.textarea.TextArea(textarea, [
-                ecs.textarea.toolbarItems.boilerplate(
-                    "{{ _('Insert Boilerplate')|escapejs }}",
-                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
-                )
-            ]);
-        });
+        container.load(link.attr('href'));
     });
 
     $('.add-comment').click(function(ev) {
@@ -54,15 +43,6 @@
 
         link.prop('disabled', true);
         link.html('<span class="fa fa-spinner fa-spin"></span>');
-        container.load(link.attr('href'), function() {
-            var textarea = container.find('textarea[name="text"]');
-            textarea.focus();
-            new ecs.textarea.TextArea(textarea, [
-                ecs.textarea.toolbarItems.boilerplate(
-                    "{{ _('Insert Boilerplate')|escapejs }}",
-                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
-                )
-            ]);
-        });
+        container.load(link.attr('href'));
     });
 </script>
