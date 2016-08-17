@@ -607,12 +607,6 @@ class TimetableEntry(models.Model):
     def add_user(self, user, medical_category=None):
         Participation.objects.get_or_create(user=user, entry=self, medical_category=medical_category)
         
-    def remove_user(self, user, medical_category=False):
-        participations = Participation.objects.filter(user=user, entry=self)
-        if medical_category is not False:
-            participations = participations.filter(medical_category=medical_category)
-        participations.delete()
-    
     def _get_index(self):
         return self.timetable_index
         
