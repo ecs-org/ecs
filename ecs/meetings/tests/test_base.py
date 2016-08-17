@@ -71,18 +71,18 @@ class MeetingModelTest(EcsTestCase):
         c = m.add_entry(duration=timedelta(hours=4), title="C")
         d = m.add_entry(duration=timedelta(hours=8), title="D")
         
-        a.add_user(u0)
-        a.add_user(u3)
+        a.participations.create(user=u0)
+        a.participations.create(user=u3)
 
-        b.add_user(u0)
-        b.add_user(u1)
+        b.participations.create(user=u0)
+        b.participations.create(user=u1)
 
-        c.add_user(u2)
+        c.participations.create(user=u2)
 
-        d.add_user(u0)
-        d.add_user(u1)
-        d.add_user(u2)
-        d.add_user(u3)
+        d.participations.create(user=u0)
+        d.participations.create(user=u1)
+        d.participations.create(user=u2)
+        d.participations.create(user=u3)
         
         metrics = m.metrics
 

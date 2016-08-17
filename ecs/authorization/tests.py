@@ -55,7 +55,7 @@ class SubmissionAuthTestCase(EcsTestCase):
 
         meeting = Meeting.objects.create(start=timezone.now())
         entry = meeting.add_entry(submission=sf.submission, duration=timedelta(seconds=60))
-        entry.add_user(self.board_member_user)
+        entry.participations.create(user=self.board_member_user)
         sf.submission.next_meeting = meeting
         sf.submission.save()
 

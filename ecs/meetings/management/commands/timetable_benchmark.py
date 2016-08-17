@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 else:
                     entry = meeting.add_entry(title=title, duration=datetime.timedelta(minutes=10))
                     entries_by_title[title] = entry
-                entry.add_user(user)
+                entry.participations.create(user=user)
         #print len(entries_by_title)
 
         setup = 'from ecs.meetings.models import Meeting;m = Meeting.objects.get(pk=%s);f = m.create_evaluation_func(lambda x: x);perm=list(m)' % meeting.pk

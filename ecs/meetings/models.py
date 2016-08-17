@@ -603,10 +603,7 @@ class TimetableEntry(models.Model):
     @cached_property
     def users(self):
         return User.objects.filter(meeting_participations__entry=self).order_by('username').distinct()
-        
-    def add_user(self, user, medical_category=None):
-        Participation.objects.get_or_create(user=user, entry=self, medical_category=medical_category)
-        
+
     def _get_index(self):
         return self.timetable_index
         
