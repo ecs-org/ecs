@@ -86,6 +86,12 @@ def create_task(request, submission_pk=None):
                 token.task.assign(user=assign_to)
                 task = token.task
 
+                if task_type.workflow_node.uid == 'board_member_review':
+                    entry = submission.timetable_entries.filter(
+                        meeting__started=None).first()
+                    if entry:
+                        entry.participations.create(user=assign_to, task=task)
+
             task.created_by = request.user
             task.send_message_on_close = form.cleaned_data['send_message_on_close']
             task.reminder_message_timeout = form.cleaned_data['reminder_message_timeout']

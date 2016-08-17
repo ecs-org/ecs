@@ -87,11 +87,12 @@ def reschedule_submission(request, submission_pk=None):
 
         old_entry = from_meeting.timetable_entries.get(submission=submission)
         assert not hasattr(old_entry, 'vote')
-        old_entry.participations.all().delete()
         visible = (not old_entry.timetable_index is None)
+        new_entry = to_meeting.add_entry(submission=submission,
+            duration=old_entry.duration, title=old_entry.title, visible=visible)
+        old_entry.participations.exclude(task=None).update(entry=new_entry)
+        old_entry.participations.all().delete()
         old_entry.delete()
-        to_meeting.add_entry(submission=submission, duration=old_entry.duration,
-            title=old_entry.title, visible=visible)
 
         old_experts = set(from_meeting.medical_categories
             .exclude(board_member=None)
@@ -336,7 +337,7 @@ def add_timetable_entry(request, meeting_pk=None):
         entry = meeting.add_entry(duration=timedelta(minutes=7, seconds=30), submission=Submission.objects.order_by('?')[:1].get())
         import random
         for user in User.objects.order_by('?')[:random.randint(1, 4)]:
-            Participation.objects.create(entry=entry, user=user)
+            entry.participations.create(user=user)
     return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
 
 @user_group_required('EC-Office')

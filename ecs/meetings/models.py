@@ -263,9 +263,8 @@ class Meeting(models.Model):
                 .distinct())
 
             for entry in entries:
-                participation, created = Participation.objects.get_or_create(
-                    medical_category=amc.category, entry=entry,
-                    user=amc.board_member)
+                participation, created = entry.participations.get_or_create(
+                    medical_category=amc.category, user=amc.board_member)
 
                 if created:
                     with sudo():
@@ -535,7 +534,7 @@ class Meeting(models.Model):
             medical_category__in=old_assignments.keys()).delete()
         
         # delete Participation entries where med-cat is not inside the referenced study anymore
-        for p in Participation.objects.filter(entry__meeting=self):
+        for p in Participation.objects.filter(entry__meeting=self, task=None):
             submission = p.entry.submission
             if submission.workflow_lane != SUBMISSION_LANE_BOARD or \
                 not submission.medical_categories.filter(id=p.medical_category_id).exists():
@@ -764,6 +763,7 @@ class Participation(models.Model):
     entry = models.ForeignKey(TimetableEntry, related_name='participations')
     user = models.ForeignKey(User, related_name='meeting_participations')
     medical_category = models.ForeignKey(MedicalCategory, related_name='meeting_participations', null=True, blank=True)
+    task = models.ForeignKey('tasks.Task', null=True)
     ignored_for_optimization = models.BooleanField(default=False)
 
     objects = AuthorizationManager()

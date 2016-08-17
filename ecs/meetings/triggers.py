@@ -1,8 +1,10 @@
 from django.dispatch import receiver
 
 from ecs.meetings import signals
-from ecs.votes.models import Vote
 from ecs.meetings.cache import flush_meeting_page_cache
+from ecs.meetings.models import Participation
+from ecs.votes.models import Vote
+from ecs.workflow.signals import token_marked_deleted
 
 
 def _flush_cache(meeting):
@@ -58,3 +60,10 @@ def on_meeting_top_index_change(sender, **kwargs):
     meeting = kwargs['meeting']
     timetable_entry = kwargs['timetable_entry']
     _flush_cache(meeting)
+
+
+@receiver(token_marked_deleted)
+def workflow_token_marked_deleted(sender, **kwargs):
+    if sender.task:
+        Participation.objects.filter(entry__meeting__started=None,
+            task=sender.task).delete()
