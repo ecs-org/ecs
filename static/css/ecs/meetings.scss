@@ -96,8 +96,11 @@
         position: relative;
 
         h4 {
+            height: 16px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             margin-bottom: 2px;
-            padding-right: 20px;
         }
 
         &.free {
@@ -128,12 +131,11 @@
             float: left;
             padding: 5px;
             margin-right: 5px;
-            width: 50px;
+            width: 55px;
             background-color: $lightskyblue;
-            height: 70px;
+            height: 78px;
             border-radius: 3px 0 0 3px;
-            -moz-border-radius: 3px 0 0 3px;
-            -webkit-border-radius: 3px 0 0 3px;
+            cursor: pointer;
         }
 
         input.duration {
