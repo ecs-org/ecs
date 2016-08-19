@@ -191,6 +191,14 @@ class Migration(migrations.Migration):
                               'office_insurance_review',
                               'final_executive_office_review',
                               'final_notification_office_review');
+
+            update workflow_node
+                set name = 'Amendment Answer Signing'
+                where name = 'Notification Answer Signing';
+
+            update tasks_tasktype
+                set name = 'Amendment Answer Signing'
+                where name = 'Notification Answer Signing';
         '''),
         migrations.RemoveField(
             model_name='notification',

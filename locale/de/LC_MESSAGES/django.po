@@ -1652,8 +1652,8 @@ msgstr ""
 msgid "Safety Review"
 msgstr "Sicherheitsmeldung"
 
-msgid "Notification Answer Signing"
-msgstr "Meldungsantwort Signierung"
+msgid "Amendment Answer Signing"
+msgstr "Amendment-Antwort Signierung"
 
 msgid "Distribute Notification Answer"
 msgstr "Meldungsantwort Verteilen"

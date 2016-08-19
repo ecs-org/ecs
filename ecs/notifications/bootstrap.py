@@ -99,7 +99,7 @@ def notification_workflow():
             'executive_amendment_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Amendment Review')),
             'wait_for_meeting': Args(WaitForMeeting, name='Wait For Meeting'),
             'amendment_split': Args(Generic, name='Amendment Split'),
-            'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Notification Answer Signing')),
+            'notification_answer_signing': Args(SignNotificationAnswer, group=SIGNING_GROUP, name=_('Amendment Answer Signing')),
         },
         edges=(
             (('start', 'safety_review'), Args(guard=is_susar)),
