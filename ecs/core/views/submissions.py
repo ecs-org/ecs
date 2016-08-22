@@ -41,7 +41,7 @@ from ecs.notifications.models import (
     Notification, NotificationType, CenterCloseNotification,
 )
 
-from ecs.core.workflow import ChecklistReview, RecommendationReview
+from ecs.core.workflow import ChecklistReview
 
 from ecs.core.signals import on_study_submit, on_presenter_change, on_susar_presenter_change
 from ecs.core.serializer import Serializer
@@ -165,8 +165,6 @@ def view_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     return redirect('readonly_submission_form', submission_form_pk=submission.current_submission_form.pk)
 
-CHECKLIST_ACTIVITIES = (ChecklistReview, RecommendationReview)
-
 
 def readonly_submission_form(request, submission_form_pk=None, submission_form=None, extra_context=None, template='submissions/readonly_form.html', checklist_overwrite=None):
     if not submission_form:
@@ -198,7 +196,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 prefix='checklist{}'.format(checklist.id),
                 queryset=checklist.answers.order_by('question__index'))
 
-            task = (get_obj_tasks(CHECKLIST_ACTIVITIES, submission, data=checklist.blueprint)
+            task = (get_obj_tasks((ChecklistReview,), submission, data=checklist.blueprint)
                 .filter(assigned_to=request.user, deleted_at__isnull=True)
                 .order_by('-closed_at')
                 .first())
