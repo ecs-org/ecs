@@ -56,8 +56,8 @@ SUBMISSION_FORM_TABS = (
     ]),
     Tab('participants', _('participant'), [
         (_('test participant'), [
-            'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females',
-            'subject_childbearing', 'subject_noncompetents', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
+            'subject_count', 'subject_minage', 'subject_maxage', 'subject_males', 'subject_females_childbearing',
+            'subject_noncompetents', 'subject_duration', 'subject_duration_active', 'subject_duration_controls', 'subject_planned_total_duration',
         ]),
         (_('centers abroad respectively non AMG'), NamedProxy([], 'centers_abroad')),
     ]),

@@ -162,7 +162,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.10.1', 'subject_minage', _('minimum age')),
     FieldInfo('2.10.2', 'subject_maxage', _('maximum age')),
 
-    FieldInfo('2.10.4', 'subject_males', _('male participants'), help_text=_('The study includes:')),
+    FieldInfo('2.10.4', 'subject_males', _('male participants')),
+    FieldInfo('2.10.4/5', 'subject_females_childbearing', _('female participants')),
     FieldInfo('2.10.4', 'subject_females', _('female participants')),
     FieldInfo('2.10.5', 'subject_childbearing', _('women of childbearing age')),
     FieldInfo('2.10.3', 'subject_noncompetents', _('non competent participants'), help_text=_('non competents explanation')),

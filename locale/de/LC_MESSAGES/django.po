@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-07 15:22+0200\n"
+"POT-Creation-Date: 2016-08-25 14:46+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,6 +307,15 @@ msgstr "Bitte geben Sie eine Uhrzeit im Format HH:MM ein."
 
 msgid "No information given"
 msgstr "Keine Angaben"
+
+msgid "Yes, also childbearing"
+msgstr "Ja, auch gebärfähige Frauen"
+
+msgid "Yes, but no childbearing"
+msgstr "Ja, aber keine gebärfähigen Frauen"
+
+msgid "Yes, but only childbearing"
+msgstr "Ja, aber nur gebärfähigen Frauen"
 
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
@@ -831,9 +840,6 @@ msgstr "Höchstalter"
 
 msgid "male participants"
 msgstr "männliche Teilnehmer"
-
-msgid "The study includes:"
-msgstr "In die Studie eingeschlossen werden:"
 
 msgid "female participants"
 msgstr "weibliche Teilnehmerinnen"

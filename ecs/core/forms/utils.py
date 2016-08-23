@@ -48,4 +48,10 @@ class ReadonlyFormSetMixin(object):
 def submission_form_to_dict(sf):
     d = model_to_dict(sf)
     d['invoice_differs_from_sponsor'] = bool(sf.invoice_name)
+    d['subject_females_childbearing'] = str((
+        (True, True),
+        (True, False),
+        (False, True),
+        (False, False),
+    ).index((sf.subject_females, sf.subject_childbearing)))
     return d

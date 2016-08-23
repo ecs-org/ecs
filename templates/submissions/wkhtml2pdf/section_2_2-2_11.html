@@ -76,14 +76,30 @@
 
     <p>
         2.10.4 Einschließbar sind 
-        {{ submission_form.subject_females|checkbox }} <span class="underline">weibliche</span> (und/oder) 
+        {% if submission_form.subject_childbearing %}
+            {{ True|checkbox }}
+        {% else %}
+            {{ submission_form.subject_females|checkbox }}
+        {% endif %}
+        <span class="underline">weibliche</span> (und/oder)
         {{ submission_form.subject_males|checkbox }} <span class="underline">männliche</span> Teilnehmer/innen.
     </p>
 
     <p>
         2.10.5 Sind gebärfähige Frauen einschließbar? (Bei Studien nach AMG/MPG ist bei Einschluss gebärfähiger  Frauen ein monatlicher Schwangerschaftstest erforderlich)
-        {{ submission_form.subject_childbearing|checkbox }} ja 
-        {{ submission_form.subject_childbearing|not|checkbox }} nein
+        {% if submission_form.subject_females %}
+            {{ submission_form.subject_childbearing|checkbox }} ja
+            {{ False|checkbox }} nur gebährfähige
+            {{ submission_form.subject_childbearing|not|checkbox }} nein
+        {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
+            {{ False|checkbox }} ja
+            {{ True|checkbox }} nur gebährfähige
+            {{ False|checkbox }} nein
+        {% else %}
+            {{ False|checkbox }} ja
+            {{ False|checkbox }} nur gebährfähige
+            {{ False|checkbox }} nein
+        {% endif %}
     </p>
 </div>
 
