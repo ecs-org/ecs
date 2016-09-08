@@ -143,11 +143,22 @@ prepare_database() {
 legacy_migrate() {
     echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
 
-    for app in auth admin contenttypes sessions sites reversion djcelery \
+    # fake-apply to current data structure (from old south migrations)
+    for app in auth admin contenttypes sessions sites \
         boilerplate docstash documents help meetings notifications \
         pki scratchpad tracking users votes workflow; do
             ./manage.py migrate --noinput --fake $app 0001_initial || true
     done
+
+    # For fake-applying the initial migration of the reversion app,
+    # we first have to move the squashed migration aside,
+    # in order for the (intermediate) target migration to show up.
+    p="$(python -c 'import sys; print(sys.path[-1])')"
+    f="$p/reversion/migrations/0001_squashed_0004_auto_20160611_1202.py"
+    mv "$f" "$f.disabled"
+    ./manage.py migrate --noinput --fake reversion 0001_initial || true
+    mv "$f.disabled" "$f"
+
     ./manage.py migrate --noinput --fake billing 0002_auto_20151217_1249 || true
     ./manage.py migrate --noinput --fake checklists 0002_auto_20151217_1249 || true
     ./manage.py migrate --noinput --fake communication 0003_auto_20151217_1249 || true
