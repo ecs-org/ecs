@@ -9,7 +9,7 @@
             <a class="fa fa-pencil edit" href="{{ edit_url }}"></a>
 
             {% url 'ecs.core.views.comments.delete' pk=comment.pk as delete_url %}
-            <a class="pull-right open-in-widget" href="{{ delete_url }}">&times;</a>
+            <a class="pull-right delete" href="{{ delete_url }}">&times;</a>
         </div>
         <div class="card-block">
             <p class="card-text">
@@ -49,6 +49,21 @@
 
         link.replaceWith('<span class="fa fa-spinner fa-spin"></span>');
         container.load(link.attr('href'));
+    });
+
+    $('.card.comment a.delete').click(function(ev) {
+        ev.preventDefault();
+        var link = $(this);
+        var widget = link.parents('.ecs-Widget').data('widget');
+
+        ecs.confirm({
+            question: '{% trans 'Do you want to delete the comment?' %}',
+            ok: '{{ _("Delete")|escapejs }}',
+            cancel: '{{ _("Don't Delete")|escapejs }}',
+            success: function() {
+                widget.load(link.attr('href'));
+            }
+        });
     });
 
     $('.add-comment').click(function(ev) {
