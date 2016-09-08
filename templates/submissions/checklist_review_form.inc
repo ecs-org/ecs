@@ -15,14 +15,14 @@
             <label for="{{ form.answer.id_for_label }}">
                 {{ form.answer.label|linebreaksbr }}
             </label>
-            <span class="{{ form.answer.field|type_name }}{% if form.answer.field.required %} required{% endif %}{% if form.answer.errors %} errors{% endif %}">
+            <span class="{{ form.answer.field|type_name }}{% if form.answer.errors %} errors{% endif %}">
                 {{ form.answer }}
                 {% if form.answer.errors %}
                     {{ form.answer.errors }}
                 {% endif %}
             </span>
 
-            <span class="{{ form.comment.field|type_name }}{% if form.comment.field.required %} required{% endif %}{% if form.comment.errors %} errors{% endif %}">
+            <span class="{{ form.comment.field|type_name }}{% if form.instance.question.requires_comment %} required{% endif %}{% if form.comment.errors %} errors{% endif %}">
                 <label for="{{ form.comment.id_for_label }}">
                     {{ form.comment.label }}
                 </label>

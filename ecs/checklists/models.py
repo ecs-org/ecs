@@ -79,7 +79,10 @@ class Checklist(models.Model):
         
     @property
     def is_complete(self):
-        return not self.answers.filter(answer=None).exists()
+        return not self.answers.filter(
+            Q(answer=None) |
+            Q(Q(comment=None) | Q(comment=''), question__requires_comment=True)
+        ).exists()
 
     @property
     def is_positive(self):

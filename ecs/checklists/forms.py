@@ -16,6 +16,7 @@ class ChecklistAnswerForm(forms.ModelForm):
     class Meta:
         model = ChecklistAnswer
         fields = ('answer', 'comment')
+        labels = {'comment': _('comment/reasoning')}
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,8 +25,6 @@ class ChecklistAnswerForm(forms.ModelForm):
             text=question.text, desc=question.description)
         self.fields['answer'].label = fullquestion
         self.fields['answer'].help_text = fullquestion
-        self.fields['comment'].required = question.requires_comment
-        self.fields['comment'].label = _('comment/reasoning')
 
 
 class BaseChecklistAnswerFormSet(ReadonlyFormSetMixin, forms.BaseModelFormSet):

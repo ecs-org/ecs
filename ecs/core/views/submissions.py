@@ -520,14 +520,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             checklist.answers.get_or_create(question=question)
         checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
 
-    docstash, created = DocStash.objects.get_or_create(
-        group='ecs.core.views.submissions.checklist_review',
-        owner=request.user,
-        content_type=ContentType.objects.get_for_model(related_task.__class__),
-        object_id=related_task.pk,
-    )
-
-    formset = ChecklistAnswerFormSet(request.POST or docstash.POST,
+    formset = ChecklistAnswerFormSet(request.POST or None,
         prefix='checklist{}'.format(checklist.id),
         queryset=checklist.answers.order_by('question__index'))
     formset.related_task = related_task
@@ -541,8 +534,6 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
             really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
 
             formset.save()
-            docstash.delete()
-
             checklist.save()    # XXX: trigger post_save signal
 
             if (complete_task or really_complete_task) and not checklist.is_complete:
@@ -556,9 +547,6 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 return redirect(related_task.afterlife_url)
             elif complete_task and checklist.is_complete:
                 extra_context['review_complete'] = checklist.pk
-        else:
-            docstash.POST = request.POST
-            docstash.save()
 
     return readonly_submission_form(request, submission_form=submission_form,
         checklist_overwrite={checklist: formset}, extra_context=extra_context)
