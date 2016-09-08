@@ -80,7 +80,6 @@ class Notification(models.Model):
     pdf_document = models.OneToOneField(Document, related_name='_notification', null=True)
 
     comments = models.TextField()
-    date_of_receipt = models.DateField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey('auth.User', null=True)
     

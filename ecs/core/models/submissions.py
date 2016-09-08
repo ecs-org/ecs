@@ -486,8 +486,6 @@ class SubmissionForm(models.Model):
     submitter_is_sponsor = models.BooleanField(default=False)
     submitter_is_authorized_by_sponsor = models.BooleanField(default=False)
     
-    date_of_receipt = models.DateField(null=True, blank=True)
-
     def save(self, **kwargs):
         if not self.presenter_id:
             self.presenter = get_current_user()

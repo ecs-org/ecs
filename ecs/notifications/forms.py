@@ -55,7 +55,7 @@ def get_usable_submission_forms():
 class NotificationForm(forms.ModelForm):
     class Meta:
         model = Notification
-        exclude = ('type', 'documents', 'investigators', 'date_of_receipt', 'user', 'timestamp', 'pdf_document')
+        exclude = ('type', 'documents', 'investigators', 'user', 'timestamp', 'pdf_document')
 
 
 class SafetyNotificationForm(NotificationForm):
