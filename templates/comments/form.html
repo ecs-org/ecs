@@ -5,9 +5,19 @@
     <div class="form-group">
         {{ form.text|add_class:'form-control' }}
     </div>
-    <div class="form-group input-group">
-        <span class="input-group-addon">{% trans 'Attachment' %}</span>
-        {{ form.file|add_class:'form-control' }}
+    <div class="form-group">
+        {% if form.instance.attachment_id %}
+            <div class="text-danger">
+                {% blocktrans trimmed %}
+                    Comments can only contain one attachment. If you select a
+                    file here it will replace the current attachment.
+                {% endblocktrans %}
+            </div>
+        {% endif %}
+        <div class="input-group">
+            <span class="input-group-addon">{% trans 'Attachment' %}</span>
+            {{ form.file|add_class:'form-control' }}
+        </div>
     </div>
     <button type="submit" class="btn btn-sm btn-primary btn-block">{% trans 'save' %}</button>
 </form>

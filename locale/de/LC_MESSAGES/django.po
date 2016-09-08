@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-08 17:14+0200\n"
+"POT-Creation-Date: 2016-09-08 17:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2305,13 +2305,24 @@ msgstr ""
 "        %(ABSOLUTE_URL_PREFIX)s%(task_url)s\n"
 "    "
 
+msgid ""
+"Comments can only contain one attachment. If you select a file here it will "
+"replace the current attachment."
+msgstr ""
+"Kommentare können nur einen Anhang beinhalten. Wenn Sie hier eine Datei "
+"auswählen wir der derzeitige Anhang ersetzt."
+
+msgid "Attachment"
+msgstr "Anhang"
+
 msgid "save"
 msgstr "Speichern"
 
-#, fuzzy
-#| msgid "Comments"
+msgid "on the"
+msgstr "am"
+
 msgid "Add Comment"
-msgstr "Kommentare"
+msgstr "Kommentar hinzufügen"
 
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
