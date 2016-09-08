@@ -26,13 +26,13 @@ versionfile=$2
 if test ! -z "$GIT_REV"; then
     ECS_GIT_REV="${GIT_REV}"
     ECS_GIT_BRANCH="${GIT_BRANCH:-unknown}"
-    ECS_GIT_SHORT=$(echo "$ECS_GIT_REV"| cut -c -7)
+    ECS_GIT_SHORT=$(echo "$ECS_GIT_REV"| cut -c -10)
     ECS_VERSION="${ECS_GIT_BRANCH} ${ECS_GIT_SHORT} dev"
 else
     if $(cd $sourcedir && git rev-parse --is-inside-work-tree); then
         ECS_GIT_REV="$(cd $sourcedir && git rev-parse HEAD)"
         ECS_GIT_BRANCH="$(cd $sourcedir && git rev-parse --abbrev-ref HEAD)"
-        ECS_VERSION="${ECS_GIT_BRANCH} $(echo "$ECS_GIT_REV"| cut -c -7) $(cd $sourcedir && git log --pretty=format:'%s' HEAD^..HEAD|cut -c -30 | tr \" \')"
+        ECS_VERSION="${ECS_GIT_BRANCH} $(echo "$ECS_GIT_REV"| cut -c -10) $(cd $sourcedir && git log --pretty=format:'%s' HEAD^..HEAD|cut -c -30 | tr \" \')"
     fi
 fi
 
