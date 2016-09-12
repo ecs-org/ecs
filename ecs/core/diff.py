@@ -317,12 +317,12 @@ class ModelDiffer(object):
         for name in self.get_field_names():
             field_info = paper_forms.get_field_info(self.model, name, None)
 
-            if field_info is not None:
+            if name in self.label_map:
+                label = self.label_map[name]
+            elif field_info is not None:
                 label = force_text(field_info.label)
                 if field_info.number:
                     label = "%s %s" % (field_info.number, label)
-            elif name in self.label_map:
-                label = self.label_map[name]
             else:
                 label = name
             field_diff = self.diff_field(name, old, new, **kwargs)
@@ -371,6 +371,19 @@ class UserDiffer(AtomicModelDiffer):
 
 
 class SubmissionFormDiffer(ModelDiffer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for name in self.get_field_names():
+            if name.startswith('invoice_'):
+                fi = paper_forms.get_field_info(self.model, name, None)
+                self.label_map[name] = '{}: {} {}'.format(
+                    _('invoice recipient'), fi.number, fi.label)
+            elif name.startswith('sponsor_'):
+                fi = paper_forms.get_field_info(self.model, name, None)
+                self.label_map[name] = '{}: {} {}'.format(
+                    _('sponsor'), fi.number, fi.label)
+
     def get_field_names(self):
         names = super().get_field_names()
         if 'documents' in names:
