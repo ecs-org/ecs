@@ -285,13 +285,14 @@ msgstr "Keine Angaben"
 msgid "Yes"
 msgstr "Ja"
 
-msgid "Auslandszentren"
-msgstr ""
+msgid "centers (non subject)"
+msgstr "Zentren im Inland, die nicht Gegenstand der Einreichung sind"
 
-#, fuzzy
-#| msgid "centres"
-msgid "Zentren"
-msgstr "Zentren"
+msgid "centers abroad"
+msgstr "Auslandszentren"
+
+msgid "centers (subject)"
+msgstr "Zentren im Inland, die Gegenstand der Einreichung sind"
 
 msgid "Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik"
 msgstr ""
@@ -493,11 +494,6 @@ msgstr "Teilnehmer"
 
 msgid "test participant"
 msgstr "Prüfungsteilnehmer"
-
-msgid "centers abroad respectively non AMG"
-msgstr ""
-"Zentren im Ausland bzw. Zentren im Inland die nicht Gegenstand der "
-"Einreichung sind"
 
 msgid "outline"
 msgstr "Kurzfassung"
