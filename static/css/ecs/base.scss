@@ -108,7 +108,7 @@ h5 {
     margin-bottom: 10px;
 }
 
-a:not(.btn) {
+a:not(.btn):not(.alert-link) {
     text-decoration: none;
     color: $royalblue-dark;
 
