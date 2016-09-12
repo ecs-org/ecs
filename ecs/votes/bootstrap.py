@@ -34,4 +34,3 @@ def vote_workflow():
             ('final_office_vote_review', 'executive_vote_review'): None,
         }
     )
-

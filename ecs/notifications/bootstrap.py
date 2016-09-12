@@ -91,8 +91,8 @@ def notification_workflow():
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
             # reports
-            'office_report_review': Args(SimpleNotificationReview, group=OFFICE_GROUP, name=_('Notification Review')),
-            'executive_report_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Notification Review')),
+            'office_report_review': Args(SimpleNotificationReview, group=OFFICE_GROUP, name=_('Office Notification Review')),
+            'executive_report_review': Args(EditNotificationAnswer, group=EXECUTIVE_GROUP, name=_('Executive Notification Review')),
 
             # amendments
             'initial_amendment_review': Args(InitialAmendmentReview, group=OFFICE_GROUP, name=_('Initial Amendment Review')),

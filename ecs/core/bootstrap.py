@@ -55,8 +55,8 @@ def submission_workflow():
             'start': Args(Generic, start=True, name="Start"),
             'resubmission': Args(Resubmission, name=_("Resubmission")),
             'b2_resubmission': Args(Resubmission, name=_("B2 Resubmission")),
-            'b2_review': Args(InitialB2ResubmissionReview, name=_("B2 Resubmission Review"), group=OFFICE_GROUP),
-            'executive_b2_review': Args(B2ResubmissionReview, name=_("B2 Resubmission Review"), group=EXECUTIVE_GROUP),
+            'b2_review': Args(InitialB2ResubmissionReview, name=_("Office B2 Resubmission Review"), group=OFFICE_GROUP),
+            'executive_b2_review': Args(B2ResubmissionReview, name=_("Executive B2 Resubmission Review"), group=EXECUTIVE_GROUP),
             'initial_review': Args(InitialReview, group=OFFICE_GROUP, name=_("Initial Review")),
             'initial_review_barrier': Args(Generic, name="Initial Review Barrier"),
             'categorization': Args(Categorization, group=EXECUTIVE_GROUP, name=_("Categorization")),
@@ -114,6 +114,13 @@ def submission_workflow():
             ('localec_recommendation', 'categorization'): Args(guard=has_localec_recommendation, negated=True),
         }
     )
+
+    # translations for legacy task types
+    _('Executive Vote Finalization')
+    _('Insurance Amendment Review')
+    _('Insurance B2 Resubmission Review')
+    _('Office Vote Review (legacy)')
+    _('Thesis Recommendation Review')
 
 
 @bootstrap.register()
