@@ -44,13 +44,10 @@
 
 /* TaskList */
 
-.task_list {
-    margin: 12px 0 10px;
-
-    .task_item ul form {
-        display: inline-block;
-    }
+.task_item ul form {
+    display: inline-block;
 }
+
 #task_list_filter {
     margin-bottom: 10px;
 }
@@ -89,26 +86,4 @@
 #task_main h4 {
     font-size: 14px;
     margin-bottom: 6px;
-}
-
-.task_item {
-    background-color: #EFEFD1;
-    padding: 5px;
-    li {
-        float: left;
-        display: inline;
-        margin-right: 10px;
-        padding: 2px 0;
-    }
-}
-
-.task_type_nr {
-    display: inline-block;
-    min-width: 30px;
-    max-width: 50px;
-    text-align: center;
-    padding: 2px;
-    font-size: 12px;
-    background: #DDD4D4;
-    border-radius: 3px;
 }

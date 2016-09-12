@@ -1,53 +1,39 @@
 {% load i18n %}
 
 <script type="text/javascript">
-  $(function(){
-      $('#{{ form_id }} select[name=task_types]').select2();
+    $(function(){
+        $('#{{ form_id }} select[name=task_types]').select2();
 
-      $('#{{ form_id }}').find('select, input').change(function() {
-          ecs.stopPageLoad();
-          $('#{{ form_id }}').submit();
-      });
+        $('#{{ form_id }}').find('select, input').change(function() {
+            ecs.stopPageLoad();
+            $('#{{ form_id }}').submit();
+        });
 
-      var threshold = 7;
+        var threshold = 7;
 
-      var toggle_collapse = function(){
-          var toggler = $(this);
-          var item = toggler.parent();
-          var lis = item.find('ul li');
-          if(item.hasClass('collapsed')) {
-              toggler.html('{% trans "Collapse" %}');
-              lis.show();
-              lis.filter(':last-child').hide();
-          } else {
-              toggler.html('{% trans "Expand" %}');
-              lis.slice(threshold).hide();
-              lis.filter(':last-child').show();
-          }
-          item.toggleClass('collapsed');
-      };
-      $('#task_main .task_item.toggle_collapse').each(function() {
-          var item = $(this);
+        $('#task_main .task_item').each(function() {
+            var ul = $(this).find('ul');
 
-          if (item.find('ul li').length <= threshold) {
-              return;
-          }
+            if (ul.find('li').length <= threshold)
+                return;
 
-          var toggler = $('<a/>', {
-              on: {
-                  click: toggle_collapse
-              },
-              style: 'float: right;'
-          });
-          item.prepend(toggler);
+            ul.find('li').slice(threshold - 1).hide();
 
-          var ellipsis = $('<li>&hellip;</li>');
-          item.find('ul').append(ellipsis);
+            var li = $('<li class="list-inline-item">');
+            ul.append(li);
 
-          toggle_collapse.apply(toggler);
-      });
-      
-      ecs.setupSubmitLinks('a.submit_parent');
-});
+            $('<a>{{ _('Expand')|escapejs }} &hellip;</a>')
+                .appendTo(li)
+                .click(function(ev) {
+                    ev.preventDefault();
+                    var link = $(this);
+                    var lis = link.closest('ul').find('li');
+                    lis.show();
+                    link.remove();
+                });
+        });
+
+        ecs.setupSubmitLinks('a.submit_parent');
+    });
 </script>
 

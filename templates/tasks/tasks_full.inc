@@ -87,13 +87,14 @@
 </form>
 
 {% if mine_tasks %}
-    <div class="task_list">
-        <h3>{% trans "My Tasks" %}</h3>
-        {% regroup mine_tasks by task_type.workflow_node.uid as task_type_list %}
+    <h3 class="m-t-1">{% trans "My Tasks" %}</h3>
+    {% regroup mine_tasks by task_type.workflow_node.uid as task_type_list %}
+    <ul class="list-group">
         {% for task_type in task_type_list %}
-            <div class="task_item toggle_collapse">
-                <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
-                <ul> {% for task in task_type.list %} <li>
+            <li class="task_item list-group-item">
+                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <h4>{{ task_type.grouper|task_type_name }}</h4>
+                <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <a href="{{ task.url }}">{{ task.data }}</a>
                     {% if not task.accepted %}
                         <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
@@ -106,26 +107,20 @@
                     {% endif %}
                     {% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
-                <div style="clear:both;"></div>
-            </div>
+            </li>
         {% endfor %}
-    </div>
+    </ul>
 {% endif %}
 
 {% if open_tasks %}
-    <div class="task_list">
-        <h3>{% trans "Open Tasks" %}</h3>
-        {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
+    <h3 class="m-t-1">{% trans "Open Tasks" %}</h3>
+    {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
+    <ul class="list-group">
         {% for task_type in task_type_list %}
-            <div class="task_item toggle_collapse">
-                {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                    {% csrf_token %}
-                    <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
-                </form>
-                {% endif %}
-                <h4>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h4>
-                <ul> {% for task in task_type.list %} <li>
+            <li class="task_item list-group-item clearfix">
+                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <h4>{{ task_type.grouper|task_type_name }}</h4>
+                <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
@@ -133,26 +128,26 @@
                         {% endif %}
                     {% endwith %}
                 </li> {% endfor %} </ul>
-                <div style="clear:both;"></div>
-            </div>
+                {% if task_type.list|length > 1 %}
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    {% csrf_token %}
+                    <a class="submit_parent" href="">{% trans 'Accept all' %}</a>
+                </form>
+                {% endif %}
+            </li>
         {% endfor %}
-    </div>
+    </ul>
 {% endif %}
 
 {% if proxy_tasks %}
-    <div class="task_list">
-        <h3>{% trans "Proxy Tasks" %}</h3>
-        {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
+    <h3 class="m-t-1">{% trans "Proxy Tasks" %}</h3>
+    {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
+    <ul class="list-group">
         {% for task_type in task_type_list %}
-            <div class="task_item toggle_collapse">
-                {% if task_type.list|length > 1 %}
-                <form method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                    {% csrf_token %}
-                    <a style="float:right;padding: 0 5px;" class="submit_parent" href="">{% trans 'Accept all' %}</a>
-                </form>
-                {% endif %}
-                <h3>({{ task_type.list|length }}) {{ task_type.grouper|task_type_name }}</h3>
-                <ul> {% for task in task_type.list %} <li>
+            <li class="task_item list-group-item clearfix">
+                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <h4>{{ task_type.grouper|task_type_name }}</h4>
+                <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post"><a class="submit_parent" href="">{{ task.data }}</a>{% csrf_token %}</form>
                     {% with task.get_preview_url as preview_url %}
                         {% if preview_url %}
@@ -160,10 +155,15 @@
                         {% endif %}
                     {% endwith %}
                 </li> {% endfor %} </ul>
-                <div style="clear:both;"></div>
-            </div>
+                {% if task_type.list|length > 1 %}
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                    {% csrf_token %}
+                    <a class="submit_parent" href="">{% trans 'Accept all' %}</a>
+                </form>
+                {% endif %}
+            </li>
         {% endfor %}
-    </div>
+    </ul>
 {% endif %}
 
 {% if not mine_tasks and not open_tasks and not proxy_tasks %}
