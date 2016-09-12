@@ -2,7 +2,7 @@
 
 /* headernav */
 
-input[disabled] {
+input[disabled]:not(.btn) {
     background-color: #d4d0c8;
     color: $black;
 }

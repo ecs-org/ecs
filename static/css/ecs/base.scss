@@ -197,7 +197,7 @@ ol.submission_list {
 
 /* input fields and buttons */
 
-input:not(.form-control),
+input:not(.form-control):not(.btn),
 input[type=file]:not(.form-control),
 textarea:not(.form-control),
 select:not(.form-control) {
@@ -206,7 +206,7 @@ select:not(.form-control) {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
 }
-input:not(.form-control):focus,
+input:not(.form-control):not(.btn):focus,
 input[type=file]:not(.form-control):focus,
 textarea:not(.form-control):focus,
 select:not(.form-control):focus {
