@@ -129,8 +129,11 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='open' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
+                    {% for task in task_type.list %}
+                        <input type="hidden" name="task_id" value="{{ task.id }}" />
+                    {% endfor %}
                     <a class="submit_parent" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}
@@ -156,8 +159,11 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_task_type_full' flavor='proxy' slug=task_type.grouper %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
+                    {% for task in task_type.list %}
+                        <input type="hidden" name="task_id" value="{{ task.id }}" />
+                    {% endfor %}
                     <a class="submit_parent" href="">{% trans 'Accept all' %}</a>
                 </form>
                 {% endif %}

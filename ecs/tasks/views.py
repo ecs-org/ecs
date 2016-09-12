@@ -212,28 +212,20 @@ def accept_task_full(request, task_pk=None):
     return accept_task(request, task_pk=task_pk, full=True)
 
 @require_POST
-def accept_task_type(request, flavor=None, slug=None, full=False):
-    tasks = Task.objects.for_user(request.user).for_widget().filter(closed_at=None)
-    task_flavors = {
-        'open': tasks.filter(assigned_to=None),
-        'proxy': tasks.filter(assigned_to__profile__is_indisposed=True),
-    }
-    tasks = task_flavors[flavor]
-
+def accept_tasks(request, full=False):
+    task_ids = request.POST.getlist('task_id')
     submission_pk = request.GET.get('submission')
-    if submission_pk:
-        submission = get_object_or_404(Submission, pk=submission_pk)
-        tasks = tasks.for_submission(submission)
+    tasks = Task.objects.acceptable_for_user(request.user).filter(id__in=task_ids)
 
-    for task in tasks.acceptable_for_user(request.user).filter(task_type__workflow_node__uid=slug).order_by('created_at'):
+    for task in tasks:
         task.accept(request.user)
 
     view = 'ecs.tasks.views.task_list' if full else 'ecs.tasks.views.my_tasks'
     return redirect_to_next_url(request, reverse(view, kwargs={'submission_pk': submission_pk} if submission_pk else None))
 
 @require_POST
-def accept_task_type_full(request, flavor=None, slug=None):
-    return accept_task_type(request, flavor=flavor, slug=slug, full=True)
+def accept_tasks_full(request):
+    return accept_tasks(request, full=True)
 
 @require_POST
 def decline_task(request, task_pk=None, full=False):
