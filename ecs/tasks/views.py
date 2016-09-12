@@ -67,7 +67,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     sorting = 'deadline'
     if filterform.is_valid():
         sorting = filterform.cleaned_data['sorting'] or 'deadline'
-    order_by = ['task_type__name', sortings[sorting], 'assigned_at']
+    order_by = ['task_type__workflow_node__uid', sortings[sorting], 'assigned_at']
 
     all_tasks = (Task.objects.for_user(request.user).for_widget()
         .filter(closed_at=None)
