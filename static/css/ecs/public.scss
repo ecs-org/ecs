@@ -33,24 +33,7 @@
     border: 1px solid #b7d4e5;
     border-radius: 10px;
 }
-#content .innerwrap p {
-    display: block;
-    margin-bottom: 5px;
-}
-.innerwrap label {
-    font-size: 14px;
-    font-weight: bolder;
-    display: block;
-    margin-bottom: 2px;
-    clear: both;
-}
-.innerwrap input {
-    display: block;
-    padding: 5px;
-    font-size: 14px;
-    width: 100%;
-    clear: both;
-}
+
 .innerwrap input[type=submit] {
     display: inline-block;
     width: 100%;
@@ -60,15 +43,14 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
+
 #content form {
     float: none;
 }
 #content h2 {
     margin-bottom: 20px;
 }
-#id_gender {
-    width: 100px;
-}
+
 .public_area {
     margin: 0 0 5px 10px;
 }
