@@ -4,10 +4,11 @@
 {% block content %}
 
     {{ block.super }}
-
-    <h2>Registrierungs-Link ungültig</h2>
-    <p>Die Gültigkeitsdauer Ihres Registrierungs-Link ist abgelaufen.</p>
-    <p>Beachten Sie, dass der Registrierungs-Link innerhalb von 24 Stunden verwendet werden muß.</p>
-    <p>Um einen neuen Registrierungs-Link zu erhalten klicken Sie <a href="{% url 'ecs.users.views.register' %}">hier</a>.</p> 
+    
+    <div class="alert alert-danger">
+        <h3 class="alert-heading">Registrierungs-Link ungültig</h3>
+        <p>Die Gültigkeitsdauer Ihres Registrierungs-Link ist abgelaufen. Beachten Sie, dass der Link innerhalb von 24 Stunden verwendet werden muss.</p>
+        <p>Um einen neuen Registrierungs-Link zu erhalten klicken Sie <a href="{% url 'ecs.users.views.register' %}" class="alert-link">hier</a>.</p> 
+    </div>
 
 {% endblock %}

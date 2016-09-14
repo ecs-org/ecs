@@ -5,8 +5,10 @@
 
     {{ block.super }}
 
-    <h2>Vielen Dank</h2>
-    <p>Wir schicken Ihnen nun eine E-Mail zu. Mit dem darin enthaltenen Link können Sie die Registrierung abschließen.</p>
-    <p>Beachten Sie, dass die Zustellung der E-Mail unter Umständen bis zu einer Stunde dauern kann. Der Registrierungs-Link ist 24 Stunden gültig</p>
+    <div class="alert alert-success" role="alert">
+        <h3 class="alert-heading">Vielen Dank!</h3> 
+        <p>Wir schicken Ihnen nun eine E-Mail zu. Mit dem darin enthaltenen Link können Sie die Registrierung abschließen.
+        Beachten Sie, dass die Zustellung der E-Mail unter Umständen bis zu einer Stunde dauern kann. Der Registrierungs-Link ist 24 Stunden gültig.</p>
+    </div>
     
 {% endblock %}

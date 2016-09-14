@@ -1,17 +1,12 @@
 {% load i18n %}
 <html>
 <body>
-<p>
-    Sie haben Sich für das ECS-System angemeldet.<br />
-    <br />
-    Klicken Sie auf den folgenden Link um die Registrierung abzuschließen:<br />
-    <br />
-    <a href="{{ activation_url }}">{{ activation_url }}</a><br />
-    <br />
-    <br />
-    Mit freundlichen Grüßen,<br />
-    <br />
-    das Team der Ethik-Kommission
-</p> 
+<div class="alert alert-success" role="alert">
+    <h3 class="alert-heading">Sie haben Sich für das ECS-System angemeldet.</h3>
+    <p>Klicken Sie auf den folgenden Link um die Registrierung abzuschließen:</p>
+    <p><a href="{{ activation_url }}" class="alert-link">{{ activation_url }}</a>/p>
+    <p>Mit freundlichen Grüßen, </p>
+    <p>das Team der Ethik-Kommission</p>
+</div> 
 </body>
 </html>

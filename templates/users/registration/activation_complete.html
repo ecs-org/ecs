@@ -4,8 +4,9 @@
 {% block content %}
 
     {{ block.super }}
-
-    <h2>Ihr Account wurde erfolgreich aktiviert.</h2>
-    <p>Sie können sich nun <a href="{% url 'ecs.users.views.login' %}">einloggen</a>.</p>
+    <div class="alert alert-success" role="alert">
+        <h3 class="alert-heading">Ihr Account wurde erfolgreich aktiviert.</h3>
+        <p>Sie können sich nun <a href="{% url 'ecs.users.views.login' %}" class="alert-link">einloggen</a>.</p>
+    </div>
   
 {% endblock %}

@@ -1,18 +1,44 @@
 {% extends 'public.html' %}
-{% load i18n %}
+{% load i18n widget_tweaks %}
 
 {% block content %}
 
     {{ block.super }}
 
-    <form action="" method="post">
+    <form action="{{ request.path }}" method="post">
         {% csrf_token %}
-        <p class="reg_detail"><label>Anrede</label> {% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</p>
-        <p class="reg_detail"><label>Vorname</label> {{ data.first_name }}</p>
-        <p class="reg_detail"><label>Nachname</label> {{ data.last_name }}</p>
-        <p class="reg_detail" style="margin-bottom: 20px;"><label>E-Mail</label> {{ data.email }}</p>
-        {{ form.as_p }}
-        <input type="submit" value="Registrieren" />
+        <div class="form-group row m-b-0">
+            <label class="col-sm-4 col-form-label"><strong>Anrede</strong></label> 
+            <label class="col-sm-8 col-form-label">{% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</label>
+        </div>
+        <div class="form-group row m-b-0">
+            <label class="col-sm-4 col-form-label"><strong>Vorname</strong></label> 
+            <label class="col-sm-8 col-form-label">{{ data.first_name }}</label>
+        </div>
+        <div class="form-group row m-b-0">
+            <label class="col-sm-4 col-form-label"><strong>Nachname</strong></label> 
+            <label class="col-sm-8 col-form-label">{{ data.last_name }}</label>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-4 col-form-label"><strong>E-Mail</strong></label> 
+            <label class="col-sm-8 col-form-label">{{ data.email }}</label>
+        </div>
+        {% for element in form %}
+            <div class="form-group {% if element.errors %}has-danger{% endif %}">
+                <label>{{ element.label }}</label> 
+                {% if element.errors %}
+                    {% render_field element class+="form-control form-control-danger" %}
+                    <div class="form-control-feedback">
+                        {% for error in element.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% render_field element class+="form-control" %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        <input type="submit" class="btn btn-primary btn-block m-t-1" value="Registrieren" />
     </form>
 
 {% endblock %}
