@@ -2,6 +2,7 @@
 
 get_dumpfilename(){
     # returns first existing file in order
+    local i
     if test -f "${ECS_RECOVER_DUMP_FILENAME:-/invalid}"; then
         echo "${ECS_RECOVER_DUMP_FILENAME}"
     else
@@ -15,6 +16,7 @@ get_dumpfilename(){
 }
 
 dump_database(){
+    local dbdump
     dbdump=$HOME/ecs.pgdump
     if test "$1" != ""; then
         dbdump=$1
@@ -30,7 +32,6 @@ dump_database(){
 recreate_database() {
     echo "wipe out ecs-ca on database restore"
     if test -e $HOME/ecs-ca; then rm -rf $HOME/ecs-ca; fi
-
     echo "create user app and database ecs"
     sudo -u postgres createuser app
     sudo -u postgres createdb ecs -T template0 -O app -l de_DE.utf8
@@ -39,7 +40,7 @@ recreate_database() {
 
 fresh_database() {
     # to be called with: activated environment, CWD=rootdir of sourcecode
-    dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump
+    local dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump
     echo "destroying and recreating empty/fresh database"
     pghero_stop
     sudo -u postgres dropdb ecs
@@ -60,9 +61,9 @@ prepare_database() {
     # :8 = could not connect to database (not existing?)
     # :9 >= could not connect to database server
     # :127 >= bash command error, eg. command not found
-    scripts/checkdb.py module ecs.settings && err=$? || err=$?
+    local err dumpfilename ecs_help_dump firstrun
     firstrun="false"
-
+    scripts/checkdb.py module ecs.settings && err=$? || err=$?
     if test $err -ge 127; then
         echo "Fatal Error: could not execute scripts/checkdb.py, please call prepare_database from the root of the ecs source directory with activated environment"
         exit 1
@@ -141,6 +142,7 @@ prepare_database() {
 }
 
 legacy_migrate() {
+    local app p f
     echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
 
     # fake-apply to current data structure (from old south migrations)
@@ -187,7 +189,7 @@ pghero_install(){
 
 pghero_config(){
     if test ! -z "`which pghero`"; then
-        pgheropass="$(openssl rand 8 -hex)"
+        local pgheropass="$(openssl rand 8 -hex)"
         echo "$pgheropass" > $HOME/pgheropass
         sudo -u postgres createuser pghero
         sudo -u postgres psql ecs -c "alter user pghero superuser;"
@@ -207,7 +209,7 @@ pghero_stop(){
 pghero_start(){
     if test ! -z "`which pghero`"; then
         echo "start pghero"
-        pgheropass=$(cat $HOME/pgheropass)
+        local pgheropass=$(cat $HOME/pgheropass)
         sudo pghero config:set DATABASE_URL=postgres://pghero:$pgheropass@localhost:5432/ecs
         sudo service pghero start
     fi

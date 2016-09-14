@@ -44,6 +44,7 @@ EOF
 
 dev_update(){
     # call with: $0 $init_all{true/false} $restore_dump{true/false} $target_branch{!=""}
+    local init_all restore_dump target_branch current_branch prepare_was_run opt i
 
     # kill whole processgroup on sigterm
     trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
@@ -79,6 +80,7 @@ dev_update(){
     sudo systemctl disable devserver
     pghero_stop
 
+    local br_change sys_change ds_change pip_change mig_change mig_add
     if $init_all; then
         # init_all does not need dump restore => mig_change=1
         echo "init_all: marking everything as changed (except mig_change)"
@@ -108,7 +110,7 @@ dev_update(){
     find . -name "*.pyc" -delete
 
     echo "overwrite version.py"
-    scripts/create-version-file.sh $sourcedir $sourcedir/ecs/version.py
+    scripts/create-version-file.sh $G_srcdir $G_srcdir/ecs/version.py
 
     if $br_change; then
         echo "delete old static/CACHE entries"
@@ -159,7 +161,7 @@ dev_update(){
 
     if $ds_change; then
         echo "devserver service change"
-        sudo cp -f $sourcedir/conf/devserver.service /etc/systemd/system/devserver.service
+        sudo cp -f $G_srcdir/conf/devserver.service /etc/systemd/system/devserver.service
         sudo systemctl daemon-reload
         sudo systemctl enable devserver
     fi
@@ -201,12 +203,13 @@ abort_ifnot_cleanrepo(){
 
 
 main(){
+    local restore_dump target_branch err force tmpdir init_all
     if test -z "$1"; then usage; fi
 
     restore_dump=false
     if test "$1" = "--restore-dump"; then shift; restore_dump=true; fi
 
-    cd $sourcedir
+    cd $G_srcdir
 
     case "$1" in
     isclean)
@@ -268,7 +271,7 @@ main(){
             echo "error: fatal, could not create temporary directory"
             exit 1
         fi
-        cp $realpath/devupdate.sh $tmpdir/devupdate.sh
+        cp $G_realpath/devupdate.sh $tmpdir/devupdate.sh
         echo "_selfcontinue $init_all $restore_dump $target_branch"
         exec $tmpdir/devupdate.sh _selfcontinue $init_all $restore_dump $target_branch
         ;;
@@ -283,11 +286,11 @@ export ECS_USERSWITCHER_ENABLED=${ECS_USERSWITCHER_ENABLED:-true}
 export ECS_DEV_AUTOSTART=${ECS_DEV_AUTOSTART:-true}
 export ECS_DEV_REBASE_TO=${ECS_DEV_REBASE_TO:-master}
 
-# HACK: set sourcedir either to $HOME/ecs or relative to this script
-sourcedir=$HOME/ecs
-realpath=`dirname $(readlink -e "$0")`
-if test -f $realpath/database.include; then
-    sourcedir=$realpath/..
+# HACK: set G_srcdir either to $HOME/ecs or relative to this script
+G_srcdir=$HOME/ecs
+G_realpath=`dirname $(readlink -e "$0")`
+if test -f $G_realpath/database.include; then
+    G_srcdir=$G_realpath/..
 fi
-. $sourcedir/scripts/database.include
+. $G_srcdir/scripts/database.include
 main $@
