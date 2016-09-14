@@ -5,7 +5,9 @@
 
     {{ block.super }}
 
-    <p>Sie haben mit diesem Link bereits Ihr Passwort geändert.</p>
-    <p>Sie können sich nun mit dem neuen Passwort <a href="{% url 'ecs.users.views.login' %}">einloggen</a></p>
+    <div class="alert alert-warning">
+        Sie haben mit diesem Link bereits Ihr Passwort geändert. 
+        Sie können sich nun mit dem neuen Passwort <a href="{% url 'ecs.users.views.login' %}" class="alert-link">einloggen</a>
+    </div>
 
 {% endblock %}

@@ -1,16 +1,39 @@
 {% extends 'public.html' %}
-{% load i18n %}
+{% load i18n widget_tweaks %}
 
 {% block content %}
 
     {{ block.super }}
 
-    <form action="" method="post">
+    <form action="{{ request.path }}" method="post">
         {% csrf_token %}
-        <table>
-            {{ form.as_p }}
-        </table>
-        <input type="submit" value="Passwort Ändern" />
+        <div class="form-group {% if form.new_password1.errors %}has-danger{% endif %}">
+            {{ form.new_password1.label_tag }}
+            {% if form.new_password1.errors %}
+                {% render_field form.new_password1 class+="form-control form-control-danger" %}
+                <div class="form-control-feedback">
+                    {% for error in form.new_password1.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% render_field form.new_password1 class+="form-control" %}
+            {% endif %}
+        </div>
+        <div class="form-group {% if form.new_password2.errors %}has-danger{% endif %}">
+            {{ form.new_password2.label_tag }}
+            {% if form.new_password2.errors %}
+                {% render_field form.new_password2 class+="form-control form-control-danger" %}
+                <div class="form-control-feedback">
+                    {% for error in form.new_password2.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% render_field form.new_password2 class+="form-control" %}
+            {% endif %}
+        </div>
+        <input type="submit" class="btn btn-primary btn-block" value="Passwort Ändern" />
     </form>
 
 {% endblock %}
