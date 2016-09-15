@@ -8,24 +8,24 @@
     <form action="{{ request.path }}" method="post">
         {% csrf_token %}
         <div class="form-group row m-b-0">
-            <label class="col-sm-4 col-form-label"><strong>Anrede</strong></label> 
+            <label class="col-sm-4 col-form-label"><strong>Anrede</strong></label>
             <label class="col-sm-8 col-form-label">{% if data.gender == 'f' %}Frau{% else %}Herr{% endif %}</label>
         </div>
         <div class="form-group row m-b-0">
-            <label class="col-sm-4 col-form-label"><strong>Vorname</strong></label> 
+            <label class="col-sm-4 col-form-label"><strong>Vorname</strong></label>
             <label class="col-sm-8 col-form-label">{{ data.first_name }}</label>
         </div>
         <div class="form-group row m-b-0">
-            <label class="col-sm-4 col-form-label"><strong>Nachname</strong></label> 
+            <label class="col-sm-4 col-form-label"><strong>Nachname</strong></label>
             <label class="col-sm-8 col-form-label">{{ data.last_name }}</label>
         </div>
         <div class="form-group row">
-            <label class="col-sm-4 col-form-label"><strong>E-Mail</strong></label> 
+            <label class="col-sm-4 col-form-label"><strong>E-Mail</strong></label>
             <label class="col-sm-8 col-form-label">{{ data.email }}</label>
         </div>
         {% for element in form %}
             <div class="form-group {% if element.errors %}has-danger{% endif %}">
-                <label>{{ element.label }}</label> 
+                <label>{{ element.label }}</label>
                 {% if element.errors %}
                     {% render_field element class+="form-control form-control-danger" %}
                     <div class="form-control-feedback">

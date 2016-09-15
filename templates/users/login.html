@@ -5,7 +5,7 @@
 
 {% block htmlcss %}
     {{ block.super }}
-	<noscript>
+    <noscript>
         <style type="text/css">
             #login_form, .pw_reg {
                 display: none;
@@ -21,42 +21,42 @@
             top.location.href = '{% url 'ecs.users.views.login' %}';
         }
     </script>
-	
+
     <img alt="Logo" src="{% static 'images/logo.png' %}" />
-    
-	<noscript>
+
+    <noscript>
         <div id="script_warning" class="alert alert-danger">
-            <strong>Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt. 
+            <strong>Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.
             Lesen Sie <a href="{% help_url 'noscript' %}" class="alert-link">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
         </div>
     </noscript>
-    
-	<div id="login_form">
-    	{% if not request.ua.is_supported and not request.ua.is_crawler %}
-        	<div id="browser_warning" class="alert alert-warning">
-            	<strong>Achtung:</strong> Sie verwenden einen nicht unterstützen Webbrowser.
-            	Zur korrekten Darstellung brauchen sie einen Browser der HTML5 Generation, wie
-            	<a href="http://www.mozilla-europe.org/de/firefox/" class="alert-link">Firefox 4+</a>,
-            	<a href="http://www.google.com/chrome/intl/de/landing_tv.html" class="alert-link">Chrome 12+</a>,
-            	<a href="http://www.apple.com/de/safari/download/" class="alert-link">Safari 5+</a>,
-            	Internet Explorer 10+ oder neuere.
-            	Ältere Browser sind nicht geeignet und führen zu Fehlern.
-            	Neuere/Unbekannte können funktionieren.
-            	<p class="m-t-1"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
-        	</div>
-    	{% endif %}
-    	<div class="public_area">
-      	  {% if request.tracking_data.view %}
+
+    <div id="login_form">
+        {% if not request.ua.is_supported and not request.ua.is_crawler %}
+            <div id="browser_warning" class="alert alert-warning">
+                <strong>Achtung:</strong> Sie verwenden einen nicht unterstützen Webbrowser.
+                Zur korrekten Darstellung brauchen sie einen Browser der HTML5 Generation, wie
+                <a href="http://www.mozilla-europe.org/de/firefox/" class="alert-link">Firefox 4+</a>,
+                <a href="http://www.google.com/chrome/intl/de/landing_tv.html" class="alert-link">Chrome 12+</a>,
+                <a href="http://www.apple.com/de/safari/download/" class="alert-link">Safari 5+</a>,
+                Internet Explorer 10+ oder neuere.
+                Ältere Browser sind nicht geeignet und führen zu Fehlern.
+                Neuere/Unbekannte können funktionieren.
+                <p class="m-t-1"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
+            </div>
+        {% endif %}
+        <div class="public_area">
+          {% if request.tracking_data.view %}
               {% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk as help_page_url %}
-      	  {% else %}
+          {% else %}
               {% url 'ecs.help.views.index' as help_page_url %}
-      	  {% endif %}
-		      <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
+          {% endif %}
+              <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
               | <a href="{{ help_page_url }}" target="_blank" class="help_trigger">{% trans 'Online Help Pages' %}</a>
               | <a href="{% help_url 'sitenotice' %}">{% trans 'Site Notice' %}</a>
-    	</div>
-		<form method="post" action="{{ request.path }}" class="login_error">
-			{% csrf_token %}
+        </div>
+        <form method="post" action="{{ request.path }}" class="login_error">
+            {% csrf_token %}
             <div class="form-group {% if form.username.errors %}has-danger{% endif %}">
                 {{ form.username.label_tag }}
                 {% if form.username.errors %}
@@ -83,18 +83,18 @@
                     {% render_field form.password class+="form-control" %}
                 {% endif %}
             </div>
-			<input type="submit" value="Login" id="login_button" class="btn btn-primary btn-block m-t-1" {% if not request.ua.is_supported or request.ua.is_crawler %} style="display:none;"{% endif %}/>
-			<input type="hidden" name="next" value="{{ next }}" />
-			{% if form.errors %}
-        		<div class="alert alert-danger m-t-1 m-b-0" role="alert">
-        			{% trans 'Your username and password did not match. Please try again.' %}
-        		</div>
-        	{% endif %}
-		</form>
-	</div>
+            <input type="submit" value="Login" id="login_button" class="btn btn-primary btn-block m-t-1" {% if not request.ua.is_supported or request.ua.is_crawler %} style="display:none;"{% endif %}/>
+            <input type="hidden" name="next" value="{{ next }}" />
+            {% if form.errors %}
+                <div class="alert alert-danger m-t-1 m-b-0" role="alert">
+                    {% trans 'Your username and password did not match. Please try again.' %}
+                </div>
+            {% endif %}
+        </form>
+    </div>
 
     <div class="pw_reg">
-    	<a href="{% url 'ecs.users.views.register' %}">Registrieren</a> | <a href="{% url 'ecs.users.views.request_password_reset' %}">Passwort vergessen/zurücksetzen</a>
+        <a href="{% url 'ecs.users.views.register' %}">Registrieren</a> | <a href="{% url 'ecs.users.views.request_password_reset' %}">Passwort vergessen/zurücksetzen</a>
     </div>
 
 {% endblock %}
