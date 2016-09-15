@@ -184,6 +184,7 @@ class UserDetailsForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
         if self.instance.pk:
             profile = self.instance.profile
             self.fields['gender'].initial = profile.gender
@@ -196,12 +197,31 @@ class UserDetailsForm(forms.ModelForm):
             self.fields['medical_categories'].initial = \
                 self.instance.medical_categories.values_list('pk', flat=True)
 
+        self.fields['task_types'].choices = sorted([
+            (tt.pk, '{} | {}'.format(tt.group.name, tt.trans_name))
+            for tt in self.fields['task_types'].queryset
+        ], key=lambda x: x[1])
+
     def clean_groups(self):
         groups = self.cleaned_data.get('groups', [])
         amcs = AssignedMedicalCategory.objects.filter(board_member=self.instance, meeting__ended__isnull=True)
         if amcs.exists() and not 'Board Member' in [g.name for g in groups]:
             raise forms.ValidationError(_('{0} is a specialist in following meetings: {1}').format(self.instance, ', '.join(amc.meeting.title for amc in amcs)))
         return groups
+
+    def clean(self):
+        cd = super().clean()
+
+        task_types = cd.get('task_types')
+        if task_types:
+            groups = set(cd.get('groups', []))
+            for tt in task_types:
+                if tt.group not in groups:
+                    self.add_error('task_types',
+                        _('{} requires group {}, but it is not selected').format(
+                            tt.trans_name, tt.group.name))
+
+        return cd
 
     def save(self):
         user = super().save()

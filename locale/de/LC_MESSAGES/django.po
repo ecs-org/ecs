@@ -2001,6 +2001,9 @@ msgstr "Name/Email"
 msgid "{0} is a specialist in following meetings: {1}"
 msgstr "{0} ist als Spezialist in folgenden Sitzungen zugeteilt: {1}"
 
+msgid "{} requires group {}, but it is not selected"
+msgstr "{} erfordert die {} Gruppe, die aber nicht ausgewählt ist"
+
 msgid "Invitation Text"
 msgstr "Einladungstext"
 
