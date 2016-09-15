@@ -48,8 +48,8 @@ def view_help_page(request, page_pk=None):
 
 
 @forceauth.exempt
-def find_help(request, view_pk=None, anchor=''):
-    anchor = request.GET.get('anchor', anchor)
+def find_help(request, view_pk=None):
+    anchor = request.GET.get('anchor', '')
     pages = Page.objects.filter(view=view_pk)
     if len(pages) == 1:
         return redirect_to_page(pages[0])

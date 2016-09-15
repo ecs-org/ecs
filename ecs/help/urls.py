@@ -16,7 +16,7 @@ urlpatterns = (
     url(r'^page/(?P<page_pk>\d+)/review_ok/$', views.review_ok),
     url(r'^page/(?P<page_pk>\d+)/review_fail/$', views.review_fail),
     
-    url(r'^view/(?P<view_pk>\d+)/(?:(?P<anchor>[\w-]+)/)?$', views.find_help),
+    url(r'^view/(?P<view_pk>\d+)/$', views.find_help),
     url(r'^edit/view/(?P<view_pk>\d+)/(?:(?P<anchor>[\w-]+)/)?$', views.edit_help_page),
 
     url(r'^diff/(?P<page_pk>\d+)/$', views.difference_help_pages),
