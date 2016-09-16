@@ -26,6 +26,7 @@ from ecs.core.models import (
     Submission, SubmissionForm, Investigator, TemporaryAuthorization,
 )
 from ecs.checklists.models import ChecklistBlueprint, Checklist
+from ecs.meetings.models import Meeting
 
 from ecs.core.forms import (SubmissionFormForm, MeasureFormSet, RoutineMeasureFormSet, NonTestedUsedDrugFormSet, 
     ForeignParticipatingCenterFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
@@ -901,9 +902,14 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         order_by = ('ec_number',)
 
     filterform = filter_form(request.POST or getattr(usersettings, filtername))
-    submissions = filterform.filter_submissions(submissions, request.user)
-    submissions = submissions.exclude(current_submission_form__isnull=True).distinct().order_by(*order_by)
-    submissions = submissions.select_related('current_submission_form')
+
+    submissions = (filterform.filter_submissions(submissions, request.user)
+        .exclude(current_submission_form__isnull=True)
+        .select_related('current_submission_form')
+        .prefetch_related(Prefetch('meetings',
+            queryset=Meeting.unfiltered.order_by('start')))
+        .distinct()
+        .order_by(*order_by))
 
     if request.user.profile.is_internal:
         submissions = submissions.prefetch_related('tags')

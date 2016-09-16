@@ -202,6 +202,7 @@ class Meeting(models.Model):
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
 
     objects = MeetingManager()
+    unfiltered = models.Manager()
 
     @property
     def retrospective_thesis_entries(self):

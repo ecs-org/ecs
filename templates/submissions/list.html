@@ -98,7 +98,7 @@
                 <div class="info">{% trans "Categories" %}: {% for cat in categories %}<i>{{ cat }}</i>{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
         {% endwith %}
-        {% with submission.meetings.distinct as meetings %}
+        {% with submission.meetings.all as meetings %}
             {% if meetings %}
                 <div class="info">{% trans "Meetings" %}: {% for meeting in meetings %}{% if user.profile.is_internal %}<a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})</a>{% else %}{{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }}){% endif %}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
             {% endif %}
