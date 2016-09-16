@@ -62,10 +62,10 @@ class SubmissionQuerySet(models.QuerySet):
         return self.filter(workflow_lane=SUBMISSION_LANE_BOARD)
 
     def past_meetings(self):
-        return self.filter(meetings__pk__in=Meeting.objects.past().values('pk').query)
+        return self.filter(meetings__ended__isnull=False)
 
     def upcoming_meetings(self):
-        return self.filter(meetings__pk__in=Meeting.objects.upcoming().values('pk').query)
+        return self.filter(meetings__ended=None)
     
     def next_meeting(self):
         try:
@@ -76,7 +76,7 @@ class SubmissionQuerySet(models.QuerySet):
             return self.filter(meetings__pk=meeting.pk)
 
     def no_meeting(self):
-        return self.filter(meetings__isnull=True)
+        return self.filter(meetings=None)
 
     def mine(self, user):
         return self.filter(Q(current_submission_form__submitter=user)|Q(current_submission_form__sponsor=user)|Q(presenter=user)|Q(susar_presenter=user)|Q(current_submission_form__primary_investigator__user=user))
