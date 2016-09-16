@@ -69,7 +69,7 @@ class Vote(models.Model):
         self.save()
 
         if not self.needs_signature:
-            template = 'meetings/wkhtml2pdf/vote.html'
+            template = 'meetings/pdf/vote.html'
             pdf_data = render_pdf_context(template, self.get_render_context())
 
             Document.objects.create_from_buffer(pdf_data, doctype='votes',

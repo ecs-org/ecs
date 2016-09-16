@@ -1,10 +1,10 @@
-{% extends 'wkhtml2pdf/skeleton.html' %}
+{% extends 'pdf/skeleton.html' %}
 {% load userutils %}
 
 {% block title %}Votum{% endblock %}
 
 {% block content %}
-{% include 'wkhtml2pdf/ec_head.inc' %}
+{% include 'pdf/ec_head.inc' %}
 
 <h1 class="metadata">Votum</h1>
 <center><p><b>
@@ -55,7 +55,7 @@
 <h2 class="metadata">Dokumente</h2>
 <p>
     Die Stellungnahme der Ethik-Kommission erfolgt aufgrund folgender eingereichter Unterlagen:
-    {% include 'wkhtml2pdf/documents.html' %}
+    {% include 'pdf/documents.html' %}
 </p>
 
 <h2 class="metadata">Beschluss</h2>

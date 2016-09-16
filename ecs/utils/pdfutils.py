@@ -26,7 +26,7 @@ def pdf_barcodestamp(source, barcode, text=None):
     
     :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
     ''' 
-    barcode_ps = loader.render_to_string('wkhtml2pdf/barcode.ps') + """
+    barcode_ps = loader.render_to_string('pdf/barcode.ps') + """
         gsave 
         20 100 moveto 0.5 0.5 scale 0 rotate
         ({}) () /qrcode /uk.co.terryburton.bwipp findresource exec

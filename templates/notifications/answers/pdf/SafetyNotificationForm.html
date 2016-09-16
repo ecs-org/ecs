@@ -1,4 +1,4 @@
-{% extends 'notifications/answers/wkhtml2pdf/base.html' %}
+{% extends 'notifications/answers/pdf/base.html' %}
 {% load core corepdf i18n userutils %}
 
 {% block answer_title %}Bestätigung zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }} ({{ notification.safetynotification.get_safety_type_display }}){% endblock %}

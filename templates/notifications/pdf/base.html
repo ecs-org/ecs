@@ -1,4 +1,4 @@
-{% extends 'wkhtml2pdf/skeleton.html' %}
+{% extends 'pdf/skeleton.html' %}
 {% load core corepdf %}
 
 {% block title %}Meldung{% endblock %}
@@ -80,7 +80,7 @@
 {% block documents %}
     {% if documents %}
         <h3>Dokumente</h3>
-        {% include 'wkhtml2pdf/documents.html' %}
+        {% include 'pdf/documents.html' %}
     {% endif %}
 {% endblock %}
 

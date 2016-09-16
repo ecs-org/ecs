@@ -259,7 +259,7 @@ def notification_answer_sign(request, notification_pk=None):
 
 def get_notification_answer_sign_data(request, task):
     answer = task.data.answer
-    pdf_template = answer.notification.type.get_template('notifications/answers/wkhtml2pdf/%s.html')
+    pdf_template = answer.notification.type.get_template('notifications/answers/pdf/%s.html')
     html_template = pdf_template    # FIXME
     context = answer.get_render_context()
     return {

@@ -409,7 +409,7 @@ class Meeting(models.Model):
         return True   # work around a django bug
 
     def get_agenda_pdf(self, request):
-        return render_pdf(request, 'meetings/wkhtml2pdf/agenda.html', {
+        return render_pdf(request, 'meetings/pdf/agenda.html', {
             'meeting': self,
         })
         
@@ -465,7 +465,7 @@ class Meeting(models.Model):
         else:
             answers = None
 
-        return render_pdf(request, 'meetings/wkhtml2pdf/protocol.html', {
+        return render_pdf(request, 'meetings/pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
             'substantial_amendments':
@@ -509,7 +509,7 @@ class Meeting(models.Model):
             start, end = self._get_timeframe_for_user(row['user'])
             row['time'] = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
 
-        return render_pdf(request, 'meetings/wkhtml2pdf/timetable.html', {
+        return render_pdf(request, 'meetings/pdf/timetable.html', {
             'meeting': self,
             'timetable': timetable,
         })
