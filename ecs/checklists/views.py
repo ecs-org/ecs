@@ -29,6 +29,15 @@ def checklist_pdf(request, checklist_pk=None):
     return handle_download(request, checklist.pdf_document)
 
 
+def checklist_pdf_debug(request, checklist_pk=None):
+    checklist = get_object_or_404(Checklist, pk=checklist_pk,
+        blueprint__allow_pdf_download=True)
+    response = HttpResponse(checklist.render_pdf(),
+        content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=debug.pdf'
+    return response
+
+
 @user_flag_required('is_internal')
 def create_task(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)

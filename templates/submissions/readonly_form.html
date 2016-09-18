@@ -281,6 +281,14 @@
                             {% endif %}
                         <span>
                     </a>
+
+                    {% if debug %}
+                        {% url 'ecs.checklists.views.checklist_pdf_debug' checklist_pk=checklist.pk as pdf_url %}
+                        <a class="btn btn-sm btn-outline-primary" href="{{ pdf_url }}">
+                            <span class="fa fa-file-pdf-o"></span>
+                            PDF Debug
+                        </a>
+                    {% endif %}
                 </p>
             {% endif %}
         {% endif %}

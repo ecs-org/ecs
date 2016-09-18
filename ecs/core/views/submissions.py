@@ -542,7 +542,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
                 checklist.status = 'completed'
                 checklist.save()
                 if checklist.blueprint.allow_pdf_download:
-                    checklist.render_pdf()
+                    checklist.render_pdf_document()
                 related_task.done(request.user)
                 return redirect(related_task.afterlife_url)
             elif complete_task and checklist.is_complete:
