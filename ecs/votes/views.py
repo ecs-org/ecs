@@ -13,21 +13,7 @@ from ecs.users.utils import user_group_required
 from ecs.tasks.utils import task_required
 
 from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.utils.viewutils import render_html, render_pdf, pdf_response
-
-
-def show_html_vote(request, vote_pk=None):
-    vote = get_object_or_404(Vote, pk=vote_pk)
-    template = 'meetings/pdf/vote.html'
-    return render(request, template, vote.get_render_context())
-
-
-def show_pdf_vote(request, vote_pk=None):
-    vote = get_object_or_404(Vote, pk=vote_pk)
-    template = 'meetings/pdf/vote.html'
-    pdf_data = wkhtml2pdf(render(request, template, vote.get_render_context()).content )
-    return pdf_response(pdf_data, filename=vote.pdf_filename)
-  
+from ecs.utils.viewutils import render_html, render_pdf
 
 def download_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk, published_at__isnull=False)
