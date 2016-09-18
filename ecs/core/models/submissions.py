@@ -497,19 +497,19 @@ class SubmissionForm(models.Model):
         return super().save(**kwargs)
 
     def render_pdf(self):
-        from ecs.core import paper_forms
-        name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
-        filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
-        pdfdata = render_pdf_context('submissions/pdf/view.html', {
-            'paper_form_fields': paper_forms.get_field_info_for_model(self.__class__),
+        return render_pdf_context('submissions/pdf/view.html', {
             'submission_form': self,
             'documents': self.documents.order_by('doctype__identifier', 'date', 'name'),
         })
 
-        pdf_document = Document.objects.create_from_buffer(pdfdata,
+    def render_pdf_document(self):
+        assert self.pdf_document is None
+        pdfdata = self.render_pdf()
+        name = 'ek' # -%s' % self.submission.get_ec_number_display(separator='-')
+        filename = 'ek-%s' % self.submission.get_ec_number_display(separator='-')
+        self.pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='submissionform', parent_object=self, name=name,
             original_file_name=filename, version=str(self.version))
-        self.pdf_document = pdf_document
         self.save()
 
     @property

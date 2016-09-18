@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 
 from ecs.core.views import submissions as views
@@ -59,3 +60,8 @@ urlpatterns = (
     url(r'^form/(?P<submission_form_pk>\d+)/vote/prepare/$', views.vote_preparation),
     url(r'^form/(?P<submission_form_pk>\d+)/vote/b2-prepare/$', views.b2_vote_preparation),
 )
+
+if settings.DEBUG:
+    urlpatterns += (
+        url(r'^form/(?P<submission_form_pk>\d+)/pdf/debug/$', views.submission_form_pdf_debug),
+    )

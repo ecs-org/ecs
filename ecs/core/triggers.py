@@ -44,8 +44,8 @@ def on_study_submit(sender, **kwargs):
     submission_form = kwargs['form']
     user = kwargs['user']
 
-    submission_form.render_pdf()
-    
+    submission_form.render_pdf_document()
+
     resubmission_task = Task.objects.for_user(user).for_data(submission).filter(
         task_type__workflow_node__uid__in=('resubmission', 'b2_resubmission')
     ).open().first()

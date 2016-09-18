@@ -79,6 +79,12 @@
                                     {% trans 'Download PDF' %}
                                 </a><br>
                             {% endif %}
+                            {% if debug %}
+                                <a href="{% url 'ecs.core.views.submissions.submission_form_pdf_debug' submission_form_pk=sf.pk %}">
+                                    <span class="fa fa-file-pdf-o"></span>
+                                    PDF Debug
+                                </a><br>
+                            {% endif %}
                             {% if sf == submission.current_submission_form and sf|allows_export_by:user %}
                                 <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}">
                                     <span class="fa fa-file-archive-o"></span>
