@@ -226,6 +226,12 @@
                     {% endif %}
                 {% endwith %}
             </form>
+
+            {% if debug and vote_review_form.instance.pk %}
+                <a href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote_review_form.instance.pk %}">
+                    PDF Debug
+                </a>
+            {% endif %}
         </div>
     {% endif %}
 
@@ -239,6 +245,11 @@
                     <a href="{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{% trans "Download" %}</a>
                     {% if user.profile.is_internal %}
                         | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}'))">{% trans 'History' %}</a>
+                    {% endif %}
+                    {% if debug %}
+                        | <a href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote.pk %}">
+                            PDF Debug
+                        </a>
                     {% endif %}
                     </li>
                 {% endfor %}

@@ -1,7 +1,7 @@
 from uuid import uuid4
 
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, Http404
 from django.core.urlresolvers import reverse
 from django.contrib.contenttypes.models import ContentType
 
@@ -12,8 +12,7 @@ from ecs.signature.views import init_batch_sign
 from ecs.users.utils import user_group_required
 from ecs.tasks.utils import task_required
 
-from ecs.utils.pdfutils import wkhtml2pdf
-from ecs.utils.viewutils import render_html, render_pdf
+from ecs.utils.viewutils import render_html
 
 def download_vote(request, vote_pk=None):
     vote = get_object_or_404(Vote, pk=vote_pk, published_at__isnull=False)
@@ -33,7 +32,6 @@ def vote_sign(request, vote_pk=None):
 
 def get_vote_sign_data(request, task):
     vote = task.data
-    pdf_template = 'meetings/pdf/vote.html'
     html_template = 'meetings/pdf/vote_preview.html'
     context = vote.get_render_context()
     return {
@@ -47,7 +45,7 @@ def get_vote_sign_data(request, task):
         'document_filename': vote.pdf_filename,
         'document_barcodestamp': True,
         'html_preview': render_html(request, html_template, context),
-        'pdf_data': render_pdf(request, pdf_template, context),
+        'pdf_data': vote.render_pdf()
     }
 
 def sign_success(request, document=None):
@@ -55,3 +53,10 @@ def sign_success(request, document=None):
     vote.signed_at = document.date
     vote.save()
     return reverse('ecs.core.views.submissions.readonly_submission_form', kwargs={'submission_form_pk': vote.submission_form.pk}) + '#vote_review_tab'
+
+
+def vote_pdf_debug(request, vote_pk=None):
+    vote = get_object_or_404(Vote, pk=vote_pk)
+    response = HttpResponse(vote.render_pdf(), content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=debug.pdf'
+    return response

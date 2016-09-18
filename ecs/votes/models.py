@@ -69,9 +69,7 @@ class Vote(models.Model):
         self.save()
 
         if not self.needs_signature:
-            template = 'meetings/pdf/vote.html'
-            pdf_data = render_pdf_context(template, self.get_render_context())
-
+            pdf_data = self.render_pdf()
             Document.objects.create_from_buffer(pdf_data, doctype='votes',
                 parent_object=self, original_file_name=self.pdf_filename,
                 name=str(self))
@@ -149,6 +147,10 @@ class Vote(models.Model):
             'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
             'past_votes': past_votes,
         }
+
+    def render_pdf(self):
+        return render_pdf_context('meetings/pdf/vote.html',
+            self.get_render_context())
 
 
 @receiver(post_save, sender=Vote)
