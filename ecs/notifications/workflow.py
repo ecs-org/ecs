@@ -7,8 +7,7 @@ from ecs.workflow.patterns import Generic
 from ecs.meetings.signals import on_meeting_start, on_meeting_end
 from ecs.notifications.models import (
     Notification, CompletionReportNotification, ProgressReportNotification,
-    SafetyNotification, CenterCloseNotification, AmendmentNotification,
-    NOTIFICATION_MODELS,
+    SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
 )
 from ecs.notifications.signals import on_safety_notification_review
 
@@ -175,5 +174,7 @@ class AutoDistributeNotificationAnswer(Generic):
     def handle_token(self, token):
         answer = self.workflow.data.answer
         answer.distribute()
-        answer.render_pdf() # xxx need to render pdf after distribute, to have new vote extension date already set
+
+        # XXX: need to render PDF after distribute, to have new vote extension date already set
+        answer.render_pdf_document()
         super().handle_token(token)

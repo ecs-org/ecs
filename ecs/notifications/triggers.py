@@ -9,7 +9,7 @@ from ecs.users.utils import get_current_user
 @receiver(signals.on_notification_submit)
 def on_notification_submit(sender, **kwargs):
     notification = kwargs['notification']
-    notification.render_pdf()
+    notification.render_pdf_document()
     
 
 @receiver(signals.on_safety_notification_review)

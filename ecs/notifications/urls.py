@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import url
 
 from ecs.notifications import views
@@ -22,3 +23,9 @@ urlpatterns = (
     url(r'^(?P<notification_pk>\d+)/answer/sign/$', views.notification_answer_sign),
     url(r'^list/open/$', views.open_notifications),
 )
+
+if settings.DEBUG:
+    urlpatterns += (
+        url(r'^(?P<notification_pk>\d+)/pdf/debug/$', views.notification_pdf_debug),
+        url(r'^(?P<notification_pk>\d+)/answer/pdf/debug/$', views.notification_answer_pdf_debug),
+    )

@@ -94,7 +94,7 @@ class NotificationFormTest(LoginTestCase):
 
         notification_type, _ = NotificationType.objects.get_or_create(name='foo notif')
         notification = Notification.objects.create(type=notification_type)
-        notification.render_pdf()
+        notification.render_pdf_document()
         response = self.client.get(reverse('ecs.notifications.views.notification_pdf', kwargs={'notification_pk': notification.pk}))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/pdf')

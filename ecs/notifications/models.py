@@ -123,19 +123,20 @@ class Notification(models.Model):
 
     def render_pdf(self):
         tpl = self.type.get_template('notifications/pdf/%s.html')
-        submission_forms = self.submission_forms.select_related('submission').all()
-        pdf = render_pdf_context(tpl, {
+        submission_forms = self.submission_forms.select_related('submission')
+        return render_pdf_context(tpl, {
             'notification': self,
             'submission_forms': submission_forms,
             'documents': self.documents.order_by('doctype__identifier', 'date', 'name'),
         })
 
-        self.pdf_document = Document.objects.create_from_buffer(pdf, 
+    def render_pdf_document(self):
+        assert self.pdf_document is None
+        pdfdata = self.render_pdf()
+        self.pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='notification', parent_object=self, name=str(self),
             original_file_name=self.get_filename())
         self.save()
-        
-        return self.pdf_document
 
 
 class ReportNotification(Notification):
@@ -213,15 +214,16 @@ class NotificationAnswer(models.Model):
     def render_pdf(self):
         notification = self.notification
         tpl = notification.type.get_template('notifications/answers/pdf/%s.html')
-        pdf = render_pdf_context(tpl, self.get_render_context())
+        return render_pdf_context(tpl, self.get_render_context())
 
-        self.pdf_document = Document.objects.create_from_buffer(pdf, 
+    def render_pdf_document(self):
+        pdfdata = self.render_pdf()
+        self.pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='notification_answer', parent_object=self,
             name=str(self),
-            original_file_name=notification.get_filename('-answer.pdf')
+            original_file_name=self.notification.get_filename('-answer.pdf')
         )
         self.save()
-        return self.pdf_document
     
     def distribute(self):
         from ecs.core.models.submissions import Submission

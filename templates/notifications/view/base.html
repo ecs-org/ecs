@@ -16,6 +16,11 @@ Meldungen zur laufenden Studie(n)
     <h3>Eingereicht von: {{ notification.user }} <br>{% block notification_header %}{% endblock %}</h3>
 
     <a href="{% url 'ecs.notifications.views.notification_pdf' notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
+    {% if debug %}
+        <a href="{% url 'ecs.notifications.views.notification_pdf_debug' notification_pk=notification.pk %}" class="button_submit">
+            PDF Debug
+        </a>
+    {% endif %}
     {% if notification.answer %}
     {% if notification.answer.published_at or user.profile.is_internal %}
         <a href="{% url 'ecs.notifications.views.view_notification_answer' notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>

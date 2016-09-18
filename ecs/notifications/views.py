@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
 from django.db.models import Min, Q
 
-from ecs.utils.viewutils import render_html, render_pdf, redirect_to_next_url
+from ecs.utils.viewutils import render_html, redirect_to_next_url
 from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
@@ -59,6 +59,14 @@ def view_notification(request, notification_pk=None):
 def notification_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return handle_download(request, notification.pdf_document)
+
+
+def notification_pdf_debug(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    response = HttpResponse(notification.render_pdf(),
+        content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=debug.pdf'
+    return response
 
 
 def download_document(request, notification_pk=None, document_pk=None, view=False):
@@ -249,6 +257,14 @@ def view_notification_answer(request, notification_pk=None):
 def notification_answer_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return handle_download(request, notification.answer.pdf_document)
+
+
+def notification_answer_pdf_debug(request, notification_pk=None):
+    notification = get_object_or_404(Notification, pk=notification_pk)
+    response = HttpResponse(notification.answer.render_pdf(),
+        content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment;filename=debug.pdf'
+    return response
     
 
 @user_group_required("EC-Signing")
@@ -258,22 +274,22 @@ def notification_answer_sign(request, notification_pk=None):
     return init_batch_sign(request, request.related_tasks[0], get_notification_answer_sign_data)
 
 def get_notification_answer_sign_data(request, task):
-    answer = task.data.answer
-    pdf_template = answer.notification.type.get_template('notifications/answers/pdf/%s.html')
-    html_template = pdf_template    # FIXME
+    notification = task.data
+    answer = notification.answer
+    html_template = notification.type.get_template('notifications/answers/pdf/%s.html')
     context = answer.get_render_context()
     return {
         'success_func': sign_success,
         'parent_pk': answer.pk,
         'parent_type': NotificationAnswer,
         'document_uuid': uuid4().hex,
-        'document_name': answer.notification.get_filename('-answer'),
+        'document_name': notification.get_filename('-answer'),
         'document_type': "notification_answer",
         'document_version': 'signed-at',
-        'document_filename': answer.notification.get_filename('-answer.pdf'),
+        'document_filename': notification.get_filename('-answer.pdf'),
         'document_barcodestamp': True,
         'html_preview': render_html(request, html_template, context),
-        'pdf_data': render_pdf(request, pdf_template, context),
+        'pdf_data': answer.render_pdf(),
     }
 
 def sign_success(request, document=None):

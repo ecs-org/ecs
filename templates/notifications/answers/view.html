@@ -7,6 +7,11 @@
     {% if answer.pdf_document_id %}
         <a href="{% url 'ecs.notifications.views.notification_answer_pdf' notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
     {% endif %}
+    {% if debug %}
+        <a href="{% url 'ecs.notifications.views.notification_answer_pdf_debug' notification_pk=notification.pk %}" class="button_submit">
+            PDF Debug
+        </a>
+    {% endif %}
 {% endblock %}
 
 {% block notification_answer_body %}
