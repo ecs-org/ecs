@@ -46,13 +46,11 @@ def on_study_submit(sender, **kwargs):
 
     submission_form.render_pdf()
     
-    resubmission_task = submission.resubmission_task_for(user)
+    resubmission_task = Task.objects.for_user(user).for_data(submission).filter(
+        task_type__workflow_node__uid__in=('resubmission', 'b2_resubmission')
+    ).open().first()
     if resubmission_task:
         resubmission_task.done(user)
-
-    b2_resubmission_task = submission.b2_resubmission_task_for(user)
-    if b2_resubmission_task:
-        b2_resubmission_task.done(user)
 
 
 @receiver(signals.on_presenter_change)

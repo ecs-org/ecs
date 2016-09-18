@@ -87,18 +87,6 @@ class Submission(models.Model):
         
     get_ec_number_display.short_description = ugettext_lazy('EC-Number')
 
-    def resubmission_task_for(self, user):
-        try:
-            return Task.objects.for_user(user).for_data(self).filter(task_type__workflow_node__uid='resubmission').open()[0]
-        except IndexError:
-            return None
-
-    def b2_resubmission_task_for(self, user):
-        try:
-            return Task.objects.for_user(user).for_submission(self).filter(task_type__workflow_node__uid='b2_resubmission').open()[0]
-        except IndexError:
-            return None
-
     @property
     def paper_submission_review_task(self):
         try:
