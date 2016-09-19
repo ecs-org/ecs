@@ -15,7 +15,7 @@ from ecs.pki.models import Certificate
 
 
 @user_group_required('EC-Signing', 'EC-Office')
-def cert_list(request, user_pk=None):
+def cert_list(request):
     return render(request, 'pki/cert_list.html', {
         'certs': (
             Certificate.objects
@@ -27,7 +27,7 @@ def cert_list(request, user_pk=None):
 
 
 @user_group_required('EC-Signing')
-def create_cert(request, user_pk=None):
+def create_cert(request):
     form = CertForm(request.POST or None)
 
     if form.is_valid():
