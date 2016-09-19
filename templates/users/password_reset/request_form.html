@@ -9,16 +9,16 @@
         {% csrf_token %}
         <p>Wir senden Ihnen eine E-Mail zu, die einen Link enthält, mit dem Sie Ihr Passwort zurücksetzen können.</p>
         <div class="form-group {% if form.email.errors %}has-danger{% endif %}">
-            {{ form.email.label_tag }}
+            <label for="{{ form.email.id_for_label }}" class="sr-only">{{ form.email.label }}</label>
             {% if form.email.errors %}
-                {% render_field form.email class+="form-control form-control-danger" %}
+                {% render_field form.email class+="form-control form-control-danger" placeholder=form.email.label %}
                 <div class="form-control-feedback">
                     {% for error in form.email.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.email class+="form-control" %}
+                {% render_field form.email class+="form-control" placeholder=form.email.label %}
             {% endif %}
         </div>
         <input type="submit" class="btn btn-primary btn-block" value="Passwort Zurücksetzen" />

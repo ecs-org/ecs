@@ -25,16 +25,16 @@
         </div>
         {% for element in form %}
             <div class="form-group {% if element.errors %}has-danger{% endif %}">
-                <label>{{ element.label }}</label>
+                <label for="{{ element.id_for_label }}" class="sr-only">{{ element.label }}</label>
                 {% if element.errors %}
-                    {% render_field element class+="form-control form-control-danger" %}
+                    {% render_field element class+="form-control form-control-danger" placeholder=element.label %}
                     <div class="form-control-feedback">
                         {% for error in element.errors %}
                             <p>{{ error }}</p>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {% render_field element class+="form-control" %}
+                    {% render_field element class+="form-control" placeholder=element.label %}
                 {% endif %}
             </div>
         {% endfor %}

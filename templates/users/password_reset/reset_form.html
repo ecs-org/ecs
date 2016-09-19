@@ -8,29 +8,29 @@
     <form action="{{ request.path }}" method="post">
         {% csrf_token %}
         <div class="form-group {% if form.new_password1.errors %}has-danger{% endif %}">
-            {{ form.new_password1.label_tag }}
+            <label for="{{ form.new_password1.id_for_label }}" class="sr-only">{{ form.new_password1.label }}</label>
             {% if form.new_password1.errors %}
-                {% render_field form.new_password1 class+="form-control form-control-danger" %}
+                {% render_field form.new_password1 class+="form-control form-control-danger" placeholder=form.new_password1.label %}
                 <div class="form-control-feedback">
                     {% for error in form.new_password1.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.new_password1 class+="form-control" %}
+                {% render_field form.new_password1 class+="form-control" placeholder=form.new_password1.label %}
             {% endif %}
         </div>
         <div class="form-group {% if form.new_password2.errors %}has-danger{% endif %}">
-            {{ form.new_password2.label_tag }}
+            <label for="{{ form.new_password2.id_for_label }}" class="sr-only">{{ form.new_password2.label }}</label>
             {% if form.new_password2.errors %}
-                {% render_field form.new_password2 class+="form-control form-control-danger" %}
+                {% render_field form.new_password2 class+="form-control form-control-danger" placeholder=form.new_password2.label %}
                 <div class="form-control-feedback">
                     {% for error in form.new_password2.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.new_password2 class+="form-control" %}
+                {% render_field form.new_password2 class+="form-control" placeholder=form.new_password2.label %}
             {% endif %}
         </div>
         <input type="submit" class="btn btn-primary btn-block" value="Passwort Ändern" />

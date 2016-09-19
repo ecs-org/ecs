@@ -8,7 +8,7 @@
     <form action="{{ request.path }}" method="post" class="register_error">
         {% csrf_token %}
         <div class="form-group {% if form.gender.errors %}has-danger{% endif %}">
-            {{ form.gender.label_tag }}
+            <label for="{{ form.gender.id_for_label }}" class="sr-only">{{ form.gender.label }}</label>
             {% if form.gender.errors %}
                 {% render_field form.gender class+="form-control form-control-danger" %}
                 <div class="form-control-feedback">
@@ -21,42 +21,42 @@
             {% endif %}
         </div>
         <div class="form-group {% if form.first_name.errors %}has-danger{% endif %}">
-            {{ form.first_name.label_tag }}
+            <label for="{{ form.first_name.id_for_label }}" class="sr-only">{{ form.first_name.label }}</label>
             {% if form.first_name.errors %}
-                {% render_field form.first_name class+="form-control form-control-danger" %}
+                {% render_field form.first_name class+="form-control form-control-danger" placeholder=form.first_name.label %}
                 <div class="form-control-feedback">
                     {% for error in form.first_name.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.first_name class+="form-control" %}
+                {% render_field form.first_name class+="form-control" placeholder=form.first_name.label %}
             {% endif %}
         </div>
         <div class="form-group {% if form.last_name.errors %}has-danger{% endif %}">
-            {{ form.last_name.label_tag }}
+            <label for="{{ form.last_name.id_for_label }}" class="sr-only">{{ form.last_name.label }}</label>
             {% if form.last_name.errors %}
-                {% render_field form.last_name class+="form-control form-control-danger" %}
+                {% render_field form.last_name class+="form-control form-control-danger" placeholder=form.last_name.label %}
                 <div class="form-control-feedback">
                     {% for error in form.last_name.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.last_name class+="form-control" %}
+                {% render_field form.last_name class+="form-control" placeholder=form.last_name.label %}
             {% endif %}
         </div>
         <div class="form-group {% if form.email.errors %}has-danger{% endif %}">
-            {{ form.email.label_tag }}
+            <label for="{{ form.email.id_for_label }}" class="sr-only">{{ form.email.label }}</label>
             {% if form.email.errors %}
-                {% render_field form.email class+="form-control form-control-danger" %}
+                {% render_field form.email class+="form-control form-control-danger" placeholder=form.email.label %}
                 <div class="form-control-feedback">
                     {% for error in form.email.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
             {% else %}
-                {% render_field form.email class+="form-control" %}
+                {% render_field form.email class+="form-control" placeholder=form.email.label %}
             {% endif %}
         </div>
             {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
