@@ -69,18 +69,32 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         sorting = filterform.cleaned_data['sorting'] or 'deadline'
     order_by = ['task_type__workflow_node__uid', sortings[sorting], 'assigned_at']
 
-    all_tasks = (Task.objects.for_user(request.user).for_widget()
-        .filter(closed_at=None)
-        .select_related('task_type', 'task_type__workflow_node')
-        .order_by(*order_by))
-
+    all_tasks = (Task.objects.for_user(request.user).for_widget().open()
+        .select_related('task_type', 'task_type__workflow_node'))
     submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
-        tasks = all_tasks.for_submission(submission)
-    elif not filterform.is_valid():
-        tasks = all_tasks
-    else:
+        all_tasks = all_tasks.for_submission(submission)
+
+    open_tasks = (all_tasks
+        .for_submissions(
+            Submission.objects.exclude(biased_board_members=request.user))
+        .filter(assigned_to=None)
+        .order_by(*order_by))
+
+    my_tasks = (all_tasks
+        .filter(assigned_to=request.user)
+        .order_by('task_type__workflow_node__uid', 'workflow_token__deadline',
+            'assigned_at'))
+
+    proxy_tasks = (all_tasks
+        .for_submissions(
+            Submission.objects.exclude(biased_board_members=request.user))
+        .filter(assigned_to__profile__is_indisposed=True)
+        .order_by('task_type__workflow_node__uid', 'workflow_token__deadline',
+            'assigned_at'))
+
+    if not submission and filterform.is_valid():
         cd = filterform.cleaned_data
         past_meetings = cd['past_meetings']
         next_meeting = cd['next_meeting']
@@ -94,7 +108,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         other = cd['other']
 
         if amg and mpg and thesis and expedited and local_ec and other and past_meetings and next_meeting and upcoming_meetings and no_meeting:
-            tasks = all_tasks
+            pass
         else:
             submissions = Submission.objects.all()
 
@@ -157,13 +171,13 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                     submission_form__submission__pk__in=submission_q
                 ).values('pk'))
 
-            tasks = all_tasks.filter(other_tasks_q | submission_tasks_q |
+            open_tasks = open_tasks.filter(other_tasks_q | submission_tasks_q |
                 notification_tasks_q | vote_tasks_q)
     
         if not ignore_task_types:
             task_types = filterform.cleaned_data['task_types']
             if task_types:
-                tasks = tasks.filter(task_type__workflow_node__uid__in=
+                open_tasks = open_tasks.filter(task_type__workflow_node__uid__in=
                     task_types.values('workflow_node__uid'))
 
     data = {
@@ -171,16 +185,10 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
         'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), filterform.urlencode()),
+        'my_tasks': my_tasks,
+        'proxy_tasks': proxy_tasks,
+        'open_tasks': open_tasks,
     }
-
-
-    data['mine_tasks'] = tasks.filter(assigned_to=request.user)
-
-    tasks = tasks.for_submissions(
-        Submission.objects.exclude(biased_board_members=request.user))
-
-    data['proxy_tasks'] = tasks.filter(assigned_to__profile__is_indisposed=True)
-    data['open_tasks'] = tasks.filter(assigned_to=None)
 
     return render(request, template, data)
 

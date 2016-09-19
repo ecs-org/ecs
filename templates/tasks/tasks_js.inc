@@ -11,7 +11,7 @@
 
         var threshold = 7;
 
-        $('#task_main .task_item').each(function() {
+        $('.task_item').each(function() {
             var ul = $(this).find('ul');
 
             if (ul.find('li').length <= threshold)
