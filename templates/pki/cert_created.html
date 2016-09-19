@@ -1,0 +1,23 @@
+{% extends 'core.html' %}
+{% load i18n userutils %}
+
+{% block htmltitle %}{% trans "PKI" %} | {{ block.super }}{% endblock %}
+
+{% block headertitle %}{% trans "PKI" %}{% endblock %}
+
+{% block content %}
+    <a href="{% url 'ecs.pki.views.cert_list' %}">
+        <span class="fa fa-backward"></span>
+        {% trans "Back to the certificate list" %}
+    </a>
+
+    <p class="m-t-2">
+    {% blocktrans trimmed with user=user|full_name email=user.email %}
+        The client certificate for {{ user }} has been created. It has been sent
+        to {{ email }} per email. The passphrase is as follows. Please make sure
+        to transmit the passphrase via a secure channel Do not send it via email!
+    {% endblocktrans %}
+    </p>
+
+    <h1 class="display text-xs-center"><tt>{{ passphrase }}</tt></h1>
+{% endblock %}

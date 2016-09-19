@@ -16,8 +16,6 @@ class CertForm(forms.Form):
         )
     )
     cn = forms.CharField()
-    passphrase = forms.CharField(widget=forms.PasswordInput(), min_length=12)
-    passphrase2 = forms.CharField(widget=forms.PasswordInput())
     
     def clean(self):
         cd = super().clean()
@@ -28,7 +26,5 @@ class CertForm(forms.Form):
             if Certificate.objects.filter(cn=cn).exists():
                 self.add_error('cn', _('A certificate with this CN already exists.'))
 
-        if cd.get('passphrase') != cd.get('passphrase2'):
-            self.add_error('passphrase2', _('The passphrases do not match.'))
         return cd
         

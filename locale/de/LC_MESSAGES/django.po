@@ -1809,6 +1809,12 @@ msgstr ""
 msgid "The passphrases do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
+msgid "Your Client Certificate"
+msgstr "Ihr Client-Zertifikat"
+
+msgid "See Attachment."
+msgstr "Siehe Anhang."
+
 msgid "German"
 msgstr "Deutsch"
 
@@ -2840,6 +2846,15 @@ msgstr "Anzahl SUSAR"
 
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
+
+msgid ""
+"The client certificate for %(user)s has been created. It has been sent to "
+"%(email)s per email. The passphrase is as follows. Please make sure to "
+"transmit the passphrase via a secure channel Do not send it via email!"
+msgstr ""
+"Das Zertifikat für %(user)s wurde angelegt. Es wurde per E-Mail an %(email)s "
+"gesendet. Die Passphrase lautet wie folgt. Bitte übertragen Sie Passphrase "
+"über einen sicheren Kanal. Senden Sie diese nicht per E-Mail!"
 
 msgid "Revoke"
 msgstr "Widerrufen"

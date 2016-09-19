@@ -1,12 +1,16 @@
 import tempfile
 
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.utils.text import slugify
+from django.utils.translation import ugettext as _
+from django.contrib import messages
 
+from ecs.communication.mailutils import deliver
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_group_required
 
@@ -35,15 +39,26 @@ def create_cert(request):
         user = form.cleaned_data['user']
 
         with tempfile.NamedTemporaryFile() as tmp:
-            cert = Certificate.create_for_user(tmp.name, user, cn=cn,
-                passphrase=form.cleaned_data['passphrase'])
+            cert, passphrase = Certificate.create_for_user(tmp.name, user, cn=cn)
             pkcs12 = tmp.read()
 
-        response = HttpResponse(pkcs12, content_type='application/x-pkcs12')
         filename = '{}.p12'.format(slugify(cert.cn))
-        response['Content-Disposition'] = 'attachment;filename={}'.format(filename)
-        return response
-        
+
+        subject = _('Your Client Certificate')
+        message = _('See Attachment.')
+        attachments = (
+            (filename, pkcs12, 'application/x-pkcs12'),
+        )
+
+        deliver(user.email, subject=subject, message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            attachments=attachments)
+
+        return render(request, 'pki/cert_created.html', {
+            'passphrase': passphrase,
+            'user': user,
+        })
+
     return render(request, 'pki/create_cert.html', {
         'form': form,
     })
