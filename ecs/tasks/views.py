@@ -173,21 +173,14 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), filterform.urlencode()),
     }
 
-    task_flavors = {
-        'open': Q(assigned_to=None),
-        'proxy': Q(assigned_to__profile__is_indisposed=True),
-    }
 
-    if not filterform.is_valid() or filterform.cleaned_data['mine']:
-        data['mine_tasks'] = tasks.filter(assigned_to=request.user)
+    data['mine_tasks'] = tasks.filter(assigned_to=request.user)
 
     tasks = tasks.for_submissions(
         Submission.objects.exclude(biased_board_members=request.user))
 
-    for k, q in task_flavors.items():
-        ck = '%s_tasks' % k
-        on = not filterform.is_valid() or filterform.cleaned_data[k]
-        data[ck] = tasks.filter(q) if on else tasks.none()
+    data['proxy_tasks'] = tasks.filter(assigned_to__profile__is_indisposed=True)
+    data['open_tasks'] = tasks.filter(assigned_to=None)
 
     return render(request, template, data)
 

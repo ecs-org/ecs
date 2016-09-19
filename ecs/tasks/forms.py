@@ -83,10 +83,6 @@ class TaskListFilterForm(forms.Form):
     local_ec = forms.BooleanField(required=False, initial=True)
     other = forms.BooleanField(required=False, initial=True)
 
-    mine = forms.BooleanField(required=False, initial=True)
-    open = forms.BooleanField(required=False, initial=True)
-    proxy = forms.BooleanField(required=False, initial=True)
-
     sorting = forms.ChoiceField(required=False, choices=(
         ('deadline', _('Deadline')),
         ('oldest', _('Oldest')),

@@ -13,23 +13,6 @@
     </div>
     <div class="task_list_choose">
         <label>
-            {{ filterform.mine }}
-            <span class="fa fa-user"></span>
-            {% trans "Mine" %}
-        </label>
-        <label>
-            {{ filterform.open }}
-            <span class="fa fa-users"></span>
-            {% trans "Open" %}
-        </label>
-        <label>
-            {{ filterform.proxy }}
-            <span class="fa fa-user-times"></span>
-            {% trans "Proxy" %}
-        </label>
-    </div>
-    <div class="task_list_choose">
-        <label>
             {{ filterform.past_meetings }}
             {% trans "Past Meetings" %}
         </label>
