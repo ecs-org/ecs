@@ -68,7 +68,7 @@ ul.errorlist {
             clear: both;
 
             &.required.errors {
-                textarea, input[type=text], select {
+                textarea, input[type=text], input[type=number], select {
                     border: 1px solid red;
                 }
             }
