@@ -39,3 +39,8 @@ class AdvancedSettings(models.Model):
     display_notifications_in_protocol = models.BooleanField(default=False)
     display_biased_in_amendment_answer_pdf = models.BooleanField(default=True)
     require_internal_vote_review = models.BooleanField(default=False)
+
+    logo = models.BinaryField(null=True)
+    logo_mimetype = models.CharField(max_length=100, null=True)
+    print_logo = models.BinaryField(null=True)
+    print_logo_mimetype = models.CharField(max_length=100, null=True)

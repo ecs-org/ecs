@@ -15,7 +15,15 @@
     width: 400px;
 }
 
-/* catalogue list */
+img.logo {
+    width: auto;
+    height: 60px;
+
+    &.full {
+        width: 100%;
+        height: auto;
+    }
+}
 
 #content .wrapper_404 {
     position: absolute;

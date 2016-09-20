@@ -9,8 +9,13 @@
     float: left;
     display: block;
     background: $white;
-    padding: 10px;
     border-right: 1px solid #B5CFDF;
+
+    img {
+        height: 40px;
+        width: auto;
+        margin: 5px;
+    }
 }
 .help_button {
     display: block;

@@ -1,7 +1,14 @@
+import base64
+
 from django.template import Library, Node
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
+
+from ecs.core.models import AdvancedSettings
+
+
 register = Library()
+
 
 @register.filter
 def checkbox(val):
@@ -29,3 +36,12 @@ def tcwrap(parser, token):
     nodelist = parser.parse(('endtcwrap',))
     parser.delete_first_token()
     return SingleCellTableNode(class_name, nodelist)
+
+
+@register.simple_tag
+def print_logo_url():
+    s = AdvancedSettings.objects.get()
+    if not s.print_logo:
+        return './media/fallback_logo.png'
+    return 'data:{};base64,{}'.format(s.print_logo_mimetype,
+        base64.b64encode(s.print_logo).decode('ascii'))

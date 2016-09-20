@@ -157,6 +157,11 @@ input[disabled]:not(.btn) {
         padding: 10px 10px 0 10px;
         border-bottom: 1px solid $grey-80;
         background: $white;
+
+        img {
+            width: 100%;
+            height: auto;
+        }
     }
     #account {
         overflow-x: hidden;

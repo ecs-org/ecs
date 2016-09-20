@@ -18,6 +18,8 @@
             position: absolute;
             right: 10px;
             top: 10px;
+            width: 240px;
+            height: auto;
         }
         .outer {
             position: relative;
@@ -36,7 +38,7 @@
         }
     </style>
     <div class="outer">
-        <img class="logo" src="{% static 'images/logo.png' %}" />
+        <img class="logo" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
         <div class="inner">
             <h1>Unterst&uuml;tzung in Arbeit</h1>
             <p>Wir arbeiten an der Unterst&uuml;tzung ihres Browsers. Bitte benutzen

@@ -1,5 +1,7 @@
+{% load corepdf %}
+
 <div class="header">
-    <img src="./media/logo_big.png" class="logo" alt="Ethik-Kommission der Medizinischen Universit&auml;t Wien" />
+    <img class="logo" src="{% print_logo_url %}" alt="Logo" />
 
     <div class="address">
         Borschkegasse 8b/6<br />

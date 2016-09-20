@@ -49,7 +49,7 @@
 
     <div id="sidebar">
         <div id="logo">
-            <img src={% static 'images/logo.png' %} alt="EC- Meduni Wien"/>
+            <img src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
             <small>{% current_version %}</small>
         </div>
         <div id="account">

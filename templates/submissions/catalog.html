@@ -12,7 +12,11 @@
 
 {% block htmlbody %}
 <div class="m-x-2 m-t-1">
-    <div><a href="/"><img src={% static 'images/logo.png' %} /></a></div>
+    <div>
+        <a href="/">
+            <img class="logo" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
+        </a>
+    </div>
 
     <div class="row m-b-1">
         <div class="m-x-auto"><h1>{% trans "Catalog of Approved Studies" %}</h1></div>

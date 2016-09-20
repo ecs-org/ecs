@@ -528,12 +528,33 @@ class AdvancedSettingsForm(forms.ModelForm):
     default_contact = AutocompleteModelChoiceField(
         'internal-users', User.objects.all(), label=_('Default Contact'))
 
+    LOGO_MIMETYPES = ('image/gif', 'image/jpeg', 'image/png', 'image/svg+xml')
+
+    logo_file = forms.FileField(required=False, label=_('Logo File'),
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}))
+    print_logo_file = forms.FileField(required=False, label=_('Print Logo File'),
+        widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}))
+
+    def clean_logo_file(self):
+        f = self.cleaned_data['logo_file']
+        if f and f.content_type not in self.LOGO_MIMETYPES:
+            self.add_error('logo_file',
+                _('The file must be a gif, jpeg, png or svg file.'))
+        return f
+
+    def clean_print_logo_file(self):
+        f = self.cleaned_data['print_logo_file']
+        if f and f.content_type not in self.LOGO_MIMETYPES:
+            self.add_error('print_logo_file',
+                _('The file must be a gif, jpeg, png or svg file.'))
+        return f
+
     class Meta:
         model = AdvancedSettings
         fields = (
             'default_contact', 'display_notifications_in_protocol',
             'display_biased_in_amendment_answer_pdf',
-            'require_internal_vote_review',
+            'require_internal_vote_review', 'logo_file',
         )
         labels = {
             'display_notifications_in_protocol':

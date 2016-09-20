@@ -6,9 +6,9 @@
 {% block htmlbody %}
 <div id="help">
   <div id="help_top" class="clearfix">
-    <div id="help_logo">
-      <a href="{% url 'ecs.help.views.index' %}"><img src={% static 'images/logo_small.png' %} alt="EC-Meduni Wien Hilfe"/></a>
-    </div>
+    <a id="help_logo" href="{% url 'ecs.help.views.index' %}">
+      <img class="logo" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
+    </a>
     <span class="help_button fa fa-question-circle-o fa-2x"></span>
     <div id="help_title">
       {% for p in page.nav.top %}
