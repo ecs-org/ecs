@@ -35,7 +35,7 @@ checklist_questions = {
         Args('5b', 'Stehen diese Belastungen in einem akzeptablen Verhältnis zum zu erwartenden Nutzen der Studie ?', requires_comment=True),
         Args('6',  'Liegt ein Patienteninformationsblatt bei? Ist dieses ausreichend und verständlich?'),
         Args('7a', 'Haben sie einen „conflict of interest“ offenzulegen?',
-            description='''Die Ethik-Kommission der Medizinischen Universität Wien ist bemüht sicherzustellen, dass alle, die am Begutachtungsverfahren für eines der eingereichten Projekte teilnehmen, die Möglichkeit haben, etwaige Sachverhalte und Interessen, die eine objektive Begutachtung hindern können, anzugeben. Dies können finanzielle sowie akademische Interessen sein. Die Gutachter werden ersucht, Stellung zu nehmen und Interessen offen zu legen.''', is_inverted=True),
+            description='''Die Ethik-Kommission ist bemüht sicherzustellen, dass alle, die am Begutachtungsverfahren für eines der eingereichten Projekte teilnehmen, die Möglichkeit haben, etwaige Sachverhalte und Interessen, die eine objektive Begutachtung hindern können, anzugeben. Dies können finanzielle sowie akademische Interessen sein. Die Gutachter werden ersucht, Stellung zu nehmen und Interessen offen zu legen.''', is_inverted=True),
         Args('7b', 'Bestätigen Sie, dass Sie alle Informationen, die Sie im Rahmen dieser Begutachtung erhalten haben, vertraulich behandeln?'),
     ],
     'gcp_review': [
@@ -57,7 +57,7 @@ checklist_questions = {
     ],
     'boardmember_review': [
         Args('1', "Ist das Antragsformular korrekt und vollständig ausgefüllt?"),
-        Args('2', "Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“ der MedUni Wien?"),
+        Args('2', "Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“?"),
         Args('3', "Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
     ],
     'expedited_review': [

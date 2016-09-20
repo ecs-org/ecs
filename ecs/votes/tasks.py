@@ -54,9 +54,9 @@ Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf „Studien Mel
 wählen Sie dann „Verlängerung der Gültigkeit des Votums“ und machen Sie die erforderlichen Angaben.
 
 Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische Arzneimittelprüfung handeln,
-bei der die Ethikkommission der MedUni Wien  nicht als Leit-Ethikkommission,
-sondern als lokale Ethikkommission fungiert, dann können Sie diese Aufforderung ignorieren.
-In solchen Fällen ist die Leit-Ethikkommission für die Votumsverlängerung zuständig.
+bei der die Ethikkommission nicht als Leit-Ethikkommission, sondern als lokale Ethikkommission
+fungiert, dann können Sie diese Aufforderung ignorieren. In solchen Fällen ist die
+Leit-Ethikkommission für die Votumsverlängerung zuständig.
 
 Mit freundlichen Grüßen,
 

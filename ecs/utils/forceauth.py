@@ -1,6 +1,3 @@
-#
-# (c) 2010 MedUni Wien
-#
 """
 Middleware that forces Authentication.
 """
