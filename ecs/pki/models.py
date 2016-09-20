@@ -33,7 +33,7 @@ class Certificate(models.Model):
         return cls.objects.exclude(revoked_at=None).count() + 1
 
     @classmethod
-    def create_for_user(cls, pkcs12, user, cn=None):
+    def create_for_user(cls, pkcs12, user, cn=None, days=None):
         if not cn:
             cn = get_full_name(user)
         subject = get_subject(cn=cn, email=user.email)
@@ -44,7 +44,8 @@ class Certificate(models.Model):
             random.choice(PASSPHRASE_CHARS) for i in range(passphrase_len))
 
         from ecs.pki import openssl
-        data = openssl.make_cert(subject, pkcs12, passphrase=passphrase)
+        data = openssl.make_cert(subject, pkcs12, passphrase=passphrase,
+            days=days)
         cert = cls.objects.create(user=user, cn=cn, **data)
 
         return (cert, passphrase)
