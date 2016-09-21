@@ -140,7 +140,7 @@
 <h2 class="metadata">Download</h2>
 <p>Dieses Votum ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
 
-{% if not vote.needs_signature %}
+{% if not vote.needs_signature and vote.published_by %}
     <p>Freigegeben von: <b>{{ vote.published_by|full_name }}</b>.</p>
 {% endif %}
 {% endblock %}
