@@ -3,8 +3,8 @@
 get_dumpfilename(){
     # returns first existing file in order
     local i
-    if test -f "${ECS_RECOVER_DUMP_FILENAME:-/invalid}"; then
-        echo "${ECS_RECOVER_DUMP_FILENAME}"
+    if test -f "${ECS_DUMP_FILENAME:-/invalid}"; then
+        echo "${ECS_DUMP_FILENAME}"
     else
         for i in . ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback; do
             if test -e $HOME/$i/ecs.pgdump; then
@@ -83,7 +83,7 @@ prepare_database() {
         recreate_database
         echo "restore from dump (this might take up to 10 minutes): $dumpfilename"
         pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
-        
+
         ecs_help_dump="`dirname $(readlink -e $dumpfilename)`/ecs-help"
         if test "$HOME/ecs-help" != "$ecs_help_dump"; then
             if test -d "$ecs_help_dump/images"; then

@@ -8,12 +8,12 @@ Usage:  $0 [--restore-dump] init
         $0 dumpdb [targetdumpname]
         $0 freshdb
 
-init    = run all system changes regardless of current state,
-            does not touch sourcecode
+init    = install/renew all system setup regardless of current state.
+            does not touch sourcecode, is safe to use.
 pull    = fetch,update current source to origin/branchname(HEAD)
             and run needed devserver updates. restore from dump if needed.
             "pull" will refuse to run if there are uncommited changes/additions
-            or unpushed changes exists in the repository
+            or unpushed changes exists in the repository.
 rebase  = fetch origin, rebase current local branch with
             origin/$ECS_DEV_REBASE_TO(HEAD) (default master)
             and force pushes changes to origin
@@ -21,15 +21,16 @@ dumpdb  = dump current database and write it to /app/ecs.pgdump
 freshdb = destroy current database and create a new empty database
 
 Option:
+    "--force" will ignore and *OVERWRITE* unpushed changes in target branch
     "--restore-dump" will mandatory restore database from dump
         dump will be selected from first existing file of list:
         $HOME/{./ ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback}/ecs.pgdump
-    "--force" will ignore unpushed but committed changes in target branch
+
 Testing:
     isclean [--ignore-unpushed] = run abort_ifnot_cleanrepo
     get_dumpfilename = get first used dumpfile
 Env:
-    ECS_RECOVER_DUMP_FILENAME="/path/to/custom.pgdump"
+    ECS_DUMP_FILENAME="/path/to/custom.pgdump"
         to restore from a non default dump.
     CLEANUP="true" to cleanup locks
     ECS_DEV_AUTOSTART="false" to your .profile,
