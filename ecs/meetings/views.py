@@ -781,7 +781,7 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
     form = ExpeditedReviewerInvitationForm(request.POST or None)
 
     if request.method == 'POST' and form.is_valid():
-        categories = MedicalCategory.objects.filter(submissions_in=meeting.submissions.expedited())
+        categories = MedicalCategory.objects.filter(submissions__in=meeting.submissions.expedited())
         users = User.objects.filter(profile__is_board_member=True,
             medical_categories__in=categories.values('pk'))
         start = form.cleaned_data['start']
