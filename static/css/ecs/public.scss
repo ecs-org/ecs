@@ -4,107 +4,24 @@
 
 /* reset base.scss classes */
 
-* body {
-    margin: 0;
-    padding: 0;
-}
 #container {
     right: 0 !important;
 }
+
 .innerwrap {
     background: none;
     border: none;
-    margin: 70px auto 0;
+    margin: 5rem auto 0;
     width: 400px;
-    text-align: left;
-}
-
-/* login and register forms */
-
-.innerwrap img,
-.innerwrap a img {
-    border: none;
-    margin: 0 0 10px 10px;
-}
-
-#content form {
-    float: none;
-}
-#content h2 {
-    margin-bottom: 20px;
-}
-
-.public_area {
-    margin-bottom: 1rem;
-}
-.pw_reg {
-    margin: 5px 0 0 10px;
-    font-size: 12px;
-}
-#browser_warning {
-    margin: 10px;
-}
-.reg_detail {
-    padding: 4px 0;
-    border-bottom: 1px solid #BCD3E0;
-    background: #E1EBF2;
-}
-.reg_detail label {
-    font-size: 12px;
-    display: inline-block;
-    width: 80px;
-    border-right: 1px solid #C9DBE5;
-    margin-right: 10px;
-}
-.login_error .errorlist {
-    display: inline-block;
-    margin-top: 20px;
-    color: red;
-}
-.login_error ul,
-.register_error ul {
-    display: inline-block;
-    margin: 0 !important;
-}
-.login_error ul ul,
-.register_error ul ul {
-    margin: 0;
-}
-.login_error ul li,
-.register_error ul li {
-    margin: 0 0 5px 5px;
-    border: none;
-    max-width: none;
-    padding: 0;
-    background: none;
-}
-.login_error ul ul li {
-    border: none;
-    padding: 8px 0;
-    margin-left: 6px;
-}
-.login_error_msg {
-    display: block;
-    margin: 20px 5px 5px;
-    color: red;
-    padding: 5px;
-    background: #FAE5E3;
-    border: 1px solid #F4CECB;
-    border-radius: 3px;
 }
 
 /* catalogue list */
 
 #header_public {
     position: absolute;
-    top: 10px;
-    padding: 20px 0;
+    top: 1rem;
     left: 0;
     width: 100%;
-
-    img {
-        margin: 0 0 0 23px;
-    }
 }
 
 #content .catalogue_list,
@@ -119,39 +36,31 @@
 .catalogue_list_inner,
 .wrapper_404_inner {
     margin: 0 auto;
-    max-width: 1000px;
+    max-width: 90%;
 }
 .catalogue_list_inner .content,
 .wrapper_404 .content {
-    font-size: 14px;
     float: left;
-    padding: 20px;
     border: 1px solid $bisque;
     background: $beige-light;
-    margin-bottom: 40px;
 }
 
 #content .catalogue_list_inner {
 
     .content h1 {
-        padding: 8px 10px;
+        padding: 1rem;
         background: $bisque;
-    }
-    .content h2 {
-        font-size: 16px;
-        margin-bottom: 6px;
     }
     .content h3 {
         background: none;
         border-bottom: none;
-        font-weight: bold;
     }
     ul {
         margin: 0;
     }
     ol > li {
         display: block;
-        padding: 10px;
+        padding: 1rem;
         border-bottom: 3px solid $bisque;
 
         &:first-child {
@@ -159,37 +68,29 @@
         }
     }
     p {
-        padding-bottom: 2px;
         border-bottom: 1px solid $bisque;
 
         span.border_right {
             border-right: 1px solid $bisque;
-            padding-right: 5px;
-            margin-right: 5px;
         }
     }
     .english_title {
-        font-size: 11px;
         color: $grey-40;
         display: block;
-        margin-bottom: 5px;
     }
 }
 .catalogue_list .indented {
-    padding-left: 20px;
-    border-left: 20px solid $bisque;
+    padding-left: 1rem;
+    border-left: 1rem solid $bisque;
 }
 #content .years a {
     display: inline-block;
-    padding: 5px 8px;
-    margin: 0 10px 12px 0;
+    padding: 0 0.5rem;
     background: $grey-90;
     color: $grey-20;
-    font-size: 12px;
     clear: both;
     text-align: center;
     border-radius: 3px;
-    font-size: 16px;
     font-weight: bold;
 
     &:hover {

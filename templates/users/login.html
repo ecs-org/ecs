@@ -45,7 +45,7 @@
                 <p class="m-t-1"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
             </div>
         {% endif %}
-        <div class="public_area">
+        <div class="public_area" class="m-b-1">
           {% if request.tracking_data.view %}
               {% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk as help_page_url %}
           {% else %}
@@ -55,7 +55,7 @@
               | <a href="{{ help_page_url }}" target="_blank" class="help_trigger">{% trans 'Online Help Pages' %}</a>
               | <a href="{% help_url 'sitenotice' %}">{% trans 'Site Notice' %}</a>
         </div>
-        <form method="post" action="{{ request.path }}" class="login_error">
+        <form method="post" action="{{ request.path }}">
             {% csrf_token %}
             <div class="form-group {% if form.username.errors %}has-danger{% endif %}">
                 <label for="{{ form.username.id_for_label }}" class="sr-only">{{ form.username.label }}</label>
@@ -95,7 +95,7 @@
         </form>
     </div>
 
-    <div class="pw_reg">
+    <div class="pw_reg" class="m-t-1 m-l-1">
         <a href="{% url 'ecs.users.views.register' %}">Registrieren</a> | <a href="{% url 'ecs.users.views.request_password_reset' %}">Passwort vergessen/zurücksetzen</a>
     </div>
     

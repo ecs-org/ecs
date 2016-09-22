@@ -5,7 +5,7 @@
 
     {{ block.super }}
 
-    <form action="{{ request.path }}" method="post" class="register_error">
+    <form action="{{ request.path }}" method="post">
         {% csrf_token %}
         <div class="form-group {% if form.gender.errors %}has-danger{% endif %}">
             <label for="{{ form.gender.id_for_label }}" class="sr-only">{{ form.gender.label }}</label>
