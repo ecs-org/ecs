@@ -50,10 +50,8 @@ def document_types():
 @bootstrap.register()
 def import_keys():
     gpgutils.reset_keystore(settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['encrypt_key'], settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['decrypt_key'], settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['signing_key'], settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['verify_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['encryption_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(settings.STORAGE_VAULT['signature_key'], settings.STORAGE_VAULT['gpghome'])
 
 
 @bootstrap.register()

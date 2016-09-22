@@ -276,10 +276,8 @@ ECS_DOWNLOAD_CACHE_MAX_AGE = 10 #30 * 24 * 60 * 60 # 30 days
 STORAGE_VAULT = {
     'dir': os.path.join(PROJECT_DIR, '..', 'ecs-storage-vault'),
     'gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-gpg'),
-    'encrypt_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_encrypt.pub'),
-    'signing_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_sign.sec'),
-    'decrypt_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_encrypt.sec'),
-    'verify_key':  os.path.join(PROJECT_DIR, 'conf', 'storagevault_sign.pub'),
+    'encryption_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_encrypt.sec'),
+    'signature_key': os.path.join(PROJECT_DIR, 'conf', 'storagevault_sign.sec'),
     'encryption_uid': 'ecs_mediaserver',
     'signature_uid': 'ecs_authority',
 }
