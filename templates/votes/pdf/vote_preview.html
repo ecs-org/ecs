@@ -22,8 +22,11 @@
 
 <p>
     <b>EK Nr:</b> <b>{{ vote.get_ec_number }}</b><br />
+    {%if form.eudract_number %}
+        <b>EudraCT Nr:</b> {{form.eudract_number}}<br />
+    {% endif %}
     <b>Projekttitel:</b> {{ submission.project_title_display }}<br />
-    <b>Antragsteller:</b> {{ form.submitter }}<br />
+    <b>Antragsteller/in:</b> {{ form.submitter }}<br />
     <b>Institution:</b> {{ form.submitter_organisation }}<br />
     <b>Sponsor:</b> {{ form.sponsor_name }}<br />
 </p>
