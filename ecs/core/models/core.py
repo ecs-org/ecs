@@ -44,3 +44,11 @@ class AdvancedSettings(models.Model):
     logo_mimetype = models.CharField(max_length=100, null=True)
     print_logo = models.BinaryField(null=True)
     print_logo_mimetype = models.CharField(max_length=100, null=True)
+
+    vote1_extra = models.TextField(null=True, blank=True)
+    vote2_extra = models.TextField(null=True, blank=True)
+    vote3a_extra = models.TextField(null=True, blank=True)
+    vote3b_extra = models.TextField(null=True, blank=True)
+    vote4_extra = models.TextField(null=True, blank=True)
+    vote5_extra = models.TextField(null=True, blank=True)
+    vote_pdf_extra = models.TextField(null=True, blank=True)

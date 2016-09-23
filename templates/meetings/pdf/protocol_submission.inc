@@ -3,7 +3,13 @@
 <table class="withborders">
     <tr>
         <td width="3%">[X]</td>
-        <td>{% include 'meetings/pdf/protocol_vote.inc' %}</td>
+        <td>
+            {% if vote %}
+                {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
+            {% else %}
+                Es liegt kein Votum vor.
+            {% endif %}
+        </td>
     </tr>
 </table> 
 

@@ -555,6 +555,10 @@ class AdvancedSettingsForm(forms.ModelForm):
             'default_contact', 'display_notifications_in_protocol',
             'display_biased_in_amendment_answer_pdf',
             'require_internal_vote_review', 'logo_file',
+            'display_biased_in_amendment_answer_pdf',
+            'require_internal_vote_review', 'logo_file',
+            'vote1_extra', 'vote2_extra', 'vote3a_extra', 'vote3b_extra',
+            'vote4_extra', 'vote5_extra', 'vote_pdf_extra',
         )
         labels = {
             'display_notifications_in_protocol':

@@ -30,26 +30,7 @@
 
 <h4>Die Kommission fasst folgenden Beschluss:</h4>
 
-<p>
-{% if vote.result == '1' %}
-    Es besteht kein Einwand gegen die Durchführung der Studie.
-{% endif %}
-{% if vote.result == '2' %}
-    Die unten bezeichneten Punkte des Antrages sind entweder noch unerledigt bzw sollten von den Antragstellern geändert/ nachgereicht werden. Nach entsprechender Vorlage/Erledigung kann auch vor der nächsten Ethik-Kommissions Sitzung ein endgültig positiver Beschluss ausgefertigt werden. Der Antrag wird in der nächsten Sitzung der Kommission nicht mehr behandelt.
-{% endif %}
-{% if vote.result == '3a' %}
-    Der TOP wird bis zur nächsten Sitzung vertagt.
-{% endif %}
-{% if vote.result == '3b' %}
-    Es bestehen Einwände gegen die Durchführung der Studie in der eingereichten Form. Die unten angeführten Punkte sollten von den Antragstellern entsprechend geändert und der Kommission neu vorgelegt werden. Der Antrag wird in der nächsten Sitzung der Kommission nochmals behandelt.
-{% endif %}
-{% if vote.result == '4' %}
-    Der Antrag wird von der Ethik-Kommission abgelehnt.
-{% endif %}
-{% if vote.result == '5' %}
-    Der Antrag wurde vom Antragsteller zurückgezogen.
-{% endif %}
-<p>
+<p>{% include 'votes/pdf/vote_result.inc' with result=vote.result %}<p>
 
 {% if past_votes %}
     {% for vote in past_votes %}
