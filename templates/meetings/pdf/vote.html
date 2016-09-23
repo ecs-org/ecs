@@ -1,17 +1,17 @@
 {% extends 'pdf/skeleton.html' %}
 {% load userutils votes %}
 
-{% block title %}Votum{% endblock %}
+{% block title %}{{ vote }}{% endblock %}
 
 {% block content %}
 {% include 'pdf/ec_head.inc' %}
 
-<h1 class="metadata">Votum</h1>
+<h1 class="metadata">{{ vote }}</h1>
 <center><p><b>
 {% if vote.top %}
     Sitzung der Ethik-Kommission am {{ vote.top.meeting.start|date:'d.m.Y' }}, {{ vote.top }}:
 {% else %}
-    Votum:
+    {% if vote.result == '1' or vote.result == '4' %}Votum{% else %}Mitteilung{% endif %}:
 {% endif %}
 </b></p></center>
 
@@ -86,7 +86,7 @@
 
 {% if submission.current_submission_form.is_amg %}
     {% if vote.result == '2' or vote.result == '3b' %}
-        <p>"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum Einlangen der in diesem Votum geforderten Informationen gehemmt.</p>
+        <p>"CLOCKSTOP": Die in §41a AMG genannte Frist wird ab dem Sitzungstag bis zum Einlangen der in dieser Mitteilung geforderten Informationen gehemmt.</p>
     {% endif %}
 {% endif %}
 
@@ -107,7 +107,7 @@
 {% endif %}
 
 <h2 class="metadata">Download</h2>
-<p>Dieses Votum ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
+<p>Dieses Dokument ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
 
 {% if not vote.needs_signature and vote.published_by %}
     <p>Freigegeben von: <b>{{ vote.published_by|full_name }}</b>.</p>

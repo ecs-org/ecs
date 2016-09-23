@@ -1,6 +1,6 @@
 {% extends 'pdf/skeleton.html' %}
 
-{% block title %}Votum{% endblock %}
+{% block title %}{{ vote }}{% endblock %}
 
 {% block inline_css %}
     {{ block.super }}
@@ -16,7 +16,7 @@
 {% if vote.top %}
     Sitzung der Ethik-Kommission am {{ vote.top.meeting.start|date:'d.m.Y' }}, {{ vote.top }}:
 {% else %}
-    Votum:
+    {% if vote.result == '1' or vote.result == '4' %}Votum{% else %}Mitteilung{% endif %}:
 {% endif %}
 </b></p></center>
 

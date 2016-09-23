@@ -55,10 +55,15 @@ class Vote(models.Model):
         return self.submission_form.submission.get_ec_number_display()
         
     def __str__(self):
+        if self.result in ('1', '4'):
+            name = 'Votum'
+        else:
+            name = 'Mitteilung'
+
         ec_number = self.get_ec_number()
         if ec_number:
-            return 'Votum %s' % ec_number
-        return 'Votum ID %s' % self.pk
+            return '{} {}'.format(name, ec_number)
+        return '{} ID {}'.format(name, self.pk)
 
     def publish(self):
         assert self.published_at is None
