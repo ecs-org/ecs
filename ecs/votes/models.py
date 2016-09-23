@@ -154,7 +154,7 @@ class Vote(models.Model):
         }
 
     def render_pdf(self):
-        return render_pdf_context('meetings/pdf/vote.html',
+        return render_pdf_context('votes/pdf/vote.html',
             self.get_render_context())
 
 

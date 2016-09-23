@@ -32,7 +32,7 @@ def vote_sign(request, vote_pk=None):
 
 def get_vote_sign_data(request, task):
     vote = task.data
-    html_template = 'meetings/pdf/vote_preview.html'
+    html_template = 'votes/pdf/vote_preview.html'
     context = vote.get_render_context()
     return {
         'success_func': sign_success,
