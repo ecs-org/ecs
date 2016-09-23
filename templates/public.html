@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load compress staticfiles %}
+{% load compress i18n staticfiles %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -18,6 +18,12 @@
                 </a>
             {% endblock %}
         </div>
+    </div>
+
+    <div class="m-y-1 text-xs-center">
+        <a href="{% url 'ecs.core.views.sitenotice' %}" target="_blank">
+            {% trans 'Site Notice' %}
+        </a>
     </div>
 </div>
 {% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'public.html' %}
+{% load core %}
+
+{% block content %}
+    {{ block.super }}
+
+    <p>
+        {% db_setting 'address' as address %}
+        {% db_setting 'contact_email' as email %}
+        {% db_setting 'contact_url' as url %}
+
+        {{ address|linebreaksbr }}<br>
+        <span class="fa fa-envelope"></span>
+        <a href="mailto:{{ email }}">{{ email }}</a><br>
+        <span class="fa fa-globe"></span>
+        <a href="{{ url }}">{{ url }}</a>
+    </p>
+{% endblock %}

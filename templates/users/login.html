@@ -51,7 +51,6 @@
           {% endif %}
               <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
               | <a href="{{ help_page_url }}" target="_blank" class="help_trigger">{% trans 'Online Help Pages' %}</a>
-              | <a href="{% help_url 'sitenotice' %}">{% trans 'Site Notice' %}</a>
         </div>
         <form method="post" action="{{ request.path }}">
             {% csrf_token %}
