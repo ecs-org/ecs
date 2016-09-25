@@ -42,13 +42,10 @@ fresh_database() {
     # to be called with: activated environment, CWD=rootdir of sourcecode
     local dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump
     echo "destroying and recreating empty/fresh database"
-    pghero_stop
     sudo -u postgres dropdb ecs
     recreate_database
-    pghero_config
     prepare_database
     dump_database $dbdump
-    pghero_start
 }
 
 prepare_database() {
@@ -86,8 +83,7 @@ prepare_database() {
         recreate_database
         echo "restore from dump (this might take up to 10 minutes): $dumpfilename"
         pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
-        pghero_config
-
+        
         ecs_help_dump="`dirname $(readlink -e $dumpfilename)`/ecs-help"
         if test "$HOME/ecs-help" != "$ecs_help_dump"; then
             if test -d "$ecs_help_dump/images"; then
@@ -173,44 +169,4 @@ legacy_migrate() {
     echo "Info: NO exceptions are expected from this point on"
     echo "Run remaining migrations, delete stale content types"
     yes yes | ./manage.py migrate
-}
-
-pghero_install(){
-    if test -z "`which pghero`"; then
-        echo "pghero (currently from deb.packager.io using jessie because of systemd)"
-        wget -qO - https://deb.packager.io/key | apt-key add -
-        echo "deb http://deb.packager.io/gh/pghero/pghero jessie master" | tee /etc/apt/sources.list.d/pghero.list
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get -y update
-        apt-get -y install pghero
-        pghero scale web=1
-    fi
-}
-
-pghero_config(){
-    if test ! -z "`which pghero`"; then
-        local pgheropass="$(openssl rand 8 -hex)"
-        echo "$pgheropass" > $HOME/pgheropass
-        sudo -u postgres createuser pghero
-        sudo -u postgres psql ecs -c "alter user pghero superuser;"
-        sudo -u postgres psql ecs -c "alter user pghero password '$pgheropass';"
-        sudo -u postgres psql ecs -c 'CREATE TABLE "pghero_query_stats" ("id" serial primary key, "database" text, "query" text, "total_time" float, "calls" bigint, "captured_at" timestamp);'
-        sudo -u postgres psql ecs -c 'CREATE INDEX "index_pghero_query_stats_on_database_and_captured_at" ON "pghero_query_stats" ("database", "captured_at");'
-    fi
-}
-
-pghero_stop(){
-    if test ! -z "`which pghero`"; then
-        echo "stop pghero if running"
-        sudo service pghero stop
-    fi
-}
-
-pghero_start(){
-    if test ! -z "`which pghero`"; then
-        echo "start pghero"
-        local pgheropass=$(cat $HOME/pgheropass)
-        sudo pghero config:set DATABASE_URL=postgres://pghero:$pgheropass@localhost:5432/ecs
-        sudo service pghero start
-    fi
 }

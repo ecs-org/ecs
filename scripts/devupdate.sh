@@ -78,7 +78,6 @@ dev_update(){
     echo "stop ecs-devserver if running"
     sudo systemctl stop devserver
     sudo systemctl disable devserver
-    pghero_stop
 
     local br_change sys_change ds_change pip_change mig_change mig_add
     if $init_all; then
@@ -126,9 +125,6 @@ dev_update(){
             sudo systemctl stop $i
         done
     fi
-    if test ${ECS_DEV_PGHERO_INSTALL:-false} = "true"; then
-        pghero_install
-    fi
 
     echo "recreate directories"
     ./scripts/create-dirs.sh
@@ -152,7 +148,6 @@ dev_update(){
         opt=$(if test $mig_change = "true" -o $restore_dump = "true"; then echo "--restore-dump"; fi)
         prepare_database $opt
     fi
-    pghero_start
 
     ./manage.py compilemessages
     if test $prepare_was_run != "true"; then
