@@ -15,12 +15,11 @@ lynx
 curl
 wget
 rsync
+bzip2
 # used for remote development
 unison
 # used for version branding
 git
-# used for wkhtmltopdf extraction
-bzip2
 # used for wkthmltopdf execution
 libxrender1
 
