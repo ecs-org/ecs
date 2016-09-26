@@ -11,7 +11,6 @@ from django.utils import timezone
 from reversion.models import Version
 from reversion import revisions as reversion
 
-from ecs.core.models.core import AdvancedSettings
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
 from ecs.notifications.constants import SAFETY_TYPE_CHOICES
@@ -208,7 +207,6 @@ class NotificationAnswer(models.Model):
             'notification': self.notification,
             'documents': self.notification.documents.order_by('doctype__identifier', 'date', 'name'),
             'answer': self,
-            'advanced_settings': AdvancedSettings.objects.get(),
         }
 
     def render_pdf(self):

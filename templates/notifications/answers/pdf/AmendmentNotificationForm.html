@@ -1,5 +1,5 @@
 {% extends 'notifications/answers/pdf/base.html' %}
-{% load notifications %}
+{% load core notifications %}
 {% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>Protokolländerung (Amendment){% endblock %}
 
 {% block study_info %}
@@ -14,7 +14,8 @@
 
 {% block content %}
     {{ block.super }}
-    {% if notification.amendmentnotification.is_substantial and advanced_settings.display_biased_in_amendment_answer_pdf %}
+    {% get_db_setting 'display_biased_in_amendment_answer_pdf' as display_biased %}
+    {% if notification.amendmentnotification.is_substantial and display_biased %}
         <p>
             Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der
             Adresse

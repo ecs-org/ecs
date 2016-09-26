@@ -1,5 +1,5 @@
 {% extends 'pdf/skeleton.html' %}
-{% load userutils votes %}
+{% load core userutils %}
 
 {% block title %}{{ vote }}{% endblock %}
 
@@ -101,7 +101,7 @@
     Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for bef in submission.biased_board_members.all %}{{ bef }}{% if not forloop.last %}, {% endif %}{% empty %}<strong>keine</strong>{% endfor %}
 </p>
 
-{% load_vote_extra %}
+{% get_db_setting 'vote_pdf_extra' %}
 {% if vote_pdf_extra %}
     <p>{{ vote_pdf_extra }}</p>
 {% endif %}

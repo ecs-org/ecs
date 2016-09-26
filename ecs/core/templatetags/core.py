@@ -4,9 +4,11 @@ from django.template import Library, Node, TemplateSyntaxError
 from django.utils.translation import ugettext as _
 from django.core.cache import cache
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission
+from ecs.core.models import Submission, AdvancedSettings
 from ecs.docstash.models import DocStash
 
 
@@ -178,3 +180,44 @@ def get_breadcrumbs(parser, token):
     except ValueError:
         raise TemplateSyntaxError('{% get_breadcrumbs as VAR %} expected')
     return BreadcrumbsNode(varname)
+
+
+class DbSettingNode(Node):
+    advanced_settings = None
+
+    def __init__(self, name, varname):
+        super().__init__()
+        self.name = name
+        self.varname = varname
+
+    def render(self, context):
+        name = self.name.resolve(context)
+
+        if not self.advanced_settings:
+            self.__class__.advanced_settings = AdvancedSettings.objects.get()
+
+        # Check if field exists; raises exception otherwise.
+        AdvancedSettings._meta.get_field(name)
+
+        context[self.varname or name] = getattr(self.advanced_settings, name)
+        return ''
+
+    @staticmethod
+    @receiver(post_save, sender=AdvancedSettings)
+    def _clear_cache(sender, **kwargs):
+        DbSettingNode.advanced_settings = None
+
+
+@register.tag
+def get_db_setting(parser, token):
+    bits = token.split_contents()
+    if len(bits) == 2:
+        kw_, name = bits
+        varname = None
+    elif len(bits) == 4 and bits[2] == 'as':
+        kw_, name, as_, varname = bits
+    else:
+        raise TemplateSyntaxError('{% get_db_setting name [as VAR] %}')
+
+    name = parser.compile_filter(name)
+    return DbSettingNode(name, varname)
