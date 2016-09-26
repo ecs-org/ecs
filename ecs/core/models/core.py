@@ -40,11 +40,13 @@ class AdvancedSettings(models.Model):
     display_biased_in_amendment_answer_pdf = models.BooleanField(default=True)
     require_internal_vote_review = models.BooleanField(default=False)
 
+    # custom logos
     logo = models.BinaryField(null=True)
     logo_mimetype = models.CharField(max_length=100, null=True)
     print_logo = models.BinaryField(null=True)
     print_logo_mimetype = models.CharField(max_length=100, null=True)
 
+    # additional vote text
     vote1_extra = models.TextField(null=True, blank=True)
     vote2_extra = models.TextField(null=True, blank=True)
     vote3a_extra = models.TextField(null=True, blank=True)
@@ -52,3 +54,11 @@ class AdvancedSettings(models.Model):
     vote4_extra = models.TextField(null=True, blank=True)
     vote5_extra = models.TextField(null=True, blank=True)
     vote_pdf_extra = models.TextField(null=True, blank=True)
+
+    # EC information
+    address = models.TextField(null=True)
+    meeting_address = models.TextField(null=True)
+    contact_email = models.EmailField(null=True)
+    contact_url = models.URLField(null=True)
+    member_list_url = models.URLField(null=True)
+    signature_block = models.TextField(null=True)

@@ -20,7 +20,7 @@ from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
 from ecs.users.utils import user_flag_required, user_group_required, sudo
-from ecs.core.models import Submission, SubmissionForm, MedicalCategory
+from ecs.core.models import Submission, SubmissionForm, MedicalCategory, AdvancedSettings
 from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC
 from ecs.checklists.models import Checklist, ChecklistBlueprint
 from ecs.votes.models import Vote
@@ -735,6 +735,7 @@ def send_agenda_to_board(request, meeting_pk=None):
         (timetable_filename, timetable_pdf, 'application/pdf'),
     )
     subject = _('EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
+    reply_to = AdvancedSettings.objects.get().contact_email
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
     for user in users:
@@ -745,22 +746,20 @@ def send_agenda_to_board(request, meeting_pk=None):
         time = '{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = str(render_html(request, \
                    'meetings/messages/boardmember_invitation.html', \
-                   {'meeting': meeting, 'time': time, 'recipient': user, \
-                    'reply_to': settings.DEFAULT_REPLY_TO}))
+                   {'meeting': meeting, 'time': time, 'recipient': user}))
         deliver(user.email, subject=subject, message=None,
             message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
-            rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO},
+            rfc2822_headers={"Reply-To": reply_to},
             attachments=attachments)
 
     for user in User.objects.filter(groups__name__in=settings.ECS_MEETING_AGENDA_RECEIVER_GROUPS):
         start, end = meeting.start, meeting.end
         htmlmail = str(render_html(request, \
                     'meetings/messages/resident_boardmember_invitation.html', \
-                    {'meeting': meeting, 'recipient': user, \
-                    'reply_to': settings.DEFAULT_REPLY_TO}))
+                    {'meeting': meeting, 'recipient': user}))
         deliver(user.email, subject=subject, message=None,
             message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
-            rfc2822_headers={"Reply-To": settings.DEFAULT_REPLY_TO},
+            rfc2822_headers={"Reply-To": reply_to},
             attachments=attachments)
 
     tops_with_primary_investigator = meeting.timetable_entries.filter(submission__invite_primary_investigator_to_meeting=True, submission__current_submission_form__primary_investigator__user__isnull=False, timetable_index__isnull=False)

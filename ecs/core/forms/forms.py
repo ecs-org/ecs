@@ -559,6 +559,8 @@ class AdvancedSettingsForm(forms.ModelForm):
             'require_internal_vote_review', 'logo_file',
             'vote1_extra', 'vote2_extra', 'vote3a_extra', 'vote3b_extra',
             'vote4_extra', 'vote5_extra', 'vote_pdf_extra',
+            'address', 'meeting_address', 'contact_email', 'contact_url',
+            'member_list_url', 'signature_block',
         )
         labels = {
             'display_notifications_in_protocol':

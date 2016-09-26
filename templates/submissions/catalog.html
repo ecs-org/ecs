@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load i18n staticfiles %}
+{% load core i18n staticfiles %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -80,10 +80,10 @@
     {% endfor %}
 </div>
 
-  <div class="m-l-2 m-b-1">
-      <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
+<div class="m-l-2 m-b-1">
+    <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
         <img alt="CC BY-SA 3.0 AT" src={% static 'images/by-sa-3.0-at-80x15.png' %} />
-        <small>{% trans "licensed data, Copyright Ethicscommission" %}</small> 
-      </a>
-  </div>
+        &copy; {% ec_name %}
+    </a>
+</div>
 {% endblock %}

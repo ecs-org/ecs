@@ -1,9 +1,8 @@
+{% load core %}
 Im Anhang finden Sie das elektronisch signierte Votum.
 
 Mit freundlichen Grüßen,
 
-Ethik-Kommission der Medizinischen Universität Wien
-Borschkegasse 8b/6, A-1090 Wien
-Tel.: (+43) 1-40 400-21470, 22440
-Fax: (+43) 1-40 400-16900
-http://ethikkommission.meduniwien.ac.at/
+{% ec_name %}
+{% db_setting 'address' %}
+{% db_setting 'contact_url' %}

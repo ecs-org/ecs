@@ -1,5 +1,5 @@
 {% extends "communication/list.html" %}
-{% load i18n %}
+{% load core i18n %}
 
 {% block content %}
 <div class="messages_overview">
@@ -55,9 +55,10 @@
 
 {% block hint %}
     <span class="fa fa-info text-info"></span>
-    {% blocktrans %}
+    {% db_setting 'contact_email' as email %}
+    {% blocktrans with contact_email=email %}
         To write a message, open the read-only view of a study and change to the communication tab.
-        For general Questions write an email to the <a href="http://ethikkommission.meduniwien.ac.at/ethik-kommission/kontakt/">Ethics-Commission</a>.
+        For general Questions write an email to <a href="{{ contact_email }}">{{ contact_email }}</a>.
     {% endblocktrans %}
 {% endblock %}
 

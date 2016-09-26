@@ -2,16 +2,14 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and ABSOLUTE_URL_PREFIX as ABSOLUTE_URL_PREFIX and url as task_url and submission.project_title_display as project_title and meeting.start|date:'d.m.Y' as meeting_day and price.price|euro as price %}
-        The ethics commission of the Medical University of Vienna requests that you review study {{ ec_number }} ("{{ project_title }}").
+    Die {% ec_name %} bittet Sie um ein Gutachten zur Studie {{ submission|ec_number }} ("{{ submission.project_title_display }}").
 
-        The study is going to be discussed at the meeting at {{ meeting_day }}.
+    Das Projekt wird in der Sitzung vom {{ meeting.start|date:'d.m.Y' }} behandelt.
 
-        You will get {{ price }} reward for your efforts.
+    Für Ihre Bemühungen erhalten Sie ein Anerkennungshonorar von {{ price.price|euro }}.
 
-        Please let us now if you will make the review. In case of your refusal we ask you to suggest other capable reviewers.
+    Bitte teilen Sie uns so bald wie möglich mit, ob Sie die Begutachtung durchführen werden. Im Falle Ihrer Absage bitten wir Sie um Vorschläge anderer geeigneter Gutachter.
 
-        Click the following link to make the review:
-        {{ ABSOLUTE_URL_PREFIX }}{{ task_url }}
-    {% endblocktrans %}
+    Um Ihr Gutachten zu erstellen, klicken Sie auf den folgenden Link:
+    {{ ABSOLUTE_URL_PREFIX }}{{ url }}
 {% endblock %}

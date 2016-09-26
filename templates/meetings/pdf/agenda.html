@@ -9,7 +9,8 @@
     Tagesordnung<br />
     f&uuml;r die Sitzung der Ethik-Kommission am<br />
     {{ meeting.start|date:'d.m.Y, H:i' }} Uhr, sine tempore<br />
-    im B&uuml;ro der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
+    {% db_setting 'meeting_address' as address %}
+    {{ address|linebreaksbr }}<br />
     </div>
     
     {% for entry in meeting %}

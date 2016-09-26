@@ -14,11 +14,14 @@ Kommen Sie bitte mindestens eine halbe Stunde früher und rechnen Sie damit, das
 <br />
 Das voraussichtliche Ende ist {{ meeting.end|datetimeround:30|date:'d.m.Y, H:i' }} Uhr.<br />
 <br />
-Ort der Sitzung: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6. Stock, 1090 Wien<br />
+Ort der Sitzung:<br />
+{% db_setting 'meeting_address' as address %}
+{{ address|linebreaksbr }}<br />
 <br />
 Bitte bestätigen Sie unbedingt Ihre Teilnahme (auch wenn Sie sich zu einem früheren Zeitpunkt bereits gemeldet haben).<br />
 <br />
-Sie können auf diese Nachricht mit der Antwortfunktion ihres Emailprogrammes antworten, diese gehen an <a href="{{reply_to}}">"{{reply_to}}"</a>.<br />
+{% db_setting 'contact_email' as email %}
+Sie können auf diese Nachricht mit der Antwortfunktion ihres Emailprogrammes antworten, diese gehen an <a href="{{ email }}">"{{ email }}"</a>.<br />
 <br />
 <br />
 Mit freundlichen Grüßen,<br />

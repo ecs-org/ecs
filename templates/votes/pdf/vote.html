@@ -97,14 +97,13 @@
 {% endif %}
 
 <p>
-    Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der Adresse <a href="http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/">http://ethikkommission.meduniwien.ac.at/ethik-kommission/mitglieder/</a> abrufbar.
+    {% db_setting 'member_list_url' as url %}
+    Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der Adresse <a href="{{ url }}">{{ url }}</a> abrufbar.
     Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for bef in submission.biased_board_members.all %}{{ bef }}{% if not forloop.last %}, {% endif %}{% empty %}<strong>keine</strong>{% endfor %}
 </p>
 
-{% get_db_setting 'vote_pdf_extra' %}
-{% if vote_pdf_extra %}
-    <p>{{ vote_pdf_extra }}</p>
-{% endif %}
+{% db_setting 'vote_pdf_extra' as extra %}
+{% if extra %}<p>{{ extra }}</p>{% endif %}
 
 <h2 class="metadata">Download</h2>
 <p>Dieses Dokument ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>

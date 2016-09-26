@@ -4,11 +4,9 @@
 
 {% strip %}
 {% dedent %}
-        {% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 {% enddedent %}
 {% endstrip %}
 
 
-{% blocktrans %}Sincerly yours,
-
-The Team of the Ethics Commission{% endblocktrans %}
+{% db_setting 'signature_block' %}

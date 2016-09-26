@@ -2,8 +2,6 @@
 {% load i18n core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        The study "{{ project_title }}" ({{ ec_number }}) has been submitted to the Ethics Commission of the Medical University of Vienna.
-        You receive this message, because you are listed as an involved party of the study.
-    {% endblocktrans %}
+    Die Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wurde bei der {% ec_name %} eingereicht.
+    Sie erhalten diese Mitteilung, weil Sie in der Studie als beteiligte Person aufscheinen.
 {% endblock %}

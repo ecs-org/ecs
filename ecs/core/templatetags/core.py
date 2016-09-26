@@ -1,5 +1,7 @@
 import re
+import uuid
 from textwrap import dedent
+
 from django.template import Library, Node, TemplateSyntaxError
 from django.utils.translation import ugettext as _
 from django.core.cache import cache
@@ -8,7 +10,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from ecs.core import paper_forms
-from ecs.core.models import Submission, AdvancedSettings
+from ecs.core.models import Submission, AdvancedSettings, EthicsCommission
 from ecs.docstash.models import DocStash
 
 
@@ -198,9 +200,13 @@ class DbSettingNode(Node):
 
         # Check if field exists; raises exception otherwise.
         AdvancedSettings._meta.get_field(name)
+        val = getattr(self.advanced_settings, name)
 
-        context[self.varname or name] = getattr(self.advanced_settings, name)
-        return ''
+        if self.varname:
+            context[self.varname] = val
+            return ''
+        else:
+            return val
 
     @staticmethod
     @receiver(post_save, sender=AdvancedSettings)
@@ -209,7 +215,7 @@ class DbSettingNode(Node):
 
 
 @register.tag
-def get_db_setting(parser, token):
+def db_setting(parser, token):
     bits = token.split_contents()
     if len(bits) == 2:
         kw_, name = bits
@@ -217,7 +223,13 @@ def get_db_setting(parser, token):
     elif len(bits) == 4 and bits[2] == 'as':
         kw_, name, as_, varname = bits
     else:
-        raise TemplateSyntaxError('{% get_db_setting name [as VAR] %}')
+        raise TemplateSyntaxError('{% db_setting name [as VAR] %}')
 
     name = parser.compile_filter(name)
     return DbSettingNode(name, varname)
+
+
+@register.simple_tag
+def ec_name():
+    system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
+    return EthicsCommission.objects.get(uuid=system_ec_uuid).name

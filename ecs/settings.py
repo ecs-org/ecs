@@ -384,9 +384,6 @@ for override in local_overrides:
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain'])
 
-# TODO: get this from bootstrap_settings.py
-DEFAULT_REPLY_TO   = 'ethik-kom@meduniwien.ac.at'
-
 # https
 if 'SECURE_PROXY_SSL' in locals() and SECURE_PROXY_SSL:
   CSRF_COOKIE_SECURE= True

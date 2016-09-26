@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load core i18n %}
 
 <html>
     <head></head>
@@ -7,7 +7,7 @@
 {% if invitation_text %}
     <pre>{{ invitation_text }}</pre>
 {% else %}
-    Sie wurden als beteiligte Person in einem Antrag an die Ethikkommission der MedUni Wien angegeben.<br />
+    Sie wurden als beteiligte Person in einem Antrag an die {% ec_name %} angegeben.<br />
     <br />
     Aus diesem Grund wurde für Sie ein Zugang zum elektronischen Einreich- und Verwaltungssystem (ECS) angelegt.<br />
     <br />

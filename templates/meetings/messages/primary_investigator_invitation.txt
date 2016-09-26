@@ -2,10 +2,10 @@
 {% load i18n core meetingutils %}
 
 {% block content %}
-    {% blocktrans with top.meeting.start|date:'d.m.Y' as date and top.start|datetimeround:-10|date:'H:i' as start and submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        Your study "{{ project_title }}" ({{ ec_number }}), will be discussed at the meeting on {{ date }} at {{ start }} o'clock.
-        Place: Sitzungssaal der Ethik-Kommission, Borschkegasse 8b/6.Stock, 1090 Wien
+    Ihre Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wird in der Sitzung vom {{ top.meeting.start|date:'d.m.Y' }} um {{ top.start|datetimeround:-10|date:'H:i' }} Uhr behandelt.
 
-        The presence of the primary investigator (or its legal representative) necessary; the Sponsor is entitled to attend the meeting too.
-    {% endblocktrans %}
+    Ort der Sitzung:
+    {% db_setting 'meeting_address' %}
+
+    Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des Projektes teilzunehmen.
 {% endblock %}

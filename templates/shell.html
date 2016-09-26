@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         {% block htmlmeta %}{% endblock %}
-        <title>{% block htmltitle %}Ethik-Kommission der Medizinischen Universität Wien{% endblock %}</title>
+        <title>{% block htmltitle %}{% ec_name %}{% endblock %}</title>
         {% block htmlcss %}
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/jquery-ui/jquery-ui.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2/select2.min.css' %} />
