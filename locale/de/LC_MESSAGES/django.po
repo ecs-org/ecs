@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-27 11:41+0200\n"
+"POT-Creation-Date: 2016-10-03 15:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -425,11 +425,62 @@ msgstr "Benutzer"
 msgid "Default Contact"
 msgstr "Standard-Empfänger"
 
+msgid "Change Logo File"
+msgstr "Logo Ändern"
+
+msgid "Change Print Logo File"
+msgstr "Druck-Logo Ändern"
+
+msgid "The file must be a gif, jpeg, png or svg file."
+msgstr ""
+
 msgid "Display Notifications in Protocol"
 msgstr "Meldungen im Protokoll anzeigen"
 
 msgid "Display biased board member in amendment answer PDF"
-msgstr ""
+msgstr "Befangene in der Amendment-Antwort anzeigen"
+
+msgid "Require internal vote review"
+msgstr "Interne Votum-Prüfung erforderlich"
+
+msgid "address"
+msgstr "Adresse"
+
+msgid "Meeting Address"
+msgstr "Sitzungsadresse"
+
+msgid "Contact Email"
+msgstr "Kontakt E-Mail"
+
+msgid "Contact URL"
+msgstr "Kontakt URL"
+
+msgid "Member List URL"
+msgstr "Liste der Mitglieder URL"
+
+msgid "Signature Block"
+msgstr "Nachrichten-Signatur"
+
+msgid "Vote Result 1 Extra Text"
+msgstr "Beschluss 1 Zusatztext"
+
+msgid "Vote Result 2 Extra Text"
+msgstr "Beschluss 2 Zusatztext"
+
+msgid "Vote Result 3a Extra Text"
+msgstr "Beschluss 3a Zusatztext"
+
+msgid "Vote Result 3b Extra Text"
+msgstr "Beschluss 3b Zusatztext"
+
+msgid "Vote Result 4 Extra Text"
+msgstr "Beschluss 4 Zusatztext"
+
+msgid "Vote Result 5 Extra Text"
+msgstr "Beschluss 5 Zusatztext"
+
+msgid "Vote PDF Extra Text"
+msgstr "Votums-PDF Zusatztext"
 
 msgid "Key data"
 msgstr "Eckdaten"
@@ -716,9 +767,6 @@ msgstr "Vorname der Kontaktperson"
 
 msgid "last name of contact person"
 msgstr "Nachname der Kontaktperson"
-
-msgid "address"
-msgstr "Adresse"
 
 msgid "postal code"
 msgstr "Postleitzahl"
@@ -1883,14 +1931,6 @@ msgstr "E-mail"
 msgid "Password"
 msgstr "Passwort"
 
-msgid ""
-"Please enter a correct email and password. Note that the password is case-"
-"sensitive."
-msgstr ""
-
-msgid "This account is inactive."
-msgstr "Dieser Zugang ist deaktiviert."
-
 msgid "gender"
 msgstr "Geschlecht"
 
@@ -2156,6 +2196,12 @@ msgstr "Votum {ec_number}"
 msgid "Advanced Settings"
 msgstr "Erweiterte Einstellungen"
 
+msgid "Customization"
+msgstr "Anpassungen"
+
+msgid "Votes"
+msgstr "Voten"
+
 msgid "Vote Receivers"
 msgstr "Votenempfänger"
 
@@ -2308,11 +2354,11 @@ msgstr "Anhang"
 msgid "save"
 msgstr "Speichern"
 
-msgid "on the"
-msgstr "am"
-
 msgid "Insert Boilerplate"
 msgstr "Textbaustein einfügen"
+
+msgid "on the"
+msgstr "am"
 
 msgid "View"
 msgstr "Ansicht"
@@ -2322,6 +2368,9 @@ msgstr "Kommentar hinzufügen"
 
 msgid "Do you want to delete the comment?"
 msgstr "Wollen Sie den Kommentar löschen?"
+
+msgid "Don't Delete"
+msgstr "Nicht Löschen"
 
 msgid "Communication"
 msgstr "Nachrichten"
@@ -2442,6 +2491,9 @@ msgstr ""
 
 msgid "Task Management Widget verstecken/wiederherstellen"
 msgstr ""
+
+msgid "Site Notice"
+msgstr "Impressum"
 
 msgid "Click here to get help."
 msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
@@ -2654,6 +2706,20 @@ msgstr "Sehr geehrte %(recipient)s!"
 msgid "Dear(m) %(recipient)s"
 msgstr "Sehr geehrter %(recipient)s!"
 
+msgid "Investigator Organisation"
+msgstr "Prüfzentrum"
+
+msgid "Investigator contact"
+msgstr "Prüfarzt"
+
+#, python-format
+msgid "<span class=\"bold\">rejected</span> on the %(publish_date)s"
+msgstr "<span class=\"bold\">abgelehnt</span> am %(publish_date)s"
+
+#, python-format
+msgid "<span class=\"bold\">acknowledged</span> on the %(publish_date)s"
+msgstr "<span class=\"bold\">bestätigt</span> am %(publish_date)s"
+
 msgid "Reschedule Submission"
 msgstr "Sitzung verlegen"
 
@@ -2680,12 +2746,6 @@ msgstr "Sponsor/CRO"
 
 msgid "Submitter Organisation"
 msgstr "Einreichendes Institut"
-
-msgid "Investigator Organisation"
-msgstr "Prüfzentrum"
-
-msgid "Investigator contact"
-msgstr "Prüfarzt"
 
 #, python-format
 msgid "<span class=\"text-danger\">rejected</span> on the %(publish_date)s"
@@ -2828,14 +2888,6 @@ msgid "after"
 msgstr "Anschließend Anwesende"
 
 #, python-format
-msgid "<span class=\"bold\">rejected</span> on the %(publish_date)s"
-msgstr "<span class=\"bold\">abgelehnt</span> am %(publish_date)s"
-
-#, python-format
-msgid "<span class=\"bold\">acknowledged</span> on the %(publish_date)s"
-msgstr "<span class=\"bold\">bestätigt</span> am %(publish_date)s"
-
-#, python-format
 msgid "Dear(f) %(receiver)s"
 msgstr "Sehr geehrte %(receiver)s!"
 
@@ -2871,9 +2923,6 @@ msgstr "Es existieren derzeit keine Studienmeldungen."
 #| msgid "Do you want to delete the submission draft?"
 msgid "Do you want to delete the notification draft?"
 msgstr "Wollen Sie den Einreichungsentwurf löschen?"
-
-msgid "Don't Delete"
-msgstr "Nicht Löschen"
 
 msgid "Changes"
 msgstr "Änderungen"
@@ -3135,6 +3184,9 @@ msgstr ""
 "        wurde eingereicht.\n"
 "    "
 
+msgid "See Section 9.Documents"
+msgstr "Siehe Punkt 9.Unterlagen"
+
 #, python-format
 msgid ""
 "\n"
@@ -3179,9 +3231,6 @@ msgstr "Generell"
 
 msgid "Evaluations"
 msgstr "Beurteilungen"
-
-msgid "Votes"
-msgstr "Voten"
 
 msgid "Workflow"
 msgstr "Arbeitsablauf"
@@ -3306,9 +3355,6 @@ msgstr ""
 "Ihnen nun zugänglich.\n"
 "    "
 
-msgid "See Section 9.Documents"
-msgstr "Siehe Punkt 9.Unterlagen"
-
 msgid "No tags yet."
 msgstr "Es gibt noch keine Tags."
 
@@ -3335,26 +3381,14 @@ msgstr "Aufgabe"
 msgid "Delegate"
 msgstr "Abgeben"
 
-msgid "Sort by"
-msgstr "Sortieren nach"
-
-msgid "Open"
-msgstr "Offen"
-
-msgid "Proxy"
-msgstr "Vertretung"
-
-msgid "thesis"
-msgstr "Diplomarbeit"
-
-msgid "local_ec"
-msgstr "Lokale EK"
-
 msgid "My Tasks"
 msgstr "Meine Aufgaben"
 
 msgid "Decline"
 msgstr "Ablehnen"
+
+msgid "Proxy Tasks"
+msgstr "Vertretungsaufgaben"
 
 msgid "Preview"
 msgstr "Vorschau"
@@ -3362,8 +3396,14 @@ msgstr "Vorschau"
 msgid "Accept all"
 msgstr "Alle annehmen"
 
-msgid "Proxy Tasks"
-msgstr "Vertretungsaufgaben"
+msgid "Sort by"
+msgstr "Sortieren nach"
+
+msgid "thesis"
+msgstr "Diplomarbeit"
+
+msgid "local_ec"
+msgstr "Lokale EK"
 
 msgid "There are no tasks for you."
 msgstr "Sie haben derzeit keine Aufgaben."
@@ -3449,12 +3489,6 @@ msgstr "Öffentliches Register"
 msgid "Online Help Pages"
 msgstr "Hilfe/Anleitungen"
 
-msgid "Site Notice"
-msgstr "Impressum"
-
-msgid "Your username and password did not match. Please try again."
-msgstr ""
-
 #, python-format
 msgid ""
 "\n"
@@ -3487,3 +3521,12 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Einstellungen"
+
+#~ msgid "This account is inactive."
+#~ msgstr "Dieser Zugang ist deaktiviert."
+
+#~ msgid "Open"
+#~ msgstr "Offen"
+
+#~ msgid "Proxy"
+#~ msgstr "Vertretung"

@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load core i18n %}
+{% load core i18n widget_tweaks %}
 
 {% block menuSelection %}administration{% endblock %}
 
@@ -10,23 +10,82 @@
 {% endblock %}
 
 {% block content %}
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#customization_tab" role="tab">
+                {% trans 'Customization' %}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#vote_text_tab" role="tab">
+                {% trans 'Votes' %}
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#vote_receivers_tab" role="tab">
+                {% trans 'Vote Receivers' %}
+            </a>
+        </li>
+    </ul>
+
+
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <h2>{% trans 'Vote Receivers' %}</h2>
-        {{ ec_formset.management_form }}
-        <table>
-        {% for form in ec_formset.forms %}
-            <tr>
-                <td>{{ form.instance }}</td>
-                <td>
-                    {{ form.id }}{{ form.vote_receiver }}
-                    {{ form.vote_receiver.errors }}
-                </td>
-            </tr>
-        {% endfor %}
-        </table>
-        <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'Save' %}"/>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="customization_tab" role="tabpanel">
+                {% include 'bootstrap/form_field.html' with field=form.default_contact %}
+                {% include 'bootstrap/form_field.html' with field=form.logo_file %}
+                {% include 'bootstrap/form_field.html' with field=form.print_logo_file %}
+                {% include 'bootstrap/form_check.html' with field=form.display_notifications_in_protocol %}
+                {% include 'bootstrap/form_check.html' with field=form.display_biased_in_amendment_answer_pdf %}
+                {% include 'bootstrap/form_check.html' with field=form.require_internal_vote_review %}
+                {% include 'bootstrap/form_field.html' with field=form.address %}
+                {% include 'bootstrap/form_field.html' with field=form.meeting_address %}
+                {% include 'bootstrap/form_field.html' with field=form.contact_email %}
+                {% include 'bootstrap/form_field.html' with field=form.contact_url %}
+                {% include 'bootstrap/form_field.html' with field=form.member_list_url %}
+                {% include 'bootstrap/form_field.html' with field=form.signature_block %}
+            </div>
+            <div class="tab-pane" id="vote_text_tab" role="tabpanel">
+                {% include 'bootstrap/form_field.html' with field=form.vote1_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote2_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote3a_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote3b_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote4_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote5_extra %}
+                {% include 'bootstrap/form_field.html' with field=form.vote_pdf_extra %}
+            </div>
+            <div class="tab-pane" id="vote_receivers_tab" role="tabpanel">
+                {{ ec_formset.management_form }}
+                {% for form in ec_formset.forms %}
+                    <div class="form-group {% if form.vote_receiver.errors %}has-danger{% endif %}">
+                        {{ form.id }}
+                        <label for="{{ form.vote_receiver.id_for_label }}">{{ form.instance }}</label>
+                        {% if form.vote_receiver.errors %}
+                            {% render_field form.vote_receiver class+="form-control form-control-danger" %}
+                            <div class="form-control-feedback">
+                                {% for error in form.vote_receiver.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {% render_field form.vote_receiver class+="form-control" %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger m-t-1 m-b-0" role="alert">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}"/>
     </form>
 {% endblock %}
 

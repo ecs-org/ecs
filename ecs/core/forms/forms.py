@@ -530,9 +530,10 @@ class AdvancedSettingsForm(forms.ModelForm):
 
     LOGO_MIMETYPES = ('image/gif', 'image/jpeg', 'image/png', 'image/svg+xml')
 
-    logo_file = forms.FileField(required=False, label=_('Logo File'),
+    logo_file = forms.FileField(required=False, label=_('Change Logo File'),
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}))
-    print_logo_file = forms.FileField(required=False, label=_('Print Logo File'),
+    print_logo_file = forms.FileField(required=False,
+        label=_('Change Print Logo File'),
         widget=forms.ClearableFileInput(attrs={'accept': 'image/*'}))
 
     def clean_logo_file(self):
@@ -554,19 +555,31 @@ class AdvancedSettingsForm(forms.ModelForm):
         fields = (
             'default_contact', 'display_notifications_in_protocol',
             'display_biased_in_amendment_answer_pdf',
-            'require_internal_vote_review', 'logo_file',
-            'display_biased_in_amendment_answer_pdf',
-            'require_internal_vote_review', 'logo_file',
-            'vote1_extra', 'vote2_extra', 'vote3a_extra', 'vote3b_extra',
-            'vote4_extra', 'vote5_extra', 'vote_pdf_extra',
+            'require_internal_vote_review', 'logo_file', 'print_logo_file',
             'address', 'meeting_address', 'contact_email', 'contact_url',
             'member_list_url', 'signature_block',
+            'vote1_extra', 'vote2_extra', 'vote3a_extra', 'vote3b_extra',
+            'vote4_extra', 'vote5_extra', 'vote_pdf_extra',
         )
         labels = {
             'display_notifications_in_protocol':
                 _('Display Notifications in Protocol'),
             'display_biased_in_amendment_answer_pdf':
                 _('Display biased board member in amendment answer PDF'),
+            'require_internal_vote_review': _('Require internal vote review'),
+            'address': _('address'),
+            'meeting_address': _('Meeting Address'),
+            'contact_email': _('Contact Email'),
+            'contact_url': _('Contact URL'),
+            'member_list_url': _('Member List URL'),
+            'signature_block': _('Signature Block'),
+            'vote1_extra': _('Vote Result 1 Extra Text'),
+            'vote2_extra': _('Vote Result 2 Extra Text'),
+            'vote3a_extra': _('Vote Result 3a Extra Text'),
+            'vote3b_extra': _('Vote Result 3b Extra Text'),
+            'vote4_extra': _('Vote Result 4 Extra Text'),
+            'vote5_extra': _('Vote Result 5 Extra Text'),
+            'vote_pdf_extra': _('Vote PDF Extra Text'),
         }
 
 EthicsCommissionFormSet = modelformset_factory(EthicsCommission, fields=('vote_receiver',), extra=0)
