@@ -45,7 +45,7 @@ libpq-dev
 libmemcached-dev
 zlib1g-dev
 # pyscss
-libpcre3-dev
+# deactivated because c-extension has parsing errors: libpcre3-dev
 
 # documents/pdf related
 ghostscript
