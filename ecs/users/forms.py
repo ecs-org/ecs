@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate
 from django.contrib.auth.forms import SetPasswordForm as DjangoSetPasswordForm
 from django.contrib.auth.forms import PasswordChangeForm as DjangoPasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm as DjangoAuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.users.models import UserProfile
@@ -20,6 +21,8 @@ class EmailLoginForm(forms.Form):
     username = forms.EmailField(label=_('Email'), max_length=User._meta.get_field('email').max_length)
     password = forms.CharField(label=_('Password'), widget=forms.PasswordInput)
 
+    error_messages = DjangoAuthenticationForm.error_messages
+
     def __init__(self, request=None, *args, **kwargs):
         self.request = request
         self.user_cache = None
@@ -32,9 +35,16 @@ class EmailLoginForm(forms.Form):
         if email and password:
             self.user_cache = authenticate(email=email, password=password)
             if self.user_cache is None:
-                raise forms.ValidationError(_('Please enter a correct email and password. Note that the password is case-sensitive.'))
+                raise forms.ValidationError(
+                    self.error_messages['invalid_login'],
+                    code='invalid_login',
+                    params={'username': _('User')},
+                )
             elif not self.user_cache.is_active:
-                raise forms.ValidationError(_('This account is inactive.'))
+                raise forms.ValidationError(
+                    self.error_messages['inactive'],
+                    code='inactive',
+                )
         return self.cleaned_data
 
     def get_user_id(self):
