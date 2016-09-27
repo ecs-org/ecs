@@ -5,7 +5,7 @@
     <form id="meeting_comments_form" action="{% url 'ecs.meetings.views.meeting_assistant_comments' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
         {{ form.comments|add_class:'form-control' }}
-        <input class="btn btn-sm btn-primary" type="submit" value="Speichern und Zurück" />
+        <input class="btn btn-primary" type="submit" value="Speichern und Zurück" />
     </form>
 
     <script type="text/javascript">

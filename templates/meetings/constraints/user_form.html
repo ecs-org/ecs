@@ -15,7 +15,7 @@
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% include "forms/tables/inline_formset.html" %}
-        <input class="btn btn-sm btn-primary" type="submit" value="{% trans "Save" %}" name="submit"/>
+        <input class="btn btn-primary" type="submit" value="{% trans "Save" %}" name="submit"/>
     </form>
 </div>
 {% endblock %}

@@ -144,7 +144,7 @@
                 {% include 'submissions/review_form.inc' %}
             {% endwith %}
             {% if categorization_form.reopen_task %}
-                <p><a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk %}">{% trans 'Reopen' %}</a></p>
+                <p><a class="btn btn-outline-primary" href="{% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk %}">{% trans 'Reopen' %}</a></p>
             {% endif %}
             {% if categorization_task %}
                 <p>
@@ -186,7 +186,7 @@
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
         {% if submission.presenter == user or submission.susar_presenter == user %}
-            <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
+            <a class="btn btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab collapse">
@@ -208,7 +208,7 @@
             <p>{% trans "There are no answered notifications." %}</p>
         {% endif %}
         {% if submission.presenter == user %}
-            <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
+            <a class="btn btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
         {% endif %}
     </div>
     {% if vote_review_form %}
@@ -271,7 +271,7 @@
             {% if checklist.status == 'review_ok' or user.profile.is_internal %}
                 {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
                 <p>
-                    <a class="btn btn-sm btn-outline-primary" href="{{ pdf_url }}">
+                    <a class="btn btn-outline-primary" href="{{ pdf_url }}">
                         <span class="fa fa-file-pdf-o"></span>
                         <span>
                             {% if checklist.status == 'review_ok' %}
@@ -296,7 +296,7 @@
         {% if formset.reopen_task and formset.readonly %}
             {% url 'ecs.tasks.views.reopen_task' task_pk=formset.reopen_task.pk as reopen_url %}
             <p>
-                <a class="btn btn-sm btn-outline-primary" href="{{ reopen_url }}">
+                <a class="btn btn-outline-primary" href="{{ reopen_url }}">
                     {% trans 'Reopen' %}
                 </a>
             </p>
@@ -307,7 +307,7 @@
     <div id="communication_tab" class="tab collapse">
         <div data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' submission_pk=submission.pk %}"></div>
         <div data-widget-url="{% url 'ecs.communication.views.outgoing_message_widget' submission_pk=submission.pk %}"></div>
-        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank">{% trans "Write a new message" %}</a>
+        <a class="btn btn-outline-primary" href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank">{% trans "Write a new message" %}</a>
     </div>
     {% if user.profile.is_internal %}
         <div id="communication_overview_tab" class="tab collapse">

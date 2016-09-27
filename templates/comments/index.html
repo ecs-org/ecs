@@ -37,7 +37,7 @@
 </div>
 
 {% url 'ecs.core.views.comments.edit' submission_pk=submission.pk as create_url %}
-<a class="btn btn-sm btn-primary btn-block add-comment" href="{{ create_url }}">
+<a class="btn btn-primary btn-block add-comment" href="{{ create_url }}">
     <span class="fa fa-plus"></span>
     {% trans 'Add Comment' %}
 </a>

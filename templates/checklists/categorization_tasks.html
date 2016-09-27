@@ -9,15 +9,15 @@
                 <th>{{ task_type }}</th>
                 <td>
                     {% if task.closed_at %}
-                        <span class="btn btn-sm btn-outline-primary disabled">
+                        <span class="btn btn-outline-primary disabled">
                             {% trans 'Closed' %}
                         </span>
                     {% elif task %}
-                        <span class="btn btn-sm btn-outline-primary disabled">
+                        <span class="btn btn-outline-primary disabled">
                             {% trans 'Started' %}
                         </span>
                     {% else %}
-                        <a class="btn btn-sm btn-primary open-in-widget" href="{{ request.path }}?start={{ task_type.workflow_node.uid }}">
+                        <a class="btn btn-primary open-in-widget" href="{{ request.path }}?start={{ task_type.workflow_node.uid }}">
                             {% trans "Start" %}
                         </a>
                     {% endif %}

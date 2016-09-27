@@ -23,7 +23,7 @@
                         {% if not cert.revoked_at %}
                         <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
                             {% csrf_token %}
-                            <input class="btn btn-sm btn-danger" type="submit" value="{% trans 'Revoke' %}" />
+                            <input class="btn btn-danger" type="submit" value="{% trans 'Revoke' %}" />
                         </form>
                         {% endif %}
                     </td>
@@ -33,7 +33,7 @@
     </table>
 
     {% if user|is_member_of:'EC-Signing' %}
-        <a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
+        <a class="btn btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
             {% trans 'Create new certificate' %}
         </a>
     {% endif %}

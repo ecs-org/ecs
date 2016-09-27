@@ -17,7 +17,7 @@
     <form action="{{ request.path }}" method="POST" class="open-in-widget">
         {% csrf_token %}
         {{ form.tags }}
-        <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'save' %}"/>
+        <input type="submit" class="btn btn-primary submit-in-widget" value="{% trans 'save' %}"/>
     </form>
 </div>
 

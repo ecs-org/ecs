@@ -2,7 +2,7 @@
 
 <h2>{% trans 'Submissions' %}</h2>
 
-<a class="btn btn-sm btn-outline-primary" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}">
+<a class="btn btn-outline-primary" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}">
     {% trans 'Download all documents for this meeting (zip)' %}
 </a>
 

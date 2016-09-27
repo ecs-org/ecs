@@ -8,6 +8,11 @@ body {
 }
 
 #container {
+    position: absolute;
+    top: 0;
+    right: 220px;
+    bottom: 0;
+    left: 0;
     display: -webkit-flex;
     display: flex;
     -webkit-flex-direction: column;

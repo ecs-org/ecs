@@ -15,9 +15,9 @@
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" class="btn btn-sm btn-primary" value="{% trans 'save' %}"/>
+        <input type="submit" class="btn btn-primary" value="{% trans 'save' %}"/>
         {% if form.instance.pk %}
-            <a class="btn btn-sm btn-danger" href="{% url 'ecs.tags.views.delete' pk=form.instance.pk %}">
+            <a class="btn btn-danger" href="{% url 'ecs.tags.views.delete' pk=form.instance.pk %}">
                 {% trans 'delete' %}
             </a>
         {% endif %}

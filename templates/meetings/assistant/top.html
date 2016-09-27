@@ -29,7 +29,7 @@
                 {% endif %}
             </div>
             <div class="pull-left">
-                <a id="complete" class="btn btn-primary btn-sm btn-block" href="">Fertig</a>
+                <a id="complete" class="btn btn-primary btn-block" href="">Fertig</a>
             </div>
         </div>
     {% else %}
@@ -46,8 +46,8 @@
               </div>
   
               <div class="pull-left">
-                <a id="complete" class="btn btn-primary btn-sm btn-block {% if vote and not top.is_open %}active{% endif %}" href="">Fertig</a>
-                <a id="save" class="btn btn-secondary btn-sm btn-block" href="">Nur Speichern<br><small>Nicht abgeschlossen</small></a>
+                <a id="complete" class="btn btn-primary btn-block {% if vote and not top.is_open %}active{% endif %}" href="">Fertig</a>
+                <a id="save" class="btn btn-secondary btn-block" href="">Nur Speichern<br><small>Nicht abgeschlossen</small></a>
               </div>
               
             </div>
@@ -62,22 +62,22 @@
 
 {% block meeting_assistant_navigation %}
     {% if top.next_open %}
-        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">
+        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">
             Nächstes offenes TOP ({{ top.next_open }})
         </a>
     {% endif %}
     {% if top.previous_open %}
-        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">
+        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">
             Vorheriges offenes TOP ({{ top.previous_open }})
         </a>
     {% endif %}
     {% if top.next %}
-        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">
+        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">
             Nächstes TOP ({{ top.next }})
         </a>
     {% endif %}
     {% if top.previous %}
-        <a class="btn btn-sm btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">
+        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">
             Vorheriges TOP ({{ top.previous }})
         </a>
     {% endif %}

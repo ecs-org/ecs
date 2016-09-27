@@ -45,7 +45,7 @@
 <form action="{{ request.path }}" method="POST" class="open-in-widget">
     {% csrf_token %}
     {{ form.biased_board_member }}
-    <input type="submit" class="btn btn-sm btn-primary submit-in-widget" value="{% trans 'Add' %}"/>
+    <input type="submit" class="btn btn-primary submit-in-widget" value="{% trans 'Add' %}"/>
 </form>
 
 <script type="text/javascript">
