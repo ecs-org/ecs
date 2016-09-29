@@ -85,8 +85,8 @@ ecs.confirm = function(options) {
     modal.find('.modal-content').html([
         '<div class="modal-body"><p></p></div>',
         '<div class="modal-footer">',
-        '    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal"></button>',
-        '    <button type="button" class="btn btn-sm btn-primary"></button>',
+        '    <button type="button" class="btn btn-secondary" data-dismiss="modal"></button>',
+        '    <button type="button" class="btn btn-primary"></button>',
         '</div>'
     ].join('\n'));
 
