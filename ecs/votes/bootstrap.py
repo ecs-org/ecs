@@ -3,7 +3,9 @@ from django.utils.translation import ugettext_noop as _
 from ecs import bootstrap
 from ecs.utils import Args
 from ecs.votes.models import Vote
-from ecs.votes.workflow import VoteReview, VoteSigning, is_final
+from ecs.votes.workflow import (
+    VoteReview, VoteSigning, is_final, internal_vote_review_required,
+)
 from ecs.integration.utils import setup_workflow_graph
 
 
@@ -23,7 +25,8 @@ def vote_workflow():
             'vote_signing': Args(VoteSigning, group=SIGNING_GROUP, name=_("Vote Signing")),
         }, 
         edges={
-            ('office_vote_finalization', 'internal_vote_review'): None,
+            ('office_vote_finalization', 'internal_vote_review'): Args(guard=internal_vote_review_required),
+            ('office_vote_finalization', 'executive_vote_review'): Args(guard=internal_vote_review_required, negated=True),
 
             ('internal_vote_review', 'office_vote_finalization'): Args(guard=is_final, negated=True),
             ('internal_vote_review', 'executive_vote_review'): Args(guard=is_final),

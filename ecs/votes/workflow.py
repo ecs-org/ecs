@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 
 from ecs.workflow import Activity, guard, register
 from ecs.votes.models import Vote
+from ecs.core.models import AdvancedSettings
 
 
 def vote_workflow_start_if(vote, created):
@@ -18,6 +19,12 @@ register(Vote, autostart_if=vote_workflow_start_if)
 @guard(model=Vote)
 def is_final(wf):
     return wf.data.is_final_version
+
+
+@guard(model=Vote)
+def internal_vote_review_required(wf):
+    s = AdvancedSettings.objects.get()
+    return s.require_internal_vote_review
 
 
 class VoteReview(Activity):

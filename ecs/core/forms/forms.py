@@ -533,6 +533,7 @@ class AdvancedSettingsForm(forms.ModelForm):
         fields = (
             'default_contact', 'display_notifications_in_protocol',
             'display_biased_in_amendment_answer_pdf',
+            'require_internal_vote_review',
         )
         labels = {
             'display_notifications_in_protocol':
