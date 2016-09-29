@@ -36,7 +36,7 @@ Vagrant.configure(2) do |config|
     config.vm.synced_folder ".", "/app/ecs", type: "rsync", create: true, rsync__exclude: "", rsync__auto: false
   end
   if Dir.exist?(File.join(File.dirname(__FILE__), './local'))
-    config.vm.synced_folder "./local", "/app/.local", type: "rsync", create: true, rsync__exclude: "", rsync__auto: false
+    config.vm.synced_folder "./local", "/app/.devserver-local", type: "rsync", create: true, rsync__exclude: "", rsync__auto: false
   end
 
   if Vagrant.has_plugin?("vagrant-proxyconf")
@@ -77,13 +77,15 @@ Vagrant.configure(2) do |config|
     # https://github.com/mitchellh/vagrant/issues/5673
     hostnamectl set-hostname #{$devserver_name}.local
     echo "127.0.0.1 #{$devserver_name}.local ecs.local" >> /etc/hosts
+    timedatectl set-timezone "Europe/Vienna"
     export DEBIAN_FRONTEND=noninteractive
     export LANG=en_US.UTF-8
     printf %b "LANG=en_US.UTF-8\nLANGUAGE=en_US:en\nLC_MESSAGES=POSIX\n" > /etc/default/locale
-    locale-gen en_US.UTF-8 && dpkg-reconfigure locales
+    locale-gen en_US.UTF-8 de_DE.UTF-8 && dpkg-reconfigure locales
     echo "==> Disabling the release upgrader"
     sed -i.bak 's/^Prompt=.*$/Prompt=never/' /etc/update-manager/release-upgrades
     apt-get -y update
+    # cloud-initramfs-growroot will grow root partition (p1) to max volume size (after a reboot)
     apt-get -y install software-properties-common spice-vdagent cloud-initramfs-growroot git
     apt-get -y dist-upgrade --force-yes
   SHELL
@@ -112,9 +114,9 @@ Vagrant.configure(2) do |config|
     # chown files
     chown -R app:app /app
 
-    # source .local overrides early
-    if test -f /app/.local/local-override-early.sh; then
-      . /app/.local/local-override-early.sh
+    # source .devserver-local overrides early
+    if test -f /app/.devserver-local/local-override-early.sh; then
+      . /app/.devserver-local/local-override-early.sh
     fi
 
     # clone source if not rsynced by vagrant
@@ -125,8 +127,8 @@ Vagrant.configure(2) do |config|
     fi
 
     # source .local overrides late
-    if test -f /app/.local/local-override-late.sh; then
-      . /app/.local/local-override-late.sh
+    if test -f /app/.devserver-local/local-override-late.sh; then
+      . /app/.devserver-local/local-override-late.sh
     fi
 
     # automount ecs-pgdump-iso if exists

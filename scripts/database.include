@@ -121,17 +121,6 @@ prepare_database() {
     echo "./manage.py bootstrap"
     ./manage.py bootstrap
 
-    if test "$firstrun" = "true"; then
-        if test "$ECS_FIRSTRUN_EXAMPLE_DATA" = "true"; then
-            echo "FIXME: add manage.py example_data"
-            exit 1
-        fi
-        if test "$ECS_FIRSTRUN_USER_EMAIL" != ""; then
-            echo "FIXME: add manage.py create-office with cert by email function"
-            exit 1
-        fi
-    fi
-
     if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
         ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
     fi

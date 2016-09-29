@@ -5,7 +5,7 @@ build:
     - DATABASE_URL=postgres://ecs:ecs@localhost:5936/
   commands:
     - chmod +x scripts/*.sh
-    - scripts/install-os-deps.sh
+    - scripts/install-os-deps.sh --no-upgrade
     - scripts/install-user-deps.sh ./env
     - scripts/create-dirs.sh ./
     - . ./env/bin/activate

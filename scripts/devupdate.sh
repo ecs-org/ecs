@@ -18,7 +18,7 @@ rebase  = fetch origin, rebase current local branch with
             origin/$ECS_DEV_REBASE_TO(HEAD) (default master)
             and force pushes changes to origin
 dumpdb  = dump current database and write it to /app/ecs.pgdump
-freshdb = destroy current database and create a new empty database
+freshdb = destroy current database and create a new empty ecs database
 
 Option:
     "--force" will ignore and *OVERWRITE* unpushed changes in target branch
@@ -119,8 +119,8 @@ dev_update(){
 
     if $sys_change; then
         echo "install os-deps"
-        sudo ./scripts/install-os-deps.sh --with-postgres-server
-        # not needed running on devserver
+        sudo ./scripts/install-os-deps.sh --with-postgres-server --autoremove --clean
+        # nginx, supervisor are not needed running on devserver
         for i in nginx supervisor; do
             sudo systemctl disable $i
             sudo systemctl stop $i
@@ -293,4 +293,4 @@ if test -f $G_realpath/database.include; then
     G_srcdir=$G_realpath/..
 fi
 . $G_srcdir/scripts/database.include
-main $@
+main "$@"
