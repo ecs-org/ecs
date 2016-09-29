@@ -2,7 +2,7 @@ import os
 from urllib.parse import urlparse
 
 if os.getenv('DATABASE_URL'):
-    parsed = urlparse(os.getenv('DATABASE_URL'))
+    url = urlparse(os.getenv('DATABASE_URL'))
     DATABASES = {}
     DATABASES['default'] = {
         'NAME': url.path[1:] or '',
