@@ -173,7 +173,7 @@ def create_submission_form(ec_number=None, presenter=None):
     with open(TEST_PDF, 'rb') as f:
         attach_document(sform, f, 'protocol.pdf', 'protocol')
     
-    ek1 = EthicsCommission(address_1 = 'mainstreet 1', chairperson = 'Univ.Prof.Dr.John Doe', city = 'Wien', contactname = '', email = 'johndoe@example.com', fax = '', name = 'EK von Noeverland', phone = '+43098765432345678', url = '', zip_code = '2323')
+    ek1 = EthicsCommission(name='EK von Neverland')
     ek1.save()
     
     Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
@@ -344,7 +344,7 @@ class SubmissionFormTest(EcsTestCase):
             presenter=presenter,
         )
         # normal way would be to fetch one, but the test database does not contain the data rows :(
-        ek1 = EthicsCommission(address_1 = 'mainstreet 1', chairperson = 'Univ.Prof.Dr.John Doe', city = 'Wien', contactname = '', email = 'johndoe@example.com', fax = '', name = 'EK von Noeverland', phone = '+43098765432345678', url = '', zip_code = '2323')
+        ek1 = EthicsCommission(name='EK von Neverland')
         ek1.save()
         Investigator.objects.create(submission_form=sform, main=True, contact_last_name="Univ. Doz. Dr. Joseph doe", subject_count=1, ethics_commission=ek1)
         sform.render_pdf_document()

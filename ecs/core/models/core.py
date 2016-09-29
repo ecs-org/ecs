@@ -7,16 +7,6 @@ from django.contrib.auth.models import User
 class EthicsCommission(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True)
     name = models.CharField(max_length=120)
-    address_1 = models.CharField(max_length=120)
-    address_2 = models.CharField(max_length=120)
-    zip_code = models.CharField(max_length=10)
-    city = models.CharField(max_length=80)
-    contactname = models.CharField(max_length=120, null=True)
-    chairperson = models.CharField(max_length=120, null=True)
-    email = models.EmailField(null=True)
-    url = models.URLField(null=True)
-    phone = models.CharField(max_length=60, null=True)
-    fax = models.CharField(max_length=60, null=True)
     vote_receiver = models.EmailField(null=True, blank=True)
     
     def __str__(self):

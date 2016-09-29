@@ -332,17 +332,7 @@ def ethics_commissions():
     except ImportError:
         commissions = [{
             'uuid': '12345678909876543212345678909876',
-            'city': 'Neverland',
-            'fax': None,
-            'chairperson': None,
             'name': 'Ethikkommission von Neverland',
-            'url': None,
-            'email': None,
-            'phone': None,
-            'address_1': 'Mainstreet 1',
-            'contactname': None,
-            'address_2': '',
-            'zip_code': '4223',
         }]
 
     for comm in commissions:
