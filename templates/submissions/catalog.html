@@ -1,89 +1,78 @@
 {% extends 'public.html' %}
 {% load i18n staticfiles %}
 
-{% block content %}
-<div id="header_public">
-  <div class="header_inner">
-    <a href="/"><img src={% static 'images/logo.png' %} /></a>
-  </div>
-</div>
+{% block htmlbody %}
+<div class="m-x-2 m-t-1">
+    <div><a href="/"><img src={% static 'images/logo.png' %} /></a></div>
 
-<div class="catalogue_list">
-  <div class="catalogue_list_inner">
-    <div class="content form_main">
-      
-      <h1>{% trans "Catalog of Approved Studies" %}</h1>
-      <div class="years">
-      {% for date in years %}
-          <a class="{% if date.year == year %}selected{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
-      {% endfor %}
-      </div>
-      
-      <ol class="votes">
-      {% for vote in votes %}
-          {% with vote.submission_form as sf %}
-          <li>
-             
-            <h2>{{ sf.german_project_title }}</h2>
-
-            <span class="english_title">{{ sf.project_title }}</span>
-
-            <p><strong>Sponsor:</strong> {{ sf.sponsor_name }}</p>
-            {% if sf.project_type_education_context %}
-            <p><strong>{{ sf.get_project_type_education_context_display }}:</strong> {{ sf.submitter_contact }}</p>
-            {% endif %}
-            
-            <p><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}
-              <span class="border_right"></span><strong>Sitzung:</strong> {{ vote.first_meeting_start|date:'d.m.Y' }}
-              <span class="border_right"></span><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}
-              {% if sf.is_categorized_multicentric_and_local %}
-                 <span class="border_right"></span> (lokale EK nach §41b AMG)
-              {% endif %}
-            </p>
-            
-            {% for investigator in sf.system_ec_investigators %}
-              <div class="indented">
-                <p>
-                  <strong>Prüfzentrum:</strong>
-                  {{ investigator.organisation }}
-                </p>
-                <p>
-                  <strong>Verantwortliche/r Prüfärtzin/arzt:</strong>
-                  {{ investigator.contact }}
-                </p>
-              </div>
+    <div class="row m-b-1">
+        <div class="m-x-auto"><h1>{% trans "Catalog of Approved Studies" %}</h1></div>
+        <div class="btn-group m-x-auto" role="group" aria-label="{% trans 'Years' %}">
+            {% for date in years %}
+                <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
             {% endfor %}
-
-            {% with sf.non_system_ec_investigators|length as other_ec_count %}
-              {% if other_ec_count %}
-                <div class="indented">
-                  {% blocktrans trimmed count other_ec_count=other_ec_count %}
-                    and one other study site
-                  {% plural %}
-                    and {{ other_ec_count }} other study sites
-                  {% endblocktrans %}
-                </div>
-              {% endif %}
-            {% endwith %}
-
-          </li>
-          {% endwith %}
-      {% endfor %}
-      </ol>
-  
-      <div class="years">
-      {% for date in years %}
-          <a class="{% if date.year == year %}selected{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>{% if not forloop.last %} | {% endif %}
-      {% endfor %}
-      </div>
-    
-      <h2><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
-            <img alt="CC BY-SA 3.0 AT" src={% static 'images/by-sa-3.0-at-80x15.png' %} />
-            {% trans "licensed data, Copyright Ethicscommission" %} 
-          </a>
-      </h2>  
-      
+        </div>
     </div>
-  </div>
+    
+    {% for vote in votes %}
+        {% with vote.submission_form as sf %}
+            <div class="card card-outline-primary">
+                <div class="card-block">
+                    <div>
+                        <h4 class="card-title font-weight-normal">
+                            {{ sf.german_project_title }} 
+                            <small class="font-weight-normal d-block m-t-1">{{ sf.project_title }}</small>
+                        </h4>
+                    </div>
+                    <hr>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><strong>Sponsor:</strong> {{ sf.sponsor_name }}</li>
+                    {% if sf.project_type_education_context %}
+                        <li class="list-inline-item"><strong>{{ sf.get_project_type_education_context_display }}:</strong> {{ sf.submitter_contact }}</li>
+                    {% endif %}
+                    </ul>
+                    <ul class="list-inline">
+                        <li class="list-inline-item"><strong>EK-Nr:</strong> {{ sf.submission.get_ec_number_display }}</li>
+                        <li class="list-inline-item"><strong>Sitzung:</strong> {{ vote.first_meeting_start|date:'d.m.Y' }}</li>
+                        <li class="list-inline-item"><strong>Votum:</strong> {{ vote.published_at|date:'d.m.Y' }}</li>
+                        {% if sf.is_categorized_multicentric_and_local %}
+                            <li class="list-inline-item">(lokale EK nach §41b AMG)</li>
+                        {% endif %}
+                    </ul>
+                    {% for investigator in sf.system_ec_investigators %}
+                        <div class="testinginfo p-l-1">
+                            <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>
+                            <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
+                        </div>
+                    {% endfor %}
+                    {% with sf.non_system_ec_investigators|length as other_ec_count %}
+                      {% if other_ec_count %}
+                        <div class="testinginfo m-b-1 p-l-1">
+                            &hellip;
+                            {% blocktrans trimmed count other_ec_count=other_ec_count %}
+                                and one other study site
+                                {% plural %}
+                                and {{ other_ec_count }} other study sites
+                            {% endblocktrans %}
+                        </div>
+                      {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        {% endwith %}
+    {% endfor %}
 </div>
+
+<div class="btn-group m-l-2 m-b-1" role="group" aria-label="Years">
+    {% for date in years %}
+        <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
+    {% endfor %}
+</div>
+
+  <div class="m-l-2 m-b-1">
+      <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
+        <img alt="CC BY-SA 3.0 AT" src={% static 'images/by-sa-3.0-at-80x15.png' %} />
+        <small>{% trans "licensed data, Copyright Ethicscommission" %}</small> 
+      </a>
+  </div>
 {% endblock %}

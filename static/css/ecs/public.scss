@@ -17,14 +17,6 @@
 
 /* catalogue list */
 
-#header_public {
-    position: absolute;
-    top: 1rem;
-    left: 0;
-    width: 100%;
-}
-
-#content .catalogue_list,
 #content .wrapper_404 {
     position: absolute;
     width: 100%;
@@ -32,71 +24,12 @@
     left: 0;
     right: 0;
 }
-.header_inner,
-.catalogue_list_inner,
+
 .wrapper_404_inner {
     margin: 0 auto;
     max-width: 90%;
 }
-.catalogue_list_inner .content,
-.wrapper_404 .content {
-    float: left;
-    border: 1px solid $bisque;
-    background: $beige-light;
+
+div.card div.testinginfo {
+    border-left:solid 0.5rem #0275d8;
 }
-
-#content .catalogue_list_inner {
-
-    .content h1 {
-        padding: 1rem;
-        background: $bisque;
-    }
-    .content h3 {
-        background: none;
-        border-bottom: none;
-    }
-    ul {
-        margin: 0;
-    }
-    ol > li {
-        display: block;
-        padding: 1rem;
-        border-bottom: 3px solid $bisque;
-
-        &:first-child {
-            border-top: 3px solid $bisque;
-        }
-    }
-    p {
-        border-bottom: 1px solid $bisque;
-
-        span.border_right {
-            border-right: 1px solid $bisque;
-        }
-    }
-    .english_title {
-        color: $grey-40;
-        display: block;
-    }
-}
-.catalogue_list .indented {
-    padding-left: 1rem;
-    border-left: 1rem solid $bisque;
-}
-#content .years a {
-    display: inline-block;
-    padding: 0 0.5rem;
-    background: $grey-90;
-    color: $grey-20;
-    clear: both;
-    text-align: center;
-    border-radius: 3px;
-    font-weight: bold;
-
-    &:hover {
-        background: $grey-20;
-        color: $grey-90;
-        text-decoration: none;
-    }
-}
-
