@@ -15,7 +15,7 @@ Ort der Sitzung:<br />
 Das voraussichtliche Ende ist {{ meeting.end|datetimeround:30|date:'d.m.Y, H:i' }} Uhr.<br />
 <br />
 {% db_setting 'contact_email' as email %}
-Sie können auf diese Nachricht mit der Antwortfunktion ihres Emailprogrammes antworten, diese gehen an <a href="{{ email }}">"{{ email }}"</a>.<br />
+Sie können auf diese Nachricht mit der Antwortfunktion ihres Emailprogrammes antworten, diese gehen an <a href="mailto:{{ email }}">"{{ email }}"</a>.<br />
 <br />
 <br />
 Mit freundlichen Grüßen,<br />
