@@ -47,7 +47,7 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
                     {% csrf_token %}
                     {% for task in task_type.list %}
                         <input type="hidden" name="task_id" value="{{ task.id }}" />
@@ -88,7 +88,7 @@
             {% trans "No Meeting" %}
         </label>
     </div>
-    <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
+    <div class="task_list_choose">
         <label>
             {{ filterform.amg }}
             <span class="fa fa-flask"></span>
@@ -148,7 +148,7 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="pull-xs-right" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
                     {% csrf_token %}
                     {% for task in task_type.list %}
                         <input type="hidden" name="task_id" value="{{ task.id }}" />
