@@ -60,64 +60,65 @@
 
 <h3 class="m-t-1">{% trans "Open Tasks" %}</h3>
 
-{# this form needs an explicit action, because it is used in widgets #}
-<form id="{{ form_id }}" action="{% if submission %}{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}{% else %}{% url 'ecs.tasks.views.my_tasks' %}{% endif %}" method="post" class="open-in-widget">
-    {% csrf_token %}
-    <div class="task_list_choose">
-        <label>
-            {% trans "Sort by" %}
-            {{ filterform.sorting }}
-        </label>
-    </div>
-    <div class="task_list_choose">
-        <label>
-            {{ filterform.past_meetings }}
-            {% trans "Past Meetings" %}
-        </label>
-        <label>
-            {{ filterform.next_meeting }}
-            {% trans "Next Meeting" %}
-        </label>
-        <label>
-            {{ filterform.upcoming_meetings }}
-            {% trans "Upcoming Meetings" %}
-        </label>
-        <label>
-            {{ filterform.no_meeting }}
-            {% trans "No Meeting" %}
-        </label>
-    </div>
-    <div class="task_list_choose"{% if submission %} style="display:none"{% endif %}>
-        <label>
-            {{ filterform.amg }}
-            <span class="fa fa-flask"></span>
-            {% trans "AMG" %}
-        </label>
-        <label>
-            {{ filterform.mpg }}
-            <span class="fa fa-medkit"></span>
-            {% trans "MPG" %}
-        </label>
-        <label>
-            {{ filterform.thesis }}
-            <span class="fa fa-book"></span>
-            {% trans "thesis" %}
-        </label>
-        <label>
-            {{ filterform.expedited }}
-            {% trans "expedited" %}
-        </label>
-        <label>
-            {{ filterform.local_ec }}
-            {% trans "local_ec" %}
-        </label>
-        <label>
-            {{ filterform.other }}
-            <span class="fa fa-question-circle"></span>
-            {% trans "Other" %}
-        </label>
-    </div>
-</form>
+{% if not submission %}
+    <form id="{{ form_id }}" action="{{ request.path }}" method="post" class="open-in-widget">
+        {% csrf_token %}
+        <div class="task_list_choose">
+            <label>
+                {% trans "Sort by" %}
+                {{ filterform.sorting }}
+            </label>
+        </div>
+        <div class="task_list_choose">
+            <label>
+                {{ filterform.past_meetings }}
+                {% trans "Past Meetings" %}
+            </label>
+            <label>
+                {{ filterform.next_meeting }}
+                {% trans "Next Meeting" %}
+            </label>
+            <label>
+                {{ filterform.upcoming_meetings }}
+                {% trans "Upcoming Meetings" %}
+            </label>
+            <label>
+                {{ filterform.no_meeting }}
+                {% trans "No Meeting" %}
+            </label>
+        </div>
+        <div class="task_list_choose">
+            <label>
+                {{ filterform.amg }}
+                <span class="fa fa-flask"></span>
+                {% trans "AMG" %}
+            </label>
+            <label>
+                {{ filterform.mpg }}
+                <span class="fa fa-medkit"></span>
+                {% trans "MPG" %}
+            </label>
+            <label>
+                {{ filterform.thesis }}
+                <span class="fa fa-book"></span>
+                {% trans "thesis" %}
+            </label>
+            <label>
+                {{ filterform.expedited }}
+                {% trans "expedited" %}
+            </label>
+            <label>
+                {{ filterform.local_ec }}
+                {% trans "local_ec" %}
+            </label>
+            <label>
+                {{ filterform.other }}
+                <span class="fa fa-question-circle"></span>
+                {% trans "Other" %}
+            </label>
+        </div>
+    </form>
+{% endif %}
 
 {% if open_tasks %}
     {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}

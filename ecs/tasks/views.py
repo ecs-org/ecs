@@ -45,42 +45,40 @@ def delete_task(request, submission_pk=None, task_pk=None):
 
 
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):
-    usersettings = request.user.ecs_settings
-
-    filterdict = request.POST or request.GET or None
-    if filterdict is None and not usersettings.task_filter is None:
-        filterdict = QueryDict(usersettings.task_filter)
-    filterform = TaskListFilterForm(filterdict)
-    filterform.is_valid() # force clean
-
-    if request.method == 'POST':
-        usersettings.task_filter = filterform.urlencode()
-        usersettings.save()
-        if len(request.GET) > 0:
-            return redirect(request.path)
-
-    sortings = {
-        'deadline': 'workflow_token__deadline',
-        'oldest': 'created_at',
-        'newest': '-created_at',
-    }
-    sorting = 'deadline'
-    if filterform.is_valid():
-        sorting = filterform.cleaned_data['sorting'] or 'deadline'
-    order_by = ['task_type__workflow_node__uid', sortings[sorting], 'assigned_at']
-
+    submission = None
     all_tasks = (Task.objects.for_user(request.user).for_widget().open()
         .select_related('task_type', 'task_type__workflow_node'))
-    submission = None
+
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
         all_tasks = all_tasks.for_submission(submission)
+        sorting = 'workflow_token__deadline'
+    else:
+        usersettings = request.user.ecs_settings
+
+        filterdict = request.POST or request.GET or None
+        if filterdict is None and not usersettings.task_filter is None:
+            filterdict = QueryDict(usersettings.task_filter)
+        filterform = TaskListFilterForm(filterdict)
+        filterform.is_valid() # force clean
+
+        sorting = {
+            'deadline': 'workflow_token__deadline',
+            'oldest': 'created_at',
+            'newest': '-created_at',
+        }[filterform.cleaned_data.get('sorting', 'deadline')]
+
+        if request.method == 'POST':
+            usersettings.task_filter = filterform.urlencode()
+            usersettings.save()
+            if len(request.GET) > 0:
+                return redirect(request.path)
 
     open_tasks = (all_tasks
         .for_submissions(
             Submission.objects.exclude(biased_board_members=request.user))
         .filter(assigned_to=None)
-        .order_by(*order_by))
+        .order_by('task_type__workflow_node__uid', sorting, 'assigned_at'))
 
     my_tasks = (all_tasks
         .filter(assigned_to=request.user)
@@ -182,13 +180,20 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
 
     data = {
         'submission': submission,
-        'filterform': filterform,
         'form_id': 'task_list_filter_%s' % random.randint(1000000, 9999999),
-        'bookmarklink': '{0}?{1}'.format(request.build_absolute_uri(request.path), filterform.urlencode()),
         'my_tasks': my_tasks,
         'proxy_tasks': proxy_tasks,
         'open_tasks': open_tasks,
     }
+    if not submission:
+        data.update({
+            'filterform': filterform,
+            'bookmarklink':
+                '{0}?{1}'.format(
+                    request.build_absolute_uri(request.path),
+                    filterform.urlencode()
+                ),
+        })
 
     return render(request, template, data)
 
