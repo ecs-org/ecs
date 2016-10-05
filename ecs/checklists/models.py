@@ -113,8 +113,6 @@ class Checklist(models.Model):
         })
 
     def render_pdf_document(self):
-        assert self.pdf_document is None
-
         if self.blueprint.reviewer_is_anonymous:
             if self.submission:
                 name = '{0} für {1}'.format(self.blueprint, self.submission)
