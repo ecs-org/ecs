@@ -11,13 +11,12 @@
     <br />
     Aus diesem Grund wurde für Sie ein Zugang zum elektronischen Einreich- und Verwaltungssystem (ECS) angelegt.<br />
     <br />
+    Um den Zugang zu aktivieren und Ihr Passwort zu setzen klicken Sie <a href="{{ link }}">hier</a>.
     <br />
-    Mit freundlichen Grüßen,<br />
     <br />
-    das Team der Ethik-Kommission<br />
+    {% db_setting 'signature_block' as signature_block %}
+    {{ signature_block|linebreaksbr }}
 {% endif %}
-<br />
-Um den Zugang zu aktivieren und Ihr Passwort zu setzen klicken Sie <a href="{{ link }}">hier</a>.
         </p>
     </body>
 </html>

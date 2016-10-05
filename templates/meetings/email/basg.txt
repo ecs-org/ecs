@@ -1,7 +1,7 @@
 {% load core %}
 Im Anhang finden Sie das elektronisch signierte Votum.
 
-Mit freundlichen Grüßen,
+{% db_setting 'signature_block' %}
 
 {% ec_name %}
 {% db_setting 'address' %}

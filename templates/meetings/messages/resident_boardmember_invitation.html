@@ -18,9 +18,8 @@ Das voraussichtliche Ende ist {{ meeting.end|datetimeround:30|date:'d.m.Y, H:i' 
 Sie können auf diese Nachricht mit der Antwortfunktion ihres Emailprogrammes antworten, diese gehen an <a href="mailto:{{ email }}">"{{ email }}"</a>.<br />
 <br />
 <br />
-Mit freundlichen Grüßen,<br />
-<br />
-das Team der Ethik-Kommission
+{% db_setting 'signature_block' as signature_block %}
+{{ signature_block|linebreaksbr }}
     </p>
 {% endblock %}
 </body>

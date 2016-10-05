@@ -9,9 +9,8 @@
 Anbei senden wir Ihnen das Protokoll der Sitzung vom {{ meeting.start|date:'d.m.Y' }}.<br />
 <br />
 <br />
-Mit freundlichen Grüßen,<br />
-<br />
-das Team der Ethik-Kommission
+{% db_setting 'signature_block' as signature_block %}
+{{ signature_block|linebreaksbr }}
     </p>
 {% endblock %}
 </body>

@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load core i18n %}
 <html>
 <body>
 <p>
@@ -13,9 +13,8 @@ Um ein neues Passwort zu setzen, klicken Sie auf den folgenden Link:<br />
 Der Link hat eine Gültigkeitsdauer von einer Stunde und ist danach nicht mehr verwendbar.<br />
 <br />
 <br />
-Mit freundlichen Grüßen,<br />
-<br />
-das Team der Ethik-Kommission
+{% db_setting 'signature_block' as signature_block %}
+{{ signature_block|linebreaksbr }}
 </p>
 </body>
 </html>

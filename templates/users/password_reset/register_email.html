@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load core i18n %}
 <html>
 <body>
 <p>
@@ -10,9 +10,8 @@ Wenn Sie das System benutzen wollen, klicken Sie auf den folgenden Link um sich 
 <a href="{{ register_url }}">{{ register_url }}</a><br />
 <br />
 <br />
-Mit freundlichen Grüßen,<br />
-<br />
-das Team der Ethik-Kommission
+{% db_setting 'signature_block' as signature_block %}
+{{ signature_block|linebreaksbr }}
 </p>
 </body>
 </html>
