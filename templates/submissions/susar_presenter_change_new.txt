@@ -1,8 +1,6 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        You have been selected as susar presenter of study "{{ project_title }}" ({{ ec_number }}).
-    {% endblocktrans %}
+Die Funktion des "Sicherheitsmeldungserstellers" für die Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" wurde an Sie übertragen.
 {% endblock %}

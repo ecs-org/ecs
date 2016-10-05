@@ -1,8 +1,6 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core userutils %}
+{% load userutils %}
 
 {% block content %}
-    {% blocktrans with user|formal_name as name  %}
-        A new Signing User has been created: {{ name }}
-    {% endblocktrans %}
+Ein neuer Zeichnungberechtigter wurde hinzugefügt: {{ user|formal_name }}
 {% endblock %}

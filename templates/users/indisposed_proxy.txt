@@ -1,8 +1,5 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
 
 {% block content %}
-    {% blocktrans with user as name  %}
-        {{ name }} is now indisposed. You have been selected as communication proxy.
-    {% endblocktrans %}
+{{ user }} ist derzeit verhindert. Sie wurden als Nachrichtenvertretung ausgewählt.
 {% endblock %}

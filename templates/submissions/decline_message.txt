@@ -1,10 +1,7 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-    Your submission "{{ project_title }}" ({{ ec_number }}) cannot be accepted in the present shape.
-    Please check your inbox for more precise information. You can resubmit
-    your study as appropriate.
-    {% endblocktrans %}
+Ihre Einreichung {{ submission|ec_number }} "{{ submission.project_title_display }}" kann in der vorliegenden Form nicht angenommen werden.
+Kontrollieren Sie Ihren Nachrichteneingang für nähere Angaben. Sie können die Studie im System durch einen Klick auf "Bearbeiten" ändern und danach neu einreichen.
 {% endblock %}

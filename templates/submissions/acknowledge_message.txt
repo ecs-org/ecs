@@ -1,10 +1,8 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        The Ethics Commission acknowledges the arrival of your submission "{{ project_title }}" ({{ ec_number }}).
-        You can find information about the processing stage of your study in your ECS account.
-    {% endblocktrans %}
-        {% trans 'See' %}: {{ ABSOLUTE_URL_PREFIX }}{% url 'view_submission' submission_pk=submission.pk %}
+Die Ethik-Kommission bestätigt den Eingang Ihres Antrags {{ submission|ec_number }} "{{ submission.project_title_display }}".
+Informationen über den Stand der Bearbeitung der Studie finden Sie in Ihrem ECS Account unter dem Reiter Generell/Status.
+Siehe: {{ ABSOLUTE_URL_PREFIX }}{% url 'view_submission' submission_pk=submission.pk %}
 {% endblock %}

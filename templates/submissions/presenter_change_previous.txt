@@ -1,8 +1,6 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number and submission.project_title_display as project_title %}
-        You are not the presenter of study "{{ project_title }}" ({{ ec_number }}) anymore.
-    {% endblocktrans %}
+Die Funktion des "Einreichers" für die Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" wurde an eine andere Person übertragen.
 {% endblock %}

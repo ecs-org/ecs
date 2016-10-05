@@ -1,7 +1,7 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    Die Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wurde bei der {% ec_name %} eingereicht.
-    Sie erhalten diese Mitteilung, weil Sie in der Studie als beteiligte Person aufscheinen.
+Die Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wurde bei der {% ec_name %} eingereicht.
+Sie erhalten diese Mitteilung, weil Sie in der Studie als beteiligte Person aufscheinen.
 {% endblock %}

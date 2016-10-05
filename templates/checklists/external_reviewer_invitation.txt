@@ -1,15 +1,15 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    Die {% ec_name %} bittet Sie um ein Gutachten zur Studie {{ submission|ec_number }} ("{{ submission.project_title_display }}").
+Die {% ec_name %} bittet Sie um ein Gutachten zur Studie {{ submission|ec_number }} ("{{ submission.project_title_display }}").
 
-    Das Projekt wird in der Sitzung vom {{ meeting.start|date:'d.m.Y' }} behandelt.
+Das Projekt wird in der Sitzung vom {{ meeting.start|date:'d.m.Y' }} behandelt.
 
-    Für Ihre Bemühungen erhalten Sie ein Anerkennungshonorar von {{ price.price|euro }}.
+Für Ihre Bemühungen erhalten Sie ein Anerkennungshonorar von {{ price.price|euro }}.
 
-    Bitte teilen Sie uns so bald wie möglich mit, ob Sie die Begutachtung durchführen werden. Im Falle Ihrer Absage bitten wir Sie um Vorschläge anderer geeigneter Gutachter.
+Bitte teilen Sie uns so bald wie möglich mit, ob Sie die Begutachtung durchführen werden. Im Falle Ihrer Absage bitten wir Sie um Vorschläge anderer geeigneter Gutachter.
 
-    Um Ihr Gutachten zu erstellen, klicken Sie auf den folgenden Link:
-    {{ ABSOLUTE_URL_PREFIX }}{{ url }}
+Um Ihr Gutachten zu erstellen, klicken Sie auf den folgenden Link:
+{{ ABSOLUTE_URL_PREFIX }}{{ url }}
 {% endblock %}

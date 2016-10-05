@@ -1,10 +1,10 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    Für den nächsten Expedited Review sind Projekte für Sie bzw. Ihre Fachgruppe zugeteilt.
-    Die Frist für die Begutachtung endet am {{ start|date:'d.m.Y' }} um {{ start|date:'H:i' }}. Bitte sprechen Sie sich ggf. mit den KollegInnen aus Ihrem Fachgebiet ab, wer die Begutachtung durchführt.
-    Wir bitten Sie, den Expedited Review ausschließlich schriftlich im ECS durchzuführen: Auf der Übersichtsseite bei den offenen Aufgaben „Expedited Empfehlung“ auf die jeweilige EK-Nummer klicken, die Expedited Bewertung ausfüllen und anschließend auf ''Schließen'' und ''Abschicken'' klicken.
-    Sie können sich bei Fragen jederzeit gerne an die Geschäftsstelle wenden.
-    WICHTIG: Die Begutachtung aller Projekte für den Expedited Review muss spätestens am Tag nach Ablauf der Frist abgeschlossen sein. Zu diesem Zeitpunkt noch nicht begutachtete Projekte werden automatisch auf die Tagesordnung der Sitzung gesetzt.
+Für den nächsten Expedited Review sind Projekte für Sie bzw. Ihre Fachgruppe zugeteilt.
+Die Frist für die Begutachtung endet am {{ start|date:'d.m.Y' }} um {{ start|date:'H:i' }}. Bitte sprechen Sie sich ggf. mit den KollegInnen aus Ihrem Fachgebiet ab, wer die Begutachtung durchführt.
+Wir bitten Sie, den Expedited Review ausschließlich schriftlich im ECS durchzuführen: Auf der Übersichtsseite bei den offenen Aufgaben "Expedited Empfehlung" auf die jeweilige EK-Nummer klicken, die Expedited Bewertung ausfüllen und anschließend auf "Schließen" und "Abschicken" klicken.
+Sie können sich bei Fragen jederzeit gerne an die Geschäftsstelle wenden.
+WICHTIG: Die Begutachtung aller Projekte für den Expedited Review muss spätestens am Tag nach Ablauf der Frist abgeschlossen sein. Zu diesem Zeitpunkt noch nicht begutachtete Projekte werden automatisch auf die Tagesordnung der Sitzung gesetzt.
 {% endblock %}

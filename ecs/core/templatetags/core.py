@@ -1,6 +1,5 @@
 import re
 import uuid
-from textwrap import dedent
 
 from django.template import Library, Node, TemplateSyntaxError
 from django.utils.translation import ugettext as _
@@ -121,32 +120,6 @@ def allows_edits_by(sf, user):
 @register.filter
 def allows_export_by(sf, user):
     return sf.allows_export(user)
-
-@register.tag(name='strip')
-def do_strip(parser, token):
-    nodelist = parser.parse(('endstrip',))
-    parser.delete_first_token()
-    return StripNode(nodelist)
-
-class StripNode(Node):
-    def __init__(self, nodelist):
-        self.nodelist = nodelist
-
-    def render(self, context):
-        return self.nodelist.render(context).strip()
-
-@register.tag(name='dedent')
-def do_dedent(parser, token):
-    nodelist = parser.parse(('enddedent',))
-    parser.delete_first_token()
-    return DedentNode(nodelist)
-
-class DedentNode(Node):
-    def __init__(self, nodelist):
-        self.nodelist = nodelist
-
-    def render(self, context):
-        return dedent(self.nodelist.render(context))
 
 @register.tag(name='sitescss')
 def do_sitescss(parser, token):

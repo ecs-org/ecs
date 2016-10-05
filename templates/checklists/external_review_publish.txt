@@ -1,13 +1,11 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core %}
+{% load core %}
 
 {% block content %}
-    {% blocktrans with submission|ec_number as ec_number %}
-        There is an new external review for the study {{ ec_number }} available.
+Zur Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" ist ein Gutachten eingelangt.
 
-        You can see it in the tab "Reviews".
+Dieses steht Ihnen im ECS unter dem Reiter "Beurteilungen" zur Verfügung.
 
-        Please click the following link to download the review as PDF file:
-    {% endblocktrans %}
-        {{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk %}
+Klicken Sie auf den folgenden Link um das Gutachten als PDF-Datei herunterzuladen:
+{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk %}
 {% endblock %}

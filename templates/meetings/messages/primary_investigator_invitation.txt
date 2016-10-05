@@ -1,11 +1,11 @@
 {% extends 'msg_core.txt' %}
-{% load i18n core meetingutils %}
+{% load core meetingutils %}
 
 {% block content %}
-    Ihre Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wird in der Sitzung vom {{ top.meeting.start|date:'d.m.Y' }} um {{ top.start|datetimeround:-10|date:'H:i' }} Uhr behandelt.
+Ihre Studie "{{ submission.project_title_display }}" ({{ submission|ec_number }}) wird in der Sitzung vom {{ top.meeting.start|date:'d.m.Y' }} um {{ top.start|datetimeround:-10|date:'H:i' }} Uhr behandelt.
 
-    Ort der Sitzung:
-    {% db_setting 'meeting_address' %}
+Ort der Sitzung:
+{% db_setting 'meeting_address' %}
 
-    Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des Projektes teilzunehmen.
+Die Anwesenheit des Prüfers (oder seines Vertreters) ist unbedingt erforderlich; der Sponsor hat das Recht, ebenfalls an der Diskussion des Projektes teilzunehmen.
 {% endblock %}

@@ -2,19 +2,19 @@
 {% load i18n %}
 
 {% block content %}
-    {% blocktrans trimmed %}
-        The assignment of task types for {{ user }} has changed.
-    {% endblocktrans %}
-    {% if added %}
-        {% trans 'Added task types' %}:
-        {% for task_type in added %}
-          - {{ task_type }}
-        {% endfor %}
-    {% endif %}
-    {% if removed %}
-        {% trans 'Removed task types' %}:
-        {% for task_type in removed %}
-          - {{ task_type }}
-        {% endfor %}
-    {% endif %}
+{% blocktrans trimmed %}
+    The assignment of task types for {{ user }} has changed.
+{% endblocktrans %}
+{% if added %}
+    {% trans 'Added task types' %}:
+    {% for task_type in added %}
+      - {{ task_type }}
+    {% endfor %}
+{% endif %}
+{% if removed %}
+    {% trans 'Removed task types' %}:
+    {% for task_type in removed %}
+      - {{ task_type }}
+    {% endfor %}
+{% endif %}
 {% endblock %}
