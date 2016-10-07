@@ -1,0 +1,5 @@
+{% extends 'msg_core.txt' %}
+
+{% block content %}
+{{ user }} hat letzte Woche {{ count }} Dokumente heruntergeladen.
+{% endblock %}

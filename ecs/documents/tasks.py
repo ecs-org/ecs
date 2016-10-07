@@ -9,8 +9,8 @@ from celery.task import periodic_task
 from celery.schedules import crontab
 
 from ecs.documents.models import DownloadHistory
-from ecs.communication.utils import send_message
-from ecs.users.utils import get_user, get_office_user, get_full_name
+from ecs.communication.utils import send_message_template
+from ecs.users.utils import get_user, get_office_user
 
 
 WEEKLY_DOWNLOAD_THRESHOLD = 150
@@ -34,10 +34,8 @@ def send_download_warnings():
     receiver = get_office_user()
 
     for user_id, count in hist:
-        print(user_id, count)
         user = User.objects.get(id=user_id)
-        subject = _('Large number of downloads by {user}').format(
-            user=get_full_name(user))
-        text = _('{user} has downloaded {count} documents during the last week.').format(
-            user=get_full_name(user), count=count)
-        send_message(sender, receiver, subject, text)
+        subject = _('Large number of downloads by {user}').format(user=user)
+        send_message_template(sender, receiver, subject,
+            'documents/messages/download_warning.txt',
+            {'user': user,'count': count})

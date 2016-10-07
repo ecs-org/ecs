@@ -1612,10 +1612,6 @@ msgstr ""
 msgid "Large number of downloads by {user}"
 msgstr "Große Anzahl an Downloads von {user}"
 
-#, python-brace-format
-msgid "{user} has downloaded {count} documents during the last week."
-msgstr "{user} hat letzte Woche {count} Dokumente heruntergeladen."
-
 #, fuzzy
 msgid "Ready for Review"
 msgstr "Gutachten Statistik"
