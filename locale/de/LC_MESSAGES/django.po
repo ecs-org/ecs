@@ -1436,10 +1436,6 @@ msgstr ""
 msgid "{task} reopened"
 msgstr "{task} neu geöffnet"
 
-#, python-brace-format
-msgid "{user} has reopened the {task}."
-msgstr "{user} hat die Aufgabe \"{task}\" neu geöffnet."
-
 msgid "Your review is incomplete."
 msgstr "Das Gutachten ist nicht vollständig."
 
@@ -1914,16 +1910,8 @@ msgid "{task} completed"
 msgstr "{task} abgeschlossen"
 
 #, python-brace-format
-msgid "{user} has completed the {task}."
-msgstr "{user} hat die Aufgabe \"{task}\" abgeschlossen."
-
-#, python-brace-format
 msgid "{task} still open"
 msgstr "{task} noch nicht abgeschlossen"
-
-#, python-brace-format
-msgid "{user} did not complete the {task} yet."
-msgstr "{user} hat die Aufgabe \"{task}\" noch nicht abgeschlossen."
 
 msgid "Email"
 msgstr "E-mail"

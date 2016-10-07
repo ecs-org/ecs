@@ -49,7 +49,7 @@ from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
-from ecs.communication.utils import send_message
+from ecs.communication.utils import send_message_template
 from ecs.utils import forceauth
 from ecs.users.utils import sudo, user_flag_required, get_user, get_full_name
 from ecs.tasks.models import Task
@@ -389,11 +389,11 @@ def reopen_categorization(request, submission_pk=None):
     new_task = task.reopen(request.user)
 
     if task.assigned_to != request.user:
+        sender = get_user('root@system.local')
         subject = _('{task} reopened').format(task=task.task_type)
-        text = _('{user} has reopened the {task}.').format(user=request.user,
-            task=task.task_type)
-        send_message(get_user('root@system.local'), task.assigned_to, subject,
-            text, submission=submission, reply_receiver=request.user)
+        send_message_template(sender, task.assigned_to, subject,
+            'tasks/messages/reopen.txt', {'user': request.user, 'task': task},
+            submission=submission, reply_receiver=request.user)
 
     return redirect(new_task.url)
 

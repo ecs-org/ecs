@@ -5,28 +5,28 @@ from django.db.models.expressions import RawSQL
 from celery.task import periodic_task
 from celery.schedules import crontab
 
-from ecs.communication.utils import send_message
+from ecs.communication.utils import send_message_template
 from ecs.tasks.models import Task
 from ecs.users.utils import get_user
 
 
-def _get_submission(task):
+def send_task_message(task, subject, template):
     if task.content_type.natural_key() == ('core', 'submission'):
-        return task.data
+        submission = task.data
     elif task.content_type.natural_key() == ('checklists', 'checklist'):
-        return task.data.submission
-    print(task.content_type.natural_key())
-    assert False
+        submission = task.data.submission
+    else:
+        assert False
+
+    subject = subject.format(task=task.task_type)
+    template = 'tasks/messages/{}'.format(template)
+
+    send_message_template(get_user('root@system.local'), task.created_by,
+        subject, template, {'task': task}, submission=submission)
 
 
 def send_close_message(task):
-    submission = _get_submission(task)
-    subject = _('{task} completed').format(task=task.task_type)
-    text = _('{user} has completed the {task}.').format(user=task.assigned_to,
-        task=task.task_type)
-
-    send_message(get_user('root@system.local'), task.created_by, subject, text,
-        submission=submission)
+    send_task_message(task, _('{task} completed'), 'completed.txt')
 
 
 @periodic_task(run_every=crontab(minute=0))
@@ -39,13 +39,7 @@ def send_reminder_messages():
         .filter(deadline__lt=now))
 
     for task in tasks:
-        submission = _get_submission(task)
-        subject = _('{task} still open').format(task=task.task_type)
-        text = _('{user} did not complete the {task} yet.').format(
-            user=task.assigned_to, task=task.task_type)
-
-        send_message(get_user('root@system.local'), task.created_by, subject,
-            text, submission=submission)
+        send_task_message(task, _('{task} still open'), 'still_open.txt')
 
         task.reminder_message_sent_at = now
         task.save()

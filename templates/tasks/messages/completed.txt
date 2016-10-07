@@ -1,0 +1,5 @@
+{% extends 'msg_core.txt' %}
+
+{% block content %}
+{{ task.assigned_to }} hat die Aufgabe "{{ task.task_type }}" abgeschlossen.
+{% endblock %}
