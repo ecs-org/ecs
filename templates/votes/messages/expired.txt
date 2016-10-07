@@ -1,0 +1,6 @@
+{% extends 'msg_core.txt' %}
+{% load core %}
+
+{% block content %}
+Das Votum für die Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" vom {{ vote.top.meeting.start|default:vote.published_at|date:'d.m.Y' }} ist abgelaufen.
+{% endblock %}

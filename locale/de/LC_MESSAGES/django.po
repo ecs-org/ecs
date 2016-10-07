@@ -2117,77 +2117,21 @@ msgstr "Kommentar"
 msgid "No Result"
 msgstr ""
 
-#, python-format
-msgid ""
-"Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s ist "
-"abgelaufen.\n"
-msgstr ""
-
 #, python-brace-format
 msgid "Vote for Submission {ec_number} has expired"
 msgstr "Das Votum für die Studie EK-Nr. {ec_number} ist abgelaufen"
 
-#, python-format
-msgid ""
-"Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in "
-"drei Wochen ab.\n"
-"Stellen Sie bitte zeitgerecht den Antrag auf Verlängerung des Votums.\n"
-"Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf „Studien "
-"Meldungen“ > „Neue Meldung“,\n"
-"wählen Sie dann „Verlängerung der Gültigkeit des Votums“ und machen Sie die "
-"erforderlichen Angaben.\n"
-"\n"
-"Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische "
-"Arzneimittelprüfung handeln,\n"
-"bei der die Ethikkommission nicht als Leit-Ethikkommission, sondern als "
-"lokale Ethikkommission\n"
-"fungiert, dann können Sie diese Aufforderung ignorieren. In solchen Fällen "
-"ist die\n"
-"Leit-Ethikkommission für die Votumsverlängerung zuständig.\n"
-"\n"
-"Mit freundlichen Grüßen,\n"
-"\n"
-"das Team der Ethik-Kommission\n"
-"    "
-msgstr ""
-
 #, python-brace-format
 msgid "Vote for Submission {ec_number} will expire in three weeks"
 msgstr "Das Votum für die Studie EK-Nr. {ec_number} läuft in drei Wochen ab"
-
-#, python-format
-msgid ""
-"Das Votum für die Studie EK-Nr. %(ec_number)s vom %(vote_date)s läuft in "
-"einer Woche ab.\n"
-msgstr ""
 
 #, python-brace-format
 msgid "Vote for Submission {ec_number} will expire in one week"
 msgstr "Das Votum für die Studie EK-Nr. {ec_number} läuft in einer Woche ab"
 
 #, python-brace-format
-msgid ""
-"There is still no permanent vote for submission {ec_number}. The current\n"
-"temporary vote was published on the {vote_date}. Please make sure you've\n"
-"sent all necessary documents to the ethics commission.\n"
-"\n"
-"Yours sincerely,\n"
-"\n"
-"the team of the ethics commission\n"
-"    "
-msgstr ""
-
-#, fuzzy, python-brace-format
-#| msgid "Vote for Submission {ec_number} has expired"
 msgid "Temporary vote for Submission {ec_number}"
-msgstr "Das Votum für die Studie EK-Nr. {ec_number} ist abgelaufen"
-
-#, python-brace-format
-msgid ""
-"There is still no permanent vote for submission {ec_number}. The current\n"
-"temporary vote was published on the {vote_date}.\n"
-"    "
-msgstr ""
+msgstr "Mitteilung für Studie EK-Nr. {ec_number}"
 
 #, python-brace-format
 msgid "Vote {ec_number}"

@@ -1,0 +1,14 @@
+{% extends 'msg_core.txt' %}
+{% load core %}
+
+{% block content %}
+Das Votum für die Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" vom {{ vote.top.meeting.start|default:vote.published_at|date:'d.m.Y' }} läuft in drei Wochen ab.
+Stellen Sie bitte zeitgerecht den Antrag auf Verlängerung des Votums.
+Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf "Studien Meldungen" > "Neue Meldung",
+wählen Sie dann "Verlängerung der Gültigkeit des Votums" und machen Sie die erforderlichen Angaben.
+
+Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische Arzneimittelprüfung handeln,
+bei der die Ethikkommission nicht als Leit-Ethikkommission, sondern als lokale Ethikkommission
+fungiert, dann können Sie diese Aufforderung ignorieren. In solchen Fällen ist die
+Leit-Ethikkommission für die Votumsverlängerung zuständig.
+{% endblock %}

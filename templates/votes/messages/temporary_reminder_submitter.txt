@@ -1,0 +1,7 @@
+{% extends 'msg_core.txt' %}
+{% load core %}
+
+{% block content %}
+Zur Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" liegt noch kein Votum vor.
+Die letzte Mitteilung zur Studie wurde am {{ vote.top.meeting.start|default:vote.published_at|date:'d.m.Y' }} veröffentlicht. Bitte stellen Sie sicher, dass Sie alle notwendigen Dokumente an die Ethik-Kommission übermittelt haben.
+{% endblock %}
