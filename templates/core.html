@@ -1,5 +1,5 @@
 {% extends 'shell.html' %}
-{% load alert compress i18n userutils core scratchpad userswitcher staticfiles version_tag %}
+{% load alert compress i18n userutils core scratchpad userswitcher staticfiles version_tag widget_tweaks %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -26,149 +26,211 @@
 {% endblock %}
 
 {% block htmlbody %}
-    <div id="container">
-        <div id="header">
-            <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
-            <div id="headernav">
-                {% block headernav %}
-                    {% if user.profile.is_indisposed %}
-                    <div>
-                      {% url 'ecs.users.views.profile' as profile_url %}
-                      {% blocktrans with profile_url as profile_url %}
-                          You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
-                      {% endblocktrans %}
-                    </div>
-                    {% endif %}
-                {% endblock %}
-            </div>
-            {% block header_actions %}
-            {% endblock %}
-
-            {% if request.task_management.form %}
-		{% include 'tasks/manage_task.html' with form=request.task_management.form %}
+    <nav class="navbar navbar-light p-b-0 m-b-0">
+        <a class="navbar-brand" href="{% url 'ecs.dashboard.views.view_dashboard' %}">
+            <img src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
+        </a>
+        <ul class="nav navbar-nav w-100">
+            <li class="nav-item">
+                <a href="{% url 'ecs.dashboard.views.view_dashboard' %}" class="nav-link text-primary">
+                    {% trans "Dashboard" %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-primary" href="{% url 'ecs.communication.views.list_threads' %}">
+                    {% trans "Communication" %}
+                </a>
+            </li>
+            {% if user.profile.show_worklow_widget %}
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="{% url 'ecs.tasks.views.task_list' %}">
+                        {% trans "Tasks" %}
+                    </a>
+                </li>
             {% endif %}
-        </div>
-
-        <div id="content">
-            <div class="innerwrap">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.level|level2alert }} alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        {{ message }}
+            <li class="nav-item dropdown">
+                <a id="studiesMenu" class="nav-link text-primary dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                    {% trans "Studies" %}
+                </a>
+                <div class="dropdown-menu">
+                    {% if user.profile.is_internal %}
+                        <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.all_submissions' %}">
+                            {% trans "All Studies" %}
+                        </a>
+                    {% endif %}
+                    {% if user|has_assigned_submissions %}
+                        <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.assigned_submissions' %}">
+                            {% trans "Assigned Studies" %}
+                        </a>
+                    {% endif %}
+                    {% if user|has_submissions %}
+                        <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.my_submissions' %}">
+                            {% trans "My Studies" %}
+                        </a>
+                    {% endif %}
+                    <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.create_submission_form' %}">
+                        {% trans "New Submission" %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.import_submission_form' %}">
+                        {% trans "Import" %}
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'ecs.notifications.views.open_notifications' %}">
+                        {% trans 'Open Notifications' %}
+                    </a>
+                    <a class="dropdown-item" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">
+                        {% trans 'New Notification' %}
+                    </a>
+                </div>
+            </li>
+            {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member or user.profile.is_omniscient_member %}
+                <li class="nav-item dropdown">
+                    <a id="meetingsMenu" class="nav-link dropdown-toggle text-primary" data-toggle="dropdown" href="#" role="button">
+                        {% trans "Meetings" %}
+                    </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'ecs.meetings.views.next' %}">
+                            {% trans "Next Meeting" %}
+                        </a>
+                        {% if user.profile.is_internal or user.profile.is_resident_member or user.profile.is_omniscient_member %}
+                            <a class="dropdown-item" href="{% url 'ecs.meetings.views.upcoming_meetings' %}">
+                                {% trans "Upcoming Meetings" %}
+                            </a>
+                        {% endif %}
+                        {% if user.profile.is_internal %}
+                            <a class="dropdown-item" href="{% url 'ecs.meetings.views.past_meetings' %}">
+                                {% trans "Past Meetings" %}
+                            </a>
+                        {% endif %}
+                        {% if user|is_member_of:"EC-Office" %}
+                            <a class="dropdown-item" href="{% url 'ecs.meetings.views.create_meeting' %}">
+                                {% trans "New Meeting" %}
+                            </a>
+                        {% endif %}
                     </div>
-                {% endfor %}
-
-                {% block content %}
-                {% endblock %}
-            </div>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a href="" id="help_button" class="nav-link p-y-0 help_trigger fa fa-question-circle-o fa-2x text-primary" title="{% trans "Click here to get help." %}"></a>
+            </li>
+            <li class="nav-item">
+                {% get_scratchpad as scratchpad %}
+                <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" class="nav-link p-y-0 scratchpad fa fa-sticky-note{% if not scratchpad or scratchpad.is_empty %}-o{% endif %} fa-2x text-primary" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %}"></a>
+            </li>
+            {% if user.profile.is_internal %}
+                <li class="nav-item dropdown">
+                    <a id="adminMenu" class="nav-link dropdown-toggle p-y-0 text-primary" data-toggle="dropdown" href="#" role="button" title="{% trans "Administration" %}">
+                        <span class="fa fa-cog fa-2x text-primary p-y-0"></span>
+                    </a>
+                    <div class="dropdown-menu">
+                        {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Member" %}
+                            <a class="dropdown-item" href="{% url 'ecs.users.views.administration' %}">
+                                {% trans "User Administration" %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'ecs.billing.views.submission_billing' %}">
+                                {% trans "Accounting of fees" %}
+                            </a>
+                            <a class="dropdown-item" href="{% url 'ecs.billing.views.external_review_payment' %}">
+                                Gutachter Bezahlung
+                            </a>
+                            <a class="dropdown-item" href="{% url 'ecs.core.views.administration.advanced_settings' %}">
+                                {% trans 'Advanced Settings' %}
+                            </a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'ecs.statistics.views.stats' %}">
+                            {% trans 'Statistics' %}
+                        </a>
+                        <a class="dropdown-item" href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">
+                            {% trans 'Boilerplates' %}
+                        </a>
+                        {% if user|is_member_of:'EC-Signing' or user|is_member_of:'EC-Office' %}
+                            <a class="dropdown-item" href="{% url 'ecs.pki.views.cert_list' %}">
+                                {% trans 'PKI' %}
+                            </a>
+                        {% endif %}
+                        <a class="dropdown-item" href="{% url 'ecs.tags.views.index' %}">
+                            {% trans "Tags" %}
+                        </a>
+                    </div>
+                </li>
+            {% endif %}
+            <li class="dropdown nav-item">
+                <a href="#" id="userMenu" class="nav-link p-y-0 dropdown-toggle text-primary" data-toggle="dropdown" title="{% trans "User" %}">
+                    <span class="fa fa-user fa-2x text-primary"></span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'ecs.users.views.profile' %}">
+                        {{ user }}
+                    </a>
+                    <a class="dropdown-item" href="/accounts/logout">
+                        Logout
+                    </a>
+                </div>
+            </li>
+            <li class="nav-item pull-xs-right">
+                <form action="{% url 'ecs.core.views.submissions.all_submissions' %}" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}" placeholder="Suche">
+                        <span class="input-group-btn">
+                            <button class="btn btn-outline-success" type="submit" title="{% trans "Search" %}"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+                </form>
+            </li> 
+        </ul>
+    </nav>
+    <div class="m-b-1 m-x-1">
+        {% userswitcher %}
+        <small class="pull-right">
+            {% if user.profile.is_internal %}
+                {% get_breadcrumbs as crumbs %}
+                {% if crumbs %}
+                    {% for submission in crumbs %}
+                        <a href="{% url 'view_submission' submission_pk=submission.pk %}">
+                            {{ submission|ec_number }} | 
+                        </a>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            {% current_version %}
+        </small>
+    </div>
+        
+    <div id="header">
+        <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
+        <div id="headernav">
+            {% block headernav %}
+                {% if user.profile.is_indisposed %}
+                <div>
+                  {% url 'ecs.users.views.profile' as profile_url %}
+                  {% blocktrans with profile_url as profile_url %}
+                      You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
+                  {% endblocktrans %}
+                </div>
+                {% endif %}
+            {% endblock %}
         </div>
+        {% block header_actions %}
+        {% endblock %}
+
+        {% if request.task_management.form %}
+            {% include 'tasks/manage_task.html' with form=request.task_management.form %}
+        {% endif %}
     </div>
 
-    <div id="sidebar">
-        <div id="logo">
-            <img src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
-            <small>{% current_version %}</small>
-        </div>
-        <div id="account">
-            <div class="user_data">
-                <span class="fa fa-user"></span>
-                <a href="{% url 'ecs.users.views.profile' %}">{{ user }}</a>
-                <a class="user_logout" href="/accounts/logout">Logout</a>
-            </div>
-            {% userswitcher %}
-        </div>
-        <div id="usertoolbar">
-            <form action="{% url 'ecs.core.views.submissions.all_submissions' %}" method="get">
-              <div class="searchbox input-group input-group-sm">
-                <input type="text" class="form-control" name="keyword" value="{% block quicksearch_keyword %}{% endblock %}"  placeholder="Suche" />
-                <span class="input-group-btn">
-                  <button class="btn btn-secondary fa fa-search" type="submit"></button>
-                </span>
-              </div>
-            </form>
-            <a href="" id="help_button" class="help_trigger fa fa-question-circle-o fa-2x text-info" title="{% trans "Click here to get help." %}"></a>
-            {% get_scratchpad as scratchpad %}
-            <a href="{% url 'ecs.scratchpad.views.popup' %}{% if submission %}?submission={{ submission.pk }}{% endif %}" class="fa fa-sticky-note{% if not scratchpad or scratchpad.is_empty %}-o{% endif %} fa-2x text-info scratchpad" title="{% if submission %}{% blocktrans with submission|ec_number as ec_number %}Show my scratchpad for submission {{ ec_number }}{% endblocktrans %}{% else %}{% trans "Show my scratchpad" %}{% endif %}"></a>
-            {% if user.profile.is_internal %}
-              {% get_breadcrumbs as crumbs %}
-              {% if crumbs %}
-              <div class="breadcrumbs">
-                {% for submission in crumbs %}
-                  <a href="{% url 'view_submission' submission_pk=submission.pk %}">{{ submission|ec_number }}{% if not forloop.last %},{% endif %}</a>
-                {% endfor %}
-              </div>
-              {% endif %}
-            {% endif %}
-        </div>
-        <div id="usermenu">
-            <nav class="nav nav-pills nav-stacked">
-                <a class="nav-link dashboard" href="{% url 'ecs.dashboard.views.view_dashboard' %}">{% trans "Dashboard" %}</a>
-                <a class="nav-link communication" href="{% url 'ecs.communication.views.list_threads' %}">{% trans "Communication" %}</a>
-                {% if user.profile.show_worklow_widget %}
-                    <a class="nav-link tasks" href="{% url 'ecs.tasks.views.task_list' %}">{% trans "Tasks" %}</a>
-                {% endif %}
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle submissions" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Studies" %}</a>
-                    <div class="dropdown-menu">
-                        {% if user.profile.is_internal %}
-                            <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.all_submissions' %}">{% trans "All Studies" %}</a>
-                        {% endif %}
-                        {% if user|has_assigned_submissions %}
-                            <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.assigned_submissions' %}">{% trans "Assigned Studies" %}</a>
-                        {% endif %}
-                        {% if user|has_submissions %}
-                            <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.my_submissions' %}">{% trans "My Studies" %}</a>
-                        {% endif %}
-                        <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.create_submission_form' %}">{% trans "New Submission" %}</a>
-                        <a class="dropdown-item" href="{% url 'ecs.core.views.submissions.import_submission_form' %}">{% trans "Import" %}</a>
-                    </div>
+    <div id="content">
+        <div class="innerwrap">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.level|level2alert }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                    {{ message }}
                 </div>
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle notifications" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Study Notifications" %}</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{% url 'ecs.notifications.views.open_notifications' %}">{% trans 'Open Notifications' %}</a>
-                        <a class="dropdown-item" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans 'New Notification' %}</a>
-                    </div>
-                </div>
-                {% if user.profile.is_internal or user.profile.is_board_member or user.profile.is_resident_member or user.profile.is_omniscient_member %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle meetings" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Meetings" %}</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{% url 'ecs.meetings.views.next' %}">{% trans "Next Meeting" %}</a>
-                            {% if user.profile.is_internal or user.profile.is_resident_member or user.profile.is_omniscient_member %}
-                                <a class="dropdown-item" href="{% url 'ecs.meetings.views.upcoming_meetings' %}">{% trans "Upcoming Meetings" %}</a>
-                            {% endif %}
-                            {% if user.profile.is_internal %}
-                                <a class="dropdown-item" href="{% url 'ecs.meetings.views.past_meetings' %}">{% trans "Past Meetings" %}</a>
-                            {% endif %}
-                            {% if user|is_member_of:"EC-Office" %}
-                                <a class="dropdown-item" href="{% url 'ecs.meetings.views.create_meeting' %}">{% trans "New Meeting" %}</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-                {% if user.profile.is_internal %}
-                    <div class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle administration" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Administration" %}</a>
-                        <div class="dropdown-menu">
-                            {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Member" %}
-                                <a class="dropdown-item" href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a>
-                                <a class="dropdown-item" href="{% url 'ecs.billing.views.submission_billing' %}">{% trans "Accounting of fees" %}</a>
-                                <a class="dropdown-item" href="{% url 'ecs.billing.views.external_review_payment' %}">Gutachter Bezahlung</a>
-                                <a class="dropdown-item" href="{% url 'ecs.core.views.administration.advanced_settings' %}">{% trans 'Advanced Settings' %}</a>
-                            {% endif %}
-                            <a class="dropdown-item" href="{% url 'ecs.statistics.views.stats' %}">{% trans 'Statistics' %}</a>
-                            <a class="dropdown-item" href="{% url 'ecs.boilerplate.views.list_boilerplate' %}">{% trans 'Boilerplates' %}</a>
-                            {% if user|is_member_of:'EC-Signing' or user|is_member_of:'EC-Office' %}
-                                <a class="dropdown-item" href="{% url 'ecs.pki.views.cert_list' %}">{% trans 'PKI' %}</a>
-                            {% endif %}
-                            <a class="dropdown-item" href="{% url 'ecs.tags.views.index' %}">{% trans "Tags" %}</a>
-                        </div>
-                    </div>
-                {% endif %}
-            </nav>
+            {% endfor %}
+
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 {% endblock %}

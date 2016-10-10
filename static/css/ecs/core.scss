@@ -130,67 +130,6 @@ input[disabled]:not(.btn) {
     }
 }
 
-#sidebar {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    width: 220px; /* Width of frame div */
-    overflow-x: hidden;
-    overflow-y: auto;
-    color: $grey-20;
-    background: #f6f6e9;
-    word-wrap: break-word;
-    border-left: 1px solid $bisque;
-
-    a.user_logout {
-        color: #800000;
-        font-size: 13px;
-    }
-
-    #account,
-    #usertoolbar {
-        padding: 10px;
-        border-bottom: 1px solid $grey-80;
-    }
-    #logo {
-        padding: 10px 10px 0 10px;
-        border-bottom: 1px solid $grey-80;
-        background: $white;
-
-        img {
-            width: 100%;
-            height: auto;
-        }
-    }
-    #account {
-        overflow-x: hidden;
-        overflow-y: visible;
-        font-size: 14px;
-    }
-    #usertoolbar {
-        min-height: 10px;
-        background: #ededdc;
-    }
-    #usermenu {
-        padding: 10px;
-    }
-
-    .user_data,
-    .searchbox {
-        margin-bottom: 10px;
-    }
-
-    .breadcrumbs {
-        margin-top: 10px;
-        margin-bottom: -5px;
-    }
-
-    #userswitcher_form select {
-        width: 100%;
-    }
-}
-
 /* table border definitions */
 
 #status_tab > table > tbody > tr > th,
@@ -390,4 +329,14 @@ table.notification td,
 
 select[data-ajax--url] {
     min-width: 250px;
+}
+
+nav.navbar {
+    display:flex;
+    align-items:center;
+}
+
+nav.navbar .navbar-brand img {
+    width: auto;
+    max-height: 50px;
 }
