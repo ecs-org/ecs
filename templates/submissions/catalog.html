@@ -18,12 +18,10 @@
         {% with vote.submission_form as sf %}
             <div class="card card-outline-primary">
                 <div class="card-block">
-                    <div>
-                        <h2 class="card-title font-weight-normal">
-                            {{ sf.german_project_title }} 
-                            <small class="font-weight-normal d-block m-t-1">{{ sf.project_title }}</small>
-                        </h2>
-                    </div>
+                    <h2 class="card-title font-weight-normal">
+                        {{ sf.german_project_title }}
+                        <small class="font-weight-normal d-block m-t-1">{{ sf.project_title }}</small>
+                    </h2>
                     <hr>
                     <ul class="list-inline">
                         <li class="list-inline-item"><strong>Sponsor:</strong> {{ sf.sponsor_name }}</li>
