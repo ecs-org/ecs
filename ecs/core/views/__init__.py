@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.decorators.cache import cache_control
 
@@ -14,8 +14,3 @@ def logo(request):
     if not s.logo:
         return redirect(staticfiles_storage.url('images/fallback_logo.png'))
     return HttpResponse(s.logo, content_type=s.logo_mimetype)
-
-
-@forceauth.exempt
-def sitenotice(request):
-    return render(request, 'sitenotice.html', {})

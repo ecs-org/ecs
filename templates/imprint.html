@@ -1,0 +1,21 @@
+{% load core %}
+
+<div id="imprint" class="m-y-1 row">
+    <div class="col-xs-12 text-xs-center">
+        {% ec_name %}
+    </div>
+
+    <div class="col-md-6 text-xs-center text-md-right">
+        {% db_setting 'address' as address %}
+        {{ address|linebreaksbr }}<br>
+    </div>
+    <div class="col-md-6 text-xs-center text-md-left">
+        {% db_setting 'contact_email' as email %}
+        <span class="fa fa-envelope"></span>
+        <a href="mailto:{{ email }}">{{ email }}</a><br>
+
+        {% db_setting 'contact_url' as url %}
+        <span class="fa fa-globe"></span>
+        <a href="{{ url }}">{{ url }}</a>
+    </div>
+</div>
