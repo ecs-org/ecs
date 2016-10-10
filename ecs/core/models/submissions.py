@@ -818,11 +818,7 @@ class InvestigatorEmployee(models.Model):
         if self.title:
             name.insert(0, self.title)
         return ' '.join(name)
-    
-    @property
-    def geschlecht_string(self):
-        return dict(m="Hr", f="Fr").get(self.sex, "")
-        
+
     def __str__(self):
         return self.full_name
 

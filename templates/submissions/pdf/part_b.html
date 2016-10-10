@@ -64,7 +64,7 @@ Krankenanstalt/Institut/Abteilung: <strong> {{ inv.organisation }} </strong></p>
 {% for emp in inv.employees.all %}
   <tbody>
     <tr>
-      <td><strong>{{ emp.geschlecht_string }}</strong></td>
+      <td><strong>{{ emp.get_sex_display }}</strong></td>
       <td><strong>{{ emp.title }}</strong></td>
       <td><strong>{{ emp.firstname }}</strong></td>
       <td><strong>{{ emp.surname }}</strong></td>
