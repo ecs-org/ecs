@@ -72,12 +72,20 @@
             </div>
         {% endwith %}
     {% endfor %}
-</div>
 
-<div class="btn-group m-l-2 m-b-1" role="group" aria-label="Years">
-    {% for date in years %}
-        <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
-    {% endfor %}
+    <div class="row m-b-2">
+        <div class="m-x-auto">
+            <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
+                <img alt="CC BY-SA 3.0 AT" src={% static 'images/by-sa-3.0-at-80x15.png' %} />
+                &copy; {% ec_name %}
+            </a>
+        </div>
+        <div class="btn-group m-x-auto" role="group" aria-label="Years">
+            {% for date in years %}
+                <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 <div class="m-l-2 m-b-1">
