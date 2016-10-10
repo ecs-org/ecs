@@ -1,5 +1,14 @@
-{% extends 'public.html' %}
+{% extends 'shell.html' %}
 {% load i18n staticfiles %}
+
+{% block htmlcss %}
+    {{ block.super }}
+    <style type="text/css">
+        div.card div.testinginfo {
+            border-left: solid 0.5rem #0275d8;
+        }
+    </style>
+{% endblock %}
 
 {% block htmlbody %}
 <div class="m-x-2 m-t-1">
