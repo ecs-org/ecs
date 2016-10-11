@@ -138,7 +138,7 @@ class AssignedMedicalCategory(models.Model):
 class MeetingManager(AuthorizationManager):
     def next(self):
         try:
-            return self.filter(ended__isnull=True).order_by('start')[0]
+            return self.filter(ended=None).order_by('start')[0]
         except IndexError:
             raise self.model.DoesNotExist()
 
@@ -146,7 +146,7 @@ class MeetingManager(AuthorizationManager):
         return self.filter(ended__isnull=False)
 
     def upcoming(self):
-        return self.filter(ended__isnull=True)
+        return self.filter(ended=None)
 
     def next_schedulable_meeting(self, submission):
         first_sf = submission.forms.order_by('created_at')[0]
@@ -477,7 +477,7 @@ class Meeting(models.Model):
         })
 
     def _get_timeframe_for_user(self, user):
-        entries = list(self.timetable_entries.filter(participations__pk__in=Participation.objects.filter(user=user, ignored_for_optimization=False).values('pk').query).exclude(timetable_index__isnull=True).order_by('timetable_index'))
+        entries = list(self.timetable_entries.filter(participations__pk__in=Participation.objects.filter(user=user, ignored_for_optimization=False).values('pk').query).exclude(timetable_index=None).order_by('timetable_index'))
         if not entries:
             return None
         start, end = entries[0].start, entries[-1].end
@@ -588,7 +588,7 @@ class TimetableEntry(models.Model):
             index = self.meeting.timetable_entries.aggregate(models.Max('timetable_index'))['timetable_index__max']
             if index is None:
                 index = -1
-            index += self.meeting.timetable_entries.filter(timetable_index__isnull=True, pk__lte=self.pk).count()
+            index += self.meeting.timetable_entries.filter(timetable_index=None, pk__lte=self.pk).count()
             return index
     
     @cached_property

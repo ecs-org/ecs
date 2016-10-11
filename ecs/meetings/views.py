@@ -145,7 +145,7 @@ def tops(request, meeting=None):
     open_tops = {}
     for top in [t for t in tops if t.is_open]:
         if top.submission:
-            medical_categories = meeting.medical_categories.exclude(board_member__isnull=True).filter(
+            medical_categories = meeting.medical_categories.exclude(board_member=None).filter(
                 category__in=top.submission.medical_categories.values('pk').query)
             bms = tuple(User.objects
                 .filter(pk__in=medical_categories.values('board_member').query)

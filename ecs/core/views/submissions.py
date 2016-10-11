@@ -198,7 +198,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 queryset=checklist.answers.order_by('question__index'))
 
             task = (get_obj_tasks((ChecklistReview,), submission, data=checklist.blueprint)
-                .filter(assigned_to=request.user, deleted_at__isnull=True)
+                .filter(assigned_to=request.user, deleted_at=None)
                 .exclude(task_type__workflow_node__uid='thesis_recommendation_review')  # XXX: legacy
                 .order_by('-closed_at')
                 .first())
@@ -261,7 +261,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'open_notifications': notifications.pending(),
         'answered_notifications': notifications.exclude(pk__in=Notification.objects.pending().values('pk').query),
         'stashed_notifications': stashed_notifications,
-        'pending_votes': votes.filter(published_at__isnull=True),
+        'pending_votes': votes.filter(published_at=None),
         'published_votes': votes.filter(published_at__isnull=False),
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
@@ -904,7 +904,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     filterform = filter_form(request.POST or getattr(usersettings, filtername))
 
     submissions = (filterform.filter_submissions(submissions, request.user)
-        .exclude(current_submission_form__isnull=True)
+        .exclude(current_submission_form=None)
         .select_related('current_submission_form')
         .prefetch_related(Prefetch('meetings',
             queryset=Meeting.unfiltered.order_by('start')))
@@ -1198,7 +1198,7 @@ def submission_widget(request, template='submissions/widget.html'):
     else:
         stashed = (DocStash.objects
             .filter(group='ecs.core.views.submissions.create_submission_form',
-                owner=request.user, object_id__isnull=True, current_version__gte=0)
+                owner=request.user, object_id=None, current_version__gte=0)
             .order_by('-modtime')
         )
         data.update({
@@ -1348,7 +1348,7 @@ def my_submissions(request):
 
     stashed = (DocStash.objects
         .filter(group='ecs.core.views.submissions.create_submission_form',
-            owner=request.user, object_id__isnull=True, current_version__gte=0)
+            owner=request.user, object_id=None, current_version__gte=0)
         .order_by('-modtime')
     )
 

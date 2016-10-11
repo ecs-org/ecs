@@ -236,7 +236,7 @@ class Submission(models.Model):
         return self.get_ec_number_display(separator='_')
 
     def allows_categorization(self):
-        return not self.meetings.filter(started__isnull=False, ended__isnull=True).exists() and not self.is_active and not self.is_finished
+        return not self.meetings.filter(started__isnull=False, ended=None).exists() and not self.is_active and not self.is_finished
 
 
 class MySubmission(models.Model):
@@ -548,7 +548,7 @@ class SubmissionForm(models.Model):
         s = self.submission
         if s.presenter == user and self.is_current:
             diff_notifications = Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True)
-            if not diff_notifications.unanswered().exists() and not diff_notifications.filter(answer__published_at__isnull=True).answered().exists():
+            if not diff_notifications.unanswered().exists() and not diff_notifications.filter(answer__published_at=None).answered().exists():
                 return s.is_active
         return False
 
@@ -659,7 +659,7 @@ class SubmissionForm(models.Model):
 
     def get_involved_parties(self):
         current_user = get_current_user()
-        if current_user and not current_user.profile.is_internal and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at__isnull=True).exists():
+        if current_user and not current_user.profile.is_internal and Task.objects.for_submission(self.submission).filter(task_type__workflow_node__uid='external_review', assigned_to=current_user, deleted_at=None).exists():
             return get_reviewing_parties(self)
         return get_involved_parties(self)
 

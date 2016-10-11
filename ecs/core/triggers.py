@@ -30,7 +30,7 @@ def on_study_change(sender, **kwargs):
             if not submission.votes.filter(is_draft=False, result__in=FINAL_VOTE_RESULTS).exists():
                 initial_review_tasks = get_obj_tasks((InitialReview,), submission)
                 try:
-                    initial_review_task = initial_review_tasks.exclude(closed_at__isnull=True).order_by('-created_at')[0]
+                    initial_review_task = initial_review_tasks.exclude(closed_at=None).order_by('-created_at')[0]
                 except IndexError:
                     pass
                 else:

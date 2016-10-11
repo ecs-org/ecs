@@ -205,7 +205,7 @@ class ExpeditedVoteForm(forms.ModelForm):
 class BaseExpeditedVoteFormSet(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         queryset = kwargs.get('queryset', TimetableEntry.objects.all())
-        queryset = queryset.filter(Q(vote__isnull=True) | Q(vote__is_draft=True)).order_by('submission__ec_number')
+        queryset = queryset.filter(Q(vote=None) | Q(vote__is_draft=True)).order_by('submission__ec_number')
         kwargs['queryset'] = queryset
         super().__init__(*args, **kwargs)
     

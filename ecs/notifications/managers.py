@@ -7,10 +7,10 @@ class NotificationQuerySet(models.QuerySet):
         return self.filter(models.Q(answer__isnull=False) | models.Q(safetynotification__is_acknowledged=True))
         
     def unanswered(self):
-        return self.filter(models.Q(answer__isnull=True) & (models.Q(safetynotification__isnull=True) | models.Q(safetynotification__is_acknowledged=False)))
+        return self.filter(models.Q(answer=None) & (models.Q(safetynotification=None) | models.Q(safetynotification__is_acknowledged=False)))
 
     def pending(self):
-        return self.unanswered() | self.filter(answer__published_at__isnull=True)
+        return self.unanswered() | self.filter(answer__published_at=None)
 
 
 NotificationManager = AuthorizationManager.from_queryset(NotificationQuerySet)

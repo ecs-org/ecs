@@ -95,7 +95,7 @@ def submission_billing(request):
     with sudo():
         categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization').closed()
         submissions = Submission.objects.filter(pk__in=categorization_tasks.values('data_id').query)
-    unbilled_submissions = list(submissions.filter(invoice__isnull=True).distinct().order_by('ec_number'))
+    unbilled_submissions = list(submissions.filter(invoice=None).distinct().order_by('ec_number'))
     for submission in unbilled_submissions:
         submission.price = Price.objects.get_for_submission(submission)
 
@@ -186,7 +186,7 @@ def invoice_list(request):
 @user_group_required('EC-Office', 'EC-Executive Board Member')
 def external_review_payment(request):
     checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status__in=['new', 'dropped']).filter(
-        Q(billing_state__isnull=True)|Q(billing_state__isnull=False, billing_state__billed_at=None))
+        Q(billing_state=None)|Q(billing_state__isnull=False, billing_state__billed_at=None))
     price = Price.objects.get_review_price()
 
     if request.method == 'POST':

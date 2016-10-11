@@ -40,10 +40,10 @@ class TaskQuerySet(models.QuerySet):
         return self.filter(content_type=ct, data_id=data.pk)
         
     def open(self):
-        return self.filter(deleted_at__isnull=True, closed_at=None)
+        return self.filter(deleted_at=None, closed_at=None)
 
     def closed(self):
-        return self.filter(deleted_at__isnull=True, closed_at__isnull=False)
+        return self.filter(deleted_at=None, closed_at__isnull=False)
         
     def mark_deleted(self):
         for t in self.all():
@@ -302,12 +302,12 @@ def workflow_token_received(sender, **kwargs):
 
 @receiver(token_consumed)
 def workflow_token_consumed(sender, **kwargs):
-    for task in Task.objects.filter(workflow_token=sender, closed_at__isnull=True):
+    for task in Task.objects.filter(workflow_token=sender, closed_at=None):
         task.close()
 
 @receiver(token_marked_deleted)
 def workflow_token_marked_deleted(sender, **kwargs):
-    for task in Task.objects.filter(workflow_token=sender, deleted_at__isnull=True):
+    for task in Task.objects.filter(workflow_token=sender, deleted_at=None):
         task.deleted_at = timezone.now()
         task.save()
 

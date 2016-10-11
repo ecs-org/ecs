@@ -81,7 +81,7 @@ def get_reviewing_parties(sf, active=None):
 
     anonymous = get_current_user() and not get_current_user().profile.is_internal
     with sudo():
-        tasks = Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at__isnull=True).exclude(task_type__workflow_node__uid='resubmission').order_by('created_at').select_related('task_type').distinct()
+        tasks = Task.objects.for_submission(sf.submission).filter(assigned_to__isnull=False, deleted_at=None).exclude(task_type__workflow_node__uid='resubmission').order_by('created_at').select_related('task_type').distinct()
         if active:
             tasks = tasks.open()
         tasks = list(tasks)

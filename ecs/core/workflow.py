@@ -74,7 +74,7 @@ def needs_thesis_vote_preparation(wf):
 @block_duplicate_task('vote_preparation')
 def needs_expedited_vote_preparation(wf):
     with sudo():
-        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
+        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at=None).exists()
         negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
         return not unfinished and not negative.exists()
 
@@ -82,7 +82,7 @@ def needs_expedited_vote_preparation(wf):
 @block_duplicate_task('categorization')
 def needs_expedited_recategorization(wf):
     with sudo():
-        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at__isnull=True).exists()
+        unfinished = wf.tokens.filter(node__graph__workflows=wf, node__uid='expedited_recommendation', consumed_at=None).exists()
         negative = ChecklistAnswer.objects.filter(question__number='1', answer=False, checklist__submission=wf.data, checklist__blueprint__slug='expedited_review')
         return not unfinished and negative.exists()
 
@@ -262,8 +262,8 @@ class ExpeditedRecommendationSplit(Generic):
         s = self.workflow.data
         with sudo():
             tasks = Task.objects.for_data(s).filter(
-                deleted_at__isnull=True, task_type__workflow_node__uid='expedited_recommendation')
-            tasks.filter(assigned_to__isnull=True, closed_at=None).exclude(
+                deleted_at=None, task_type__workflow_node__uid='expedited_recommendation')
+            tasks.filter(assigned_to=None, closed_at=None).exclude(
                 medical_category__in=s.medical_categories.values('pk')).mark_deleted()
             missing_cats = list(s.medical_categories.exclude(
                 pk__in=tasks.values('medical_category_id')))

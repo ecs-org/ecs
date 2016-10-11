@@ -56,7 +56,7 @@ def on_vote_published(sender, **kwargs):
         meeting = sf.submission.schedule_to_meeting()
         meeting.update_assigned_categories()
         with sudo():
-            tasks = Task.objects.for_submission(sf.submission).filter(task_type__workflow_node__uid='categorization', deleted_at__isnull=True)
+            tasks = Task.objects.for_submission(sf.submission).filter(task_type__workflow_node__uid='categorization', deleted_at=None)
             if tasks and not any(t for t in tasks if not t.closed_at):  # XXX
                 tasks[0].reopen()
     elif vote.is_permanent:
