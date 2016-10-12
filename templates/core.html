@@ -1,6 +1,30 @@
 {% extends 'shell.html' %}
 {% load alert compress i18n userutils core scratchpad userswitcher staticfiles version_tag %}
 
+{% block htmlcss %}
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/base.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/core.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/forms.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/readonly.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/notification.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/diff.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/meetings.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/communication.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/dashboard.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/search.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/billing.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tasks.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/submission.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/administration.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/boilerplate.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/signature.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/statistics.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tags.scss' %} />
+    {% endcompress %}
+{% endblock %}
+
 {% block htmlbody %}
     <div id="container">
         <div id="header">
@@ -152,69 +176,84 @@
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
-  <script type="text/javascript">
-    $(function(){
-      var selected = '{% block menuSelection %}dashboard{% endblock %}';
-      $('#usermenu .nav-link.' + selected).addClass('active');
+    {{ block.super }}
 
-      {% if request.task_management.form %}
-          ecs.init_task_form();
-      {% endif %}
+    {% compress js %}
+        <script type="text/javascript" src={% static 'js/ecs/__init__.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/TabController.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/TabbedForm.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/InlineFormset.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/fieldhistory.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/textarea.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/textarea.toolbarItems.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/utils.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/widgets.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/tasks.js' %}></script>
+        <script type="text/javascript" src={% static 'js/ecs/communication.js' %}></script>
+    {% endcompress %}
 
-      window.openHelpPage = function(ev) {
-          if (ev)
-              ev.preventDefault();
+    <script type="text/javascript">
+        $(function(){
+            var selected = '{% block menuSelection %}dashboard{% endblock %}';
+            $('#usermenu .nav-link.' + selected).addClass('active');
 
-          {% if request.tracking_data.view %}
-              var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
-              if(ev && ev.shiftKey){
-                  url = '{% url 'ecs.help.views.edit_help_page' view_pk=request.tracking_data.view.pk %}';
-              }
-              if(window.location.hash){
-                  url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
-              }
-          {% else %}
-              var url = '{% url 'ecs.help.views.index' %}';
-          {% endif %}
-          var win = window.open(url, 'ecshelp');
-          win.focus();
-      };
-      
-      $('#help_button').click(window.openHelpPage);
+            {% if request.task_management.form %}
+                ecs.init_task_form();
+            {% endif %}
 
-      $('#userswitcher_input').select2({placeholder: null});
+            window.openHelpPage = function(ev) {
+                if (ev)
+                    ev.preventDefault();
 
-      $(document).on('click', 'a.scratchpad', function(ev) {
-          ev.preventDefault();
+                {% if request.tracking_data.view %}
+                    var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
+                    if(ev && ev.shiftKey){
+                        url = '{% url 'ecs.help.views.edit_help_page' view_pk=request.tracking_data.view.pk %}';
+                    }
+                    if(window.location.hash){
+                        url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
+                    }
+                {% else %}
+                    var url = '{% url 'ecs.help.views.index' %}';
+                {% endif %}
+                var win = window.open(url, 'ecshelp');
+                win.focus();
+            };
 
-          var modal = ecs.popup();
-          modal.find('.modal-content').load($(this).attr('href'), function() {
-              var textarea = modal.find('textarea[name="text"]');
-              var len = textarea.val().length;
-              textarea.focus();
-              textarea.get(0).setSelectionRange(len, len);
-          });
+            $('#help_button').click(window.openHelpPage);
 
-          modal.on('hide.bs.modal', function() {
-              var form = modal.find('form');
-              if (form.length)
-                  $.post(form.attr('action'), form.serialize());
-          });
+            $('#userswitcher_input').select2({placeholder: null});
 
-          modal.on('click', 'a', function(ev) {
-              ev.preventDefault();
+            $(document).on('click', 'a.scratchpad', function(ev) {
+                ev.preventDefault();
 
-              var form = modal.find('form');
-              if (form.length)
-                  $.post(form.attr('action'), form.serialize());
+                var modal = ecs.popup();
+                modal.find('.modal-content').load($(this).attr('href'), function() {
+                    var textarea = modal.find('textarea[name="text"]');
+                    var len = textarea.val().length;
+                    textarea.focus();
+                    textarea.get(0).setSelectionRange(len, len);
+                });
 
-              modal.find('.modal-content').load($(this).attr('href'));
-          });
-      });
+                modal.on('hide.bs.modal', function() {
+                    var form = modal.find('form');
+                    if (form.length)
+                        $.post(form.attr('action'), form.serialize());
+                });
 
-      $.fn.select2.defaults.set('placeholder', '\u2026');
-      $.fn.select2.defaults.set('dropdownAutoWidth', true);
-    });
-  </script>
+                modal.on('click', 'a', function(ev) {
+                    ev.preventDefault();
+
+                    var form = modal.find('form');
+                    if (form.length)
+                        $.post(form.attr('action'), form.serialize());
+
+                    modal.find('.modal-content').load($(this).attr('href'));
+                });
+            });
+
+            $.fn.select2.defaults.set('placeholder', '\u2026');
+            $.fn.select2.defaults.set('dropdownAutoWidth', true);
+        });
+    </script>
 {% endblock %}

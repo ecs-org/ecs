@@ -1,4 +1,4 @@
-{% load compress core staticfiles %}
+{% load core staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,27 +12,6 @@
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap/bootstrap.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/font-awesome-4.6.3/css/font-awesome.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker3.standalone.min.css' %} />
-            {% compress css %}
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/base.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/core.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/forms.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/readonly.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/notification.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/diff.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/meetings.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/communication.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/dashboard.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/search.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/billing.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/help.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tasks.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/submission.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/administration.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/boilerplate.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/signature.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/statistics.scss' %} />
-                <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tags.scss' %} />
-            {% endcompress %}
         {% endblock %}         
     </head>
     <body style="overflow: auto;">
@@ -44,19 +23,6 @@
             <script type="text/javascript" src={% static '3rd-party/tether/tether.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/bootstrap/bootstrap.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker.min.js' %}></script>
-            {% compress js %}
-                <script type="text/javascript" src={% static 'js/ecs/__init__.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/TabController.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/TabbedForm.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/InlineFormset.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/fieldhistory.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/textarea.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/textarea.toolbarItems.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/utils.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/widgets.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/tasks.js' %}></script>
-                <script type="text/javascript" src={% static 'js/ecs/communication.js' %}></script>
-            {% endcompress %}
         {% endblock %}
     </body>
 </html>

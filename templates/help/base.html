@@ -1,7 +1,14 @@
 {% extends "shell.html" %}
-{% load userutils staticfiles %}
+{% load compress userutils staticfiles %}
 
 {% block htmltitle %}Online Hilfe | {{ block.super }}{% endblock %}
+
+{% block htmlcss %}
+    {{ block.super }}
+    {% compress css %}
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/help.scss' %} />
+    {% endcompress %}
+{% endblock %}
 
 {% block htmlbody %}
 <div id="help">
