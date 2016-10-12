@@ -121,17 +121,6 @@ def allows_edits_by(sf, user):
 def allows_export_by(sf, user):
     return sf.allows_export(user)
 
-@register.tag(name='sitescss')
-def do_sitescss(parser, token):
-    return SiteSCSSNode()
-
-class SiteSCSSNode(Node):
-    def render(self, context):
-        sitecss = ''
-        logo_border_color = getattr(settings, 'ECS_LOGO_BORDER_COLOR', None)
-        if logo_border_color:
-            sitecss += '#logo {background-color:%s;}\n' % (logo_border_color)
-        return sitecss
 
 class BreadcrumbsNode(Node):
     def __init__(self, varname):
