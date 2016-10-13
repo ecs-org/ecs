@@ -9,10 +9,12 @@
         <span class="fa fa-search"></span>
         {{ submission_form.submission|ec_number }}
     </a>
-    {{ submission.project_title_display }}
-    {% if submission.is_finished %}
-        ({% trans 'finished' %})
-    {% endif %}
+    <small title="{{ submission.project_title_display }}">
+        {{ submission.project_title_display }}
+        {% if submission.is_finished %}
+            ({% trans 'finished' %})
+        {% endif %}
+    </small>
 {% endblock %}
 
 
