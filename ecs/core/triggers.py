@@ -2,13 +2,11 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
-from ecs.core.workflow import InitialReview
 from ecs.core import signals
 from ecs.tasks.models import Task
-from ecs.tasks.utils import get_obj_tasks
 from ecs.users.utils import sudo, get_current_user
 from ecs.users.utils import get_office_user
-from ecs.votes.constants import FINAL_VOTE_RESULTS
+from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
 
@@ -26,16 +24,27 @@ def on_study_change(sender, **kwargs):
         for u in new_sf.get_involved_parties().get_users().difference([submission.presenter]):
             send_submission_message(submission, u, _('Submission of study EC-Nr. {ec_number}'), 'submissions/creation_message.txt', reply_receiver=submission.presenter)
     else:
-        with sudo():
-            if not submission.votes.filter(is_draft=False, result__in=FINAL_VOTE_RESULTS).exists():
-                initial_review_tasks = get_obj_tasks((InitialReview,), submission)
-                try:
-                    initial_review_task = initial_review_tasks.exclude(closed_at=None).order_by('-created_at')[0]
-                except IndexError:
-                    pass
-                else:
-                    if not initial_review_tasks.open().exists():
-                        initial_review_task.reopen()
+        reopen = True
+
+        current_vote = submission.current_published_vote
+        if current_vote:
+            if current_vote.result in PERMANENT_VOTE_RESULTS:
+                reopen = False
+            elif current_vote.result == '2':
+                pending_vote = submission.current_pending_vote
+                if not pending_vote or pending_vote.is_draft:
+                    reopen = False
+
+        if reopen:
+            with sudo():
+                initial_review_tasks = Task.objects.for_data(submission).filter(
+                    task_type__workflow_node__uid__in=(
+                        'initial_review', 'initial_thesis_review'),
+                    deleted_at=None,
+                )
+
+                if not initial_review_tasks.open().exists():
+                    initial_review_tasks.order_by('-created_at').first().reopen()
 
 
 @receiver(signals.on_study_submit)
