@@ -158,7 +158,11 @@ dev_update(){
     if $ds_change; then
         echo "devserver service change"
         sudo cp -f $G_srcdir/conf/devserver.service /etc/systemd/system/devserver.service
+        sudo -- bash -c 'grep -qi "^#\?RateLimitBurst" /etc/systemd/journald.conf &&
+            sed -i "s/^#\?RateLimitBurst.*/RateLimitBurst=100000/" /etc/systemd/journald.conf ||
+            echo "RateLimitBurst=100000" >> /etc/systemd/journald.conf'
         sudo systemctl daemon-reload
+        sudo systemctl restart systemd-journald
         sudo systemctl enable devserver
     fi
 
