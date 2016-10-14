@@ -41,7 +41,7 @@ RUN ./scripts/create-dirs.sh /app
 RUN . /app/env/bin/activate; \
     ./manage.py compilemessages && \
     ./manage.py collectstatic --noinput && \
-    ./manage.py compress -f
+    ./manage.py compress
 
 # create version.py file but do not abort if not successful
 RUN ./scripts/create-version-file.sh /app/ecs /app/ecs/ecs/version.py || true

@@ -331,12 +331,10 @@ COMPRESS_PRECOMPILERS = (
     (
         'text/x-scss',
         'pyscss -I {} -o {{outfile}} {{infile}}'.format(
-            os.path.join(PROJECT_DIR, 'static', 'css'))
+            os.path.join(STATIC_ROOT, 'css'))
     ),
 )
 
-COMPRESS_DEBUG_TOGGLE = 'showmethesource' if DEBUG else 'foo'
-COMPRESS_OFFLINE = False if DEBUG else True
 
 # settings override
 ###################
