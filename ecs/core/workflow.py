@@ -8,7 +8,7 @@ from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
-from ecs.core.signals import on_initial_review, on_categorization, on_b2_upgrade
+from ecs.core.signals import on_initial_review, on_categorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
 from ecs.tasks.models import Task
@@ -196,7 +196,9 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
                 vote.is_draft = False
             vote.save()
             if is_upgrade:
-                on_b2_upgrade.send(Submission, submission=self.workflow.data, vote=vote)
+                vote.submission_form.is_acknowledged = True
+                vote.submission_form.save()
+                vote.submission_form.mark_current()
 
 
 class Categorization(Activity):

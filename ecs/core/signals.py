@@ -6,4 +6,3 @@ on_presenter_change = Signal() # sender=Submission, kwargs: submission, old_pres
 on_susar_presenter_change = Signal() # sender=Submission, kwargs: submission, old_susar_presenter, new_susar_presenter
 on_initial_review = Signal() # sender=Submission, kwargs: submission, form
 on_categorization = Signal() # sender=Submission, kwargs: submission
-on_b2_upgrade = Signal() # sender=Submission, kwargs: submission, vote

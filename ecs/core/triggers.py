@@ -161,11 +161,3 @@ def on_categorization(sender, **kwargs):
         for task in vote_preparation_tasks:
             if task.workflow_token.source.uid != source_uid:
                 task.mark_deleted()
-
-
-@receiver(signals.on_b2_upgrade)
-def on_b2_upgrade(sender, **kwargs):
-    submission, vote = kwargs['submission'], kwargs['vote']
-    vote.submission_form.is_acknowledged = True
-    vote.submission_form.save()
-    vote.submission_form.mark_current()
