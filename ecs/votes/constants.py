@@ -16,7 +16,6 @@ VOTE_RESULT_CHOICES = VOTE_PREPARATION_CHOICES + (
     ('5', _('5 withdrawn (applicant)')),
 )
 
-VOTE_RESULTS = [r for r, label in VOTE_RESULT_CHOICES]
 POSITIVE_VOTE_RESULTS = ('1', '2')
 NEGATIVE_VOTE_RESULTS = ('4', '5')
 RECESSED_VOTE_RESULTS = ('3a', '3b')
