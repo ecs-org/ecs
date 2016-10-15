@@ -57,16 +57,20 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         usersettings = request.user.ecs_settings
 
         filterdict = request.POST or request.GET or None
-        if filterdict is None and not usersettings.task_filter is None:
+        if filterdict is None and usersettings.task_filter is not None:
             filterdict = QueryDict(usersettings.task_filter)
         filterform = TaskListFilterForm(filterdict)
-        filterform.is_valid() # force clean
+
+        if filterform.is_valid():
+            sortkey = filterform.cleaned_data.get('sorting', 'deadline')
+        else:
+            sortkey = 'deadline'
 
         sorting = {
             'deadline': 'workflow_token__deadline',
             'oldest': 'created_at',
             'newest': '-created_at',
-        }[filterform.cleaned_data.get('sorting', 'deadline')]
+        }[sortkey]
 
         if request.method == 'POST':
             usersettings.task_filter = filterform.urlencode()
