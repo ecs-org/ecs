@@ -24,7 +24,7 @@
                 {% with submission.get_current_docstash as docstash %}
                 {% if docstash %}
                     <tr>
-                        <td>{{ submission.forms.count|add:1 }}</td>
+                        <td>{{ submission_forms|length|add:1 }}</td>
                         <td colspan="4" class="text-xs-center">
                             <i>{% trans "This form has not been submitted yet." %}</i>
                         </td>
@@ -62,11 +62,8 @@
                         <td>
                             {% if sf.is_notification_update %}
                                 {% with sf.new_for_notification.all.0 as notif %}
-                                    {% if notif %}
-                                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk %}">{{ notif }}</a>
-                                    {% else %}
-                                        -
-                                    {% endif %}
+                                    {% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk as url %}
+                                    <a href="{{ url }}">{% trans 'Amendment' %}</a>
                                 {% endwith %}
                             {% else %}
                                 –

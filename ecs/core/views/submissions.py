@@ -228,7 +228,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             answers = checklist.answers.filter(q)
             checklist_summary.append((checklist, answers))
 
-    submission_forms = list(submission.forms.order_by('-created_at'))
+    submission_forms = list(submission.forms
+        .prefetch_related('new_for_notification')
+        .order_by('-created_at'))
     for sf, prev in zip(submission_forms, submission_forms[1:]):
         sf.previous_form = prev
     current_form_idx = [sf == submission.current_submission_form for sf in submission_forms].index(True)
@@ -263,7 +265,9 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
-        'documents': submission_form.documents.order_by('doctype__identifier', 'date', 'name'),
+        'documents': submission_form.documents
+            .select_related('doctype')
+            .order_by('doctype__identifier', 'date', 'name'),
         'readonly': True,
         'submission': submission,
         'submission_form': submission_form,
