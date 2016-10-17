@@ -2,6 +2,7 @@
 
 import os, sys, platform, logging
 from datetime import timedelta
+from urllib.parse import urlparse
 
 # root dir of project
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
@@ -18,11 +19,23 @@ DEBUG = True
 
 # database configuration defaults, may get overwritten in local_settings
 DATABASES = {}
-DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'ecs',
-    'ATOMIC_REQUESTS': True,
-}
+if os.getenv('DATABASE_URL'):
+    url = urlparse(os.getenv('DATABASE_URL'))
+    DATABASES['default'] = {
+        'NAME': url.path[1:] or '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'USER': url.username,
+        'PASSWORD': url.password,
+        'HOST': url.hostname or '',
+        'PORT': url.port or '5432',
+        'ATOMIC_REQUESTS': True
+    }
+else:
+    DATABASES['default'] = {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ecs',
+        'ATOMIC_REQUESTS': True,
+    }
 
 # Local time zone for this installation. See http://en.wikipedia.org/wiki/List_of_tz_zones_by_name,
 # although not all choices may be available on all operating systems.
@@ -75,11 +88,19 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 FIXTURE_DIRS = [os.path.join(PROJECT_DIR, "fixtures")]
 
 # cache backend, warning, this is seperate for each process, for production use memcache
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
-}
+if os.getenv('MEMCACHED_URL'):
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+            'LOCATION': os.getenv('MEMCACHED_URL').split('//')[1],
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        },
+    }
 
 # django.contrib.messages
 MESSAGE_STORE = 'django.contrib.messages.storage.session.SessionStorage'
@@ -293,7 +314,6 @@ ECSMAIL = {
 # ### celery ### configuration defaults, uses memory transport and always eager
 # production environments should:
 #   set BROKER_USER, PASSWORD, VHOST
-BROKER_URL = 'amqp://ecsuser:ecspassword@localhost:5672/ecshost'
 
 CELERY_IMPORTS = (
     'ecs.communication.tasks',
@@ -308,8 +328,18 @@ CELERY_TASK_SERIALIZER = 'pickle'
 CELERY_ACCEPT_CONTENT = (CELERY_TASK_SERIALIZER,)
 # try to propagate exceptions back to caller
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
-# dont use queueing backend but consume it right away
-CELERY_ALWAYS_EAGER = True
+
+if os.getenv('REDIS_URL'):
+    BROKER_URL = os.getenv('REDIS_URL')
+    BROKER_TRANSPORT_OPTIONS = {
+        'fanout_prefix': True,
+        'fanout_patterns': True
+    }
+    CELERY_RESULT_BACKEND = BROKER_URL
+    CELERY_ALWAYS_EAGER = False
+else:
+    # dont use queueing backend but consume it right away
+    CELERY_ALWAYS_EAGER = True
 
 
 # ### haystack ### fulltext search engine
@@ -349,15 +379,13 @@ COMPRESS_PRECOMPILERS = (
 #ECS_WORDING = True/False defaults to False if empty
 # activates django-rosetta
 
+# import and execute ECS_SETTINGS from environment as python code if they exist
+if os.getenv('ECS_SETTINGS'):
+    exec(os.getenv('ECS_SETTINGS'))
+
 # overwrite settings from local_settings.py if it exists
 try:
     from ecs.local_settings import *
-except ImportError:
-    pass
-
-# overwrite settings from environment if they exist
-try:
-    from ecs.env_settings import *
 except ImportError:
     pass
 
