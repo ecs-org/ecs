@@ -36,7 +36,7 @@ upgrade=true
 withpostgres=false
 autoremove=false
 clean=false
-OPTS=`getopt -o aclup --long autoremove,clean,list,update-pkgcache,with-postgres-server -- "$@"`
+OPTS=`getopt -o aclupn --long autoremove,clean,list,update-pkgcache,with-postgres-server,no-upgrade -- "$@"`
 [[ $? -eq 0 ]] || usage
 
 eval set -- "${OPTS}"
@@ -59,6 +59,9 @@ while true; do
         ;;
     -p|--with-postgres-server)
         withpostgres=true
+        ;;
+    -n|--no-upgrade)
+        upgrade=false
         ;;
     --)
         shift
