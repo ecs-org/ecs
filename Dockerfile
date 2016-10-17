@@ -41,11 +41,11 @@ USER app
 RUN ./scripts/install-user-deps.sh /app/env
 RUN ./scripts/create-dirs.sh /app
 
-# compile/compress/collect/create translations, javascript, static files
+# compile/collect/create translations, javascript, static files
 RUN . /app/env/bin/activate; \
     ./manage.py compilemessages && \
-    ./manage.py collectstatic --noinput && \
-    ./manage.py compress
+    ./manage.py collectstatic --noinput
+# xxx offline compress is deactived for now
 
 # create version.py file but do not abort if not successful
 RUN ./scripts/create-version-file.sh /app/ecs /app/ecs/ecs/version.py || true
