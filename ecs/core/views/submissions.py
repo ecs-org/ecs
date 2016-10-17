@@ -234,7 +234,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     current_form_idx = [sf == submission.current_submission_form for sf in submission_forms].index(True)
 
     external_review_checklists = submission.checklists.filter(blueprint__slug='external_review')
-    notifications = submission.notifications.order_by('-timestamp')
+    notifications = (submission.notifications
+        .select_related('type', 'user', 'user__profile', 'answer')
+        .prefetch_related(Prefetch('submission_forms',
+            queryset=SubmissionForm.objects
+                .select_related('submission')
+                .order_by('submission__ec_number')))
+        .order_by('-timestamp'))
     votes = submission.votes
     
     stashed_notifications = []
