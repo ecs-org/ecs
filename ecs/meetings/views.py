@@ -743,10 +743,9 @@ def send_agenda_to_board(request, meeting_pk=None):
         if timeframe is None:
             continue
         start, end = timeframe
-        time = '{0}–{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
         htmlmail = str(render_html(request, \
                    'meetings/messages/boardmember_invitation.html', \
-                   {'meeting': meeting, 'time': time, 'recipient': user}))
+                   {'meeting': meeting, 'start': start, 'end': end, 'recipient': user}))
         deliver(user.email, subject=subject, message=None,
             message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
             rfc2822_headers={"Reply-To": reply_to},
