@@ -21,11 +21,8 @@
             {% endblock %}
 
             {% if request.task_management.form %}
-                <a id="toggle_headerworkflow" title="{% trans 'Task Management Widget verstecken/wiederherstellen' %}">&lt;</a>
                 <div id="headerworkflow">
-                {% with request.task_management.form as form %}
-                    {% include 'tasks/manage_task.html' %}
-                {% endwith %}
+                    {% include 'tasks/manage_task.html' with form=request.task_management.form %}
                 </div>
             {% endif %}
         </div>

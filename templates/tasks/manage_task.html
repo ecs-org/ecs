@@ -1,6 +1,5 @@
 {% load core i18n %}
 
-<div id="task_main">
 <form action="{{ request.path }}" method="post" id="task_form">
     {% csrf_token %}
     <h4>{% trans 'Task' %}: {{ form.task }}</h4>
@@ -46,4 +45,3 @@
     <input class="btn btn-primary" type="submit" name="task_management-submit" value="Abschicken">
     {{ form.post_data }}
 </form>
-</div>

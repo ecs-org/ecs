@@ -10,13 +10,4 @@ ecs.init_task_form = function() {
             input.val(data_form.serialize());
         });
     }
-
-    var toggle_headerworkflow = $('#toggle_headerworkflow');
-    toggle_headerworkflow.click(function(ev) {
-        ev.preventDefault();
-        var visible = headerworkflow.is(':visible');
-        headerworkflow.toggle();
-        toggle_headerworkflow.toggleClass('collapsed', !visible);
-        toggle_headerworkflow.html(visible ? '&gt;' : '&lt;');
-    });
 };
