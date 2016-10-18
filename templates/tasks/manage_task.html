@@ -1,47 +1,48 @@
-{% load core i18n %}
+{% load core i18n widget_tweaks %}
 
-<form action="{{ request.path }}" method="post" id="task_form">
-    {% csrf_token %}
-    <h4>{% trans 'Task' %}: {{ form.task }}</h4>
-    {% if form.errors.post_data %}
-        <div class="text-danger">
-            Füllen Sie alle benötigten Felder aus um diese Aufgabe abschließen zu können.
-        </div>
-    {% endif %}
-    {% if form.errors.action %}
-        <div class="text-danger">
-            Bitte wählen Sie eine Aktion aus.
-        </div>
-    {% endif %}
+<div class="card card-block m-t-1 m-b-0" id="headerworkflow">
+    <h4 class="card-title text-xs-center">{% trans 'Task' %}: {{ form.task }}</h4>
 
-    {% if not form.task.choices %}
-        <label>
-            <input type="radio" name="task_management-action" value="complete"{% if form|form_value:'action' == 'complete' %} checked="checked"{% endif %} />
-            <span class="fa fa-check fa-2x text-success"></span>
-            {% trans 'Close' %}
-        </label>
-    {% else %}
-        {% for val, label in form.task.choices %}
-            <label>
-                <input type="radio" name="task_management-action" value="complete_{{ forloop.counter0 }}" />
-                <span class="fa fa-cog fa-2x text-info"></span>
-                {{ label }}
-            </label>
-        {% endfor %}
-    {% endif %}
-    {% if form.assign_to %}
-        <label>
-            <input type="radio" name="task_management-action" value="delegate"{% ifequal form|form_value:'action' 'delegate' %} checked="checked"{% endifequal %} />
-            <span class="fa fa-share fa-2x text-info"></span>
-            {% trans 'Delegate' %}
-        </label>
+    <form class="clearfix" action="{{ request.path }}" method="post">
+	{% csrf_token %}
+	{% if form.errors.post_data %}
+	    <div class="text-danger">
+		Füllen Sie alle benötigten Felder aus um diese Aufgabe abschließen zu können.
+	    </div>
+	{% endif %}
+	{% if form.errors.action %}
+	    <div class="text-danger">
+		Bitte wählen Sie eine Aktion aus.
+	    </div>
+	{% endif %}
 
-        <label for="id_assign_to">An</label>{{ form.assign_to }}
-        {% if form.assign_to.errors %}
-            <span class="errors">{{ form.assign_to.errors }}</span>
-        {% endif %}
-    {% endif %}
-    <input class="btn btn-outline-primary" hidden type="submit" name="task_management-save" value="Nur Speichern">
-    <input class="btn btn-primary" type="submit" name="task_management-submit" value="Abschicken">
-    {{ form.post_data }}
-</form>
+	{% if not form.task.choices %}
+	    <button class="btn btn-primary" type="submit" name="task_management-action" value="complete">
+		{% trans 'Close' %}
+	    </button>
+	{% else %}
+	    {% for val, label in form.task.choices %}
+		<button class="btn btn-primary" type="submit" name="task_management-action" value="complete_{{ forloop.counter0 }}">
+		    {{ label }}
+		</button>
+	    {% endfor %}
+	{% endif %}
+
+	<input class="btn btn-secondary" hidden type="submit" name="task_management-save" value="Nur Speichern">
+
+	{% if form.assign_to %}
+	    <div class="pull-xs-right">
+		<div class="input-group">
+		    {{ form.assign_to|add_class:'form-control' }}
+		    <div class="input-group-btn">
+			<button class="btn btn-secondary" type="submit" name="task_management-action" value="delegate">
+			    {% trans 'Delegate' %}
+			</button>
+		    </div>
+		</div>
+	    </div>
+	{% endif %}
+
+	{{ form.post_data }}
+    </form>
+</div>

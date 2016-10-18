@@ -56,7 +56,7 @@ class TaskManagementData(object):
         self.user = request.user
         self.method = request.method
         self.POST = request.POST
-        self.submit = self.POST.get('task_management-submit')
+        self.submit = 'task_management-action' in self.POST
         self.save = self.POST.get('task_management-save')
 
         if request.method == 'POST' and not self.task is None:

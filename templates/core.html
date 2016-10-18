@@ -45,9 +45,7 @@
             {% endblock %}
 
             {% if request.task_management.form %}
-                <div id="headerworkflow">
-                    {% include 'tasks/manage_task.html' with form=request.task_management.form %}
-                </div>
+		{% include 'tasks/manage_task.html' with form=request.task_management.form %}
             {% endif %}
         </div>
 
