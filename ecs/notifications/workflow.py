@@ -74,8 +74,8 @@ class InitialAmendmentReview(BaseNotificationReview):
         
     def get_choices(self):
         return (
-            (True, _('Acknowledge')),
-            (False, _('Reject')),
+            (True, _('Acknowledge'), 'success'),
+            (False, _('Reject'), 'danger'),
         )
 
     def pre_perform(self, choice):
@@ -93,8 +93,8 @@ class EditNotificationAnswer(BaseNotificationReview):
     
     def get_choices(self):
         return (
-            (True, _('Ready')),
-            (False, _('Needs further review')),
+            (True, _('Ready'), 'success'),
+            (False, _('Needs further review'), 'info'),
         )
     
     def pre_perform(self, choice):
@@ -155,8 +155,8 @@ class SignNotificationAnswer(Activity):
 
     def get_choices(self):
         return (
-            (True, 'ok'),
-            (False, 'pushback'),
+            (True, 'ok', 'success'),
+            (False, 'pushback', 'warning'),
         )
 
     def get_url(self):

@@ -89,9 +89,9 @@ class ExternalReviewReview(Activity):
 
     def get_choices(self):
         return (
-            ('review_ok', _('Publish')),
-            ('review_fail', _('Send back to external Reviewer')),
-            ('dropped', _('Drop')),
+            ('review_ok', _('Publish'), 'success'),
+            ('review_fail', _('Send back to external Reviewer'), 'warning'),
+            ('dropped', _('Drop'), 'danger'),
         )
 
     def pre_perform(self, choice):

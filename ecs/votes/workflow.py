@@ -51,8 +51,8 @@ class VoteSigning(Activity):
 
     def get_choices(self):
         return (
-            (True, 'ok'),
-            (False, 'pushback'),
+            (True, 'ok', 'success'),
+            (False, 'pushback', 'warning'),
         )
 
     def pre_perform(self, choice):

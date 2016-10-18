@@ -128,8 +128,8 @@ class InitialReview(Activity):
 
     def get_choices(self):
         return (
-            (True, _('Acknowledge')),
-            (False, _('Reject')),
+            (True, _('Acknowledge'), 'success'),
+            (False, _('Reject'), 'danger'),
         )
 
     def pre_perform(self, choice):
@@ -180,8 +180,8 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
         
     def get_choices(self):
         return (
-            (None, _('Finish')),
-            ('exerev', _('Executive Review')),
+            (None, _('Finish'), 'success'),
+            ('exerev', _('Executive Review'), 'info'),
         )
         
     def pre_perform(self, choice):
@@ -245,8 +245,8 @@ class CategorizationReview(Activity):
 
     def get_choices(self):
         return (
-            (None, _('Close')),
-            ('reopen', _('Reopen')),
+            (None, _('Close'), 'success'),
+            ('reopen', _('Reopen'), 'warning'),
         )
 
     def post_perform(self, choice, token=None):

@@ -17,12 +17,12 @@
 	{% endif %}
 
 	{% if not form.task.choices %}
-	    <button class="btn btn-primary" type="submit" name="task_management-action" value="complete">
+	    <button class="btn btn-success" type="submit" name="task_management-action" value="complete">
 		{% trans 'Close' %}
 	    </button>
 	{% else %}
-	    {% for val, label in form.task.choices %}
-		<button class="btn btn-primary" type="submit" name="task_management-action" value="complete_{{ forloop.counter0 }}">
+	    {% for val, label, style in form.task.choices %}
+		<button class="btn btn-{{ style }}" type="submit" name="task_management-action" value="complete_{{ forloop.counter0 }}">
 		    {{ label }}
 		</button>
 	    {% endfor %}
