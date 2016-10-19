@@ -64,7 +64,7 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    {% render_field form.username class+="form-control" placeholder=form.username.label %}
+                    {% render_field form.username class+="form-control" placeholder=form.username.label autofocus="autofocus" %}
                 {% endif %}
             </div>
             <div class="form-group {% if form.password.errors %}has-danger{% endif %}">
