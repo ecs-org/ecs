@@ -1,6 +1,6 @@
 {% load core i18n widget_tweaks %}
 
-<div class="card card-block m-t-1 m-b-0" id="headerworkflow">
+<div class="card card-block mt-1 mb-0" id="headerworkflow">
     <h4 class="card-title text-xs-center">{% trans 'Task' %}: {{ form.task }}</h4>
 
     <form class="clearfix" action="{{ request.path }}" method="post">
@@ -31,7 +31,7 @@
 	<input class="btn btn-secondary" hidden type="submit" name="task_management-save" value="Nur Speichern">
 
 	{% if form.assign_to %}
-	    <div class="pull-xs-right">
+	    <div class="float-xs-right">
 		<div class="input-group">
 		    {{ form.assign_to|add_class:'form-control' }}
 		    <div class="input-group-btn">

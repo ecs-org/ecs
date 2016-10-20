@@ -6,12 +6,12 @@
     {% trans 'Download all documents for this meeting (zip)' %}
 </a>
 
-<ul class="list-group m-t-2">
+<ul class="list-group mt-2">
 {% for top in tops %}
     {% ifchanged top.timetable_index|is_none %}
         {% if top.timetable_index|is_none %}
             </ul>
-            <h2 class="m-t-2">Weitere TOPs</h2>
+            <h2 class="mt-2">Weitere TOPs</h2>
             <ul class="list-group">
         {% endif %}
     {% endifchanged %}
@@ -26,7 +26,7 @@
 
             {% if user.profile.is_omniscient_member %}
                 {% with doc=top.submission.current_submission_form.pdf_document %}
-                    <div class="row m-t-1">
+                    <div class="row mt-1">
                         <strong class="col-md-3">{{ doc.doctype }}</strong>
                         <div class="col-md-9">
                             {% url 'ecs.meetings.views.download_document' meeting_pk=meeting.pk document_pk=doc.pk as download_url %}

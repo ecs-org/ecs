@@ -46,7 +46,7 @@
             </h4>
             {% with entry|last_recessed_vote as vote %}
                 {% if vote %}
-                    <span class="pull-right m-r-1">
+                    <span class="float-xs-right mr-1">
                         ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})
                     </span>
                 {% endif %}

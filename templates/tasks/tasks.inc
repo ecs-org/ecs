@@ -6,7 +6,7 @@
     <ul class="list-group">
         {% for task_type in task_type_list %}
             <li class="task_item list-group-item">
-                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <a href="{{ task.url }}">{{ task.data }}</a>
@@ -26,12 +26,12 @@
 {% endif %}
 
 {% if proxy_tasks %}
-    <h3 class="m-t-1">{% trans "Proxy Tasks" %}</h3>
+    <h3 class="mt-1">{% trans "Proxy Tasks" %}</h3>
     {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
     <ul class="list-group">
         {% for task_type in task_type_list %}
             <li class="task_item list-group-item clearfix">
-                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
@@ -45,7 +45,7 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="float-xs-right open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     {% for task in task_type.list %}
                         <input type="hidden" name="task_id" value="{{ task.id }}" />
@@ -58,7 +58,7 @@
     </ul>
 {% endif %}
 
-<h3 class="m-t-1">{% trans "Open Tasks" %}</h3>
+<h3 class="mt-1">{% trans "Open Tasks" %}</h3>
 
 {% if not submission %}
     <form id="{{ form_id }}" action="{{ request.path }}" method="post" class="open-in-widget">
@@ -125,7 +125,7 @@
     <ul class="list-group">
         {% for task_type in task_type_list %}
             <li class="task_item list-group-item clearfix">
-                <span class="tag tag-default tag-pill pull-xs-right">{{ task_type.list|length }}</span>
+                <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                     <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
@@ -139,7 +139,7 @@
                     {% endwith %}
                 </li> {% endfor %} </ul>
                 {% if task_type.list|length > 1 %}
-                <form class="pull-xs-right open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                <form class="float-xs-right open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                     {% csrf_token %}
                     {% for task in task_type.list %}
                         <input type="hidden" name="task_id" value="{{ task.id }}" />

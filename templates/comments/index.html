@@ -10,7 +10,7 @@
             <a class="fa fa-pencil edit" href="{{ edit_url }}"></a>
 
             {% url 'ecs.core.views.comments.delete' pk=comment.pk as delete_url %}
-            <a class="pull-right delete" href="{{ delete_url }}">&times;</a>
+            <a class="float-xs-right delete" href="{{ delete_url }}">&times;</a>
         </div>
         <div class="card-block">
             <p class="card-text">

@@ -3,7 +3,7 @@
 {% if substantial_amendments.exists %}
     <h2>Substanzielle Amendments</h2>
 
-    <ul class="list-group m-b-2">
+    <ul class="list-group mb-2">
         {% for amendment in substantial_amendments %}
             <li class="list-group-item">
                 {% with submission=amendment.get_submission %}
@@ -18,14 +18,14 @@
 {% if b1ized.exists %}
     <h2>Zwischenzeitlich positiv erledigte Einreichungen</h2>
 
-    <ul class="list-group m-b-2">
+    <ul class="list-group mb-2">
         {% for b1 in b1ized.all %}
             <li class="list-group-item">
                 {% with sf=b1.submission_form %}
                     <strong>{{ sf.submission.get_ec_number_display }}</strong>
                     {{ sf.german_project_title|default:sf.project_title }}
 
-                    <div class="row m-t-1">
+                    <div class="row mt-1">
                         <div class="col-md-4 col-xs-12">
                             <strong>{% trans 'Submitter' %}</strong>
                             <div>
@@ -54,7 +54,7 @@
 {% regroup answers by notification.type as answer_list %}
 {% for type in answer_list %}
     <h2>{{ type.grouper }}</h2>
-    <ul class="list-group m-b-2">
+    <ul class="list-group mb-2">
         {% for answer in type.list %}
             {% with notification=answer.notification %}
                 <li class="list-group-item">
@@ -75,7 +75,7 @@
 
                         {% if notification.centerclosenotification %}
                             {% with ccn=notification.centerclosenotification %}
-                                <div class="row m-y-1">
+                                <div class="row my-1">
                                     <div class="col-md-4 col-xs-12">
                                         <strong>{% trans 'Investigator Organisation' %}</strong>
                                         <div>{{ ccn.investigator.organisation }}</div>

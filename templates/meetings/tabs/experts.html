@@ -4,13 +4,13 @@
     <form method="post">
         {% csrf_token %}
         {{ expert_formset.management_form }}
-        <ul class="list-group m-b-1">
+        <ul class="list-group mb-1">
         {% for form in expert_formset.forms %}
             <li class="list-group-item">
                 <div>
                     <strong>{{ form.instance.category }}</strong>
                 </div>
-                <div class="m-b-1">
+                <div class="mb-1">
                     {% if meeting.started %}
                         {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
                     {% else %}

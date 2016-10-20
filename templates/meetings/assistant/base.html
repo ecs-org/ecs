@@ -60,7 +60,7 @@
                         {% endif %}
 
                         {% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk as quickjump_url%}
-                        <form action="{{ quickjump_url }}" class="open-in-widget m-t-1">
+                        <form action="{{ quickjump_url }}" class="open-in-widget mt-1">
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control" name="q" placeholder="Suche" />
                                 <span class="input-group-btn">

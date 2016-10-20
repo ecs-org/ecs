@@ -11,18 +11,18 @@
 {% endblock %}
 
 {% block htmlbody %}
-<div class="m-x-2 m-t-1">
+<div class="mx-2 mt-1">
     <div>
         <a href="/">
             <img class="logo" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
         </a>
     </div>
 
-    <div class="row m-b-1">
-        <div class="m-x-auto"><h1>{% trans "Catalog of Approved Studies" %}</h1></div>
-        <div class="btn-group m-x-auto" role="group" aria-label="{% trans 'Years' %}">
+    <div class="row mb-1">
+        <div class="mx-auto"><h1>{% trans "Catalog of Approved Studies" %}</h1></div>
+        <div class="btn-group mx-auto" role="group" aria-label="{% trans 'Years' %}">
             {% for date in years %}
-                <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
+                <a class="px-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
             {% endfor %}
         </div>
     </div>
@@ -33,7 +33,7 @@
                 <div class="card-block">
                     <h2 class="card-title font-weight-normal">
                         {{ sf.german_project_title }}
-                        <small class="font-weight-normal d-block m-t-1">{{ sf.project_title }}</small>
+                        <small class="font-weight-normal d-block mt-1">{{ sf.project_title }}</small>
                     </h2>
                     <hr>
                     <ul class="list-inline">
@@ -51,14 +51,14 @@
                         {% endif %}
                     </ul>
                     {% for investigator in sf.system_ec_investigators %}
-                        <div class="testinginfo p-l-1">
+                        <div class="testinginfo pl-1">
                             <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>
                             <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
                         </div>
                     {% endfor %}
                     {% with sf.non_system_ec_investigators|length as other_ec_count %}
                       {% if other_ec_count %}
-                        <div class="testinginfo m-b-1 p-l-1">
+                        <div class="testinginfo mb-1 pl-1">
                             &hellip;
                             {% blocktrans trimmed count other_ec_count=other_ec_count %}
                                 and one other study site
@@ -73,16 +73,16 @@
         {% endwith %}
     {% endfor %}
 
-    <div class="row m-b-2">
-        <div class="m-x-auto">
+    <div class="row mb-2">
+        <div class="mx-auto">
             <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/at/">
                 <img alt="CC BY-SA 3.0 AT" src={% static 'images/by-sa-3.0-at-80x15.png' %} />
                 &copy; {% ec_name %}
             </a>
         </div>
-        <div class="btn-group m-x-auto" role="group" aria-label="Years">
+        <div class="btn-group mx-auto" role="group" aria-label="Years">
             {% for date in years %}
-                <a class="p-x-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>
+                <a class="px-2 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>
             {% endfor %}
         </div>
     </div>
