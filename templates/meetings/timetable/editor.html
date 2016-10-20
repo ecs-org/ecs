@@ -133,11 +133,11 @@
                 handle: '.dragHandle',
                 placeholder: 'entry-placeholder',
                 start: function(ev, ui) {
-                    ui.item.data('start-position', ui.item.index());
+                    ui.item.data('startPosition', ui.item.index());
                 },
                 update: function(ev, ui) {
-                    var fromIndex = ui.item.data('start-position');
-                    ui.item.removeData('start-position');
+                    var fromIndex = ui.item.data('startPosition');
+                    ui.item.removeData('startPosition');
                     var toIndex = ui.item.index();
                     var widget = $('#timetable_tab .ecs-Widget').data('widget');
                     widget.load(

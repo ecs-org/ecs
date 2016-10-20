@@ -13,7 +13,7 @@ ecs.TabbedForm = function(form, tabController, autosaveInterval) {
     this.lastSaveData = this.form.serialize();
     if (autosaveInterval) {
         setInterval(this.autosave.bind(this), autosaveInterval * 1000);
-        $(window).unload(this.autosave.bind(this));
+        $(window).on('unload', this.autosave.bind(this));
     }
 };
 ecs.TabbedForm.prototype = {
