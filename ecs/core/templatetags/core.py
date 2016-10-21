@@ -147,8 +147,6 @@ def get_breadcrumbs(parser, token):
 
 
 class DbSettingNode(Node):
-    advanced_settings = None
-
     def __init__(self, name, varname):
         super().__init__()
         self.name = name
@@ -156,24 +154,13 @@ class DbSettingNode(Node):
 
     def render(self, context):
         name = self.name.resolve(context)
-
-        if not self.advanced_settings:
-            self.__class__.advanced_settings = AdvancedSettings.objects.get()
-
-        # Check if field exists; raises exception otherwise.
-        AdvancedSettings._meta.get_field(name)
-        val = getattr(self.advanced_settings, name)
+        val = AdvancedSettings.objects.values_list(name, flat=True)[0]
 
         if self.varname:
             context[self.varname] = val
             return ''
         else:
             return val
-
-    @staticmethod
-    @receiver(post_save, sender=AdvancedSettings)
-    def _clear_cache(sender, **kwargs):
-        DbSettingNode.advanced_settings = None
 
 
 @register.tag
