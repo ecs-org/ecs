@@ -90,6 +90,28 @@
     </div>
     <div class="task_list_choose">
         <label>
+            {{ filterform.lane_board }}
+            {% trans 'board' %}
+        </label>
+        <label>
+            {{ filterform.lane_expedited }}
+            {% trans 'expedited' %}
+        </label>
+        <label>
+            {{ filterform.lane_retrospective_thesis }}
+            {% trans 'retrospective thesis' %}
+        </label>
+        <label>
+            {{ filterform.lane_localec }}
+            {% trans 'Local EC' %}
+        </label>
+        <label>
+            {{ filterform.lane_none }}
+            {% trans 'Not Categorized' %}
+        </label>
+    </div>
+    <div class="task_list_choose">
+        <label>
             {{ filterform.amg }}
             <span class="fa fa-flask"></span>
             {% trans "AMG" %}
@@ -102,15 +124,7 @@
         <label>
             {{ filterform.thesis }}
             <span class="fa fa-book"></span>
-            {% trans "thesis" %}
-        </label>
-        <label>
-            {{ filterform.expedited }}
-            {% trans "expedited" %}
-        </label>
-        <label>
-            {{ filterform.local_ec }}
-            {% trans "local_ec" %}
+            {% trans "Thesis" %}
         </label>
         <label>
             {{ filterform.other }}

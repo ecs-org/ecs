@@ -76,11 +76,15 @@ class TaskListFilterForm(forms.Form):
     upcoming_meetings = forms.BooleanField(required=False, initial=True)
     no_meeting = forms.BooleanField(required=False, initial=True)
 
+    lane_board = forms.BooleanField(required=False, initial=True)
+    lane_expedited = forms.BooleanField(required=False, initial=True)
+    lane_retrospective_thesis = forms.BooleanField(required=False, initial=True)
+    lane_localec = forms.BooleanField(required=False, initial=True)
+    lane_none = forms.BooleanField(required=False, initial=True)
+
     amg = forms.BooleanField(required=False, initial=True)
     mpg = forms.BooleanField(required=False, initial=True)
     thesis = forms.BooleanField(required=False, initial=True)
-    expedited = forms.BooleanField(required=False, initial=True)
-    local_ec = forms.BooleanField(required=False, initial=True)
     other = forms.BooleanField(required=False, initial=True)
 
     sorting = forms.ChoiceField(required=False, choices=(

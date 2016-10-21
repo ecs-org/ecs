@@ -592,7 +592,7 @@ msgid "expedited"
 msgstr "Expedited"
 
 msgid "retrospective thesis"
-msgstr "Retrospektive Diplomarbeiten/Dissertationen"
+msgstr "Retr. Diplomarbeiten/Diss."
 
 msgid "Ms"
 msgstr "Frau"

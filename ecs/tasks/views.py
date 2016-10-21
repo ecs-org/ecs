@@ -1,4 +1,5 @@
 import random
+from functools import reduce
 
 from django.core.urlresolvers import reverse
 from django.db.models import Q
@@ -10,11 +11,17 @@ from django.views.decorators.http import require_POST
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
 from ecs.core.models import Submission
+from ecs.core.models.constants import (
+    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED,
+    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC,
+)
+from ecs.checklists.models import Checklist
 from ecs.tasks.models import Task
 from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_declined
 from ecs.votes.models import Vote
 from ecs.notifications.models import NOTIFICATION_MODELS, Notification
+from ecs.meetings.models import Meeting
 
 
 @user_flag_required('is_internal')
@@ -102,38 +109,67 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         next_meeting = cd['next_meeting']
         upcoming_meetings = cd['upcoming_meetings']
         no_meeting = cd['no_meeting']
+        lane_board = cd['lane_board']
+        lane_expedited = cd['lane_expedited']
+        lane_retrospective_thesis = cd['lane_retrospective_thesis']
+        lane_localec = cd['lane_localec']
+        lane_none = cd['lane_none']
         amg = cd['amg']
         mpg = cd['mpg']
         thesis = cd['thesis']
-        expedited = cd['expedited']
-        local_ec = cd['local_ec']
         other = cd['other']
 
-        if amg and mpg and thesis and expedited and local_ec and other and past_meetings and next_meeting and upcoming_meetings and no_meeting:
+        if (past_meetings and next_meeting and upcoming_meetings and no_meeting and
+            lane_board and lane_expedited and lane_retrospective_thesis and lane_localec and lane_none and
+            amg and mpg and thesis and other):
             pass
         else:
             submissions = Submission.objects.all()
 
             if not (past_meetings and next_meeting and upcoming_meetings and no_meeting):
-                q = Submission.objects.none()
+                qs = []
                 if past_meetings:
-                    q |= Submission.objects.past_meetings()
+                    qs.append(Q(meetings__ended__isnull=False))
                 if next_meeting:
-                    q |= Submission.objects.next_meeting()
+                    try:
+                        meeting = Meeting.objects.next()
+                    except Meeting.DoesNotExist:
+                        pass
+                    else:
+                        qs.append(Q(meetings=meeting))
                 if upcoming_meetings:
-                    q |= Submission.objects.upcoming_meetings()
+                    qs.append(Q(meetings__ended=None))
                 if no_meeting:
-                    q |= Submission.objects.no_meeting()
-                submissions &= q
+                    qs.append(Q(meetings=None))
 
-            if not (amg and mpg and thesis and expedited and local_ec and other):
+                if qs:
+                    submissions = submissions.filter(reduce(lambda x, y: x | y, qs))
+                else:
+                    submissions = submissions.none()
+
+            if not (lane_board and lane_expedited and lane_retrospective_thesis and lane_localec and lane_none):
+                lanes = []
+                if lane_board:
+                    lanes.append(SUBMISSION_LANE_BOARD)
+                if lane_expedited:
+                    lanes.append(SUBMISSION_LANE_EXPEDITED)
+                if lane_retrospective_thesis:
+                    lanes.append(SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+                if lane_localec:
+                    lanes.append(SUBMISSION_LANE_LOCALEC)
+                q = Q(workflow_lane__in=lanes)
+                if lane_none:
+                    q |= Q(workflow_lane=None)
+
+                submissions = submissions.filter(q)
+
+            if not (amg and mpg and thesis and other):
                 amg_q = Submission.objects.amg()
                 mpg_q = Submission.objects.mpg()
-                thesis_q = Submission.objects.for_thesis_lane()
-                expedited_q = Submission.objects.expedited()
-                local_ec_q = Submission.objects.localec()
+                thesis_q = Submission.objects.exclude(
+                    current_submission_form__project_type_education_context=None)
                 other_q = Submission.objects.exclude(
-                    pk__in=(amg_q | mpg_q | thesis_q | expedited_q | local_ec_q).values('pk'))
+                    pk__in=(amg_q | mpg_q | thesis_q).values('pk'))
 
                 q = Submission.objects.none()
                 if amg:
@@ -142,10 +178,6 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                     q |= mpg_q
                 if thesis:
                     q |= thesis_q
-                if expedited:
-                    q |= expedited_q
-                if local_ec:
-                    q |= local_ec_q
                 if other:
                     q |= other_q
                 submissions &= q
@@ -178,7 +210,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                 ).values('pk'))
 
             open_tasks = open_tasks.filter(submission_tasks_q |
-                checklists_tasks_q | vote_tasks_q | notification_tasks_q)
+                checklist_tasks_q | vote_tasks_q | notification_tasks_q)
     
         if not ignore_task_types:
             task_types = filterform.cleaned_data['task_types']
