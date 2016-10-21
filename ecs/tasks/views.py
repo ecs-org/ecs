@@ -151,30 +151,34 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                 submissions &= q
 
             submission_q = submissions.values('pk')
-
+            checklist_ct = ContentType.objects.get_for_model(Checklist)
             submission_ct = ContentType.objects.get_for_model(Submission)
             vote_ct = ContentType.objects.get_for_model(Vote)
             notification_cts = list(map(ContentType.objects.get_for_model, NOTIFICATION_MODELS))
 
-            other_tasks_q = ~Q(content_type__in=[submission_ct, vote_ct] + notification_cts)
-
             submission_tasks_q = Q(
                 content_type=submission_ct, data_id__in=submission_q)
 
-            notification_tasks_q = Q(
-                content_type__in=notification_cts,
-                data_id__in=Notification.objects.filter(
-                    submission_forms__submission__pk__in=submission_q
+            checklist_tasks_q = Q(
+                content_type=checklist_ct,
+                data_id__in=Checklist.objects.filter(
+                    submission__in=submission_q
                 ).values('pk'))
 
             vote_tasks_q = Q(
                 content_type=vote_ct,
                 data_id__in=Vote.objects.filter(
-                    submission_form__submission__pk__in=submission_q
+                    submission_form__submission__in=submission_q
                 ).values('pk'))
 
-            open_tasks = open_tasks.filter(other_tasks_q | submission_tasks_q |
-                notification_tasks_q | vote_tasks_q)
+            notification_tasks_q = Q(
+                content_type__in=notification_cts,
+                data_id__in=Notification.objects.filter(
+                    submission_forms__submission__in=submission_q
+                ).values('pk'))
+
+            open_tasks = open_tasks.filter(submission_tasks_q |
+                checklists_tasks_q | vote_tasks_q | notification_tasks_q)
     
         if not ignore_task_types:
             task_types = filterform.cleaned_data['task_types']
