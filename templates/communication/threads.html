@@ -4,101 +4,104 @@
 {% block menuSelection %}communication{% endblock %}
 
 {% block htmltitle %}{% trans "Communication" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "Communication" %} ({{ page.paginator.count }}){% endblock %}
+{% block headertitle %}{% trans "Communication" %}{% endblock %}
 
 {% block content %}
-<div class="messages_overview">
-  <div class="messages_header">
-    <form id="thread_list_filter" action="" method="post">
-        {% csrf_token %}
-        <div class="thread_list_choose">
-            <label>
-                {{ filterform.incoming }}
-                <span class="fa fa-arrow-down"></span>
-                {% trans "Incoming" %}
-            </label>
+    <div class="messages_header mb-1">
+        <form id="thread_list_filter" action="" method="post">
+            {% csrf_token %}
+            <div class="thread_list_choose">
+                <label>
+                    {{ filterform.incoming }}
+                    <span class="fa fa-arrow-down"></span>
+                    {% trans "Incoming" %}
+                </label>
 
-            <label>
-                {{ filterform.outgoing }}
-                <span class="fa fa-arrow-up"></span>
-                {% trans "Outgoing" %}
-            </label>
-        </div>
-        <div class="thread_list_choose">
-            <label>
-                {{ filterform.unstarred }}
-                <span class="fa fa-star-o"></span>
-                {% trans "Not Starred" %}
-            </label>
+                <label>
+                    {{ filterform.outgoing }}
+                    <span class="fa fa-arrow-up"></span>
+                    {% trans "Outgoing" %}
+                </label>
+            </div>
+            <div class="thread_list_choose">
+                <label>
+                    {{ filterform.starred }}
+                    <span class="fa fa-star"></span>
+                    {% trans "Starred" %}
+                </label>
 
-            <label>
-                {{ filterform.starred }}
-                <span class="fa fa-star"></span>
-                {% trans "Starred" %}
-            </label>
+                <label>
+                    {{ filterform.unstarred }}
+                    <span class="fa fa-star-o"></span>
+                    {% trans "Not Starred" %}
+                </label>
+            </div>
+        </form>
+        <div class="sort_options">
+            {% include 'communication/sort_options.inc' %}
         </div>
-    </form>
-    <div class="sort_options">
-        {% include 'communication/sort_options.inc' %}
     </div>
-  </div>
 
-  <table class="messages">
-      <tr>
-          <th></th>
-          <th>{% trans "Date" %}</th>
-          <th>{% trans "Subject" %}</th>
-          <th>{% trans "Read" %}</th>
-          <th>{% trans "Von/An" %}</th>
-      </tr>
-  {% for thread in page.object_list %}
-      <tr>
-          <td>
-              {% if thread|starred_by:user %}
-                  {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                  <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
-              {% else %}
-                  {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                  <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
-              {% endif %}
-          </td>
-          <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
-          <td>
-              <a href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.pk %}">
-                  {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
-                  {{ thread.subject }}
-              </a>
-          </td>
-          <td>{{ thread.last_message.unread|yesno:'Nein,Ja' }}</td>
-          {% if thread.last_message.sender == user %}
-              <td>{% trans "an" %} {{ thread.last_message.receiver }}</td>
-          {% else %}
-              <td>{% trans "von" %} {{ thread.last_message.sender }}</td>
-          {% endif %}
-      </tr>
-  {% endfor %}
-  </table>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{% trans "Date" %}</th>
+                <th>{% trans "Subject" %}</th>
+                <th>{% trans "Von/An" %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for thread in page.object_list %}
+                <tr {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}class="font-weight-bold"{% endif %}>
+                    <td>
+                        {% if thread|starred_by:user %}
+                            {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+                            <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+                        {% else %}
+                            {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+                            <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+                        {% endif %}
+                    </td>
+                    <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
+                    <td>
+                        {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url%}
+                        <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
+                            {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
+                            {{ thread.subject|truncatewords:10 }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if thread.last_message.sender == user %}
+                            {% trans "an" %} {{ thread.last_message.receiver }}
+                        {% else %}
+                            {% trans "von" %} {{ thread.last_message.sender }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-  <div class="paginator text-xs-center">
-      {% if page.has_previous %}
-          <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
-          <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
-      {% endif %}
-      {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
-      {% if page.has_next %}
-          <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"></a>
-          <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"></a>
-      {% endif %}
-  </div>
-  <div class="hint mt-1">
-    <span class="fa fa-info text-info"></span>
-    {% db_setting 'contact_email' as email %}
-    {% blocktrans with contact_email=email %}
-        To write a message, open the read-only view of a study and change to the communication tab.
-        For general Questions write an email to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
-    {% endblocktrans %}
-  </div>
-</div>
+    <div class="paginator text-xs-center">
+        {% if page.has_previous %}
+            <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
+            <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
+        {% endif %}
+        {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+        {% if page.has_next %}
+            <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"></a>
+            <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"></a>
+        {% endif %}
+    </div>
+    <div class="hint mt-1">
+      <span class="fa fa-info text-info"></span>
+      {% db_setting 'contact_email' as email %}
+      {% blocktrans with contact_email=email %}
+          To write a message, open the read-only view of a study and change to the communication tab.
+          For general Questions write an email to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
+      {% endblocktrans %}
+    </div>
 {% endblock %}
 
 {% block jsbottom %}

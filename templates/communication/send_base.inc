@@ -4,14 +4,14 @@
 <p>
     <label for="{{ form.receiver.auto_id }}" class="receiver">Empfänger</label>
     {% if to_user %}
-        <div class="input">
+        <div class="ml-1">
             {{ to_user }}
             <input type="hidden" name="receiver" value="{{ to_user.pk }}"/>
         </div>
     {% else %}
-        <div class="input">
+        <div class="ml-1">
              {% for choice in form.fields.receiver_type.choices %}
-               <span>
+               <div>
                   <label for="{{ form.receiver_type.auto_id }}_{{ forloop.counter0 }}">
                       <input id="{{ form.receiver_type.auto_id}}_{{ forloop.counter0 }}" type="radio" name="{{ form.receiver_type.html_name }}" value="{{ choice.0 }}"{% if choice.0 == form.receiver_type.data %} checked="checked"{% endif %}{% if not form.receiver_type.data and not forloop.counter0 %} checked="checked"{% endif %}>
                       {{ choice.1 }}
@@ -19,35 +19,31 @@
                   {% if choice.0 == "involved" %}
                       {{ form.receiver_involved }}
                       {% if form.receiver_involved.errors %}
-                          <span class="errors">{{ form.receiver_involved.errors }}</span>
+                          <div class="errors">{{ form.receiver_involved.errors }}</div>
                       {% endif %}
                   {% endif %}
                   {% if choice.0 == "person" %}
                       {{ form.receiver_person }}
                       {% if form.receiver_person.errors %}
-                          <span class="errors">{{ form.receiver_person.errors }}</span>
+                          <div class="errors">{{ form.receiver_person.errors }}</div>
                       {% endif %}
                   {% endif %}
-               </span>
+               </div>
             {% endfor %}
             {% if form.receiver_type.errors %}
-                <span class="errors">{{ form.receiver_type.errors }}</span>
+                <div class="errors">{{ form.receiver_type.errors }}</div>
             {% endif %}
         </div>
     {% endif %}
 </p>
 {% endif %}
 
-<p>
-    <label for="{{ form.text.auto_id }}">Nachricht</label>
-    {{ form.text }}
-    {% if form.text.errors %}
-        <span class="errors">{{ form.text.errors }}</span>
-    {% endif %}
-</p>
+{% include 'bootstrap/form_field.html' with field=form.text %}
 
 {% if form.non_field_errors %}
-<p>
-    <span class="errors">{{ form.non_field_errors }}</span>
-</p>
+    <div class="alert alert-danger mt-1 mb-0" role="alert">
+        {% for error in form.non_field_errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+    </div>
 {% endif %}

@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load i18n core communication humanize %}
+{% load i18n core communication humanize widget_tweaks %}
 
 {% block menuSelection %}communication{% endblock %}
 
@@ -22,45 +22,75 @@
 {% block content %}
 <div class="communication_thread">
 
-<a href="{% url 'ecs.communication.views.list_threads' %}">
-    <span class="fa fa-backward"></span>
-    {% trans "To the communication overview" %}
-</a>
-{% if thread.submission %}
-    <br>
-    <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab">
+<div class="mb-1">
+    <a href="{% url 'ecs.communication.views.list_threads' %}">
         <span class="fa fa-backward"></span>
-        {% trans "To the Study" %}
+        {% trans "To the communication overview" %}
     </a>
-{% endif %}
+    {% if thread.submission %}
+        <br>
+        <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab">
+            <span class="fa fa-backward"></span>
+            {% trans "To the Study" %}
+        </a>
+    {% endif %}
+</div>
 
-<ul class="thread">
 {% for message in thread.message_list %}
-    <li class="message {% if not forloop.last %}collapsed{% endif %}">
-        <div class="head">
-            <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
-            <span class="preview">{{ message|preview:80 }}</span>
-            <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
+    <div class="card message">
+        <div class="card-header">
+            <span class="sender">
+                {% if message.sender == user %}
+                    {% trans 'Me' %}
+                {% else %}
+                    {{ message.sender }}
+                {% endif %}
+            </span>
+            <span class="preview text-muted" hidden>{{ message|preview:80 }}</span>
+            <span class="text-muted float-xs-right">
+                {{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr
+            </span>
         </div>
-        <pre class="body">{{ message.text|urlize }}</pre>
-    </li>
+        <div class="card-block">
+            <pre class="card-text">{{ message.text|urlize }}</pre>
+        </div>
+    </div>
 {% endfor %}
-</ul>
-<div class="related_thread">
+
+<div class="mt-1 ml-1">
+    <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
+    | <a href="" class="expand_all">{% trans "Expand all" %}</a>
+</div>
+
+<div class="related_thread mt-1">
 {% if thread.related_thread %}
 {% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
     Den betreffenden Nachrichtenstrang finden sie <a href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
 {% endif %}
 {% endif %}
 </div>
-<div class="expand_collapse">
-    <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
-    | <a href="" class="expand_all">{% trans "Expand all" %}</a>
-</div>
 
-<form class="send" method="post">
+<hr>
+
+<form action="{{ request.path }}" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {% if form.to %}
+        <div class="form-group">
+            <label for="{{ form.to.id_for_label }}">{{ form.to.label }}</label>
+            {{ form.to }}
+        </div>
+    {% endif %}
+
+    {% include 'bootstrap/form_field.html' with field=form.text %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger mt-1 mb-0" role="alert">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <input type="submit" class="btn btn-primary" value="{% trans "Send" %}">
 </form>
 
@@ -77,7 +107,7 @@
             var last_message = thread.find('.message').last();
             last_message.offsetParent().scrollTop(last_message.position().top);
 
-            var textarea = thread.find('textarea[name="text"]');
+            var textarea = $('#{{ form.text.id_for_label }}');
             new ecs.textarea.TextArea(textarea, [
                 {% if user.profile.is_internal %}
                     ecs.textarea.toolbarItems.boilerplate(

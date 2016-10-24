@@ -4,19 +4,26 @@
 <div class="communication_thread">
     <h3>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h3>
 
-    <ul class="thread">
     {% for message in thread.message_list %}
-        <li class="message collapsed">
-            <div class="head">
-                <span class="sender">{% if message.sender == user %}{% trans 'Me' %}{% else %}{{ message.sender }}{% endif %}</span>
-                <span class="preview"></span><span class="preview_text">{{ message|preview:80 }}</span>
-                <span class="time">{{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr</span>
+        <div class="card message">
+            <div class="card-header">
+                <span class="sender">
+                    {% if message.sender == user %}
+                        {% trans 'Me' %}
+                    {% else %}
+                        {{ message.sender }}
+                    {% endif %}
+                </span>
+                <span class="preview text-muted">{{ message|preview:80 }}</span>
+                <span class="text-muted float-xs-right">
+                    {{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr
+                </span>
             </div>
-            <pre class="body">{{ message.text|urlize }}</pre>
-        </li>
+            <div class="card-block" hidden>
+                <pre class="card-text">{{ message.text|urlize }}</pre>
+            </div>
+        </div>
     {% endfor %}
-    </ul>
-
 </div>
 {% empty %}
 <div style="margin:20px;">

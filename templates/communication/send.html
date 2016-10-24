@@ -5,28 +5,31 @@
 
 {% block headertitle %}
     {% if submission %}
-        {{ thread.submission|ec_number }} -
+        {{ submission|ec_number }} -
     {% endif %}
     {% trans "New Message" %}
 {% endblock %}
 
 {% block content %}
 <div class="message_display">
-  <a href="{% url 'ecs.communication.views.list_threads' %}">
-      <span class="fa fa-backward"></span>
-      {% trans "Back to the communication overview" %}
-  </a>
-  {% if submission %}
-      <br>
-      <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab">
+  <div class="mb-1">
+      <a href="{% url 'ecs.communication.views.list_threads' %}">
           <span class="fa fa-backward"></span>
-          {% trans "Back to the Study" %}
+          {% trans "Back to the communication overview" %}
       </a>
-  {% endif %}
+      {% if submission %}
+          <br>
+          <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab">
+              <span class="fa fa-backward"></span>
+              {% trans "Back to the Study" %}
+          </a>
+      {% endif %}
+  </div>
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       {% csrf_token %}
       {% if submission %}
-          <h4>Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
+          <h4 class="text-muted">Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
+          <hr>
       {% endif %}
 
       {% if task %}
@@ -36,15 +39,7 @@
       </p>
       {% endif %}
 
-      {% if form.subject %}
-      <p>
-          <label for="{{ form.subject.auto_id }}">Betreff</label>
-          {{ form.subject }}
-          {% if form.subject.errors %}
-              <span class="errors">{{ form.subject.errors }}</span>
-          {% endif %}
-      </p>
-      {% endif %}
+      {% include 'bootstrap/form_field.html' with field=form.subject %}
 
       {% if form.instance.thread %}
         <p>

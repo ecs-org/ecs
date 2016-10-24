@@ -35,29 +35,11 @@
         padding-right: 5px;
     }
 
-    .messages, .submission_widget_list{
+    .submission_widget_list{
         list-style: none;
         & > li{
             clear: both;
             position: relative;
-        }
-    }
-
-    .messages{
-        & > li{
-            height: auto;
-            padding: 5px 30px;
-            overflow: hidden;
-
-            .head {
-                display: block;
-                padding-bottom: 5px;
-                margin-left: -27px;
-            }
-
-            .title {
-                font-weight: bold;
-            }
         }
     }
 
@@ -71,18 +53,6 @@
         border-radius: 3px;
         padding: 3px 5px !important;
         margin-bottom: 5px;
-    }
-
-    .actions {
-        display: block;
-        position: absolute;
-        right: 3px;
-        top: 5px;
-
-        a {
-            display: inline-block;
-            margin: 0px 5px;
-        }
     }
 
     img {

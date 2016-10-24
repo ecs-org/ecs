@@ -1,16 +1,16 @@
 {% load humanize i18n core communication %}
 
-<h3>{% trans "Communication" %} ({{ page.paginator.count }})</h3>
+<h3>{% trans "Communication" %}</h3>
 
 <br />
-<div class="messages_header">
+<div class="messages_header mb-1">
     {% include 'communication/sort_options.inc' %}
 </div>
 
-<ol class="messages">
+<ul class="list-group">
 {% for thread in page.object_list %}
-    <li>
-        <span class="head">
+    <li class="list-group-item {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
+        <div>
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
             {% if thread.last_message.sender == user %}
@@ -18,23 +18,23 @@
             {% else %}
                 {% trans "von" %} {{ thread.last_message.sender }}
             {% endif %}
-        </span>
-        <span {% if thread.last_message.unread and thread.last_message.receiver == user %}class="fa fa-sun-o text-warning"{% endif %}></span>
-        <a class="title" href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.pk %}" title="{{ thread.last_message|preview:80 }}">{{ thread.subject|truncatewords:10 }}</a>
-        <span class="actions">
-            {% if thread|starred_by:user %}
-                {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
-            {% else %}
-                {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
-            {% endif %}
-        </span>
+        </div>
+        {% if thread|starred_by:user %}
+            {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+            <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+        {% else %}
+            {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+            <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+        {% endif %}
+        {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url %}
+        <a class="ml-1" href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
+            {{ thread.subject|truncatewords:10 }}
+        </a>
     </li>
 {% endfor %}
 </ol>
 
-<div class="paginator text-xs-center">
+<div class="paginator text-xs-center mt-1">
     {% if page.has_previous %}
         <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
         <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
