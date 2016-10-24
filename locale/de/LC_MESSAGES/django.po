@@ -2272,9 +2272,6 @@ msgstr "Betreff"
 msgid "Read"
 msgstr "Gelesen"
 
-msgid "mark as done"
-msgstr "als erledigt markieren"
-
 msgid "Page"
 msgstr "Seite"
 

@@ -111,29 +111,3 @@ class CommunicationTest(CommunicationTestCase):
         message = Message.objects.exclude(pk=message.pk).get()
         self.assertEqual(message.sender, self.alice)
         self.assertEqual(message.receiver, self.bob)
-
-    def test_close_thread(self):
-        '''Makes sure that a thread can be closed.'''
-        
-        self.client.login(email='alice@example.com', password='password')
-        response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.assertEqual(response.status_code, 302)
-        
-        self.client.login(email='bob@example.com', password='password')
-        response = self.client.get(reverse('ecs.communication.views.close_thread', kwargs={'thread_pk': self.thread.pk}))
-        self.assertEqual(response.status_code, 302)
-
-    def test_incoming_message_widget(self):
-        '''Tests if the incoming message widget is accessible.'''
-        
-        self.client.login(email='alice@example.com', password='password')
-        response = self.client.get(reverse('ecs.communication.views.incoming_message_widget'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_outgoing_message_widget(self):
-        '''Tests if the outgoing message widget is accessible.'''
-        
-        self.client.login(email='alice@example.com', password='password')
-        response = self.client.get(reverse('ecs.communication.views.outgoing_message_widget'))
-        self.assertEqual(response.status_code, 200)
-

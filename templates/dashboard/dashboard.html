@@ -10,11 +10,10 @@
 {% block content %}
     <div id="dashboard">
         <div class="left_column">
-            <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.outgoing_message_widget' %}"></div>
+            <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.dashboard_widget' %}"></div>
             <div class="dashboard_widget" data-widget-url="{% url 'ecs.core.views.submissions.submission_widget' %}"></div>
         </div>
         <div class="right_column">
-            <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.incoming_message_widget' %}"></div>
             {% if user.profile.show_worklow_widget %}
                 <div class="dashboard_widget" data-widget-url="{% url 'ecs.tasks.views.my_tasks' %}"></div>
             {% endif %}

@@ -33,10 +33,14 @@ class ThreadQuerySet(models.QuerySet):
             Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_BOB)
         )
 
-    def open(self, user):
+    def for_widget(self, user):
         return self.filter(
-            Q(closed_by_receiver=False, receiver=user) |
-            Q(closed_by_sender=False, sender=user)
+            Q(sender=user, starred_by_sender=True) |
+            Q(receiver=user, starred_by_receiver=True) |
+            Q(
+                Q(sender=user) | Q(receiver=user),
+                id__in=Message.objects.filter(receiver=user, unread=True).values('thread_id')
+            )
         )
 
 
@@ -50,22 +54,28 @@ class Thread(models.Model):
     last_message = models.OneToOneField('Message', null=True, related_name='head')
     related_thread = models.ForeignKey('self', null=True)
 
-    closed_by_sender = models.BooleanField(default=False)
-    closed_by_receiver = models.BooleanField(default=False)
+    starred_by_sender = models.BooleanField(default=False)
+    starred_by_receiver = models.BooleanField(default=False)
 
     objects = ThreadQuerySet.as_manager()
 
-    def mark_closed_for_user(self, user):
-        for msg in self.messages.filter(receiver=user):
-            msg.unread = False
-            msg.save()
-
+    def star(self, user):
         if user.id == self.sender_id:
-            self.closed_by_sender = True
-            self.save()
-        if user.id == self.receiver_id:
-            self.closed_by_receiver = True
-            self.save()
+            self.starred_by_sender = True
+        elif user.id == self.receiver_id:
+            self.starred_by_receiver = True
+        else:
+            assert False
+        self.save()
+
+    def unstar(self, user):
+        if user.id == self.sender_id:
+            self.starred_by_sender = False
+        elif user.id == self.receiver_id:
+            self.starred_by_receiver = False
+        else:
+            assert False
+        self.save()
 
     def add_message(self, user, text, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
         assert user.id in (self.sender_id, self.receiver_id)
@@ -122,20 +132,6 @@ class Thread(models.Model):
         return self.messages.order_by('timestamp')
 
 
-class MessageQuerySet(models.QuerySet):
-    def outgoing(self, user):
-        return self.filter(
-            Q(thread__sender=user, origin=MESSAGE_ORIGIN_ALICE) |
-            Q(thread__receiver=user, origin=MESSAGE_ORIGIN_BOB)
-        )
-
-    def incoming(self, user):
-        return self.filter(
-            Q(thread__sender=user, origin=MESSAGE_ORIGIN_BOB) |
-            Q(thread__receiver=user, origin=MESSAGE_ORIGIN_ALICE)
-        )
-
-
 class Message(models.Model):
     thread = models.ForeignKey(Thread, related_name='messages')
     sender = models.ForeignKey(User, related_name='outgoing_messages')
@@ -157,8 +153,6 @@ class Message(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True)
 
     reply_receiver = models.ForeignKey(User, null=True, related_name='reply_receiver_for_messages')
-
-    objects = MessageQuerySet.as_manager()
 
     @property
     def return_address(self):

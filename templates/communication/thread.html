@@ -5,12 +5,18 @@
 
 {% block htmltitle %}{{ thread|remote:user }} - "{{ thread.subject }}" | {{ block.super }}{% endblock %}
 {% block headertitle %}
+    {% if thread|starred_by:user %}
+        {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+        <a class="fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+    {% else %}
+        {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+        <a class="fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+    {% endif %}
     {{ thread|remote:user }} -
     {% if thread.submission %}
         {{ thread.submission|ec_number }} -
     {% endif %}
     {{ thread.subject }}
-    ({{ thread.message_list|length }})
 {% endblock %}
 
 {% block content %}
@@ -51,11 +57,6 @@
     <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
     | <a href="" class="expand_all">{% trans "Expand all" %}</a>
 </div>
-{% if not thread|closed_by:user %}
-    <div class="message_done">
-        <a href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next={{ request.path|urlencode }}"><span class="fa fa-check-square-o"></span> {% trans 'mark as done' %}</a>
-    </div>
-{% endif %}
 
 <form class="send" method="post">
     {% csrf_token %}

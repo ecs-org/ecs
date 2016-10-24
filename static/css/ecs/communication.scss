@@ -111,8 +111,7 @@
     min-height: 180px;
 }
 
-.message_display img,
-.messages_overview img {
+.message_display img {
     vertical-align: middle;
 }
 
@@ -286,10 +285,6 @@ ul.thread {
     .expand_collapse {
         text-align: left;
         margin: -15px 0 0 10px;
-    }
-    .message_done {
-        text-align: right;
-        margin: -15px 10px 0 0;
     }
     label, .ecs-TextAreaToolbar {
         display: inline-block;

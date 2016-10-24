@@ -1,6 +1,6 @@
 {% load humanize i18n core communication %}
 
-<h3>{% block title %}Nachrichten{% endblock %} ({{ page.paginator.count }})</h3>
+<h3>{% trans "Communication" %} ({{ page.paginator.count }})</h3>
 
 <br />
 <div class="messages_header">
@@ -13,12 +13,22 @@
         <span class="head">
             {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
             {{ thread.last_message.timestamp|naturalday:'d.m.Y' }}, {{ thread.last_message.timestamp|date:'H:i'}}
-            {% if incoming %}{% trans "von" %}{% else %}{% trans "an" %}{% endif %}: <span class="user">{% block message_user %}{% endblock %}</span>
+            {% if thread.last_message.sender == user %}
+                {% trans "an" %} {{ thread.last_message.receiver }}
+            {% else %}
+                {% trans "von" %} {{ thread.last_message.sender }}
+            {% endif %}
         </span>
         <span {% if thread.last_message.unread and thread.last_message.receiver == user %}class="fa fa-sun-o text-warning"{% endif %}></span>
         <a class="title" href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.pk %}" title="{{ thread.last_message|preview:80 }}">{{ thread.subject|truncatewords:10 }}</a>
         <span class="actions">
-            <a class="open-in-widget fa fa-check-square-o" href="{% url 'ecs.communication.views.close_thread' thread_pk=thread.pk %}?next=$CURRENT_URL$" title="{% trans 'mark as done' %}"></a>
+            {% if thread|starred_by:user %}
+                {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+                <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+            {% else %}
+                {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+                <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+            {% endif %}
         </span>
     </li>
 {% endfor %}

@@ -5,13 +5,14 @@ register = Library()
 
 
 @register.filter
-def closed_by(thread, user):
+def starred_by(thread, user):
     if user.id == thread.sender_id:
-        return thread.closed_by_sender
+        return thread.starred_by_sender
     elif user.id == thread.receiver_id:
-        return thread.closed_by_receiver
+        return thread.starred_by_receiver
     else:
-        return None
+        assert False
+
 
 @register.filter
 def remote(thread, user):
@@ -21,6 +22,7 @@ def remote(thread, user):
         return thread.sender
     else:
         return None
+
 
 @register.filter
 def preview(message, chars):

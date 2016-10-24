@@ -74,49 +74,35 @@ def read_thread(request, thread_pk=None):
     })
 
 
-def close_thread(request, thread_pk=None):
+@tracking_hint(exclude=True)
+def star(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
-    thread.mark_closed_for_user(request.user)
-    return redirect_to_next_url(request, reverse('ecs.communication.views.outgoing_message_widget'))
+    thread.star(request.user)
+    return redirect_to_next_url(request, reverse('ecs.communication.views.dashboard_widget'))
 
 
 @tracking_hint(exclude=True)
-def incoming_message_widget(request, submission_pk=None):
-    qs = Thread.objects.incoming(request.user).open(request.user)
+def unstar(request, thread_pk=None):
+    thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
+    thread.unstar(request.user)
+    return redirect_to_next_url(request, reverse('ecs.communication.views.dashboard_widget'))
+
+
+@tracking_hint(exclude=True)
+def dashboard_widget(request, submission_pk=None):
+    qs = Thread.objects.for_widget(request.user)
     submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
         qs = qs.filter(submission=submission)
     return message_widget(request, 
         queryset=qs,
-        template='communication/widgets/incoming_messages.inc',
-        user_sort='last_message__sender__username',
-        session_prefix='dashboard:incoming_messages',
+        template='communication/widget.html',
+        user_sort='last_message__sender__username', # XXX
+        session_prefix='dashboard:communication',
         page_size=4,
         submission=submission,
         extra_context={
-            'incoming': True,
-            'widget': True,
-        }
-    )
-
-
-@tracking_hint(exclude=True)
-def outgoing_message_widget(request, submission_pk=None):
-    qs = Thread.objects.outgoing(request.user).open(request.user)
-    submission = None
-    if submission_pk:
-        submission = get_object_or_404(Submission, pk=submission_pk)
-        qs = qs.filter(submission=submission)
-    return message_widget(request, 
-        queryset=qs,
-        template='communication/widgets/outgoing_messages.inc',
-        user_sort='last_message__receiver__username',
-        session_prefix='dashboard:outgoing_messages',
-        page_size=4,
-        submission=submission,
-        extra_context={
-            'incoming': False,
             'widget': True,
         }
     )
@@ -130,13 +116,13 @@ def communication_overview_widget(request, submission_pk=None):
     if not show_system_messages:
         threads = threads.exclude(last_message__sender__email='root@system.local')
 
-    return render(request, 'communication/widgets/overview.inc', {
+    return render(request, 'communication/overview.html', {
         'threads': threads.order_by('-last_message__timestamp'),
         'show_system_messages': show_system_messages,
     })
 
 
-def message_widget(request, queryset=None, template='communication/widgets/messages.inc', user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
+def message_widget(request, queryset=None, template=None, user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
     sort_session_key = '%s:sort' % session_prefix
     raw_sort = request.GET.get('sort', request.session.get(sort_session_key, '-last_message__timestamp'))
     
@@ -182,7 +168,7 @@ def list_threads(request):
     usersettings = request.user.ecs_settings
 
     filter_defaults = {}
-    for key in ('incoming', 'outgoing', 'closed', 'pending'):
+    for key in ('incoming', 'outgoing', 'starred', 'unstarred'):
         filter_defaults[key] = 'on'
 
     filterform = ThreadListFilterForm(
@@ -201,17 +187,17 @@ def list_threads(request):
     else:
         queryset = Thread.objects.none()
 
-    if filters['closed'] and filters['pending']:
+    if filters['starred'] and filters['unstarred']:
         pass
-    elif filters['closed']:
+    elif filters['starred']:
         queryset = queryset.filter(
-            Q(closed_by_receiver=True, receiver=request.user) |
-            Q(closed_by_sender=True, sender=request.user)
+            Q(starred_by_receiver=True, receiver=request.user) |
+            Q(starred_by_sender=True, sender=request.user)
         )
-    elif filters['pending']:
+    elif filters['unstarred']:
         queryset = queryset.filter(
-            Q(closed_by_receiver=False, receiver=request.user) |
-            Q(closed_by_sender=False, sender=request.user)
+            Q(starred_by_receiver=False, receiver=request.user) |
+            Q(starred_by_sender=False, sender=request.user)
         )
     else:
         queryset = queryset.none()
