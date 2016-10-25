@@ -59,7 +59,7 @@
                 {% render_field form.email class+="form-control" placeholder=form.email.label %}
             {% endif %}
         </div>
-            {% if form.non_field_errors %}<div class="alert alert-danger" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+            {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
         <input type="submit" class="btn btn-primary btn-block" value="Registrieren" />
     </form>
 

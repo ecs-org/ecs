@@ -83,7 +83,7 @@
             <input type="submit" value="Login" id="login_button" class="btn btn-primary btn-block mt-1" {% if not request.ua.is_supported or request.ua.is_crawler %} style="display:none;"{% endif %}/>
             <input type="hidden" name="next" value="{{ next }}" />
             {% if form.non_field_errors %}
-                <div class="alert alert-danger mt-1 mb-0" role="alert">
+                <div class="alert alert-danger mt-1 mb-0">
                     {% for error in form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
