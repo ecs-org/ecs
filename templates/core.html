@@ -1,5 +1,6 @@
 {% extends 'shell.html' %}
-{% load alert compress i18n userutils core scratchpad userswitcher staticfiles version_tag widget_tweaks %}
+{% load compress i18n staticfiles widget_tweaks %}
+{% load alert communication core scratchpad userswitcher userutils version_tag %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -39,6 +40,7 @@
             <li class="nav-item">
                 <a class="nav-link text-primary" href="{% url 'ecs.communication.views.list_threads' %}">
                     {% trans "Communication" %}
+                    ({% unread_msg_count %})
                 </a>
             </li>
             {% if user.profile.show_worklow_widget %}

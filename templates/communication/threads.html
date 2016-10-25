@@ -4,7 +4,7 @@
 {% block menuSelection %}communication{% endblock %}
 
 {% block htmltitle %}{% trans "Communication" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "Communication" %}{% endblock %}
+{% block headertitle %}{% trans "Communication" %} ({% unread_msg_count %}){% endblock %}
 
 {% block content %}
     <div class="messages_header mb-1">

@@ -1,4 +1,7 @@
 from django.template import Library
+from django.db.models import Sum, Case, When, IntegerField
+
+from ecs.communication.models import Thread
 
 
 register = Library()
@@ -31,3 +34,17 @@ def preview(message, chars):
         return text[:chars-3] + '...'
     else:
         return text
+
+
+@register.simple_tag(takes_context=True)
+def unread_msg_count(context):
+    user = context['user']
+    return Thread.objects.by_user(user).annotate(
+        unread_count=Sum(
+            Case(
+                When(messages__receiver=user, messages__unread=True, then=1),
+                default=0,
+                output_field=IntegerField()
+            )
+        )
+    ).filter(unread_count__gt=0).count()
