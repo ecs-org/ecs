@@ -95,17 +95,17 @@ def reschedule_submission(request, submission_pk=None):
         old_entry.delete()
 
         old_experts = set(from_meeting.medical_categories
-            .exclude(board_member=None)
+            .exclude(specialist=None)
             .filter(category__in=submission.medical_categories.values('pk'))
-            .values_list('board_member_id', flat=True))
+            .values_list('specialist_id', flat=True))
         new_experts = set(to_meeting.medical_categories
-            .exclude(board_member=None)
+            .exclude(specialist=None)
             .filter(category__in=submission.medical_categories.values('pk'))
-            .values_list('board_member_id', flat=True))
+            .values_list('specialist_id', flat=True))
 
         with sudo():
             Task.objects.for_data(submission).filter(
-                task_type__workflow_node__uid='board_member_review',
+                task_type__workflow_node__uid='specialist_review',
                 assigned_to__in=(old_experts - new_experts)
             ).open().mark_deleted()
 
@@ -145,10 +145,10 @@ def tops(request, meeting=None):
     open_tops = {}
     for top in [t for t in tops if t.is_open]:
         if top.submission:
-            medical_categories = meeting.medical_categories.exclude(board_member=None).filter(
+            medical_categories = meeting.medical_categories.exclude(specialist=None).filter(
                 category__in=top.submission.medical_categories.values('pk').query)
             bms = tuple(User.objects
-                .filter(pk__in=medical_categories.values('board_member').query)
+                .filter(pk__in=medical_categories.values('specialist').query)
                 .order_by('last_name', 'first_name').distinct())
         else:
             bms = ()
@@ -883,7 +883,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         request.user.profile.is_internal:
 
         previous_experts = dict(
-            meeting.medical_categories.values_list('pk', 'board_member_id'))
+            meeting.medical_categories.values_list('pk', 'specialist_id'))
 
         for amc in expert_formset.save():
             previous_expert = previous_experts[amc.pk]
@@ -900,18 +900,18 @@ def meeting_details(request, meeting_pk=None, active=None):
             ).exclude(
                 submission__medical_categories__in=
                     meeting.medical_categories
-                        .filter(board_member=previous_expert)
+                        .filter(specialist=previous_expert)
                         .values('category_id')
             )
 
             for entry in entries:
                 with sudo():
                     Task.objects.for_data(entry.submission).filter(
-                        task_type__workflow_node__uid='board_member_review',
+                        task_type__workflow_node__uid='specialist_review',
                         assigned_to=previous_expert
                     ).open().mark_deleted()
 
-        meeting.create_boardmember_reviews()
+        meeting.create_specialist_reviews()
 
         messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))
         active = 'experts'

@@ -103,7 +103,7 @@ def create_task(request, submission_pk=None):
                 token.task.assign(user=assign_to)
                 task = token.task
 
-                if task_type.workflow_node.uid == 'board_member_review':
+                if task_type.workflow_node.uid == 'specialist_review':
                     entry = submission.timetable_entries.filter(
                         meeting__started=None).first()
                     if entry:

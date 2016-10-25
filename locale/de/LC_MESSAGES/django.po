@@ -117,7 +117,7 @@ msgstr "Versicherungsbewertung"
 msgid "GCP Review"
 msgstr "GCP Bewertung"
 
-msgid "Board Member Review"
+msgid "Specialist Review"
 msgstr "Spezialistenbewertung"
 
 msgid "External Review"

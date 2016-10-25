@@ -106,7 +106,7 @@ def on_initial_review(sender, **kwargs):
                 with sudo():
                     for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid__in=['categorization', 'internal_vote_review'], assigned_to__isnull=False):
                         receivers.add(task.assigned_to)
-                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='board_member_review', assigned_to__isnull=False).open():
+                    for task in Task.objects.for_submission(submission).filter(task_type__workflow_node__uid='specialist_review', assigned_to__isnull=False).open():
                         receivers.add(task.assigned_to)
             else:
                 receivers = submission_form.get_involved_parties().get_users()
@@ -127,7 +127,7 @@ LANE_TASKS = {
         'expedited_recommendation',
     ),
     SUBMISSION_LANE_BOARD : (
-        'board_member_review',
+        'specialist_review',
     ),
     SUBMISSION_LANE_LOCALEC : (
         'localec_recommendation',

@@ -12,10 +12,10 @@
                 </div>
                 <div class="mb-1">
                     {% if meeting.started %}
-                        {{ form.instance.board_member|default:'<em>Niemand zugeteilt!</em>' }}
+                        {{ form.instance.specialist|default:'<em>Niemand zugeteilt!</em>' }}
                     {% else %}
                         {{ form.id }}
-                        {{ form.board_member }}
+                        {{ form.specialist }}
                     {% endif %}
                 </div>
 

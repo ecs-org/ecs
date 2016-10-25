@@ -40,7 +40,7 @@ def submission_workflow():
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
     insurance_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='insurance_review')
     legal_and_patient_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='legal_review')
-    boardmember_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='boardmember_review')
+    specialist_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='specialist_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
 
     EXECUTIVE_GROUP = 'EC-Executive Board Member'
@@ -49,6 +49,7 @@ def submission_workflow():
     INSURANCE_REVIEW_GROUP = 'Insurance Reviewer'
     STATISTIC_REVIEW_GROUP = 'Statistic Reviewer'
     GCP_REVIEW_GROUP = 'GCP Reviewer'
+    SPECIALIST_GROUP = 'Specialist'
 
     setup_workflow_graph(Submission,
         auto_start=True,
@@ -66,7 +67,7 @@ def submission_workflow():
             'legal_and_patient_review': Args(ChecklistReview, data=legal_and_patient_review_checklist_blueprint, name=_("Legal and Patient Review"), group=OFFICE_GROUP, is_dynamic=True),
             'insurance_review': Args(ChecklistReview, data=insurance_review_checklist_blueprint, name=_("Insurance Review"), group=INSURANCE_REVIEW_GROUP, is_dynamic=True),
             'statistical_review': Args(ChecklistReview, data=statistical_review_checklist_blueprint, name=_("Statistical Review"), group=STATISTIC_REVIEW_GROUP, is_dynamic=True),
-            'board_member_review': Args(ChecklistReview, data=boardmember_review_checklist_blueprint, name=_("Board Member Review"), group=BOARD_MEMBER_GROUP, is_delegatable=False, is_dynamic=True),
+            'specialist_review': Args(ChecklistReview, data=specialist_review_checklist_blueprint, name=_("Specialist Review"), group=SPECIALIST_GROUP, is_delegatable=False, is_dynamic=True),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP, is_dynamic=True),
 
             # retrospective thesis lane
@@ -137,6 +138,7 @@ def auth_groups():
         'Meeting Protocol Receiver',
         'Omniscient Board Member',
         'Resident Board Member',
+        'Specialist',
         'Statistic Reviewer',
         'Userswitcher Target',
     )
@@ -282,6 +284,7 @@ def auth_user_testusers():
 
     userswitcher_group = Group.objects.get(name='Userswitcher Target')
     boardmember_group = Group.objects.get(name='Board Member')
+    specialist_group = Group.objects.get(name='Specialist')
 
     for testuser, group in testusers:
         for number in range(1,4):
@@ -304,6 +307,7 @@ def auth_user_testusers():
     for testuser, medcategories in boardtestusers:
         user, created = get_or_create_user('{0}@example.org'.format(testuser))
         user.groups.add(boardmember_group)
+        user.groups.add(specialist_group)
         user.groups.add(userswitcher_group)
 
         user.profile.is_testuser = True

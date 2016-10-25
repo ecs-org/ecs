@@ -204,9 +204,12 @@ class UserDetailsForm(forms.ModelForm):
 
     def clean_groups(self):
         groups = self.cleaned_data.get('groups', [])
-        amcs = AssignedMedicalCategory.objects.filter(board_member=self.instance, meeting__ended=None)
-        if amcs.exists() and not 'Board Member' in [g.name for g in groups]:
-            raise forms.ValidationError(_('{0} is a specialist in following meetings: {1}').format(self.instance, ', '.join(amc.meeting.title for amc in amcs)))
+        amcs = AssignedMedicalCategory.objects.filter(specialist=self.instance, meeting__ended=None)
+        if amcs.exists() and not 'Specialist' in [g.name for g in groups]:
+            raise forms.ValidationError(
+                _('{} is a specialist in following meetings: {}').format(
+                    self.instance, ', '.join(amc.meeting.title for amc in amcs))
+            )
         return groups
 
     def clean(self):

@@ -91,18 +91,18 @@ class UserChoiceField(forms.ModelChoiceField):
 
 
 class AssignedMedicalCategoryForm(forms.ModelForm):
-    board_member = UserChoiceField(required=False)
+    specialist = UserChoiceField(required=False)
 
     class Meta:
         model = AssignedMedicalCategory
-        fields = ('board_member',)
+        fields = ('specialist',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['board_member'].queryset = User.objects.filter(
+        self.fields['specialist'].queryset = User.objects.filter(
             is_active=True, medical_categories=self.instance.category,
-            groups__name='Board Member'
+            groups__name='Specialist'
         ).order_by('email')
 
     def _gen_submission_info(self):
@@ -117,8 +117,8 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
             tasks = list(Task.objects.filter(
                 content_type=ContentType.objects.get_for_model(Submission),
                 data_id__in=[s.id for s in submissions],
-                task_type__workflow_node__uid='board_member_review',
-                assigned_to=self.instance.board_member,
+                task_type__workflow_node__uid='specialist_review',
+                assigned_to=self.instance.specialist,
                 deleted_at=None
             ).order_by('-created_at'))
 
@@ -137,7 +137,7 @@ class AssignedMedicalCategoryForm(forms.ModelForm):
             else:
                 self._submissions_without_review.append(submission)
 
-            if self.instance.board_member in submission.biased_board_members.all():
+            if self.instance.specialist in submission.biased_board_members.all():
                 submission.biased = True
 
     @property

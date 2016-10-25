@@ -20,7 +20,7 @@ def checklist_blueprints():
         dict(slug='legal_review', name=_("Legal and Patient Review")),
         dict(slug='insurance_review', name=_("Insurance Review")),
         dict(slug='gcp_review', name=_("GCP Review")),
-        dict(slug='boardmember_review', name=_("Board Member Review"), multiple=True),
+        dict(slug='specialist_review', name=_("Specialist Review"), multiple=True),
         dict(slug='external_review', name=_("External Review"), multiple=True, reviewer_is_anonymous=True, allow_pdf_download=True),
     )
 

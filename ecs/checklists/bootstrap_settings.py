@@ -55,7 +55,7 @@ checklist_questions = {
         Args('14', 'Sind Angaben zur Regelung bzgl Publikation ausreichend definiert?'),
         Args('15', 'Anhang, wenn zutreffend?'),
     ],
-    'boardmember_review': [
+    'specialist_review': [
         Args('1', "Ist das Antragsformular korrekt und vollständig ausgefüllt?"),
         Args('2', "Entspricht das Protokoll /der Prüfplan formal und inhaltlich den Richtlinien der „Guten wissenschaftlichen Praxis“?"),
         Args('3', "Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),

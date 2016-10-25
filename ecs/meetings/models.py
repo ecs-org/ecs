@@ -124,7 +124,7 @@ class TimetableMetrics(object):
 
 class AssignedMedicalCategory(models.Model):
     category = models.ForeignKey('core.MedicalCategory')
-    board_member = models.ForeignKey(User, null=True, blank=True, related_name='assigned_medical_categories')
+    specialist = models.ForeignKey(User, null=True, blank=True, related_name='assigned_medical_categories')
     meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
     objects = AuthorizationManager()
@@ -251,32 +251,32 @@ class Meeting(models.Model):
         del self.users_with_constraints
         del self.timetable_entries_which_violate_constraints
 
-    def create_boardmember_reviews(self):
+    def create_specialist_reviews(self):
         task_type = TaskType.objects.get(
-            workflow_node__uid='board_member_review',
+            workflow_node__uid='specialist_review',
             workflow_node__graph__auto_start=True)
 
-        for amc in self.medical_categories.exclude(board_member=None):
+        for amc in self.medical_categories.exclude(specialist=None):
             entries = (self.timetable_entries
                 .filter(submission__workflow_lane=SUBMISSION_LANE_BOARD,
                     submission__medical_categories=amc.category)
-                .exclude(submission__biased_board_members=amc.board_member)
+                .exclude(submission__biased_board_members=amc.specialist)
                 .distinct())
 
             for entry in entries:
                 participation, created = entry.participations.get_or_create(
-                    medical_category=amc.category, user=amc.board_member)
+                    medical_category=amc.category, user=amc.specialist)
 
                 if created:
                     with sudo():
                         bm_task_exists = Task.objects.for_data(entry.submission).filter(
-                            task_type__workflow_node__uid='board_member_review',
-                            assigned_to=amc.board_member).open().exists()
+                            task_type__workflow_node__uid='specialist_review',
+                            assigned_to=amc.specialist).open().exists()
                     if not bm_task_exists:
                         token = task_type.workflow_node.bind(
                             entry.submission.workflow.workflows[0]
                         ).receive_token(None)
-                        token.task.assign(user=amc.board_member)
+                        token.task.assign(user=amc.specialist)
 
     def add_entry(self, **kwargs):
         visible = kwargs.pop('visible', True)
@@ -296,7 +296,7 @@ class Meeting(models.Model):
         if entry.optimal_start:
             entry.move_to_optimal_position()
         self._clear_caches()
-        self.create_boardmember_reviews()
+        self.create_specialist_reviews()
         on_meeting_top_add.send(Meeting, meeting=self, timetable_entry=entry)
         return entry
 
@@ -742,7 +742,7 @@ class TimetableEntry(models.Model):
             # invisible tops don't have participants
             self.participations.all().delete()
         self.meeting._clear_caches()
-        self.meeting.create_boardmember_reviews()
+        self.meeting.create_specialist_reviews()
 
 @receiver(post_delete, sender=TimetableEntry)
 def _timetable_entry_post_delete(sender, **kwargs):
