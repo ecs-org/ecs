@@ -41,10 +41,7 @@ def new_thread(request, submission_pk=None, to_user_pk=None):
 
 def read_thread(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
-    msg = thread.last_message 
-    if msg.unread and msg.receiver == request.user:
-        msg.unread = False
-        msg.save()
+    thread.messages.filter(receiver=request.user).update(unread=False)
 
     form = ReplyDelegateForm(request.user, request.POST or None)
 
@@ -65,7 +62,7 @@ def read_thread(request, thread_pk=None):
                 submission=thread.submission,
                 related_thread=thread,
             )
-        msg = thread.add_message(request.user, form.cleaned_data['text'])
+        thread.add_message(request.user, form.cleaned_data['text'])
         form = ReplyDelegateForm(request.user, None)
 
     return render(request, 'communication/thread.html', {
