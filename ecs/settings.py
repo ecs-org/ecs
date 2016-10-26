@@ -377,6 +377,8 @@ COMPRESS_PRECOMPILERS = (
 
 #ECS_USERSWITCHER_ENABLED = True/False
 # default to True, Userswitcher will be shown so user can switch to testusers quickly
+if os.getenv('ECS_USERSWITCHER_ENABLED'):
+    ECS_USERSWITCHER_ENABLED = os.getenv('ECS_USERSWITCHER_ENABLED','').lower() == 'true'
 
 #ECS_DEBUGTOOLBAR = True/False defaults to False if empty
 # loads support for django-debug-toolbar
