@@ -31,7 +31,9 @@
         </span><br />
     </div>
 {% empty %}
-    <p>Noch keine Unterlagen</p>
+    <div class="text-xs-center mb-1">
+        <em>Noch keine Unterlagen.</em>
+    </div>
 {% endfor %}
 </div>
 
@@ -44,14 +46,14 @@
         {% endfor %}
         {% for field in form %}
             {% if not field.is_hidden %}
-                {% include "bootstrap/form_field.html" %}
+                {% include "bootstrap/form_field.html" with inline=True %}
             {% endif %}
         {% endfor %}
         <div style="display:none;">
             {% trans "Replaces document" %} <span id="replaced_document_name"></span>
             <a href="" class="new_document">{% trans "New Document" %}</a>
         </div>
-        <input type="submit" name="upload" value="{% trans 'Upload' %}" />
+        <input class="btn btn-primary btn-block" type="submit" name="upload" value="{% trans 'Upload' %}" />
         <progress class="progress"></progress>
         <div class="warning">
             <span class="fa fa-exclamation-triangle text-info"></span>

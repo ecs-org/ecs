@@ -1,0 +1,18 @@
+@import "ecs/variables.scss";
+
+/* submission widget */
+
+.submission_list .warning {
+    font-size: 150%;
+    font-style: bold;
+    color: $red;
+    margin: 15px 0px 15px 0px;
+    border: 1px solid $red;
+    padding: 10px;
+    text-align: center;
+}
+
+li.required label span::after {
+    content: "*";
+    color:#FF0000;
+}

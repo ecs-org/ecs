@@ -9,7 +9,7 @@ ecs.setupFormFieldHelpers = function(context){
             weekStart: 1
         });
 
-    context.find('.CharField > textarea').each(function() {
+    context.find('.CharField textarea').each(function() {
         new ecs.textarea.TextArea(this);
     });
 
@@ -85,7 +85,7 @@ ecs.InvestigatorFormset = function(container, readonly) {
 };
 ecs.InvestigatorFormset.prototype = {
     show: function(index) {
-        $('.investigator_list li').each(function(i) {
+        $('.investigator_list li button:not(.remove)').each(function(i) {
             $(this).toggleClass('active', i == index);
         });
 
@@ -96,7 +96,7 @@ ecs.InvestigatorFormset.prototype = {
     add: function() {
         this.inline_formset.add(this.container);
         var index = this.inline_formset.forms.length - 1;
-        this.inline_formset.forms[index].find('.errors').removeClass('errors');
+        this.inline_formset.forms[index].find('.has-danger').removeClass('has-danger');
         this.generateJumpList();
         this.show(index);
     },
@@ -105,11 +105,12 @@ ecs.InvestigatorFormset.prototype = {
         ul.html('');
 
         this.inline_formset.forms.forEach(function(form, i){
-            var li = $('<li>');
+            var li = $('<li>', { 'class': 'btn btn-group p-0 mr-1 mb-1'});
             li.toggleClass('readonly', this.readonly);
-            li.toggleClass('errors', !!form.find('.errors').length);
+            li.toggleClass('errors', !!form.find('.has-danger').length);
 
-            var a = $('<a>', {
+            var a = $('<button>', {
+                'class': 'btn btn-outline-primary',
                 html: 'Zentrum ' + (i + 1),
                 click: (function(ev){
                     ev.preventDefault();
@@ -119,8 +120,9 @@ ecs.InvestigatorFormset.prototype = {
             li.append(a);
 
             if (!this.readonly && this.inline_formset.forms.length > 1) {
-                var removeLink = $('<a>', {
-                    'class': 'fa fa-times-circle remove',
+                var removeLink = $('<button>', {
+                    'class': 'btn btn-outline-danger remove',
+                    html: '<span class="fa fa-ban"></span>',
                     click: (function(ev) {
                         ev.preventDefault();
                         this.inline_formset.remove(i);
@@ -133,15 +135,14 @@ ecs.InvestigatorFormset.prototype = {
         }, this);
 
         if (!this.readonly) {
-            var li = $('<li>');
-            var a = $('<a>', {
-                'class': 'fa fa-plus-circle',
+            var li = $('<li>', {
+                'class': 'btn btn-outline-success mb-1',
+                html: '<span class="fa fa-plus-circle"></span>',
                 click: (function(ev) {
                     ev.preventDefault();
                     this.add();
                 }).bind(this)
             });
-            li.append(a);
             ul.append(li);
         }
     }
@@ -299,8 +300,11 @@ ecs.FormFieldController = function(options) {
     this.sources.change((function(ev) {
         this.auto.apply(this);
     }).bind(this));
-    if (options.sourceFieldClass)
-        this.sources.addClass(options.sourceFieldClass);
+    if (options.sourceFieldClass) {
+        this.sources.each(function() {
+            $(this).closest('.form-check').addClass(options.sourceFieldClass);
+        });
+    }
 
     this.toggleTab = options.toggleTab;
     if (this.toggleTab) {

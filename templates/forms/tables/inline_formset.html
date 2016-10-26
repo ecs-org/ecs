@@ -1,42 +1,48 @@
-{% load core %}
+{% load core i18n %}
 
 {{ formset.management_form }}
-<table id="{{ formset.prefix }}_formset" class="inline_formset">
+<table id="{{ formset.prefix }}_formset" class="table table-sm">
     <thead>
-    <tr>
-        <th></th>
-        {% for field in formset.empty_form %}
-            {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
-                {% with field|get_field_info as field_info %}
-                <th{% if field.field.required %} class="required"{% endif %}>
-                    {{ field_info.label|default:field.label }}
-                    {% if field_info.number %}
-                        <span class="paperform_number">{{ field_info.number }}</span>
-                    {% endif %}
-                    {% if field_info.help_text %}
-                    <span class="help_text">
-                        {{ field_info.help_text }}
-                    </span>
-                    {% endif %}
-                </th>
-                {% endwith %}
-            {% endif %}
-        {% endfor %}
-    </tr>
+        <tr>
+            <th></th>
+            {% for field in formset.empty_form %}
+                {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
+                    {% with field|get_field_info as field_info %}
+                    <th{% if field.field.required %} class="required"{% endif %}>
+                        {{ field_info.label|default:field.label }}
+                        {% if field_info.number %}
+                            <span class="text-muted">[{{ field_info.number }}]</span>
+                        {% endif %}
+                        {% if field_info.help_text %}
+                        <span class="text-muted">
+                            {{ field_info.help_text }}
+                        </span>
+                        {% endif %}
+                    </th>
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+        </tr>
     </thead>
     <tbody>
-    {% for form in formset.forms %}
-    <tr class="form">
-        {% include "forms/tables/row.html" %}
-    </tr>
-    {% empty %}
-        {% if not readonly %}
-            {% with formset.empty_form as form %}
-                <tr class="form template">
-                    {% include "forms/tables/row.html" %}
+        {% for form in formset.forms %}
+        <tr class="form">
+            {% include "forms/tables/row.html" %}
+        </tr>
+        {% empty %}
+            {% if readonly %}
+                <tr>
+                    <td class="text-xs-center text-muted" colspan="{{ formset.empty_form.visible_fields|length|add:1 }}">
+                        <em>{% trans 'No information given' %}</em>
+                    </td>
                 </tr>
-            {% endwith %}
-        {% endif %}
-    {% endfor%}
+            {% else %}
+                {% with formset.empty_form as form %}
+                    <tr class="form template">
+                        {% include "forms/tables/row.html" %}
+                    </tr>
+                {% endwith %}
+            {% endif %}
+        {% endfor%}
     </tbody>
 </table>

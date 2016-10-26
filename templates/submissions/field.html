@@ -1,0 +1,63 @@
+{% load core widget_tweaks %}
+
+{% with field|get_field_info as field_info %}
+    {% if field.field|type_name == 'BooleanField' %}
+        <li class="form-group row">
+            <div class="col-md-9 push-md-3">
+                <div class="form-check mb-0 {{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-danger{% endif %}">
+                    <label class="form-check-label" for="{{ field.id_for_label }}">
+                        {% render_field field class+="form-check-input" %}
+                        <span class="pl-1">
+                            {% if readonly and field_info.help_text %}
+                                <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
+                            {% endif %}
+                            {{ field_info.label|default:field.label }}
+                            {% if field_info.number %}
+                                <small class="text-muted">[{{ field_info.number }}]</small>
+                            {% endif %}
+                            {% if field.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </span>
+                    </label>
+                    {% if not readonly and field_info.help_text %}
+                        <div class="text-muted">
+                            {{ field_info.help_text }}
+                        </div>
+                    {% endif %}
+                    {% if field.errors and field.errors.0 != _('This field is required.') %}
+                        <div class="alert alert-danger text-xs-center">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </li>
+    {% else %}
+        <li class="form-group row {{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-danger {% endif %}">
+            <label class="col-md-3 col-form-label" for="{{ field.id_for_label }}">
+                {% if readonly and field_info.help_text %}
+                    <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
+                {% endif %}
+                <span>
+                {{ field_info.label|default:field.label }}
+                    {% if field_info.number %}
+                        <small class="text-muted">[{{ field_info.number }}]</small>
+                    {% endif %}
+                    {% if field.field.required %}
+                        <span class="text-danger">*</span>
+                    {% endif %}
+                </span>
+                {% if not readonly and field_info.help_text %}
+                    <div class="text-muted">
+                        {{ field_info.help_text }}
+                    </div>
+                {% endif %}
+            </label>
+            <div class="col-md-9">
+                {% render_field field class+="form-control" %}
+                {% if field.errors and field.errors.0 != _('This field is required.') %}
+                    <div class="alert alert-danger text-xs-center">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+    </li>
+    {% endif %}
+{% endwith %}

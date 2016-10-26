@@ -122,7 +122,7 @@
     </div>
 
     {% if categorization_form %}
-        <div id="categorization_tab" class="tab collapse">
+        <div id="categorization_tab" class="container collapse">
             <p>
                 Typ:
                 {% if submission_form.is_amg %}
@@ -159,7 +159,7 @@
             {% include 'submissions/tabs/involved_parties.html' %}
         </div>
     {% endif %}
-    <div id="pending_notifications_tab" class="tab collapse">
+    <div id="pending_notifications_tab" class="container collapse">
         <h3>{% trans "Open Notifications" %}</h3>
         <ul class="list-group">
             {% for notification in open_notifications %}
@@ -189,7 +189,7 @@
             </a>
         {% endif %}
     </div>
-    <div id="answered_notifications_tab" class="tab collapse">
+    <div id="answered_notifications_tab" class="container collapse">
         <h3>{% trans "Answered Notifications" %}</h3>
         <ul class="list-group">
             {% for notification in answered_notifications %}
@@ -220,9 +220,9 @@
         {% endif %}
     </div>
     {% if vote_review_form %}
-        <div id="vote_review_tab" class="tab collapse">
+        <div id="vote_review_tab" class="container collapse">
             {% with vote=vote_review_form.instance %}
-                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
+                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!</span>{% endif %}</h3>
             {% endwith %}
 
             {% with vote_review_form as review_form %}
@@ -237,7 +237,7 @@
         </div>
     {% endif %}
 
-    <div id="published_votes_tab" class="tab collapse">
+    <div id="published_votes_tab" class="container collapse">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
             <ul class="list-group">
@@ -272,13 +272,13 @@
     </div>
 
     {% if user.profile.is_internal %}
-        <div id="checklist_summary_tab" class="tab collapse">
+        <div id="checklist_summary_tab" class="container collapse">
             {% include 'submissions/checklist_summary.inc' %}
         </div>
     {% endif %}
 
     {% for checklist, formset in checklist_reviews %}
-    <div id="checklist_{{ checklist.pk }}_review_form" class="collapse">
+    <div id="checklist_{{ checklist.pk }}_review_form" class="container collapse">
         {% if formset.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
             {% if checklist.status == 'review_ok' or user.profile.is_internal %}
                 {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
@@ -316,21 +316,21 @@
     </div>
     {% endfor %}
     
-    <div id="communication_tab" class="tab collapse">
+    <div id="communication_tab" class="collapse">
         <div data-widget-url="{% url 'ecs.communication.views.dashboard_widget' submission_pk=submission.pk %}"></div>
         <a class="btn btn-outline-primary" href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk %}" target="_blank">{% trans "Write a new message" %}</a>
     </div>
     {% if user.profile.is_internal %}
-        <div id="communication_overview_tab" class="tab collapse">
+        <div id="communication_overview_tab" class="container collapse">
             <div data-widget-url="{% url 'ecs.communication.views.communication_overview_widget' submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
     {% if user.profile.show_task_widget %}
-        <div id="tasks_tab" class="tab collapse">
+        <div id="tasks_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>
         {% if user.profile.is_internal %}
-            <div id="workflow_log" class="tab collapse">
+            <div id="workflow_log" class="collapse">
                 <div data-widget-url="{% url 'ecs.tasks.views.task_backlog' submission_pk=submission.pk %}"></div>
                 {% if submission.allows_dynamic_task_creation %}
                     <div class="mt-2" data-widget-url="{% url 'ecs.checklists.views.create_task' submission_pk=submission.pk %}"></div>
@@ -360,7 +360,7 @@
             ecs.setupForms();
             ecs.setupWidgets();
 
-            $('form.review textarea').each(function(){
+            $('form.review textarea:not([disabled])').each(function(){
                 new ecs.textarea.TextArea(this, [
                     {% if user.profile.is_internal %}
                         ecs.textarea.toolbarItems.boilerplate(
@@ -401,11 +401,10 @@
 
             $('#tabs_submission a').each(function() {
                 var container = $($(this).attr('href'));
-                container.find('input[type="checkbox"]').each(function() {
-                    var input = $(this);
-                    if (!input.is(':checked'))
-                        input.parent('li.BooleanField').hide();
-                });
+                container.find('input[type="checkbox"]:not(:checked)')
+                    .closest('.BooleanField')
+                    .closest('li.form-group')
+                    .hide();
             });
 
             $('.expand_submission_forms').click(function(ev) {

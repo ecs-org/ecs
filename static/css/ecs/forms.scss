@@ -27,129 +27,6 @@ ul.errorlist {
         clear: both;
     }
 
-    .field {
-        margin-bottom: 30px;
-
-        input.subchoice {
-            margin-left: 30px;
-        }
-    }
-
-    .field h2, .field h3, .tab h2, .tab h3{
-        letter-spacing: 1px;
-        line-break: normal;
-    }
-
-    table, ol, select, option, input, textarea:not(.form-control) {
-        font-size: 12px;
-    }
-
-    .paperform_number{
-        color: $grey-40;
-        font-size: 10px;
-
-        &:before{
-            content: "[";
-        }
-
-        &:after{
-            content: "]";
-        }
-    }
-
-    ul li:not(.select2-selection__choice) {
-        list-style: none;
-    }
-
-    ol {
-        @include field-list;
-        & > li {
-            display: block;
-            clear: both;
-
-            &.required.errors {
-                textarea, input[type=text], input[type=number], select {
-                    border: 1px solid red;
-                }
-            }
-
-            &.required label:after {
-                content: " *";
-                color: $red;
-            }
-
-            &.max10 input { width: 60px;}
-            &.max20 input { width: 100px;}
-            &.max40 input { width: 200px;}
-            &.max60 input { width: 340px;}
-
-            label, input[type=text], input[type=file], textarea, select {
-                display: inline-block;
-                vertical-align: top;
-                margin-bottom: 10px;
-            }
-
-            textarea {
-                height: 40px;
-            }
-
-            label {
-                width: 230px;
-                padding: 0 5px;
-            }
-
-            div.input {
-                float: left;
-            }
-
-            .help_text {
-                margin: 0 0 3px 230px;
-                display: block;
-                clear: both;
-                color: $grey-40;
-                padding-left: 10px;
-            }
-
-            &.BooleanField {
-                padding-left: 245px;
-
-                input{
-                    display: inline-block;
-                    float: left;
-                }
-
-                label{
-                    width: 400px;
-                    display: inline-block;
-                    float: none;
-                    padding-left: 10px  ;
-                    text-align: left;
-
-                    &:after {
-                        content: none;
-                    }
-                }
-
-                .help_text {
-                    clear: both;
-                    margin: 10px 0 0 20px;
-                    height: 15px;
-                    display: block;
-                    clear: both;
-                    color: $grey-40;
-                }
-            }
-            &.EmailField input {
-                width: 340px;
-            }
-        }
-    }
-
-    textarea:not(.form-control) {
-        /* Note: Textareas must have a css-defined width. Otherwise, the autogrowing textarea widget has problems to determine the correct width. */
-        width: 400px;
-    }
-
     input[type=submit]:not(.btn) {
         margin: 10px 10px 10px 240px;
         display: block;
@@ -157,7 +34,7 @@ ul.errorlist {
     input[type=submit].hidden {
         display: none;
     }
-
+    
     table td li {
         margin: 0px;
         float: none;
@@ -167,42 +44,6 @@ ul.errorlist {
         margin-left: 240px;
         margin-bottom: 5px;
         color: red;
-    }
-
-    ul.investigator_list {
-        margin: 0 0 20px -5px !important;
-
-        li {
-            display: inline-block;
-            margin: 2px;
-            line-height: 20px;
-            padding: 0px 5px;
-            border-radius: 3px;
-            border: 1px solid #bbb;
-            background-color: $grey-ochre;
-
-            a {
-                text-decoration: none !important;
-                color: $grey-20 !important;
-            }
-            &.active {
-                background: $beige;
-            }
-            &.errors {
-                border: 1px solid $red;
-                background-color: $brick-red;
-            }
-            &.errors a {
-                color: #fff !important;
-            }
-            &.errors.active {
-                background-color: $orange;
-            }
-
-            .remove {
-                padding: 2px 0 2px 5px;
-            }
-        }
     }
 
     table.inline_formset td ul.errorlist {
@@ -234,47 +75,10 @@ ul.errorlist {
     }
 }
 
-li.ModelChoiceField select {
-    width: 35em;
-}
-td.TypedChoiceField select {
-    width: 120px;
-}
-li.TypedChoiceField select {
-    min-width: 250px;
-    max-width: 350px;
-}
-li.NullBooleanField select {
-    width: 130px;
-}
-li.TypedChoiceField ul{
-    float: left;
-
-    li label {
-        float: none;
-        margin-left: none;
-    }
-}
-
-.inline_formset .form {
-    position: relative;
-    margin-top: 20px;
-}
-
 table.inline_formset {
     th.required:after {
         content: " *";
         color: $red;
-    }
-
-    td {
-        vertical-align: top;
-
-        &.required.errors {
-            textarea, input[type=text], select {
-                border: 1px solid red;
-            }
-        }
     }
 }
 
@@ -283,9 +87,6 @@ table.inline_formset {
         margin-bottom: 10px;
         list-style-type: none;
     }
-}
-tr.form td {
-    vertical-align: top;
 }
 
 .change_presenter #id_presenter {

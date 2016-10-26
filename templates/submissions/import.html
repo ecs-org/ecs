@@ -5,11 +5,19 @@
 {% block headertitle %}{% trans "Import" %}{% endblock %}
 
 {% block content %}
-<div class="my-1 text-xs-center">
-    <form class="form-inline" action="{{ request.path }}" method="post" enctype="multipart/form-data">
+<div class="my-1 container">
+    <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {% include 'bootstrap/form_field.html' with field=form.file %}
-        <button type="submit" class="btn btn-primary">Importieren</button>
+        <div class="row">
+            <div class="col-md-9">
+                {% include 'bootstrap/form_field.html' with field=form.file inline=True %}
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="mx-1 btn btn-block btn-primary">
+                    Importieren
+                </button>
+            </div>
+        </div>
     </form>
 </div>
 {% endblock %}

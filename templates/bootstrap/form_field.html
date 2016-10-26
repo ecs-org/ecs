@@ -1,6 +1,6 @@
 {% load core widget_tweaks %}
 
-<div class="form-group {% if inline %}row{% endif %} {% if field.errors %}has-danger{% endif %}">
+<div class="form-group{% if inline %} row{% endif %}{% if field.errors %} has-danger{% endif %}">
     {% if field.field|type_name == "BooleanField" %}
         <div class="form-check {% if inline %}col-md-10 push-md-2{% endif %}">
             <label class="form-check-label">
@@ -12,7 +12,7 @@
             </label>
         </div>
     {% else %}
-        <label {% if inline %}class="col-md-2"{% endif %} for="{{ field.id_for_label }}">
+        <label {% if inline %}class="col-md-2 col-form-label"{% endif %} for="{{ field.id_for_label }}">
             {{ field.label }}
             {% if field.field.required %}
                 <span class="text-danger">*</span>

@@ -2,11 +2,6 @@
 
 /* headernav */
 
-input[disabled]:not(.btn) {
-    background-color: #d4d0c8;
-    color: $black;
-}
-
 .tab_headers {
     a {
         &.disabled {
@@ -94,16 +89,6 @@ input[disabled]:not(.btn) {
     }
 }
 
-
-/* specific formset styles */
-
-#measure_formset textarea,
-#routinemeasure_formset textarea {
-    height: 20px;
-    width: 90%;
-}
-
-
 /* documents */
 
 .document_upload {
@@ -118,7 +103,6 @@ input[disabled]:not(.btn) {
     }
     progress {
         display: none;
-        width: 50em;
     }
 }
 

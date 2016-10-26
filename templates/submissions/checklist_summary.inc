@@ -24,7 +24,7 @@
                 {% endif %}
                 <br>
                 {% if answer.comment %}
-                    <pre class="multiline mt-1">{{ answer.comment }}</pre>
+                    <textarea class="form-control mt-1" disabled>{{ answer.comment }}</textarea>
                 {% endif %}
             </div>
         {% endfor %}

@@ -88,10 +88,6 @@ class AutocompleteModelMultipleChoiceField(AutocompleteFieldMixin, forms.ModelMu
         pass
 
 
-from django.utils.safestring import mark_safe
-from django.forms.utils import flatatt
-from django.utils.html import conditional_escape
-
 class ReadonlyTextMixin(object):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -104,29 +100,23 @@ class ReadonlyTextMixin(object):
         if not self.readonly:
             return super().render(name, value, attrs=attrs)
         else:
-            if value is None: value = ''
             if attrs is None: attrs = {}
             if not value:
-                attrs['class'] += ' empty'
-            final_attrs = self.build_attrs(attrs, name=name)
-            empty_str = '<em>-- {0} --</em>'.format(_('No information given'))
-            return mark_safe('<pre{0}>{1}</pre>'.format(flatatt(final_attrs), conditional_escape(force_text(value)) or empty_str))
+                if 'class' in attrs:
+                    attrs['class'] += ' empty'
+                else:
+                    attrs['class'] = 'empty'
+            attrs['readonly'] = 'readonly'
+            attrs['disabled'] = 'disabled'
+            empty_str = '-- {0} --'.format(_('No information given'))
+            return super().render(name, value or empty_str, attrs=attrs)
 
 class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
-    def render(self, name, value, attrs=None):
-        if attrs is None: attrs = {}
-        if self.readonly:
-            attrs['class'] = 'oneline'
-        return super().render(name, value, attrs=attrs)
+    pass
 
 class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
-    def render(self, name, value, attrs=None):
-        if attrs is None: attrs = {}
-        if self.readonly:
-            attrs['class'] = 'multiline'
-            if not 'cols' in attrs and not 'cols' in self.attrs:
-                attrs['cols'] = 100
-        return super().render(name, value, attrs=attrs)
+    pass
+
 
 class StrippedTextInput(ReadonlyTextInput):
     def value_from_datadict(self, *args, **kwargs):

@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load core i18n %}
+{% load core i18n widget_tweaks %}
 
 {% block headertitle %}
   <div id="info" style="display: none;"></div>
@@ -29,72 +29,78 @@
     {% endblock %}
 
       <div class="form_main{% if readonly %} readonly{% endif %}">
-        <div id="tabs">
           {% block tabs %}
             {% for tab in tabs %}
-                <div id="tabs-{{ forloop.counter }}" class="tab collapse">
+                <div id="tabs-{{ forloop.counter }}" class="collapse {% if tab.slug != 'measures' %}container{% endif %}">
+                    
                     {% if unacknowledged_forms %}
-                    <div class="text-xs-center font-weight-bold mb-1">
-                        <span class="fa fa-info text-info" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
-                        {% if unacknowledged_forms == 1 %}
-                            Es gibt eine neuere, unbestätigte Version.
-                        {% else %}
-                            Es gibt {{ unacknowledged_forms }} neuere, unbestätigte Versionen.
+                        <div class="alert alert-info text-xs-center font-weight-bold mb-1">
+                            {% if unacknowledged_forms == 1 %}
+                                Es gibt eine neuere, unbestätigte Version.
+                            {% else %}
+                                Es gibt {{ unacknowledged_forms }} neuere, unbestätigte Versionen.
+                            {% endif %}
+                            <span class="fa fa-info text-info" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
+                        </div>
                         {% endif %}
-                    </div>
-                    {% endif %}
+                                            
                     {% if tab.slug == 'measures' %}
-                        <div class="field">
-                            <h3>Ausschließlich studienbezogene Maßnahmen <span class="paperform_number">6.1</span></h3>
-                            {% block section_6_1 %}
+
+                        {% block section_6_1 %}
+                            <h3 class="my-2">
+                                Ausschließlich studienbezogene Maßnahmen 
+                                <small class="text-muted">[6.1]</small>
+                            </h3>
                             {% with measure_formset as formset %}
                                 {% include "forms/tables/inline_formset.html" %}
                             {% endwith %}
-                            {% endblock %}
-                        </div>
-                        <div class="field">
-                            <h3>Invasive/strahlenbelastende Maßnahmen im Rahmen der Routineversorgung während der Studiendauer <span class="paperform_number">6.2</span></h3>
-                            {% with routinemeasure_formset as formset %}
-                                {% include "forms/tables/inline_formset.html" %}
-                            {% endwith %}
-                        </div>
-                        <div class="field">
-                            <h3>Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind <span class="paperform_number">3b</span></h3>
-                            {% with nontesteduseddrug_formset as formset %}
-                                {% include "forms/tables/inline_formset.html" %}
-                            {% endwith %}
-                        </div>
-                    {% endif %}
+                        {% endblock %}
 
-                    {% if tab.slug == 'documents' %}
+                        <h3 class="my-2">
+                            Invasive/strahlenbelastende Maßnahmen im Rahmen der
+                            Routineversorgung während der Studiendauer
+                            <small class="text-muted">[6.2]</small>
+                        </h3>
+                        {% with routinemeasure_formset as formset %}
+                            {% include "forms/tables/inline_formset.html" %}
+                        {% endwith %}
+
+                        <h3 class="my-2">
+                            Im Rahmen der Studie verabreichte Medikamente, deren
+                            Wirksamkeit und/oder Sicherheit nicht Gegenstand der
+                            Prüfung sind
+                            <small class="text-muted">[3b]</small>
+                        </h3>
+                        {% with nontesteduseddrug_formset as formset %}
+                            {% include "forms/tables/inline_formset.html" %}
+                        {% endwith %}
+                        
+                    {% elif tab.slug == 'documents' %}
+                    
                         {% if not readonly %}
                             {% if not protocol_uploaded %}
-                                <div class="errors">
-                                    <ul class="errorlist">
-                                        <li>{% trans "At least on protocol is required." %}</li>
-                                    </ul>
+                                <div class="alert alert-danger text-xs-center">
+                                    {% trans "At least one protocol is required." %}
                                 </div>
                             {% endif %}
                             <div class="upload_container"></div>
                         {% else %}
                             {% include "documents/compact_list.html" %}
                         {% endif %}
-                    {% endif %}
-
-                    {% if tab.slug == 'centers' %}
-                        <h3>{% trans 'centers (subject)' %}</h3>
+                        
+                    {% elif tab.slug == 'centers' %}
+                    
+                        <h3 class="my-2">{% trans 'centers (subject)' %}</h3>
 
                         {% if investigator_formset.non_form_errors %}
-                            <div class="errors">
-                                <ul class="errorlist">
+                            <div class="alert alert-danger text-xs-center pb-0">
                                     {% for error in investigator_formset.non_form_errors %}
-                                        <li>{{ error }}</li>
+                                        <p>{{ error }}</p>
                                     {% endfor %}
-                                </ul>
                             </div>
                         {% endif %}
 
-                        <ul class="investigator_list"></ul>
+                        <ul class="investigator_list list-unstyled"></ul>
 
                         {{ investigator_formset.management_form }}
                         {{ investigatoremployee_formset.management_form }}
@@ -123,17 +129,19 @@
                                         {% for hidden in form.hidden_fields %}
                                             {{ hidden }}
                                         {% endfor %}
-                                        <ol>
+                                        <ul class="list-unstyled">
                                             {% for field in form %}
                                                 {% if not field.is_hidden %}
-                                                    {% include "forms/field.html" %}
+                                                    {% include "submissions/field.html" %}
                                                 {% endif %}
                                             {% endfor %}
-                                        </ol>
+                                        </ul>
                                     </div>
                                 </div>
-                                <div class="field">
-                                    <h4>Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)</h4>
+                                <div class="">
+                                    <h3 class="my-2">
+                                        Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)
+                                    </h3>
                                     {% if investigatoremployee_formset.non_form_errors %}
                                         <div class="errors">
                                             <ul class="errorlist">
@@ -145,7 +153,7 @@
                                     {% endif %}
 
                                     {# XXX: reuse forms/tables/inline_formset.html (FMD2) #}
-                                    <table class="inline_formset investigatoremployee_formset">
+                                    <table class="table table-sm investigatoremployee_formset">
                                         <thead>
                                         <tr>
                                             <th></th>
@@ -155,10 +163,10 @@
                                                     <th{% if field.field.required %} class="required"{% endif %}>
                                                         {{ field_info.label|default:field.label }}
                                                         {% if field_info.number %}
-                                                            <span class="paperform_number">{{ field_info.number }}</span>
+                                                            <span class="text-muted">[{{ field_info.number }}]</span>
                                                         {% endif %}
                                                         {% if field_info.help_text %}
-                                                        <span class="help_text">
+                                                        <span class="text-muted">
                                                             {{ field_info.help_text }}
                                                         </span>
                                                         {% endif %}
@@ -181,7 +189,7 @@
                                                     {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
                                                         {% with field|get_field_info as field_info %}
                                                         <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}">
-                                                            {{ field }}
+                                                            {% render_field field class+="form-control" %}
                                                         </td>
                                                         {% endwith %}
                                                     {% endif %}
@@ -207,7 +215,7 @@
                     {% for legend, fields in tab.fieldsets %}
                         <div class="field fieldset_{{ forloop.counter }}">
                             {% if legend %}
-                                <h3>{{ legend }}</h3>
+                                <h3 class="my-2">{{ legend }}</h3>
                             {% endif %}
                             {% if fields.name == 'centers_abroad' %}
                                 {% with foreignparticipatingcenter_formset as formset %}
@@ -219,19 +227,18 @@
                                     {% include "forms/tables/inline_formset.html" %}
                                 {% endwith %}
                             {% endif %}
-                            <ol>
+                            <ul class="list-unstyled">
                                 {% for field_name in fields %}
                                     {% with form|getitem:field_name as field %}
-                                        {% include "forms/field.html" %}
+                                        {% include "submissions/field.html" %}
                                     {% endwith %}
                                 {% endfor %}
-                            </ol>
+                            </ul>
                         </div>
                     {% endfor %}
                 </div>
             {% endfor %}
           {% endblock %}
-        </div>
      </div>
 {% endblock %}
 

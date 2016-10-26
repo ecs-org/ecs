@@ -4,9 +4,9 @@ ecs.TabbedForm = function(form, tabController, autosaveInterval) {
     this.autosave_xhr = null;
 
     tabController.tabs.forEach(function(tab) {
-        if (tab.panel.find('.errors').length) {
+        if (tab.panel.find('.has-danger').length) {
             tab.setErrorState();
-            tab.group.header.addClass('bg-danger'); // css('border','1px solid red');
+            tab.group.header.addClass('bg-danger');
         }
     });
 

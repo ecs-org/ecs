@@ -1,4 +1,4 @@
-{% load core %}
+{% load core widget_tweaks %}
 <td>
     {% for hidden in form.hidden_fields %}
         {{ hidden }}
@@ -8,7 +8,7 @@
     {% if not field.is_hidden and not field.html_name|endswith:'-DELETE' %}
         {% with field|get_field_info as field_info %}
         <td class="{{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
-            {{ field }}
+            {% render_field field class+="form-control" %}
             {% if field.errors and field.errors.0 != _('This field is required.') %}
                 {{ field.errors }}
             {% endif %}

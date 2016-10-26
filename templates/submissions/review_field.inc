@@ -3,7 +3,7 @@
     {% if field.field|type_name == "BooleanField" %}
         <div class="form-check">
             {% if not readonly and field_info.help_text %}
-                <span class="help_text">
+                <span class="text-muted">
                     {{ field_info.help_text }}
                 </span>
             {% endif %}
@@ -21,7 +21,7 @@
     {% else %}
         <div class="form-group{% if field.field.required %} required{% endif %}{% if field.errors %} errors{% endif %}">
             {% if not readonly and field_info.help_text %}
-                <span class="help_text">
+                <span class="text-muted">
                     {{ field_info.help_text }}
                 </span>
             {% endif %}

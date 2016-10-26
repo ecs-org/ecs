@@ -46,7 +46,7 @@
 {% endblock %}
 
 {% block section_6_1 %}
-    <div class="hint">
+    <div class="alert alert-info text-xs-center">
         Bitte beachten Sie die
         <a href="{% static 'help/index.html' %}">Hinweise in den Hilfeseiten</a>
     </div>
@@ -88,14 +88,14 @@
             new ecs.FormFieldController({
                 fields: '#id_project_type_reg_drug',
                 disable: true,
-                sourceFieldClass: 'subchoice',
+                sourceFieldClass: 'pl-3',
                 sources: 'input[id^=id_project_type_reg_drug_]'
             });
 
             new ecs.FormFieldController({
                 fields: '#id_project_type_medical_device',
                 disable: true,
-                sourceFieldClass: 'subchoice',
+                sourceFieldClass: 'pl-3',
                 sources: 'input[id^=id_project_type_medical_device_]',
                 toggleTab: {
                     tab: setup.tabController.getTab('#tabs-7'),

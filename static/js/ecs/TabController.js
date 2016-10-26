@@ -72,7 +72,7 @@ ecs.TabController = function(tabGroupContainers) {
         var header = $(this);
         var container = $(header.attr('href'));
         var tabs = [];
-        container.find('a').each(function() {
+        container.find('a.nav-link').each(function() {
             var link = $(this);
             var tab = new ecs.Tab(controller, link);
             if (window.location.hash == link.attr('href'))

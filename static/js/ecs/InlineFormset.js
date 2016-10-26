@@ -40,9 +40,9 @@ ecs.InlineFormSet = function(containers, options) {
 };
 ecs.InlineFormSet.prototype = {
     createAddButton: function(container){
-        return $('<a>', {
-            'class': 'fa fa-plus-circle text-success',
-            'css': {'font-size': '150%', 'margin': '.2em'},
+        return $('<button>', {
+            'class': 'btn btn-outline-success',
+            'html': '<span class="fa fa-plus"></span>',
             click: (function(ev) {
                 ev.preventDefault();
                 this.add(container);
@@ -52,7 +52,7 @@ ecs.InlineFormSet.prototype = {
     createRemoveButton: function(){
         return $('<a>', {
             'class': 'fa fa-ban text-danger',
-            'css': {'font-size': '150%', 'margin': '.2em'},
+            'css': {'font-size': '150%', 'margin': '.2em', 'cursor': 'pointer'},
             click: (function(ev) {
                 ev.preventDefault();
                 var form = $(ev.target).parents(this.options.formSelector);
@@ -66,7 +66,16 @@ ecs.InlineFormSet.prototype = {
     addContainer: function(container){
         if(this.options.addButton){
             var addButton = this.createAddButton(container);
-            container[this.isTable ? 'after' : 'append'](addButton);
+            if (this.isTable) {
+                var tfoot = $('<tfoot><tr><td></td></tr></tfoot>');
+                container.append(tfoot);
+                tfoot.find('td:first').append(addButton);
+                tfoot.find('tr').append($('<td>', {
+                    'colspan': container.find('thead tr th').length - 1
+                }));
+            } else {
+                container.append(addButton);
+            }
         }
     },
     removeContainer: function(container){

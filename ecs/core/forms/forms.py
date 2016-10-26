@@ -215,9 +215,9 @@ class NonTestedUsedDrugForm(forms.ModelForm):
         model = NonTestedUsedDrug
         exclude = ('submission_form',)
         widgets = {
-            'generic_name': ReadonlyTextInput(attrs={'cols': 30}),
-            'preparation_form': ReadonlyTextInput(attrs={'cols': 30}),
-            'dosage': ReadonlyTextInput(attrs={'cols': 30}),
+            'generic_name': ReadonlyTextInput(),
+            'preparation_form': ReadonlyTextInput(),
+            'dosage': ReadonlyTextInput(),
         }
 
 NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm,
@@ -230,10 +230,10 @@ class MeasureForm(forms.ModelForm):
         model = Measure
         exclude = ('submission_form',)
         widgets = {
-            'type': ReadonlyTextarea(attrs={'cols': 30}),
-            'count': ReadonlyTextarea(attrs={'cols': 30}),
-            'period': ReadonlyTextarea(attrs={'cols': 30}),
-            'total': ReadonlyTextarea(attrs={'cols': 30}),
+            'type': ReadonlyTextarea(),
+            'count': ReadonlyTextarea(),
+            'period': ReadonlyTextarea(),
+            'total': ReadonlyTextarea(),
         }
 
 class RoutineMeasureForm(MeasureForm):
