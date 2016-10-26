@@ -17,20 +17,22 @@ class SmtpdTest(CommunicationTestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.tmpdir = tempfile.mkdtemp()
-        ECSMAIL = {
-            'addr': ('127.0.0.1', 8824),
+        TEST_SMTPD_CONFIG= {
+            'listen_addr': ('127.0.0.1', 8024),
             'undeliverable_maildir': os.path.join(cls.tmpdir, 'undeliverable'),
-            'authoritative_domain': 'ecs',
-            'filter_outgoing_smtp': True,
+            'domain': 'ecs',
         }
-        cls.OLD_ECSMAIL = settings.ECSMAIL
-        settings.ECSMAIL = ECSMAIL
+        cls.OLD_SMTPD_CONFIG = settings.SMTPD_CONFIG
+        cls.OLD_DOMAIN = settings.DOMAIN
+        settings.SMTPD_CONFIG = TEST_SMTPD_CONFIG
+        settings.DOMAIN = "ecs"
         cls.mail_receiver = EcsMailReceiver()
 
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir)
-        settings.ECSMAIL = cls.OLD_ECSMAIL
+        settings.SMTPD_CONFIG = cls.OLD_SMTPD_CONFIG
+        settings.DOMAIN = cls.OLD_DOMAIN
         super().tearDownClass()
 
     def process_message(self, recipients, msg):

@@ -163,5 +163,4 @@ class Message(models.Model):
     @property
     def return_address(self):
         return 'ecs-{}@{}'.format(self.uuid.hex,
-            settings.ECSMAIL['authoritative_domain'])
-
+            settings.DOMAIN)

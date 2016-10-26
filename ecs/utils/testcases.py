@@ -28,7 +28,7 @@ class EcsTestCase(TestCase):
 
         settings.STORAGE_VAULT['dir'] = tempfile.mkdtemp()
         settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-        settings.LIMITED_EMAIL_BACKEND = settings.EMAIL_BACKEND
+        settings.EMAIL_BACKEND_UNFILTERED = 'django.core.mail.backends.locmem.EmailBackend'
         settings.ETHICS_COMMISSION_UUID = 'ecececececececececececececececec'
         integration_bootstrap.create_settings_dirs()
 

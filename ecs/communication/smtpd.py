@@ -24,15 +24,15 @@ class EcsMailReceiver(smtpd.SMTPServer):
     MAX_MSGSIZE = 1024 * 1024
 
     def __init__(self):
-        smtpd.SMTPServer.__init__(self, settings.ECSMAIL['addr'], None,
+        smtpd.SMTPServer.__init__(self, settings.SMTPD_CONFIG['listen_addr'], None,
             data_size_limit=self.MAX_MSGSIZE)
         self.undeliverable_maildir = mailbox.Maildir(
-            settings.ECSMAIL['undeliverable_maildir'])
+            settings.SMTPD_CONFIG['undeliverable_maildir'])
 
     def _find_msg(self, recipient):
         msg_uuid, domain = recipient.split('@')
 
-        if domain != settings.ECSMAIL['authoritative_domain']:
+        if domain != settings.SMTPD_CONFIG['domain']:
             raise SMTPError(550, 'Relay access denied')
 
         m = re.match(r'ecs-([0-9A-Fa-f]{32})$', msg_uuid)

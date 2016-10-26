@@ -66,9 +66,9 @@ def deliver_to_recipient(recipient, subject, message, from_email,
         attachments, rfc2822_headers)
     msgid = msg.extra_headers['Message-ID']
 
-    backend = None
-    if settings.ECSMAIL.get('filter_outgoing_smtp') and not nofilter:
-        backend = settings.LIMITED_EMAIL_BACKEND
+    backend = settings.EMAIL_BACKEND
+    if nofilter or recipient.split('@')[1] in settings.EMAIL_UNFILTERED_DOMAINS:
+        backend = settings.EMAIL_BACKEND_UNFILTERED
 
     connection = mail.get_connection(backend=backend)
     connection.send_messages([msg])

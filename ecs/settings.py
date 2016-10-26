@@ -10,10 +10,6 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 # standard django settings
 ##########################
 
-# admins is used to send django 500, 404 and celery error messages per email, DEBUG needs to be false for this
-MANAGERS = ADMINS = ()
-MAIL_ADMINS = False
-
 # Default is DEBUG, others may override it later
 DEBUG = True
 
@@ -289,27 +285,21 @@ STORAGE_VAULT = {
 }
 
 # domain to use
-AUTHORITATIVE_DOMAIN= "localhost"
+DOMAIN= "localhost"
 
 # absolute URL prefix w/out trailing slash
-ABSOLUTE_URL_PREFIX = "http://"+ AUTHORITATIVE_DOMAIN+ ":8000"
+ABSOLUTE_URL_PREFIX = "http://"+ DOMAIN+ ":8000"
 
-# mail config, standard django values
-EMAIL_HOST = 'localhost'; EMAIL_PORT = 25; EMAIL_HOST_USER = ""; EMAIL_HOST_PASSWORD = ""; EMAIL_USE_TLS = False
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
-DEBUG_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-LIMITED_EMAIL_BACKEND = DEBUG_EMAIL_BACKEND # used if ECSMAIL['filter_outgoing_smtp'] == True
-# EMAIL_BACKEND will get overwritten on production setup (backends.smtp) and on runserver (backendss.console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND_UNFILTERED = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_UNFILTERED_DOMAINS = () # = ('example.com', 'shoddy.technology')
+# ecs.users.views.register, request_password_reset and emails send to
+# EMAIL_UNFILTERED_DOMAINS are sent through EMAIL_BACKEND_UNFILTERED
 
-# ecsmail server settings
-ECSMAIL = {
-    'addr': ('127.0.0.1', 8823),
+SMTPD_CONFIG = {
+    'listen_addr': ('127.0.0.1', 8025),
     'undeliverable_maildir': os.path.join(PROJECT_DIR, '..', 'ecs-undeliverable-mail'),
-    'authoritative_domain': AUTHORITATIVE_DOMAIN,
-    'filter_outgoing_smtp': False,
-    # if True, only devliver_to_receipient(nofilter=True) will get send through settings.EMAIL_BACKEND,
-    # all other will be send to LIMITED_EMAIL_BACKEND if defined else DEBUG_EMAIL_BACKEND
-    # this is used only for ecs.users.views. register and request_password_reset
+    'domain': DOMAIN,
 }
 
 
@@ -415,7 +405,7 @@ for override in local_overrides:
     else:
         val += val_override
 
-DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@%s' % (ECSMAIL['authoritative_domain'])
+DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@{}'.format(DOMAIN)
 
 # https
 if 'SECURE_PROXY_SSL' in locals() and SECURE_PROXY_SSL:
@@ -432,7 +422,7 @@ if 'SENTRY_DSN' in locals():
         'dsn': SENTRY_DSN,
         'release': ECS_GIT_REV,
         'transport': ThreadedRequestsHTTPTransport,
-        'site': AUTHORITATIVE_DOMAIN,
+        'site': DOMAIN,
     }
     SENTRY_CLIENT = 'ecs.utils.ravenutils.DjangoClient'
 
@@ -459,8 +449,6 @@ if 'test' in sys.argv:
     INSTALLED_APPS += ('ecs.workflow.tests',)
 
 if 'runserver' in sys.argv:
-    EMAIL_BACKEND = DEBUG_EMAIL_BACKEND
-
     logging.basicConfig(
         level = logging.DEBUG,
         format = '%(asctime)s %(levelname)s %(message)s',
