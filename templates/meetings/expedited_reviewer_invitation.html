@@ -8,7 +8,7 @@
             {% include 'forms/field.html' %}
         {% endfor %}
         </ol>
-        <input type="submit" value="{% trans 'Send Invitations' %}"/>
+        <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'Send Invitations' %}"/>
     </form>
     <div>
         {% if meeting.expedited_reviewer_invitation_sent_for %}
