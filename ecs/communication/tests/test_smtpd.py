@@ -1,12 +1,14 @@
 import os
 import shutil
 import tempfile
+from datetime import timedelta
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 
 from django.conf import settings
 from django.core.mail import make_msgid
+from django.utils import timezone
 
 from ecs.communication.testcases import CommunicationTestCase
 from ecs.communication.smtpd import EcsMailReceiver
@@ -186,3 +188,21 @@ class SmtpdTest(CommunicationTestCase):
 
         self.assertEqual(reply.sender, self.bob)
         self.assertEqual(reply.receiver, self.alice)
+
+    def test_answer_timeout_recipient(self):
+        old_timestamp = self.last_message.timestamp
+        recipient = self.last_message.return_address
+        self.last_message.timestamp = timezone.now() - timedelta(
+            days=EcsMailReceiver.ANSWER_TIMEOUT+ 1)
+        self.last_message.save()
+
+        msgid = make_msgid()
+        msg = MIMEText('This is a test reply.')
+        msg['From'] = 'Bob <alice@example.com>'
+        msg['To'] = 'Alice <{}>'.format(recipient)
+        msg['Message-ID'] = msgid
+
+        self.assertEqual(EcsMailReceiver.ANSWER_TIMEOUT, 365)
+        code, description = self.process_message([recipient], msg)
+        self.assertEqual(code, 553)
+        self.assertEqual(description, 'Invalid recipient <{}>'.format(recipient))

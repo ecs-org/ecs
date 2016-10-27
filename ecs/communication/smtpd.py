@@ -4,8 +4,10 @@ import smtpd
 import asyncore
 import email
 import mailbox
+from datetime import timedelta
 
 from django.conf import settings
+from django.utils import timezone
 
 from ecs.communication.models import Message
 from ecs.communication.mailutils import html2text
@@ -22,6 +24,7 @@ class EcsMailReceiver(smtpd.SMTPServer):
 
     # 1MB; this seems a lot, but also includes HTML and inline images.
     MAX_MSGSIZE = 1024 * 1024
+    ANSWER_TIMEOUT = 365
 
     def __init__(self):
         smtpd.SMTPServer.__init__(self, settings.SMTPD_CONFIG['listen_addr'], None,
@@ -38,7 +41,8 @@ class EcsMailReceiver(smtpd.SMTPServer):
         m = re.match(r'ecs-([0-9A-Fa-f]{32})$', msg_uuid)
         if m:
             try:
-                return Message.objects.get(uuid=m.group(1))
+                return Message.objects.get(uuid=m.group(1),
+                    timestamp__gt=timezone.now() - timedelta(days=self.ANSWER_TIMEOUT))
             except Message.DoesNotExist:
                 pass
         raise SMTPError(553, 'Invalid recipient <{}>'.format(recipient))
