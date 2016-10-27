@@ -395,16 +395,6 @@ if not all([k in locals() for k in ['ECS_VERSION', 'ECS_GIT_REV', 'ECS_GIT_BRANC
         ECS_GIT_BRANCH = 'unknown'
         ECS_GIT_REV = 'badbadbadbadbadbadbadbadbadbadbadbadbad0'
 
-# apply local overrides
-local_overrides = [x[:(len('_OVERRIDE') * -1)] for x in locals().copy() if x.endswith('_OVERRIDE')]
-for override in local_overrides:
-    val = locals()[override]
-    val_override = locals()['%s_OVERRIDE' % override]
-    if hasattr(val, 'update'):
-        val.update(val_override)
-    else:
-        val += val_override
-
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@{}'.format(DOMAIN)
 
 # https
