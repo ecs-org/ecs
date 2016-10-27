@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import Site
 from django.utils.translation import ugettext_noop as _
@@ -227,11 +228,7 @@ def medical_categories():
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     ''' Developer Account Creation '''
-    try:
-        from ecs.core.bootstrap_settings import developers
-    except ImportError:
-        # first, Last, email, gender (sic!)
-        developers = (('John', 'Doe', 'developer@example.org', 'f'),)
+    from ecs.core.bootstrap_settings import developers
 
     help_writer_group = Group.objects.get(name='Help Writer')
 
@@ -327,13 +324,14 @@ def auth_user_testusers():
 
 @bootstrap.register()
 def ethics_commissions():
-    try:
-        from ecs.core.bootstrap_settings import commissions
-    except ImportError:
-        commissions = [{
-            'uuid': '12345678909876543212345678909876',
-            'name': 'Ethikkommission von Neverland',
-        }]
+    test_commission = {
+        'uuid': 'ecececececececececececececececec',
+        'name': 'Test Ethikkommission',
+    }
+    from ecs.core.bootstrap_settings import commissions
+
+    if settings.ETHICS_COMMISSION_UUID == test_commission['uuid']:
+        commissions += [test_commission]
 
     for comm in commissions:
         comm = comm.copy()

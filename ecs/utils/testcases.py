@@ -29,13 +29,14 @@ class EcsTestCase(TestCase):
         settings.STORAGE_VAULT['dir'] = tempfile.mkdtemp()
         settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
         settings.LIMITED_EMAIL_BACKEND = settings.EMAIL_BACKEND
-        
+        settings.ETHICS_COMMISSION_UUID = 'ecececececececececececececececec'
         integration_bootstrap.create_settings_dirs()
-        
+
         core_bootstrap.auth_groups()
         core_bootstrap.medical_categories()
         core_bootstrap.auth_user_testusers()
         core_bootstrap.advanced_settings()
+        core_bootstrap.ethics_commissions()
 
         documents_bootstrap.document_types()
         documents_bootstrap.import_keys()
@@ -45,23 +46,23 @@ class EcsTestCase(TestCase):
         core_bootstrap.auth_groups()
         checklists_bootstrap.checklist_blueprints()
         core_bootstrap.submission_workflow()
-        
+
     @classmethod
     def teardownClass(cls):
         shutil.rmtree(settings.STORAGE_VAULT['dir'])
         super().teardownClass()
-    
+
     def setUp(self):
-        self.logger = logging.getLogger() 
-        
+        self.logger = logging.getLogger()
+
         self.create_user('alice', profile_extra={'is_internal': True})
         for name in ('bob', 'unittest',):
             self.create_user(name)
-        
+
         user = get_user('unittest@example.com')
         user.is_superuser = True
         user.save()
-        
+
     def create_user(self, name, extra=None, profile_extra=None):
         extra = extra or {}
         profile_extra = profile_extra or {}
@@ -73,10 +74,10 @@ class EcsTestCase(TestCase):
             setattr(profile, k, v)
         profile.save()
         return user
-    
+
     def tearDown(self):
         User.objects.all().delete()
-        
+
     @contextmanager
     def login(self, email, password='password'):
         if '@' not in email:
@@ -92,7 +93,7 @@ class LoginTestCase(EcsTestCase):
         super().setUp()
         self.user = get_user('unittest@example.com')
         self.client.login(email='unittest@example.com', password='password')
-    
+
     def tearDown(self):
         self.client.logout()
         super().tearDown()
