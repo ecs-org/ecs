@@ -87,12 +87,6 @@ class TaskListFilterForm(forms.Form):
     thesis = forms.BooleanField(required=False, initial=True)
     other = forms.BooleanField(required=False, initial=True)
 
-    sorting = forms.ChoiceField(required=False, choices=(
-        ('deadline', _('Deadline')),
-        ('oldest', _('Oldest')),
-        ('newest', _('Newest')),
-    ), initial='deadline')
-
     task_types = forms.ModelMultipleChoiceField(required=False,
         queryset=TaskType.objects
             .order_by('workflow_node__uid', '-pk')
@@ -101,7 +95,7 @@ class TaskListFilterForm(forms.Form):
 
     @property
     def defaults(self):
-        data = {'sorting': 'deadline'}
+        data = {}
         for name, field in self.fields.items():
             if isinstance(field, forms.BooleanField):
                 data[name] = 'on'

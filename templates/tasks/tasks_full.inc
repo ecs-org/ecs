@@ -66,12 +66,6 @@
     {% csrf_token %}
     <div class="task_list_choose">
         <label>
-            {% trans "Sort by" %}
-            {{ filterform.sorting }}
-        </label>
-    </div>
-    <div class="task_list_choose">
-        <label>
             {{ filterform.past_meetings }}
             {% trans "Past Meetings" %}
         </label>

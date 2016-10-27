@@ -54,12 +54,12 @@ def delete_task(request, submission_pk=None, task_pk=None):
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):
     submission = None
     all_tasks = (Task.objects.for_user(request.user).for_widget().open()
-        .select_related('task_type', 'task_type__workflow_node'))
+        .select_related('task_type', 'task_type__workflow_node')
+        .order_by('task_type__workflow_node__uid', 'created_at', 'assigned_at'))
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
         all_tasks = all_tasks.for_submission(submission)
-        sorting = 'workflow_token__deadline'
     else:
         usersettings = request.user.ecs_settings
 
@@ -68,40 +68,21 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
             filterdict = QueryDict(usersettings.task_filter)
         filterform = TaskListFilterForm(filterdict)
 
-        if filterform.is_valid():
-            sortkey = filterform.cleaned_data.get('sorting', 'deadline')
-        else:
-            sortkey = 'deadline'
-
-        sorting = {
-            'deadline': 'workflow_token__deadline',
-            'oldest': 'created_at',
-            'newest': '-created_at',
-        }[sortkey]
-
         if request.method == 'POST':
             usersettings.task_filter = filterform.urlencode()
             usersettings.save()
             if len(request.GET) > 0:
                 return redirect(request.path)
 
-    open_tasks = (all_tasks
-        .for_submissions(
-            Submission.objects.exclude(biased_board_members=request.user))
-        .filter(assigned_to=None)
-        .order_by('task_type__workflow_node__uid', sorting, 'assigned_at'))
+    open_tasks = all_tasks.filter(assigned_to=None).for_submissions(
+        Submission.objects.exclude(biased_board_members=request.user))
 
-    my_tasks = (all_tasks
-        .filter(assigned_to=request.user)
-        .order_by('task_type__workflow_node__uid', 'workflow_token__deadline',
-            'assigned_at'))
+    my_tasks = all_tasks.filter(assigned_to=request.user)
 
     proxy_tasks = (all_tasks
         .for_submissions(
             Submission.objects.exclude(biased_board_members=request.user))
-        .filter(assigned_to__profile__is_indisposed=True)
-        .order_by('task_type__workflow_node__uid', 'workflow_token__deadline',
-            'assigned_at'))
+        .filter(assigned_to__profile__is_indisposed=True))
 
     if not submission and filterform.is_valid():
         cd = filterform.cleaned_data
