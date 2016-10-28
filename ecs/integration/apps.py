@@ -8,7 +8,6 @@ class IntegrationAppConfig(AppConfig):
         # XXX: should be imported in the AppConfig of the respective app itself
         import ecs.core.triggers
         import ecs.votes.triggers
-        import ecs.notifications.triggers
         import ecs.meetings.triggers
 
         # Patch the user __str__ method, so the hash in the username field

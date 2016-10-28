@@ -20,7 +20,6 @@ from ecs.notifications.forms import (
     NotificationAnswerForm, RejectableNotificationAnswerForm,
     AmendmentAnswerForm,
 )
-from ecs.notifications.signals import on_notification_submit
 from ecs.documents.views import handle_download, upload_document, delete_document
 from ecs.users.utils import user_group_required
 from ecs.tasks.utils import task_required, with_task_management
@@ -193,7 +192,7 @@ def create_notification(request, notification_type_pk=None):
             notification.save() # send another post_save signal (required to properly start the workflow)
             request.docstash.delete()
             
-            on_notification_submit.send(type(notification), notification=notification)
+            notification.render_pdf_document()
             return redirect('ecs.notifications.views.view_notification',
                 notification_pk=notification.pk)
 

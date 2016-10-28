@@ -8,8 +8,9 @@ from ecs.meetings.signals import on_meeting_start, on_meeting_end
 from ecs.notifications.models import (
     Notification, CompletionReportNotification, ProgressReportNotification,
     SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
+    NotificationAnswer,
 )
-from ecs.notifications.signals import on_safety_notification_review
+from ecs.users.utils import get_current_user
 
 
 for cls in NOTIFICATION_MODELS:
@@ -116,8 +117,13 @@ class SafetyNotificationReview(Activity):
         return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.workflow.data.pk})
         
     def pre_perform(self, choice):
-        notification = self.workflow.data
-        on_safety_notification_review.send(type(notification), notification=notification)
+        notification = self.workflow.data.safetynotification
+        notification.is_acknowledged = True
+        notification.reviewer = get_current_user()
+        notification.save()
+
+        NotificationAnswer.objects.create(notification=notification, is_final_version=True,
+            text=_('Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung.'))
 
 
 class WaitForMeeting(Generic):
