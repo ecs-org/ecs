@@ -88,10 +88,10 @@ class SendMessageForm(forms.ModelForm):
             receiver = get_office_user(submission=self.submission)
         elif receiver_type == 'involved':
             require_fields(self, ['receiver_involved',])
-            receiver = cd['receiver_involved']
+            receiver = cd.get('receiver_involved')
         elif receiver_type == 'person':
             require_fields(self, ['receiver_person',])
-            receiver = cd['receiver_person']
+            receiver = cd.get('receiver_person')
 
         return receiver
 
