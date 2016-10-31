@@ -56,38 +56,46 @@ def create_task(request, submission_pk=None):
         task_type = form.cleaned_data['task_type']
         assign_to = form_stage2.cleaned_data.get('assign_to')
 
-        with sudo():
-            tasks = Task.objects.for_submission(submission).open().filter(
-                task_type=task_type)
-            if not task_type.is_delegatable:
-                tasks = tasks.filter(assigned_to=assign_to)
-            task_exists = tasks.exists()
+        tasks = Task.unfiltered.for_submission(submission).open().filter(
+            task_type=task_type)
+        if not task_type.is_delegatable:
+            tasks = tasks.filter(assigned_to=assign_to)
 
-        if task_exists:
+        if tasks.exists():
             form.add_error('task_type', _('This task does already exist'))
         else:
             if task_type.workflow_node.uid == 'external_review':
                 blueprint = ChecklistBlueprint.objects.get(slug='external_review')
-                checklist, created = Checklist.objects.get_or_create(
+                checklist, checklist_created = Checklist.objects.get_or_create(
                     blueprint=blueprint, submission=submission, user=assign_to,
                     defaults={'last_edited_by': assign_to})
-                if created:
+
+                if checklist_created:
                     for question in blueprint.questions.order_by('text'):
                         checklist.answers.get_or_create(question=question)
-                elif checklist.status == 'dropped':
+
+                    task = Task.unfiltered.for_data(checklist).open().filter(
+                        task_type=task_type).get()
+                else:
+                    review_task = Task.unfiltered.for_data(checklist).filter(
+                        task_type__workflow_node__uid='external_review_review'
+                    ).open().first()
+                    if review_task:
+                        form.add_error('task_type',
+                            _('There is an external review review in progress'))
+                        return render(request, 'checklists/create_task.html', {
+                            'form': form,
+                            'form_stage2': form_stage2,
+                            'created': False,
+                        })
+
                     checklist.status = 'new'
                     checklist.save()
-                    with sudo():
-                        task = Task.objects.for_data(checklist).filter(
-                            task_type__workflow_node__uid='external_review'
-                        ).first().reopen()
-                        task.created_by = request.user
-                        task.accepted = False
-                        task.save()
 
-                with sudo():
-                    task = Task.objects.for_data(checklist).open().filter(
-                        task_type=task_type).get()
+                    task = Task.unfiltered.for_data(checklist).filter(
+                        task_type__workflow_node__uid='external_review'
+                    ).first().reopen()
+                    task.accepted = False
 
             else:
                 token = task_type.workflow_node.bind(
