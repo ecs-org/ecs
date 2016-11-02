@@ -2,9 +2,8 @@ from django.shortcuts import redirect
 
 from ecs.userswitcher.forms import UserSwitcherForm
 from ecs.userswitcher import SESSION_KEY
-from ecs.tracking.decorators import tracking_hint
 
-@tracking_hint(exclude=True)
+
 def switch(request):
     form = UserSwitcherForm(request.POST)
     if form.is_valid():

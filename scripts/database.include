@@ -58,7 +58,7 @@ prepare_database() {
     # :8 = could not connect to database (not existing?)
     # :9 >= could not connect to database server
     # :127 >= bash command error, eg. command not found
-    local err dumpfilename ecs_help_dump firstrun
+    local err dumpfilename firstrun
     firstrun="false"
     scripts/checkdb.py module ecs.settings && err=$? || err=$?
     if test $err -ge 127; then
@@ -83,16 +83,6 @@ prepare_database() {
         recreate_database
         echo "restore from dump (this might take up to 10 minutes): $dumpfilename"
         pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
-
-        ecs_help_dump="`dirname $(readlink -e $dumpfilename)`/ecs-help"
-        if test "$HOME/ecs-help" != "$ecs_help_dump"; then
-            if test -d "$ecs_help_dump/images"; then
-                echo "ecs-help images found in dump, copy over to $HOME/ecs-help"
-                if test -e $HOME/ecs-help; then rm -r $HOME/ecs-help; fi
-                mkdir -p $HOME/ecs-help
-                cp -r $ecs_help_dump/images $HOME/ecs-help/images
-            fi
-        fi
     else
         if test $err -eq 8; then
             firstrun="true"
@@ -131,9 +121,8 @@ legacy_migrate() {
     echo "Initial migration from old 1.2 django database, expect errors in log, this is normal up to 'NO exceptions are expected from this point on' is displayed"
 
     # fake-apply to current data structure (from old south migrations)
-    for app in auth admin contenttypes sessions sites \
-        boilerplate docstash documents help meetings notifications \
-        pki scratchpad tracking users votes workflow; do
+    for app in auth admin contenttypes sessions sites boilerplate docstash \
+        documents meetings notifications pki scratchpad users votes workflow; do
             ./manage.py migrate --noinput --fake $app 0001_initial || true
     done
 

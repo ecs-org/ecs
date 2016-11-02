@@ -1,5 +1,5 @@
 {% extends 'public.html' %}
-{% load i18n core helputils staticfiles widget_tweaks %}
+{% load i18n core staticfiles widget_tweaks %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -25,7 +25,7 @@
     <noscript>
         <div id="script_warning" class="alert alert-danger">
             <strong>Achtung:</strong> Sie verwenden einen Webbrowser der Javascript deaktiviert hat oder nicht unterst&uuml;tzt.
-            Lesen Sie <a href="{% help_url 'noscript' %}" class="alert-link">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
+            Lesen Sie <a href="{% static 'help/noscript.html' %}" class="alert-link">hier</a> wie Sie Javascript aktivieren k&ouml;nnen.
         </div>
     </noscript>
 
@@ -44,13 +44,8 @@
             </div>
         {% endif %}
         <div class="public_area" class="mb-1">
-          {% if request.tracking_data.view %}
-              {% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk as help_page_url %}
-          {% else %}
-              {% url 'ecs.help.views.index' as help_page_url %}
-          {% endif %}
-              <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
-              | <a href="{{ help_page_url }}" target="_blank" class="help_trigger">{% trans 'Online Help Pages' %}</a>
+          <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
+          | <a href="{% static 'help/index.html' %}" target="_blank">{% trans 'Online Help Pages' %}</a>
         </div>
         <form method="post" action="{{ request.path }}">
             {% csrf_token %}

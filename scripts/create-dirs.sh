@@ -5,7 +5,7 @@ else
     base=$1
 fi
 
-dirs="storage-vault log cache ca help gpg undeliverable-mail whoosh pgdump pgdump-iso pgdump-fallback"
+dirs="storage-vault log cache ca gpg undeliverable-mail pgdump pgdump-iso pgdump-fallback"
 
 for a in $dirs; do
     mkdir -p $base/ecs-$a

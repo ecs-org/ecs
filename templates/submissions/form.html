@@ -1,5 +1,5 @@
 {% extends "submissions/base_form.html" %}
-{% load core i18n %} 
+{% load core i18n staticfiles %}
 
 {% block htmltitle %}
     … |
@@ -47,7 +47,10 @@
 {% endblock %}
 
 {% block section_6_1 %}
-    <div class="hint">Bitte beachten Sie die <a href="javascript:void(openHelpPage())">Hinweise in den Hilfeseiten</a></div>
+    <div class="hint">
+        Bitte beachten Sie die
+        <a href="{% static 'help/index.html' %}">Hinweise in den Hilfeseiten</a>
+    </div>
     {{ block.super }}
 {% endblock %}
 

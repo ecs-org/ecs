@@ -200,7 +200,6 @@ class Migration(migrations.Migration):
         ('docstash', '0002_production_compat'),
         ('notifications', '0002_production_compat'),
         ('pki', '0002_production_compat'),
-        ('tracking', '0002_production_compat'),
         ('users', '0002_production_compat'),
     ]
 

@@ -13,7 +13,6 @@ from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
 from ecs.core.models import SubmissionForm, Investigator
 from ecs.documents.models import Document
-from ecs.tracking.decorators import tracking_hint
 from ecs.notifications.models import (
     Notification, NotificationType, NotificationAnswer, CenterCloseNotification,
 )
@@ -158,7 +157,6 @@ def delete_document_from_notification(request):
     return redirect('ecs.notifications.views.upload_document_for_notification',
         docstash_key=request.docstash.key)
 
-@tracking_hint(vary_on=['notification_type_pk'])
 @with_docstash()
 def create_notification(request, notification_type_pk=None):
     notification_type = get_object_or_404(NotificationType, pk=notification_type_pk)

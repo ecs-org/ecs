@@ -7,7 +7,6 @@ django-extensions
 django-picklefield		# for docstash
 django-reversion
 pylibmc				# for caching
-docutils			# for ecs.help
 httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
 django-countries
@@ -16,17 +15,13 @@ celery[redis]
 redis
 weasyprint                      # PDF rendering
 
+requests          # for raven
 raven             # sentry integration
 uwsgi             # container wsgi runner
 
 # preprocessing, combining, compressing of js and css
 django_compressor
 pyScss
-
-# search
-Whoosh
-pysolr
-django-haystack
 
 xlwt	# excel generation
 

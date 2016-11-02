@@ -133,7 +133,6 @@ def auth_groups():
         'EC-Signing',
         'External Reviewer',
         'GCP Reviewer',
-        'Help Writer',
         'Insurance Reviewer',
         'Meeting Protocol Receiver',
         'Omniscient Board Member',
@@ -230,8 +229,6 @@ def auth_user_developers():
     ''' Developer Account Creation '''
     from ecs.core.bootstrap_settings import developers
 
-    help_writer_group = Group.objects.get(name='Help Writer')
-
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email)
         user.first_name = first
@@ -240,7 +237,6 @@ def auth_user_developers():
         user.is_superuser = False
         user.save()
 
-        user.groups.add(help_writer_group)
         user.profile.forward_messages_after_minutes = 30
         user.profile.gender = gender
         user.profile.save()
@@ -286,7 +282,6 @@ def auth_user_testusers():
 
     userswitcher_group = Group.objects.get(name='Userswitcher Target')
     boardmember_group = Group.objects.get(name='Board Member')
-    help_writer_group = Group.objects.get(name='Help Writer')
 
     for testuser, group in testusers:
         for number in range(1,4):
@@ -301,9 +296,6 @@ def auth_user_testusers():
                     user.profile.task_uids = list(uids)
 
             user.groups.add(userswitcher_group)
-            if number == 3:
-                # XXX set every third userswitcher user to be included in help_writer group
-                user.groups.add(help_writer_group)
 
             user.profile.is_testuser = True
             user.profile.update_flags()

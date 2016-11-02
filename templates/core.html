@@ -14,7 +14,6 @@
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/meetings.scss' %} />
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/communication.scss' %} />
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/dashboard.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/search.scss' %} />
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/billing.scss' %} />
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tasks.scss' %} />
         <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/submission.scss' %} />
@@ -113,7 +112,7 @@
                 </li>
             {% endif %}
             <li class="nav-item">
-                <a href="" id="help_button" class="nav-link py-0 help_trigger fa fa-question-circle-o fa-2x text-primary" title="{% trans "Click here to get help." %}"></a>
+                <a href="{% static 'help/index.html' %}" target="_blank" class="nav-link py-0 fa fa-question-circle-o fa-2x text-primary" title="{% trans "Click here to get help." %}"></a>
             </li>
             <li class="nav-item">
                 {% get_scratchpad as scratchpad %}
@@ -262,27 +261,6 @@
             {% if request.task_management.form %}
                 ecs.init_task_form();
             {% endif %}
-
-            window.openHelpPage = function(ev) {
-                if (ev)
-                    ev.preventDefault();
-
-                {% if request.tracking_data.view %}
-                    var url = '{% url 'ecs.help.views.find_help' view_pk=request.tracking_data.view.pk %}';
-                    if(ev && ev.shiftKey){
-                        url = '{% url 'ecs.help.views.edit_help_page' view_pk=request.tracking_data.view.pk %}';
-                    }
-                    if(window.location.hash){
-                        url += '?anchor=' + encodeURIComponent(window.location.hash.substring(1));
-                    }
-                {% else %}
-                    var url = '{% url 'ecs.help.views.index' %}';
-                {% endif %}
-                var win = window.open(url, 'ecshelp');
-                win.focus();
-            };
-
-            $('#help_button').click(window.openHelpPage);
 
             $('#userswitcher_input').select2({placeholder: null});
 

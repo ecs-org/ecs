@@ -1,8 +1,8 @@
 {% extends 'shell.html' %}
-{% load i18n helputils staticfiles %}
+{% load i18n staticfiles %}
 
 {% block htmlmeta %}
-<meta http-equiv="refresh" content="5; url={% help_url 'html5' %}" />
+<meta http-equiv="refresh" content="5; url={% static 'help/html5.html' %}" />
 {% endblock %}
 
 {% block htmlbody %}
@@ -44,7 +44,7 @@
             <p>Wir arbeiten an der Unterst&uuml;tzung ihres Browsers. Bitte benutzen
             Sie in der Zwischenzeit einen anderen Browser. Die Lister der unterst&uuml;tzten
             Browser finden Sie
-            <a href="{% help_url 'html5' %}">hier</a>.</p>
+            <a href="{% static 'help/html5.html' %}">hier</a>.</p>
         </div>
     </div>
 {% endblock %}

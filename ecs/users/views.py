@@ -17,6 +17,7 @@ from django.core import signing
 from django.utils import timezone
 from django.contrib.sessions.models import Session
 from django.contrib import messages
+from django.contrib.staticfiles.storage import staticfiles_storage
 
 from ecs.utils import forceauth
 from ecs.utils.viewutils import render_html
@@ -29,7 +30,6 @@ from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, 
 from ecs.users.utils import get_user, create_user, user_flag_required, user_group_required
 from ecs.communication.utils import send_message, send_system_message_template
 from ecs.utils.browserutils import UA
-from ecs.help.models import Page
 
 
 class TimestampedTokenFactory(object):
@@ -60,12 +60,7 @@ def login(request, *args, **kwargs):
     if ua_str:
         request.ua = UA(ua_str)
         if request.ua.is_unsupported:
-            try:
-                page = Page.objects.get(slug='html5')
-                url = reverse('ecs.help.views.view_help_page', kwargs={'page_pk': page.pk})
-            except Page.DoesNotExist:
-                url = reverse('ecs.help.views.index')
-            return redirect(url)
+            return redirect(staticfiles_storage.url('help/html5.html'))
         elif request.ua.is_tmp_unsupported:
             return render(request, 'browser_temporarily_unsupported.html', {})
 

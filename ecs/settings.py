@@ -140,7 +140,6 @@ MIDDLEWARE_CLASSES = (
     'ecs.userswitcher.middleware.UserSwitcherMiddleware',
     'ecs.pki.middleware.ClientCertMiddleware',
     #'ecs.TestMiddleware',
-    'ecs.tracking.middleware.TrackingMiddleware',
     'ecs.users.middleware.GlobalUserMiddleware',
     'reversion.middleware.RevisionMiddleware',
     'ecs.tasks.middleware.RelatedTasksMiddleware',
@@ -161,7 +160,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
 
     'compressor',
-    'haystack',
     'reversion',
     'django_countries',
     'raven.contrib.django.raven_compat',
@@ -179,8 +177,6 @@ INSTALLED_APPS = (
     'ecs.dashboard',
     'ecs.bootstrap',
     'ecs.billing',
-    'ecs.tracking',
-    'ecs.help',
     'ecs.users',
     'ecs.documents',
     'ecs.meetings',
@@ -226,9 +222,6 @@ LOGGING = {
 
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', 'ecs-ca')
-
-# whether ecs.tracking should store requests
-ECS_TRACKING_ENABLED = False
 
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = 'ecececececececececececececececec'
@@ -309,7 +302,6 @@ CELERY_IMPORTS = (
     'ecs.communication.tasks',
     'ecs.core.tests.test_tasks',
     'ecs.documents.tasks',
-    'ecs.help.tasks',
     'ecs.integration.tasks',
     'ecs.meetings.tasks',
     'ecs.tasks.tasks',
@@ -330,19 +322,6 @@ if os.getenv('REDIS_URL'):
 else:
     # dont use queueing backend but consume it right away
     CELERY_ALWAYS_EAGER = True
-
-
-# ### haystack ### fulltext search engine
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(PROJECT_DIR, "..", "ecs-whoosh"),
-
-        # example solr url, is only used if
-        # ENGINE == 'haystack.backends.solr_backend.SolrEngine'
-        'URL': 'http://localhost:8983/solr/',
-    },
-}
 
 
 # ### django_compressor ###

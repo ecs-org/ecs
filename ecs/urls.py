@@ -38,7 +38,6 @@ urlpatterns = [
     url(r'^task/', include('ecs.tasks.urls')),
     url(r'^communication/', include('ecs.communication.urls')),
     url(r'^billing/', include('ecs.billing.urls')),
-    url(r'^help/', include('ecs.help.urls')),
     url(r'^boilerplate/', include('ecs.boilerplate.urls')),
     url(r'^scratchpad/', include('ecs.scratchpad.urls')),
     url(r'^document/', include('ecs.documents.urls')),
@@ -52,8 +51,6 @@ urlpatterns = [
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.STATIC_ROOT}),
-
-    url(r'^search/', include('haystack.urls')),
 ]
 
 

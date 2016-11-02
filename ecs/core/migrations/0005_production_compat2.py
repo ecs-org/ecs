@@ -326,24 +326,6 @@ def rename_indices(apps, schema_editor):
                 ALTER TABLE documents_downloadhistory
                     DROP CONSTRAINT user_id_refs_id_21cd64de;
 
-                ALTER TABLE help_attachment
-                    DROP CONSTRAINT help_attachment_slug_uniq;
-
-                ALTER TABLE help_attachment
-                    DROP CONSTRAINT page_id_refs_id_887573;
-
-                ALTER TABLE help_attachment
-                    DROP CONSTRAINT view_id_refs_id_1b0c17fd;
-
-                ALTER TABLE help_page
-                    DROP CONSTRAINT help_page_anchor_758dfc79_uniq;
-
-                ALTER TABLE help_page
-                    DROP CONSTRAINT help_page_slug_uniq;
-
-                ALTER TABLE help_page
-                    DROP CONSTRAINT view_id_refs_id_5193865;
-
                 ALTER TABLE meetings_assignedmedicalcategory
                     DROP CONSTRAINT meetings_assignedmedicalcategory_category_id_46bf0a6c_uniq;
 
@@ -508,12 +490,6 @@ def rename_indices(apps, schema_editor):
 
                 ALTER TABLE tasks_tasktype_groups
                     DROP CONSTRAINT tasktype_id_refs_id_133da373;
-
-                ALTER TABLE tracking_request
-                    DROP CONSTRAINT user_id_refs_id_4dfa7589;
-
-                ALTER TABLE tracking_request
-                    DROP CONSTRAINT view_id_refs_id_768d37ae;
 
                 ALTER TABLE users_invitation
                     DROP CONSTRAINT user_id_refs_id_12c4bbe6;
@@ -697,9 +673,6 @@ def rename_indices(apps, schema_editor):
                 DROP INDEX documents_downloadhistory_user_id;
                 DROP INDEX documents_downloadhistory_uuid;
                 DROP INDEX documents_downloadhistory_uuid_like;
-                DROP INDEX help_attachment_page_id;
-                DROP INDEX help_attachment_view_id;
-                DROP INDEX help_page_view_id;
                 DROP INDEX meetings_assignedmedicalcategory_board_member_id;
                 DROP INDEX meetings_assignedmedicalcategory_category_id;
                 DROP INDEX meetings_assignedmedicalcategory_meeting_id;
@@ -740,13 +713,6 @@ def rename_indices(apps, schema_editor):
                 DROP INDEX tasks_task_expedited_review_categories_task_id;
                 DROP INDEX tasks_tasktype_groups_group_id;
                 DROP INDEX tasks_tasktype_groups_tasktype_id;
-                DROP INDEX tracking_request_anchor;
-                DROP INDEX tracking_request_anchor_like;
-                DROP INDEX tracking_request_ip;
-                DROP INDEX tracking_request_method;
-                DROP INDEX tracking_request_method_like;
-                DROP INDEX tracking_request_user_id;
-                DROP INDEX tracking_request_view_id;
                 DROP INDEX users_invitation_user_id;
                 DROP INDEX users_loginhistory_user_id;
                 DROP INDEX users_userprofile_communication_proxy_id;
@@ -1089,24 +1055,6 @@ def rename_indices(apps, schema_editor):
                 ALTER TABLE documents_downloadhistory
                     ADD CONSTRAINT documents_downloadhist_user_id_3db85b319c2ddb55_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
-                ALTER TABLE help_attachment
-                    ADD CONSTRAINT help_attachment_slug_key UNIQUE (slug);
-
-                ALTER TABLE help_attachment
-                    ADD CONSTRAINT help_attachment_page_id_5b3cde457590b79d_fk_help_page_id FOREIGN KEY (page_id) REFERENCES help_page(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE help_attachment
-                    ADD CONSTRAINT help_attachment_view_id_6d01544cfd7db141_fk_tracking_view_id FOREIGN KEY (view_id) REFERENCES tracking_view(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE help_page
-                    ADD CONSTRAINT help_page_slug_key UNIQUE (slug);
-
-                ALTER TABLE help_page
-                    ADD CONSTRAINT help_page_view_id_503f202cc5eaea8b_uniq UNIQUE (view_id, anchor);
-
-                ALTER TABLE help_page
-                    ADD CONSTRAINT help_page_view_id_59de68cbdac01827_fk_tracking_view_id FOREIGN KEY (view_id) REFERENCES tracking_view(id) DEFERRABLE INITIALLY DEFERRED;
-
                 ALTER TABLE meetings_assignedmedicalcategory
                     ADD CONSTRAINT meetings_assignedmedicalcatego_category_id_52b7232b940f594_uniq UNIQUE (category_id, meeting_id);
 
@@ -1268,12 +1216,6 @@ def rename_indices(apps, schema_editor):
 
                 ALTER TABLE tasks_tasktype_groups
                     ADD CONSTRAINT tasks_tasktype_group_group_id_173a50c0630d02aa_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE tracking_request
-                    ADD CONSTRAINT tracking_request_user_id_391c0cfd35501d56_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE tracking_request
-                    ADD CONSTRAINT tracking_request_view_id_400767de34bb691c_fk_tracking_view_id FOREIGN KEY (view_id) REFERENCES tracking_view(id) DEFERRABLE INITIALLY DEFERRED;
 
                 ALTER TABLE users_invitation
                     ADD CONSTRAINT users_invitation_user_id_2213deb7d02c7bb3_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
@@ -1583,16 +1525,6 @@ def rename_indices(apps, schema_editor):
 
                 CREATE INDEX documents_downloadhistory_uuid_5b513ca03b5fc4f2_like ON documents_downloadhistory USING btree (uuid varchar_pattern_ops);
 
-                CREATE INDEX help_attachment_1a63c800 ON help_attachment USING btree (page_id);
-
-                CREATE INDEX help_attachment_2e1a1398 ON help_attachment USING btree (view_id);
-
-                CREATE INDEX help_attachment_slug_4a5961339594e3a0_like ON help_attachment USING btree (slug varchar_pattern_ops);
-
-                CREATE INDEX help_page_2e1a1398 ON help_page USING btree (view_id);
-
-                CREATE INDEX help_page_slug_c54bf339c6eaf8_like ON help_page USING btree (slug varchar_pattern_ops);
-
                 CREATE INDEX meetings_assignedmedicalcategory_383440d3 ON meetings_assignedmedicalcategory USING btree (meeting_id);
 
                 CREATE INDEX meetings_assignedmedicalcategory_532157e3 ON meetings_assignedmedicalcategory USING btree (board_member_id);
@@ -1676,22 +1608,6 @@ def rename_indices(apps, schema_editor):
                 CREATE INDEX tasks_tasktype_groups_0e939a4f ON tasks_tasktype_groups USING btree (group_id);
 
                 CREATE INDEX tasks_tasktype_groups_ff91ec0d ON tasks_tasktype_groups USING btree (tasktype_id);
-
-                CREATE INDEX tracking_request_2e1a1398 ON tracking_request USING btree (view_id);
-
-                CREATE INDEX tracking_request_47ae9ec4 ON tracking_request USING btree (anchor);
-
-                CREATE INDEX tracking_request_957b527b ON tracking_request USING btree (ip);
-
-                CREATE INDEX tracking_request_anchor_4ae7c54ce7e4a695_like ON tracking_request USING btree (anchor varchar_pattern_ops);
-
-                CREATE INDEX tracking_request_e8701ad4 ON tracking_request USING btree (user_id);
-
-                CREATE INDEX tracking_request_ea9f6aca ON tracking_request USING btree (method);
-
-                CREATE INDEX tracking_request_method_f279753c40b682b_like ON tracking_request USING btree (method varchar_pattern_ops);
-
-                CREATE INDEX tracking_view_path_70472ed24e6181c4_like ON tracking_view USING btree (path varchar_pattern_ops);
 
                 CREATE INDEX users_invitation_e8701ad4 ON users_invitation USING btree (user_id);
 

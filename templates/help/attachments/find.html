@@ -1,7 +1,0 @@
-{% for attachment in attachments %}
-<div data-slug="{{ attachment.slug }}">
-    <img src="{% url 'ecs.help.views.download_attachment' attachment.pk %}" />
-    <span class="slug">{{ attachment.slug }}</span>
-    <a href="{% url 'ecs.help.views.delete_attachment' attachment_pk=attachment.pk %}">delete</a>
-</div>
-{% endfor %}

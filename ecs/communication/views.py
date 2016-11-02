@@ -9,7 +9,6 @@ from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import Submission
 from ecs.communication.models import Thread
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
-from ecs.tracking.decorators import tracking_hint
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
 from ecs.users.utils import user_flag_required
@@ -78,21 +77,18 @@ def mark_read(request, thread_pk=None):
         reverse('ecs.communication.views.dashboard_widget'))
 
 
-@tracking_hint(exclude=True)
 def star(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.star(request.user)
     return redirect_to_next_url(request, reverse('ecs.communication.views.dashboard_widget'))
 
 
-@tracking_hint(exclude=True)
 def unstar(request, thread_pk=None):
     thread = get_object_or_404(Thread.objects.by_user(request.user), pk=thread_pk)
     thread.unstar(request.user)
     return redirect_to_next_url(request, reverse('ecs.communication.views.dashboard_widget'))
 
 
-@tracking_hint(exclude=True)
 def dashboard_widget(request, submission_pk=None):
     qs = Thread.objects.for_widget(request.user).select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',
@@ -123,7 +119,6 @@ def dashboard_widget(request, submission_pk=None):
     return render(request, 'communication/widget.html', context)
 
 
-@tracking_hint(exclude=True)
 @user_flag_required('is_internal')
 def communication_overview_widget(request, submission_pk=None):
     threads = Thread.objects.filter(submission__pk=submission_pk)
