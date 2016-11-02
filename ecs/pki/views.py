@@ -3,15 +3,11 @@ import tempfile
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.db.models import Count
 from django.utils.text import slugify
 from django.utils.translation import ugettext as _
-from django.contrib import messages
 
 from ecs.communication.mailutils import deliver
-from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_group_required
 
 from ecs.pki.forms import CertForm
@@ -70,12 +66,3 @@ def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
     cert.revoke()
     return redirect('ecs.pki.views.cert_list')
-
-
-def authenticate(request):
-    profile = request.user.profile
-    if profile.is_internal or profile.is_omniscient_member:
-        request.session['ecs_pki_authenticated'] = True
-        request.session.modified = True
-    return redirect_to_next_url(request, reverse('ecs.dashboard.views.view_dashboard'))
-    
