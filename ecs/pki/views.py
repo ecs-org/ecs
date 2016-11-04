@@ -48,7 +48,7 @@ def create_cert(request):
 
         deliver(user.email, subject=subject, message=message,
             from_email=settings.DEFAULT_FROM_EMAIL,
-            attachments=attachments)
+            attachments=attachments, nofilter=True)
 
         return render(request, 'pki/cert_created.html', {
             'passphrase': passphrase,
