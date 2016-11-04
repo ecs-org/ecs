@@ -1,5 +1,5 @@
 {% extends "core.html" %}
-{% load i18n core communication %}
+{% load humanize i18n core communication %}
 
 {% block menuSelection %}communication{% endblock %}
 
@@ -13,13 +13,13 @@
             <div class="thread_list_choose">
                 <label>
                     {{ filterform.incoming }}
-                    <span class="fa fa-arrow-down"></span>
+                    <span class="fa fa-envelope-o"></span>
                     {% trans "Incoming" %}
                 </label>
 
                 <label>
                     {{ filterform.outgoing }}
-                    <span class="fa fa-arrow-up"></span>
+                    <span class="fa fa-paper-plane-o"></span>
                     {% trans "Outgoing" %}
                 </label>
             </div>
@@ -38,7 +38,16 @@
             </div>
         </form>
         <div class="sort_options">
-            {% include 'communication/sort_options.inc' %}
+            <span class="fa fa-sort"></span>
+            <a href="{{ request.path }}?sort={% if sort == 'submission' %}-{% endif %}submission">
+                {% trans 'Submission' %}
+            </a> |
+            <a href="{{ request.path }}?sort={% if sort == 'user' %}-{% endif %}user">
+                {% trans "Person" %}
+            </a> |
+            <a href="{{ request.path }}?sort={% if sort == 'timestamp' %}-{% endif %}timestamp">
+                {% trans "Old/New" %}
+            </a>
         </div>
     </div>
 
@@ -46,9 +55,11 @@
         <thead>
             <tr>
                 <th></th>
-                <th>{% trans "Date" %}</th>
-                <th>{% trans "Subject" %}</th>
                 <th>{% trans "Von/An" %}</th>
+                <th>{% trans "Submission" %}</th>
+                <th>{% trans "Subject" %}</th>
+                <th class="text-xs-right">{% trans "Date" %}</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -57,26 +68,43 @@
                     <td>
                         {% if thread|starred_by:user %}
                             {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                            <a class="open-in-widget fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+                            <a class="open-in-widget fa fa-2x fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
                         {% else %}
                             {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                            <a class="open-in-widget fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+                            <a class="open-in-widget fa fa-2x fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
                         {% endif %}
                     </td>
-                    <td>{{ thread.last_message.timestamp|date:'d.m.Y, H:i:s' }} Uhr</td>
-                    <td>
+                    <td class="col-xs-4 col-lg-3 col-xl-2 align-middle">
+                        {% if thread.last_message.sender == user %}
+                            <span class="fa fa-paper-plane-o"></span>
+                            {% trans "an" %} {{ thread.last_message.receiver }}
+                        {% else %}
+                            <span class="fa fa-envelope-o"></span>
+                            {% trans "von" %} {{ thread.last_message.sender }}
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
+                        {% if thread.submission %}
+                            {{ thread.submission|ec_number }}
+                        {% endif %}
+                    </td>
+                    <td class="align-middle">
                         {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url%}
                         <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
-                            {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
                             {{ thread.subject|truncatewords:10 }}
                         </a>
                     </td>
-                    <td>
-                        {% if thread.last_message.sender == user %}
-                            {% trans "an" %} {{ thread.last_message.receiver }}
-                        {% else %}
-                            {% trans "von" %} {{ thread.last_message.sender }}
-                        {% endif %}
+                    <td class="align-middle text-xs-right">
+                        {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
+                        {{ thread.last_message.timestamp|date:'H:i'}}
+                    </td>
+                    <td class="align-middle">
+                    {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
+                        {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
+                        <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
+                            <span class="fa fa-2x fa-check text-primary"></span>
+                        </a>
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}

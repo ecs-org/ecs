@@ -137,48 +137,6 @@ def communication_overview_widget(request, submission_pk=None):
     })
 
 
-def message_widget(request, queryset=None, template=None, user_sort=None, session_prefix='messages', extra_context=None, page_size=4, submission=None):
-    sort_session_key = '%s:sort' % session_prefix
-    raw_sort = request.GET.get('sort', request.session.get(sort_session_key, '-last_message__timestamp'))
-    
-    sort_options = ('last_message__timestamp', 'user', 'submission')
-    sort = raw_sort
-    if sort:
-        field = sort if sort[0] != '-' else sort[1:]
-        if field not in sort_options:
-            sort = None
-        elif field == 'user':
-            sort = sort.replace('user', user_sort) if user_sort else None
-    if sort:
-        queryset = queryset.order_by(sort)
-    request.session[sort_session_key] = sort
-
-    page_session_key = 'dashboard:%s:page' % session_prefix
-    try:
-        page_num = int(request.GET.get('p', request.session.get(page_session_key, 1)))
-    except ValueError:
-        page_num = 1
-
-    queryset = queryset.select_related('last_message', 'last_message__sender', 'last_message__receiver',
-        'last_message__sender__profile', 'last_message__receiver__profile', 'submission')
-    paginator = Paginator(queryset, page_size)
-    try:
-        page = paginator.page(page_num)
-    except EmptyPage:
-        page_num = paginator.num_pages
-        page = paginator.page(page_num)
-    request.session[page_session_key] = page_num
-
-    context = {
-        'page': page,
-        'sort': raw_sort,
-        'submission': submission,
-    }
-    if extra_context:
-        context.update(extra_context)
-    return render(request, template, context)
-
-
 def list_threads(request):
     usersettings = request.user.ecs_settings
 
@@ -217,11 +175,40 @@ def list_threads(request):
     else:
         queryset = queryset.none()
 
-    return message_widget(request, 
-        template='communication/threads.html',
-        queryset=queryset,
-        session_prefix='messages:unified',
-        user_sort='receiver__username',
-        page_size=15,
-        extra_context={'filterform': filterform},
-    )
+    sort_options = {
+        'timestamp': ('last_message__timestamp',),
+        'user': ('receiver__last_name', 'receiver__first_name'),
+        'submission': ('submission',),
+    }
+    sort_key = request.GET.get('sort', request.session.get('messages:sort', '-timestamp'))
+    if not sort_key.lstrip('-') in sort_options:
+        sort_key = '-timestamp'
+    request.session['messages:sort'] = sort_key
+
+    queryset = queryset.select_related(
+        'last_message', 'last_message__sender', 'last_message__receiver',
+        'last_message__sender__profile', 'last_message__receiver__profile',
+        'submission',
+    ).order_by(*sort_options[sort_key.lstrip('-')])
+    if sort_key[0] == '-':
+        queryset = queryset.reverse()
+
+    try:
+        page_num = int(request.GET.get('p', request.session.get('messages:page', 1)))
+    except ValueError:
+        page_num = 1
+
+    paginator = Paginator(queryset, 20)
+    try:
+        page = paginator.page(page_num)
+    except EmptyPage:
+        page_num = paginator.num_pages
+        page = paginator.page(page_num)
+    request.session['messages:page'] = page_num
+
+    context = {
+        'page': page,
+        'sort': sort_key,
+        'filterform': filterform,
+    }
+    return render(request, 'communication/threads.html', context)
