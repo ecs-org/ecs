@@ -94,22 +94,33 @@ def unstar(request, thread_pk=None):
 
 @tracking_hint(exclude=True)
 def dashboard_widget(request, submission_pk=None):
-    qs = Thread.objects.for_widget(request.user)
+    qs = Thread.objects.for_widget(request.user).select_related(
+        'last_message', 'last_message__sender', 'last_message__receiver',
+        'last_message__sender__profile', 'last_message__receiver__profile',
+        'submission',
+    ).order_by('-last_message__timestamp')
     submission = None
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
         qs = qs.filter(submission=submission)
-    return message_widget(request, 
-        queryset=qs,
-        template='communication/widget.html',
-        user_sort='last_message__sender__username', # XXX
-        session_prefix='dashboard:communication',
-        page_size=4,
-        submission=submission,
-        extra_context={
-            'widget': True,
-        }
-    )
+
+    try:
+        page_num = int(request.GET.get('p', 1))
+    except ValueError:
+        page_num = 1
+
+    paginator = Paginator(qs, 4)
+    try:
+        page = paginator.page(page_num)
+    except EmptyPage:
+        page_num = paginator.num_pages
+        page = paginator.page(page_num)
+
+    context = {
+        'page': page,
+        'submission': submission,
+    }
+    return render(request, 'communication/widget.html', context)
 
 
 @tracking_hint(exclude=True)

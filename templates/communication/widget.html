@@ -2,11 +2,6 @@
 
 <h3>{% trans "Communication" %} ({% unread_msg_count %})</h3>
 
-<br />
-<div class="messages_header mb-1">
-    {% include 'communication/sort_options.inc' %}
-</div>
-
 <ul class="list-group">
 {% for thread in page.object_list %}
     <li class="list-group-item px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
@@ -57,11 +52,11 @@
 <div class="paginator text-xs-center mt-1">
     {% if page.has_previous %}
         <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
-        <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
+        <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}"></a>
     {% endif %}
     {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
     {% if page.has_next %}
-        <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"></a>
-        <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"></a>
+        <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}"></a>
+        <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}"></a>
     {% endif %}
 </div>
