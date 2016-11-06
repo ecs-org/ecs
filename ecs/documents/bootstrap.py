@@ -12,7 +12,7 @@ from ecs.utils import Args, gpgutils
 def document_types():
     names = (
         Args(_("Covering Letter"), "coveringletter", _("Cover letter / covering letter to the Ethics Commission")),
-        Args(_("patient information"), "patientinformation", 
+        Args(_("patient information"), "patientinformation",
             _("Patients / subjects / children / youths / parents / genetic information, information for non competent patients")),
         Args(_("insurancecertificate"), "insurancecertificate", _(" ")),
         Args(_("study protocol"), "protocol", _("study protocol")),
@@ -49,9 +49,26 @@ def document_types():
 
 @bootstrap.register()
 def import_keys():
+    DEFAULT_ENC_KEY = os.path.join(settings.PROJECT_DIR, 'conf',
+        'storagevault_encrypt.sec')
+    DEFAULT_SIG_KEY = os.path.join(settings.PROJECT_DIR, 'conf',
+        'storagevault_sign.sec')
+
+    enc_key = settings.STORAGE_VAULT.get('encryption_key')
+    if not enc_key:
+        print('using default STORAGE_VAULT encryption key')
+        with open(DEFAULT_ENC_KEY) as f:
+            enc_key = f.read()
+
+    sig_key = settings.STORAGE_VAULT.get('signature_key')
+    if not sig_key:
+        print('using default STORAGE_VAULT signature key')
+        with open(DEFAULT_SIG_KEY) as f:
+            sig_key = f.read()
+
     gpgutils.reset_keystore(settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['encryption_key'], settings.STORAGE_VAULT['gpghome'])
-    gpgutils.import_key(settings.STORAGE_VAULT['signature_key'], settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(enc_key, settings.STORAGE_VAULT['gpghome'])
+    gpgutils.import_key(sig_key, settings.STORAGE_VAULT['gpghome'])
 
 
 @bootstrap.register()
