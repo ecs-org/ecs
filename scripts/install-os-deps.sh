@@ -95,14 +95,6 @@ if $withpostgres; then
     apt-get install -y postgresql postgresql-contrib
 fi
 
-echo "get and extract wkhtmltopdf to /usr/local/bin"
-wkarchive="wkhtmltopdf-0.11.0_rc1-static-${arch}.tar.bz2"
-curl -o /tmp/$wkarchive -fsSL \
-    "http://download.gna.org/wkhtmltopdf/obsolete/linux/${wkarchive}"
-tar xjf /tmp/${wkarchive} -C /usr/local/bin
-ln -f -s /usr/local/bin/wkhtmltopdf-amd64  /usr/local/bin/wkhtmltopdf
-rm /tmp/${wkarchive}
-
 if $autoremove; then
     echo "remove installed but unused packages"
     apt-get autoremove -y

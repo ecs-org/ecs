@@ -10,9 +10,7 @@
 {% block content %}
     {% include "submissions/pdf/head.html" %}
 
-    <div class="main_part">
-        <h2>Teil A</h2>
-    </div>
+    <h2 class="main_part">Teil A</h2>
     
     {% include "submissions/pdf/section_1.html" %}
     
@@ -69,9 +67,7 @@
 {% for inv in submission_form.investigators.all %}
     <div class="pb_after"></div>
 
-    <div class="main_part">
-        <h2>Teil B</h2>
-    </div>
+    <h2 class="main_part">Teil B</h2>
 
     {% include "submissions/pdf/part_b.html" %}
 {% endfor %}

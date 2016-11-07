@@ -14,8 +14,6 @@ rsync
 bzip2
 gosu
 git
-# used for wkthmltopdf execution
-libxrender1
 
 # build-essential metapackage install: make, gcc, g++,
 build-essential
@@ -45,6 +43,15 @@ ghostscript
 gnupg
 pdftk
 qpdf
+
+# PDF rendering, weasyprint
+fonts-dejavu
+libpango1.0-0
+libcairo2
+libgdk-pixbuf2.0-0
+libxml2-dev
+libxslt1-dev
+libffi-dev
 
 # webserver
 nginx

@@ -5,6 +5,16 @@
     <title>{% block title %}{% endblock %}</title>
     {% block inline_css %}
     <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 2cm;
+
+            @bottom-right {
+                content: 'Seite ' counter(page) '/' counter(pages);
+                font-family: "DejaVu Sans";
+                font-size: 8pt;
+            }
+        }
       
         /* Reset CSS. http://yui.yahooapis.com/3.2.0/build/cssreset/reset-min.css  */
         html{color:#000;background:#FFF;}
@@ -24,7 +34,6 @@
         sub {vertical-align:text-bottom;}
         input,textarea, select
         {font-family:inherit;font-size:inherit;font-weight:inherit;}
-        input,textarea, select{*font-size:100%;}
         legend{color:#000;}
         
         /* Your Base Foundation */
@@ -36,48 +45,11 @@
         .pb_after  { page-break-after:always !important; }
         .pbi_avoid { page-break-inside:avoid !important; }
 
-
-        /* Normal */
-        @font-face {
-           font-family: "DejaSans";
-           src: "./media/DejaVuSans.ttf";
-           font-weight:normal;
-        }
-        /* Bold */
-        @font-face {
-           font-family: "DejaSans";
-           src: "./media/DejaVuSans-Bold.ttf";
-           font-weight: bold;
-        }
-        /* Italic */
-        @font-face {
-           font-family: "DejaSans";
-           src: "./media/DejaVuSans-Oblique.ttf";
-           font-style: italic;
-        }
-        /* Bold and italic */
-        @font-face {
-           font-family: "DejaSans";
-           src: "./media/DejaVuSans-BoldOblique.ttf";
-           font-weight: bold;
-           font-style: italic;
-        }
-        /* Normal Monospace */
-        @font-face {
-           font-family: "DejaMono";
-           src: "./media/DejaVuSansMono.ttf";
-        }
-        /* Bold Monospace*/
-        @font-face {
-           font-family: "DejaMono";
-           src: "./media/DejaVuSansMono-Bold.ttf";
-           font-weight: bold;
-        }
         * {
           line-height: 14pt;
         }
-        body, #content {
-            font-family: DejaSans;
+        body {
+            font-family: "DejaVu Sans";
             font-size: 10pt;
             width: 170mm;       /* = 210mm (A4) - 20mm margin on both sides */
         }
@@ -135,23 +107,30 @@
           list-style: disc inside;
         }
         .header {
+            display: block;
             margin-bottom: 3mm;
         }
+        .header:after {
+          content: " ";
+          display: block;
+          clear: both;
+        }
         div.header .logo {
+            display: block;
             width: 7cm;
             height: auto;
+            float: left;
         }
         div.header .address {
+            display: block;
             text-align: right;
             float: right;
         }
-        div.header .spacer {
-            clear: both;
+        .spacer {
             height: 1cm;
         }
         .value {
           font-weight: bold;
-          font-family: DejaSans;
         }
         .underline {
           text-decoration: underline;
@@ -185,7 +164,6 @@
           display: inline-block;
         }
         .checkbox {
-          font-family: DejaSans;
           font-size: 10pt;
           border: 1pt solid #000;
           font-weight: 900;
@@ -238,13 +216,17 @@
           display: block;
           padding: 0.2cm;
           border: 1pt solid #000;
+          position: relative;
         }
-        .main_part {
+        .title > .ec_number_right {
+            position: absolute;
+            right: 1rem;
+            font-weight: bold;
+        }
+        h2.main_part {
+          page-break-before: always;
           margin: 0.5cm 0;
           padding: 0;
-          page-break-after: avoid;
-        }
-        .main_part h2 {
           display: block;
           border: 1pt solid #000000;
           text-align: center;
@@ -261,25 +243,30 @@
         }
         .two_columns {
           display: block;
-          float: left;
           width: 100%;
           margin-bottom: 1cm;
         }
-        .column_left,
-        .column_right {
+        .two_columns:after {
+          content: " ";
+          display: block;
+          clear: both;
+        }
+        .two_columns > .column_left,
+        .two_columns > .column_right {
           display: block;
           width: 48%;
           height: 4cm;
           border: 1pt solid #000;
           padding: 0.5%;
+          vertical-align: top;
         }
-        .column_left {
-          float: left;
+        .two_columns > .column_left {
+            float: left;
         }
-        .column_right {
-          float: right;
+        .two_columns > .column_right {
+            float: right;
         }
-        .two_columns span {
+        .two_columns span.small {
           font-size: 7pt;
         }
         .withborder {
@@ -324,6 +311,6 @@
     {% endblock %}
   </head>
   <body>
-    <div id="content">{% block content %}{% endblock %}</div>
+    {% block content %}{% endblock %}
   </body>
 </html>

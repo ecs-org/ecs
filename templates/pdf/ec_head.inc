@@ -11,5 +11,5 @@
         {% db_setting 'contact_url' %}
     </div>
 
-    <div class="spacer">&nbsp;</div>
 </div>
+<div class="spacer"></div>

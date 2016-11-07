@@ -227,9 +227,6 @@ LOGGING = {
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', 'ecs-ca')
 
-# ecs.utils.pdfutils wkhtmltopdf uses these options to steer pdf generation out of html files
-WKHTMLTOPDF_OPTIONS = ['--zoom', '1.0', '--disable-smart-shrinking', '--dpi', '300'] #
-
 # whether ecs.tracking should store requests
 ECS_TRACKING_ENABLED = False
 

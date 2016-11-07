@@ -9,13 +9,14 @@ pdfutils
 - creation (from html)
 
 '''
-import os, subprocess, logging, shutil
+import subprocess, logging
 from binascii import hexlify
-from tempfile import TemporaryFile, NamedTemporaryFile, mkdtemp
+from tempfile import TemporaryFile, NamedTemporaryFile
 
-from django.conf import settings
 from django.template import loader
 from django.utils.encoding import smart_bytes
+
+from weasyprint import HTML
 
 
 logger = logging.getLogger(__name__)
@@ -92,59 +93,10 @@ def decrypt_pdf(src):
     return decrypted
 
 
-def wkhtml2pdf(html, header_html=None, footer_html=None, param_list=None):
+def wkhtml2pdf(html, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
     if isinstance(html, str): 
         html = html.encode('utf-8') 
-    if isinstance(header_html, str):
-        header_html = header_html.encode('utf-8')
-    if isinstance(footer_html, str):
-        footer_html = footer_html.encode('utf-8')
-    
-    cmd = ['wkhtmltopdf-amd64',
-        '--margin-left', '2cm',
-        '--margin-top', '2cm',
-        '--margin-right', '2cm',
-        '--margin-bottom', '2cm',
-        '--page-size', 'A4',
-    ] + getattr(settings, 'WKHTMLTOPDF_OPTIONS', [])
-    tmp_dir = mkdtemp()
-    shutil.copytree(os.path.join(settings.PROJECT_DIR, 'ecs', 'utils', 'pdf'), os.path.join(tmp_dir, 'media'))
 
-    if header_html:
-        header_html_file = NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
-        header_html_file.write(header_html)
-        header_html_file.close()
-        cmd += ['--header-html', header_html_file.name]
-    if footer_html and not getattr(settings, 'DISABLE_WKHTML2PDF_FOOTERS', False):
-        footer_html_file = NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
-        footer_html_file.write(footer_html)
-        footer_html_file.close()
-        cmd += ['--footer-html', footer_html_file.name]
-
-    if param_list:
-        cmd += param_list
-
-    html_file = NamedTemporaryFile(suffix='.html', dir=tmp_dir, delete=False)
-    html_file.write(html)
-    html_file.close()
-    cmd += ['page', html_file.name]
-
-    pdf_file = NamedTemporaryFile(suffix='.pdf', dir=tmp_dir, delete=False)
-    pdf_file.close()
-    cmd += [pdf_file.name]
-    
-    try:
-        popen = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = popen.communicate() 
-        if popen.returncode != 0: 
-            raise IOError('wkhtmltopdf pipeline returned with errorcode %i , stderr: %s' % (popen.returncode, stderr))
-
-        with open(pdf_file.name, 'rb') as pdf:
-            ret = pdf.read()
-
-    finally:
-        shutil.rmtree(tmp_dir)
-
-    return ret
+    return HTML(string=html).write_pdf()

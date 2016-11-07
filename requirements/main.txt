@@ -14,6 +14,7 @@ django-countries
 django-widget-tweaks
 celery[redis]
 redis
+weasyprint                      # PDF rendering
 
 raven             # sentry integration
 uwsgi             # container wsgi runner

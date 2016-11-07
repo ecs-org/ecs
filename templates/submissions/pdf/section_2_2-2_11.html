@@ -106,19 +106,21 @@
 
     <p>
         2.10.5 Sind gebärfähige Frauen einschließbar? (Bei Studien nach AMG/MPG ist bei Einschluss gebärfähiger  Frauen ein monatlicher Schwangerschaftstest erforderlich)
-        {% if submission_form.subject_females %}
-            {{ submission_form.subject_childbearing|checkbox }} ja
-            {{ False|checkbox }} nur gebährfähige
-            {{ submission_form.subject_childbearing|not|checkbox }} nein
-        {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
-            {{ False|checkbox }} ja
-            {{ True|checkbox }} nur gebährfähige
-            {{ False|checkbox }} nein
-        {% else %}
-            {{ False|checkbox }} ja
-            {{ False|checkbox }} nur gebährfähige
-            {{ False|checkbox }} nein
-        {% endif %}
+        <div class="indented">
+            {% if submission_form.subject_females %}
+                {{ submission_form.subject_childbearing|checkbox }} ja
+                {{ False|checkbox }} nur gebährfähige
+                {{ submission_form.subject_childbearing|not|checkbox }} nein
+            {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
+                {{ False|checkbox }} ja
+                {{ True|checkbox }} nur gebährfähige
+                {{ False|checkbox }} nein
+            {% else %}
+                {{ False|checkbox }} ja
+                {{ False|checkbox }} nur gebährfähige
+                {{ False|checkbox }} nein
+            {% endif %}
+        </div>
     </p>
 </div>
 

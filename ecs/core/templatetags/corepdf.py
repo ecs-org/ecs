@@ -1,5 +1,7 @@
+import os
 import base64
 
+from django.conf import settings
 from django.template import Library, Node
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
@@ -41,7 +43,13 @@ def tcwrap(parser, token):
 @register.simple_tag
 def print_logo_url():
     s = AdvancedSettings.objects.get()
-    if not s.print_logo:
-        return './media/fallback_logo.png'
-    return 'data:{};base64,{}'.format(s.print_logo_mimetype,
-        base64.b64encode(s.print_logo).decode('ascii'))
+    if s.print_logo:
+        data = s.print_logo
+        mimetype = s.print_logo_mimetype
+    else:
+        path = os.path.join(settings.STATIC_ROOT, 'images', 'fallback_logo.png')
+        with open(path, 'rb') as f:
+            data = f.read()
+        mimetype = 'image/png'
+    return 'data:{};base64,{}'.format(mimetype,
+        base64.b64encode(data).decode('ascii'))

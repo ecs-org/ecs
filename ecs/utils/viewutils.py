@@ -24,13 +24,10 @@ def pdf_response(pdf, filename='Unnamed.pdf'):
 
 def render_pdf(request, template, context):
     html = render_html(request, template, context)
-    footer_html = render_html(request, 'pdf/footer.html', context)
-    return wkhtml2pdf(html, footer_html=footer_html)
+    return wkhtml2pdf(html)
 
 def render_pdf_context(template, context):
     if not hasattr(template, 'render'):
         template = loader.get_template(template)
     html = template.render(context)
-    footer_template = loader.get_template('pdf/footer.html')
-    footer_html = footer_template.render(context)
-    return wkhtml2pdf(html, footer_html=footer_html)
+    return wkhtml2pdf(html)
