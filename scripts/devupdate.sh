@@ -80,6 +80,9 @@ dev_update(){
     sudo systemctl stop devserver
     sudo systemctl disable devserver
 
+    echo "cleanup __pycache__ directories"
+    find . -name __pycache__ -exec rm -r '{}' +
+
     local br_change sys_change ds_change pip_change mig_change mig_add
     if $init_all; then
         # init_all does not need dump restore => mig_change=1
@@ -105,9 +108,6 @@ dev_update(){
         git checkout -f $target_branch
         git reset --hard origin/$target_branch
     fi
-
-    echo "cleanup *.pyc"
-    find . -name "*.pyc" -delete
 
     echo "overwrite version.py"
     scripts/create-version-file.sh $G_srcdir $G_srcdir/ecs/version.py
