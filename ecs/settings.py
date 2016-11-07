@@ -433,7 +433,6 @@ if 'ECS_DEBUGTOOLBAR' in locals() and ECS_DEBUGTOOLBAR:
 # hack some settings for test and runserver
 if 'test' in sys.argv:
     CELERY_ALWAYS_EAGER = True
-    ECS_REQUIRE_CLIENT_CERTS = False
     INSTALLED_APPS += ('ecs.workflow.tests',)
 
 if 'runserver' in sys.argv:

@@ -4,7 +4,7 @@ from django.conf import settings
 
 class ClientCertMiddleware(object):
     def process_request(self, request):
-        if not getattr(settings, 'ECS_REQUIRE_CLIENT_CERTS', True):
+        if not getattr(settings, 'ECS_REQUIRE_CLIENT_CERTS', False):
             return
 
         if request.user.is_authenticated():
