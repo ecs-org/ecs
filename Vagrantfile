@@ -86,7 +86,7 @@ Vagrant.configure(2) do |config|
     sed -i.bak 's/^Prompt=.*$/Prompt=never/' /etc/update-manager/release-upgrades
     apt-get -y update
     # cloud-initramfs-growroot will grow root partition (p1) to max volume size (after a reboot)
-    apt-get -y install software-properties-common spice-vdagent cloud-initramfs-growroot git
+    apt-get -y install software-properties-common spice-vdagent cloud-initramfs-growroot acpid openssh-server git
     apt-get -y dist-upgrade --force-yes
   SHELL
 

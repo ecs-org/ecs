@@ -95,11 +95,6 @@ if $withpostgres; then
     apt-get install -y postgresql postgresql-contrib
 fi
 
-echo "get and install gosu to /usr/local/bin"
-curl -o /usr/local/bin/gosu -fsSL \
-    "https://github.com/tianon/gosu/releases/download/1.7/gosu-${arch}"
-chmod +x /usr/local/bin/gosu
-
 echo "get and extract wkhtmltopdf to /usr/local/bin"
 wkarchive="wkhtmltopdf-0.11.0_rc1-static-${arch}.tar.bz2"
 curl -o /tmp/$wkarchive -fsSL \

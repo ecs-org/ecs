@@ -1,24 +1,18 @@
-# base functions, ssh, powerbutton, upgrades
-openssh-server
-acpid
-unattended-upgrades
-
-# used for manual user intervention
+# manual user intervention
 tmux
 psmisc
 man
 vim
 zip
 lynx
+unison
 
-# used for install scripts
+# install scripts
 curl
 wget
 rsync
 bzip2
-# used for remote development
-unison
-# used for version branding
+gosu
 git
 # used for wkthmltopdf execution
 libxrender1
