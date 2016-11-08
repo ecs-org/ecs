@@ -65,7 +65,8 @@
 <div class="related_thread mt-1">
 {% if thread.related_thread %}
 {% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
-    Den betreffenden Nachrichtenstrang finden sie <a href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>
+    Den betreffenden Nachrichtenstrang finden Sie
+    <a href="{% url 'ecs.communication.views.read_thread' thread_pk=thread.related_thread.pk %}" target="_blank">hier</a>.
 {% endif %}
 {% endif %}
 </div>
