@@ -11,6 +11,11 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL('''
+            update core_submissionform
+            set subject_maxage = 0
+            where subject_maxage < 0;
+        '''),
         migrations.AlterField(
             model_name='investigator',
             name='subject_count',
