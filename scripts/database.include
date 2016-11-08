@@ -62,18 +62,18 @@ prepare_database() {
     firstrun="false"
     scripts/checkdb.py module ecs.settings && err=$? || err=$?
     if test $err -ge 127; then
-        echo "Fatal Error: could not execute scripts/checkdb.py, please call prepare_database from the root of the ecs source directory with activated environment"
+        echo "Fatal Error: could not execute scripts/checkdb.py, please call prepare_database from the root of the ecs source directory with activated environment" >&2
         exit 1
     fi
     if test $err -ge 9; then
-        echo "Fatal Error: ecs.settings, parameter or database connection error ($err)"
+        echo "Fatal Error: ecs.settings, parameter or database connection error ($err)" >&2
         exit 1
     fi
 
     if test "${ECS_RECOVER_FROM_DUMP:-false}" = "true" -o "$1" = "--restore-dump"; then
         dumpfilename=$(get_dumpfilename)
         if test "$dumpfilename" = "" -o ! -e "$dumpfilename"; then
-            echo "Fatal Error: restore from dump; could not find any dump: $dumpfilename"
+            echo "Fatal Error: restore from dump; could not find any dump: $dumpfilename" >&2
             exit 1
         fi
         if test $err -eq 0 -o $err -eq 1; then
@@ -106,7 +106,7 @@ prepare_database() {
 
     scripts/checkdb.py module ecs.settings && err=$? || err=$?
     if test $err -ge 8; then
-        echo "Fatal Error: could not connect to database or parameter error ($err)"
+        echo "Fatal Error: could not connect to database or parameter error ($err)" >&2
         exit 1
     fi
 
@@ -116,10 +116,10 @@ prepare_database() {
     fi
 
     echo "./manage.py migrate --noinput"
-    ./manage.py migrate --noinput
+    ./manage.py migrate --noinput || exit 1
 
     echo "./manage.py bootstrap"
-    ./manage.py bootstrap
+    ./manage.py bootstrap || exit 1
 
     if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
         ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
@@ -158,4 +158,8 @@ legacy_migrate() {
     echo "Info: NO exceptions are expected from this point on"
     echo "Run remaining migrations, delete stale content types"
     yes yes | ./manage.py migrate
+    if test $? -ne 0; then
+        echo "Error: Legacy Import: ./manage.py migrate failed" >&2
+        exit 1
+    fi
 }
