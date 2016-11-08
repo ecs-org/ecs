@@ -6,9 +6,6 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 
 
-MESSAGE_ORIGIN_ALICE = 1
-MESSAGE_ORIGIN_BOB = 2
-
 DELIVERY_STATES = (
     ("new", "new"),
     ("started", "started"),
@@ -20,18 +17,6 @@ DELIVERY_STATES = (
 class ThreadQuerySet(models.QuerySet):
     def by_user(self, user):
         return self.filter(Q(sender=user) | Q(receiver=user))
-
-    def incoming(self, user):
-        return self.filter(
-            Q(sender=user, last_message__origin=MESSAGE_ORIGIN_BOB) |
-            Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_ALICE)
-        )
-
-    def outgoing(self, user):
-        return self.filter(
-            Q(sender=user, last_message__origin=MESSAGE_ORIGIN_ALICE) |
-            Q(receiver=user, last_message__origin=MESSAGE_ORIGIN_BOB)
-        )
 
     def for_widget(self, user):
         return self.filter(
@@ -82,10 +67,8 @@ class Thread(models.Model):
 
         if user.id == self.sender_id:
             receiver = self.receiver
-            origin = MESSAGE_ORIGIN_ALICE
         else:
             receiver = self.sender
-            origin = MESSAGE_ORIGIN_BOB
 
         previous_message = self.last_message
         if previous_message and previous_message.reply_receiver and previous_message.receiver_id == user.id:
@@ -94,7 +77,7 @@ class Thread(models.Model):
         while receiver.profile.is_indisposed:
             receiver = receiver.profile.communication_proxy
 
-        if origin == MESSAGE_ORIGIN_ALICE:
+        if user.id == self.sender_id:
             self.receiver = receiver
         else:
             self.sender = receiver
@@ -103,7 +86,6 @@ class Thread(models.Model):
             sender=user,
             receiver=receiver,
             text=text,
-            origin=origin,
             smtp_delivery_state='new',
             rawmsg=rawmsg,
             rawmsg_msgid=rawmsg_msgid,
@@ -138,17 +120,13 @@ class Message(models.Model):
     receiver = models.ForeignKey(User, related_name='incoming_messages')
     timestamp = models.DateTimeField(auto_now_add=True)
     unread = models.BooleanField(default=True)
-    soft_bounced = models.BooleanField(default=False)
     text = models.TextField()
 
     rawmsg = models.TextField(null=True)
     rawmsg_msgid = models.CharField(max_length=250, null=True, db_index=True)
 
-    origin = models.SmallIntegerField(default=MESSAGE_ORIGIN_ALICE, choices=((MESSAGE_ORIGIN_ALICE, 'Alice'), (MESSAGE_ORIGIN_BOB, 'Bob')))
-
     smtp_delivery_state = models.CharField(max_length=7,
-                            choices=DELIVERY_STATES, default='new',
-                            db_index=True)
+        choices=DELIVERY_STATES, default='new', db_index=True)
 
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True)
 

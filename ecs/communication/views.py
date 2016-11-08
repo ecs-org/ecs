@@ -151,14 +151,16 @@ def list_threads(request):
     filters = usersettings.communication_filter = filterform.cleaned_data
     usersettings.save()
 
+    queryset = Thread.objects.by_user(request.user)
+
     if filters['incoming'] and filters['outgoing']:
-        queryset = Thread.objects.by_user(request.user)
+        pass
     elif filters['incoming']:
-        queryset = Thread.objects.incoming(request.user)
+        queryset = queryset.exclude(last_message__sender=request.user)
     elif filters['outgoing']:
-        queryset = Thread.objects.outgoing(request.user)
+        queryset = queryset.filter(last_message__sender=request.user)
     else:
-        queryset = Thread.objects.none()
+        queryset = queryset.none()
 
     if filters['starred'] and filters['unstarred']:
         pass
