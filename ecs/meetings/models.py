@@ -508,7 +508,7 @@ class Meeting(models.Model):
 
         for row in timetable:
             start, end = self._get_timeframe_for_user(row['user'])
-            row['time'] = '{0} - {1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
+            row['time'] = '{0}\u00a0-\u00a0{1}'.format(start.strftime('%H:%M'), end.strftime('%H:%M'))
 
         return render_pdf(request, 'meetings/pdf/timetable.html', {
             'meeting': self,

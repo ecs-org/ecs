@@ -18,7 +18,8 @@
             <td>{{ row.user }}</td>
             <td>{% for entry in row.entries %}{{ entry.submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
             <td>
-                {{ row.time }},
+                {{ row.time }}
+                <br>
                 <span style="color:red;">
                 {% if row.entries|length == 1 %}
                     1 Projekt
