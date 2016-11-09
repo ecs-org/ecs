@@ -32,8 +32,8 @@
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <div class="tab-content">
-            <div class="tab-pane active" id="customization_tab"
+        <div class="tab-content mt-1">
+            <div class="tab-pane active" id="customization_tab">
                 {% include 'bootstrap/form_field.html' with field=form.default_contact %}
                 {% include 'bootstrap/form_field.html' with field=form.logo_file %}
                 {% include 'bootstrap/form_field.html' with field=form.print_logo_file %}
