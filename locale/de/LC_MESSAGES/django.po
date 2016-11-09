@@ -184,7 +184,7 @@ msgid "This task does already exist"
 msgstr "Diese Aufgabe existiert bereits."
 
 msgid "There is an external review review in progress"
-msgstr "Das letzte Gutachten wurde nocht nicht überprüft"
+msgstr "Das letzte Gutachten wurde noch nicht überprüft"
 
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
@@ -2227,7 +2227,7 @@ msgid "Delete"
 msgstr "Löschen"
 
 msgid "No boilerplate yet!"
-msgstr "Es gibt nocht keinen Textbaustein!"
+msgstr "Es gibt noch keinen Textbaustein!"
 
 msgid "Request Review"
 msgstr "Begutachtung anfordern"
@@ -2770,7 +2770,7 @@ msgid "Finished TOPs"
 msgstr "Abgeschlossene TOPs"
 
 msgid "No Vote yet!"
-msgstr "Es gibt nocht kein Votum!"
+msgstr "Es gibt noch kein Votum!"
 
 msgid "before"
 msgstr "Vorher Anwesende"
