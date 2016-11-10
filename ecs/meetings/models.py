@@ -198,6 +198,7 @@ class Meeting(models.Model):
     protocol_sent_at = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
+    expert_assignment_user = models.ForeignKey('auth.User', null=True)
 
     objects = MeetingManager()
     unfiltered = models.Manager()
@@ -274,6 +275,7 @@ class Meeting(models.Model):
                         token = task_type.workflow_node.bind(
                             entry.submission.workflow.workflows[0]
                         ).receive_token(None)
+                        token.task.created_by = self.expert_assignment_user
                         token.task.assign(user=amc.specialist)
 
     def add_entry(self, **kwargs):

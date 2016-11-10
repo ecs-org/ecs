@@ -10,7 +10,7 @@ from ecs.tasks.models import Task
 from ecs.users.utils import get_user
 
 
-def send_task_message(task, subject, template):
+def send_task_message(task, subject, template, extra_ctx={}):
     if task.content_type.natural_key() == ('core', 'submission'):
         submission = task.data
     elif task.content_type.natural_key() == ('checklists', 'checklist'):
@@ -20,13 +20,19 @@ def send_task_message(task, subject, template):
 
     subject = subject.format(task=task.task_type)
     template = 'tasks/messages/{}'.format(template)
+    ctx = {'task': task}
+    ctx.update(extra_ctx)
 
     send_message_template(get_user('root@system.local'), task.created_by,
-        subject, template, {'task': task}, submission=submission)
+        subject, template, ctx, submission=submission)
 
 
 def send_close_message(task):
     send_task_message(task, _('{task} completed'), 'completed.txt')
+
+
+def send_delete_message(task, user):
+    send_task_message(task, _('{task} deleted'), 'deleted.txt', {'user': user})
 
 
 @periodic_task(run_every=crontab(minute=0))

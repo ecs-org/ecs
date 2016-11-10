@@ -144,9 +144,13 @@ def categorization_tasks(request, submission_pk=None):
 
         task_type = TaskType.objects.get(workflow_node__uid=uid,
             workflow_node__graph__auto_start=True)
-        task_type.workflow_node.bind(
+        token = task_type.workflow_node.bind(
             submission.workflow.workflows[0]).receive_token(None)
         created = True
+
+        task = token.task
+        task.created_by = request.user
+        task.save()
 
     tasks = []
     for uid in uids:

@@ -911,6 +911,9 @@ def meeting_details(request, meeting_pk=None, active=None):
                         assigned_to=previous_expert
                     ).open().mark_deleted()
 
+        meeting.expert_assignment_user = request.user
+        meeting.save()
+
         meeting.create_specialist_reviews()
 
         messages.success(request, _('The expert assignment has been saved. The experts will be invited to the meeting when you send the agenda to the board.'))

@@ -19,6 +19,7 @@ from ecs.checklists.models import Checklist
 from ecs.tasks.models import Task
 from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_declined
+from ecs.tasks.tasks import send_delete_message
 from ecs.votes.models import Vote
 from ecs.notifications.models import NOTIFICATION_MODELS, Notification
 from ecs.meetings.models import Meeting
@@ -48,6 +49,9 @@ def delete_task(request, submission_pk=None, task_pk=None):
         task = get_object_or_404(Task.objects.for_submission(submission).open(),
             pk=task_pk, task_type__is_dynamic=True)
         task.mark_deleted()
+    if task.task_type.is_dynamic and task.created_by and \
+        task.created_by != request.user:
+        send_delete_message(task, request.user)
     return redirect('ecs.tasks.views.task_backlog', submission_pk=submission_pk)
 
 

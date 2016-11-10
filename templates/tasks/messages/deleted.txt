@@ -1,0 +1,5 @@
+{% extends 'msg_core.txt' %}
+
+{% block content %}
+{{ user }} hat die Aufgabe "{{ task.task_type }}" gelöscht.
+{% endblock %}
