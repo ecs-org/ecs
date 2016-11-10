@@ -26,9 +26,7 @@ from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.core.models.core import AdvancedSettings
-from ecs.notifications.models import (
-    NotificationAnswer, AmendmentNotification, SafetyNotification,
-)
+from ecs.notifications.models import NotificationAnswer, SafetyNotification
 from ecs.meetings.signals import on_meeting_top_add, on_meeting_top_delete, on_meeting_top_index_change
 
 

@@ -27,7 +27,7 @@ from ecs.votes.models import Vote
 from ecs.votes.forms import VoteForm, SaveVoteForm
 from ecs.tasks.models import Task
 from ecs.communication.mailutils import deliver
-from ecs.notifications.models import NotificationAnswer, AmendmentNotification
+from ecs.notifications.models import NotificationAnswer
 
 from ecs.meetings.tasks import optimize_timetable_task
 from ecs.meetings.signals import on_meeting_start, on_meeting_end, on_meeting_top_jump, \
