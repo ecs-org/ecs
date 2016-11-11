@@ -31,7 +31,7 @@ default_days = 730
 default_bits = 2048
 
 [ policy_any ]
-countryName            = supplied
+countryName            = optional
 stateOrProvinceName    = optional
 organizationName       = optional
 organizationalUnitName = optional

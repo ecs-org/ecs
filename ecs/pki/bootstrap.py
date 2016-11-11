@@ -1,27 +1,19 @@
 import os
+
 from django.conf import settings
 
 from ecs import bootstrap
 from ecs.pki import openssl
 from ecs.pki.models import CertificateAuthority
+from ecs.core.models import EthicsCommission
 
 
-@bootstrap.register()
+@bootstrap.register(depends_on=('ecs.core.bootstrap.ethics_commissions',))
 def setup_ca():
     print('creating dummy CA')
     if not CertificateAuthority.objects.exists():
-        # XXX: use sane data from settings instead
-        subject_bits = (
-            ('CN', 'testecs.local'),
-            ('C', 'AT'),
-            ('ST', 'Vienna'),
-            ('localityName', 'Vienna'),
-            ('O', 'ep3 Software & System House'),
-            ('OU', 'Security'),
-            ('emailAddress', 'admin@testecs.local'),
-        )
-
-        subject = ''.join('/%s=%s' % bit for bit in subject_bits)
+        ec = EthicsCommission.objects.get(uuid=settings.ETHICS_COMMISSION_UUID)
+        subject = '/CN={}/O={}'.format(settings.DOMAIN, ec.name)
         openssl.setup(subject)
 
     if not os.path.exists(settings.ECS_CA_ROOT):

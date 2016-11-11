@@ -2,12 +2,13 @@ import math
 import random
 import string
 
+from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
 from ecs.users.utils import get_full_name
-from ecs.pki.utils import get_subject
+from ecs.core.models import EthicsCommission
 
 
 PASSPHRASE_ENTROPY = 80
@@ -36,7 +37,8 @@ class Certificate(models.Model):
     def create_for_user(cls, pkcs12, user, cn=None, days=None):
         if not cn:
             cn = get_full_name(user)
-        subject = get_subject(cn=cn, email=user.email)
+        ec = EthicsCommission.objects.get(uuid=settings.ETHICS_COMMISSION_UUID)
+        subject = '/CN={}/O={}/emailAddress={}'.format(cn, ec.name, user.email)
 
         passphrase_len = math.ceil(
             PASSPHRASE_ENTROPY / math.log2(len(PASSPHRASE_CHARS)))

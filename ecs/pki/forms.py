@@ -27,4 +27,3 @@ class CertForm(forms.Form):
                 self.add_error('cn', _('A certificate with this CN already exists.'))
 
         return cd
-        
