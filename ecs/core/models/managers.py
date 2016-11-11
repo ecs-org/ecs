@@ -92,7 +92,7 @@ class SubmissionQuerySet(models.QuerySet):
             q |= Q(pk__in=a.meeting.timetable_entries.filter(submission__medical_categories=a.category).values('submission_id'))
 
         submission_ct = ContentType.objects.get_for_model(Submission)
-        q |= Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).exclude(task_type__workflow_node__uid='resubmission').values('data_id'))
+        q |= Q(pk__in=Task.objects.filter(content_type=submission_ct, assigned_to=user).exclude(task_type__workflow_node__uid__in=('resubmission', 'b2_resubmission')).values('data_id'))
         checklist_ct = ContentType.objects.get_for_model(Checklist)
         q |= Q(pk__in=Checklist.objects.filter(pk__in=Task.objects.filter(content_type=checklist_ct, assigned_to=user).values('data_id')).values('submission__pk'))
         q |= Q(id__in=TemporaryAuthorization.objects.active(user=user).values('submission_id'))
