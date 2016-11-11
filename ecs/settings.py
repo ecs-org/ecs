@@ -244,11 +244,8 @@ REGISTRATION_SECRET = '!brihi7#cxrd^twvj$r=398mdp4neo$xa-rm7b!8w1jfa@7zu_'
 PASSWORD_RESET_SECRET = 'j2obdvrb-hm$$x949k*f5gk_2$1x%2etxhd!$+*^qs8$4ra3=a'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-# PDF Signing settings,
-# PDF_AS_SERVICE can either be undefined, or empty string, or string beginning with "mock:" to mock ecs.signature
-# for real pdf-as usage use http://localhost:4780/ per default
-# deployment should use something like 'https://hostname/pdf-as'
-#PDFAS_SERVICE = 'http://localhost:4780/pdf-as/'
+# PDF Signing will use fake signing if PDFAS_SERVICE is "mock:"
+# deployment should use 'https://hostname/pdf-as-web/'
 PDFAS_SERVICE = 'mock:'
 
 
@@ -291,9 +288,7 @@ SMTPD_CONFIG = {
 # thirdparty settings
 ######################
 
-# ### celery ### configuration defaults, uses memory transport and always eager
-# production environments should:
-#   set BROKER_USER, PASSWORD, VHOST
+# ### celery ### default uses memory transport and always eager
 
 CELERY_IMPORTS = (
     'ecs.communication.tasks',
