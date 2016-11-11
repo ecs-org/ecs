@@ -1,6 +1,5 @@
 from django.conf.urls import include, url
 from django.conf import settings
-from django.contrib import admin
 from django.views.static import serve
 from django.shortcuts import render
 from django.views.generic.base import RedirectView
@@ -35,8 +34,6 @@ urlpatterns = [
     url(r'^tags/', include('ecs.tags.urls')),
     url(r'^', include('ecs.pki.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
     url(r'^static/(?P<path>.*)$', forceauth.exempt(serve), {'document_root': settings.STATIC_ROOT}),
 ]
 

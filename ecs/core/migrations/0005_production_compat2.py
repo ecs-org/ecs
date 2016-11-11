@@ -284,12 +284,6 @@ def rename_indices(apps, schema_editor):
                 ALTER TABLE core_temporaryauthorization
                     DROP CONSTRAINT user_id_refs_id_655261d5;
 
-                ALTER TABLE django_admin_log
-                    DROP CONSTRAINT django_admin_log_content_type_id_fkey;
-
-                ALTER TABLE django_admin_log
-                    DROP CONSTRAINT django_admin_log_user_id_fkey;
-
                 ALTER TABLE django_content_type
                     DROP CONSTRAINT django_content_type_app_label_key;
 
@@ -656,8 +650,6 @@ def rename_indices(apps, schema_editor):
                 DROP INDEX core_submissionform_substance_p_c_t_countries_submissionform_id;
                 DROP INDEX core_temporaryauthorization_submission_id;
                 DROP INDEX core_temporaryauthorization_user_id;
-                DROP INDEX django_admin_log_content_type_id;
-                DROP INDEX django_admin_log_user_id;
                 DROP INDEX docstash_docstash_content_type_id;
                 DROP INDEX docstash_docstash_group;
                 DROP INDEX docstash_docstash_group_like;
@@ -1012,12 +1004,6 @@ def rename_indices(apps, schema_editor):
 
                 ALTER TABLE core_temporaryauthorization
                     ADD CONSTRAINT core_temporaryauthoriz_user_id_60fb3b6a3acb706c_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE django_admin_log
-                    ADD CONSTRAINT djan_content_type_id_697914295151027a_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
-
-                ALTER TABLE django_admin_log
-                    ADD CONSTRAINT django_admin_log_user_id_52fdd58701c5f563_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
                 ALTER TABLE django_content_type
                     ADD CONSTRAINT django_content_type_app_label_45f3b1d93ec8c61c_uniq UNIQUE (app_label, model);
@@ -1476,10 +1462,6 @@ def rename_indices(apps, schema_editor):
                 CREATE INDEX core_temporaryauthorization_e8701ad4 ON core_temporaryauthorization USING btree (user_id);
 
                 CREATE INDEX country_iso_like ON country USING btree (iso varchar_pattern_ops);
-
-                CREATE INDEX django_admin_log_417f1b1c ON django_admin_log USING btree (content_type_id);
-
-                CREATE INDEX django_admin_log_e8701ad4 ON django_admin_log USING btree (user_id);
 
                 CREATE INDEX django_session_de54fa62 ON django_session USING btree (expire_date);
 
