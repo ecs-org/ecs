@@ -270,9 +270,17 @@ ABSOLUTE_URL_PREFIX = "http://"+ DOMAIN+ ":8000"
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND_UNFILTERED = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_UNFILTERED_DOMAINS = () # = ('example.com', 'shoddy.technology')
-# ecs.users.views.register, request_password_reset and emails send to
-# EMAIL_UNFILTERED_DOMAINS are sent through EMAIL_BACKEND_UNFILTERED
+EMAIL_UNFILTERED_DOMAINS = () # = ('example.com', )
+# User registration, password reset, send client certificate and mail to
+# receivers at a domain included in EMAIL_UNFILTERED_DOMAINS will be sent via
+# EMAIL_BACKEND_UNFILTERED. All other mail will be sent via EMAIL_BACKEND.
+
+if os.getenv('SMTP_URL'):
+    url = urlparse(os.getenv('SMTP_URL'))
+    EMAIL_HOST = url.hostname
+    EMAIL_PORT = url.port or 25
+    EMAIL_HOST_USER = url.username or ''
+    EMAIL_HOST_PASSWORD = url.password or ''
 
 SMTPD_CONFIG = {
     'listen_addr': ('127.0.0.1', 8025),
