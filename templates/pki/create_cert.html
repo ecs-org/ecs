@@ -11,26 +11,20 @@
         {% trans "Back to the certificate list" %}
     </a>
 
-    <p>
-        <form action="" method="post" class="form_main" autocomplete="off">
-            {% csrf_token %}
-            <div>
-            <ol>
-                {% for field in form %}
-                    {% include "forms/field.html" %}
-                {% endfor %}
-            </ol>
-            </div>
-            <input class="btn btn-primary" type="submit" value="{% trans 'Create Certificate' %}" />
-        </form>
-    </p>
+    <form action="{{ request.path }}" method="post" autocomplete="off">
+        {% csrf_token %}
+        {% for field in form %}
+            {% include "bootstrap/form_field.html" %}
+        {% endfor %}
+        <input class="btn btn-primary" type="submit" value="{% trans 'Create Certificate' %}" />
+    </form>
 {% endblock %}
 
 {% block jsbottom %}
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#id_user').select2();
+            $('#id_user').select2({width: '100%'});
         });
     </script>
 {% endblock %}
