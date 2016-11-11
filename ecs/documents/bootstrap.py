@@ -73,5 +73,4 @@ def import_keys():
 
 @bootstrap.register()
 def create_local_storage_vault():
-    if not os.path.isdir(settings.STORAGE_VAULT['dir']):
-        os.makedirs(settings.STORAGE_VAULT['dir'])
+    os.makedirs(settings.STORAGE_VAULT['dir'], exist_ok=True)

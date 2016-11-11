@@ -13,9 +13,7 @@ def workflow_sync():
 
 @bootstrap.register()
 def create_settings_dirs():
-    for workdir in (settings.LOGFILE_DIR, settings.ECS_DOWNLOAD_CACHE_DIR):
-        if not os.path.isdir(workdir):
-            os.makedirs(workdir)
+    os.makedirs(settings.ECS_DOWNLOAD_CACHE_DIR, exist_ok=True)
 
 @bootstrap.register()
 def compilemessages():
