@@ -99,10 +99,10 @@
         {% endif %}
 
         <div id="tabs_votes" class="tab_headers collapse">
+            <a href="#published_votes_tab">{% trans "Published Votes" %}</a>
             {% if vote_review_form %}
                 <a href="#vote_review_tab"{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>Votum</a>
             {% endif %}
-            <a href="#published_votes_tab">{% trans "Published Votes" %}</a>
         </div>
 
         <div id="tabs_notifications" class="tab_headers collapse">
