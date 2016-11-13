@@ -240,13 +240,23 @@
     <div id="published_votes_tab" class="tab collapse">
         <h3>{% trans "Published Votes" %}</h3>
         {% if published_votes %}
-            <ul>
+            <ul class="list-group">
                 {% for vote in published_votes %}
-                    <li>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}
-                    {% if vote.valid_until %} {% trans 'valid until' %} {{ vote.valid_until|date:'d.m.Y' }}{% endif %}
-                    <a href="{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{% trans "Download" %}</a>
+                    <li class="list-group-item {% if vote == submission.current_published_vote %}list-group-item-info{% endif %}">
+                        {{ vote.result_text }}
+                        {% if vote.top %}
+                             (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }})
+                        {% endif %}
+                        {% if vote.valid_until %}
+                             {% trans 'valid until' %} {{ vote.valid_until|date:'d.m.Y' }}
+                        {% endif %}
+                        <a href="{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">
+                            {% trans "Download" %}
+                        </a>
                     {% if user.profile.is_internal %}
-                        | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}'))">{% trans 'History' %}</a>
+                        | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}'))">
+                            {% trans 'History' %}
+                        </a>
                     {% endif %}
                     {% if debug %}
                         | <a href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote.pk %}">
