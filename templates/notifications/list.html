@@ -10,27 +10,33 @@
 
 {% block content %}
 
-<div class="notification_list">
-    {% if notifs %}
-        <ol>
-        {% for notification in notifs %}
-            <li>
-                <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">{{ notification.short_name }}</a> für 
-                {% for submission_form in notification.submission_forms.all %}
-                    <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}">{{ submission_form }}</a>{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-                vom {{ notification.timestamp|date:'d.m.Y' }}
-            </li>
-        {% endfor %}
-        </ol>
-    {% else %}
-        <em>{% trans 'There are no notifications yet.' %}</em>
-    {% endif %}
-</div>
+<ul class="list-group">
+    {% for notification in notifs %}
+        <li class="list-group-item">
+            <h5>{{ notification.timestamp|date:'d.m.Y' }} 
+                <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
+                    <strong>{{ notification.short_name }}</strong>
+                </a>
+            </h5> 
+            <ul class="list-unstyled">
+            {% for submission_form in notification.submission_forms.all %}
+                <li>
+                    <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}">
+                        {{ submission_form.submission|ec_number }}
+                    </a>
+                    {{ submission_form.project_title }}
+                </li>
+            {% endfor %}
+            </ul>
+        </li>
+    {% empty %}
+        <li class="list-group-item text-xs-center"><em>{% trans 'There are no notifications yet.' %}</em></li>
+    {% endfor %}
+</ul>
 
 {% if stashed_notifications %}
-<div class="notification_list">
-  <h4>Nicht eingereichte Meldungen</h4>
+<div>
+  <h4 class="my-1">Nicht eingereichte Meldungen</h4>
   {% include 'notifications/stashed_notification_list.html' %}
 </div>
 {% endif %}

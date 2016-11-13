@@ -1,10 +1,10 @@
 {% load i18n %}
-<ol>
+    <ul class="list-group">
     {% for docstash in stashed_notifications %}
         {% if docstash.value %}
-            <li>
+            <li class="list-group-item">
                 <a href="{% url 'ecs.notifications.views.create_notification' notification_type_pk=docstash.value.type_id docstash_key=docstash.key %}">
-                    {{ docstash.name|default:"<em>Unbenannt</em>" }}
+                    {{ docstash.name|default:"<strong>Unbenannt</strong>" }}
                 </a>
                 (Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr)
                 {% if docstash.value.submission_forms %}
@@ -15,5 +15,5 @@
                 <a class="delete_docstash" href="{% url 'ecs.notifications.views.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">{% trans 'Delete' %}</a>
             </li>
         {% endif %}
-    {% endfor %}     
-</ol>
+    {% endfor %}
+    </ul> 

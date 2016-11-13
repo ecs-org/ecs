@@ -1,17 +1,17 @@
 {% extends 'core.html' %}
-{% load i18n %}
+{% load i18n widget_tweaks %}
 
 {% block htmltitle %}{% trans "Import" %} | {{ block.super }}{% endblock %}
 {% block headertitle %}{% trans "Import" %}{% endblock %}
 
 {% block content %}
-
-<form action="" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Importieren" />
-</form>
-
+<div class="my-1 text-xs-center">
+    <form class="form-inline" action="{{ request.path }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+            {% include 'bootstrap/form_field.html' with field=form.file %}
+        <button type="submit" class="btn btn-primary">Importieren</button>
+    </form>
+</div>
 {% endblock %}
 
 {% block menuSelection %}submissions{% endblock %}
