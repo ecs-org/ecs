@@ -4,7 +4,6 @@ usage(){
     cat << EOF
 Usage:  $0 [--restore-dump] init
         $0 [--restore-dump] pull [--force] [branchname [--force]]
-        $0 rebase
         $0 dumpdb [targetdumpname]
         $0 freshdb
 
@@ -13,10 +12,7 @@ init    = install/renew all system setup regardless of current state.
 pull    = fetch,update current source to origin/branchname(HEAD)
             and run needed devserver updates. restore from dump if needed.
             "pull" will refuse to run if there are uncommited changes/additions
-            or unpushed changes exists in the repository.
-rebase  = fetch origin, rebase current local branch with
-            origin/$ECS_DEV_REBASE_TO(HEAD) (default master)
-            and force pushes changes to origin
+            or unpushed changes existing in the repository.
 dumpdb  = dump current database and write it to /app/ecs.pgdump
 freshdb = destroy current database and create a new empty ecs database
 
@@ -32,12 +28,10 @@ Testing:
 Env:
     ECS_DUMP_FILENAME="/path/to/custom.pgdump"
         to restore from a non default dump.
-    CLEANUP="true" to cleanup locks
     ECS_DEV_AUTOSTART="false" to your .profile,
         devupdate.sh will not restart devserver
 
     current autostart: $ECS_DEV_AUTOSTART
-    current rebase to: $ECS_DEV_REBASE_TO
 
 EOF
     exit 1
@@ -59,15 +53,10 @@ dev_update(){
         echo "Error: fatal, no target branch set"
         exit 1
     fi
-    if test "${CLEANUP:-false}" = "true"; then
-        echo "Warning: CLEANUP=true, deleting lock files"
-        if test -f $HOME/devupdate.disabled; then rm $HOME/devupdate.disabled; fi
-    fi
     if test -e $HOME/devupdate.disabled; then
-        echo "ERROR: $HOME/devupdate.disabled was found, aborting"
+        echo "ERROR: $HOME/devupdate.disabled was found, aborting. Delete this file to use devupate.sh"
         exit 1
     fi
-
     # Open/create lock file and acquire an exclusive lock. The lock will be
     # released automatically when the shell terminates.
     exec 200<>$HOME/devupdate.lock
@@ -234,12 +223,6 @@ main(){
             sudo systemctl start devserver
         fi
         ;;
-    rebase)
-        abort_ifnot_cleanrepo --ignore-unpushed
-        git fetch --all --prune
-        git rebase $ECS_DEV_REBASE_TO
-        git push -f "origin/$(git rev-parse --abbrev-ref HEAD)"
-        ;;
     init|pull)
         target_branch="$(git rev-parse --abbrev-ref HEAD)"
         err=$?
@@ -284,7 +267,6 @@ main(){
 
 export ECS_USERSWITCHER_ENABLED=${ECS_USERSWITCHER_ENABLED:-true}
 export ECS_DEV_AUTOSTART=${ECS_DEV_AUTOSTART:-true}
-export ECS_DEV_REBASE_TO=${ECS_DEV_REBASE_TO:-master}
 
 # HACK: set G_srcdir either to $HOME/ecs or relative to this script
 G_srcdir=$HOME/ecs

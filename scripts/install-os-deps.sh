@@ -4,6 +4,8 @@ function usage(){
     cat <<EOF
 usage: $0 [options]
 
+install system packages
+
 options:
 --no-upgrade            # does not upgrade packages as first step
 --with-postgres-server  # additionaly install a postgresql server
@@ -81,7 +83,6 @@ apt-get -y update
 
 if $upgrade; then
     echo "upgrade packages"
-    echo "==> Disabling the release upgrader"
     sed -i.bak 's/^Prompt=.*$/Prompt=never/' /etc/update-manager/release-upgrades
     apt-get -y upgrade
     apt-get -y dist-upgrade --force-yes

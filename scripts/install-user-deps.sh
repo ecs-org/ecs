@@ -7,8 +7,8 @@ if test -z "$1"; then
     cat <<EOF
 usage: $0 environmentdir [requirementfile [requirementfile]+]"
 
-install a new python3 virtual environment and installs the requirements via pip
-default if no requirementfile is "$defreq"
+install a new python3 virtual environment and the requirements via pip.
+if no requirementfile is specified, the default "$defreq" is used.
 
 EOF
     exit 1

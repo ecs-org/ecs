@@ -104,7 +104,6 @@ def main():
         conn.close()
 
     if has_django_migrations:
-        print('django_migrations found')
         sys.exit(0)
 
     if has_south_migrations:
