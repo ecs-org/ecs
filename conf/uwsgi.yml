@@ -1,9 +1,11 @@
 uwsgi:
   master: true
-  workers: 4
+  # reasonable number of workers = cores + 2
+  workers: %(%k + 2)
   enable-threads: true
   uwsgi-socket: 127.0.0.1:8000
   pidfile: /app/uwsgi.pid
+  # buffer-size= max size of request head (cookies, query string), default= 4096
   buffer-size: 8192
   chdir: /app/ecs
   module: ecs.wsgi
