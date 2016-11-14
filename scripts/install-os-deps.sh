@@ -25,7 +25,7 @@ function filter_list(){
 
 function update_pkgcache(){
     local pkgs=$(filter_list "$1" | sort | tr '\n' ' ' | sed -e 's/[[:space:]]*$//')
-    sed "s/^apt-get install -y .*/apt-get install -y ${pkgs}/"
+    sed "s/^apt-get install -y .*/apt-get install -y ${pkgs} \&\& apt-get clean -y/"
 }
 
 

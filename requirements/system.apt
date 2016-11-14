@@ -1,6 +1,7 @@
 # manual user intervention
 tmux
 psmisc
+net-tools
 man
 vim
 zip
