@@ -47,6 +47,9 @@ fi
 cmd=$1
 shift
 
+# recreating working directories with correct ownership
+/app/ecs/scripts/create-dirs.sh --chown /app
+
 if [[ "$cmd" =~ ^(worker|beat|smtpd|migrate|run|_prepare)$ ]]; then
     # needs running as app user
     exec gosu app $0 _user $cmd "$@"

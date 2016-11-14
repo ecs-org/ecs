@@ -1,12 +1,22 @@
 #!/bin/bash
+
+do_chown=false
+if test "$1" = "--chown"; then
+    do_chown=true
+    shift
+fi
 if test -z "$1"; then
-    base=/app
-else
-    base=$1
+    echo "Error: Usage: $0 [--chown] basedirectory" >&2
+    exit 1
 fi
 
-dirs="storage-vault log cache ca gpg undeliverable-mail pgdump pgdump-iso pgdump-fallback"
+base=$1
+dirnames="storage-vault cache ca gpg undeliverable-mail pgdump pgdump-iso pgdump-fallback"
+install_opts="-g app -o app"
 
-for a in $dirs; do
-    mkdir -p $base/ecs-$a
+for a in $dirnames; do
+    install $install_opts -d $base/ecs-$a
 done
+
+chmod 0700 $base/ecs-gpg
+install $install_opts -d $base/ecs/static/CACHE

@@ -128,7 +128,7 @@ dev_update(){
     fi
 
     echo "recreate directories"
-    ./scripts/create-dirs.sh
+    ./scripts/create-dirs.sh $HOME
 
     # migrate symlink of bin to symlink to ~/bin/*
     if test -L /app/bin; then rm /app/bin; fi
