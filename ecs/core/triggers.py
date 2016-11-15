@@ -93,11 +93,6 @@ def on_initial_review(sender, **kwargs):
     submission, submission_form = kwargs['submission'], kwargs['form']
 
     if submission_form.is_acknowledged:
-        if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
-            with sudo():
-                meeting = submission.schedule_to_meeting()
-                meeting.update_assigned_categories()
-
         send_submission_message(submission, submission.presenter, _('Acknowledgement of Receipt'), 'submissions/acknowledge_message.txt')
         if not submission.current_submission_form == submission_form:
             pending_vote = submission.current_pending_vote
