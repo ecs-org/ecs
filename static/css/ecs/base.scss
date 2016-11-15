@@ -31,7 +31,6 @@ body {
     width: 86.5%;
     display: block;
     margin-bottom: 5px;
-    text-shadow: 0 1px 2px $white;
 
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -100,12 +99,6 @@ input[type=file]:not(.form-control),
 textarea:not(.form-control),
 select:not(.form-control) {
     border: 1px solid #b7b7b7;
-}
-input:not(.form-control):not(.btn):focus,
-input[type=file]:not(.form-control):focus,
-textarea:not(.form-control):focus,
-select:not(.form-control):focus {
-    box-shadow: 0 0 6px $grey-80;
 }
 
 input[type=submit]:not(.btn),

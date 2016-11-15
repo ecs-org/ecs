@@ -22,7 +22,6 @@ input[disabled]:not(.btn) {
     font-weight: bolder;
     margin-right: 3px;
     border-radius: 5px 5px 0 0;
-    text-shadow: 0 1px 2px $white;
 
     &.active {
         background: $lightskyblue;
@@ -32,7 +31,6 @@ input[disabled]:not(.btn) {
     &.errors {
         background: $brick-red;
         color: #fff !important;
-        text-shadow: 0 1px 2px $brick-red;
     }
 }
 
@@ -40,7 +38,6 @@ input[disabled]:not(.btn) {
 .tab_headers a.active.errors  {
     color: $white;
     background: $orange;
-    text-shadow: 0 1px 2px $orange;
 }
 
 .tab_headers {
@@ -56,7 +53,6 @@ input[disabled]:not(.btn) {
         color: $white;
         font-weight: normal;
         border-radius: 3px;
-        text-shadow: 0 0 0 $white;
 
         &.active {
             background: $lightskyblue-light;
@@ -100,12 +96,10 @@ input[disabled]:not(.btn) {
     a:active {
         background: $grey-90;
         color: $grey-20;
-        box-shadow: 0 0 6px $lightblue;
     }
     a:hover {
         text-decoration: none;
         border: 1px solid $grey-70;
-        box-shadow: 0 0 6px $lightblue;
     }
     .button_save {
         background: $grey-95;
