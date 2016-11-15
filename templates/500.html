@@ -1,55 +1,48 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8" />
-        <style>
-          
-         /* reset base.scss classes */
-          
-          *, body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 22px;
-          }
-          #content {
-            margin: 50px auto 0;
-            max-width: 800px;
-          }
-          .innerwrap {
-            padding: 20px;
-            border: 1px solid #EBDFC3;
-            background: #F8F8EF;
-          }
-          #content .innerwrap p {
-            display: block;
-            margin-bottom: 10px;
-          }
-          #content a {
-            color: #2B558E;
-            text-decoration: none;
-          }
-          #content a:hover {
-            text-decoration: underline;
-          }
-
+        <style type="text/css">
+            div#main {
+                font-family:sans-serif;
+                margin:3rem auto 0;
+                padding:1rem;
+                width:33rem;
+                border:1px solid black;
+                border-radius:0.25rem;
+                text-align:center;
+                background-color:#d9edf7;
+                border-color:#bcdff1;
+                color:#31708f;
+            }
+            h3 {
+                margin-top:0;
+            }
+            div {
+                margin-top:1rem;
+            }
+            a:link, a:visited {
+                color:#0275d8;
+                text-decoration:none;
+            }
         </style>
-        
     </head>
     <body>
-      <div id="content">
-        <div class="innerwrap">
-            <p><strong>Entschuldigung, ein Fehler ist aufgetreten !</strong></p>
-            <p>Der Fehler wurde protokolliert.</p>
-            {% if request.sentry.id %}
-                <p>
-                    Um auf diesen Fehler Bezug zu nehmen notieren Sie sich bitte
-                    diese Nummer: <strong>{{ request.sentry.id }}</strong>.
-                </p>
-            {% endif %}
-            <p>Um zur Hauptseite zu wechseln, <a href="/"> klicken Sie hier</a>.</p>
+        <div id ="main">
+            <h3>Es ist ein Fehler aufgetreten!</h3>
+            <div>
+                Der Fehler wurde protokolliert. 
+                {% if request.sentry.id %}
+                    Um auf diesen Fehler Bezug zu nehmen,<br> 
+                    notieren Sie sich bitte diese Nummer: 
+                    <p>
+                        <strong>{{ request.sentry.id }}</strong>
+                    </p>
+                {% endif %}
+            </div>
+            <div>
+                Um zur Hauptseite zu wechseln, <a href="/"> klicken Sie hier</a>.
+            </div>
         </div>
-      </div>         
     </body>
 </html>
 
