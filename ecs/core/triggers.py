@@ -165,3 +165,16 @@ def on_categorization(sender, **kwargs):
         for task in vote_preparation_tasks:
             if task.workflow_token.source.uid != source_uid:
                 task.mark_deleted()
+
+    first = not Task.unfiltered.for_data(submission).filter(
+        task_type__workflow_node__uid='categorization',
+        deleted_at=None,
+    ).exclude(closed_at=None).exists()
+    if first:
+        specialist_reviews = Task.unfiltered.for_data(submission).filter(
+            task_type__workflow_node__uid='specialist_review',
+            deleted_at=None,
+        )
+        entry = submission.timetable_entries.get()
+        for task in specialist_reviews:
+            entry.participations.create(user=task.assigned_to, task=task)

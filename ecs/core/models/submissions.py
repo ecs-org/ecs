@@ -202,10 +202,7 @@ class Submission(models.Model):
             meeting.add_entry(submission=self, duration=duration, visible=visible)
             return meeting
 
-        try:
-            top = self.timetable_entries.order_by('-meeting__start')[0]
-        except IndexError:
-            top = None
+        top = self.timetable_entries.order_by('-meeting__start').first()
 
         if top is None:
             return _schedule()
