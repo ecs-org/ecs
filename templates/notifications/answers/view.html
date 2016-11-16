@@ -1,30 +1,57 @@
-{% extends 'notifications/answers/base.html' %}
+{% extends 'core.html' %}
 {% load core i18n %}
 
-{% block notification_answer_head %}
-    {{ block.super }}
-    <br />
-    {% if answer.pdf_document_id %}
-        <a href="{% url 'ecs.notifications.views.notification_answer_pdf' notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
-    {% endif %}
-    {% if debug %}
-        <a href="{% url 'ecs.notifications.views.notification_answer_pdf_debug' notification_pk=notification.pk %}" class="button_submit">
-            PDF Debug
-        </a>
-    {% endif %}
-{% endblock %}
+{% block menuSelection %}notifications{% endblock %}
 
-{% block notification_answer_body %}
+{% block htmltitle %}Antwort: {{ notification }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% endblock %}
 
-<div class="notification_answer">
-    {{ answer.text|linebreaksbr }}
+{% block content %}
+<div class="notification">
+    <h2>Antwort auf <a target="_blank" href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
+        {{ notification }}</a> vom {{ notification.timestamp|date:'d.m.Y' }}
+    </h2>
+
+    <p>
+        <h3>Eingereicht von: {{ notification.user }}</h3>
+        <br>
+        {% if answer.pdf_document_id %}
+            <a href="{% url 'ecs.notifications.views.notification_answer_pdf' notification_pk=notification.pk %}" class="button_submit">{% trans 'Download PDF' %}</a>
+        {% endif %}
+        {% if debug %}
+            <a href="{% url 'ecs.notifications.views.notification_answer_pdf_debug' notification_pk=notification.pk %}" class="button_submit">
+                PDF Debug
+            </a>
+        {% endif %}
+    </p>
+
+    {% with 1 as target_blank %}
+        {% with notification.submission_forms.all as submission_forms %}
+            {% include "notifications/submission_data.html" %}
+        {% endwith %}
+    {% endwith %}
+
+    <div class="notification_answer">
+        {{ answer.text|linebreaksbr }}
+    </div>
+
+    {% if user.profile.is_internal %}
+        <br>
+        <p>
+            {% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk as history_url %}
+            <a href="javascript:void(ecs.fieldhistory.show('{{ history_url|escapejs }}'))">
+                {% trans 'History' %}
+            </a>
+        </p>
+    {% endif %}
+
+
+    {% if notification.type.grants_vote_extension %}
+        <br>
+        <p>
+            Die aktuelle Gültigkeit des Votums endet mit
+            <b>{{ notification.get_submission.votes.positive.permanent.latest.valid_until|date:'d.m.Y' }}</b>
+        </p>
+    {% endif %}
 </div>
-
-{% if user.profile.is_internal %}
-<br/><p>
-    <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">{% trans 'History' %}</a>
-</p>
-{% endif %}
-
 {% endblock %}
-
