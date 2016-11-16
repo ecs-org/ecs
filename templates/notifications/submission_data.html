@@ -1,13 +1,38 @@
+{% load core %}
+
 {% if submission_forms %}
-<table class="notif_meta" style="clear:both">
-    <tr><th>Studie</th><th>EudraCT-Nr.</th><th>Ethik-Kommission</th><th>Prüfer</th></tr>
-    {% for submission_form in submission_forms %}
-        <tr>
-           <td><a{% if target_blank %} target="_blank"{% endif %} href="{% url 'ecs.core.views.submissions.view_submission' submission_pk=submission_form.submission.pk %}{% if not notification.answer %}#pending_notifications_tab{% else %}#answered_notifications_tab{% endif %}">{{ submission_form.submission }} {{ submission_form.project_title_display }}</a></td>
-           <td>{{ submission_form.submission.current_submission_form.eudract_number|default:'<em>nicht vorhanden</em>' }}</td>
-           <td>{{ submission_form.submission.main_ethics_commission }}</td>
-           <td>{{ submission_form.submission.primary_investigator.contact }}</td>
-        </tr>
-    {% endfor %}
-</table>
+    <table class="table table-sm mt-1">
+        <thead class="thead-default">
+            <tr>
+                <th>Studie</th>
+                <th>EudraCT-Nr.</th>
+                <th>Ethik-Kommission</th>
+                <th>Prüfer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for submission_form in submission_forms %}
+                {% with submission=submission_form.submission %}
+                    <tr>
+                        <td>
+                            {% url 'ecs.core.views.submissions.view_submission' submission_pk=submission.pk as submission_url %}
+                            <a href="{{ submission_url }}">
+                                {{ submission|ec_number }}
+                                {{ submission.project_title_display }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ submission.current_submission_form.eudract_number|default:'<em>nicht vorhanden</em>' }}
+                        </td>
+                        <td>
+                            {{ submission.main_ethics_commission }}
+                        </td>
+                        <td>
+                            {{ submission.primary_investigator.contact }}
+                        </td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
 {% endif %}

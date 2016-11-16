@@ -1,56 +1,107 @@
 {% extends 'core.html' %}
 {% load i18n %}
 
-{% block htmltitle %}{{ notification }} | {{ block.super }}{% endblock %}
-{% block headertitle %}
-Meldungen zur laufenden Studie(n)
-{% endblock %}
 {% block menuSelection %}notifications{% endblock %}
+
+{% block htmltitle %}{{ notification }} | {{ block.super }}{% endblock %}
+{% block headertitle %}{{ notification.type }}{% endblock %}
 
 {% block headernav %}
 {% endblock %}
 
 {% block content %}
-<h2>{{ notification }} vom {{ notification.timestamp|date:'d.m.Y H:i' }}</h2>
-<div class="notification_header">
-    <h3>Eingereicht von: {{ notification.user }} <br>{% block notification_header %}{% endblock %}</h3>
+    {% if not answer %}
+        <p>
+            <a href="{% url 'ecs.notifications.views.open_notifications' %}">
+                <span class="fa fa-backward"></span>
+                {% trans "Back to open notifications" %}
+            </a>
+        </p>
+    {% endif %}
 
-    <a href="{% url 'ecs.notifications.views.notification_pdf' notification_pk=notification.pk %}" class="button_submit">Download PDF</a>
+    {% with notification.submission_forms.all as submission_forms %}
+        {% include "notifications/submission_data.html" %}
+    {% endwith %}
+
+    <table class="table thead-default">
+        <colgroup>
+            <col>
+            <col class="w-100">
+        </colgroup>
+        <tr>
+            <th class="text-nowrap">Eingereicht von</th>
+            <td>{{ notification.user }}</td>
+        </tr>
+        <tr>
+            <th class="text-nowrap">Eingereicht am</th>
+            <td>{{ notification.timestamp|date:'d.m.Y' }}</td>
+        </tr>
+        {% block table_rows %}
+            <tr>
+                <th class="text-nowrap">Begründung/Stellungnahme/Mitteilung</th>
+                <td>{{ notification.comments|linebreaksbr }}</td>
+            </tr>
+            {% if documents %}
+            <tr>
+                <th class="text-nowrap">Unterlagen</th>
+                <td>
+                    {% include "documents/compact_list.html" %}
+                </td>
+            </tr>
+            {% endif %}
+        {% endblock %}
+    </table>
+
+    {% url 'ecs.notifications.views.notification_pdf' notification_pk=notification.pk as pdf_url %}
+    <a class="btn btn-outline-primary" href="{{ pdf_url }}">
+        <span class="fa fa-file-pdf-o"></span>
+        {% trans 'Download PDF' %}
+    </a>
     {% if debug %}
-        <a href="{% url 'ecs.notifications.views.notification_pdf_debug' notification_pk=notification.pk %}" class="button_submit">
+        {% url 'ecs.notifications.views.notification_pdf_debug' notification_pk=notification.pk as debug_pdf_url %}
+        <a class="btn btn-outline-primary" href="{{ debug_pdf_url }}">
+            <span class="fa fa-file-pdf-o"></span>
             PDF Debug
         </a>
     {% endif %}
-    {% if notification.answer %}
-    {% if notification.answer.published_at or user.profile.is_internal %}
-        <a href="{% url 'ecs.notifications.views.view_notification_answer' notification_pk=notification.pk %}" class="button_submit">{% trans "Answer" %}</a>
-    {% endif %}
-    {% endif %}
-</div>
 
-  {% with notification.submission_forms.all as submission_forms %}
-      {% include "notifications/submission_data.html" %}
-  {% endwith %}
-
-<table class="notification">
-    {% block table_rows %}
-        <tr>
-            <th>Begründung/Stellungnahme/Mitteilung</th>
-            <td>{{ notification.comments|linebreaksbr }}</td>
-        </tr>
-        {% if documents %}
-        <tr>
-            <th>Unterlagen</th>
-            <td>
-                {% include "documents/compact_list.html" %}
-            </td>
-        </tr>
+    {% if answer %}
+        {% if answer.published_at or user.profile.is_internal %}
+            <hr>
+            <div class="card mt-1">
+                <h2 class="card-header mb-0">
+                    Antwort
+                    {% if user.profile.is_internal %}
+                        {% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=answer.pk as history_url %}
+                        <a class="fa fa-history text-primary float-xs-right" href="javascript:void(ecs.fieldhistory.show('{{ history_url }}'))"></a>
+                    {% endif %}
+                </h2>
+                <div class="card-block">
+                    <div class="card-text">{{ answer.text|linebreaksbr }}</div>
+                    <hr>
+                    {% if notification.type.grants_vote_extension %}
+                        <div class="card-text">
+                            Die aktuelle Gültigkeit des Votums endet mit
+                            <b>{{ notification.get_submission.current_published_vote.valid_until|date:'d.m.Y' }}</b>.
+                        </div>
+                    {% endif %}
+                    {% if answer.pdf_document_id %}
+                        {% url 'ecs.notifications.views.notification_answer_pdf' notification_pk=notification.pk as pdf_url %}
+                        <a class="card-link" href="{{ pdf_url }}">
+                            <span class="fa fa-file-pdf-o"></span>
+                            {% trans 'Download PDF' %}
+                        </a>
+                    {% endif %}
+                    {% if debug %}
+                        {% url 'ecs.notifications.views.notification_answer_pdf_debug' notification_pk=notification.pk as debug_pdf_url %}
+                        <a class="card-link" href="{{ debug_pdf_url }}">
+                            <span class="fa fa-file-pdf-o"></span>
+                            PDF Debug
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
-    {% endblock %}
-</table>
-
-{% if not notification.answer %}
-    <a href="{% url 'ecs.notifications.views.open_notifications' %}" class="button_submit">{% trans "Back to open notifications" %}</a>
-{% endif %}
+    {% endif %}
 
 {% endblock %}

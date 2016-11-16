@@ -59,7 +59,7 @@ class BaseNotificationReview(Activity):
         return reverse('ecs.notifications.views.edit_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
 
     def get_final_urls(self):
-        return super().get_final_urls() + [reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})]
+        return super().get_final_urls() + [reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.workflow.data.pk})]
 
     def receive_token(self, source, trail=(), repeated=False):
         token = super().receive_token(source, trail=trail, repeated=repeated)

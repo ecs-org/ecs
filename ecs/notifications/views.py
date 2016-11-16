@@ -52,6 +52,7 @@ def view_notification(request, notification_pk=None):
     return HttpResponse(tpl.render({
         'documents': notification.documents.order_by('doctype__identifier', 'date', 'name'),
         'notification': notification,
+        'answer': getattr(notification, 'answer', None),
     }, request))
 
 
@@ -244,14 +245,6 @@ def edit_notification_answer(request, notification_pk=None):
     return response
 
 
-def view_notification_answer(request, notification_pk=None):
-    answer = get_object_or_404(NotificationAnswer, notification__pk=notification_pk)
-    return render(request, 'notifications/answers/view.html', {
-        'notification': answer.notification,
-        'answer': answer,
-    })
-
-
 def notification_answer_pdf(request, notification_pk=None):
     notification = get_object_or_404(Notification, pk=notification_pk)
     return handle_download(request, notification.answer.pdf_document)
@@ -295,4 +288,4 @@ def sign_success(request, document=None):
     answer.signed_at = document.date
     answer.pdf_document = document
     answer.save()
-    return reverse('ecs.notifications.views.view_notification_answer', kwargs={'notification_pk': answer.notification.pk})
+    return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': answer.notification.pk})

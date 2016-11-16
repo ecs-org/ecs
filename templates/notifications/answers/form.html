@@ -16,10 +16,8 @@
     {% endblock %}
     </p>
 
-    {% with 1 as target_blank %}
-        {% with notification.submission_forms.all as submission_forms %}
-            {% include "notifications/submission_data.html" %}
-        {% endwith %}
+    {% with notification.submission_forms.all as submission_forms %}
+        {% include "notifications/submission_data.html" %}
     {% endwith %}
 
     <form action="" method="post" enctype="multipart/form-data" class="form_main{% if form.bound_to_task %} bound_to_task{% endif %}">

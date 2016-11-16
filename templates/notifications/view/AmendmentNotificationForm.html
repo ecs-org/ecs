@@ -5,7 +5,7 @@
     {{ block.super }}
     {% with notification.amendmentnotification as notification %}
         <tr>
-            <th>{% trans 'Changes' %}</th>
+            <th class="text-nowrap">{% trans 'Changes' %}</th>
             <td>
                 {% with notification|diff as diff %}
                 {% if diff %}
@@ -33,11 +33,11 @@
         </tr>
         {% if user.profile.is_internal %}
             <tr>
-                <th>{% trans 'Substantial' %}</th>
+                <th class="text-nowrap">{% trans 'Substantial' %}</th>
                 <td>{{ notification.is_substantial|yesno }}</td>
             </td>
             <tr>
-                <th>{% trans 'Meeting' %}</th>
+                <th class="text-nowrap">{% trans 'Meeting' %}</th>
                 <td>
                     {% if notification.meeting %}
                         {{ notification.meeting.start|date:'d.m.Y' }}

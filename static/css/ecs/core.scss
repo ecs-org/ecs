@@ -128,8 +128,6 @@ input[disabled]:not(.btn) {
 
 .meeting_detail th,
 .profile th,
-table.notif_meta th,
-table.notification th,
 .catalogue_list th {
     background-color: #ebe8d0;
     border-bottom: 1px solid $wheatbrown;
@@ -137,8 +135,6 @@ table.notification th,
 }
 .meeting_detail td,
 .profile td,
-table.notif_meta td,
-table.notification td,
 .billing_summary td,
 .catalogue_list td {
     border-bottom: 1px solid $wheatbrown;

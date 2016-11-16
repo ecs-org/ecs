@@ -17,7 +17,6 @@ urlpatterns = (
     url(r'^(?P<notification_pk>\d+)/pdf/$', views.notification_pdf),
     url(r'^(?P<notification_pk>\d+)/doc/(?P<document_pk>\d+)/$', views.download_document),
     url(r'^(?P<notification_pk>\d+)/doc/(?P<document_pk>\d+)/view/$', views.view_document),
-    url(r'^(?P<notification_pk>\d+)/answer/$', views.view_notification_answer),
     url(r'^(?P<notification_pk>\d+)/answer/pdf/$', views.notification_answer_pdf),
     url(r'^(?P<notification_pk>\d+)/answer/edit/$', views.edit_notification_answer),
     url(r'^(?P<notification_pk>\d+)/answer/sign/$', views.notification_answer_sign),
