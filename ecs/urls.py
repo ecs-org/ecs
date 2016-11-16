@@ -15,15 +15,6 @@ def handler500(request):
     t = loader.get_template('500.html') # You need to create a 500.html template.
     return HttpResponseServerError(t.render({'request': request}))
 
-def fake404handler(request):
-    ''' 404 error fake handler to be called via /trigger404 '''
-    return render(request, '404.html', {})
-    from django.template import loader
-    from django.http import HttpResponseNotFound
-
-    t = loader.get_template('404.html')
-    return HttpResponseNotFound(t.render({'request': request}))
-
 
 urlpatterns = [
     # Default redirect is same as redirect from login if no redirect is set (/dashboard/)
@@ -58,15 +49,31 @@ urlpatterns = [
 if 'ecs.userswitcher' in settings.INSTALLED_APPS:
     from django.http import HttpResponse
     import logging
+
     logger = logging.getLogger(__name__)
-    def __trigger_log(request):
-        logger.warn('foo')
+
+    @forceauth.exempt
+    def _trigger_log(request):
+        logger.warn('debug test message')
         return HttpResponse()
+
+    @forceauth.exempt
+    def _403(request):
+        return render(request, '403.html', status=403)
+
+    @forceauth.exempt
+    def _404(request):
+        return render(request, '404.html', status=404)
+
+    @forceauth.exempt
+    def _500(request):
+        return render(request, '500.html', status=500)
+
     urlpatterns += [
-        url(r'^debug/empty/$', lambda request: HttpResponse()),
-        url(r'^debug/404/$', fake404handler),
-        url(r'^debug/500/$', lambda request: 1/0),
-        url(r'^trigger-warning-log/$', __trigger_log),
+        url(r'^debug/403/$', _403),
+        url(r'^debug/404/$', _404),
+        url(r'^debug/500/$', _500),
+        url(r'^debug/trigger-log/$', _trigger_log),
     ]
 
 if 'ecs.userswitcher' in settings.INSTALLED_APPS:
