@@ -110,7 +110,7 @@ def submission_billing(request):
                     selected_fee += [submission]
                 
         xls = SimpleXLS()
-        xls.write_row(0, (_('amt.'), _('EC-Number'), _('company'), _('UID-Nr.'), _('Eudract-Nr.'), _('applicant'), _('clinic'), _('sum')), header=True)
+        xls.write_row(0, (_('amt.'), _('EC-Number'), _('company'), _('UID-Nr.'), _('EudraCT-Nr.'), _('applicant'), _('clinic'), _('sum')), header=True)
         if selected_fee:
             for i, submission in enumerate(selected_fee, 1):
                 r = i

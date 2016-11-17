@@ -61,9 +61,6 @@ msgstr "Firma"
 msgid "UID-Nr."
 msgstr "UID-Nr."
 
-msgid "Eudract-Nr."
-msgstr "Eudract-Nr."
-
 msgid "applicant"
 msgstr "Antragsteller"
 
