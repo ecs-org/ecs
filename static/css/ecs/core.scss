@@ -169,36 +169,6 @@ table.notification td,
 
 /* documents */
 
-.doclist {
-    background: #eee;
-    border: 1px solid $grey-80;
-    padding: 10px;
-
-    h4 {
-        display: block;
-        background-repeat: no-repeat;
-        font-weight: normal;
-        font-size: 14px;
-        padding-bottom: 1px;
-        margin-bottom: 2px !important;
-    }
-    .list_item {
-        display: block;
-        margin-bottom: 5px;
-        padding: 1px 3px;
-        background: $grey-90;
-    }
-    .list_item span.doc_name:before {
-        content: " | ";
-    }
-    .list_item .status:before {
-        content: "[";
-    }
-    .list_item .status:after {
-        content: "]";
-    }
-}
-
 .document_upload {
     ol {
         margin: 10px 0px;

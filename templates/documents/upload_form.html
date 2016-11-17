@@ -3,31 +3,29 @@
 <div class="doclist">
 {% for doc in documents %}
     {% ifchanged doc.doctype.identifier %}
-        <h4>{{ doc.doctype }}</h4>
+        <h4 {% if not forloop.first %}class="mt-1"{% endif %}>{{ doc.doctype }}</h4>
     {% endifchanged %}
 
-    <div class="list_item">
-        {% block actions %}
-            {% if doc.doctype.is_downloadable or user.profile.is_internal %}
-                <a href="{% url 'ecs.docstash.views.download_document' docstash_key=request.docstash.key document_pk=doc.pk %}">{% trans "Download" %}</a> |
-            {% endif %}
-            <a href="{% url 'ecs.docstash.views.view_document' docstash_key=request.docstash.key document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> |
-            <a href="{% block delete_url %}{% endblock %}?document_pk={{ doc.pk }}" class="delete_document">{% trans "Delete" %}</a>
-            | <a href="" class="replace_document" data-document-id="{{ doc.pk }}" data-document-type="{{ doc.doctype.pk }}">{% trans "Replace" %}</a>
-            <span class="document_display_name" style="display:none;">
-                {% if doc.name %}
-                {{ doc.name|smart_truncate:100 }}
-                {% else %}
-                Dateiname: {{ doc.original_file_name|smart_truncate:100 }}
-                {% endif %}
-                - {{ doc.version|smart_truncate:100 }} vom {{ doc.date|date:'d.m.Y' }}
-            </span>
-        {% endblock %}
-        <span class="doc_name">
+    <div>
+        {% if doc.doctype.is_downloadable or user.profile.is_internal %}
+            <a href="{% url 'ecs.docstash.views.download_document' docstash_key=request.docstash.key document_pk=doc.pk %}">{% trans "Download" %}</a> |
+        {% endif %}
+        <a href="{% url 'ecs.docstash.views.view_document' docstash_key=request.docstash.key document_pk=doc.pk %}" target="_blank">{% trans "View" %}</a> |
+        <a href="{% block delete_url %}{% endblock %}?document_pk={{ doc.pk }}" class="delete_document">{% trans "Delete" %}</a>
+        | <a href="" class="replace_document" data-document-id="{{ doc.pk }}" data-document-type="{{ doc.doctype.pk }}">{% trans "Replace" %}</a>
+        <span class="document_display_name" hidden>
             {% if doc.name %}
-            {{ doc.name }}
+            {{ doc.name|smart_truncate:100 }}
             {% else %}
-            Dateiname: {{ doc.original_file_name }}
+            Dateiname: {{ doc.original_file_name|smart_truncate:100 }}
+            {% endif %}
+            - {{ doc.version|smart_truncate:100 }} vom {{ doc.date|date:'d.m.Y' }}
+        </span>
+        | <span>
+            {% if doc.name %}
+                {{ doc.name }}
+            {% else %}
+                Dateiname: {{ doc.original_file_name }}
             {% endif %}
             -  <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
         </span><br />

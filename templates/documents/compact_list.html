@@ -12,21 +12,19 @@
     {% endif %}
 
     {% ifchanged doc.doctype.identifier %}
-        <h4>{{ doc.doctype }}</h4>
+        <h4 {% if not forloop.first %}class="mt-1"{% endif %}>{{ doc.doctype }}</h4>
     {% endifchanged %}
 
-    <div class="list_item">
-        {% block actions %}
-	    {% if doc.doctype.is_downloadable or user.profile.is_internal %}
-                <a href="{{ download_url }}">{% trans "Download" %}</a> |
-	    {% endif %}
-            <a href="{{ view_url }}" target="_blank">{% trans "View" %}</a> |
-        {% endblock %}
-        <a class="doc_name" href="{{ view_url }}" target="_blank">
+    <div>
+        {% if doc.doctype.is_downloadable or user.profile.is_internal %}
+            <a href="{{ download_url }}">{% trans "Download" %}</a> |
+        {% endif %}
+        <a href="{{ view_url }}" target="_blank">{% trans "View" %}</a> |
+        <a href="{{ view_url }}" target="_blank">
             {% if doc.name %}
-            {{ doc.name }}
+                {{ doc.name }}
             {% else %}
-            Dateiname: {{ doc.original_file_name }}
+                Dateiname: {{ doc.original_file_name }}
             {% endif %} 
             -  <em>Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}</em>
         </a><br />
