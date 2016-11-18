@@ -34,7 +34,7 @@ from ecs.core.forms import (
     ForeignParticipatingCenterFormSet, InvestigatorFormSet,
     InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm,
-    SubmissionWidgetFilterForm, PresenterChangeForm, SusarPresenterChangeForm,
+    PresenterChangeForm, SusarPresenterChangeForm,
     AssignedSubmissionsFilterForm, MySubmissionsFilterForm,
     AllSubmissionsFilterForm,
 )
@@ -899,7 +899,7 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     })
 
 
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', limit=20, keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
     if not title:
         title = _('Submissions')
     usersettings = request.user.ecs_settings
@@ -923,7 +923,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     if stashed_submission_forms:
         submissions = list(stashed_submission_forms) + list(submissions)
 
-    paginator = Paginator(submissions, limit, allow_empty_first_page=True)
+    paginator = Paginator(submissions, 20, allow_empty_first_page=True)
     try:
         submissions = paginator.page(int(filterform.cleaned_data['page']))
     except (EmptyPage, InvalidPage):
@@ -1191,30 +1191,6 @@ def xls_export(request):
         content_type='application/vnd.ms-excel')
     response['Content-Disposition'] = 'attachment;filename=submission-export.xls'
     return response
-
-def submission_widget(request, template='submissions/widget.html'):
-    data = dict(template='submissions/widget.html', limit=5, order_by=('-ec_number',))
-
-    if request.user.profile.is_internal:
-        data.update({
-            'submissions': Submission.objects.all(),
-            'filtername': 'submission_filter_widget_internal',
-            'filter_form': SubmissionWidgetFilterForm,
-        })
-    else:
-        stashed = (DocStash.objects
-            .filter(group='ecs.core.views.submissions.create_submission_form',
-                owner=request.user, object_id=None, current_version__gte=0)
-            .order_by('-modtime')
-        )
-        data.update({
-            'submissions': Submission.objects.mine(request.user) | Submission.objects.reviewed_by_user(request.user),
-            'stashed_submission_forms': stashed,
-            'filtername': 'submission_filter_widget',
-            'filter_form': SubmissionFilterForm,
-        })
-
-    return submission_list(request, **data)
 
 
 def all_submissions(request):

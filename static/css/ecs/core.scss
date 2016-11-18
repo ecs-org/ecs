@@ -220,14 +220,11 @@ table.notification td,
  * XXX: This should all be replaced with bootstrap's table-striped class. Sigh.
  */
 
-.dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 #meeting_list li:nth-of-type(1) ,
 .billing_list li:nth-of-type(1) ,
 .billing_summary tr:nth-of-type(1) {
     border-top: 1px solid $wheatbrown;
 }
-
-.dashboard_widget .submission_widget_list li:nth-child(odd) ,
 .administration_detail .user_list tr:nth-child(odd) ,
 #meeting_list li:nth-child(odd) ,
 .billing_list li:nth-child(odd) ,
@@ -235,8 +232,6 @@ table.notification td,
     background: $beige;
     border-bottom: 1px solid $wheatbrown;
 }
-
-.dashboard_widget .submission_widget_list li:nth-child(even) ,
 .administration_detail .user_list tr:nth-child(even) ,
 #meeting_list li:nth-child(even) ,
 .billing_list li:nth-child(even) ,
@@ -244,8 +239,6 @@ table.notification td,
     background: $beige-dark;
     border-bottom: 1px solid $wheatbrown;
 }
-
-.dashboard_widget .submission_widget_list li:hover,
 .administration_detail .user_list tr:hover,
 #meeting_list li:hover,
 .billing_list li:hover,

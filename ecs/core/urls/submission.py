@@ -16,7 +16,6 @@ urlpatterns = (
     url(r'^list/xls/$', views.xls_export),
     url(r'^list/assigned/$', views.assigned_submissions),
     url(r'^list/mine/$', views.my_submissions),
-    url(r'^list/widget/$', views.submission_widget),
 
     url(r'^import/$', views.import_submission_form),
     url(r'^new/(?:(?P<docstash_key>.+)/)?$', views.create_submission_form),

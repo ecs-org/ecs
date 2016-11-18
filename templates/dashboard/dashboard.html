@@ -11,7 +11,6 @@
     <div id="dashboard">
         <div class="left_column">
             <div class="dashboard_widget" data-widget-url="{% url 'ecs.communication.views.dashboard_widget' %}"></div>
-            <div class="dashboard_widget" data-widget-url="{% url 'ecs.core.views.submissions.submission_widget' %}"></div>
         </div>
         <div class="right_column">
             {% if user.profile.show_worklow_widget %}

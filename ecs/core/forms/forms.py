@@ -490,9 +490,6 @@ FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 class SubmissionMinimalFilterForm(SubmissionFilterForm):
     layout = ()
 
-class SubmissionWidgetFilterForm(SubmissionFilterForm):
-    layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE)
-
 class AssignedSubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES)
 

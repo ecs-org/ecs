@@ -4,7 +4,7 @@ from ecs.core.forms.forms import (
     RoutineMeasureFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet,
     SubmissionImportForm, PresenterChangeForm, SusarPresenterChangeForm,
     SubmissionFilterForm, SubmissionMinimalFilterForm,
-    SubmissionWidgetFilterForm, AssignedSubmissionsFilterForm,
+    AssignedSubmissionsFilterForm,
     MySubmissionsFilterForm, AllSubmissionsFilterForm,
     TemporaryAuthorizationForm, AdvancedSettingsForm, EthicsCommissionFormSet,
 )
