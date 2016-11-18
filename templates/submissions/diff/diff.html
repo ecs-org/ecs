@@ -15,10 +15,18 @@
             {% trans "Back to the Study" %}
         </a>
 
-        <div class="diff_toggles">
-            <a href="#" id="diff_show_old">{% trans "old" %}</a>
-            <a href="#" id="diff_show_new">{% trans "new" %}</a>
-            <a href="#" id="diff_show_all">{% trans "all" %}</a>
+        <div class="my-1">
+            <div class="btn-group diff-toggles">
+                <button class="btn btn-outline-danger" data-toggle-value="old">
+                    {% trans "old" %} (-)
+                </button>
+                <button class="btn btn-outline-success" data-toggle-value="new">
+                    {% trans "new" %} (+)
+                </button>
+                <button class="btn btn-outline-info active" data-toggle-value="all">
+                    {% trans "all" %} (-/+)
+                </button>
+            </div>
         </div>
         
         <div class="diff">
@@ -36,20 +44,16 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#diff_show_old').click(function(ev) {
+            $('.diff-toggles button').click(function(ev) {
                 ev.preventDefault();
-                $('.diff .deleted').show();
-                $('.diff .inserted').hide();
-            });
-            $('#diff_show_new').click(function(ev) {
-                ev.preventDefault();
-                $('.diff .deleted').hide();
-                $('.diff .inserted').show();
-            });
-            $('#diff_show_all').click(function(ev) {
-                ev.preventDefault();
-                $('.diff .deleted').show();
-                $('.diff .inserted').show();
+
+                var btn = $(this);
+                btn.siblings('button').removeClass('active');
+                btn.addClass('active');
+
+                var val = btn.data('toggleValue');
+                $('.diff .deleted').toggle(['old', 'all'].indexOf(val) > -1);
+                $('.diff .inserted').toggle(['new', 'all'].indexOf(val) > -1);
             });
         });
     </script>

@@ -9,10 +9,18 @@
             <td>
                 {% with notification|diff as diff %}
                 {% if diff %}
-                    <div class="diff_toggles">
-                        <a href="#" id="diff_show_old">{% trans "old" %}</a>
-                        <a href="#" id="diff_show_new">{% trans "new" %}</a>
-                        <a href="#" id="diff_show_all">{% trans "all" %}</a>
+                    <div class="mb-1">
+                        <div class="btn-group diff-toggles">
+                            <button class="btn btn-outline-danger" data-toggle-value="old">
+                                {% trans "old" %} (-)
+                            </button>
+                            <button class="btn btn-outline-success" data-toggle-value="new">
+                                {% trans "new" %} (+)
+                            </button>
+                            <button class="btn btn-outline-info active" data-toggle-value="all">
+                                {% trans "all" %} (-/+)
+                            </button>
+                        </div>
                     </div>
                     <div class="diff">
                         {{ diff|safe }}
@@ -28,15 +36,17 @@
                 <th>{% trans 'Substantial' %}</th>
                 <td>{{ notification.is_substantial|yesno }}</td>
             </td>
-            {% if notification.meeting %}
-                <tr>
-                    <th>{% trans 'Meeting' %}</th>
-                    <td>
+            <tr>
+                <th>{% trans 'Meeting' %}</th>
+                <td>
+                    {% if notification.meeting %}
                         {{ notification.meeting.start|date:'d.m.Y' }}
                         {{ notification.meeting.title }}
-                    </td>
-                </tr>
-            {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
         {% endif %}
     {% endwith %}
 {% endblock %}
@@ -45,22 +55,16 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $(function(){
-                $('#diff_show_old').click(function(ev) {
-                    ev.preventDefault();
-                    $('.diff .deleted').show();
-                    $('.diff .inserted').hide();
-                });
-                $('#diff_show_new').click(function(ev) {
-                    ev.preventDefault();
-                    $('.diff .deleted').hide();
-                    $('.diff .inserted').show();
-                });
-                $('#diff_show_all').click(function(ev) {
-                    ev.preventDefault();
-                    $('.diff .deleted').show();
-                    $('.diff .inserted').show();
-                });
+            $('.diff-toggles button').click(function(ev) {
+                ev.preventDefault();
+
+                var btn = $(this);
+                btn.siblings('button').removeClass('active');
+                btn.addClass('active');
+
+                var val = btn.data('toggleValue');
+                $('.diff .deleted').toggle(['old', 'all'].indexOf(val) > -1);
+                $('.diff .inserted').toggle(['new', 'all'].indexOf(val) > -1);
             });
         });
     </script>
