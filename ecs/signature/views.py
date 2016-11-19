@@ -149,12 +149,6 @@ def sign_receive(request, mock=False):
                 # ValueCheckCode= 0 => ok, 1=> err, CertificateCheckCode=0 => OK, 2-5 Verify Error, 99 Other verify Error, raise exception if verify fails
                 pdf_data = sock_pdfas.read(int(request.GET['pdflength']))
 
-                # FIXME: remove /tmp file writes
-                with open("/tmp/signed.pdf","wb") as t:
-                    t.write(pdf_data)
-                with open("/tmp/get_urls.txt","ab") as t:
-                    t.write("url: {0}, response: {1} , info: {2}".format(pdfurl_str, sock_pdfas.getcode(), sock_pdfas.info()))
-
             document = Document.objects.create_from_buffer(pdf_data,
                 uuid=uuid.UUID(request.sign_data["document_uuid"]),
                 stamp_on_download=False, doctype=request.sign_data['document_type'],
