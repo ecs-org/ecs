@@ -10,16 +10,36 @@
 {% block content %}
     {% include 'paginator.inc' with page=meetings %}
 
-    <div id="meeting_list">
-      <ol>
-          {% for meeting in meetings.object_list %}
-              <li>
-                  <h3>{{ meeting.start|date:'d.m.Y H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}</h3>
-                      <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">{% trans "Ansehen" %}</a>
-              </li>
-          {% endfor %}
-      </ol>
-    </div>
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th>Sitzung</th>
+                <th>Datum</th>
+                <th>Beginn</th>
+                <th class="text-xs-right">Ende</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for meeting in meetings.object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">
+                        {{ meeting.title }}
+                    </a>
+                </td>
+                <td>
+                    {{ meeting.start|date:'d.m.Y' }}
+                </td>
+                <td>
+                    {{ meeting.start|date:'H:i' }}
+                </td>
+                <td class="text-xs-right">
+                    {{ meeting.end|date:'H:i' }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     {% include 'paginator.inc' with page=meetings %}
 {% endblock %}

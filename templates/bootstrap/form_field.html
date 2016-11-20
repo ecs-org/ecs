@@ -1,20 +1,24 @@
-{% load widget_tweaks %}
+{% load core widget_tweaks %}
 
-<div class="form-group {% if field.errors %}has-danger{% endif %}">
+<div class="form-group{% if field.errors %} has-danger{% endif %}">
     <label for="{{ field.id_for_label }}">
         {{ field.label }}
         {% if field.field.required %}
             <span class="text-danger">*</span>
         {% endif %}
     </label>
+    {% if field.field|type_name == "DateTimeField" %}
+        <div class="DateTimeField input-group">
+            {% render_field field class+="form-control" error_class="form-control-danger" %}
+        </div>
+    {% else %}
+        {% render_field field class+="form-control" error_class="form-control-danger" %}
+    {% endif %}
     {% if field.errors %}
-        {% render_field field class+="form-control form-control-danger" %}
         <div class="form-control-feedback">
             {% for error in field.errors %}
                 <p>{{ error }}</p>
             {% endfor %}
         </div>
-    {% else %}
-        {% render_field field class+="form-control" %}
     {% endif %}
 </div>

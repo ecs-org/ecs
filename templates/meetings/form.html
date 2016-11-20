@@ -1,5 +1,5 @@
 {% extends 'core.html' %}
-{% load core i18n %}
+{% load core i18n widget_tweaks %}
 
 {% block htmltitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %} | {{ block.super }}{% endblock %}
 {% block headertitle %}{% if not meeting %}{% trans "new meeting" %}{% else %}{% trans "edit meeting" %}{% endif %}{% endblock %}
@@ -7,13 +7,15 @@
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data" class="form_main">
     {% csrf_token %}
-    <div>
-    <ol>
+    <div class="row">
         {% for field in form %}
-            {% include "forms/field.html" %}
+            <div class="col-md-6 mt-1">
+                {% include 'bootstrap/form_field.html' %}
+            </div>
         {% endfor %}
-      <li><input type="submit" value="Speichern" /></li>
-    </ol>
+        <div class="col-md-6 offset-md-3 mt-1">
+            <input class="btn btn-primary btn-block" type="submit" value="Speichern" />
+        </div>
     </div>
 </form>
 {% endblock %}
