@@ -44,8 +44,8 @@
                 {% endwith %}
             {% else %}
                 {% with submission.current_submission_form as submission_form %}
-                    <h5 class="font-weight-normal">
-                        {% with submission.get_current_docstash as docstash %}
+                    {% with submission.get_current_docstash as docstash %}
+                        <h5 class="font-weight-normal">
                             {% if docstash %}
                                 <span class="fa fa-wrench text-info"></span>
                             {% endif %}

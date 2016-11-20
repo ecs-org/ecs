@@ -15,9 +15,9 @@
                         </li>
                     {% endwith %}
                 {% endfor %}
-                </ul>
+            </ul>
         {% else %}
-                <ul class="list-unstyled">
+            <ul class="list-unstyled">
                 {% for name in row %}
                     {% with filterform|getitem:name as field %}
                         <li>
@@ -28,7 +28,7 @@
                         </li>
                     {% endwith %}
                 {% endfor %}
-                </ul>
+            </ul>
         {% endif %}
     {% endfor %}
     {% if filterform.tags %}
