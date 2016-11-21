@@ -126,7 +126,6 @@ input[disabled]:not(.btn) {
 
 /* table border definitions */
 
-#status_tab > table > tbody > tr > th,
 .meeting_detail th,
 .profile th,
 table.notif_meta th,
@@ -136,7 +135,6 @@ table.notification th,
     border-bottom: 1px solid $wheatbrown;
     border-collapse: collapse;
 }
-#status_tab > table > tbody > tr > td,
 .meeting_detail td,
 .profile td,
 table.notif_meta td,
