@@ -13,11 +13,11 @@
 <ul class="list-group">
     {% for notification in notifs %}
         <li class="list-group-item">
-            <h5>{{ notification.timestamp|date:'d.m.Y' }} 
+            <h5>{{ notification.timestamp|date:'d.m.Y' }}
                 <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
                     <strong>{{ notification.short_name }}</strong>
                 </a>
-            </h5> 
+            </h5>
             <ul class="list-unstyled">
             {% for submission_form in notification.submission_forms.all %}
                 <li>
@@ -30,7 +30,9 @@
             </ul>
         </li>
     {% empty %}
-        <li class="list-group-item text-xs-center"><em>{% trans 'There are no notifications yet.' %}</em></li>
+        <li class="list-group-item text-xs-center">
+            <em>{% trans 'There are no notifications yet.' %}</em>
+        </li>
     {% endfor %}
 </ul>
 
