@@ -1338,6 +1338,7 @@ def my_submissions(request):
         filtername='submission_filter_mine',
         filter_form=SubmissionMinimalFilterForm,
         title=_('My Studies'),
+        order_by=('-ec_number',),
     )
 
 
