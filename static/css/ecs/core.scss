@@ -222,8 +222,6 @@ table.notification td,
  * XXX: This should all be replaced with bootstrap's table-striped class. Sigh.
  */
 
-.notification_list li:nth-of-type(1) ,
-.attachments li:nth-of-type(1) ,
 .dashboard_widget .submission_widget_list li:nth-of-type(1) ,
 #meeting_list li:nth-of-type(1) ,
 .billing_list li:nth-of-type(1) ,
@@ -231,8 +229,6 @@ table.notification td,
     border-top: 1px solid $wheatbrown;
 }
 
-.notification_list li:nth-child(odd) ,
-.attachments li:nth-child(odd) ,
 .dashboard_widget .submission_widget_list li:nth-child(odd) ,
 .administration_detail .user_list tr:nth-child(odd) ,
 #meeting_list li:nth-child(odd) ,
@@ -242,8 +238,6 @@ table.notification td,
     border-bottom: 1px solid $wheatbrown;
 }
 
-.notification_list li:nth-child(even) ,
-.attachments li:nth-child(even) ,
 .dashboard_widget .submission_widget_list li:nth-child(even) ,
 .administration_detail .user_list tr:nth-child(even) ,
 #meeting_list li:nth-child(even) ,
@@ -253,8 +247,6 @@ table.notification td,
     border-bottom: 1px solid $wheatbrown;
 }
 
-.notification_list li:hover,
-.attachments li:hover,
 .dashboard_widget .submission_widget_list li:hover,
 .administration_detail .user_list tr:hover,
 #meeting_list li:hover,

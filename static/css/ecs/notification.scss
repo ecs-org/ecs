@@ -53,22 +53,6 @@
     }
 }
 
-.form_main.readonly .notification_list,
-.notification_list {
-    ol {
-        list-style: none;
-        margin-bottom: 20px;
-    }
-    li {
-        float: none;
-        padding: 5px;
-        margin-bottom: 0;
-    }
-    .rejected > a{
-        color: #f00 !important;
-    }
-}
-
 .notification_answer {
     padding: 10px;
     background: $white;
@@ -81,11 +65,4 @@ table.notif_meta {
 
 .submission_data {
     margin-left: 240px;
-}
-
-.checklist_field {
-    visibility: visible;
-}
-.checklist_field_hidden {
-    visibility: hidden;
 }

@@ -171,46 +171,62 @@
     {% endif %}
     <div id="pending_notifications_tab" class="tab collapse">
         <h3>{% trans "Open Notifications" %}</h3>
-        {% if open_notifications %}
-            <ol class="notification_list">
-                {% for notification in open_notifications %}
-                    <li>
-                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">{{ notification }}</a>
-                        von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
-                    </li>
-                {% endfor %}
-            </ol>
-        {% else %}
-            <p>{% trans "There are no open notifications." %}</p>
-        {% endif %}
+        <ul class="list-group">
+            {% for notification in open_notifications %}
+                <li class="list-group-item">
+                    <h5>
+                        {{ notification.timestamp|date:'d.m.Y' }}
+                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
+                            <strong>{{ notification.short_name }}</strong>
+                        </a>
+                    </h5>
+                    von {{ notification.user }}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-xs-center">
+                    <em>{% trans "There are no open notifications." %}</em>
+                </li>
+            {% endfor %}
+        </ul>
         {% if stashed_notifications %}
             <h3>Nicht eingereichte Meldungen</h3>
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
         {% if submission.presenter == user or submission.susar_presenter == user %}
-            <a class="btn btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
+            {% url 'ecs.notifications.views.select_notification_creation_type' as create_url %}
+            <a class="btn btn-outline-primary mt-1" href="{{ create_url }}">
+                {% trans "Create a new notification" %}
+            </a>
         {% endif %}
     </div>
     <div id="answered_notifications_tab" class="tab collapse">
         <h3>{% trans "Answered Notifications" %}</h3>
-        {% if answered_notifications %}
-            <ol class="notification_list">
-                {% for notification in answered_notifications %}
-                    <li{% if notification.is_rejected %} class="rejected"{% endif %}>
-                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">{{ notification }}</a>
-                        von {{ notification.user }} am {{ notification.timestamp|date:'d.m.Y' }}
-                        {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
-                        {% if user.profile.is_internal %}
-                        | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">{% trans 'History' %}</a>
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ol>
-        {% else %}
-            <p>{% trans "There are no answered notifications." %}</p>
-        {% endif %}
+        <ul class="list-group">
+            {% for notification in answered_notifications %}
+                <li class="list-group-item {% if notification.answer.is_rejected %}list-group-item-danger{% endif %}">
+                    <h5>
+                        {{ notification.timestamp|date:'d.m.Y' }}
+                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
+                            <strong>{{ notification.short_name }}</strong>
+                        </a>
+                    </h5>
+                    von {{ notification.user }}
+                    {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
+                    {% if user.profile.is_internal %}
+                    | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">{% trans 'History' %}</a>
+                    {% endif %}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-xs-center">
+                    <em>{% trans "There are no answered notifications." %}</em>
+                </li>
+            {% endfor %}
+        </ul>
         {% if submission.presenter == user %}
-            <a class="btn btn-outline-primary" href="{% url 'ecs.notifications.views.select_notification_creation_type' %}">{% trans "Create a new notification" %}</a>
+            {% url 'ecs.notifications.views.select_notification_creation_type' as create_url %}
+            <a class="btn btn-outline-primary mt-1" href="{{ create_url }}">
+                {% trans "Create a new notification" %}
+            </a>
         {% endif %}
     </div>
     {% if vote_review_form %}
