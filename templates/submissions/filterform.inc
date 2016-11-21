@@ -3,33 +3,18 @@
 <form id="submission_list_filter" action="{{ request.path }}{% if keyword %}?keyword={{ keyword|urlencode }}{% endif %}" method="post" class="form-inline open-in-widget">
     {% csrf_token %}
     {% for row in filterform.layout %}
-        {% if filterform.layout|length == 1 %}
-            <ul class="list-inline">
-                {% for name in row %}
-                    {% with filterform|getitem:name as field %}
-                        <li class="list-inline-item">
-                            <label>
-                                {% render_field field  class+="form-control" %}
-                                {{ field.label }}
-                            </label>
-                        </li>
-                    {% endwith %}
-                {% endfor %}
-            </ul>
-        {% else %}
-            <ul class="list-unstyled">
-                {% for name in row %}
-                    {% with filterform|getitem:name as field %}
-                        <li>
-                            <label>
-                                {% render_field field  class+="form-control" %}
-                                {{ field.label }}
-                            </label>
-                        </li>
-                    {% endwith %}
-                {% endfor %}
-            </ul>
-        {% endif %}
+        <ul class="list-unstyled">
+            {% for name in row %}
+                {% with filterform|getitem:name as field %}
+                    <li>
+                        <label>
+                            {% render_field field  class+="form-control" %}
+                            {{ field.label }}
+                        </label>
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
     {% endfor %}
     {% if filterform.tags %}
         <ul class="list-unstyled pr-1 pb-1">
@@ -48,4 +33,7 @@
     {% endif %}
     {{ filterform.page }}
 </form>
-<hr>
+
+{% if filterform.layout %}
+    <hr>
+{% endif %}

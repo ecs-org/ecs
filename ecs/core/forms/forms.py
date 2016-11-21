@@ -493,9 +493,6 @@ class SubmissionMinimalFilterForm(SubmissionFilterForm):
 class AssignedSubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES)
 
-class MySubmissionsFilterForm(SubmissionFilterForm):
-    layout = (FILTER_VOTES,)
-
 class AllSubmissionsFilterForm(SubmissionFilterForm):
     layout = (FILTER_MEETINGS, FILTER_LANE, FILTER_TYPE, FILTER_VOTES, FILTER_ASSIGNMENT)
     tags = TagMultipleChoiceField(label=_('Tags'), required=False)

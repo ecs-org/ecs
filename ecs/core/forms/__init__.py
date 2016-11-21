@@ -4,8 +4,7 @@ from ecs.core.forms.forms import (
     RoutineMeasureFormSet, InvestigatorFormSet, InvestigatorEmployeeFormSet,
     SubmissionImportForm, PresenterChangeForm, SusarPresenterChangeForm,
     SubmissionFilterForm, SubmissionMinimalFilterForm,
-    AssignedSubmissionsFilterForm,
-    MySubmissionsFilterForm, AllSubmissionsFilterForm,
+    AssignedSubmissionsFilterForm, AllSubmissionsFilterForm,
     TemporaryAuthorizationForm, AdvancedSettingsForm, EthicsCommissionFormSet,
 )
 from ecs.core.forms.comments import CommentForm

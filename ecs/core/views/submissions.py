@@ -35,8 +35,7 @@ from ecs.core.forms import (
     InvestigatorEmployeeFormSet, TemporaryAuthorizationForm,
     SubmissionImportForm, SubmissionFilterForm, SubmissionMinimalFilterForm,
     PresenterChangeForm, SusarPresenterChangeForm,
-    AssignedSubmissionsFilterForm, MySubmissionsFilterForm,
-    AllSubmissionsFilterForm,
+    AssignedSubmissionsFilterForm, AllSubmissionsFilterForm,
 )
 from ecs.core.forms.review import CategorizationForm, BiasedBoardMemberForm
 from ecs.core.forms.layout import SUBMISSION_FORM_TABS
@@ -1334,7 +1333,12 @@ def my_submissions(request):
         .order_by('-modtime')
     )
 
-    return submission_list(request, submissions, stashed_submission_forms=stashed, filtername='submission_filter_mine', filter_form=MySubmissionsFilterForm, title=_('My Studies'))
+    return submission_list(request, submissions,
+        stashed_submission_forms=stashed,
+        filtername='submission_filter_mine',
+        filter_form=SubmissionMinimalFilterForm,
+        title=_('My Studies'),
+    )
 
 
 @forceauth.exempt
