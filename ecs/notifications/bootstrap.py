@@ -7,8 +7,7 @@ from ecs.integration.utils import setup_workflow_graph
 from ecs.utils import Args
 from ecs.notifications.workflow import (
     InitialAmendmentReview, EditNotificationAnswer, AutoDistributeNotificationAnswer,
-    SafetyNotificationReview, SignNotificationAnswer, SimpleNotificationReview,
-    WaitForMeeting,
+    SignNotificationAnswer, SimpleNotificationReview, WaitForMeeting,
     is_susar, is_report, is_center_close, is_amendment, is_rejected_and_final,
     is_substantial, needs_further_review, needs_signature, needs_distribution,
 )
@@ -87,7 +86,7 @@ def notification_workflow():
         auto_start=True,
         nodes={
             'start': Args(Generic, start=True, name='Start'),
-            'safety_review': Args(SafetyNotificationReview, group=OFFICE_GROUP, name=_('Safety Review')),
+            'safety_review': Args(SimpleNotificationReview, group=OFFICE_GROUP, name=_('Safety Review')),
             'distribute_notification_answer': Args(AutoDistributeNotificationAnswer, name=_('Distribute Notification Answer')),
 
             # reports
@@ -108,11 +107,13 @@ def notification_workflow():
             (('start', 'initial_amendment_review'), Args(guard=is_amendment)),
 
             # safety reports
-            (('safety_review', 'distribute_notification_answer'), None),
+            (('safety_review', 'executive_report_review'), Args(guard=is_rejected_and_final, negated=True)),
+            (('safety_review', 'distribute_notification_answer'), Args(guard=is_rejected_and_final)),
 
             # reports
-            (('office_report_review', 'executive_report_review'), None),
-            (('executive_report_review', 'office_report_review'), Args(guard=needs_further_review)),
+            (('office_report_review', 'executive_report_review'), Args(guard=is_rejected_and_final, negated=True)),
+            (('office_report_review', 'distribute_notification_answer'), Args(guard=is_rejected_and_final)),
+            (('executive_report_review', 'start'), Args(guard=needs_further_review)),
             (('executive_report_review', 'distribute_notification_answer'), Args(guard=needs_further_review, negated=True)),
 
             # amendments

@@ -71,7 +71,7 @@ class SafetyNotificationForm(NotificationForm):
         
     class Meta:
         model = SafetyNotification
-        exclude = NotificationForm._meta.exclude + ('reviewer',)
+        exclude = NotificationForm._meta.exclude
 
 
 class SingleStudyNotificationForm(NotificationForm):

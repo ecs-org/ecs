@@ -539,7 +539,7 @@ class SubmissionForm(models.Model):
         s = self.submission
         if s.presenter == user and self.is_current:
             diff_notifications = Notification.objects.filter(submission_forms__submission=self.submission, type__includes_diff=True)
-            if not diff_notifications.unanswered().exists() and not diff_notifications.filter(answer__published_at=None).answered().exists():
+            if not diff_notifications.pending().exists():
                 return s.is_active
         return False
 

@@ -7,10 +7,9 @@ from ecs.workflow.patterns import Generic
 from ecs.meetings.signals import on_meeting_start, on_meeting_end
 from ecs.notifications.models import (
     Notification, CompletionReportNotification, ProgressReportNotification,
-    SafetyNotification, CenterCloseNotification, NOTIFICATION_MODELS,
-    NotificationAnswer,
+    SafetyNotification, CenterCloseNotification, AmendmentNotification,
+    NOTIFICATION_MODELS, NotificationAnswer,
 )
-from ecs.users.utils import get_current_user
 
 
 for cls in NOTIFICATION_MODELS:
@@ -31,7 +30,7 @@ def is_center_close(wf):
 
 @guard(model=Notification)
 def is_amendment(wf):
-    return wf.data.type.name == "Amendment"
+    return AmendmentNotification.objects.filter(pk=wf.data.pk).exists()
 
 @guard(model=Notification)
 def needs_further_review(wf):
@@ -57,15 +56,16 @@ def needs_distribution(wf):
 
 class BaseNotificationReview(Activity):
     def get_url(self):
-        return reverse('ecs.notifications.views.edit_notification_answer', kwargs={'notification_pk': self.workflow.data.pk})
-
-    def get_final_urls(self):
-        return super().get_final_urls() + [reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.workflow.data.pk})]
+        return reverse('ecs.notifications.views.edit_notification_answer',
+            kwargs={'notification_pk': self.workflow.data.pk})
 
     def receive_token(self, source, trail=(), repeated=False):
         token = super().receive_token(source, trail=trail, repeated=repeated)
-        if trail[0].node.uid != 'start':
-            token.task.review_for = trail[0].task
+        prev = trail[0]
+        if prev.node.uid == 'start':
+            prev = prev.trail.first()
+        if prev:
+            token.task.review_for = prev.task
             token.task.save()
         return token
 
@@ -108,22 +108,19 @@ class SimpleNotificationReview(BaseNotificationReview):
     class Meta:
         model = Notification
 
+    def get_choices(self):
+        return (
+            (True, _('Ready'), 'info'),
+            (False, _('Reject'), 'danger'),
+        )
 
-class SafetyNotificationReview(Activity):
-    class Meta:
-        model = Notification
-
-    def get_url(self):
-        return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.workflow.data.pk})
-        
     def pre_perform(self, choice):
-        notification = self.workflow.data.safetynotification
-        notification.is_acknowledged = True
-        notification.reviewer = get_current_user()
-        notification.save()
-
-        NotificationAnswer.objects.create(notification=notification, is_final_version=True,
-            text=_('Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung.'))
+        if not choice:
+            answer = self.workflow.data.answer
+            answer.is_valid = True
+            answer.is_rejected = True
+            answer.is_final_version = True
+            answer.save()
 
 
 class WaitForMeeting(Generic):
