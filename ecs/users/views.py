@@ -76,7 +76,9 @@ def login(request, *args, **kwargs):
         profile.session_key = request.session.session_key
         profile.save()
 
-        Session.objects.filter(session_key=old_session_key).update(expire_date=timezone.now())
+        if not settings.DEBUG:
+            Session.objects.filter(session_key=old_session_key).update(
+                expire_date=timezone.now())
 
     return response
 
