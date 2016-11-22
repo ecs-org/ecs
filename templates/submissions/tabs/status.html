@@ -1,14 +1,18 @@
 {% load i18n userutils core %}
 <table class="table table-sm">
+    <colgroup>
+        <col class="bg-faded">
+        <col class="w-100">
+    </colgroup>
     {% if user.profile.is_internal %}
         <tr>
-            <th class="bg-faded">{% trans 'Tags' %}</th>
+            <th class="text-nowrap">{% trans 'Tags' %}</th>
             <td>
                 <div data-widget-url="{% url 'ecs.tags.views.assign' submission_pk=submission.pk %}"></div>
             </td>
         </tr>
     {% endif %}
-    <tr><th class="bg-faded">Formulare</th><td colspan="3">
+    <tr><th class="text-nowrap">Formulare</th><td>
         <table class="table table-sm">
             <thead>
                 <tr>
@@ -103,8 +107,8 @@
         </table>
     </td></tr>
     <tr>
-        <th class="bg-faded">Eingereicht von</th>
-        <td colspan="3">
+        <th class="text-nowrap">Eingereicht von</th>
+        <td>
             {% with submission.presenter.profile.organisation as organisation %}
                 {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
@@ -114,8 +118,8 @@
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Sicherheitsmeldungsersteller</th>
-        <td colspan="3">
+        <th class="text-nowrap">Sicherheitsmeldungsersteller</th>
+        <td>
             {% with submission.susar_presenter.profile.organisation as organisation %}
                 {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
@@ -125,21 +129,21 @@
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Antragsteller</th>
+        <th class="text-nowrap">Antragsteller</th>
         {% with submission_form.submitter_organisation as organisation %}
-            <td colspan="3">{{ submission_form.submitter }}{% if organisation %} ({{ organisation }}){% endif %}</td>
+            <td>{{ submission_form.submitter }}{% if organisation %} ({{ organisation }}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
-        <th class="bg-faded">Sponsor</th>
+        <th class="text-nowrap">Sponsor</th>
         {% with submission_form.sponsor_name as organisation %}
-            <td colspan="3">{{ submission_form.sponsor }}{% if organisation %} ({{ organisation }}){% endif %}</td>
+            <td>{{ submission_form.sponsor }}{% if organisation %} ({{ organisation }}){% endif %}</td>
         {% endwith %}
     </tr>
     <tr>
-        <th class="bg-faded">Rechnungsempfänger</th>
+        <th class="text-nowrap">Rechnungsempfänger</th>
         {% with submission_form.invoice_name as organisation %}
-            <td colspan="3">
+            <td>
             {% if organisation %}
                 {{ submission_form.invoice_contact }}{% if organisation %} ({{ organisation }}){% endif %}
             {% else %}
@@ -149,8 +153,8 @@
         {% endwith %}
     </tr>
     <tr>
-        <th class="bg-faded">Hauptprüfer</th>
-        <td colspan="3">
+        <th class="text-nowrap">Hauptprüfer</th>
+        <td>
             {% with submission_form.primary_investigator as pi %}
                 {% if pi %}
                     {{ pi.contact.full_name }}{% if pi.organisation %} ({{ pi.organisation }}){% endif %}
@@ -161,33 +165,33 @@
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Phase</th>
-        <td colspan="3">
+        <th class="text-nowrap">Phase</th>
+        <td>
             {{ submission.lifecycle_phase }}
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Typ</th>
-        <td colspan="3">
+        <th class="text-nowrap">Typ</th>
+        <td>
             {{ submission_form.get_type_display }}
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Kategorien</th>
-        <td colspan="3">
+        <th class="text-nowrap">Kategorien</th>
+        <td>
             {% for cat in submission.medical_categories.all %}
                 {{ cat }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
         </td>
     </tr>
     <tr>
-        <th class="bg-faded">Ethikkommission</th>
-        <td colspan="3">{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
+        <th class="text-nowrap">Ethikkommission</th>
+        <td>{{ submission_form.main_ethics_commission|default:'<em>Keine Angabe</em>' }}</td>
     </tr>
     {% if user.profile.is_internal %}
     <tr>
-        <th class="bg-faded">Arbeitsablauf</th>
-        <td colspan="3">
+        <th class="text-nowrap">Arbeitsablauf</th>
+        <td>
             {% if submission.workflow_lane %}
                 {{ submission.get_workflow_lane_display }}
             {% else %}
@@ -197,8 +201,8 @@
     </tr>
     {% endif %}
     <tr>
-        <th class="bg-faded">Sitzungen</th>
-        <td colspan="3">
+        <th class="text-nowrap">Sitzungen</th>
+        <td>
             {% sudo %}{# non-internal users aren't allowed to see meetings by default (see auth_conf.py) #}
             {% for meeting in submission.meetings.all %}
                 <div>
@@ -217,8 +221,8 @@
     </tr>
     {% if user.profile.is_internal %}
     <tr>
-        <th class="bg-faded">Voten</th>
-        <td colspan="3">
+        <th class="text-nowrap">Voten</th>
+        <td>
             {% for vote in published_votes %}
                 {% if vote.result %}
                 <div>{{ vote.result_text }}{% if vote.top %} (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }}){% endif %}</div>
@@ -229,7 +233,7 @@
     {% endif %}
     {% if user.profile.is_internal and external_review_checklists %}
     <tr>
-        <th class="bg-faded">Gutachten</th>
+        <th class="text-nowrap">Gutachten</th>
         <td>
             {% for checklist in external_review_checklists %}
                 <div>{{ checklist }} [{{ checklist.get_status_display }}]
@@ -241,7 +245,7 @@
     </tr>
     {% elif user not in submission_form.get_presenting_parties %}
         <tr>
-            <th class="bg-faded">Gutachten erforderlich</th>
+            <th class="text-nowrap">Gutachten erforderlich</th>
             <td>{{ external_review_checklists|yesno }}</td>
         </tr>
     {% endif %}
