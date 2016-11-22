@@ -456,13 +456,3 @@
         clear: both;
     }
 }
-
-#expedited_reviewer_invitation {
-    ol {
-        display: inline-block;
-        list-style: none outside none;
-    }
-    input[type="submit"] {
-        margin: 0 0 0 15px;
-    }
-}

@@ -1,24 +1,25 @@
-{% load i18n core %}
+{% load i18n core widget_tweaks %}
 
-<div id="expedited_reviewer_invitation">
+<div id="expedited_reviewer_invitation" class="my-1">
     <form class="open-in-widget" action="{{ request.path }}" method="post">
         {% csrf_token %}
-        <ol>
-        {% for field in form %}
-            {% include 'forms/field.html' %}
-        {% endfor %}
-        </ol>
-        <input class="btn btn-sm btn-primary" type="submit" value="{% trans 'Send Invitations' %}"/>
+        <div class="DateTimeField input-group">
+            {% render_field form.start class+="form-control" error_class="form-control-danger" %}
+            <span class="input-group-btn">
+                <input class="btn btn-primary" type="submit" value="{% trans 'Send Invitations' %}" />
+            </span>
+        </div>
     </form>
-    <div>
-        {% if meeting.expedited_reviewer_invitation_sent_for %}
+    {% if meeting.expedited_reviewer_invitation_sent_for %}
+        <div class="mt-1">
             {% with meeting.expedited_reviewer_invitation_sent_for as sent_for %}
-            {% with meeting.expedited_reviewer_invitation_sent_at as sent_at %}
-                Letzter kommunizierter Termin: {{ sent_for|date:'d.m.Y H:i' }} (verschickt am {{ sent_at|date:'d.m.Y' }})
+                {% with meeting.expedited_reviewer_invitation_sent_at as sent_at %}
+                    Letzter kommunizierter Termin: {{ sent_for|date:'d.m.Y H:i' }}
+                    (verschickt am {{ sent_at|date:'d.m.Y' }})
+                {% endwith %}
             {% endwith %}
-            {% endwith %}
-        {% endif %}
-    </div>
+        </div>
+    {% endif %}
 </div>
 
 <script type="text/javascript">

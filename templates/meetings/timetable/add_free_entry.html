@@ -3,11 +3,13 @@
 <form action="{{ request.path }}" method="post" class="form_main open-in-widget">
     {% csrf_token %}
     <h3>Neuer TOP</h3>
-    <ol>
+    <div>
         {% for field in form %}
-            {% include "forms/field.html" %}
+            {% include "bootstrap/form_field.html" %}
         {% endfor %}
-    </ol>
-    <span class="cancel"><a class="open-in-widget" href="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}">Abbrechen (zurück zur Sitzung)</a></span>
-    <input type="submit" value="Speichern" />
+    </div>
+    <input class="btn btn-primary" type="submit" value="Speichern" />
+    <a class="btn btn-danger open-in-widget" href="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}">
+        Abbrechen (zurück zur Sitzung)
+    </a>
 </form>

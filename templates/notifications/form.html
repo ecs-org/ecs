@@ -68,13 +68,11 @@
                         {% if legend %}
                             <h3>{{ legend }}</h3>
                         {% endif %}
-                        <ol>
-                            {% for field_name in fields %}
-                                {% with form|getitem:field_name as field %}
-                                    {% include "forms/field.html" %}
-                                {% endwith %}
-                            {% endfor %}
-                        </ol>
+                        {% for field_name in fields %}
+                            {% with form|getitem:field_name as field %}
+                                {% include "bootstrap/form_field.html" %}
+                            {% endwith %}
+                        {% endfor %}
                     </div>
                 {% endfor %}
             </div>

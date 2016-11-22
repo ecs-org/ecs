@@ -46,6 +46,7 @@
                     <th>{% trans 'E-Mail' %}</th>
                 {% endif %}
                 <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -61,12 +62,14 @@
                         <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission_form.submission.pk to_user_pk=ta.user.pk %}" target="_blank">
                             <span class="fa fa-envelope-o"></span>
                             {% trans "Send Message" %}
-                        </a><br>
+                        </a>
+                    </td>
                         {% if ta.is_active and user.profile.is_executive_board_member %}
-                            <a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}">
-                                <span class="fa fa-times"></span>
-                                {% trans 'Revoke' %}
-                            </a><br>
+                            <td>
+                                <a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}">
+                                    <span class="fa fa-ban text-danger"></span>
+                                </a>
+                            </td>
                         {% endif %}
                     </td>
                 </tr>
@@ -75,17 +78,13 @@
     </table>
 {% endif %}
 {% if user.profile.is_executive_board_member %}
-    <div>
-        <form class="authorize" action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
-            {% csrf_token %}
-            <ol>
-            {% for field in temporary_auth_form %}
-                {% include 'forms/field.html' %}
-            {% endfor %}
-            </ol>
-            <input type="submit" value="{% trans 'Authorize' %}"/>
-        </form>
-    </div>
+    <form action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
+        {% csrf_token %}
+        {% for field in temporary_auth_form %}
+            {% include 'bootstrap/form_field.html' %}
+        {% endfor %}
+        <input class="btn btn-primary mb-1" type="submit" value="{% trans 'Authorize' %}"/>
+    </form>
 {% endif %}
 
 {% if user.profile.is_internal %}

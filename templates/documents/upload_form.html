@@ -39,20 +39,18 @@
 <div class="form document_upload">
     <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <ol>
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-            {% for field in form %}
-                {% if not field.is_hidden %}
-                    {% include "forms/field.html" %}
-                {% endif %}
-            {% endfor %}
-            <li style="display:none;">
-                {% trans "Replaces document" %} <span id="replaced_document_name"></span>
-                <a href="" class="new_document">{% trans "New Document" %}</a>
-            </li>
-        </ol>
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form %}
+            {% if not field.is_hidden %}
+                {% include "bootstrap/form_field.html" %}
+            {% endif %}
+        {% endfor %}
+        <div style="display:none;">
+            {% trans "Replaces document" %} <span id="replaced_document_name"></span>
+            <a href="" class="new_document">{% trans "New Document" %}</a>
+        </div>
         <input type="submit" name="upload" value="{% trans 'Upload' %}" />
         <progress class="progress"></progress>
         <div class="warning">

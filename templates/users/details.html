@@ -7,18 +7,23 @@
 
 {% block content %}
 <div class="administration_detail form_main">
-<h2>{{ form.instance }} ({{ form.instance.email }})</h2>
-
-<p><a href="{% url 'ecs.users.views.administration' %}">{% trans "Back to the List of Users" %}</a></p>
-<form action="" method="post">
-    {% csrf_token %}
-    <ol>
+    <h2>{{ form.instance }} ({{ form.instance.email }})</h2>
+    <p>
+        <a href="{% url 'ecs.users.views.administration' %}">
+            {% trans "Back to the List of Users" %}
+        </a>
+    </p>
+    <form action="" method="post">
+        {% csrf_token %}
         {% for field in form %}
-            {% include "forms/field.html" %}
+            {% include "bootstrap/form_field.html" %}
         {% endfor %}
-    </ol>
-    <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}" />
-</form>
+        <div class="row my-2">
+            <div class="col-md-6 push-md-3">
+                <input class="btn btn-primary btn-block" type="submit" value="{% trans 'Save' %}" />
+            </div>
+        </div>
+    </form>
 </div>
 {% endblock %}
 

@@ -37,9 +37,9 @@
                 {% include 'bootstrap/form_field.html' with field=form.default_contact %}
                 {% include 'bootstrap/form_field.html' with field=form.logo_file %}
                 {% include 'bootstrap/form_field.html' with field=form.print_logo_file %}
-                {% include 'bootstrap/form_check.html' with field=form.display_notifications_in_protocol %}
-                {% include 'bootstrap/form_check.html' with field=form.display_biased_in_amendment_answer_pdf %}
-                {% include 'bootstrap/form_check.html' with field=form.require_internal_vote_review %}
+                {% include 'bootstrap/form_field.html' with field=form.display_notifications_in_protocol %}
+                {% include 'bootstrap/form_field.html' with field=form.display_biased_in_amendment_answer_pdf %}
+                {% include 'bootstrap/form_field.html' with field=form.require_internal_vote_review %}
                 {% include 'bootstrap/form_field.html' with field=form.address %}
                 {% include 'bootstrap/form_field.html' with field=form.meeting_address %}
                 {% include 'bootstrap/form_field.html' with field=form.contact_email %}

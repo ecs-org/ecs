@@ -1,18 +1,34 @@
 {% load core widget_tweaks %}
 
-<div class="form-group{% if field.errors %} has-danger{% endif %}">
-    <label for="{{ field.id_for_label }}">
-        {{ field.label }}
-        {% if field.field.required %}
-            <span class="text-danger">*</span>
-        {% endif %}
-    </label>
-    {% if field.field|type_name == "DateTimeField" %}
-        <div class="DateTimeField input-group">
-            {% render_field field class+="form-control" error_class="form-control-danger" %}
+<div class="form-group {% if field.errors %} has-danger{% endif %}">
+    {% if field.field|type_name == "BooleanField" %}
+        <div class="form-check">
+            <label class="form-check-label">
+                {% render_field field class+="form-check-input" %}
+                {{ field.label }}
+                {% if field.field.required %}
+                    <span class="text-danger">*</span>
+                {% endif %}
+            </label>
         </div>
     {% else %}
-        {% render_field field class+="form-control" error_class="form-control-danger" %}
+        <label for="{{ field.id_for_label }}">
+            {{ field.label }}
+            {% if field.field.required %}
+                <span class="text-danger">*</span>
+            {% endif %}
+        </label>
+        {% if field.field|type_name == "DateTimeField" %}
+            <div class="DateTimeField input-group">
+                {% render_field field class+="form-control" error_class="form-control-danger" %}
+            </div>
+        {% elif field.field|type_name == "DateField"%}
+            <div class="DateField">
+                {% render_field field class+="form-control" error_class="form-control-danger" %}
+            </div>
+        {% else %}
+            {% render_field field class+="form-control" error_class="form-control-danger" %}
+        {% endif %}
     {% endif %}
     {% if field.errors %}
         <div class="form-control-feedback">
