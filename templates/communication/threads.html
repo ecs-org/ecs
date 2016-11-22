@@ -52,6 +52,14 @@
     </div>
 
     <table class="table table-sm">
+        <colgroup>
+            <col>
+            <col>
+            <col>
+            <col class="w-100">
+            <col>
+            <col>
+        </colgroup>
         <thead>
             <tr>
                 <th></th>
@@ -65,7 +73,7 @@
         <tbody>
             {% for thread in page.object_list %}
                 <tr {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}class="font-weight-bold"{% endif %}>
-                    <td>
+                    <td class="pr-1">
                         {% if thread|starred_by:user %}
                             {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
                             <a class="open-in-widget fa fa-2x fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
@@ -74,7 +82,7 @@
                             <a class="open-in-widget fa fa-2x fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
                         {% endif %}
                     </td>
-                    <td class="col-xs-4 col-lg-3 col-xl-2 align-middle">
+                    <td class="text-nowrap align-middle">
                         {% if thread.last_message.sender == user %}
                             <span class="fa fa-paper-plane-o"></span>
                             {% trans "an" %} {{ thread.last_message.receiver }}
@@ -83,7 +91,7 @@
                             {% trans "von" %} {{ thread.last_message.sender }}
                         {% endif %}
                     </td>
-                    <td class="align-middle">
+                    <td class="text-nowrap align-middle">
                         {% if thread.submission %}
                             {{ thread.submission|ec_number }}
                         {% endif %}
@@ -94,11 +102,11 @@
                             {{ thread.subject|truncatewords:10 }}
                         </a>
                     </td>
-                    <td class="align-middle text-xs-right">
+                    <td class="text-nowrap align-middle text-xs-right">
                         {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
                         {{ thread.last_message.timestamp|date:'H:i'}}
                     </td>
-                    <td class="align-middle">
+                    <td class="pl-1 align-middle">
                     {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
                         {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
                         <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
