@@ -898,13 +898,10 @@ def diff(request, old_submission_form_pk, new_submission_form_pk):
     })
 
 
-def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', order_by=None, extra_context=None, title=None):
+def submission_list(request, submissions, stashed_submission_forms=None, template='submissions/list.html', keyword=None, filter_form=SubmissionFilterForm, filtername='submission_filter', extra_context=None, title=None):
     if not title:
         title = _('Submissions')
     usersettings = request.user.ecs_settings
-
-    if order_by is None:
-        order_by = ('ec_number',)
 
     filterform = filter_form(request.POST or getattr(usersettings, filtername))
 
@@ -914,7 +911,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         .prefetch_related(Prefetch('meetings',
             queryset=Meeting.unfiltered.order_by('start')))
         .distinct()
-        .order_by(*order_by))
+        .order_by('-ec_number'))
 
     if request.user.profile.is_internal:
         submissions = submissions.prefetch_related('tags')
@@ -1314,7 +1311,6 @@ def all_submissions(request):
         'filter_form': SubmissionMinimalFilterForm,
         'extra_context': extra_context,
         'title': _('Study Search'),
-        'order_by': ('-ec_number',),
     }
     return submission_list(request, submissions, **kwargs)
 
@@ -1338,7 +1334,6 @@ def my_submissions(request):
         filtername='submission_filter_mine',
         filter_form=SubmissionMinimalFilterForm,
         title=_('My Studies'),
-        order_by=('-ec_number',),
     )
 
 
