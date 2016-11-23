@@ -1,7 +1,7 @@
 {% load core i18n %}
 
 {% if not formset.readonly %}
-    <form action="" method="post" class="review {% if formset.bound_to_task %}bound_to_task{% endif %}">
+    <form action="{{ request.path }}" method="post" class="review bound_to_task">
     {% csrf_token %}
     {{ formset.management_form }}
 {% endif %}
@@ -41,10 +41,5 @@
 </ol>
 
 {% if not formset.readonly %}
-    {% if not formset.bound_to_task %}
-        <input type="submit" name="save" value="{% trans "save" %}" />
-        <input style="display:none;" type="submit" name="complete_task" value="complete_task" />
-        <input style="display:none;" type="submit" name="really_complete_task" value="really_complete_task" />
-    {% endif %}
     </form>
 {% endif %}

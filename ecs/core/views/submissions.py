@@ -274,7 +274,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'current_form_idx': current_form_idx,
         'checklist_reviews': checklist_reviews,
         'checklist_summary': checklist_summary,
-        'open_checklist': any(not f.readonly for c,f in checklist_reviews),
         'open_notifications': notifications.pending(),
         'answered_notifications': notifications.exclude(pk__in=Notification.objects.pending().values('pk').query),
         'stashed_notifications': stashed_notifications,
@@ -517,7 +516,6 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     if request.method == 'GET' and not submission_form.is_current:
         return redirect('ecs.core.views.submissions.checklist_review', submission_form_pk=submission_form.submission.current_submission_form.pk, blueprint_pk=blueprint_pk)
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
-    related_task = request.related_tasks[0]
 
     user = request.user if blueprint.multiple else get_user('root@system.local')
     with sudo():
@@ -527,38 +525,24 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     if created:
         for question in blueprint.questions.order_by('text'):
             checklist.answers.get_or_create(question=question)
-        checklist.save() # touch the checklist instance to trigger the post_save signal (for locking status)
+
+        # XXX: trigger the post_save signal (for locking status)
+        checklist.save()
 
     formset = ChecklistAnswerFormSet(request.POST or None,
         prefix='checklist{}'.format(checklist.id),
         queryset=checklist.answers.order_by('question__index'))
-    formset.related_task = related_task
-    formset.bound_to_task = request.task_management.task
 
     extra_context = {}
 
-    if request.method == 'POST':
-        if formset.is_valid():
-            complete_task = request.POST.get('complete_task') == 'complete_task'
-            really_complete_task = request.POST.get('really_complete_task') == 'really_complete_task'
+    if request.method == 'POST' and formset.is_valid():
+        formset.save()
+        checklist.save()    # XXX: trigger post_save signal
 
-            formset.save()
-            checklist.save()    # XXX: trigger post_save signal
-
-            if (complete_task or really_complete_task) and not checklist.is_complete:
-                messages.error(request, _('Your review is incomplete.'))
-            elif really_complete_task and checklist.is_complete:
-                checklist.status = 'completed'
-                checklist.save()
-                if checklist.blueprint.allow_pdf_download:
-                    checklist.render_pdf_document()
-                related_task.done(request.user)
-                return redirect(related_task.afterlife_url)
-            elif complete_task and checklist.is_complete:
-                extra_context['review_complete'] = checklist.pk
-
-    return readonly_submission_form(request, submission_form=submission_form,
+    response = readonly_submission_form(request, submission_form=submission_form,
         checklist_overwrite={checklist: formset}, extra_context=extra_context)
+    response.has_errors = not formset.is_valid()
+    return response
 
 
 @task_required

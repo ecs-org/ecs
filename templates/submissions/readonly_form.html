@@ -31,23 +31,13 @@
         {% endif %}
         
         {% if not request.task_management.form %}
-            {% if not open_checklist %}
-                {% with submission.external_review_task as external_review_task %}
-                    {% if external_review_task %}
-                        <a href="{{ external_review_task.url }}">{% trans 'Start External Review' %}</a>
-                    {% endif %}
-                {% endwith %}
-            {% endif %}
-            {% for checklist, checklist_review_form in checklist_reviews %}
-                {% if not checklist_review_form.readonly %}
-                    {% if checklist_review_form.related_task %}
-                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}save {{ review }}{% endblocktrans %}</a>
-                        <a class="review button_submit" id="close_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist_review_form.related_task.task_type as review %}complete {{ review }}{% endblocktrans %}</a>
-                    {% else %}
-                        <a class="review button_save" id="save_checklist_{{ checklist.pk }}_review_form" href="">{% blocktrans with checklist.blueprint.name as review %}save {{ review }}{% endblocktrans %}</a>
-                    {% endif %}
+            {% with external_review_task=submission.external_review_task %}
+                {% if external_review_task %}
+                    <a href="{{ external_review_task.url }}">
+                        {% trans 'Start External Review' %}
+                    </a>
                 {% endif %}
-            {% endfor %}
+            {% endwith %}
         {% endif %}
     </div>
 {% endblock %}
@@ -408,32 +398,6 @@
                             "{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote_review_form.instance.pk %}"
                         )
                     );
-                });
-            {% endif %}
-
-
-            $('.header_actions a.review[id^=save_]').click(function(ev) {
-                ev.preventDefault();
-                var tab = $(this).attr('id').substring('save_'.length);
-                $('#' + tab).find('input[type="submit"][name="save"]').click();
-            });
-
-            $('.header_actions a.review[id^=close_]').click(function(ev) {
-                ev.preventDefault();
-                var tab = $(this).attr('id').substring('close_'.length);
-                $('#' + tab).find('input[type="submit"][name="complete_task"]').click();
-            });
-
-            {% if review_complete %}
-                ecs.confirm({
-                    question: '{{ _("Do you want to close the review and send it to the EC?")|escapejs }}',
-                    ok: '{{ _("Yes")|escapejs }}',
-                    cancel: '{{ _("No")|escapejs }}',
-                    success: function() {
-                        $('#checklist_{{ review_complete }}_review_form')
-                            .find('input[type="submit"][name="really_complete_task"]')
-                            .click();
-                    }
                 });
             {% endif %}
 

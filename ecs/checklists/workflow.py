@@ -42,6 +42,11 @@ class ExternalReview(Activity):
         submission_form_id = checklist.submission.current_submission_form_id
         return reverse('ecs.core.views.submissions.checklist_review', kwargs={'submission_form_pk': submission_form_id, 'blueprint_pk': blueprint_id})
 
+    def get_choices(self):
+        return (
+            (None, _('Finish'), 'success'),
+        )
+
     def get_final_urls(self):
         checklist = self.workflow.data
         blueprint_id = checklist.blueprint_id
@@ -67,6 +72,12 @@ class ExternalReview(Activity):
             url = reverse('ecs.tasks.views.do_task', kwargs={'task_pk': token.task.pk})
             send_system_message_template(c.user, _('Request for review'), 'checklists/external_reviewer_invitation.txt', {'task': token.task, 'meeting': meeting, 'price': price, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX, 'url': url}, submission=c.submission)
         return token
+
+    def pre_perform(self, choice):
+        checklist = self.workflow.data
+        checklist.status = 'completed'
+        checklist.save()
+        checklist.render_pdf_document()
 
 @receiver(post_save, sender=Checklist)
 def unlock_external_review(sender, **kwargs):

@@ -65,7 +65,6 @@ class UserProfile(models.Model):
             'EC-Signing',
         })
         self.has_explicit_workflow = bool(groups - {
-            'External Reviewer',
             'Meeting Protocol Receiver',
             'Userswitcher Target',
         })

@@ -67,7 +67,6 @@ class TaskQuerySet(models.QuerySet):
         return self.exclude(task_type__workflow_node__uid__in=(
             'resubmission',
             'b2_resubmission',
-            'external_review',
             'paper_submission_review',
         ))
 
@@ -162,7 +161,7 @@ class Task(models.Model):
 
     @property
     def managed_transparently(self):
-        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'external_review', 'vote_signing']
+        return self.task_type.workflow_node.uid in ['resubmission', 'b2_resubmission', 'vote_signing']
 
     @property
     def is_locked(self):
