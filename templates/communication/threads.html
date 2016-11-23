@@ -7,49 +7,54 @@
 {% block headertitle %}{% trans "Communication" %} ({% unread_msg_count %}){% endblock %}
 
 {% block content %}
-    <div class="messages_header mb-1">
-        <form id="thread_list_filter" action="" method="post">
-            {% csrf_token %}
-            <div class="thread_list_choose">
-                <label>
-                    {{ filterform.incoming }}
-                    <span class="fa fa-envelope-o"></span>
-                    {% trans "Incoming" %}
-                </label>
 
-                <label>
-                    {{ filterform.outgoing }}
-                    <span class="fa fa-paper-plane-o"></span>
-                    {% trans "Outgoing" %}
-                </label>
-            </div>
-            <div class="thread_list_choose">
-                <label>
-                    {{ filterform.starred }}
-                    <span class="fa fa-star"></span>
-                    {% trans "Starred" %}
-                </label>
-
-                <label>
-                    {{ filterform.unstarred }}
-                    <span class="fa fa-star-o"></span>
-                    {% trans "Not Starred" %}
-                </label>
-            </div>
-        </form>
-        <div class="sort_options">
-            <span class="fa fa-sort"></span>
-            <a href="{{ request.path }}?sort={% if sort == 'submission' %}-{% endif %}submission">
-                {% trans 'Submission' %}
-            </a> |
-            <a href="{{ request.path }}?sort={% if sort == 'user' %}-{% endif %}user">
-                {% trans "Person" %}
-            </a> |
-            <a href="{{ request.path }}?sort={% if sort == 'timestamp' %}-{% endif %}timestamp">
-                {% trans "Old/New" %}
-            </a>
-        </div>
-    </div>
+    <form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline">
+        {% csrf_token %}
+        <ul class="list-unstyled">
+            <li>
+                {{ filterform.incoming }}
+                <span class="fa fa-envelope-o"></span>
+                {% trans "Incoming" %}
+            </li>
+            <li>
+                {{ filterform.outgoing }}
+                <span class="fa fa-paper-plane-o"></span>
+                {% trans "Outgoing" %}
+            </li>
+        </ul>
+        <ul class="list-unstyled">
+            <li>
+                {{ filterform.starred }}
+                <span class="fa fa-star"></span>
+                {% trans "Starred" %}
+            </li>
+            <li>
+                {{ filterform.unstarred }}
+                <span class="fa fa-star-o"></span>
+                {% trans "Not Starred" %}
+            </li>
+        </ul>
+        <ul class="list-unstyled">
+            <li>
+                <span class="fa fa-sort"></span>
+                <a href="{{ request.path }}?sort={% if sort == 'submission' %}-{% endif %}submission">
+                    {% trans 'Submission' %}
+                </a>
+            </li>
+            <li>
+                <span class="fa fa-sort"></span>
+                <a href="{{ request.path }}?sort={% if sort == 'user' %}-{% endif %}user">
+                    {% trans "Person" %}
+                </a>
+            </li>
+            <li>
+                <span class="fa fa-sort"></span>
+                <a href="{{ request.path }}?sort={% if sort == 'timestamp' %}-{% endif %}timestamp">
+                    {% trans "Old/New" %}
+                </a>
+            </li>
+        </ul>
+    </form>
 
     <table class="table table-sm">
         <colgroup>
