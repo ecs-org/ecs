@@ -10,12 +10,28 @@
 {% block content %}
 
     <table class="table table-sm">
+        <colgroup>
+            <col style="width: 50%;">
+            <col>
+            <col>
+            <col>
+            <col>
+            <col style="width: 10%;">
+            <col style="width: 5%;">
+            <col style="width: 5%;">
+        </colgroup>
         <thead>
             <tr>
-                <th>Sitzung</th>
-                <th>Datum</th>
-                <th>Beginn</th>
-                <th class="text-xs-right">Ende</th>
+                <th>{% trans 'Title' %}</th>
+                <th class="text-xs-center pr-1" colspan="2">
+                    {% trans 'Deadline for Thesis Submission' %}
+                </th>
+                <th class="text-xs-center" colspan="2">
+                    {% trans 'Deadline for Submission' %}
+                </th>
+                <th>{% trans 'Scheduled for' %}</th>
+                <th>{% trans 'Start' %}</th>
+                <th>{% trans 'End' %}</th>
             </tr>
         </thead>
         <tbody>
@@ -26,13 +42,25 @@
                         {{ meeting.title }}
                     </a>
                 </td>
-                <td>
+                <td class="text-xs-right px-1">
+                    {{ meeting.deadline_diplomathesis|date:'d.m.Y' }}
+                </td>
+                <td class="px-1">
+                    {{ meeting.deadline_diplomathesis|date:'H:i' }}
+                </td>
+                <td class="text-xs-right px-1">
+                    {{ meeting.deadline|date:'d.m.Y' }}
+                </td>
+                <td class="px-1">
+                    {{ meeting.deadline|date:'H:i' }}
+                </td>
+                <td class="pr-1">
                     {{ meeting.start|date:'d.m.Y' }}
                 </td>
-                <td>
+                <td class="pr-1">
                     {{ meeting.start|date:'H:i' }}
                 </td>
-                <td class="text-xs-right">
+                <td class="pr-1">
                     {{ meeting.end|date:'H:i' }}
                 </td>
             </tr>
