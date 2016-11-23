@@ -12,10 +12,6 @@ class DeclineTaskForm(forms.Form):
     message = forms.CharField(required=False)
     
 
-class TaskChoiceField(forms.ModelChoiceField):
-    def label_from_instance(self, task):
-        return "%s (%s)" % (task.assigned_to, task)
-
 class ManageTaskForm(forms.Form):
     action = forms.ChoiceField(choices=[])
     assign_to = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True).order_by('last_name', 'first_name', 'email'), required=False, empty_label=_('<group>'))
@@ -27,8 +23,6 @@ class ManageTaskForm(forms.Form):
         self.user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
         fs = self.fields
-        fs['callback_task'] = TaskChoiceField(queryset=task.trail, required=False)
-        fs['related_task'] = TaskChoiceField(queryset=task.related_tasks.exclude(assigned_to=None).exclude(pk=task.pk), required=False)
         if task.task_type.is_delegatable:
             fs['action'].choices = [('delegate', _('delegate')),('message', _('message'))]
             assign_to_q = fs['assign_to'].queryset.filter(groups__task_types=task.task_type).exclude(pk=self.user.pk)
