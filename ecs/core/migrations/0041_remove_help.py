@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL('''
-            drop table help_attachment, help_page, tracking_request, tracking_view;
+            drop table if exists help_attachment, help_page, tracking_request, tracking_view;
 
             delete from auth_user_groups where group_id in (
                 select id from auth_group where name = 'Help Writer'
