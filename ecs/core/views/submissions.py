@@ -561,7 +561,7 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
         checklist_overwrite={checklist: formset}, extra_context=extra_context)
 
 
-@user_flag_required('is_internal')
+@task_required
 @with_task_management
 def vote_review(request, submission_form_pk=None):
     submission_form = get_object_or_404(SubmissionForm, pk=submission_form_pk)
