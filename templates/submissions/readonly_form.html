@@ -224,16 +224,14 @@
             {% with vote=vote_review_form.instance %}
                 <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!!</span>{% endif %}</h3>
             {% endwith %}
-            <form action="" method="post" class="review vote{% if vote_review_form.bound_to_task %} bound_to_task{% endif %}">
-                {% csrf_token %}
-                {% with vote_review_form as review_form %}
-                    {% if review_form.is_preparation %}
-                        {% include 'submissions/review_form.inc' %}
-                    {% else %}
-                        {% include 'submissions/vote_review_form.inc' %}
-                    {% endif %}
-                {% endwith %}
-            </form>
+
+            {% with vote_review_form as review_form %}
+                {% if review_form.is_preparation %}
+                    {% include 'submissions/review_form.inc' %}
+                {% else %}
+                    {% include 'submissions/vote_review_form.inc' %}
+                {% endif %}
+            {% endwith %}
 
             {% if debug and vote_review_form.instance.pk %}
                 <a href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote_review_form.instance.pk %}">
@@ -390,15 +388,14 @@
                 {% endif %}
             {% endfor %}
 
-            {% if user.profile.is_internal and vote_review_form and vote_review_form.instance.pk %}
-                $('form.review.vote .CharField textarea').each(function(){
-                    ecs.textarea.installToolbarItem(this,
-                        ecs.textarea.toolbarItems.versionHistory(
-                            "{% trans 'History' %} ({{ vote_version }})",
-                            "{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote_review_form.instance.pk %}"
-                        )
-                    );
-                });
+            {% if user.profile.is_internal and not vote_review_form.readonly and vote_review_form.instance.pk %}
+                ecs.textarea.installToolbarItem(
+                    '#{{ vote_review_form.text.id_for_label }}',
+                    ecs.textarea.toolbarItems.versionHistory(
+                        "{% trans 'History' %} ({{ vote_version }})",
+                        "{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote_review_form.instance.pk %}"
+                    )
+                );
             {% endif %}
 
             if (!$('#id_invoice_differs_from_sponsor').is(':checked'))

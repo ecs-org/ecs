@@ -381,13 +381,10 @@ def categorization(request, submission_pk=None):
             docstash.POST = request.POST
             docstash.save()
 
-    form.bound_to_task = task
-
     response = readonly_submission_form(request,
         submission_form=submission.current_submission_form,
         extra_context={'categorization_form': form,})
-    if request.method == 'POST' and not form.is_valid():
-        response.has_errors = True
+    response.has_errors = not form.is_valid()
     return response
 
 
@@ -553,9 +550,6 @@ def vote_review(request, submission_form_pk=None):
     if not vote:
         raise Http404("This SubmissionForm has no Vote yet.")
     vote_review_form = VoteReviewForm(request.POST or None, instance=vote)
-    task = request.task_management.task
-    if task:
-        vote_review_form.bound_to_task = task
     if request.method == 'POST' and vote_review_form.is_valid():
         vote_review_form.save()
 
@@ -563,8 +557,7 @@ def vote_review(request, submission_form_pk=None):
         'vote_review_form': vote_review_form,
         'vote_version': vote.version_number,
     })
-    if request.method == 'POST' and not vote_review_form.is_valid():
-        response.has_errors = True
+    response.has_errors = not vote_review_form.is_valid()
     return response
 
 @task_required
@@ -597,7 +590,6 @@ def vote_preparation(request, submission_form_pk=None):
         initial = {'text': text}
     form = VotePreparationForm(request.POST or None, instance=vote, initial=initial)
     form.is_preparation = True
-    form.bound_to_task = request.task_management.task
     
     if form.is_valid():
         vote = form.save(commit=False)
@@ -632,7 +624,6 @@ def b2_vote_preparation(request, submission_form_pk=None):
 
     form = B2VotePreparationForm(request.POST or None, instance=vote)
     form.is_preparation = True
-    form.bound_to_task = request.task_management.task
 
     if form.is_valid():
         vote = form.save(commit=False)
