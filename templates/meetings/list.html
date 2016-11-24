@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'paginator.inc' with page=meetings %}
 
     <table class="table table-sm">
         <thead>
@@ -42,6 +41,7 @@
     </table>
 
     {% include 'paginator.inc' with page=meetings %}
+
 {% endblock %}
 
 {% block menuSelection %}meetings{% endblock %}

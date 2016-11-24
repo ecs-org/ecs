@@ -33,7 +33,3 @@
     {% endif %}
     {{ filterform.page }}
 </form>
-
-{% if filterform.layout %}
-    <hr>
-{% endif %}

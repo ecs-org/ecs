@@ -1,13 +1,59 @@
 {% load i18n %}
 
-<div class="paginator text-xs-center my-1">
+<nav class="text-xs-center paginator">
+  <ul class="pagination">
     {% if page.has_previous %}
-        <a class="fa fa-fast-backward" href="{{ request.path }}?page=1" data-page="1"></a>
-        <a class="fa fa-backward" href="{{ request.path }}?page={{ page.previous_page_number }}" data-page="{{ page.previous_page_number }}"></a>
+        <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page=1" data-page="1">
+                <span class="fa fa-fast-backward"></span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ page.previous_page_number }}" data-page="{{ page.previous_page_number }}">
+                <span class="fa fa-backward"></span>
+            </a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">
+                <span class="fa fa-fast-backward"></span>
+            </span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">
+                <span class="fa fa-backward"></span>
+            </span>
+        </li>
     {% endif %}
-    {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+    <li class="page-item disabled">
+        <span class="page-link">
+            {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+        </span>
+    </li>
     {% if page.has_next %}
-        <a class="fa fa-forward" href="{{ request.path }}?page={{ page.next_page_number }}" data-page="{{ page.next_page_number }}"></a>
-        <a class="fa fa-fast-forward" href="{{ request.path }}?page={{ page.paginator.num_pages }}" data-page="{{ page.paginator.num_pages }}"></a>
+        <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ page.next_page_number }}" data-page="{{ page.next_page_number }}">
+                <span class="fa fa-forward"></span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="{{ request.path }}?page={{ page.paginator.num_pages }}" data-page="{{ page.paginator.num_pages }}">
+                <span class="fa fa-fast-forward"></span>
+            </a>
+        </li>
+    {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">
+                <span class="fa fa-forward"></span>
+            </span>
+        </li>
+        <li class="page-item disabled">
+            <span class="page-link">
+                <span class="fa fa-fast-forward"></span>
+            </span>
+        </li>
     {% endif %}
-</div>
+
+
+  </ul>
+</nav>

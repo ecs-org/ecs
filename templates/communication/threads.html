@@ -119,17 +119,64 @@
         </tbody>
     </table>
 
-    <div class="paginator text-xs-center">
+    <nav class="text-xs-center paginator">
+      <ul class="pagination">
         {% if page.has_previous %}
-            <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
-            <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}"></a>
+            <li class="page-item">
+                <a class="page-link open-in-widget" href="{{ request.path }}?p=1&amp;sort={{ sort }}">
+                    <span class="fa fa-fast-backward"></span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.previous_page_number }}&amp;sort={{ sort }}">
+                    <span class="fa fa-backward"></span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">
+                    <span class="fa fa-fast-backward"></span>
+                </span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">
+                    <span class="fa fa-backward"></span>
+                </span>
+            </li>
         {% endif %}
-        {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+        <li class="page-item disabled">
+            <span class="page-link">
+                {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+            </span>
+        </li>
         {% if page.has_next %}
-            <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}"></a>
-            <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}"></a>
+            <li class="page-item">
+                <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.next_page_number }}&amp;sort={{ sort }}">
+                    <span class="fa fa-forward"></span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}&amp;sort={{ sort }}">
+                    <span class="fa fa-fast-forward"></span>
+                </a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <span class="page-link">
+                    <span class="fa fa-forward"></span>
+                </span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">
+                    <span class="fa fa-fast-forward"></span>
+                </span>
+            </li>
         {% endif %}
-    </div>
+
+
+      </ul>
+    </nav>
+
     <div class="hint mt-1">
       <span class="fa fa-info text-info"></span>
       {% db_setting 'contact_email' as email %}
