@@ -22,7 +22,8 @@ class UserProfile(models.Model):
     is_omniscient_member = models.BooleanField(default=False)
     is_executive_board_member = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
-    has_explicit_workflow = models.BooleanField(default=False)
+    can_have_tasks = models.BooleanField(default=False)
+    can_have_open_tasks = models.BooleanField(default=False)
 
     # XXX: not backed by user groups
     is_testuser = models.BooleanField(default=False)
@@ -64,14 +65,31 @@ class UserProfile(models.Model):
             'EC-Office',
             'EC-Signing',
         })
-        self.has_explicit_workflow = bool(groups - {
-            'Meeting Protocol Receiver',
-            'Userswitcher Target',
+        self.can_have_tasks = bool(groups & {
+            'Board Member',
+            'EC-Executive Board Member',
+            'EC-Office',
+            'EC-Signing',
+            'GCP Reviewer',
+            'Insurance Reviewer',
+            'Statistic Reviewer',
+            'External Reviewer',
+            'Specialist'
+        })
+        self.can_have_open_tasks = bool(groups & {
+            'Board Member',
+            'EC-Executive Board Member',
+            'EC-Office',
+            'EC-Signing',
+            'GCP Reviewer',
+            'Insurance Reviewer',
+            'Statistic Reviewer',
         })
 
-    def show_worklow_widget(self):
+    @property
+    def show_task_widget(self):
         tasks = self.user.tasks(manager='unfiltered').open().for_widget()
-        return self.has_explicit_workflow or tasks.exists()
+        return self.can_have_tasks or tasks.exists()
 
 
 class UserSettings(models.Model):

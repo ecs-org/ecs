@@ -64,7 +64,7 @@
             {% if categorization_form %}
                 <a href="#categorization_tab"{% if not categorization_form.readonly or categorization_review %} class="readonly_review active"{% endif %}>{% trans "Categorization" %}</a>
             {% endif %}
-            {% if user.profile.show_worklow_widget %}
+            {% if user.profile.show_task_widget %}
                 <a href="#tasks_tab">{% trans 'Tasks' %}</a>
                 {% if user.profile.is_internal %}
                     <a href="#workflow_log">{% trans 'Workflow' %}</a>
@@ -329,7 +329,7 @@
             <div data-widget-url="{% url 'ecs.communication.views.communication_overview_widget' submission_pk=submission.pk %}"></div>
         </div>
     {% endif %}
-    {% if user.profile.show_worklow_widget %}
+    {% if user.profile.show_task_widget %}
         <div id="tasks_tab" class="tab collapse">
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>

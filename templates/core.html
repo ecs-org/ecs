@@ -41,7 +41,7 @@
                     ({% unread_msg_count %})
                 </a>
             </li>
-            {% if user.profile.show_worklow_widget %}
+            {% if user.profile.show_task_widget %}
                 <li class="nav-item">
                     <a class="nav-link text-primary" href="{% url 'ecs.tasks.views.task_list' %}">
                         {% trans "Tasks" %}

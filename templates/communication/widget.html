@@ -1,62 +1,70 @@
 {% load humanize i18n core communication %}
 
-<h3>{% trans "Communication" %} ({% unread_msg_count %})</h3>
+<div class="card">
+    <div class="card-block">
+        <h3 class="card-title mb-0">
+            {% trans "Communication" %} ({% unread_msg_count %})
+        </h3>
+    </div>
 
-<ul class="list-group">
-{% for thread in page.object_list %}
-    <li class="list-group-item px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
-        <div class="row mx-0 flex-items-xs-middle">
-            {% if thread|starred_by:user %}
-                {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                <a class="open-in-widget col-xs-1" href="{{ unstar_url }}?next={{ request.path|urlencode }}">
-                    <span class="fa fa-2x fa-star text-warning"></span>
-                </a>
-            {% else %}
-                {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                <a class="open-in-widget col-xs-1" href="{{ star_url }}?next={{ request.path|urlencode }}">
-                    <span class="fa fa-2x fa-star-o text-muted"></span>
-                </a>
-            {% endif %}
-            <div class="col-xs">
-                {% if thread.last_message.sender == user %}
-                    <span class="fa fa-paper-plane-o"></span>
-                    {% trans 'an' %} {{ thread.last_message.receiver }}
+    <ul class="list-group list-group-flush">
+    {% for thread in page.object_list %}
+        <li class="list-group-item px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
+            <div class="row mx-0 flex-items-xs-middle">
+                {% if thread|starred_by:user %}
+                    {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+                    <a class="open-in-widget col-xs-1" href="{{ unstar_url }}?next={{ request.path|urlencode }}">
+                        <span class="fa fa-2x fa-star text-warning"></span>
+                    </a>
                 {% else %}
-                    <span class="fa fa-envelope-o"></span>
-                    {% trans 'von' %} {{ thread.last_message.sender }}
+                    {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+                    <a class="open-in-widget col-xs-1" href="{{ star_url }}?next={{ request.path|urlencode }}">
+                        <span class="fa fa-2x fa-star-o text-muted"></span>
+                    </a>
                 {% endif %}
-                <span class="float-xs-right">
-                    {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
-                    {{ thread.last_message.timestamp|date:'H:i'}}
-                </span>
-                <br>
-                {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url %}
-                {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
-                <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
-                    {{ thread.subject|truncatewords:10 }}
-                </a>
+                <div class="col-xs">
+                    {% if thread.last_message.sender == user %}
+                        <span class="fa fa-paper-plane-o"></span>
+                        {% trans 'an' %} {{ thread.last_message.receiver }}
+                    {% else %}
+                        <span class="fa fa-envelope-o"></span>
+                        {% trans 'von' %} {{ thread.last_message.sender }}
+                    {% endif %}
+                    <span class="float-xs-right">
+                        {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
+                        {{ thread.last_message.timestamp|date:'H:i'}}
+                    </span>
+                    <br>
+                    {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url %}
+                    {% if thread.submission %}{{ thread.submission|ec_number }} - {% endif %}
+                    <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
+                        {{ thread.subject|truncatewords:10 }}
+                    </a>
+                </div>
+                <div class="col-xs-1 px-0">
+                {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
+                    {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
+                    <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
+                        <span class="fa fa-2x fa-check text-primary"></span>
+                    </a>
+                {% endif %}
+                </div>
             </div>
-            <div class="col-xs-1 px-0">
-            {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
-                {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
-                <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
-                    <span class="fa fa-2x fa-check text-primary"></span>
-                </a>
-            {% endif %}
-            </div>
-        </div>
-    </li>
-{% endfor %}
-</ul>
+        </li>
+    {% endfor %}
+    </ul>
 
-<div class="paginator text-xs-center mt-1">
-    {% if page.has_previous %}
-        <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
-        <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}"></a>
-    {% endif %}
-    {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
-    {% if page.has_next %}
-        <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}"></a>
-        <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}"></a>
-    {% endif %}
+    <div class="card-block">
+        <div class="paginator text-xs-center">
+            {% if page.has_previous %}
+                <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
+                <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}"></a>
+            {% endif %}
+            {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
+            {% if page.has_next %}
+                <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}"></a>
+                <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}"></a>
+            {% endif %}
+        </div>
+    </div>
 </div>

@@ -27,11 +27,6 @@ $skyblue: #6CA6CD; /* link bg */
 $royalblue-dark: #2B558E; /* main link color */
 $royalblue-light: adjust-color(#2B558E, $lightness: 25%);
 
-$bluegreen: #A8D9E0;
-
-$bisque-extra-light: #F8F8EF; /* background color */
-$bisque: #EBDFC3; /* used for borders */
-
 $wheatbrown: #EDDFBF;
 
 $grey-ochre: #DDDAC8; /* readonly nav colors */
@@ -49,20 +44,3 @@ $yellow-extra-dark: adjust-color(#F9F77A, $lightness: -25%);
 $brick-red: #FB6464;
 $red: #ff0000;
 $orange: #FF8000;
-
-/* examples: */
-
-//$moritz : #38FA90;
-//$moritz-light : lighten(moritz, 20%)
-//$moritz-extra-light : lighten(moritz, 30%)
-
-//pastel
-//extra-light
-//light = heller
-// grundfarbe
-//dark = duenkler
-//extra-dark
-//neon
-
-//$zebra_brown_odd: middle-light-brown-bg;
-//$zebra_brown_even: middle-dark-brown-bg;
