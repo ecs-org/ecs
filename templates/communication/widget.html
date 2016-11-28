@@ -2,6 +2,60 @@
 
 <div class="card">
     <div class="card-block">
+        <ul class="pagination pagination-sm my-0 float-xs-right">
+            {% if page.has_previous %}
+                <li class="page-item">
+                    <a class="page-link open-in-widget" href="{{ request.path }}?p=1">
+                        <span class="fa fa-fast-backward"></span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.previous_page_number }}">
+                        <span class="fa fa-backward"></span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <span class="fa fa-fast-backward"></span>
+                    </span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <span class="fa fa-backward"></span>
+                    </span>
+                </li>
+            {% endif %}
+            <li class="page-item">
+                <span class="page-link text-muted">
+                    {{ page.number }} / {{ page.paginator.num_pages }}
+                </span>
+            </li>
+            {% if page.has_next %}
+                <li class="page-item">
+                    <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.next_page_number }}">
+                        <span class="fa fa-forward"></span>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link open-in-widget" href="{{ request.path }}?p={{ page.paginator.num_pages }}">
+                        <span class="fa fa-fast-forward"></span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <span class="fa fa-forward"></span>
+                    </span>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">
+                        <span class="fa fa-fast-forward"></span>
+                    </span>
+                </li>
+            {% endif %}
+        </ul>
+
         <h3 class="card-title mb-0">
             {% trans "Communication" %} ({% unread_msg_count %})
         </h3>
@@ -53,18 +107,4 @@
         </li>
     {% endfor %}
     </ul>
-
-    <div class="card-block">
-        <div class="paginator text-xs-center">
-            {% if page.has_previous %}
-                <a class="open-in-widget fa fa-fast-backward" href="{{ request.path }}?p=1"></a>
-                <a class="open-in-widget fa fa-backward" href="{{ request.path }}?p={{ page.previous_page_number }}"></a>
-            {% endif %}
-            {% trans "Page" %} {{ page.number }} {% trans "of" %} {{ page.paginator.num_pages }}
-            {% if page.has_next %}
-                <a class="open-in-widget fa fa-forward" href="{{ request.path }}?p={{ page.next_page_number }}"></a>
-                <a class="open-in-widget fa fa-fast-forward" href="{{ request.path }}?p={{ page.paginator.num_pages }}"></a>
-            {% endif %}
-        </div>
-    </div>
 </div>
