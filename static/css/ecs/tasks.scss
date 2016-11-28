@@ -4,27 +4,13 @@
     margin-top: 10px;
 }
 
-.task_message .ecs-TextAreaToolbar {
-    clear: both;
-}
-.show_all {
-    margin-bottom: 10px;
-}
-
 /* TaskList */
-
-.task_item ul form {
-    display: inline-block;
-}
 
 .task_full .task_list_choose {
     display: inline-block;
     margin: 0 5px 5px 0;
+    padding: 3px 0 0;
     background: $beige;
     border-radius: 3px;
     padding: 5px 3px 0 8px;
-}
-
-.task_list_choose {
-    padding: 3px 0 0;
 }

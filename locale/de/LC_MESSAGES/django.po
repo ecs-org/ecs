@@ -3201,9 +3201,6 @@ msgstr ""
 msgid "Bookmark"
 msgstr "Lesezeichen"
 
-msgid "Expand"
-msgstr "mehr"
-
 msgid "List of Users"
 msgstr "Liste der Benutzer"
 

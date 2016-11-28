@@ -6,7 +6,7 @@
     {% regroup my_tasks by task_type.workflow_node.uid as task_type_list %}
     <ul class="list-group">
         {% for task_type in task_type_list %}
-            <li class="task_item list-group-item">
+            <li class="list-group-item">
                 <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
@@ -14,13 +14,12 @@
                     {% if not task.accepted %}
                         <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
                         {% if task.task_type.is_delegatable %}
-                            <form action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post">
+                            <form class="d-inline-block" action="{% url 'ecs.tasks.views.decline_task_full' task_pk=task.pk %}" method="post">
                                 {% csrf_token %}
                                 <a class="submit_parent" href="">{% trans "Decline" %}</a>
                             </form>
                         {% endif %}
                     {% endif %}
-                    {% if not forloop.last %},{% endif %}
                 </li> {% endfor %} </ul>
             </li>
         {% endfor %}
@@ -32,7 +31,7 @@
     {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
     <ul class="list-group">
         {% for task_type in task_type_list %}
-            <li class="task_item list-group-item clearfix">
+            <li class="list-group-item clearfix">
                 <span class="tag tag-default tag-pill float-xs-right">
                     {{ task_type.list|length }}
                 </span>
@@ -50,7 +49,7 @@
 
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
-                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post">
+                    <form class="d-inline-block" action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post">
                         {% csrf_token %}
                         <a class="submit_parent" href="">{{ task.data }}</a>
                     </form>
@@ -146,7 +145,7 @@
     {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
     <ul class="list-group">
         {% for task_type in task_type_list %}
-            <li class="task_item list-group-item clearfix">
+            <li class="list-group-item clearfix">
                 <span class="tag tag-default tag-pill float-xs-right">
                     {{ task_type.list|length }}
                 </span>
@@ -164,7 +163,7 @@
 
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
-                    <form action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post">
+                    <form class="d-inline-block" action="{% url 'ecs.tasks.views.accept_task_full' task_pk=task.pk %}" method="post">
                         {% csrf_token %}
                         <a class="submit_parent" href="">{{ task.data }}</a>
                     </form>

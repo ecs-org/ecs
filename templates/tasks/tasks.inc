@@ -9,7 +9,7 @@
         {% regroup my_tasks by task_type.workflow_node.uid as task_type_list %}
         <ul class="list-group list-group-flush">
             {% for task_type in task_type_list %}
-                <li class="task_item list-group-item">
+                <li class="list-group-item">
                     <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                     <h4>{{ task_type.grouper|task_type_name }}</h4>
                     <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
@@ -17,7 +17,7 @@
                         {% if not task.accepted %}
                             <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
                             {% if task.task_type.is_delegatable %}
-                                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.decline_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                <form class="open-in-widget d-inline-block" method="post" action="{% url 'ecs.tasks.views.decline_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                     {% csrf_token %}
                                     <a class="submit-in-widget" href="">{% trans "Decline" %}</a>
                                 </form>
@@ -40,7 +40,7 @@
             {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
             <ul class="list-group list-group-flush">
                 {% for task_type in task_type_list %}
-                    <li class="task_item list-group-item clearfix">
+                    <li class="list-group-item clearfix">
                         <span class="tag tag-default tag-pill float-xs-right">
                             {{ task_type.list|length }}
                         </span>
@@ -58,7 +58,7 @@
 
                         <h4>{{ task_type.grouper|task_type_name }}</h4>
                         <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
-                            <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                            <form class="open-in-widget d-inline-block" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                 {% csrf_token %}
                                 <a class="submit-in-widget" href="">{{ task.data }}</a>
                             </form>
@@ -184,7 +184,7 @@
                 {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
                 <ul class="list-group list-group-flush">
                     {% for task_type in task_type_list %}
-                        <li class="task_item list-group-item clearfix">
+                        <li class="list-group-item clearfix">
                             <span class="tag tag-default tag-pill float-xs-right">
                                 {{ task_type.list|length }}
                             </span>
@@ -202,7 +202,7 @@
 
                             <h4>{{ task_type.grouper|task_type_name }}</h4>
                             <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
-                                <form class="open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                <form class="open-in-widget d-inline-block" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                     {% csrf_token %}
                                     <a class="submit-in-widget" href="">{{ task.data }}</a>
                                 </form>
