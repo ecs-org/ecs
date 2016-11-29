@@ -123,7 +123,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                     else:
                         qs.append(Q(meetings=meeting))
                 if upcoming_meetings:
-                    qs.append(Q(meetings__ended=None))
+                    qs.append(Q(meetings__isnull=False, meetings__ended=None))
                 if no_meeting:
                     qs.append(Q(meetings=None))
 

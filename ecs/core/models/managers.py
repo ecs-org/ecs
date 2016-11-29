@@ -65,7 +65,7 @@ class SubmissionQuerySet(models.QuerySet):
         return self.filter(meetings__ended__isnull=False)
 
     def upcoming_meetings(self):
-        return self.filter(meetings__ended=None)
+        return self.filter(meetings__isnull=False, meetings__ended=None)
     
     def next_meeting(self):
         try:
