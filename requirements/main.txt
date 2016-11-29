@@ -11,7 +11,7 @@ httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
 django-countries
 django-widget-tweaks
-celery[redis]
+celery[redis]<4.0.0
 redis
 weasyprint                      # PDF rendering
 
