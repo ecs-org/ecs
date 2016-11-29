@@ -247,7 +247,7 @@ class InvitationForm(UserDetailsForm):
         model = User
         fields = (
             'email', 'gender', 'title', 'first_name', 'last_name', 'groups',
-            'medical_categories', 'invitation_text',
+            'task_types', 'medical_categories', 'invitation_text',
         )
 
     def clean_email(self):
