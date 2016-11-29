@@ -44,7 +44,7 @@
             <span class="question"><span class="number">{{ answer.question.number }}.</span> {{ answer.question.text }}</span>
             <span class="answer">- {{ answer.answer|yes_no_unknown }}</span>
             {% if answer.comment %}
-                <pre class="comment">{{ answer.comment }}</pre>
+                <div class="comment">{{ answer.comment }}</div>
             {% endif %}
         </li>
     {% endfor %}

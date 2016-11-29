@@ -9,14 +9,17 @@ pdfutils
 - creation (from html)
 
 '''
+import os
+import mimetypes
 import subprocess, logging
 from binascii import hexlify
 from tempfile import TemporaryFile, NamedTemporaryFile
 
+from django.conf import settings
 from django.template import loader
 from django.utils.encoding import smart_bytes
 
-from weasyprint import HTML
+from weasyprint import HTML, default_url_fetcher
 
 
 logger = logging.getLogger(__name__)
@@ -99,4 +102,13 @@ def wkhtml2pdf(html, param_list=None):
     if isinstance(html, str): 
         html = html.encode('utf-8') 
 
-    return HTML(string=html).write_pdf()
+    def _url_fetcher(url):
+        if url.startswith('static:'):
+            path = os.path.join(settings.STATIC_ROOT, url[len('static:'):])
+            with open(path, 'rb') as f:
+                data = f.read()
+            return {'string': data, 'mime_type': mimetypes.guess_type(path)[0]}
+
+        return default_url_fetcher(url)
+
+    return HTML(string=html, url_fetcher=_url_fetcher).write_pdf()

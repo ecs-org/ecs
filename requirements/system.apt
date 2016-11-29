@@ -46,7 +46,6 @@ pdftk
 qpdf
 
 # PDF rendering, weasyprint
-fonts-dejavu
 libpango1.0-0
 libcairo2
 libgdk-pixbuf2.0-0

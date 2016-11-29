@@ -7,7 +7,7 @@ RUN locale-gen en_US.UTF-8 de_DE.UTF-8 && DEBIAN_FRONTEND=noninteractive dpkg-re
 
 # install cached package list, so container build time will benefit from image caching
 RUN export DEBIAN_FRONTEND=noninteractive; apt-get -y update; \
-apt-get install -y build-essential bzip2 curl fonts-dejavu gettext ghostscript git gnupg gosu graphviz libcairo2 libffi-dev libgdk-pixbuf2.0-0 libmemcached-dev libpango1.0-0 libpq-dev libxml2-dev libxslt1-dev lynx man net-tools nginx pdftk postgresql-client psmisc python3 python3-dev python3-pip python3-venv qpdf rsync supervisor tmux unison vim wget zip zlib1g-dev && apt-get clean -y
+apt-get install -y build-essential bzip2 curl gettext ghostscript git gnupg gosu graphviz libcairo2 libffi-dev libgdk-pixbuf2.0-0 libmemcached-dev libpango1.0-0 libpq-dev libxml2-dev libxslt1-dev lynx man net-tools nginx pdftk postgresql-client psmisc python3 python3-dev python3-pip python3-venv qpdf rsync supervisor tmux unison vim wget zip zlib1g-dev && apt-get clean -y
 
 # create user+home, copy source, chown, chmod
 ENV HOME /app
