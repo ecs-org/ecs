@@ -7,18 +7,6 @@ body {
     overflow: auto;
 }
 
-#container {
-    position: absolute;
-    top: 0;
-    right: 220px;
-    bottom: 0;
-    left: 0;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-direction: column;
-    flex-direction: column;
-}
-
 #header {
     z-index: 101;
     background: $lightblue;
@@ -48,9 +36,6 @@ body {
 /* general content-specific */
 
 #content {
-    -webkit-flex: 1;
-    flex: 1;
-
     background: $white;
     overflow-x: hidden;
     overflow-y: auto;
