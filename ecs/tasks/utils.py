@@ -1,14 +1,14 @@
 from functools import wraps
 
 from django.shortcuts import redirect
-from django.http import HttpResponseForbidden, QueryDict
+from django.http import QueryDict
 from django.contrib.contenttypes.models import ContentType
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 
 from ecs.tasks.models import Task
 from ecs.tasks.forms import ManageTaskForm
 from ecs.users.utils import sudo
-from ecs.utils.viewutils import render_html
 
 
 def get_obj_tasks(activities, obj, data=None):
@@ -37,8 +37,7 @@ def task_required(view):
     @wraps(view)
     def _inner(request, *args, **kwargs):
         if not getattr(request, 'related_tasks', None):
-            html = render_html(request, '403.html', {})
-            return HttpResponseForbidden(html)
+            raise PermissionDenied()
         return view(request, *args, **kwargs)
     return _inner
 

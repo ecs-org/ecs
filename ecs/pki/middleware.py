@@ -1,5 +1,5 @@
-from django.http import HttpResponseForbidden
 from django.conf import settings
+from django.core.exceptions import PermissionDenied
 
 
 class ClientCertMiddleware(object):
@@ -12,4 +12,4 @@ class ClientCertMiddleware(object):
             if (profile.is_internal or profile.is_omniscient_member) and \
                 request.META.get('HTTP_X_SSL_CLIENT_VERIFY') != 'SUCCESS':
 
-                return HttpResponseForbidden()
+                raise PermissionDenied()

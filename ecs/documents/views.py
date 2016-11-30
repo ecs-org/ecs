@@ -2,10 +2,11 @@ from urllib.parse import urlencode
 from uuid import uuid4
 
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import FileResponse, HttpResponseForbidden, Http404
+from django.http import FileResponse, Http404
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.core.exceptions import PermissionDenied
 
 from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
@@ -40,7 +41,7 @@ def handle_download(request, doc, view=False):
 
     if (not doc.doctype.is_downloadable and
         not request.user.profile.is_internal):
-        return HttpResponseForbidden()
+        raise PermissionDenied()
 
     response = FileResponse(doc.retrieve(request.user, 'download'),
         content_type=doc.mimetype)
