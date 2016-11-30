@@ -105,7 +105,7 @@ def dashboard_widget(request, submission_pk=None):
     except ValueError:
         page_num = 1
 
-    paginator = Paginator(qs, 4)
+    paginator = Paginator(qs, 5)
     try:
         page = paginator.page(page_num)
     except EmptyPage:
