@@ -101,7 +101,7 @@ def setup(subject):
 
     p = subprocess.Popen([
         'openssl', 'req', '-batch', '-new', '-key', '/dev/stdin', '-x509',
-        '-days', '3650', '-subj', subject,
+        '-days', '3650', '-utf8', '-subj', subject,
     ], stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
     cert, err = p.communicate(key)
@@ -124,7 +124,7 @@ def make_cert(subject, pkcs12_file, days=None, passphrase=''):
         _exec(['genrsa', '-out', key_file])
         _exec([
             'req', '-batch', '-new', '-key', key_file, '-out', csr_file,
-            '-subj', subject,
+            '-utf8', '-subj', subject,
         ])
 
         # sign the request

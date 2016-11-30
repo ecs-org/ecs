@@ -219,6 +219,8 @@ LOGGING = {
 
 # used by ecs.pki
 ECS_CA_ROOT = os.path.join(PROJECT_DIR, '..', 'ecs-ca')
+# if set to true:  users of internal groups need a client certificate to logon
+# ECS_REQUIRE_CLIENT_CERTS = false  # default
 
 # this is used by the EthicsCommission model to identify the system
 ETHICS_COMMISSION_UUID = 'ecececececececececececececececec'
