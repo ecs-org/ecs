@@ -236,7 +236,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     external_review_checklists = submission.checklists.filter(blueprint__slug='external_review')
     notifications = (submission.notifications
-        .select_related('type', 'user', 'user__profile', 'answer')
+        .select_related('safetynotification', 'type', 'user', 'user__profile', 'answer')
         .prefetch_related(Prefetch('submission_forms',
             queryset=SubmissionForm.objects
                 .select_related('submission')

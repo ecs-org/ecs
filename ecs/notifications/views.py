@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.template import loader
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.translation import ugettext as _
-from django.db.models import Min, Q
+from django.db.models import Min, Q, Prefetch
 
 from ecs.utils.viewutils import render_html, redirect_to_next_url
 from ecs.docstash.decorators import with_docstash
@@ -32,7 +32,16 @@ def _get_notification_template(notification, pattern):
 
 def open_notifications(request):
     title = _('Open Notifications')
-    notifications =  Notification.objects.pending().annotate(min_ecn=Min('submission_forms__submission__ec_number')).order_by('min_ecn')
+    notifications = (Notification.objects
+        .pending()
+        .annotate(min_ecn=Min('submission_forms__submission__ec_number'))
+        .select_related('safetynotification', 'type')
+        .prefetch_related(Prefetch('submission_forms',
+            queryset=SubmissionForm.objects
+                .select_related('submission')
+                .order_by('submission__ec_number')))
+        .order_by('min_ecn')
+    )
     stashed_notifications = DocStash.objects.filter(
         owner=request.user, group='ecs.notifications.views.create_notification',
         current_version__gte=0)
