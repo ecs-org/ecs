@@ -119,7 +119,7 @@
         {% for answer in answers %}
             <div class="pbi_avoid">
                 {% with notification=answer.notification %}
-                    <span class="bold">{{ notification.type }}</span><br />
+                    <span class="bold">{{ notification.short_name }}</span><br />
                     {% for sf in notification.submission_forms.all %}
                         <span class="bold">{{ sf.submission.get_ec_number_display }}</span>
                         {{ sf.german_project_title|default:sf.project_title }}<br />

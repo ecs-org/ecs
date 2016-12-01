@@ -6,7 +6,7 @@
 {% block content %}
     {% include 'pdf/ec_head.inc' %}
     <div class="header">
-        <h1>{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.type.name }}{% endblock %}</h1>
+        <h1>{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.short_name }}{% endblock %}</h1>
     </div>
     
     <div>

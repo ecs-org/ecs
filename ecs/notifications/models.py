@@ -86,12 +86,18 @@ class Notification(models.Model):
     unfiltered = models.Manager()
     
     def __str__(self):
-        return "%s für %s" % (self.type, " + ".join(str(sf.submission) for sf in self.submission_forms.all()))
-    
+        return '{} für {}'.format(
+            self.short_name,
+            ' + '.join(str(sf.submission) for sf in self.submission_forms.all())
+        )
+
     @property
     def short_name(self):
-        return str(self.type)
-        
+        sn = getattr(self, 'safetynotification', None)
+        if sn:
+            return sn.get_safety_type_display()
+        return self.type.name
+
     @property
     def is_rejected(self):
         try:
