@@ -2,7 +2,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
-from ecs.core.models import (Submission, SubmissionForm, Investigator, InvestigatorEmployee,
+from ecs.core.models import (Submission, SubmissionForm, Investigator,
     ParticipatingCenterNonSubject, Measure, ForeignParticipatingCenter, NonTestedUsedDrug,
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
@@ -51,7 +51,6 @@ class SubmissionQFactory(authorization.QFactory):
 authorization.register(Submission, factory=SubmissionQFactory)
 authorization.register(SubmissionForm, lookup='submission')
 authorization.register(Investigator, lookup='submission_form__submission')
-authorization.register(InvestigatorEmployee, lookup='investigator__submission_form__submission')
 authorization.register(Measure, lookup='submission_form__submission')
 authorization.register(NonTestedUsedDrug, lookup='submission_form__submission')
 authorization.register(ForeignParticipatingCenter, lookup='submission_form__submission')

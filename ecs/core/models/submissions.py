@@ -803,9 +803,7 @@ class InvestigatorEmployee(models.Model):
     firstname = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     organisation = models.CharField(max_length=80)
-    
-    objects = AuthorizationManager()
-    
+
     class Meta:
         ordering = ['id']
     
