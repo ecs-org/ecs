@@ -827,9 +827,7 @@ class Measure(models.Model):
     count = models.CharField(max_length=150)
     period = models.CharField(max_length=30)
     total = models.CharField(max_length=30)
-    
-    objects = AuthorizationManager()
-    
+
     class Meta:
         ordering = ['id']
 

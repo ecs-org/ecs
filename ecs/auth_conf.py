@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator,
-    Measure, TemporaryAuthorization, MySubmission)
+    TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task, TaskType
@@ -50,7 +50,6 @@ class SubmissionQFactory(authorization.QFactory):
 authorization.register(Submission, factory=SubmissionQFactory)
 authorization.register(SubmissionForm, lookup='submission')
 authorization.register(Investigator, lookup='submission_form__submission')
-authorization.register(Measure, lookup='submission_form__submission')
 
 class VoteQFactory(authorization.QFactory):
     def get_q(self, user):
