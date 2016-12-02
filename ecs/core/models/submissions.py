@@ -852,8 +852,6 @@ class ParticipatingCenterNonSubject(models.Model):
     ethics_commission = models.ForeignKey('core.EthicsCommission')
     investigator_name = models.CharField(max_length=60, blank=True)
 
-    objects = AuthorizationManager()
-
     class Meta:
         ordering = ['id']
 
@@ -863,9 +861,7 @@ class ForeignParticipatingCenter(models.Model):
     submission_form = models.ForeignKey(SubmissionForm)
     name = models.CharField(max_length=60)
     investigator_name = models.CharField(max_length=60, blank=True)
-    
-    objects = AuthorizationManager()
-    
+
     class Meta:
         ordering = ['id']
 
