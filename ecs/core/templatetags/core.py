@@ -1,5 +1,4 @@
 import re
-import uuid
 
 from django.template import Library, Node, TemplateSyntaxError
 from django.utils.translation import ugettext as _
@@ -180,5 +179,5 @@ def db_setting(parser, token):
 
 @register.simple_tag
 def ec_name():
-    system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
-    return EthicsCommission.objects.get(uuid=system_ec_uuid).name
+    ec = EthicsCommission.objects.get(uuid=settings.ETHICS_COMMISSION_UUID)
+    return ec.name

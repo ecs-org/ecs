@@ -1,5 +1,3 @@
-import uuid
-
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
@@ -130,12 +128,12 @@ SubmissionFormManager = AuthorizationManager.from_queryset(SubmissionFormQuerySe
 
 class InvestigatorQuerySet(models.QuerySet):
     def system_ec(self):
-        system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
-        return self.filter(ethics_commission__uuid=system_ec_uuid)
+        return self.filter(
+            ethics_commission__uuid=settings.ETHICS_COMMISSION_UUID)
 
     def non_system_ec(self):
-        system_ec_uuid = uuid.UUID(settings.ETHICS_COMMISSION_UUID)
-        return self.exclude(ethics_commission__uuid=system_ec_uuid)
+        return self.exclude(
+            ethics_commission__uuid=settings.ETHICS_COMMISSION_UUID)
 
 
 InvestigatorManager = AuthorizationManager.from_queryset(InvestigatorQuerySet)
