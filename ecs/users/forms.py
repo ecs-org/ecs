@@ -12,7 +12,6 @@ from ecs.core.forms.fields import AutocompleteModelChoiceField, DateTimeField
 from ecs.utils.formutils import require_fields
 from ecs.users.utils import get_user, create_user
 from ecs.users.models import LOGIN_HISTORY_TYPES
-from ecs.meetings.models import AssignedMedicalCategory
 from ecs.tasks.models import TaskType
 
 
@@ -204,7 +203,7 @@ class UserDetailsForm(forms.ModelForm):
 
     def clean_groups(self):
         groups = self.cleaned_data.get('groups', [])
-        amcs = AssignedMedicalCategory.objects.filter(specialist=self.instance, meeting__ended=None)
+        amcs = self.instance.assigned_medical_categories.filter(meeting__ended=None)
         if amcs.exists() and not 'Specialist' in [g.name for g in groups]:
             raise forms.ValidationError(
                 _('{} is a specialist in following meetings: {}').format(

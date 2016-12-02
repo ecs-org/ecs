@@ -125,8 +125,6 @@ class AssignedMedicalCategory(models.Model):
     specialist = models.ForeignKey(User, null=True, blank=True, related_name='assigned_medical_categories')
     meeting = models.ForeignKey('meetings.Meeting', related_name='medical_categories')
 
-    objects = AuthorizationManager()
-
     class Meta:
         unique_together = (('category', 'meeting'),)
 
