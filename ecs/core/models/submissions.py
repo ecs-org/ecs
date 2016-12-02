@@ -748,7 +748,7 @@ def _post_submission_form_save(**kwargs):
 
 class Investigator(models.Model):
     submission_form = models.ForeignKey(SubmissionForm, related_name='investigators')
-    ethics_commission = models.ForeignKey('core.EthicsCommission', null=True, related_name='investigators')
+    ethics_commission = models.ForeignKey('core.EthicsCommission', related_name='investigators')
     main = models.BooleanField(default=True, blank=True)
 
     user = models.ForeignKey(User, null=True, related_name='investigations')
