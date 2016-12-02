@@ -9,7 +9,7 @@ from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task, TaskType
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
-from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation, Constraint
+from ecs.meetings.models import Meeting, AssignedMedicalCategory, TimetableEntry, Participation
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
@@ -160,4 +160,3 @@ authorization.register(Meeting, factory=MeetingQFactory)
 authorization.register(AssignedMedicalCategory, lookup='meeting')
 authorization.register(TimetableEntry, lookup='meeting')
 authorization.register(Participation, lookup='entry__meeting')
-authorization.register(Constraint, lookup='meeting')

@@ -781,8 +781,6 @@ class Constraint(models.Model):
     end_time = models.TimeField(null=True, blank=True)
     weight = models.FloatField(default=0.5, choices=WEIGHT_CHOICES)
 
-    objects = AuthorizationManager()
-
     @property
     def duration(self):
         d = timezone.now().date()
