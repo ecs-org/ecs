@@ -3,7 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator,
-    ParticipatingCenterNonSubject, Measure, ForeignParticipatingCenter, NonTestedUsedDrug,
+    ParticipatingCenterNonSubject, Measure, ForeignParticipatingCenter,
     TemporaryAuthorization, MySubmission)
 from ecs.checklists.models import Checklist, ChecklistAnswer
 from ecs.votes.models import Vote
@@ -52,7 +52,6 @@ authorization.register(Submission, factory=SubmissionQFactory)
 authorization.register(SubmissionForm, lookup='submission')
 authorization.register(Investigator, lookup='submission_form__submission')
 authorization.register(Measure, lookup='submission_form__submission')
-authorization.register(NonTestedUsedDrug, lookup='submission_form__submission')
 authorization.register(ForeignParticipatingCenter, lookup='submission_form__submission')
 authorization.register(ParticipatingCenterNonSubject, lookup='submission_form__submission')
 

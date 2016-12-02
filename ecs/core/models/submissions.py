@@ -841,9 +841,7 @@ class NonTestedUsedDrug(models.Model):
     generic_name = models.CharField(max_length=40)
     preparation_form = models.CharField(max_length=40)
     dosage = models.CharField(max_length=40)
-    
-    objects = AuthorizationManager()
-    
+
     class Meta:
         ordering = ['id']
 
