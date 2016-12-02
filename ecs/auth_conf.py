@@ -101,13 +101,14 @@ class NotificationAnswerQFactory(authorization.QFactory):
         q = self.make_q(notification__in=Notification.objects.values('pk'))
         if not user.profile.is_internal:
             q &= self.make_q(published_at__isnull=False)
-        for cls in NOTIFICATION_MODELS:
-            ct = ContentType.objects.get_for_model(cls)
-            q |= self.make_q(notification__pk__in=
-                Notification.objects.filter(
-                    pk__in=Task.objects.filter(content_type=ct).values('data_id')
-                ).values('pk')
-            )
+        notification_cts = map(ContentType.objects.get_for_model,
+            NOTIFICATION_MODELS)
+        q |= self.make_q(notification__in=
+            Notification.objects.filter(pk__in=
+                Task.objects.filter(content_type__in=notification_cts)
+                    .values('data_id')
+            ).values('pk')
+        )
         return q
 
 authorization.register(NotificationAnswer, factory=NotificationAnswerQFactory)
