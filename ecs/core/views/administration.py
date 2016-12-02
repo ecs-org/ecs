@@ -11,7 +11,9 @@ def advanced_settings(request):
     instance = AdvancedSettings.objects.get(pk=1)
     form = AdvancedSettingsForm(request.POST or None, request.FILES or None,
         instance=instance, prefix='advanced_settings')
-    ec_formset = EthicsCommissionFormSet(request.POST or None, queryset=EthicsCommission.objects.all(), prefix='ethics_commissions')
+    ec_formset = EthicsCommissionFormSet(request.POST or None,
+        queryset=EthicsCommission.objects.order_by('name'),
+        prefix='ethics_commissions')
     if request.method == 'POST':
         if form.is_valid():
             form.save()

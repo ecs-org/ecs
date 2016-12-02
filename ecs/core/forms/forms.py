@@ -180,6 +180,9 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
 ## ##
 
 class ParticipatingCenterNonSubjectForm(forms.ModelForm):
+    ethics_commission = forms.ModelChoiceField(
+        EthicsCommission.objects.order_by('name'), required=True)
+
     class Meta:
         model = ParticipatingCenterNonSubject
         fields = ('name', 'ethics_commission', 'investigator_name')
@@ -242,6 +245,9 @@ RoutineMeasureFormSet = formset_factory(RoutineMeasureForm,
     formset=ReadonlyBaseFormSet, extra=0)
 
 class InvestigatorForm(forms.ModelForm):
+    ethics_commission = forms.ModelChoiceField(
+        EthicsCommission.objects.order_by('name'), required=True)
+
     class Meta:
         model = Investigator
         fields = ('organisation', 'subject_count', 'ethics_commission', 'main',
