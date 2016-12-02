@@ -1,7 +1,9 @@
 @import "ecs/variables.scss";
 
 .readonly {
-    input[disabled], textarea[disabled], select[disabled] {
+    input[disabled]:not(.form-control),
+    textarea[disabled]:not(.form-control),
+    select[disabled]:not(.form-control) {
         color: $grey-20;
         background: #e4e4e4;
         font-family: Arial, Helvetica, sans-serif;
@@ -11,6 +13,7 @@
         margin-left: 240px;
     }
 
+    /* tab headers - TODO: remove after scrollspy implementation */
     .tab_header_groups a {
         color: $grey-80;
         background: $grey-40;
@@ -40,53 +43,7 @@
     }
 }
 
-
-#checklist_summary_tab {
-
-    ol > li > ol {
-        margin-left: 10px;
-    }
-
-    .answer {
-        display: block;
-
-        & > .positive{
-            color: #00ff00;
-        }
-        & > .negative{
-            color: $red;
-        }
-        & > .unanswered{
-            color: $grey-20;
-        }
-    }
-
-    .comment {
-        display: inline-block;
-        margin: 5px 0 0 10px;
-        font-family: monospace;
-        background: $white;
-        font-style: normal;
-        line-height: 1.5;
-        border: 1px solid $grey-60;
-        padding: 3px 5px;
-    }
-}
-
-#vote_review_tab {
-    label {
-        width: auto;
-        padding: 0 10px;
-    }
-    textarea {
-        margin-left: 0px;
-        width: 800px;
-    }
-}
-
-
-/*  Readonly Forms  */
-
+/* pre fields should wrap */
 .form_main.readonly {
     ol li {
         display: block;
@@ -108,23 +65,23 @@
         clear: none;
     }
 
-    .review ol li label,
-    .checklist_review_tab ol li label{
-        width: 240px;
-    }
-
     ol li.BooleanField {
         padding-left: 0;
     }
 
     pre:not(.card-text) {
+        white-space: pre-wrap;
+    }
+
+    .CharField pre:not(.card-text),
+    .EmailField pre:not(.card-text),
+    .IntegerField pre:not(.card-text) {
         display: inline-block;
         background-color: $white;
         font-style: normal;
         line-height: 1.5;
         border: 1px solid $grey-60;
         padding: 3px 5px;
-        white-space: pre-wrap;
         max-width: 700px;
 
         table & {
@@ -153,63 +110,6 @@
             color: $grey-20;
         }
     }
-}
-
-
-/* Readonly Checklist Review Forms */
-
-.form_main.readonly .checklist_review_tab {
-    ol li label {
-        width: auto;
-        clear: both;
-        padding: 0;
-        text-indent: -20px;
-        margin-left: 20px;
-    }
-
-    ol li select {
-        clear: both;
-    }
-
-    span.NullBooleanField, span.CharField {
-        float: left;
-    }
-
-    span.NullBooleanField {
-        clear: left;
-        margin: 0 10px 0 20px;
-    }
-
-    span.CharField label {
-        margin-right: 5px;
-    }
-
-    span.CharField.required label:after {
-        content: " *";
-        color: $red;
-    }
-
-    span.required.errors {
-        textarea {
-            border: 1px solid $red;
-        }
-    }
-
-    ul.errorlist li {
-        margin-left: 0;
-    }
-
-    textarea {
-        clear: both;
-        display: block;
-        margin-left: 0;
-    }
-
-    input {
-        /* XXX: which inputs do we wan't to hide? */
-        display: none;
-    }
-
 }
 
 .boilerplate_selector input {

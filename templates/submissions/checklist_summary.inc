@@ -1,22 +1,36 @@
 {% load core i18n userutils %}
 
-<ol>
 {% for checklist, answers in checklist_summary %}
-    <li>
-        <h4 class="checklist">{{ checklist.blueprint.name }}: {{ checklist.last_edited_by|formal_name }}</h4>
-        <ol>
+    <div class="mb-3">
+        <h4 class="checklist">
+            {{ checklist.blueprint.name }}:
+            {{ checklist.last_edited_by|formal_name }}
+        </h4>
         {% for answer in answers %}
-            <li>
-                <span class="answer">{{ answer.question.number}}. {{ answer.question.text }}: <span class="{% if answer.is_answered %}{% if answer.is_positive %}positive{% else %}negative{% endif %}{% else %}unanswered{% endif %}">{{ answer.answer|yes_no_unknown }}</span></span>
-                {% if answer.comment %}
-                    <span class="comment">{{ answer.comment }}</span>
+            <div class="ml-1 mb-1">
+                {{ answer.question.number}}. {{ answer.question.text }}:
+                {% if not answer.is_answered %}
+                    <span class="text-muted">
+                        {{ answer.answer|yes_no_unknown }}
+                    </span>
+                {% elif answer.is_positive %}
+                    <span class="text-success">
+                        {{ answer.answer|yes_no_unknown }}
+                    </span>
+                {% else %}
+                    <span class="text-danger">
+                        {{ answer.answer|yes_no_unknown }}
+                    </span>
                 {% endif %}
-            </li>
-
+                <br>
+                {% if answer.comment %}
+                    <pre class="multiline mt-1">{{ answer.comment }}</pre>
+                {% endif %}
+            </div>
         {% endfor %}
-        </ol>
-    </li>
+    </div>
 {% empty %}
-    <li><em>{% trans "No Checklist with unexpected answers or unexpected comments yet." %}</em></li>
+    <em>
+        {% trans "No Checklist with unexpected answers or unexpected comments yet." %}
+    </em>
 {% endfor %}
-</ol>

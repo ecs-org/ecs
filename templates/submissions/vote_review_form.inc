@@ -1,7 +1,9 @@
-{% load core i18n %}
+{% load i18n widget_tweaks %}
 
 {% if form.errors %}
-    {{ form.errors }}
+    <div class="alert alert-danger text-xs-center">
+        {{ form.errors }}
+    </div>
 {% endif %}
 
 {% if not review_form.readonly %}
@@ -9,28 +11,29 @@
     {% csrf_token %}
 {% endif %}
 
-<ol>
 {% with review_form.text as field %}
     {% include "submissions/review_field.inc" %}
 {% endwith %}
 {% with review_form.is_final_version as field %}
     {% include "submissions/review_field.inc" %}
 {% endwith %}
+
 {% with review_form.result as field %}
-{% if field %}
-    <li>
-        <label for="{{ field.id_for_label }}">{% trans 'Vote' %}:</label> B{{ review_form.instance.result }}
-        <a onclick="$(this).hide(); $('#vote_result_change').show(); return false;">{% trans 'change' %}</a>
-    </li>
-    <li id="vote_result_change" class="{{ field.field|type_name }}{% if field.errors %} errors{% endif %}" style="display:none;">
-        {{ field }}
-        {% if field.errors %}
-            {{ field.errors }}
-        {% endif %}
-    </li>
-{% endif %}
+    {% if field %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{% trans 'Vote' %}:</label> B{{ review_form.instance.result }}
+            <a onclick="$(this).hide(); $('#vote_result_change').show(); return false;">{% trans 'change' %}</a>
+        </div>
+        <div class="form-group {% if field.errors %}errors{% endif %}" id="vote_result_change" style="display:none;">
+            {% render_field field class+="form-control" %}
+            {% if field.errors %}
+                <div class="alert alert-danger text-xs-center">
+                    {{ field.errors }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endwith %}
-</ol>
 
 {% if not review_form.readonly %}
     </form>

@@ -1,4 +1,4 @@
-{% load core i18n %}
+{% load i18n widget_tweaks %}
 
 {% if not formset.readonly %}
     <form action="{{ request.path }}" method="post" class="review bound_to_task">
@@ -6,39 +6,41 @@
     {{ formset.management_form }}
 {% endif %}
 
-<ol>
-    {% for form in formset %}
-        <li>
+{% for form in formset %}
+    <div class="row">
+        <label class="col-xs-12" for="{{ form.answer.id_for_label }}">
+            {{ form.answer.label }}
+            {% if form.instance.question.requires_comment %}
+                <span class="text-danger">*</span>
+            {% endif %}
+        </label>
+
+        <div class="form-group col-sm-2 col-lg-1">
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
-            <label for="{{ form.answer.id_for_label }}">
-                {{ form.answer.label|linebreaksbr }}
-            </label>
-            <span class="{{ form.answer.field|type_name }}{% if form.answer.errors %} errors{% endif %}">
-                {{ form.answer }}
-                {% if form.answer.errors %}
-                    {{ form.answer.errors }}
-                {% endif %}
-            </span>
+            {% render_field form.answer class+="form-control" %}
+            {% if form.answer.errors %}
+                {{ form.answer.errors }}
+            {% endif %}
+        </div>
 
-            <span class="{{ form.comment.field|type_name }}{% if form.instance.question.requires_comment %} required{% endif %}{% if form.comment.errors %} errors{% endif %}">
-                <label for="{{ form.comment.id_for_label }}">
-                    {{ form.comment.label }}
-                </label>
-                {% if formset.readonly %}
+        <div class="form-group col-sm-10 col-lg-11">
+            {% if formset.readonly %}
+                <div>
                     {% url 'ecs.core.views.fieldhistory.field_history' model_name='checklist_answer' pk=form.instance.pk as history_url %}
                     <a class="fa fa-history text-primary" style="font-size:150%;" href="javascript:void(ecs.fieldhistory.show('{{ history_url }}'))"></a>
-                    <br>
-                {% endif %}
-                {{ form.comment }}
-                {% if form.comment.errors %}
+                </div>
+            {% endif %}
+            {% render_field form.comment class+="form-control" placeholder=form.comment.label %}
+            {% if form.comment.errors %}
+                <p class="form-text text-muted">
                     {{ form.comment.errors }}
-                {% endif %}
-            </span>
-        </li>
-    {% endfor %}
-</ol>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
 
 {% if not formset.readonly %}
     </form>

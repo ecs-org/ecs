@@ -282,7 +282,7 @@
     {% endif %}
 
     {% for checklist, formset in checklist_reviews %}
-    <div id="checklist_{{ checklist.pk }}_review_form" class="checklist_review_tab collapse">
+    <div id="checklist_{{ checklist.pk }}_review_form" class="collapse">
         {% if formset.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
             {% if checklist.status == 'review_ok' or user.profile.is_internal %}
                 {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
@@ -364,8 +364,8 @@
             ecs.setupForms();
             ecs.setupWidgets();
 
-            $('form.review .CharField textarea').each(function(){
-                ecs.textarea.installToolbar(this, [
+            $('form.review textarea').each(function(){
+                new ecs.textarea.TextArea(this, [
                     {% if user.profile.is_internal %}
                         ecs.textarea.toolbarItems.boilerplate(
                             "{% trans 'Insert Boilerplate' %}",
