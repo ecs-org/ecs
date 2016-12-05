@@ -136,7 +136,7 @@ class InvestigatorQuerySet(models.QuerySet):
             ethics_commission__uuid=settings.ETHICS_COMMISSION_UUID)
 
 
-InvestigatorManager = AuthorizationManager.from_queryset(InvestigatorQuerySet)
+InvestigatorManager = models.Manager.from_queryset(InvestigatorQuerySet)
 
 
 class TemporaryAuthorizationManager(models.Manager):
