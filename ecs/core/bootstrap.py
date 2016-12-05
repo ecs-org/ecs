@@ -329,15 +329,9 @@ def ethics_commissions():
     if settings.ETHICS_COMMISSION_UUID == test_commission['uuid']:
         commissions += [test_commission]
 
-    root = get_user('root@system.local')
-
     for comm in commissions:
         comm = comm.copy()
-        ec, created = EthicsCommission.objects.update_or_create(
-            uuid=comm.pop('uuid'), defaults=comm)
-        if ec.system:
-            root.last_name = ec.name
-            root.save()
+        EthicsCommission.objects.update_or_create(uuid=comm.pop('uuid'), defaults=comm)
 
 @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_user_testusers',))
 def advanced_settings():
