@@ -6,25 +6,29 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
-    <table class="table table-sm">
+    <table class="table table-sm cert_list">
         <thead>
             <tr>
                 <th>User</th>
                 <th>CN</th>
+                <th>Erstellt am</th>
+                <th>Gültig bis</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
             {% for cert in certs %}
-                <tr class="{% if cert.revoked_at %}revoked{% endif %}">
+                <tr class="{% if cert.revoked_at %}revoked{% endif %} {% if cert.is_expired %}text-muted{% endif %}">
                     <td>{{ cert.user }}</td>
                     <td>{{ cert.cn }}</td>
+                    <td>{{ cert.created_at|date:'d.m.Y' }}</td>
+                    <td>{{ cert.expires_at|date:'d.m.Y' }}</td>
                     <td>
-                        {% if not cert.revoked_at %}
-                        <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
-                            {% csrf_token %}
-                            <input class="btn btn-danger" type="submit" value="{% trans 'Revoke' %}" />
-                        </form>
+                        {% if not cert.revoked_at and not cert.is_expired %}
+                            <form action="{% url 'ecs.pki.views.revoke_cert' cert_pk=cert.pk %}" method="post">
+                                {% csrf_token %}
+                                <input class="btn btn-danger" type="submit" value="{% trans 'Revoke' %}" />
+                            </form>
                         {% endif %}
                     </td>
                 </tr>

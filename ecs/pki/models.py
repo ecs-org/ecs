@@ -52,6 +52,10 @@ class Certificate(models.Model):
 
         return (cert, passphrase)
 
+    @property
+    def is_expired(self):
+        return self.expires_at < timezone.now()
+
     def revoke(self):
         assert self.revoked_at is None
         self.revoked_at = timezone.now()

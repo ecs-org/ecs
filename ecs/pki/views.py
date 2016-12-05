@@ -21,7 +21,7 @@ def cert_list(request):
             Certificate.objects
                 .select_related('user')
                 .annotate(is_revoked=Count('revoked_at'))
-                .order_by('is_revoked', 'user__email', 'cn')
+                .order_by('-created_at')
         ),
     })
 
