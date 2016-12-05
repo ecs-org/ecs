@@ -32,9 +32,7 @@
         </tbody>
     </table>
 
-    {% if user|is_member_of:'EC-Signing' %}
-        <a class="btn btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
-            {% trans 'Create new certificate' %}
-        </a>
-    {% endif %}
+    <a class="btn btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
+        {% trans 'Create new certificate' %}
+    </a>
 {% endblock %}

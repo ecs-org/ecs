@@ -8,13 +8,13 @@ from django.utils.text import slugify
 from django.utils.translation import ugettext as _
 
 from ecs.communication.mailutils import deliver
-from ecs.users.utils import user_group_required
+from ecs.users.utils import user_flag_required
 
 from ecs.pki.forms import CertForm
 from ecs.pki.models import Certificate
 
 
-@user_group_required('EC-Signing', 'EC-Office')
+@user_flag_required('is_internal')
 def cert_list(request):
     return render(request, 'pki/cert_list.html', {
         'certs': (
@@ -26,7 +26,7 @@ def cert_list(request):
     })
 
 
-@user_group_required('EC-Signing')
+@user_flag_required('is_internal')
 def create_cert(request):
     form = CertForm(request.POST or None)
 
@@ -61,7 +61,7 @@ def create_cert(request):
 
 
 @require_POST
-@user_group_required('EC-Signing', 'EC-Office')
+@user_flag_required('is_internal')
 def revoke_cert(request, cert_pk=None):
     cert = get_object_or_404(Certificate, pk=cert_pk)
     cert.revoke()
