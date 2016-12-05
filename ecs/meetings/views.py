@@ -891,7 +891,6 @@ def meeting_details(request, meeting_pk=None, active=None):
                 continue
 
             # remove all participations for a previous selected board member.
-            # XXX: this may delete manually entered data. (FMD2)
             Participation.objects.filter(medical_category=amc.category,
                 entry__meeting=meeting, user=previous_expert).delete()
 

@@ -351,7 +351,9 @@ class Meeting(models.Model):
             constraint_end = timezone.make_aware(
                 datetime.combine(start_date, constraint.end_time),
                 timezone.get_current_timezone())
-            for participation in Participation.objects.filter(entry__meeting=self, user=constraint.user, ignored_for_optimization=False):
+            participations = Participation.objects.filter(entry__meeting=self,
+                user=constraint.user, ignored_for_optimization=False)
+            for participation in participations:
                 start = participation.entry.start
                 end = participation.entry.end
                 if (constraint_start >= start and constraint_start < end) or \
@@ -368,7 +370,12 @@ class Meeting(models.Model):
         for user in self.users_with_constraints:
             users_by_id[user.id] = user
         entries = list()
-        for participation in Participation.objects.filter(entry__meeting=self).select_related('user').order_by('user__username'):
+        participations = (Participation.objects
+            .filter(entry__meeting=self)
+            .select_related('user')
+            .order_by('user__username')
+        )
+        for participation in participations:
             users_by_entry_id.setdefault(participation.entry_id, set()).add((users_by_id.get(participation.user_id), participation.ignored_for_optimization))
         for entry in self.timetable_entries.filter(timetable_index__isnull=False).select_related('submission').order_by('timetable_index'):
             entry.users = users_by_entry_id.get(entry.id, set())
@@ -475,7 +482,12 @@ class Meeting(models.Model):
         })
 
     def _get_timeframe_for_user(self, user):
-        entries = list(self.timetable_entries.filter(participations__pk__in=Participation.objects.filter(user=user, ignored_for_optimization=False).values('pk').query).exclude(timetable_index=None).order_by('timetable_index'))
+        entries = list(self.timetable_entries.filter(
+            participations__pk__in=
+                Participation.objects
+                    .filter(user=user, ignored_for_optimization=False)
+                    .values('pk')
+        ).exclude(timetable_index=None).order_by('timetable_index'))
         if not entries:
             return None
         start, end = entries[0].start, entries[-1].end
@@ -529,7 +541,7 @@ class Meeting(models.Model):
 
         AssignedMedicalCategory.objects.filter(
             pk__in=[amc.pk for amc in old_assignments.values()]).delete()
-        Participation.objects.filter(entry__meeting=self).filter(
+        Participation.objects.filter(entry__meeting=self,
             medical_category__in=old_assignments.keys()).delete()
         
         # delete Participation entries where med-cat is not inside the referenced study anymore
@@ -765,7 +777,6 @@ class Participation(models.Model):
     task = models.ForeignKey('tasks.Task', null=True)
     ignored_for_optimization = models.BooleanField(default=False)
 
-    objects = AuthorizationManager()
 
 WEIGHT_CHOICES = (
     (1.0, _('impossible')),

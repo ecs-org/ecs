@@ -8,7 +8,7 @@ from ecs.checklists.models import Checklist
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task, TaskType
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
-from ecs.meetings.models import Meeting, TimetableEntry, Participation
+from ecs.meetings.models import Meeting, TimetableEntry
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
 
 
@@ -153,4 +153,3 @@ class MeetingQFactory(authorization.QFactory):
 
 authorization.register(Meeting, factory=MeetingQFactory)
 authorization.register(TimetableEntry, lookup='meeting')
-authorization.register(Participation, lookup='entry__meeting')
