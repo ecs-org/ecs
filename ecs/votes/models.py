@@ -16,6 +16,7 @@ from ecs.votes.signals import on_vote_publication
 from ecs.users.utils import get_current_user
 from ecs.documents.models import Document
 from ecs.utils.viewutils import render_pdf_context
+from ecs.tasks.models import Task
 
 
 @reversion.register(fields=('result', 'text'))
@@ -96,6 +97,9 @@ class Vote(models.Model):
         submission = self.get_submission()
         submission.is_expired = True
         submission.save()
+
+        Task.unfiltered.for_submission(submission).filter(
+            task_type__is_dynamic=True).open().mark_deleted()
     
     def extend(self):
         self.valid_until += timedelta(days=365)

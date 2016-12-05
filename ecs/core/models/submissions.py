@@ -182,6 +182,9 @@ class Submission(models.Model):
         self.is_finished = True
         self.save()
 
+        Task.unfiltered.for_submission(self).filter(
+            task_type__is_dynamic=True).open().mark_deleted()
+
     def get_current_docstash(self):
         return DocStash.objects.get(
             group='ecs.core.views.submissions.create_submission_form',
