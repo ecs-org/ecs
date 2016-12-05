@@ -577,8 +577,6 @@ class TimetableEntry(models.Model):
     is_open = models.BooleanField(default=True)
     text = models.TextField(null=True, blank=True)
 
-    objects = AuthorizationManager()
-
     def __str__(self):
         return "TOP %s" % (self.agenda_index + 1)
 
