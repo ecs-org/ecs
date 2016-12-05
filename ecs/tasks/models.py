@@ -74,7 +74,6 @@ class TaskQuerySet(models.QuerySet):
     def for_submissions(self, submissions):
         from ecs.core.models import Submission
         from ecs.votes.models import Vote
-        from ecs.meetings.models import Meeting, TimetableEntry
         from ecs.checklists.models import Checklist
         from ecs.notifications.models import Notification, NOTIFICATION_MODELS
 
@@ -84,11 +83,6 @@ class TaskQuerySet(models.QuerySet):
         vote_ct = ContentType.objects.get_for_model(Vote)
         votes = Vote.objects.filter(submission_form__submission__in=submissions)
         q |= Q(content_type=vote_ct, data_id__in=votes.values('pk'))
-
-        meeting_ct = ContentType.objects.get_for_model(Meeting)
-        entries = TimetableEntry.objects.filter(submission__in=submissions)
-        q |= Q(content_type=meeting_ct,
-            data_id__in=entries.values('meeting_id'))
 
         notification_cts = ContentType.objects.get_for_models(
             *NOTIFICATION_MODELS).values()
