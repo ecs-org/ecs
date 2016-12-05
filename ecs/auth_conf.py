@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from ecs import authorization
 from ecs.core.models import (Submission, SubmissionForm, Investigator,
     TemporaryAuthorization, MySubmission)
-from ecs.checklists.models import Checklist, ChecklistAnswer
+from ecs.checklists.models import Checklist
 from ecs.votes.models import Vote
 from ecs.tasks.models import Task, TaskType
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
@@ -138,7 +138,6 @@ class ChecklistQFactory(authorization.QFactory):
         return q
 
 authorization.register(Checklist, factory=ChecklistQFactory)
-authorization.register(ChecklistAnswer, lookup='checklist')
 
 
 class MeetingQFactory(authorization.QFactory):

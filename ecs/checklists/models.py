@@ -143,8 +143,6 @@ class ChecklistAnswer(models.Model):
     answer = models.NullBooleanField(null=True)
     comment = models.TextField(null=True, blank=True)
 
-    objects = AuthorizationManager()
-
     class Meta:
         ordering = ('question__blueprint', 'question__index')
 
