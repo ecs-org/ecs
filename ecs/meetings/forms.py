@@ -163,15 +163,6 @@ AssignedMedicalCategoryFormSet = modelformset_factory(AssignedMedicalCategory,
     extra=0, can_delete=False, form=AssignedMedicalCategoryForm)
 
 
-class _EntryMultipleChoiceField(forms.ModelMultipleChoiceField):
-    def __init__(self, *args, **kwargs):
-        super().__init__(TimetableEntry.objects, *args, **kwargs)
-
-    def label_from_instance(self, obj):
-        s = obj.submission
-        return '{0} {1}'.format(s.get_ec_number_display(), s.project_title_display())
-
-
 class ExpeditedVoteForm(forms.ModelForm):
     accept_prepared_vote = forms.BooleanField(required=False, initial=True)
 
