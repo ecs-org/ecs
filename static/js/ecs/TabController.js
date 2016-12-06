@@ -82,6 +82,8 @@ ecs.TabController = function(tabGroupContainers) {
         controller.tabGroups.push(new ecs.TabGroup(controller, header, container, tabs));
     }, null, this));
     this.selectTab(initialSelection || this.tabs[0]);
+    if (window.location.hash)
+        $(window).scrollTop(0);
 
     $(window).on('hashchange', this.onHashChange.bind(this));
 };
