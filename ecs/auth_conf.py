@@ -9,7 +9,7 @@ from ecs.votes.models import Vote
 from ecs.tasks.models import Task, TaskType
 from ecs.notifications.models import Notification, AmendmentNotification, SafetyNotification, NotificationAnswer, NOTIFICATION_MODELS
 from ecs.meetings.models import Meeting
-from ecs.votes.constants import PERMANENT_VOTE_RESULTS
+from ecs.votes.constants import NEGATIVE_VOTE_RESULTS
 
 
 class SubmissionQFactory(authorization.QFactory):
@@ -30,14 +30,18 @@ class SubmissionQFactory(authorization.QFactory):
         )
 
         ### permissions until final vote is published
-        until_vote_q = self.make_q(
+        lifetime_q = self.make_q(
             pk__in=Checklist.objects.values('submission__pk'))
-        until_vote_q |= self.make_q(pk__in=
+        lifetime_q |= self.make_q(pk__in=
             Task.objects.filter(
                 content_type=ContentType.objects.get_for_model(Submission),
             ).values('data_id')
         )
-        q |= until_vote_q & ~self.make_q(current_published_vote__result__in=PERMANENT_VOTE_RESULTS)
+        q |= (
+            lifetime_q &
+            self.make_q(is_finished=False, is_expired=False) &
+            ~self.make_q(current_published_vote__result__in=NEGATIVE_VOTE_RESULTS)
+        )
 
         notification_cts = map(ContentType.objects.get_for_model,
             (AmendmentNotification, SafetyNotification))
