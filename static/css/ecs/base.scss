@@ -19,10 +19,10 @@ body {
     width: 86.5%;
     display: block;
     margin-bottom: 5px;
-
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    line-height: normal;
 }
 
 #headernav {
