@@ -289,12 +289,12 @@ def workflow_token_received(sender, **kwargs):
 
 @receiver(token_consumed)
 def workflow_token_consumed(sender, **kwargs):
-    for task in Task.objects.filter(workflow_token=sender, closed_at=None):
+    for task in Task.unfiltered.filter(workflow_token=sender, closed_at=None):
         task.close()
 
 @receiver(token_marked_deleted)
 def workflow_token_marked_deleted(sender, **kwargs):
-    for task in Task.objects.filter(workflow_token=sender, deleted_at=None):
+    for task in Task.unfiltered.filter(workflow_token=sender, deleted_at=None):
         task.deleted_at = timezone.now()
         task.save()
 
