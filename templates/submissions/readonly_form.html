@@ -336,7 +336,9 @@
         {% if user.profile.is_internal %}
             <div id="workflow_log" class="tab collapse">
                 <div data-widget-url="{% url 'ecs.tasks.views.task_backlog' submission_pk=submission.pk %}"></div>
-                <div class="mt-2" data-widget-url="{% url 'ecs.checklists.views.create_task' submission_pk=submission.pk %}"></div>
+                {% if submission.allows_dynamic_task_creation %}
+                    <div class="mt-2" data-widget-url="{% url 'ecs.checklists.views.create_task' submission_pk=submission.pk %}"></div>
+                {% endif %}
             </div>
         {% endif %}
     {% endif %}

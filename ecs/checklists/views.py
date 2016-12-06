@@ -41,6 +41,7 @@ def checklist_pdf_debug(request, checklist_pk=None):
 @user_flag_required('is_internal')
 def create_task(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
+    assert submission.allows_dynamic_task_creation()
 
     form = ChecklistTaskCreationForm(request.GET or request.POST or None,
         prefix='checklist_task')
