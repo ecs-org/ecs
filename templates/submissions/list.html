@@ -78,10 +78,15 @@
                             {% if submission_form|allows_edits_by:user %}
                                 <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">{% trans "Edit" %}</a> |
                             {% endif %}
-                            <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=submission_form.pk %}">
-                                {% trans "Download PDF" %} 
-                                <i class="fa fa-file-pdf-o text-primary"></i>
-                            </a>
+                            {% if submission_form.pdf_document %}
+                                <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=submission_form.pk %}">
+                                    {% trans "Download PDF" %}
+                                    <i class="fa fa-file-pdf-o"></i>
+                                </a>
+                            {% else %}
+                                {% trans 'PDF is being rendered' %}
+                                <i class="fa fa-spinner fa-spin"></i>
+                            {% endif %}
                             {% with submission.paper_submission_task as paper_submission_review_task %}
                                 {% if paper_submission_review_task %}
                                     | <a href="{{ paper_submission_review_task.url }}">{% trans "Paper Submission Review" %}</a>

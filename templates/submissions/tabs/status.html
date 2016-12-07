@@ -75,10 +75,16 @@
                         </td>
                         <td>
                             {% if forloop.first %}
-                                <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}">
-                                    <span class="fa fa-file-pdf-o"></span>
-                                    {% trans 'Download PDF' %}
-                                </a><br>
+                                {% if sf.pdf_document %}
+                                    <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}">
+                                        <span class="fa fa-file-pdf-o"></span>
+                                        {% trans 'Download PDF' %}
+                                    </a>
+                                {% else %}
+                                    {% trans 'PDF is being rendered' %}
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                {% endif %}
+                                <br>
                             {% endif %}
                             {% if debug %}
                                 <a href="{% url 'ecs.core.views.submissions.submission_form_pdf_debug' submission_form_pk=sf.pk %}">

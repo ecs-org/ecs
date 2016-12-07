@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 from ecs.communication.utils import send_system_message_template
 from ecs.core import signals
+from ecs.core.tasks import render_submission_form
 from ecs.tasks.models import Task
 from ecs.users.utils import sudo, get_current_user
 from ecs.users.utils import get_office_user
@@ -53,13 +54,15 @@ def on_study_submit(sender, **kwargs):
     submission_form = kwargs['form']
     user = kwargs['user']
 
-    submission_form.render_pdf_document()
-
     resubmission_task = Task.objects.for_user(user).for_data(submission).filter(
         task_type__workflow_node__uid__in=('resubmission', 'b2_resubmission')
     ).open().first()
     if resubmission_task:
         resubmission_task.done(user)
+
+    render_submission_form.apply_async(kwargs={
+        'submission_form_id': submission_form.id,
+    })
 
 
 @receiver(signals.on_presenter_change)

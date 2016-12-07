@@ -298,6 +298,7 @@ SMTPD_CONFIG = {
 
 CELERY_IMPORTS = (
     'ecs.communication.tasks',
+    'ecs.core.tasks',
     'ecs.core.tests.test_tasks',
     'ecs.documents.tasks',
     'ecs.integration.tasks',

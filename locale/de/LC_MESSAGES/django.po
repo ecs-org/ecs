@@ -3007,6 +3007,9 @@ msgstr "Bearbeiten"
 msgid "No title."
 msgstr "Titel"
 
+msgid "PDF is being rendered"
+msgstr "PDF wird gerendert"
+
 msgid "Categories"
 msgstr "Fachgebiete"
 
