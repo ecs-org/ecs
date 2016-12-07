@@ -87,14 +87,14 @@
                     {% endif %}
                     {% if answer.pdf_document_id %}
                         {% url 'ecs.notifications.views.notification_answer_pdf' notification_pk=notification.pk as pdf_url %}
-                        <a class="card-link" href="{{ pdf_url }}">
+                        <a class="btn btn-outline-primary card-link" href="{{ pdf_url }}">
                             <span class="fa fa-file-pdf-o"></span>
                             {% trans 'Download PDF' %}
                         </a>
                     {% endif %}
                     {% if debug %}
                         {% url 'ecs.notifications.views.notification_answer_pdf_debug' notification_pk=notification.pk as debug_pdf_url %}
-                        <a class="card-link" href="{{ debug_pdf_url }}">
+                        <a class="btn btn-outline-primary card-link ml-0" href="{{ debug_pdf_url }}">
                             <span class="fa fa-file-pdf-o"></span>
                             PDF Debug
                         </a>
