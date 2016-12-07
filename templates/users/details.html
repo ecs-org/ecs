@@ -16,13 +16,9 @@
     <form action="" method="post">
         {% csrf_token %}
         {% for field in form %}
-            {% include "bootstrap/form_field.html" %}
+            {% include "bootstrap/form_field.html" with inline=True %}
         {% endfor %}
-        <div class="row my-2">
-            <div class="col-md-6 push-md-3">
-                <input class="btn btn-primary btn-block" type="submit" value="{% trans 'Save' %}" />
-            </div>
-        </div>
+        <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}" />
     </form>
 </div>
 {% endblock %}

@@ -10,28 +10,32 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}" class="button_submit">{% trans 'Download Invoice as xls file' %}</a></p>
+    <div class="container my-1">
+        <a class="btn btn-secondary btn-sm mt-1" href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}" class="button_submit">
+            {% trans 'Download Invoice as xls file' %}
+        </a>
 
-    <h2>{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</h2>
-    {% with invoice.stats as stats %}
-    <table class="billing_summary">
-        {% for item in stats.summary.values %}
+        <h2 class="mt-1">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</h2>
+        {% with invoice.stats as stats %}
+        <table class="table table-sm">
+            {% for item in stats.summary.values %}
+                <tr>
+                    <td>{{ item.label }}</td>
+                    <td>{{ item.count }}</td>
+                    <td><span class="price">{{ item.price.price|euro }}</span></td>
+                    <td><span class="price">{{ item.price.text }}</span></td>
+                    <td><span class="price">{{ item.price.price|multiply:item.count|euro }}</span></td>
+                </tr>
+            {% endfor %}
             <tr>
-                <td>{{ item.label }}</td>
-                <td>{{ item.count }}</td>
-                <td><span class="price">{{ item.price.price|euro }}</span></td>
-                <td><span class="price">{{ item.price.text }}</span></td>
-                <td><span class="price">{{ item.price.price|multiply:item.count|euro }}</span></td>
+                <td><strong>(brutto = netto)</strong></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong>{{ stats.total|euro }}</strong></td>
             </tr>
-        {% endfor %}
-        <tr>
-            <td><strong>(brutto = netto)</strong></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><strong>{{ stats.total|euro }}</strong></td>
-        </tr>
-    </table>
-    {% endwith %}
+        </table>
+        {% endwith %}
+    </div>
 {% endblock %}
 

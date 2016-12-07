@@ -1,12 +1,11 @@
 {% load core i18n %}
 
-<div id="meeting_list" class="form_main">
-
+<div class="form_main">
 {% if next_tops %}
 <h2>{% trans 'Next TOPs' %}</h2>
-<ol>
+<ul class="list-group mb-1">
 {% for top in next_tops %}
-    <li>
+    <li class="list-group-item">
         {{ top }} - 
         {% if top.submission %}
             {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
@@ -18,7 +17,7 @@
         {% endif %}
     </li>
 {% endfor %}
-</ol>
+</ul>
 {% endif %}
 
 {% if open_tops %}
@@ -30,9 +29,9 @@
     {% else %}
         <h4><i>{% trans "No board member." %}</i></h4>
     {% endif %}
-    <ol>
+    <ul class="list-group mb-1">
     {% for top in tops %}
-        <li>
+        <li class="list-group-item">
             {{ top }} - 
             {% if top.submission %}
                 {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
@@ -44,7 +43,7 @@
             {% endif %}
         </li>
     {% endfor %}
-    </ol>
+    </ul>
 {% endfor %}
 </div>
 {% endif %}
@@ -52,9 +51,9 @@
 
 {% if closed_tops %}
 <h2>{% trans "Finished TOPs" %}</h2>
-<ol>
+<ul class="list-group mb-1">
 {% for top in closed_tops %}
-    <li>
+    <li class="list-group-item">
         {{ top }} - 
         {% if top.submission %}
             {{ top.submission|ec_number }}: ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})
@@ -63,7 +62,7 @@
         {% endif %}
     </li>
 {% endfor %}
-</ol>
+</ul>
 {% endif %}
 
 </div>

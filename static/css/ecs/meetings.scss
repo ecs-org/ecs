@@ -1,15 +1,5 @@
 @import "ecs/variables.scss";
 
-/* meeting list */
-
-#meeting_list ol {
-    list-style: none;
-
-    li {
-        padding: 5px 8px;
-    }
-}
-
 /* meeting_editor */
 
 #meeting_editor {
@@ -278,7 +268,7 @@
     }
 
     .meeting_assistant_nav {
-        width: 180px;
+        width: 220px;
         float: left;
         padding: 10px;
     }

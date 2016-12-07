@@ -10,23 +10,33 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{% trans 'Old Payments' %}</h2>
+    <div class="container">
+        <h2>{% trans 'Old Payments' %}</h2>
 
-    {% include 'paginator.inc' with page=payments %}
+        {% include 'paginator.inc' with page=payments %}
     
-    <div class="billing_list">
-      <ol>
-      {% for payment in payments.object_list %}
-          <li>
-              <a href="{% url 'ecs.billing.views.view_checklist_payment' payment_pk=payment.pk %}">{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</a>
-              [{% with payment.checklists.count as count %}{% if count == 1 %}{% trans '1 Review' %}{% else %}{% blocktrans with count as count %}{{ count }} Reviews{% endblocktrans %}{% endif %},{% endwith %}
-              {{ payment.total|euro }}]
-          </li>
-      {% empty %}
-          <li><em>{% trans 'No payment yet.' %}</em></li>
-      {% endfor %}
-      </ol>
+        <ul class="list-group">
+            {% for payment in payments.object_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'ecs.billing.views.view_checklist_payment' payment_pk=payment.pk %}">
+                        {% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}
+                    </a>:
+                    {% with payment.checklists.count as count %}
+                        {% if count == 1 %}
+                            {% trans '1 Review' %}
+                        {% else %}
+                            {% blocktrans with count as count %}{{ count }} Reviews{% endblocktrans %}
+                        {% endif %}
+                        -
+                    {% endwith %}
+                    {{ payment.total|euro }}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-xs-center">
+                    <em>{% trans 'No payment yet.' %}</em>
+                </li>
+            {% endfor %}
+        </ul>
+        {% include 'paginator.inc' with page=payments %}
     </div>
-
-    {% include 'paginator.inc' with page=payments %}
 {% endblock %}

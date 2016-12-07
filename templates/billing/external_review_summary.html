@@ -10,19 +10,23 @@
 {% endblock %}
 
 {% block content %}
-    <p><a href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}" class="button_submit">{% trans 'Download payment as xls file' %}</a></p>
+    <div class="container my-1">
+        <a class="btn btn-secondary btn-sm" href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}" class="button_submit">
+            {% trans 'Download payment as xls file' %}
+        </a>
 
-    <h2>{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
-    <table class="billing_summary">
-        <tr>
-            <th>{% trans 'Reviewer' %}</th>
-            <th>{% trans 'Study' %}</th>
-        </tr>
-        {% for checklist in payment.checklists.all %}
+        <h2 class="mt-1">{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
+        <table class="table table-sm">
             <tr>
-                <td>{{ checklist.user }}</td>
-                <td>{{ checklist.submission|ec_number }}</td>
+                <th>{% trans 'Reviewer' %}</th>
+                <th>{% trans 'Study' %}</th>
             </tr>
-        {% endfor %}
-    </table>
+            {% for checklist in payment.checklists.all %}
+                <tr>
+                    <td>{{ checklist.user }}</td>
+                    <td>{{ checklist.submission|ec_number }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

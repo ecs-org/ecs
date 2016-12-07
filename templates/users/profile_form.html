@@ -2,42 +2,23 @@
 {% load i18n %}
 
 {% block content %}
-<div class="profile">
-<h2>{% blocktrans %}Profile of {{ user }}{% endblocktrans %}</h2>
+    <div class="container">
+        <h2>{% blocktrans %}Profile of {{ user }}{% endblocktrans %}</h2>
 
-<form action="" method="post">
-    {% csrf_token %}
-    <h3>{% trans "Personal details" %}</h3>
-    <table>
-        {% for field in form %}
-            {% if field.name == "iban" %}
-                </table>
-
-                <p>{% trans "If you work for the ethics commission as an external reviewer, you have to fill out the following fields" %}</p>
-                <table>
-            {% endif %}
-            {% if field.name == "forward_messages_after_minutes" %}
-                </table>
-
-                <h3>{% trans "Settings" %}</h3>
-                <table>
-            {% endif %}
-            <tr>
-                <th>{{ field.label }}:</th>
-                <td>
-                    {% if field.errors %}
-                        <ul class="errorlist">
-                            {% for error in field.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
+        <form action="" method="post">
+            {% csrf_token %}
+            <h3 class="mb-1">{% trans "Personal details" %}</h3>
+                {% for field in form %}
+                    {% if field.name == "iban" %}
+                        <p>{% trans "If you work for the ethics commission as an external reviewer, you have to fill out the following fields" %}:</p>
                     {% endif %}
-                    {{ field }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    <input type="submit" value="{% trans 'Save' %}" />
-</form>
-</div>
+                    {% if field.name == "forward_messages_after_minutes" %}
+                        <h3>{% trans "Settings" %}</h3>
+                    {% endif %}
+                    {% include "bootstrap/form_field.html" with inline=True %}
+                {% endfor %}
+            </table>
+            <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}" />
+        </form>
+    </div>
 {% endblock %}

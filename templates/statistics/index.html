@@ -5,38 +5,36 @@
 {% block headertitle %}{% blocktrans %}Statistics for the year of {{ current_year }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <div class="statistics">
-        <ol class="years">
-        {% for year in years %}
-            <li>
+    <div class="container">
+        <div class="btn-group mb-1">
+            {% for year in years %}
                 {% if year == current_year %}
-                    {{ year }}
+                    <button class="btn btn-primary active">{{ year }}</button>
                 {% else %}
-                    <a href="{% url 'ecs.statistics.views.stats' year=year %}">{{ year }}</a>
+                    <a class="btn btn-primary" href="{% url 'ecs.statistics.views.stats' year=year %}">{{ year }}</a>
                 {% endif %}
-            </li>
-        {% endfor %}
-        </ol>
+            {% endfor %}
+        </div>
 
         {% for section in stats.values %}
-            <h2>{{ section.label }}</h2>
-            <table>
-            {% for entry in section %}
-                <tr>
-                    <th>{{ entry.label }} ({{ entry.paper_number }})</th>
-                    <td>{{ entry.count }}</td>
-                    <td>
+            <h2>
+                {{ section.label }}
+            </h2>
+            <ul class="list-group mb-1">
+                {% for entry in section %}
+                    <li class="list-group-item">
+                        {{ entry.label }} <small class="text-muted">({{ entry.paper_number }})</small>
+                        <span class="tag tag-default tag-pill float-xs-right">{{ entry.count }}</span>
                         {% if entry.with_listing %}
-                        {% for submission in entry.submissions %}
-                            <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                                {{ submission|ec_number }}
-                            </a>
-                        {% endfor %}
+                            <p class="mb-0">
+                                {% for submission in entry.submissions %}
+                                    <a href="{% url 'view_submission' submission_pk=submission.pk %}">{{ submission|ec_number }}</a>{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </p>
                         {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-            </table>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endfor %}
     </div>
 {% endblock %}

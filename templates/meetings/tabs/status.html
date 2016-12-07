@@ -1,12 +1,32 @@
 {% load core i18n userutils %}
-
-<table>
-    <tr><th>{% trans "Title" %}:</th><td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td></tr>
-    <tr><th>{% trans "Scheduled for" %}:</th><td>{{ meeting.start|date:'d.m.Y H:i' }}{% if not meeting.started and user.profile.is_internal %} <a href="{% url 'ecs.meetings.views.edit_meeting' meeting_pk=meeting.pk %}">{% trans "edit" %}</a>{% endif %}</td></tr>
-    <tr><th>{% trans "Deadline for Submission" %}:</th><td>{{ meeting.deadline|date:'d.m.Y' }}</td></tr>
-    <tr><th>{% trans "Deadline for Thesis Submission" %}:</th><td>{{ meeting.deadline_diplomathesis|date:'d.m.Y' }}</td></tr>
+<div class="container">
+<table class="table table-sm mb-1">
+    <colgroup>
+        <col class="bg-faded">
+        <col class="w-100">
+    </colgroup>
     <tr>
-        <th>{% trans "Status" %}:</th>
+        <th>{% trans "Title" %}</th>
+        <td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Scheduled for" %}</th>
+        <td>{{ meeting.start|date:'d.m.Y H:i' }}
+            {% if not meeting.started and user.profile.is_internal %} 
+                <a href="{% url 'ecs.meetings.views.edit_meeting' meeting_pk=meeting.pk %}">{% trans "edit" %}</a>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>{% trans "Deadline for Submission" %}</th>
+        <td>{{ meeting.deadline|date:'d.m.Y' }}</td>
+    </tr>
+    <tr>
+        <th class="pr-1">{% trans "Deadline for Thesis Submission" %}</th>
+        <td>{{ meeting.deadline_diplomathesis|date:'d.m.Y' }}</td>
+    </tr>
+    <tr>
+        <th>{% trans "Status" %}</th>
         <td>
             {% if meeting.started and meeting.ended %}
                 {% trans "Ended" %}
@@ -19,13 +39,19 @@
         </td>
     </tr>
     {% if meeting.started %}
-        <tr><th>{% trans "Started at" %}:</th><td>{{ meeting.started|date:'d.m.Y H:i' }}</td></tr>
+        <tr>
+            <th>{% trans "Started at" %}</th>
+            <td>{{ meeting.started|date:'d.m.Y H:i' }}</td>
+        </tr>
     {% endif %}
     {% if meeting.ended %}
-        <tr><th>{% trans "Ended at" %}:</th><td>{{ meeting.ended|date:'d.m.Y H:i' }}</td></tr>
+        <tr>
+            <th>{% trans "Ended at" %}</th>
+            <td>{{ meeting.ended|date:'d.m.Y H:i' }}</td>
+        </tr>
     {% endif %}
     <tr>
-        <th>{% trans "Agenda" %}:</th>
+        <th>{% trans "Agenda" %}</th>
         <td>
             <a href="{% url 'ecs.meetings.views.agenda_pdf' meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
             {% if user|is_member_of:'EC-Office' %}
@@ -37,121 +63,176 @@
         </td>
     </tr>
     {% if user|is_member_of:'EC-Office' %}
-    <tr>
-        <th>{% trans "Expedited Reviewer Invitations" %}:</th>
-        <td>
-            <div data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
-        </td>
-    </tr>
+        <tr>
+            <th>{% trans "Expedited Reviewer Invitations" %}:</th>
+            <td>
+                <div class="row">
+                    <div class="col-lg-8 col-xl-6" data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
+                </div>
+            </td>
+        </tr>
     {% endif %}
     <tr>
-        <th>{% trans "Timetable" %}:</th>
+        <th>{% trans "Timetable" %}</th>
         <td><a href="{% url 'ecs.meetings.views.timetable_pdf' meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>
     </tr>
     <tr>
-        <th>{% trans "Protocol" %}:</th>
+        <th>{% trans "Protocol" %}</th>
         <td>
             <a href="{% url 'ecs.meetings.views.protocol_pdf' meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a>
             {% if user|is_member_of:'EC-Office' and meeting.protocol_sent_at %}
-                ({% trans 'Sent at' %}: {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
+                ({% trans 'Sent at' %} {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
             {% endif %}
         </td>
     </tr>
 </table>
 
-<h2>{% trans 'Statistics' %}</h2>
+<h2>{% trans 'Statistics' %} <small>({{ cumulative_count }} Studien)</small></h2>
 
-<p><strong>{% trans 'Gesamt' %}:</strong> {{ cumulative_count }}</p>
-<table>
-    <tr>
-        <th>{% trans "board" %}</th>
-        <td>{{ board_submissions|length }}</td>
-        <td>{% with board_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr class="sub">
-        <th>- {% trans "AMG" %}</th>
-        <td>{{ amg_submissions|length }}</td>
-        <td>{% with amg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr class="sub">
-        <th>- {% trans "MPG" %}</th>
-        <td>{{ mpg_submissions|length }}</td>
-        <td>{% with mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr class="sub">
-        <th>- {% trans "AMG/MPG" %}</th>
-        <td>{{ amg_mpg_submissions|length }}</td>
-        <td>{% with amg_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr class="sub">
-        <th>- {% trans "Andere" %}</th>
-        <td>{{ not_amg_and_not_mpg_submissions|length }}</td>
-        <td>{% with not_amg_and_not_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Retro. Thesis" %}</th>
-        <td>{{ retrospective_thesis_submissions|length }}</td>
-        <td>{% with retrospective_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Expedited" %}</th>
-        <td>{{ expedited_submissions|length }}</td>
-        <td>{% with expedited_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Local EC" %}</th>
-        <td>{{ localec_submissions|length }}</td>
-        <td>{% with localec_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-</table>
-<table>
-    <tr>
-        <th>{% trans "Dissertation" %}</th>
-        <td>{{ dissertation_submissions|length }}</td>
-        <td>{% with dissertation_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Diploma Thesis" %}</th>
-        <td>{{ diploma_thesis_submissions|length }}</td>
-        <td>{% with diploma_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Multicentric, Main EC" %}</th>
-        <td>{{ amg_multi_main_submissions|length }}</td>
-        <td>{% with amg_multi_main_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Billable" %}</th>
-        <td>{{ billable_submissions|length }}</td>
-        <td>{% with billable_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "B3 (examined)" %}</th>
-        <td>{{ b3_examined_submissions|length }}</td>
-        <td>{% with b3_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-    <tr>
-        <th>{% trans "B3 (not examined)" %}</th>
-        <td>{{ b3_not_examined_submissions|length }}</td>
-        <td>{% with b3_not_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}</td>
-    </tr>
-</table>
-<table>
-    <tr>
-        <th>{% trans 'Substantial amendments' %}</th>
-        <td>{{ substantial_amendments.count }}</td>
-        <td>
-            {% for amendment in substantial_amendments %}
-                {% with submission=amendment.get_submission %}
-                    {% if user.profile.is_internal %}
-                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=amendment.pk %}" target="_blank">
-                            {{ submission.get_ec_number_display }}
-                        </a>{% if not forloop.last %}, {% endif %}
-                    {% else %}
-                        {{ submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}
-                    {% endif %}
-                {% endwith %}
-            {% endfor %}
-        </td>
-    </tr>
-</table>
+<ul class="list-group mb-1">
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "board" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ board_submissions|length }}</span>
+    </h5>
+
+    <h6 class="list-group-item-heading">
+        {% trans "AMG" %}
+        ({{ amg_submissions|length }})
+    </h6>
+    <p class="list-group-item-text mb-1">
+        {% with amg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+
+    <h6 class="list-group-item-heading">
+        {% trans "MPG" %}
+        ({{ mpg_submissions|length }})
+    </h6>
+    <p class="list-group-item-text mb-1">
+        {% with mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+
+    <h6 class="list-group-item-heading">
+        {% trans "AMG/MPG" %}
+        ({{ amg_mpg_submissions|length }})
+    </h6>
+    <p class="list-group-item-text mb-1">
+        {% with amg_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+
+    <h6 class="list-group-item-heading">
+        {% trans "Andere" %}
+        ({{ not_amg_and_not_mpg_submissions|length }})
+    </h6>
+    <p class="list-group-item-text">
+        {% with not_amg_and_not_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Retro. Thesis" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ retrospective_thesis_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with retrospective_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Expedited" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ expedited_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with expedited_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Local EC" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ localec_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with localec_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+</ul>
+
+<ul class="list-group mb-1">
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Dissertation" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ dissertation_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with dissertation_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Diploma Thesis" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ diploma_thesis_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with diploma_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Multicentric, Main EC" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ amg_multi_main_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with amg_multi_main_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "Billable" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ billable_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with billable_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "B3 (examined)" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ b3_examined_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with b3_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans "B3 (not examined)" %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ b3_not_examined_submissions|length }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% with b3_not_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+    </p>
+  </li>
+</ul>
+
+<ul class="list-group mb-1">
+  <li class="list-group-item">
+    <h5 class="list-group-item-heading">
+        {% trans 'Substantial amendments' %}
+        <span class="tag tag-default tag-pill float-xs-right">{{ substantial_amendments.count }}</span>
+    </h5>
+    <p class="list-group-item-text">
+        {% for amendment in substantial_amendments %}
+            {% with submission=amendment.get_submission %}
+                {% if user.profile.is_internal %}
+                    <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=amendment.pk %}" target="_blank">
+                        {{ submission.get_ec_number_display }}
+                    </a>{% if not forloop.last %}, {% endif %}
+                {% else %}
+                    {{ submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}
+                {% endif %}
+            {% endwith %}
+        {% endfor %}
+    </p>
+  </li>
+ </ul>
+</div>

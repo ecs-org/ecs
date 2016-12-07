@@ -2041,13 +2041,11 @@ msgstr "Nachrichtenvertretung"
 msgid "Circular Proxy Chain: {}"
 msgstr "Zirkuläre Vertretungs-Kette"
 
-#, fuzzy
 msgid "New password"
-msgstr "Passwort setzen"
+msgstr "Neues Passwort"
 
-#, fuzzy
 msgid "New password confirmation"
-msgstr "Keine Angaben"
+msgstr "Passwort bestätigen"
 
 msgid "Start must be before end."
 msgstr ""
@@ -2480,10 +2478,8 @@ msgstr "Kein Text"
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
 
-#, fuzzy
-#| msgid "Study Search"
 msgid "Search"
-msgstr "Studien-Suche"
+msgstr "Suchen"
 
 msgid "last edited"
 msgstr "zuletzt bearbeitet"
@@ -2760,10 +2756,8 @@ msgstr "B3 (behandelt)"
 msgid "B3 (not examined)"
 msgstr "B3 (nicht behandelt)"
 
-#, fuzzy
-#| msgid "Submit Amendment"
 msgid "Substantial amendments"
-msgstr "Änderungen absenden"
+msgstr "Substantielle Amendments"
 
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"

@@ -8,54 +8,68 @@
 
 <form action="{{ request.path }}" method="post">
     {% csrf_token %}
-    <table>
-        {{ filterform.as_table }}
-    </table>
+    {% for field in filterform.visible_fields %}
+        {% include 'bootstrap/form_field.html' with inline=True %}
+    {% endfor %}
+    {% for hidden in filterform.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
     <input class="btn btn-primary" type="submit" value="{% trans 'Search' %}" />
 </form>
 
 {% include 'paginator.inc' with page=users %}
 
-<ul class="user_list">
+<ul class="user_list list-group">
 {% for profile in users.object_list %}
-    <li class="user collapsed{% if profile.profile.is_indisposed %} indisposed{% endif %}{% if not profile.is_active %} inactive{% endif %}">
+    <li class="list-group-item user collapsed{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
         <div class="head">
-            <span class="username">
+            <strong>
                 {{ profile|formal_name }}
                 {% if profile.profile.is_phantom %}
                     ({% trans "phantom" %})
                 {% endif %}
-            </span>
-            <span class="email">{{ profile.email }}</span>
-            <span class="indisposed_warning">[{% trans 'Indisposed' %}]</span>
-            <span class="inactive_warning">[{% trans 'Inactive' %}]</span>
+            </strong>
+            <span>{{ profile.email }}</span>
+            {% if profile.profile.is_indisposed %}
+                <span class="float-xs-right mx-1">[{% trans 'Indisposed' %}]</span>
+            {% endif %}
+            {% if not profile.is_active %}
+                <span class="float-xs-right mx-1">[{% trans 'Inactive' %}]</span>
+            {% endif %}
         </div>
         <div class="body">
             <a href="{% url 'ecs.users.views.details' user_pk=profile.pk %}">{% trans 'Edit Details' %}</a>
             | <a href="{% url 'ecs.users.views.indisposition' user_pk=profile.pk %}">
                     {% if profile.profile.is_indisposed %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
                 </a>
-            | <form action="{% url 'ecs.users.views.toggle_active' user_pk=profile.pk %}" method="post"><a href="" class="submit_parent">{% if profile.is_active %}{% trans "Deactivate" %}{% else %}{% trans "Activate" %}{% endif %}</a>{% csrf_token %}</form>
+            | <form class="d-inline" action="{% url 'ecs.users.views.toggle_active' user_pk=profile.pk %}" method="post">
+                {% csrf_token %}
+                <a href="" class="submit_parent">
+                    {% if profile.is_active %}
+                        {% trans "Deactivate" %}
+                    {% else %}
+                        {% trans "Activate" %}
+                    {% endif %}
+                </a>
+            </form>
             {% with profile as profile_user %}
-            {% with profile_user.profile as profile %}
-            <div class="profile">
-            <table class="profile_data">
-                <tr><th>Organisation:</th><td>{{ profile.organisation }}</td></tr>
-                <tr><th>Position:</th><td>{{ profile.jobtitle }}</td></tr>
-                <tr><th>E-Mail:</th><td>{{ profile_user.email }}</td></tr>
-                <tr><th>Telefon:</th><td>{{ profile.phone }}</td></tr>
-                <tr><th>Fax:</th><td>{{ profile.fax }}</td></tr>
-                <tr><th>Adresse/Privatadresse falls Gutachter:</th><td>
-                    {{ profile.address1 }}<br/>
-                    {{ profile.address2 }}<br/>
-                    {{ profile.zip_code }} {{ profile.city }}
-                </td></tr>
-                <tr><th>IBAN:</th><td>{{ profile.iban }}</td></tr>
-                <tr><th>SWIFT-BIC:</th><td>{{ profile.swift_bic }}</td></tr>
-                <tr><th>Sozialversicherungsnummer:</th><td>{{ profile.social_security_number }}</td></tr>
-            </table>
-            </div>
-            {% endwith %}
+                {% with profile_user.profile as profile %}
+                    <table class="table table-sm mt-1">
+                        <tr><th class="bg-faded">Organisation:</th><td class="w-100">{{ profile.organisation }}</td></tr>
+                        <tr><th class="bg-faded">Position:</th><td class="w-100">{{ profile.jobtitle }}</td></tr>
+                        <tr><th class="bg-faded">E-Mail:</th><td class="w-100">{{ profile_user.email }}</td></tr>
+                        <tr><th class="bg-faded">Telefon:</th><td class="w-100">{{ profile.phone }}</td></tr>
+                        <tr><th class="bg-faded">Fax:</th><td class="w-100">{{ profile.fax }}</td></tr>
+                        <tr><th class="bg-faded text-nowrap">Adresse/Privatadresse falls Gutachter:</th><td class="w-100">
+                            {{ profile.address1 }}<br/>
+                            {{ profile.address2 }}<br/>
+                            {{ profile.zip_code }} {{ profile.city }}
+                        </td></tr>
+                        <tr><th class="bg-faded">IBAN:</th><td class="w-100">{{ profile.iban }}</td></tr>
+                        <tr><th class="bg-faded">SWIFT-BIC:</th><td class="w-100">{{ profile.swift_bic }}</td></tr>
+                        <tr><th class="bg-faded">Sozialversicherungsnummer:</th><td class="w-100">{{ profile.social_security_number }}</td></tr>
+                    </table>
+                {% endwith %}
             {% endwith %}
         </div>
     </li>

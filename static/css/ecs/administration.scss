@@ -3,95 +3,15 @@
 /* user administration */
 
 .administration_detail {
-    ul {
-        margin: 0 0 20px;
-        padding: 5px;
-    }
-
-    ul.user_list {
-        margin: 20px 0px !important;
-        li {
-            list-style-type: none;
-            &.user:nth-child(odd) {
-                background: $beige;
-            }
-            &.user:nth-child(even) {
-                background: $beige-dark;
-            }
-        }
-    }
-
     .user_list {
         .user {
-            border-radius: 5px;
-            margin-bottom: 3px;
-            border: 1px solid $wheatbrown;
-            .head {
-                padding: 2px 10px;
-                cursor: pointer;
-                .username {
-                    font-weight: bold;
-                }
-                .email {
-                    margin-left: 10px;
-                    color: $grey-40;
-                    display: none;
-                }
-                .indisposed_warning {
-                    float: right;
-                    display: none;
-                }
-                .inactive_warning {
-                    float: right;
-                    display: none;
-                }
-            }
             .body {
-                padding: 10px;
-                background-color: white;
-                margin: 5px;
-                form {
-                    display: inline;
-                }
             }
             &.collapsed {
-                .head {
-                    .email {
-                        display: inline;
-                    }
-                }
                 .body {
                     display: none;
                 }
             }
-            &.indisposed {
-                border: 1px solid yellow;
-                .head .indisposed_warning {
-                    display: inline;
-                }
-            }
-            &.inactive {
-                border: 1px solid red;
-                .head .inactive_warning {
-                    display: inline;
-                }
-            }
-        }
-    }
-
-    .CharField {
-
-        .ecs-TextAreaToolbar {
-            display: inline-block;
-        }
-
-        textarea#id_invitation_text {
-            display: block;
-            margin-left: 240px;
-        }
-
-        .boilerplate_selector {
-            left: 260px;
         }
     }
 }

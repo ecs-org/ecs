@@ -13,14 +13,12 @@
 /* table border definitions */
 
 .meeting_detail th,
-.profile th,
 .catalogue_list th {
     background-color: #ebe8d0;
     border-bottom: 1px solid $wheatbrown;
     border-collapse: collapse;
 }
 .meeting_detail td,
-.profile td,
 .billing_summary td,
 .catalogue_list td {
     border-bottom: 1px solid $wheatbrown;
@@ -54,37 +52,6 @@
     progress {
         display: none;
     }
-}
-
-/*
- * list cycles
- * XXX: This should all be replaced with bootstrap's table-striped class. Sigh.
- */
-
-#meeting_list li:nth-of-type(1) ,
-.billing_list li:nth-of-type(1) ,
-.billing_summary tr:nth-of-type(1) {
-    border-top: 1px solid $wheatbrown;
-}
-.administration_detail .user_list tr:nth-child(odd) ,
-#meeting_list li:nth-child(odd) ,
-.billing_list li:nth-child(odd) ,
-.billing_summary tr:nth-child(odd) {
-    background: $beige;
-    border-bottom: 1px solid $wheatbrown;
-}
-.administration_detail .user_list tr:nth-child(even) ,
-#meeting_list li:nth-child(even) ,
-.billing_list li:nth-child(even) ,
-.billing_summary tr:nth-child(even) {
-    background: $beige-dark;
-    border-bottom: 1px solid $wheatbrown;
-}
-.administration_detail .user_list tr:hover,
-#meeting_list li:hover,
-.billing_list li:hover,
-.billing_summary tr:hover {
-    background: #fefefe;
 }
 
 /* filter list */

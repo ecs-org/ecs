@@ -1,23 +1,24 @@
 {% load i18n widget_tweaks %}
+<div class="container">
+    <form action="{{ request.path }}" method="post" class="open-in-widget">
+        {% csrf_token %}
+        {{ formset.management_form }}
 
-<form action="{{ request.path }}" method="post" class="open-in-widget">
-    {% csrf_token %}
-    {{ formset.management_form }}
+        {% for form in formset.forms %}
+            <fieldset class="form-group">
+                {{ form.id }}
+                {{ form.text.errors }}
+                <label for="{{ form.text.id_for_label }}">
+                    {{ form.instance }}, {{ form.instance.title }}
+                </label>
+                {% render_field form.text class+="form-control" %}
+            </fieldset>
+        {% endfor %}
 
-    {% for form in formset.forms %}
-        <fieldset class="form-group">
-            {{ form.id }}
-            {{ form.text.errors }}
-            <label for="{{ form.text.id_for_label }}">
-                {{ form.instance }}, {{ form.instance.title }}
-            </label>
-            {% render_field form.text class+="form-control" %}
-        </fieldset>
-    {% endfor %}
-
-    <a href="" class="btn btn-primary submit-in-widget">Speichern</a>
-    <a class="send_emails btn btn-danger" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
-</form>
+        <a href="" class="btn btn-primary submit-in-widget">Speichern</a>
+        <a class="send_emails btn btn-danger" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
+    </form>
+</div>
 
 <script type="text/javascript">
     (function() {

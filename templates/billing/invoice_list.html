@@ -10,23 +10,33 @@
 {% endblock %}
 
 {% block content %}
-    <h2>{% trans 'Old Invoices' %}</h2>
+    <div class="container">
+        <h2>{% trans 'Old Invoices' %}</h2>
 
-    {% include 'paginator.inc' with page=invoices %}
-    
-    <div class="billing_list">
-      <ol>
-      {% for invoice in invoices.object_list %}
-          <li>
-              <a href="{% url 'ecs.billing.views.view_invoice' invoice_pk=invoice.pk %}">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</a>
-              [{% with invoice.submissions.count as count %}{% if count == 1 %}{% trans '1 Submission' %}{% else %}{% blocktrans with count as count %}{{ count }} Submissions{% endblocktrans %}{% endif %},{% endwith %}
-              {{ invoice.stats.total|euro }}]
-          </li>
-      {% empty %}
-          <li><em>{% trans 'No invoice yet.' %}</em></li>
-      {% endfor %}
-      </ol>
+        {% include 'paginator.inc' with page=invoices %}
+
+        <ul class="list-group">
+            {% for invoice in invoices.object_list %}
+                <li class="list-group-item">
+                    <a href="{% url 'ecs.billing.views.view_invoice' invoice_pk=invoice.pk %}">
+                        {% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}
+                    </a>:
+                    {% with invoice.submissions.count as count %}
+                        {% if count == 1 %}
+                            {% trans '1 Submission' %}
+                        {% else %}
+                            {% blocktrans with count as count %}{{ count }} Submissions{% endblocktrans %}
+                        {% endif %}
+                        -
+                    {% endwith %}
+                    {{ invoice.stats.total|euro }}
+                </li>
+            {% empty %}
+                <li class="list-group-item text-xs-center">
+                    <em>{% trans 'No invoice yet.' %}</em>
+                </li>
+            {% endfor %}
+        </ul>
+        {% include 'paginator.inc' with page=invoices %}
     </div>
-    
-    {% include 'paginator.inc' with page=invoices %}
 {% endblock %}
