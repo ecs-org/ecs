@@ -47,7 +47,12 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         user = get_current_user()
         if not self.readonly and user.profile.is_executive_board_member:
-            self.fields['result'] = ResultField(required=True, initial=self.instance.result)
+            self.fields['result'] = Vote._meta.get_field('result').formfield(
+                initial=self.instance.result)
+
+            # reorder fields
+            self.fields['text'] = self.fields.pop('text')
+            self.fields['is_final_version'] = self.fields.pop('is_final_version')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -71,7 +76,8 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
 
 
 class VotePreparationForm(forms.ModelForm):
-    result = ResultField(choices=VOTE_PREPARATION_CHOICES, required=True)
+    result = Vote._meta.get_field('result').formfield(
+        choices=VOTE_PREPARATION_CHOICES)
 
     class Meta:
         model = Vote
@@ -86,7 +92,8 @@ class VotePreparationForm(forms.ModelForm):
 
 
 class B2VotePreparationForm(forms.ModelForm):
-    result = ResultField(choices=B2_VOTE_PREPARATION_CHOICES, required=True)
+    result = Vote._meta.get_field('result').formfield(
+        choices=B2_VOTE_PREPARATION_CHOICES)
     
     class Meta:
         model = Vote

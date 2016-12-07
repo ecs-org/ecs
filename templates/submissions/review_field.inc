@@ -1,6 +1,6 @@
 {% load core widget_tweaks %}
 {% with field|get_field_info as field_info %}
-    {% if field.field|type_name == "BooleanField" or field.field|type_name == "TypedChoiceField" %}
+    {% if field.field|type_name == "BooleanField" %}
         <div class="form-check">
             {% if not readonly and field_info.help_text %}
                 <span class="help_text">

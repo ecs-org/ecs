@@ -1,7 +1,9 @@
 {% load core i18n %}
 
 {% if form.errors %}
-    {{ form.errors }}
+    <div class="alert alert-danger text-xs-center">
+        {{ form.errors }}
+    </div>
 {% endif %}
 
 {% if not review_form.readonly %}

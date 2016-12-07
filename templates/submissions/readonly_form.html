@@ -226,11 +226,7 @@
             {% endwith %}
 
             {% with vote_review_form as review_form %}
-                {% if review_form.is_preparation %}
-                    {% include 'submissions/review_form.inc' %}
-                {% else %}
-                    {% include 'submissions/vote_review_form.inc' %}
-                {% endif %}
+                {% include 'submissions/review_form.inc' %}
             {% endwith %}
 
             {% if debug and vote_review_form.instance.pk %}
