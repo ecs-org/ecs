@@ -17,7 +17,7 @@ PASSPHRASE_CHARS = string.ascii_lowercase + string.digits
 
 class Certificate(models.Model):
     user = models.ForeignKey(User, related_name='certificates')
-    cn = models.CharField(max_length=100, unique=True)
+    cn = models.CharField(max_length=64, unique=True)
     subject = models.TextField()
     serial = models.IntegerField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)

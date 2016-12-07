@@ -15,7 +15,7 @@ class CertForm(forms.Form):
             is_active=True
         )
     )
-    cn = forms.CharField()
+    cn = forms.CharField(max_length=64)
     
     def clean(self):
         cd = super().clean()
