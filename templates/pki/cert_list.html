@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             {% for cert in certs %}
-                <tr class="{% if cert.revoked_at %}revoked{% endif %} {% if cert.is_expired %}text-muted{% endif %}">
+                <tr class="{% if cert.revoked_at or cert.is_expired %}invalid{% endif %} {% if cert.is_expired %}table-danger{% endif %}">
                     <td>{{ cert.user }}</td>
                     <td>{{ cert.cn }}</td>
                     <td>{{ cert.created_at|date:'d.m.Y' }}</td>
