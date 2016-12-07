@@ -1,14 +1,5 @@
 @import "ecs/variables.scss";
 
-#boilerplate {
-    textarea {
-        width: 400px;
-    }
-    input[type=submit] {
-        margin-left: 50px;
-    }
-}
-
 .boilerplate_selector {
     display: none;
     position: absolute;
@@ -48,16 +39,6 @@
         height: 25px;
         padding: 5px;
         display: block;
-    }
-}
-
-
-#content div.boilerplate {
-    margin: 20px 0;
-
-    h4 {
-        display: inline-block;
-        font-size: 16px;
     }
 }
 

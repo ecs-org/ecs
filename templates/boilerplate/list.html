@@ -7,15 +7,29 @@
 {% block menuSelection %}administration{% endblock %}
 
 {% block content %}
-    <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' %}" class="button_submit">{% trans 'New' %}</a>
+    <div class="mb-1">
+        <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' %}" class="btn btn-primary">
+            {% trans 'New' %}
+        </a>
+    </div>
     {% for text in texts %}
-    <div class="boilerplate">
-        <h4>{{ text.slug }}</h4> | <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' text_pk=text.pk %}">{% trans "edit" %}</a>
-        <p>Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr<br />
-           Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr von {{ text.author }} 
-            | <a href="{% url 'ecs.boilerplate.views.delete_boilerplate' text_pk=text.pk %}">{% trans 'Delete' %}</a>
-        </p>
-        <p class="boilerplate_text">{{ text.text|linebreaksbr }}</p>
+    <div class="card">
+        <div class="card-block pb-0">
+            <h4 class="card-title">{{ text.slug }}</h4>
+            <h6 class="card-subtitle text-muted">
+                Erstellt am {{ text.ctime|date:'d.m.Y' }} um {{ text.ctime|date:'H:i' }} Uhr - 
+                Zuletzt bearbeitet am {{ text.mtime|date:'d.m.Y' }} um {{ text.mtime|date:'H:i' }} Uhr von {{ text.author }}
+            </h6>
+        </div>
+        <div class="card-block mt-0">
+            <p class="card-text">{{ text.text }}</p>
+            <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' text_pk=text.pk %}" class="card-link">
+                {% trans "edit" %}
+            </a>
+            <a href="{% url 'ecs.boilerplate.views.delete_boilerplate' text_pk=text.pk %}" class="card-link">
+                {% trans 'Delete' %}
+            </a>
+        </div>
     </div>
     {% empty %}
     <div class="boilerplate">
