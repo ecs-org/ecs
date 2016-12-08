@@ -3,7 +3,7 @@
 pdfutils
 ========
 
-- identification (is valid pdf, number of pages), 
+- identification (is valid pdf, number of pages),
 - manipulation (barcode stamp)
 - conversion (to PDF/A, to text)
 - creation (from html)
@@ -27,11 +27,11 @@ logger = logging.getLogger(__name__)
 
 def pdf_barcodestamp(source, barcode, text=None):
     ''' takes source pdf, stamps a barcode onto every page and output it to dest
-    
+
     :raise IOError: if something goes wrong (including exit errorcode and stderr output attached)
-    ''' 
+    '''
     barcode_ps = loader.render_to_string('pdf/barcode.ps') + """
-        gsave 
+        gsave
         20 100 moveto 0.5 0.5 scale 0 rotate
         ({}) () /qrcode /uk.co.terryburton.bwipp findresource exec
         grestore
@@ -77,8 +77,8 @@ def pdf_barcodestamp(source, barcode, text=None):
 
     stamped.seek(0)
     return stamped
-    
-  
+
+
 def decrypt_pdf(src):
     decrypted = TemporaryFile()
     popen = subprocess.Popen(['qpdf', '--decrypt', '/dev/stdin', '-'],
@@ -99,12 +99,15 @@ def decrypt_pdf(src):
 def wkhtml2pdf(html, param_list=None):
     ''' Takes html and makes an pdf document out of it using the webkit engine
     '''
-    if isinstance(html, str): 
-        html = html.encode('utf-8') 
+    if isinstance(html, str):
+        html = html.encode('utf-8')
 
     def _url_fetcher(url):
         if url.startswith('static:'):
-            path = os.path.join(settings.STATIC_ROOT, url[len('static:'):])
+            path = os.path.abspath(os.path.join(
+                settings.STATIC_ROOT, url[len('static:'):]))
+            if not path.startswith(settings.STATIC_ROOT):
+                raise IOError()
             with open(path, 'rb') as f:
                 data = f.read()
             return {'string': data, 'mime_type': mimetypes.guess_type(path)[0]}
