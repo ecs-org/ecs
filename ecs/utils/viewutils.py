@@ -1,7 +1,7 @@
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
-from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.pdfutils import html2pdf
 
 def render_html(request, template, context):
     if isinstance(template, (tuple, list)):
@@ -24,10 +24,10 @@ def pdf_response(pdf, filename='Unnamed.pdf'):
 
 def render_pdf(request, template, context):
     html = render_html(request, template, context)
-    return wkhtml2pdf(html)
+    return html2pdf(html)
 
 def render_pdf_context(template, context):
     if not hasattr(template, 'render'):
         template = loader.get_template(template)
     html = template.render(context)
-    return wkhtml2pdf(html)
+    return html2pdf(html)

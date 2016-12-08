@@ -96,8 +96,8 @@ def decrypt_pdf(src):
     return decrypted
 
 
-def wkhtml2pdf(html, param_list=None):
-    ''' Takes html and makes an pdf document out of it using the webkit engine
+def html2pdf(html, param_list=None):
+    ''' Takes html and makes an pdf document out of it
     '''
     if isinstance(html, str):
         html = html.encode('utf-8')

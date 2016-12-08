@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import Group
 
 from ecs.utils.testcases import LoginTestCase
-from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.pdfutils import html2pdf
 from ecs.signature.views import sign
 
 
@@ -21,7 +21,7 @@ def _sign_dict():
         'document_barcodestamp': True,
         'html_preview': '<HTML><BODY>unittest</BODY></HTML>',
     }
-    sign_dict['pdf_data'] = wkhtml2pdf(sign_dict['html_preview'])
+    sign_dict['pdf_data'] = html2pdf(sign_dict['html_preview'])
     return sign_dict
 
 def sign_success(request):

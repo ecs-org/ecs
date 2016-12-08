@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template
 
 from ecs.core.serializer import Serializer
-from ecs.utils.pdfutils import wkhtml2pdf
+from ecs.utils.pdfutils import html2pdf
 
 
 class Command(BaseCommand):
@@ -32,6 +32,6 @@ class Command(BaseCommand):
             if options['output_type'] == "html":
                 f.write(html)
             else:
-                f.write(wkhtml2pdf(html))
+                f.write(html2pdf(html))
 
     
