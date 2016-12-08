@@ -49,23 +49,15 @@ def document_types():
 
 @bootstrap.register()
 def import_keys():
-    DEFAULT_ENC_KEY = os.path.join(settings.PROJECT_DIR, 'conf',
-        'storagevault_encrypt.sec')
-    DEFAULT_SIG_KEY = os.path.join(settings.PROJECT_DIR, 'conf',
-        'storagevault_sign.sec')
+    secring = os.path.join(settings.STORAGE_VAULT['gpghome'], 'secring.gpg')
+    if os.path.isfile(secring) and os.stat(secring).st_size > 0:
+        return
 
-    enc_key = settings.STORAGE_VAULT.get('encryption_key')
-    if not enc_key:
-        print('using default STORAGE_VAULT encryption key')
-        with open(DEFAULT_ENC_KEY) as f:
-            enc_key = f.read()
-
-    sig_key = settings.STORAGE_VAULT.get('signature_key')
-    if not sig_key:
-        print('using default STORAGE_VAULT signature key')
-        with open(DEFAULT_SIG_KEY) as f:
-            sig_key = f.read()
-
+    print('creating ecs-gpg using default STORAGE_VAULT keys')
+    enc_key = open(os.path.join(settings.PROJECT_DIR, 'conf',
+        'storagevault_encrypt.sec')).read()
+    sig_key = open(os.path.join(settings.PROJECT_DIR, 'conf',
+        'storagevault_sign.sec')).read()
     gpgutils.reset_keystore(settings.STORAGE_VAULT['gpghome'])
     gpgutils.import_key(enc_key, settings.STORAGE_VAULT['gpghome'])
     gpgutils.import_key(sig_key, settings.STORAGE_VAULT['gpghome'])

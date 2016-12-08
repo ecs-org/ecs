@@ -260,8 +260,6 @@ STORAGE_VAULT = {
     'gpghome' : os.path.join(PROJECT_DIR, '..', 'ecs-gpg'),
     'encryption_uid': 'ecs_mediaserver',
     'signature_uid': 'ecs_authority',
-    'encryption_key': os.getenv('ECS_VAULT_ENCRYPT'),
-    'signature_key': os.getenv('ECS_VAULT_SIGN'),
 }
 
 # domain to use
