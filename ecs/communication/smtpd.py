@@ -76,7 +76,11 @@ class EcsMailReceiver(smtpd.SMTPServer):
             text = self._get_text(msg)
 
             orig_msg = self._find_msg(rcpttos[0])
-            orig_msg.thread.add_message(orig_msg.receiver, text, rawmsg=data,
+            thread = orig_msg.thread
+            thread.messages.filter(
+                receiver=orig_msg.receiver,
+            ).update(unread=False)
+            thread.add_message(orig_msg.receiver, text, rawmsg=data,
                 rawmsg_msgid=msg['Message-ID'])
 
         except SMTPError as e:
