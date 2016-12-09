@@ -12,20 +12,8 @@ Encryption/Signing, Decryption/Verifying modul.
   - Usage in ecs: via commandline wrapper
 """
 
-import os, subprocess, tempfile, re
+import subprocess, tempfile, re
 import shutil
-
-
-def reset_keystore(gpghome):
-    ''' wipes out keystore under directory gpghome
-
-    :warn: deletes every file in this directory
-    '''
-    os.makedirs(gpghome, mode=0o700, exist_ok=True)
-    for f in os.listdir(gpghome):
-        path = os.path.join(gpghome, f);
-        if os.path.isfile(path):
-            os.remove(path)
 
 
 def gen_keypair(ownername, secretkey_filename, publickey_filename):

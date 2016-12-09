@@ -58,7 +58,6 @@ def import_keys():
         'storagevault_encrypt.sec')).read()
     sig_key = open(os.path.join(settings.PROJECT_DIR, 'conf',
         'storagevault_sign.sec')).read()
-    gpgutils.reset_keystore(settings.STORAGE_VAULT['gpghome'])
     gpgutils.import_key(enc_key, settings.STORAGE_VAULT['gpghome'])
     gpgutils.import_key(sig_key, settings.STORAGE_VAULT['gpghome'])
 
