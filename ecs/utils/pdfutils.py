@@ -10,6 +10,7 @@ pdfutils
 
 '''
 import os
+import re
 import mimetypes
 import subprocess, logging
 from binascii import hexlify
@@ -98,8 +99,9 @@ def decrypt_pdf(src):
 
 
 def html2pdf(html, param_list=None):
-    ''' Takes html and makes an pdf document out of it
-    '''
+    # XXX: Remove control characters, otherwise lxml will go kaboom.
+    html = re.sub(r'[\x00-\x08\x0b\x0e-\x1f\x7f]', '', html)
+
     if isinstance(html, str):
         html = html.encode('utf-8')
 
