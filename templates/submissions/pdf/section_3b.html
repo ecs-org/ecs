@@ -9,9 +9,9 @@
     </tr>
     {% for drug in submission_form.nontesteduseddrug_set.all %}
         <tr>
-            <td class="value">{{ drug.generic_name }}</td>
-            <td class="value">{{ drug.preparation_form }}</td>
-            <td class="value">{{ drug.dosage }}</td>
+            <td>{{ drug.generic_name }}</td>
+            <td>{{ drug.preparation_form }}</td>
+            <td>{{ drug.dosage }}</td>
         </tr>
     {% endfor %}
   </tbody>

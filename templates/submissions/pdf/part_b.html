@@ -26,10 +26,10 @@ Krankenanstalt/Institut/Abteilung: <strong> {{ inv.organisation }} </strong></p>
         <th>10.5 Fax</th>
         <th>10.6 e-mail-Adresse:</th>
     </tr><tr>
-        <td><strong>{{ inv.phone }}</strong></td>
-        <td><strong>{{ inv.mobile }}</strong></td>
-        <td><strong>{{ inv.fax }}</strong></td>
-        <td><strong>{{ inv.email }}</strong></td>
+        <td>{{ inv.phone }}</td>
+        <td>{{ inv.mobile }}</td>
+        <td>{{ inv.fax }}</td>
+        <td>{{ inv.email }}</td>
     </tr>
 </table>
 
@@ -64,11 +64,11 @@ Krankenanstalt/Institut/Abteilung: <strong> {{ inv.organisation }} </strong></p>
 {% for emp in inv.employees.all %}
   <tbody>
     <tr>
-      <td><strong>{{ emp.get_sex_display }}</strong></td>
-      <td><strong>{{ emp.title }}</strong></td>
-      <td><strong>{{ emp.firstname }}</strong></td>
-      <td><strong>{{ emp.surname }}</strong></td>
-      <td><strong>{{ emp.organisation }}</strong></td>
+      <td>{{ emp.get_sex_display }}</td>
+      <td>{{ emp.title }}</td>
+      <td>{{ emp.firstname }}</td>
+      <td>{{ emp.surname }}</td>
+      <td>{{ emp.organisation }}</td>
     </tr>
   </tbody>
 {% endfor %}

@@ -15,10 +15,10 @@
   {% for m in submission_form.measures_study_specific %}
   <tbody>
     <tr>
-      <td><strong>{{ m.type }}</strong></td>
-      <td><strong>{{ m.count }}</strong></td>
-      <td><strong>{{ m.period }}</strong></td>
-      <td><strong>{{ m.total }}</strong></td>
+      <td>{{ m.type }}</td>
+      <td>{{ m.count }}</td>
+      <td>{{ m.period }}</td>
+      <td>{{ m.total }}</td>
     </tr>
   </tbody>
 {% endfor %}
@@ -39,10 +39,10 @@
   {% for m in submission_form.measures_nonspecific %}
   <tbody>
     <tr>
-      <td><strong>{{ m.type }}</strong></td>
-      <td><strong>{{ m.count }}</strong></td>
-      <td><strong>{{ m.period }}</strong></td>
-      <td><strong>{{ m.total }}</strong></td>
+      <td>{{ m.type }}</td>
+      <td>{{ m.count }}</td>
+      <td>{{ m.period }}</td>
+      <td>{{ m.total }}</td>
     </tr>
   </tbody>
   {% endfor %}
