@@ -1396,6 +1396,9 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
+msgid "XLS-Export done"
+msgstr "XLS-Export fertig"
+
 msgid "yes"
 msgstr "Ja"
 
@@ -1467,6 +1470,13 @@ msgstr "Kontaktperson"
 
 msgid "same as sponsor"
 msgstr "wie Sponsor"
+
+msgid ""
+"The XLS export has been started. You will get a message when the file is "
+"ready."
+msgstr ""
+"Der XLS-Export wurde gestartet. Sie erhalten eine Nachricht sobald die Datei "
+"bereitsteht."
 
 msgid "All Studies"
 msgstr "Alle Studien"

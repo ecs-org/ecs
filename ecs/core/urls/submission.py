@@ -14,6 +14,7 @@ urlpatterns = (
 
     url(r'^list/all/$', views.all_submissions),
     url(r'^list/xls/$', views.xls_export),
+    url(r'^list/xls/(?P<shasum>[0-9a-f]{40})/$', views.xls_export_download),
     url(r'^list/assigned/$', views.assigned_submissions),
     url(r'^list/mine/$', views.my_submissions),
 

@@ -1,0 +1,8 @@
+{% extends 'msg_core.txt' %}
+
+{% block content %}
+Ihr XLS-Export steht nun zum Download zur Verfügung:
+{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.core.views.submissions.xls_export_download' shasum=shasum %}
+
+Dieser Link ist 30 Tage gültig.
+{% endblock %}
