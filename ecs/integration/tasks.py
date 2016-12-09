@@ -1,7 +1,11 @@
 import logging
 
-from celery.signals import task_failure
+from datetime import timedelta
 
+from celery.signals import task_failure
+from celery.task import periodic_task
+
+from django.core.management import call_command
 
 logger = logging.getLogger('task')
 
@@ -20,3 +24,8 @@ def process_failure_signal(exception, traceback, sender, task_id, signal, args, 
         }
     )
 task_failure.connect(process_failure_signal)
+
+
+@periodic_task(run_every=timedelta(days=1))
+def clearsessions():
+    call_command('clearsessions')
