@@ -50,7 +50,7 @@ def document_types():
 @bootstrap.register()
 def import_keys():
     secring = os.path.join(settings.STORAGE_VAULT['gpghome'], 'secring.gpg')
-    if os.path.isfile(secring) and os.stat(secring).st_size > 0:
+    if os.path.exists(secring):
         return
 
     print('creating ecs-gpg using default STORAGE_VAULT keys')
