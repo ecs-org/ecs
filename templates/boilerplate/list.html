@@ -22,7 +22,7 @@
             </h6>
         </div>
         <div class="card-block mt-0">
-            <p class="card-text">{{ text.text }}</p>
+            <p class="card-text">{{ text.text|linebreaksbr }}</p>
             <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' text_pk=text.pk %}" class="card-link">
                 {% trans "edit" %}
             </a>
