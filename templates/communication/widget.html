@@ -105,6 +105,10 @@
                 </div>
             </div>
         </li>
+    {% empty %}
+        <li class="list-group-item text-xs-center text-muted">
+            <em>{% trans 'No messages yet!' %}</em>
+        </li>
     {% endfor %}
     </ul>
 </div>

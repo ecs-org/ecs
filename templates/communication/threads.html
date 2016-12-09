@@ -120,6 +120,12 @@
                     {% endif %}
                     </td>
                 </tr>
+            {% empty %}
+                <tr>
+                    <td class="text-xs-center text-muted" colspan="6">
+                        <em>{% trans 'No messages yet!' %}</em>
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
