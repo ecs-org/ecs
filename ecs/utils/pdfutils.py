@@ -19,7 +19,8 @@ from django.conf import settings
 from django.template import loader
 from django.utils.encoding import smart_bytes
 
-from weasyprint import HTML, default_url_fetcher
+from weasyprint import HTML
+from weasyprint.urls import open_data_url
 
 
 logger = logging.getLogger(__name__)
@@ -103,15 +104,18 @@ def html2pdf(html, param_list=None):
         html = html.encode('utf-8')
 
     def _url_fetcher(url):
-        if url.startswith('static:'):
+        if url.startswith('data:'):
+            return open_data_url(url)
+        elif url.startswith('static:'):
             path = os.path.abspath(os.path.join(
                 settings.STATIC_ROOT, url[len('static:'):]))
             if not path.startswith(settings.STATIC_ROOT):
-                raise IOError()
+                raise ValueError(
+                    'static: URI points outside of static directory!')
             with open(path, 'rb') as f:
                 data = f.read()
             return {'string': data, 'mime_type': mimetypes.guess_type(path)[0]}
 
-        return default_url_fetcher(url)
+        raise ValueError('Only data: and static: URIs are allowed')
 
     return HTML(string=html, url_fetcher=_url_fetcher).write_pdf()
