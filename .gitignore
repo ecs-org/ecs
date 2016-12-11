@@ -4,5 +4,6 @@ __pycache__
 version.py
 local_settings.py
 static/CACHE/
+static/help/
 celerybeat-schedule
 celerybeat.pid
