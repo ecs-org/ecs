@@ -12,6 +12,10 @@
         {% endblock %}
     </div>
 
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
     {% block tab_headers %}
         <div id="tabs_submission" class="tab_headers collapse">
             {% for tab, fieldsets in tabs %}
@@ -20,10 +24,6 @@
         </div>
     {% endblock %}
 
-    {{ block.super }}
-{% endblock %}
-
-{% block content %}
       <div class="form_main{% if readonly %} readonly{% endif %}">
         <div id="tabs">
           {% block tabs %}
