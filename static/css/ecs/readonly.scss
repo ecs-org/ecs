@@ -23,24 +23,6 @@
             color: $grey-20;
         }
     }
-
-    .tab_headers {
-        background: $grey-ochre-dark;
-
-        a {
-            background: $grey-ochre;
-            color: $grey-20;
-
-            &.active {
-                background: $grey-ochre-light;
-            }
-
-            &.readonly_review {
-                background: $lightskyblue-light;
-                color: $royalblue-dark;
-            }
-        }
-    }
 }
 
 /* pre fields should wrap */

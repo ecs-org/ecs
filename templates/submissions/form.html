@@ -22,19 +22,22 @@
     {{ block.super }}
     <div class="header_actions">
       <div class="last_save">&nbsp;</div>
-      <a href="" id="save-button" class="button_save">{% trans "Just Save" %}</a>
-      <a href="" id="submit-button" class="button_submit">
-        {% if submission and submission.current_submission_form %}
-            {% if notification_type %}
-                {% trans "Submit Amendment" %}
-            {% else %}
-                {% trans "Resubmit" %}
-            {% endif %}
-        {% else %}
-            {% trans "Submit" %}
-        {% endif %}
-      </a>
     </div>
+{% endblock %}
+
+{% block submission_action_buttons %}
+    <a href="" id="save-button" class="ml-2 btn btn-secondary">{% trans "Just Save" %}</a>
+    <a href="" id="submit-button" class="btn btn-primary">
+      {% if submission and submission.current_submission_form %}
+          {% if notification_type %}
+              {% trans "Submit Amendment" %}
+          {% else %}
+              {% trans "Resubmit" %}
+          {% endif %}
+      {% else %}
+          {% trans "Submit" %}
+      {% endif %}
+    </a>
 {% endblock %}
 
 {% block content %}

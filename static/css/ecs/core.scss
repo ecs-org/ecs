@@ -12,16 +12,8 @@ input[disabled]:not(.btn) {
     margin-bottom: 0;
 }
 
-.tab_header_groups a,
-.tab_headers a {
+.tab_header_groups a {
     display: inline-block;
-    text-decoration: none;
-    padding: 4px 7px;
-    background: #f4f4f4;
-    color: $royalblue-dark;
-    font-weight: bolder;
-    margin-right: 3px;
-    border-radius: 5px 5px 0 0;
 
     &.active {
         background: $lightskyblue;
@@ -34,38 +26,25 @@ input[disabled]:not(.btn) {
     }
 }
 
-.tab_header_groups a.active.errors,
-.tab_headers a.active.errors  {
+.tab_headers a {
+    display: inline-block;
+
+    &.active {
+        background: $lightskyblue;
+        color: $royalblue-dark;
+    }
+}
+
+.tab_header_groups a.active.errors {
     color: $white;
     background: $orange;
 }
 
 .tab_headers {
-    background: $lightskyblue;
-    width: 84%;
-    padding: 5px;
-    border-radius: 0 5px 5px 5px;
-    margin-bottom: 0;
 
     a {
-        padding: 3px 5px;
-        background: $skyblue;
-        color: $white;
-        font-weight: normal;
-        border-radius: 3px;
-
-        &.active {
-            background: $lightskyblue-light;
-            color: $royalblue-dark;
-        }
-
-        &.errors {
-            background: $brick-red;
-            color: #fff !important;
-        }
 
         &.disabled {
-            background-color: $grey-80;
             color: $grey-60;
         }
     }
