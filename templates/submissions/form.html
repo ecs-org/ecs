@@ -18,16 +18,11 @@
     {% endif %}
 {% endblock %}
 
-{% block header_actions %}
-    {{ block.super }}
-    <div class="header_actions">
-      <div class="last_save">&nbsp;</div>
-    </div>
-{% endblock %}
-
 {% block submission_action_buttons %}
-    <a href="" id="save-button" class="ml-2 btn btn-secondary">{% trans "Just Save" %}</a>
-    <a href="" id="submit-button" class="btn btn-primary">
+    <li class="nav-item float-xs-right">
+        <small class="mr-1 text-muted last_save">&nbsp;</small>
+        <a href="" id="save-button" class="btn btn-secondary">{% trans "Just Save" %}</a>
+        <a href="" id="submit-button" class="btn btn-primary">
       {% if submission and submission.current_submission_form %}
           {% if notification_type %}
               {% trans "Submit Amendment" %}
@@ -37,7 +32,8 @@
       {% else %}
           {% trans "Submit" %}
       {% endif %}
-    </a>
+        </a>
+    </li>
 {% endblock %}
 
 {% block content %}

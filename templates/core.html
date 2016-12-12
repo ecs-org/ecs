@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block htmlbody %}
-    <nav class="navbar navbar-light pb-0 mb-0">
+    <nav class="navbar navbar-light bg-faded pb-0 mb-0">
         <a class="navbar-brand" href="{% url 'ecs.dashboard.views.view_dashboard' %}">
             <img src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
         </a>
@@ -176,7 +176,7 @@
             </li> 
         </ul>
     </nav>
-    <div class="mb-1 mx-1">
+    <div class="px-1 bg-faded">
         {% userswitcher %}
         <small class="float-xs-right">
             {% if user.profile.is_internal %}

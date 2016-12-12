@@ -26,7 +26,7 @@ ecs.TabbedForm.prototype = {
             data: currentData + '&' + extraParameter + '=' + extraParameter,
             success: function() {
                 var now = new Date();
-                $('#header .last_save').text(
+                $('.last_save').text(
                     'Last save: ' +
                     ('0' + now.getHours()).slice(-2) + ':' +
                     ('0' + now.getMinutes()).slice(-2)
