@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block headernav %}
-    <div class="tab_header_groups">
+    <ul class="tab_header_groups nav nav-pills">
         {% block tab_header_groups %}
-            <a href="#tabs_submission">{% trans "Submission" %}</a>
+            <li class="nav-item"><a class="nav-link" href="#tabs_submission">{% trans "Submission" %}</a></li>
         {% endblock %}
-    </div>
+    </ul>
 
     {{ block.super }}
 {% endblock %}

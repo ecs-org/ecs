@@ -8,10 +8,6 @@ body {
 }
 
 #header {
-    z-index: 101;
-    background: $lightblue;
-    padding: 10px;
-    border-bottom: 1px solid #B5CFDF;
     position: relative;
 }
 
@@ -23,14 +19,6 @@ body {
     white-space: nowrap;
     overflow: hidden;
     line-height: normal;
-}
-
-#headernav {
-    position: relative;
-    display: block;
-    width: 100%;
-    background: $lightblue;
-    font-size: 14px;
 }
 
 /* general content-specific */

@@ -13,12 +13,6 @@ input[disabled]:not(.btn) {
 }
 
 .tab_header_groups a {
-    display: inline-block;
-
-    &.active {
-        background: $lightskyblue;
-        color: $royalblue-dark;
-    }
 
     &.errors {
         background: $brick-red;

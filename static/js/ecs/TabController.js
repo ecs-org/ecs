@@ -9,6 +9,10 @@ ecs.Tab.prototype = {
         this.header.toggleClass(cls, set);
         this.panel.toggleClass(cls, set);
     },
+    setErrorState: function() {
+        this.header.addClass('text-danger');
+        this.panel.addClass('errors');
+    },
     setSelected: function(selected) {
         this.toggleClass('active', selected);
         this.panel.toggleClass('in', selected);

@@ -12,17 +12,6 @@
     textarea:not(.form-control) {
         margin-left: 240px;
     }
-
-    /* tab headers - TODO: remove after scrollspy implementation */
-    .tab_header_groups a {
-        color: $grey-80;
-        background: $grey-40;
-
-        &.active {
-            background: $grey-ochre-dark;
-            color: $grey-20;
-        }
-    }
 }
 
 /* pre fields should wrap */

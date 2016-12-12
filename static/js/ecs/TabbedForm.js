@@ -5,8 +5,8 @@ ecs.TabbedForm = function(form, tabController, autosaveInterval) {
 
     tabController.tabs.forEach(function(tab) {
         if (tab.panel.find('.errors').length) {
-            tab.toggleClass('text-danger', true);
-            tab.group.header.toggleClass('errors', true);
+            tab.setErrorState();
+            tab.group.header.addClass('bg-danger'); // css('border','1px solid red');
         }
     });
 
