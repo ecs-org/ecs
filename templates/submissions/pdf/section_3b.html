@@ -1,18 +1,22 @@
 {% load core corepdf %}
 
 <table class="full_width withborders">
-  <tbody>
-    <tr>
-        <th>Generic Name</th>
-        <th>Darreichungsform</th>
-        <th>Dosis</th>
-    </tr>
-    {% for drug in submission_form.nontesteduseddrug_set.all %}
-        <tr>
-            <td>{{ drug.generic_name }}</td>
-            <td>{{ drug.preparation_form }}</td>
-            <td>{{ drug.dosage }}</td>
-        </tr>
-    {% endfor %}
-  </tbody>
+    <tbody>
+        <thead>
+            <tr>
+                <th style="width: 33.33%;">Generic Name</th>
+                <th style="width: 33.33%;">Darreichungsform</th>
+                <th style="width: 33.33%;">Dosis</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for drug in submission_form.nontesteduseddrug_set.all %}
+                <tr>
+                    <td>{{ drug.generic_name }}</td>
+                    <td>{{ drug.preparation_form }}</td>
+                    <td>{{ drug.dosage }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </tbody>
 </table>

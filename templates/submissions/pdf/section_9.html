@@ -6,39 +6,35 @@
 <h4>Name und Unterschrift der Antragstellerin/des Antragstellers</h4>
 
 <p class="pbi_avoid">
- 9.1 Name: <strong> {{ submission_form.submitter_contact }} </strong> </p>
+    9.1 Name: <strong> {{ submission_form.submitter_contact }} </strong>
+</p>
 
 <p class="pbi_avoid">
- 9.2 Institution/ Firma: <strong> {{ submission_form.submitter_organisation }} </strong> </p>
+    9.2 Institution/ Firma: <strong> {{ submission_form.submitter_organisation }} </strong>
+</p>
 
 <p class="pbi_avoid">
- 9.3 Position: <strong> {{ submission_form.submitter_jobtitle }} </strong> </p>
+    9.3 Position: <strong> {{ submission_form.submitter_jobtitle }} </strong>
+</p>
 
-<table class="nopadding">
-    <tr>
-        <td stlye="width: 6cm;">9.4 Antragsteller/in ist</td>
-        <td>
-            {{ submission_form.submitter_is_coordinator|checkbox }} 9.4.1 koordinierende/r Prüfer/in (multizentrische Studie)
-        </td>
-    </tr>
-    <tr>
-        <td>(nur AMG-Studien)</td>
-        <td>
-            {{ submission_form.submitter_is_main_investigator|checkbox }} 9.4.2 Hauptprüfer/in (monozentrische Studie)
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            {{ submission_form.submitter_is_sponsor|checkbox }} 9.4.3 Sponsor bzw. Vertreter/in des Sponsors
-        </td>
-    </tr>
-    <tr>
-        <td></td>
-        <td>
-            {{ submission_form.submitter_is_authorized_by_sponsor|checkbox }} 9.4.4 vom Sponsor autorisierte Person/Organisation 
-        </td>
-    </tr>
+<table class="full_width nopadding">
+    <tbody>
+        <tr>
+            <td style="width: 25%;">
+                9.4 Antragsteller/in ist:
+                (nur AMG-Studien)
+            </td>
+            <td style="width: 75%;">
+                {{ submission_form.submitter_is_coordinator|checkbox }} 9.4.1 koordinierende/r Prüfer/in (multizentrische Studie)
+                <br>
+                {{ submission_form.submitter_is_main_investigator|checkbox }} 9.4.2 Hauptprüfer/in (monozentrische Studie)
+                <br>
+                {{ submission_form.submitter_is_sponsor|checkbox }} 9.4.3 Sponsor bzw. Vertreter/in des Sponsors
+                <br>
+                {{ submission_form.submitter_is_authorized_by_sponsor|checkbox }} 9.4.4 vom Sponsor autorisierte Person/Organisation
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <p> Ich bestätige hiermit, dass die in diesem

@@ -31,24 +31,26 @@
 <p>
     Teilnehmende Prüfzentren:
     <table class="full_width withborders">
-      <tbody>
-        <tr>
-            <th>Ethik-Kommission</th>
-            <th>Prüfzentrum</th>
-            <th>Prüfärztin/arzt</th>
-        </tr>
-        {% for investigator in form.investigators.all %}
+        <thead>
             <tr>
-                <td>{{ investigator.ethics_commission }}</td>
-                <td>{{ investigator.organisation }}</td>
-                <td>{{ investigator.contact.full_name }}</td>
+                <th style="width: 33.33%;">Ethik-Kommission</th>
+                <th style="width: 33.33%;">Prüfzentrum</th>
+                <th style="width: 33.33%;">Prüfärztin/arzt</th>
             </tr>
-        {% empty %}
-            <tr>
-                <td colspan="4"><em>(kein Prüfzentrum)</em></td>
-            </tr>
-        {% endfor %}
-      </tbody>
+        </thead>
+        <tbody>
+            {% for investigator in form.investigators.all %}
+                <tr>
+                    <td>{{ investigator.ethics_commission }}</td>
+                    <td>{{ investigator.organisation }}</td>
+                    <td>{{ investigator.contact.full_name }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4"><em>(kein Prüfzentrum)</em></td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </p>
 
@@ -62,10 +64,16 @@
 <b>Die Kommission fasst folgenden Beschluss (mit X markiert):</b><br />
 
 <table class="full_width withborders">
-    <tr>
-      <td width="3%"><span class="checkbox">X</span></td>
-      <td>{% include 'votes/pdf/vote_result.inc' with result=vote.result %}</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td style="width: 5%;">
+                <span class="checkbox">X</span>
+            </td>
+            <td style="width: 95%;">
+                {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
+            </td>
+        </tr>
+    </tbody>
 </table> 
 
 <h2 class="metadata">Ergänzende Kommentare</h2>

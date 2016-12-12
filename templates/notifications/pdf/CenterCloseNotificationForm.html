@@ -12,19 +12,19 @@
         <table class="full_width">
             <tbody>
                 <tr>
-                    <td width="25%">4.1 Prüfzentrum</td>
-                    <td class="value">{{ investigator.organisation }}</td>
+                    <td style="width: 25%;">4.1 Prüfzentrum</td>
+                    <td class="value" style="width: 75%;">{{ investigator.organisation }}</td>
                 </tr>
                 <tr>
-                    <td width="25%">4.2 Ethik-Kommission</td>
+                    <td>4.2 Ethik-Kommission</td>
                     <td class="value">{{ investigator.ethics_commission.name }}</td>
                 </tr>
                 <tr>
-                    <td width="25%">4.3 Prüfarzt</td>
+                    <td>4.3 Prüfarzt</td>
                     <td class="value">{{ investigator.contact }}</td>
                 </tr>
                 <tr>
-                    <td width="25%">4.4 Datum der Schließung</td>
+                    <td>4.4 Datum der Schließung</td>
                     <td class="value">{{ notification.centerclosenotification.close_date|date:'d.m.Y' }}</td>
                 </tr>
             </tbody>

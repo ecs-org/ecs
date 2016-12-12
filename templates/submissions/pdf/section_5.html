@@ -6,28 +6,49 @@
     {{ submission_form.insurance_name|not|checkbox }} nein. Wenn <strong>ja</strong>: 
 </p>
 
-<table class="nopadding">
-    <tr><td>
-        5.1.1 Versicherungsgesellschaft: 
-    </td><td class="value">
-        {{ submission_form.insurance_name }}
-    </td></tr><tr><td>
-        5.1.2 Adresse:
-    </td><td class="value">
-        {{ submission_form.insurance_address }}
-    </td></tr><tr><td>
-        5.1.3 Telefon: 
-    </td><td class="value">
-        {{ submission_form.insurance_phone }}
-    </td></tr><tr><td>
-        5.1.4 Polizzennummer:
-    </td><td class="value">
-        {{ submission_form.insurance_contract_number }}
-    </td></tr><tr><td>
-        5.1.5 Gültigkeitsdauer:
-    </td><td class="value">
-        {{ submission_form.insurance_validity }}
-    </td></tr>
+<table class="full_width nopadding">
+    <tbody>
+        <tr>
+            <td style="width: 35%;">
+                5.1.1 Versicherungsgesellschaft:
+            </td>
+            <td class="value" style="width: 65%;">
+                {{ submission_form.insurance_name }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                5.1.2 Adresse:
+            </td>
+            <td class="value">
+                {{ submission_form.insurance_address }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                5.1.3 Telefon:
+            </td>
+            <td class="value">
+                {{ submission_form.insurance_phone }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                5.1.4 Polizzennummer:
+            </td>
+            <td class="value">
+                {{ submission_form.insurance_contract_number }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                5.1.5 Gültigkeitsdauer:
+            </td>
+            <td class="value">
+                {{ submission_form.insurance_validity }}
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <div class="infotext">

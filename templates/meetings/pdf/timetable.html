@@ -5,32 +5,32 @@
 {% block content %}
     {% include 'pdf/ec_head.inc' %}
     
-    <table class="withborders">
-    
-    <tr class="bold">
-        <th width="15%"></th>
-        <th>Anwesenheit {{ meeting.title }}</th>
-        <th>Zeitfenster</th>
-    </tr>
-    
-    {% for row in timetable %}
-        <tr>
-            <td>{{ row.user }}</td>
-            <td>{% for entry in row.entries %}{{ entry.submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-            <td>
-                {{ row.time }}
-                <br>
-                <span style="color:red;">
-                {% if row.entries|length == 1 %}
-                    1 Projekt
-                {% else %}
-                    {{ row.entries|length }} Projekte
-                {% endif %}
-                </span>
-            </td>
-        
-        </tr>
-    {% endfor %}
-    
+    <table class="full_width withborders">
+        <thead>
+            <tr class="bold">
+                <th style="width: 30%;"></th>
+                <th style="width: 55%;">Anwesenheit {{ meeting.title }}</th>
+                <th style="width: 15%;">Zeitfenster</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in timetable %}
+                <tr>
+                    <td>{{ row.user }}</td>
+                    <td>{% for entry in row.entries %}{{ entry.submission.get_ec_number_display }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>
+                        {{ row.time }}
+                        <br>
+                        <span style="color:red;">
+                        {% if row.entries|length == 1 %}
+                            1 Projekt
+                        {% else %}
+                            {{ row.entries|length }} Projekte
+                        {% endif %}
+                        </span>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 {% endblock %}

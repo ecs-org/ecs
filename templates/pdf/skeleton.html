@@ -246,20 +246,23 @@
             display: inline-block;
             text-align: center;
         }
-        .nopadding th,
-        .nopadding td {
+        table.full_width {
+            width: 100%;
+            table-layout: fixed;
+        }
+        table.full_width th,
+        table.full_width td {
+            padding: 0.1cm;
+            overflow-wrap: break-word;
+            box-sizing: border-box;
+        }
+        table.nopadding th,
+        table.nopadding td {
             padding: 2pt;
         }
-        .nopadding td:first-child,
-        .nopadding th:first-child {
+        table.nopadding td:first-child,
+        table.nopadding th:first-child {
             padding-left: 0 !important;
-        }
-        .full_width {
-            width: 100%;
-        }
-        .full_width th,
-        .full_width td {
-            padding: 0.1cm;
         }
         table.withborders td,
         table.withborders th {
@@ -277,9 +280,6 @@
         }
         .withrowborders td:first-child {
             width: 1cm;
-        }
-        table.equal_columns {
-            table-layout: fixed;
         }
         .infotext {
             margin: 0.5cm;
@@ -304,6 +304,10 @@
             border: 1pt solid #000000;
             text-align: center;
             padding: 0.2cm;
+        }
+        .border_top {
+            padding-top: 0.1cm;
+            border-top: 1pt solid #000;
         }
         .border_bottom {
             display: block;

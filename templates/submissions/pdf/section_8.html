@@ -5,32 +5,34 @@
 </div>
 
 <p>8.1 Studiendesign (z.B. doppelblind, randomisiert, kontrolliert, Placebo, Parallelgruppen, multizentrisch)</p>
-<table class="nopadding border_bottom">
-    <tr>
-        <td>{{ submission_form.study_plan_open|checkbox }} 8.1.1 offen </td>
-        <td>{{ submission_form.study_plan_randomized|checkbox }} 8.1.2 randomisiert </td>
-        <td>{{ submission_form.study_plan_parallelgroups|checkbox }} 8.1.3 Parallelgruppen </td>
-        <td>{{ submission_form.is_monocentric|checkbox }} 8.1.4 monozentrisch </td>
-    </tr>
-    <tr>
-        <td>{{ submission_form.study_plan_single_blind|checkbox }} 8.1.5 blind </td>
-        <td>{{ submission_form.study_plan_controlled|checkbox }} 8.1.6 kontrolliert </td>
-        <td>{{ submission_form.study_plan_cross_over|checkbox }} 8.1.7 cross-over </td>
-        <td>{{ submission_form.is_multicentric|checkbox }} 8.1.8 multizentrisch </td>
-    </tr>
-    <tr>
-        <td>{{ submission_form.study_plan_double_blind|checkbox }} 8.1.9 doppelblind </td>
-        <td>{{ submission_form.study_plan_placebo|checkbox }} 8.1.10 Placebo </td>
-        <td>{{ submission_form.study_plan_factorized|checkbox }} 8.1.11 faktoriell </td>
-        <td>{{ submission_form.study_plan_pilot_project|checkbox }} 8.1.12 Pilotprojekt</td>
-    </tr>
-    <tr>
-        <td>{{ submission_form.study_plan_observer_blinded|checkbox }} 8.1.13 observer-blinded </td>
-        <td colspan="3">{{ submission_form.study_plan_equivalence_testing|checkbox }} 8.1.14 Äquivalenzprüfung</td>
-    </tr>
-    <tr>
-        <td colspan="4">{{ submission_form.study_plan_misc|checkbox }} 8.1.15 Sonstiges: {{ submission_form.study_plan_misc|default_if_none:""|linebreaksbr }} </td>
-    </tr>
+<table class="full_width nopadding border_bottom">
+    <tbody>
+        <tr>
+            <td style="width: 27.7%;">{{ submission_form.study_plan_open|checkbox }} 8.1.1 offen </td>
+            <td style="width: 22.2%;">{{ submission_form.study_plan_randomized|checkbox }} 8.1.2 randomisiert </td>
+            <td style="width: 25.8%;">{{ submission_form.study_plan_parallelgroups|checkbox }} 8.1.3 Parallelgruppen </td>
+            <td style="width: 24.3%;">{{ submission_form.is_monocentric|checkbox }} 8.1.4 monozentrisch </td>
+        </tr>
+        <tr>
+            <td>{{ submission_form.study_plan_single_blind|checkbox }} 8.1.5 blind </td>
+            <td>{{ submission_form.study_plan_controlled|checkbox }} 8.1.6 kontrolliert </td>
+            <td>{{ submission_form.study_plan_cross_over|checkbox }} 8.1.7 cross-over </td>
+            <td>{{ submission_form.is_multicentric|checkbox }} 8.1.8 multizentrisch </td>
+        </tr>
+        <tr>
+            <td>{{ submission_form.study_plan_double_blind|checkbox }} 8.1.9 doppelblind </td>
+            <td>{{ submission_form.study_plan_placebo|checkbox }} 8.1.10 Placebo </td>
+            <td>{{ submission_form.study_plan_factorized|checkbox }} 8.1.11 faktoriell </td>
+            <td>{{ submission_form.study_plan_pilot_project|checkbox }} 8.1.12 Pilotprojekt</td>
+        </tr>
+        <tr>
+            <td>{{ submission_form.study_plan_observer_blinded|checkbox }} 8.1.13 observer-blinded </td>
+            <td colspan="3">{{ submission_form.study_plan_equivalence_testing|checkbox }} 8.1.14 Äquivalenzprüfung</td>
+        </tr>
+        <tr>
+            <td colspan="4">{{ submission_form.study_plan_misc|checkbox }} 8.1.15 Sonstiges: {{ submission_form.study_plan_misc|default_if_none:""|linebreaksbr }} </td>
+        </tr>
+    </tbody>
 </table>
 
 <p class="pbi_avoid">
@@ -136,23 +138,19 @@ Qualifikation)? </p>
  {{ submission_form.study_plan_dataprotection_partial|checkbox }} b) indirekt personenbezogen
  {{ submission_form.study_plan_dataprotection_full|checkbox }} c) vollständig anonymisiert </p>
 
-<table>
-    <tr>
-    <td>
-        8.6.2 Wenn a): &nbsp;
-    </td>
-    <td>
-        Begründung:<span class="value indented">{{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}</span> 
-    </td>
-    </tr>
-    <tr>
-    <td>
-        <!-- empty -->
-    </td>
-    <td>
-         DVR-Nummer: <span class="value">{{ submission_form.study_plan_dataprotection_dvr|default_if_none:"" }}</span>
-    </td>
-    </tr>
+<table class="full_width nopadding">
+    <tbody>
+        <tr>
+            <td style="width: 15%;">
+                8.6.2 Wenn a):
+            </td>
+            <td style="width: 85%;">
+                Begründung:<span class="value indented">{{ submission_form.study_plan_dataprotection_reason|default_if_none:"" }}</span>
+                <br>
+                DVR-Nummer: <span class="value">{{ submission_form.study_plan_dataprotection_dvr|default_if_none:"" }}</span>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <p>

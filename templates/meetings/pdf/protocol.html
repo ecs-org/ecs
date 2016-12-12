@@ -66,17 +66,19 @@
                 {% endwith %}
                 {% with answer=amendment.answer %}
                     <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
-                    <table class="withborders">
-                        <tr>
-                            <td width="3%">[X]</td>
-                            <td>
-                                {% if answer.is_rejected %}
-                                    Der Antrag wird von der Ethik-Kommission abgelehnt.
-                                {% else %}
-                                    Es besteht kein Einwand gegen die Änderung.
-                                {% endif %}
-                            </td>
-                        </tr>
+                    <table class="full_width withborders">
+                        <tbody>
+                            <tr>
+                                <td style="width: 5%;">[X]</td>
+                                <td style="width: 95%;">
+                                    {% if answer.is_rejected %}
+                                        Der Antrag wird von der Ethik-Kommission abgelehnt.
+                                    {% else %}
+                                        Es besteht kein Einwand gegen die Änderung.
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                     {% if answer.text %}
                         <span class="bold">Kommentar:</span><br />
@@ -127,11 +129,17 @@
 
                     {% if notification.centerclosenotification %}
                         {% with ccn=notification.centerclosenotification %}
-                            <table class="full_width equal_columns">
+                            <table class="full_width">
                                 <thead>
-                                    <th>{% trans 'Investigator Organisation' %}</th>
-                                    <th>{% trans 'Ethics Commission' %}</th>
-                                    <th>{% trans 'Investigator contact' %}</th>
+                                    <th style="width: 33.33%;">
+                                        {% trans 'Investigator Organisation' %}
+                                    </th>
+                                    <th style="width: 33.33%;">
+                                        {% trans 'Ethics Commission' %}
+                                    </th>
+                                    <th style="width: 33.33%;">
+                                        {% trans 'Investigator contact' %}
+                                    </th>
                                 </thead>
                                 <tbody>
                                     <td>{{ ccn.investigator.organisation }}</td>

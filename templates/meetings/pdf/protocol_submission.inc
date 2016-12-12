@@ -1,16 +1,18 @@
 <div style="font-weight: bold;">Die Kommission fasst folgenden Beschluss (mit X markiert):</div>
 
-<table class="withborders">
-    <tr>
-        <td width="3%">[X]</td>
-        <td>
-            {% if vote %}
-                {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
-            {% else %}
-                Es liegt kein Votum vor.
-            {% endif %}
-        </td>
-    </tr>
+<table class="full_width withborders">
+    <tbody>
+        <tr>
+            <td style="width: 5%;">[X]</td>
+            <td style="width: 95%;">
+                {% if vote %}
+                    {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
+                {% else %}
+                    Es liegt kein Votum vor.
+                {% endif %}
+            </td>
+        </tr>
+    </tbody>
 </table> 
 
 {% if vote.text %}

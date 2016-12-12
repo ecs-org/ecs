@@ -4,48 +4,48 @@
 
 <center>
 <table class="full_width withborders">
-  <thead>
-    <tr>
-      <th width="30%">Art</th>
-      <th width="20%">Anzahl/Dosis</th>
-      <th width="25%">Zeitraum</th>
-      <th width="25%">Insgesamt</th>
-    </tr>
-  </thead>
-  {% for m in submission_form.measures_study_specific %}
-  <tbody>
-    <tr>
-      <td>{{ m.type }}</td>
-      <td>{{ m.count }}</td>
-      <td>{{ m.period }}</td>
-      <td>{{ m.total }}</td>
-    </tr>
-  </tbody>
-{% endfor %}
+    <thead>
+        <tr>
+            <th style="width: 30%;">Art</th>
+            <th style="width: 30%;">Anzahl/Dosis</th>
+            <th style="width: 25%;">Zeitraum</th>
+            <th style="width: 15%;">Insgesamt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in submission_form.measures_study_specific %}
+            <tr>
+                <td>{{ m.type }}</td>
+                <td>{{ m.count }}</td>
+                <td>{{ m.period }}</td>
+                <td>{{ m.total }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 </center>
 
 <p>6.2. Welche speziellen Untersuchungen (<strong>nur invasive und strahlenbelastende</strong>) werden während des Studienzeitraumes <strong>zu Routinezwecken</strong> durchgeführt: </p>
 
 <table class="full_width withborders">
-  <thead>
-    <tr>
-      <th width="30%">Art</th>
-      <th width="20%">Anzahl/Dosis</th>
-      <th width="25%">Zeitraum</th>
-      <th width="25%">Insgesamt</th>
-    </tr>
-  </thead>
-  {% for m in submission_form.measures_nonspecific %}
-  <tbody>
-    <tr>
-      <td>{{ m.type }}</td>
-      <td>{{ m.count }}</td>
-      <td>{{ m.period }}</td>
-      <td>{{ m.total }}</td>
-    </tr>
-  </tbody>
-  {% endfor %}
+    <thead>
+        <tr>
+            <th style="width: 30%;">Art</th>
+            <th style="width: 30%;">Anzahl/Dosis</th>
+            <th style="width: 25%;">Zeitraum</th>
+            <th style="width: 15%;">Insgesamt</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in submission_form.measures_nonspecific %}
+            <tr>
+                <td>{{ m.type }}</td>
+                <td>{{ m.count }}</td>
+                <td>{{ m.period }}</td>
+                <td>{{ m.total }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 <p> 6.3. Ergänzende Informationen zu studienbezogenen Maßnahmen und alle erforderlichen Abweichungen von der Routinebehandlung: </p>

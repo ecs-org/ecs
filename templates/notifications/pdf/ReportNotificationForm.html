@@ -13,15 +13,18 @@
     <table class="full_width">
         <tbody>
             <tr>
-                <td width="25%">2.1 Antragsteller/in:</td>
-                <td class="value">{{ sf.submitter }}</td>
+                <td style="width: 25%;">2.1 Antragsteller/in:</td>
+                <td class="value" style="width: 75%;">{{ sf.submitter }}</td>
             </tr>
             <tr>
                 <td>2.2 Prüfer/in:</td>
                 <td class="value">{% if sf.primary_investigator %}{{ sf.primary_investigator.user }} ({{ sf.primary_investigator.organisation }}){% else %}<i>nicht vorhanden</i>{% endif %}</td>
             </tr>
             <tr>
-                <td colspan="2">2.3 Projekttitel: <span class="value">{{ sf.submission.project_title_display }}</span></td>
+                <td>
+                    2.3 Projekttitel:
+                </td>
+                <td class="value">{{ sf.submission.project_title_display }}</td>
             </tr>
             <tr>
                 <td>2.4 EK Nr:</td>
@@ -42,8 +45,8 @@
     <table class="full_width">
         <tbody>
             <tr>
-                <td>3.1 Wurde die Studie begonnen?:</td>
-                <td width="35%" class="value">{{ notification.study_started|yesno:'Ja,Nein' }}</td>
+                <td style="width: 65%;">3.1 Wurde die Studie begonnen?:</td>
+                <td style="width: 35%;" class="value">{{ notification.study_started|yesno:'Ja,Nein' }}</td>
             </tr>
             {% if not notification.study_started %}
                 <tr>
