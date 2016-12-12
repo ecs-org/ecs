@@ -7,37 +7,8 @@ input[disabled]:not(.btn) {
     color: $black;
 }
 
-.tab_header_groups {
-    position: relative;
-    margin-bottom: 0;
-}
-
-.tab_header_groups a {
-
-    &.errors {
-        background: $brick-red;
-        color: #fff !important;
-    }
-}
-
-.tab_headers a {
-    display: inline-block;
-
-    &.active {
-        background: $lightskyblue;
-        color: $royalblue-dark;
-    }
-}
-
-.tab_header_groups a.active.errors {
-    color: $white;
-    background: $orange;
-}
-
 .tab_headers {
-
     a {
-
         &.disabled {
             color: $grey-60;
         }
