@@ -2,31 +2,32 @@
 {% load core i18n notifications %}
 
 {% block headernav %}
-    <div class="tab_header_groups">
-        <a href="#tabs_notification">{% trans "New Notification" %}</a>
-    </div>
+    <ul class="nav nav-pills tab_header_groups hidden-xs-up">
+        <li class="nav-item">
+            <a class="nav-link" href="#tabs_notification">{% trans "New Notification" %}</a>
+        </li>
+    </ul>
 
-    <div id="tabs_notification" class="tab_headers collapsed">
-        {% for tab, fieldsets in tabs %}
-            <a href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
-        {% endfor %}
-    </div>
     {{ block.super }}
 {% endblock %}
 
 {% block htmltitle %}Neu: {{ notification_type.name }} | {{ block.super }}{% endblock %}
 {% block headertitle %}Neu: {{ notification_type.name }}{% endblock %}
 
-{% block header_actions %}
-    {{ block.super }}
-    <div class="header_actions">
-      <div class="last_save">&nbsp;</div>
-      <a href="" id="save-button" class="button_save">{% trans "Save" %}</a>
-      <a href="" id="submit-button" class="button_submit">{% trans "Submit" %}</a>
-    </div>
-{% endblock %}
-
 {% block content %}
+    <ul id="tabs_notification" class="nav nav-tabs mb-1 tab_headers collapsed">
+        {% for tab, fieldsets in tabs %}
+            <li class="nav-item">
+                <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+            </li>
+        {% endfor %}
+        <li class="nav-item float-xs-right">
+            <small class="text-muted last_save">&nbsp;</small>
+            <a href="" id="save-button" class="btn btn-secondary">{% trans "Save" %}</a>
+            <a href="" id="submit-button" class="btn btn-primary">{% trans "Submit" %}</a>
+        </li>
+    </ul>
+
 <form action="" method="post" enctype="multipart/form-data" class="form_main notifications">
     {% csrf_token %}
     <div id="tabs">
