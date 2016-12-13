@@ -71,7 +71,7 @@
                         {% endif %}
                         {% for field_name in fields %}
                             {% with form|getitem:field_name as field %}
-                                {% include "bootstrap/form_field.html" %}
+                                {% include "bootstrap/form_field.html" with paper_info=True %}
                             {% endwith %}
                         {% endfor %}
                     </div>

@@ -46,7 +46,7 @@
         {% endfor %}
         {% for field in form %}
             {% if not field.is_hidden %}
-                {% include "bootstrap/form_field.html" with inline=True %}
+                {% include "bootstrap/form_field.html" with inline=True paper_info=True %}
             {% endif %}
         {% endfor %}
         <div style="display:none;">
