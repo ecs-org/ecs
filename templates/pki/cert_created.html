@@ -6,6 +6,7 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
+<div class="container">
     <a href="{% url 'ecs.pki.views.cert_list' %}">
         <span class="fa fa-backward"></span>
         {% trans "Back to the certificate list" %}
@@ -20,4 +21,5 @@
     </p>
 
     <div class="display-4 text-xs-center">{{ passphrase }}</div>
+</div>
 {% endblock %}

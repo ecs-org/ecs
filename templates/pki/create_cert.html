@@ -6,6 +6,7 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
+<div class="container">
     <a href="{% url 'ecs.pki.views.cert_list' %}">
         <span class="fa fa-backward"></span>
         {% trans "Back to the certificate list" %}
@@ -18,6 +19,7 @@
         {% endfor %}
         <input class="btn btn-primary" type="submit" value="{% trans 'Create Certificate' %}" />
     </form>
+</div>
 {% endblock %}
 
 {% block jsbottom %}

@@ -7,7 +7,7 @@
 {% block menuSelection %}administration{% endblock %}
 
 {% block content %}
-<div id="boilerplate">
+<div id="boilerplate" class="container">
   <form action="" method="post">
       {% csrf_token %}
       {% for field in form %}

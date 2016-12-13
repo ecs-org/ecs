@@ -6,6 +6,7 @@
 {% block headertitle %}{% trans "PKI" %}{% endblock %}
 
 {% block content %}
+<div class="container">
     <table class="table table-sm cert_list">
         <thead>
             <tr>
@@ -39,4 +40,5 @@
     <a class="btn btn-outline-primary" href="{% url 'ecs.pki.views.create_cert' %}">
         {% trans 'Create new certificate' %}
     </a>
+</div>
 {% endblock %}

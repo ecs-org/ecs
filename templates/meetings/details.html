@@ -66,14 +66,14 @@
         <div id="open_tasks_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.open_tasks' meeting_pk=meeting.pk %}"></div>
         </div>
-        <div id="tops_tab" class="collapse">
+        <div id="tops_tab" class="container collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
-    <div id="submissions_tab" class="collapse">
+    <div id="submissions_tab" class="container collapse">
         <div data-widget-url="{% url 'ecs.meetings.views.submission_list' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
     </div>
-    <div id="notifications_tab" class="collapse">
+    <div id="notifications_tab" class="container collapse">
         <div data-widget-url="{% url 'ecs.meetings.views.notification_list' meeting_pk=meeting.pk %}"></div>
     </div>
     {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
@@ -83,10 +83,10 @@
     {% endif %}
 
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-        <div id="experts_tab" class="collapse">
+        <div id="experts_tab" class="container collapse">
             {% include 'meetings/tabs/experts.html' %}
         </div>
-        <div id="timetable_tab" class="collapse">
+        <div id="timetable_tab" class="container collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.timetable_editor' meeting_pk=meeting.pk %}"></div>
         </div>
         <div id="assistant_tab" class="collapse">

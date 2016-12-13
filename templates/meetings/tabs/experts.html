@@ -1,4 +1,4 @@
-{% load core i18n %}
+{% load core i18n widget_tweaks %}
   
 {% if expert_formset.total_form_count %}
     <form method="post">
@@ -15,7 +15,7 @@
                         {{ form.instance.specialist|default:'<em>Niemand zugeteilt!</em>' }}
                     {% else %}
                         {{ form.id }}
-                        {{ form.specialist }}
+                        {% render_field form.specialist class+='form-control' %}
                     {% endif %}
                 </div>
 

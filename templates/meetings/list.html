@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
 
     <table class="table table-sm">
         <colgroup>
@@ -70,6 +71,7 @@
 
     {% include 'paginator.inc' with page=meetings %}
 
+</div>
 {% endblock %}
 
 {% block menuSelection %}meetings{% endblock %}

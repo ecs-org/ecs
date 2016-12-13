@@ -7,6 +7,7 @@
 {% block menuSelection %}administration{% endblock %}
 
 {% block content %}
+<div class="container">
     <div class="mb-1">
         <a href="{% url 'ecs.boilerplate.views.edit_boilerplate' %}" class="btn btn-primary">
             {% trans 'New' %}
@@ -36,4 +37,5 @@
         <em>{% trans "No boilerplate yet!" %}</em>
     </div>
     {% endfor %}
+</div>
 {% endblock %}

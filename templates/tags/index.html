@@ -5,6 +5,7 @@
 {% block htmltitle %}{% trans 'Tags' %} | {{ block.super }}{% endblock %}
 
 {% block content %}
+<div class="container">
     <p>
         {% for tag in tags %}
             <div class="tag" style="{{ tag.css }}">
@@ -18,6 +19,7 @@
     </p>
 
     <a class="btn btn-primary" href="{% url 'ecs.tags.views.edit' %}">{% trans 'New Tag' %}</a>
+</div>
 {% endblock %}
 
 {% block menuSelection %}administration{% endblock %}

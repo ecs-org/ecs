@@ -5,6 +5,7 @@
 {% block htmltitle %}{% trans 'Tags' %} | {{ block.super }}{% endblock %}
 
 {% block content %}
+<div class="container">
     <p>
         <a href="{% url 'ecs.tags.views.index' %}">
             <span class="fa fa-chevron-left"></span>
@@ -14,7 +15,9 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        {% for field in form %}
+            {% include 'bootstrap/form_field.html' with inline=True %}
+        {% endfor %}
         <input type="submit" class="btn btn-primary" value="{% trans 'save' %}"/>
         {% if form.instance.pk %}
             <a class="btn btn-danger" href="{% url 'ecs.tags.views.delete' pk=form.instance.pk %}">
@@ -22,6 +25,7 @@
             </a>
         {% endif %}
     </form>
+</div>
 {% endblock %}
 
 {% block menuSelection %}administration{% endblock %}
