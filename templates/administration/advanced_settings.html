@@ -10,68 +10,74 @@
 {% endblock %}
 
 {% block content %}
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#customization_tab">
-                {% trans 'Customization' %}
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#vote_text_tab">
-                {% trans 'Votes' %}
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#vote_receivers_tab">
-                {% trans 'Vote Receivers' %}
-            </a>
-        </li>
-    </ul>
-
-
-    <form action="" method="post" enctype="multipart/form-data">
+    <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#customization_tab">
+                    {% trans 'Customization' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#vote_text_tab">
+                    {% trans 'Votes' %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#vote_receivers_tab">
+                    {% trans 'Vote Receivers' %}
+                </a>
+            </li>
+            <li class="nav-item float-xs-right">
+                <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}"/>
+            </li>
+        </ul>
+
         <div class="tab-content mt-1">
-            <div class="tab-pane active" id="customization_tab">
-                {% include 'bootstrap/form_field.html' with field=form.default_contact %}
-                {% include 'bootstrap/form_field.html' with field=form.logo_file %}
-                {% include 'bootstrap/form_field.html' with field=form.print_logo_file %}
-                {% include 'bootstrap/form_field.html' with field=form.display_notifications_in_protocol %}
-                {% include 'bootstrap/form_field.html' with field=form.display_biased_in_amendment_answer_pdf %}
-                {% include 'bootstrap/form_field.html' with field=form.require_internal_vote_review %}
-                {% include 'bootstrap/form_field.html' with field=form.address %}
-                {% include 'bootstrap/form_field.html' with field=form.meeting_address %}
-                {% include 'bootstrap/form_field.html' with field=form.contact_email %}
-                {% include 'bootstrap/form_field.html' with field=form.contact_url %}
-                {% include 'bootstrap/form_field.html' with field=form.member_list_url %}
-                {% include 'bootstrap/form_field.html' with field=form.signature_block %}
+            <div class="tab-pane container active" id="customization_tab">
+                {% include 'bootstrap/form_field.html' with field=form.default_contact inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.logo_file inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.print_logo_file inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.display_notifications_in_protocol inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.display_biased_in_amendment_answer_pdf inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.require_internal_vote_review inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.address inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.meeting_address inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.contact_email inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.contact_url inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.member_list_url inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.signature_block inline=True %}
             </div>
-            <div class="tab-pane" id="vote_text_tab">
-                {% include 'bootstrap/form_field.html' with field=form.vote1_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote2_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote3a_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote3b_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote4_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote5_extra %}
-                {% include 'bootstrap/form_field.html' with field=form.vote_pdf_extra %}
+            <div class="tab-pane container" id="vote_text_tab">
+                {% include 'bootstrap/form_field.html' with field=form.vote1_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote2_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote3a_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote3b_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote4_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote5_extra inline=True %}
+                {% include 'bootstrap/form_field.html' with field=form.vote_pdf_extra inline=True %}
             </div>
-            <div class="tab-pane" id="vote_receivers_tab">
+            <div class="tab-pane container" id="vote_receivers_tab">
                 {{ ec_formset.management_form }}
                 {% for form in ec_formset.forms %}
-                    <div class="form-group {% if form.vote_receiver.errors %}has-danger{% endif %}">
-                        {{ form.id }}
-                        <label for="{{ form.vote_receiver.id_for_label }}">{{ form.instance }}</label>
-                        {% if form.vote_receiver.errors %}
-                            {% render_field form.vote_receiver class+="form-control form-control-danger" %}
-                            <div class="form-control-feedback">
-                                {% for error in form.vote_receiver.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {% render_field form.vote_receiver class+="form-control" %}
-                        {% endif %}
+                    <div class="form-group row {% if form.vote_receiver.errors %}has-danger{% endif %}">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        <label class="col-md-6 col-xl-5" for="{{ form.vote_receiver.id_for_label }}">
+                            {{ form.instance }}
+                        </label>
+                        <div class="col-md-6 col-xl-7">
+                            {% render_field form.vote_receiver class+="form-control" error_class="form-control-danger" %}
+                            {% if form.vote_receiver.errors %}
+                                <div class="form-control-feedback">
+                                    {% for error in form.vote_receiver.errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -84,8 +90,6 @@
                 {% endfor %}
             </div>
         {% endif %}
-
-        <input class="btn btn-primary" type="submit" value="{% trans 'Save' %}"/>
     </form>
 {% endblock %}
 
@@ -94,6 +98,10 @@
     <script type="text/javascript">
         $(function(){
             $('#id_advanced_settings-default_contact').select2();
+        });
+
+        $('.tab-pane:has(.has-danger)').each(function() {
+            $('.nav-link[href="#' + $(this).prop('id') + '"]').addClass('text-danger');
         });
     </script>
 {% endblock %}
