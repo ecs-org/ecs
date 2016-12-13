@@ -7,6 +7,7 @@
 {% block headertitle %}{% trans "Communication" %} ({% unread_msg_count %}){% endblock %}
 
 {% block content %}
+<div class="container">
 
     <form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline">
         {% csrf_token %}
@@ -120,6 +121,8 @@
           For general Questions write an email to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
       {% endblocktrans %}
     </div>
+
+</div>
 {% endblock %}
 
 {% block jsbottom %}

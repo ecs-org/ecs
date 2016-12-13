@@ -1,17 +1,5 @@
 @import "ecs/variables.scss";
 
-.message_display {
-    .ecs-TextAreaToolbar {
-        display: inline-block;
-        margin-left: 10px;
-        vertical-align: bottom;
-
-        a {
-            margin: 0 10px 0 0;
-        }
-    }
-}
-
 #thread_list_filter {
     display: flex;
     justify-content: space-around;
@@ -20,16 +8,6 @@
 /* Communication Thread */
 
 .communication_thread {
-    .related_thread {
-        display: block;
-        text-align: left;
-        margin: -15px 10px 0 0;
-    }
-    .ecs-TextAreaToolbar {
-        display: inline-block;
-        margin-left: 10px;
-        vertical-align: bottom;
-    }
     .card.message pre.card-text {
         white-space: pre-wrap;
     }
