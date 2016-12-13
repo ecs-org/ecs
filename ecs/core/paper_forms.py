@@ -7,7 +7,10 @@ from ecs.core.models import (
     ForeignParticipatingCenter, Measure, NonTestedUsedDrug, Investigator,
     InvestigatorEmployee,
 )
-from ecs.notifications.models import Notification, ReportNotification, ProgressReportNotification, CompletionReportNotification, SafetyNotification
+from ecs.notifications.models import (
+    Notification, ReportNotification, ProgressReportNotification,
+    CompletionReportNotification, SafetyNotification, CenterCloseNotification,
+)
 from ecs.documents.models import Document
 
 _form_info = {}
@@ -67,6 +70,11 @@ FormInfo(CompletionReportNotification, fields=(
 
 FormInfo(ProgressReportNotification, fields=(
     FieldInfo(None, 'runs_till', None, short_label=_('Estimated end date')),
+))
+
+FormInfo(CenterCloseNotification, fields=(
+    FieldInfo(None, 'investigator', _('Closed center')),
+    FieldInfo(None, 'close_date', _('Close date')),
 ))
 
 FormInfo(Document, fields=(
