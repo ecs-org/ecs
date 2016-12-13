@@ -61,12 +61,13 @@ class BaseNotificationReview(Activity):
 
     def receive_token(self, source, trail=(), repeated=False):
         token = super().receive_token(source, trail=trail, repeated=repeated)
-        prev = trail[0]
-        if prev.node.uid == 'start':
-            prev = prev.trail.first()
-        if prev:
-            token.task.review_for = prev.task
-            token.task.save()
+        if trail:
+            prev = trail[0]
+            if prev.node.uid == 'start':
+                prev = prev.trail.first()
+            if prev:
+                token.task.review_for = prev.task
+                token.task.save()
         return token
 
 class InitialAmendmentReview(BaseNotificationReview):
@@ -91,6 +92,9 @@ class InitialAmendmentReview(BaseNotificationReview):
 class EditNotificationAnswer(BaseNotificationReview):
     class Meta:
         model = Notification
+
+    def is_repeatable(self):
+        return True
     
     def get_choices(self):
         return (
