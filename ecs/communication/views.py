@@ -172,26 +172,14 @@ def list_threads(request):
     else:
         queryset = queryset.none()
 
-    sort_options = {
-        'timestamp': ('last_message__timestamp',),
-        'user': ('receiver__last_name', 'receiver__first_name'),
-        'submission': ('submission',),
-    }
-    sort_key = request.GET.get('sort', request.session.get('messages:sort', '-timestamp'))
-    if not sort_key.lstrip('-') in sort_options:
-        sort_key = '-timestamp'
-    request.session['messages:sort'] = sort_key
-
     queryset = queryset.select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',
         'last_message__sender__profile', 'last_message__receiver__profile',
         'submission',
-    ).order_by(*sort_options[sort_key.lstrip('-')])
-    if sort_key[0] == '-':
-        queryset = queryset.reverse()
+    ).order_by('-last_message__timestamp')
 
     try:
-        page_num = int(request.GET.get('p', request.session.get('messages:page', 1)))
+        page_num = int(request.GET.get('page', request.session.get('messages:page', 1)))
     except ValueError:
         page_num = 1
 
@@ -205,7 +193,6 @@ def list_threads(request):
 
     context = {
         'page': page,
-        'sort': sort_key,
         'filterform': filterform,
     }
     return render(request, 'communication/threads.html', context)
