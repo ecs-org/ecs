@@ -32,7 +32,7 @@
     {% csrf_token %}
     <div id="tabs">
         {% for tab in tabs %}
-            <div id="tabs-{{ forloop.counter }}" class="collapse">
+            <div id="tabs-{{ forloop.counter }}" class="container collapse">
                 {% if tab.slug == 'documents' %}
                     <div class="field">
                         <div class="upload_container"></div>
