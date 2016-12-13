@@ -116,8 +116,9 @@
             var submissionDataDisplay = $('<div/>');
             var investigatorSelect = $('#id_investigator');
 
-            submissionFormsSelect.add(submissionFormSelect).parents('li')
-                .append(submissionDataDisplay);
+            submissionFormsSelect.add(submissionFormSelect)
+                .closest('.form-group')
+                .after(submissionDataDisplay);
 
             function loadSubmissionFormData(pks) {
                 submissionDataDisplay.load(
