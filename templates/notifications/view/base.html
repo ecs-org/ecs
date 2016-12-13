@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="container">
     {% if not answer %}
         <p>
             <a href="{% url 'ecs.notifications.views.open_notifications' %}">
@@ -104,4 +105,5 @@
         {% endif %}
     {% endif %}
 
+</div>
 {% endblock %}

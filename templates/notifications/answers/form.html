@@ -7,7 +7,7 @@
 {% block headertitle %}{% endblock %}
 
 {% block content %}
-<div class="notification">
+<div class="notification container">
     <h2>Antwort auf <a target="_blank" href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">{{ notification }}</a> vom {{ notification.timestamp|date:'d.m.Y' }}</h2>
 
     <p>
