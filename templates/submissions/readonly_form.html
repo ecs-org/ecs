@@ -6,7 +6,6 @@
 
 {% block headertitle %}
     <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}" target="_blank">
-        <span class="fa fa-search"></span>
         {{ submission_form.submission|ec_number }}
     </a>
     <small title="{{ submission.project_title_display }}">
