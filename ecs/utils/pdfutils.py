@@ -10,8 +10,6 @@ pdfutils
 
 '''
 import os
-import re
-import mimetypes
 import subprocess, logging
 from binascii import hexlify
 from tempfile import TemporaryFile, NamedTemporaryFile
@@ -19,9 +17,6 @@ from tempfile import TemporaryFile, NamedTemporaryFile
 from django.conf import settings
 from django.template import loader
 from django.utils.encoding import smart_bytes
-
-from weasyprint import HTML
-from weasyprint.urls import open_data_url
 
 
 logger = logging.getLogger(__name__)
@@ -98,26 +93,17 @@ def decrypt_pdf(src):
     return decrypted
 
 
-def html2pdf(html, param_list=None):
-    # XXX: Remove control characters, otherwise lxml will go kaboom.
-    html = re.sub(r'[\x00-\x08\x0b\x0e-\x1f\x7f]', '', html)
+def html2pdf(html):
+    p = subprocess.Popen([
+        os.path.join(settings.PROJECT_DIR, 'scripts', 'html2pdf.py'),
+        '-s', settings.STATIC_ROOT,
+    ], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-    if isinstance(html, str):
-        html = html.encode('utf-8')
+    stdout, stderr = p.communicate(html.encode('utf-8'))
+    if p.returncode != 0:
+        raise IOError(
+            'html2pdf returned with exit status {}, stderr: {}'.format(
+                p.returncode, stderr.decode('utf-8'))
+        )
 
-    def _url_fetcher(url):
-        if url.startswith('data:'):
-            return open_data_url(url)
-        elif url.startswith('static:'):
-            path = os.path.abspath(os.path.join(
-                settings.STATIC_ROOT, url[len('static:'):]))
-            if not path.startswith(settings.STATIC_ROOT):
-                raise ValueError(
-                    'static: URI points outside of static directory!')
-            with open(path, 'rb') as f:
-                data = f.read()
-            return {'string': data, 'mime_type': mimetypes.guess_type(path)[0]}
-
-        raise ValueError('Only data: and static: URIs are allowed')
-
-    return HTML(string=html, url_fetcher=_url_fetcher).write_pdf()
+    return stdout
