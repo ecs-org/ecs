@@ -1,4 +1,4 @@
-from django.template import Library
+from django.template import Library, Node, TemplateSyntaxError
 from django.db.models import Sum, Case, When, IntegerField
 
 from ecs.communication.models import Thread
@@ -36,15 +36,39 @@ def preview(message, chars):
         return text
 
 
-@register.simple_tag(takes_context=True)
-def unread_msg_count(context):
-    user = context['user']
-    return Thread.objects.by_user(user).annotate(
-        unread_count=Sum(
-            Case(
-                When(messages__receiver=user, messages__unread=True, then=1),
-                default=0,
-                output_field=IntegerField()
+class UnreadMsgCountNode(Node):
+    def __init__(self, varname):
+        super().__init__()
+        self.varname = varname
+
+    def render(self, context):
+        user = context['user']
+        count = Thread.objects.by_user(user).annotate(
+            unread_count=Sum(
+                Case(
+                    When(messages__receiver=user, messages__unread=True, then=1),
+                    default=0,
+                    output_field=IntegerField()
+                )
             )
-        )
-    ).filter(unread_count__gt=0).count()
+        ).filter(unread_count__gt=0).count()
+
+        if self.varname:
+            context[self.varname] = count
+            return ''
+        else:
+            return count
+
+
+@register.tag
+def unread_msg_count(parser, token):
+    bits = token.split_contents()
+    if len(bits) == 1:
+        kw_, = bits
+        varname = None
+    elif len(bits) == 3 and bits[1] == 'as':
+        kw_, as_, varname = bits
+    else:
+        raise TemplateSyntaxError('{% unread_msg_count [as VAR] %}')
+
+    return UnreadMsgCountNode(varname)

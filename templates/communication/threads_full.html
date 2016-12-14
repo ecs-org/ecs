@@ -4,7 +4,9 @@
 {% block menuSelection %}communication{% endblock %}
 
 {% block htmltitle %}{% trans "Communication" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "Communication" %} ({% unread_msg_count %}){% endblock %}
+
+{% unread_msg_count as unread %}
+{% block headertitle %}{% trans "Communication" %}{% if unread %} ({{ unread }}){% endif %}{% endblock %}
 
 {% block content %}
     <div class="container">

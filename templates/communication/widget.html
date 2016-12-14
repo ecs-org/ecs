@@ -57,7 +57,9 @@
         </ul>
 
         <h3 class="card-title mb-0">
-            {% trans "Communication" %} ({% unread_msg_count %})
+            {% trans "Communication" %}
+            {% unread_msg_count as unread %}
+            {% if unread %}({{ unread }}){% endif %}
         </h3>
     </div>
 

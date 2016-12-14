@@ -36,7 +36,10 @@
             <li class="nav-item">
                 <a class="nav-link text-primary" href="{% url 'ecs.communication.views.list_threads' %}">
                     {% trans "Communication" %}
-                    ({% unread_msg_count %})
+                    {% unread_msg_count as unread %}
+                    {% if unread %}
+                        <strong>({{ unread }})</strong>
+                    {% endif %}
                 </a>
             </li>
             {% if user.profile.show_task_widget %}
