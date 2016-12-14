@@ -65,7 +65,7 @@
             <ul id="tabs_general" class="nav nav-tabs mb-1 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#status_tab">{% trans 'Status' %}</a></li>
                 {% if categorization_form %}
-                    <li class="nav-item"><a class="nav-link" href="#categorization_tab"{% if not categorization_form.readonly or categorization_review %} class="readonly_review active"{% endif %}>{% trans "Categorization" %}</a></li>
+                    <li class="nav-item"><a class="nav-link {% if not categorization_form.readonly or categorization_review %}active{% endif %}" href="#categorization_tab">{% trans "Categorization" %}</a></li>
                 {% endif %}
                 {% if user.profile.show_task_widget %}
                     <li class="nav-item"><a class="nav-link" href="#tasks_tab">{% trans 'Tasks' %}</a></li>
@@ -86,7 +86,7 @@
                     <li class="nav-item"><a class="nav-link" href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                 {% endif %}
                 {% for checklist, checklist_review_form in checklist_reviews %}
-                    <li class="nav-item"><a class="nav-link" href="#checklist_{{ checklist.pk }}_review_form"{% if not checklist_review_form.readonly %} class="readonly_review active"{% endif %}{% if active_checklist == checklist.pk %} class="active"{% endif %}>{{ checklist.short_name }}</a></li>
+                    <li class="nav-item"><a class="nav-link {% if not checklist_review_form.readonly or active_checklist == checklist.pk %}active{% endif %}" href="#checklist_{{ checklist.pk }}_review_form">{{ checklist.short_name }}</a></li>
                 {% endfor %}
             </ul>
             {% endif %}
@@ -94,7 +94,7 @@
             <ul id="tabs_votes" class="nav nav-tabs mb-1 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
                 {% if vote_review_form %}
-                    <li class="nav-item"><a class="nav-link" href="#vote_review_tab"{% if not vote_review_form.readonly %} class="readonly_review active"{% endif %}>Votum</a></li>
+                    <li class="nav-item"><a class="nav-link {% if not vote_review_form.readonly %}active{% endif %}" href="#vote_review_tab">Votum</a></li>
                 {% endif %}
             </ul>
 
