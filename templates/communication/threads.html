@@ -79,7 +79,9 @@
                     </td>
                     <td class="text-nowrap align-middle">
                         {% if thread.submission %}
-                            {{ thread.submission|ec_number }}
+                            <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}">
+                                {{ thread.submission|ec_number }}
+                            </a>
                         {% endif %}
                     </td>
                     <td class="align-middle">
