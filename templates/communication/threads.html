@@ -1,82 +1,79 @@
-{% extends "core.html" %}
 {% load humanize i18n core communication %}
 
-{% block menuSelection %}communication{% endblock %}
+<form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline open-in-widget">
+    {% csrf_token %}
+    <ul class="list-unstyled">
+        <li>
+            {{ filterform.incoming }}
+            <span class="fa fa-envelope-o"></span>
+            {% trans "Incoming" %}
+        </li>
+        <li>
+            {{ filterform.outgoing }}
+            <span class="fa fa-paper-plane-o"></span>
+            {% trans "Outgoing" %}
+        </li>
+    </ul>
+    <ul class="list-unstyled">
+        <li>
+            {{ filterform.starred }}
+            <span class="fa fa-star"></span>
+            {% trans "Starred" %}
+        </li>
+        <li>
+            {{ filterform.unstarred }}
+            <span class="fa fa-star-o"></span>
+            {% trans "Not Starred" %}
+        </li>
+    </ul>
+    {{ filterform.page }}
+</form>
 
-{% block htmltitle %}{% trans "Communication" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "Communication" %} ({% unread_msg_count %}){% endblock %}
-
-{% block content %}
-<div class="container">
-
-    <form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline">
-        {% csrf_token %}
-        <ul class="list-unstyled">
-            <li>
-                {{ filterform.incoming }}
-                <span class="fa fa-envelope-o"></span>
-                {% trans "Incoming" %}
-            </li>
-            <li>
-                {{ filterform.outgoing }}
-                <span class="fa fa-paper-plane-o"></span>
-                {% trans "Outgoing" %}
-            </li>
-        </ul>
-        <ul class="list-unstyled">
-            <li>
-                {{ filterform.starred }}
-                <span class="fa fa-star"></span>
-                {% trans "Starred" %}
-            </li>
-            <li>
-                {{ filterform.unstarred }}
-                <span class="fa fa-star-o"></span>
-                {% trans "Not Starred" %}
-            </li>
-        </ul>
-    </form>
-
-    <table class="table table-sm">
-        <colgroup>
+<table class="table table-sm">
+    <colgroup>
+        <col>
+        <col>
+        {% if not submission_pk %}
             <col>
-            <col>
-            <col>
-            <col class="w-100">
-            <col>
-            <col>
-        </colgroup>
-        <thead>
-            <tr>
-                <th></th>
-                <th>{% trans "Von/An" %}</th>
+        {% endif %}
+        <col class="w-100">
+        <col>
+        <col>
+    </colgroup>
+    <thead>
+        <tr>
+            <th></th>
+            <th>{% trans "Von/An" %}</th>
+            {% if not submission_pk %}
                 <th>{% trans "Submission" %}</th>
-                <th>{% trans "Subject" %}</th>
-                <th class="text-xs-right">{% trans "Date" %}</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for thread in page.object_list %}
-                <tr {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}class="font-weight-bold"{% endif %}>
-                    <td class="pr-1">
-                        {% if thread|starred_by:user %}
-                            {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                            <a class="open-in-widget fa fa-2x fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
-                        {% else %}
-                            {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                            <a class="open-in-widget fa fa-2x fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
-                        {% endif %}
-                    </td>
-                    <td class="text-nowrap align-middle">
-                        {% if thread.last_message.sender == user %}
-                            <span class="fa fa-paper-plane-o"></span>
-                            {% trans "an" %} {{ thread.last_message.receiver }}
-                        {% else %}
-                            <span class="fa fa-envelope-o"></span>
-                            {% trans "von" %} {{ thread.last_message.sender }}
-                        {% endif %}
-                    </td>
+            {% endif %}
+            <th>{% trans "Subject" %}</th>
+            <th class="text-xs-right">{% trans "Date" %}</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for thread in page.object_list %}
+            <tr {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}class="font-weight-bold"{% endif %}>
+                <td class="pr-1">
+                    {% if thread|starred_by:user %}
+                        {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
+                        <a class="open-in-widget fa fa-2x fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+                    {% else %}
+                        {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
+                        <a class="open-in-widget fa fa-2x fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+                    {% endif %}
+                </td>
+                <td class="text-nowrap align-middle">
+                    {% if thread.last_message.sender == user %}
+                        <span class="fa fa-paper-plane-o"></span>
+                        {% trans "an" %} {{ thread.last_message.receiver }}
+                    {% else %}
+                        <span class="fa fa-envelope-o"></span>
+                        {% trans "von" %} {{ thread.last_message.sender }}
+                    {% endif %}
+                </td>
+                {% if not submission_pk %}
                     <td class="text-nowrap align-middle">
                         {% if thread.submission %}
                             <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}">
@@ -84,58 +81,34 @@
                             </a>
                         {% endif %}
                     </td>
-                    <td class="align-middle">
-                        {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url%}
-                        <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
-                            {{ thread.subject|truncatewords:10 }}
-                        </a>
-                    </td>
-                    <td class="text-nowrap align-middle text-xs-right">
-                        {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
-                        {{ thread.last_message.timestamp|date:'H:i'}}
-                    </td>
-                    <td class="pl-1 align-middle">
-                    {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
-                        {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
-                        <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
-                            <span class="fa fa-2x fa-check text-primary"></span>
-                        </a>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td class="text-xs-center text-muted" colspan="6">
-                        <em>{% trans 'No messages yet!' %}</em>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endif %}
+                <td class="align-middle">
+                    {% url 'ecs.communication.views.read_thread' thread_pk=thread.pk as read_url%}
+                    <a href="{{ read_url }}" title="{{ thread.last_message|preview:1000 }}">
+                        {{ thread.subject|truncatewords:10 }}
+                    </a>
+                </td>
+                <td class="text-nowrap align-middle text-xs-right">
+                    {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
+                    {{ thread.last_message.timestamp|date:'H:i'}}
+                </td>
+                <td class="pl-1 align-middle">
+                {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
+                    {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
+                    <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
+                        <span class="fa fa-2x fa-check text-primary"></span>
+                    </a>
+                {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td class="text-xs-center text-muted" colspan="6">
+                    <em>{% trans 'No messages yet!' %}</em>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
-    {% include 'paginator.inc' %}
-
-    <div class="hint mt-1">
-      <span class="fa fa-info text-info"></span>
-      {% db_setting 'contact_email' as email %}
-      {% blocktrans with contact_email=email %}
-          To write a message, open the read-only view of a study and change to the communication tab.
-          For general Questions write an email to <a href="mailto:{{ contact_email }}">{{ contact_email }}</a>.
-      {% endblocktrans %}
-    </div>
-
-</div>
-{% endblock %}
-
-{% block jsbottom %}
-    {{ block.super }}
-    <script type="text/javascript">
-        $(function(){
-            $('#thread_list_filter input').change(function() {
-                ecs.stopPageLoad();
-                $('#thread_list_filter').submit();
-            });
-        });
-    </script>
-{% endblock %}
-
+{% include 'paginator.inc' %}

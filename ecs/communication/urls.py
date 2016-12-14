@@ -4,8 +4,8 @@ from ecs.communication import views
 
 
 urlpatterns = (
-    url(r'^list/$', views.list_threads),
-    url(r'^widget/(?:(?P<submission_pk>\d+)/)?$', views.dashboard_widget),
+    url(r'^list/(?:(?P<submission_pk>\d+)/)?$', views.list_threads),
+    url(r'^widget/$', views.dashboard_widget),
     url(r'^widget/overview/(?P<submission_pk>\d+)/$', views.communication_overview_widget),
     url(r'^new/(?:(?P<submission_pk>\d+)/)?(?:(?P<to_user_pk>\d+)/)?$', views.new_thread),
     url(r'^(?P<thread_pk>\d+)/read/$', views.read_thread),

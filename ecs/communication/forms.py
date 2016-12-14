@@ -115,3 +115,4 @@ class ThreadListFilterForm(forms.Form):
     outgoing = forms.BooleanField(required=False)
     starred = forms.BooleanField(required=False)
     unstarred = forms.BooleanField(required=False)
+    page = forms.IntegerField(required=False, widget=forms.HiddenInput())

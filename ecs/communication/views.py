@@ -89,16 +89,12 @@ def unstar(request, thread_pk=None):
     return redirect_to_next_url(request, reverse('ecs.communication.views.dashboard_widget'))
 
 
-def dashboard_widget(request, submission_pk=None):
+def dashboard_widget(request):
     qs = Thread.objects.for_widget(request.user).select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',
         'last_message__sender__profile', 'last_message__receiver__profile',
         'submission',
     ).order_by('-last_message__timestamp')
-    submission = None
-    if submission_pk:
-        submission = get_object_or_404(Submission, pk=submission_pk)
-        qs = qs.filter(submission=submission)
 
     try:
         page_num = int(request.GET.get('p', 1))
@@ -112,11 +108,7 @@ def dashboard_widget(request, submission_pk=None):
         page_num = paginator.num_pages
         page = paginator.page(page_num)
 
-    context = {
-        'page': page,
-        'submission': submission,
-    }
-    return render(request, 'communication/widget.html', context)
+    return render(request, 'communication/widget.html', {'page': page})
 
 
 @user_flag_required('is_internal')
@@ -132,21 +124,33 @@ def communication_overview_widget(request, submission_pk=None):
     })
 
 
-def list_threads(request):
-    usersettings = request.user.ecs_settings
+def list_threads(request, submission_pk=None):
+    queryset = Thread.objects.by_user(request.user)
 
-    filter_defaults = {}
+    filter_defaults = {'page': '1'}
     for key in ('incoming', 'outgoing', 'starred', 'unstarred'):
         filter_defaults[key] = 'on'
 
-    filterform = ThreadListFilterForm(
-        request.POST or usersettings.communication_filter or filter_defaults)
-    filterform.is_valid() # force clean
+    if submission_pk:
+        queryset = queryset.filter(submission_id=submission_pk)
 
-    filters = usersettings.communication_filter = filterform.cleaned_data
-    usersettings.save()
+        filterform = ThreadListFilterForm(request.POST or filter_defaults)
+        filterform.is_valid() # force clean
 
-    queryset = Thread.objects.by_user(request.user)
+        template = 'communication/threads_submission.html'
+    else:
+        usersettings = request.user.ecs_settings
+
+        filterform = ThreadListFilterForm(
+            request.POST or usersettings.communication_filter or filter_defaults)
+        filterform.is_valid() # force clean
+
+        usersettings.communication_filter = filterform.cleaned_data
+        usersettings.save()
+
+        template = 'communication/threads_full.html'
+
+    filters = filterform.cleaned_data
 
     if filters['incoming'] and filters['outgoing']:
         pass
@@ -178,21 +182,15 @@ def list_threads(request):
         'submission',
     ).order_by('-last_message__timestamp')
 
-    try:
-        page_num = int(request.GET.get('page', request.session.get('messages:page', 1)))
-    except ValueError:
-        page_num = 1
-
     paginator = Paginator(queryset, 20)
     try:
-        page = paginator.page(page_num)
+        page = paginator.page(filters['page'] or 1)
     except EmptyPage:
         page_num = paginator.num_pages
         page = paginator.page(page_num)
-    request.session['messages:page'] = page_num
 
-    context = {
+    return render(request, template, {
         'page': page,
         'filterform': filterform,
-    }
-    return render(request, 'communication/threads.html', context)
+        'submission_pk': submission_pk,
+    })

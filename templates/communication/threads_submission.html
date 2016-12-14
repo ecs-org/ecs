@@ -1,0 +1,16 @@
+{% include 'communication/threads.html' %}
+
+<script type="text/javascript">
+    $(function(){
+        $('#thread_list_filter input').change(function() {
+            ecs.stopPageLoad();
+            $('#thread_list_filter input[name="page"]').val(1);
+            $('#thread_list_filter').submit();
+        });
+        $('#communication_tab .paginator a').click(function(ev) {
+            ev.preventDefault();
+            $('#thread_list_filter input[name="page"]').val($(this).data('page'));
+            $('#thread_list_filter').submit();
+        });
+    });
+</script>
