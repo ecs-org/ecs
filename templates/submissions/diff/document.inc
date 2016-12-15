@@ -1,6 +1,6 @@
 {% load core i18n %}
 
-<div style="display:inline-block;vertical-align:top;color:black;">
+<div class="d-inline-block text-black">
     {{doc.doctype}}: {{ doc.name }}<br />
     Version {{ doc.version }} vom {{ doc.date|date:'d.m.Y' }}
     {% if doc.replaces_document %}

@@ -76,7 +76,7 @@
 {% if user.profile.can_have_open_tasks %}
     <div class="card-group">
 
-        <div class="card" style="flex-grow: 0;">
+        <div class="card no-flex-grow">
             <div class="card-block">
                 <form id="{{ form_id }}" method="post">
                     {% csrf_token %}

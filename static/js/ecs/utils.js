@@ -220,7 +220,7 @@ ecs.setupDocumentUploadForms = function(){
 
         $('#replaced_document_name')
             .html(link.siblings('.document_display_name').html())
-            .parent('li').show();
+            .parent().show();
 
         form.find('select[name="document-doctype"]')
             .val(link.data('documentType'))

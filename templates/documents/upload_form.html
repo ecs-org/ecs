@@ -49,7 +49,7 @@
                 {% include "bootstrap/form_field.html" with inline=True paper_info=True %}
             {% endif %}
         {% endfor %}
-        <div style="display:none;">
+        <div class="my-1" style="display: none;">
             {% trans "Replaces document" %} <span id="replaced_document_name"></span>
             <a href="" class="new_document">{% trans "New Document" %}</a>
         </div>

@@ -138,3 +138,15 @@ nav.navbar .navbar-brand img {
     width: auto;
     max-height: 50px;
 }
+
+/* dashboard task widgets */
+
+.no-flex-grow {
+    flex-grow:0 !important;
+}
+
+/* document diff view */
+
+.text-black {
+    color: #000;
+}

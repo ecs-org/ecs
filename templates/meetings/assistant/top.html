@@ -23,12 +23,12 @@
                 {{ form.text|add_class:'form-control' }}
             {% endif %}
 
-            <div class="float-xs-left">
+            <div class="text-xs-center">
                 {% if top.is_break %}
-                    <div style="font-size:80px;color:#cc0000;position:relative">PAUSE<div style="font-size:80px;color:#ff6600;position:absolute;left:-3px;top:-3px">PAUSE</div></div>
+                    <h1 class="text-danger my-1">PAUSE</h1>
                 {% endif %}
             </div>
-            <div class="float-xs-left">
+            <div class="text-xs-center">
                 <a id="complete" class="btn btn-primary btn-block" href="">Fertig</a>
             </div>
         </div>

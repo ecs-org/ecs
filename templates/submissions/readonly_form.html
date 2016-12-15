@@ -214,7 +214,7 @@
     {% if vote_review_form %}
         <div id="vote_review_tab" class="container collapse">
             {% with vote=vote_review_form.instance %}
-                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span style="color:red;">!!{% trans 'Changed after voting' %}!</span>{% endif %}</h3>
+                <h3>B{{ vote.result }} Votum{% if vote.top %} der Sitzung {{ vote.top.meeting.title }} am {{ vote.top.meeting.start|date:'d.m.Y' }}{% endif %}{% if vote.changed_after_voting %} <span class="text-danger">!!{% trans 'Changed after voting' %}!</span>{% endif %}</h3>
             {% endwith %}
 
             {% with vote_review_form as review_form %}

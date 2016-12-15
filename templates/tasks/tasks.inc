@@ -80,7 +80,7 @@
         <div class="card-group">
 
             {% if not submission %}
-                <div class="card text-nowrap" style="flex-grow: 0;">
+                <div class="card text-nowrap no-flex-grow">
                     <div class="card-block">
                         <form id="{{ form_id }}" action="{{ request.path }}" method="post" class="open-in-widget">
                             {% csrf_token %}

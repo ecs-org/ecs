@@ -3,7 +3,7 @@
 {{ formset.management_form }}
 <table>
 {% for form in formset.forms %}
-    <tr{% if not form.instance.submission.current_pending_vote %} style="color:red;"{% endif %}>
+    <tr{% if not form.instance.submission.current_pending_vote %} class="text-danger"{% endif %}>
         <td>{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}{{ form.accept_prepared_vote }}</td>
         <td>
             {% with form.instance.submission as submission %}

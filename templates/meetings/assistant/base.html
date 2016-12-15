@@ -74,7 +74,7 @@
         {% endwith %}
     </div>
     <div id="meeting_assistant_body">
-        {% if not meeting.open_tops.exists and meeting.started and not meeting.ended %}<span style="color:red">Alle TOPs wurden geschlossen. <b>Achtung: Weitere TOPs überprüfen.</b> Sie können die Sitzung jetzt beenden.</span>{% endif %}
+        {% if not meeting.open_tops.exists and meeting.started and not meeting.ended %}<div class="mb-1 text-xs-center text-danger">Alle TOPs wurden geschlossen. <b>Achtung: Weitere TOPs überprüfen.</b> Sie können die Sitzung jetzt beenden.</div>{% endif %}
         {% block meeting_assistant_body %}{% endblock %}
         {% block meeting_assistant_sidebar %}{% endblock %}
     </div>
