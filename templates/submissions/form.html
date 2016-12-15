@@ -23,15 +23,15 @@
         <small class="mr-1 text-muted last_save">&nbsp;</small>
         <a href="" id="save-button" class="btn btn-secondary">{% trans "Just Save" %}</a>
         <a href="" id="submit-button" class="btn btn-primary">
-      {% if submission and submission.current_submission_form %}
-          {% if notification_type %}
-              {% trans "Submit Amendment" %}
-          {% else %}
-              {% trans "Resubmit" %}
-          {% endif %}
-      {% else %}
-          {% trans "Submit" %}
-      {% endif %}
+            {% if submission and submission.current_submission_form %}
+                {% if notification_type %}
+                    {% trans "Submit Amendment" %}
+                {% else %}
+                    {% trans "Resubmit" %}
+                {% endif %}
+            {% else %}
+                {% trans "Submit" %}
+            {% endif %}
         </a>
     </li>
 {% endblock %}
