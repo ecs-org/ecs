@@ -21,6 +21,7 @@ ecs.TabbedForm.prototype = {
         var currentData = this.form.serialize();
         this.lastSaveData = currentData;
 
+        $('.last_save').html('<span class="fa fa-spinner fa-spin"></span>');
         this.autosave_xhr = $.post({
             url: window.location.href,
             data: currentData + '&' + extraParameter + '=' + extraParameter,
@@ -30,6 +31,11 @@ ecs.TabbedForm.prototype = {
                     'Last save: ' +
                     ('0' + now.getHours()).slice(-2) + ':' +
                     ('0' + now.getMinutes()).slice(-2)
+                );
+            },
+            error: function() {
+                $('.last_save').html(
+                    '<span class="text-danger fa fa-exclamation-triangle"></span>'
                 );
             },
             complete: (function() {
