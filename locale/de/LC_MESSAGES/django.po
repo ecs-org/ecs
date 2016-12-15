@@ -331,7 +331,7 @@ msgid "Yes, but no childbearing"
 msgstr "Ja, aber keine gebärfähigen Frauen"
 
 msgid "Yes, but only childbearing"
-msgstr "Ja, aber nur gebärfähigen Frauen"
+msgstr "Ja, aber nur gebärfähige Frauen"
 
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
