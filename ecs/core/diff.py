@@ -10,7 +10,7 @@ from django_countries import countries
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_text
 from django.db import models
-from django.db.models import Manager
+from django.db.models import Manager, QuerySet
 from django.http import HttpRequest
 from django.contrib.auth.models import User
 from django.utils.html import escape
@@ -298,7 +298,7 @@ class ModelDiffer(object):
         
         if isinstance(field, models.ForeignKey):
             return diff_model_instances(old_val, new_val, model=field.rel.to, **kwargs)
-        elif isinstance(new_val, Manager) or isinstance(old_val, Manager):
+        elif isinstance(new_val, (Manager, QuerySet)) or isinstance(old_val, (Manager, QuerySet)):
             old_val = list(old_val.all()) if old else []
             new_val = list(new_val.all()) if new else []
             if not old_val and not new_val:
@@ -352,7 +352,7 @@ class DocumentDiffer(AtomicModelDiffer):
 
     def format(self, doc):
         def _render(plainhtml=False):
-            submission_form = doc.submission_forms.first()
+            submission_form = doc.submission_forms.all()[0]
             assert submission_form is not None
             data = {
                 'doc': doc,
@@ -387,9 +387,9 @@ class SubmissionFormDiffer(ModelDiffer):
 
     def get_field_names(self):
         names = super().get_field_names()
-        if 'documents' in names:
-            names.remove('documents')
-            names.insert(0, 'documents')
+        if 'documents_for_diff' in names:
+            names.remove('documents_for_diff')
+            names.insert(0, 'documents_for_diff')
         return names
 
     def diff_field(self, name, old, new, **kwargs):
@@ -410,10 +410,10 @@ _differs = {
         follow=(
             'participatingcenternonsubject_set',
             'foreignparticipatingcenter_set', 'investigators', 'measures',
-            'nontesteduseddrug_set', 'documents',
+            'nontesteduseddrug_set', 'documents_for_diff',
         ),
         node_map={
-            'documents': DocumentListDiffNode,
+            'documents_for_diff': DocumentListDiffNode,
         },
         label_map=dict([
             ('participatingcenternonsubject_set', _('centers (non subject)')),
@@ -422,7 +422,7 @@ _differs = {
             ('measures', _('Studienbezogen/Routinemäßig durchzuführende Therapie und Diagnostik')),
             ('nontesteduseddrug_set',
                 _('Im Rahmen der Studie verabreichte Medikamente, deren Wirksamkeit und/oder Sicherheit nicht Gegenstand der Prüfung sind')),
-            ('documents', _('Dokumente')),
+            ('documents_for_diff', _('Dokumente')),
         ]),
     ),
     Investigator: ModelDiffer(Investigator,

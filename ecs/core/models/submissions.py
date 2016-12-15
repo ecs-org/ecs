@@ -718,6 +718,13 @@ class SubmissionForm(models.Model):
     def study_plan_dataprotection_full(self):
         return self.study_plan_dataprotection_choice == 'anonymous'
 
+    @property
+    def documents_for_diff(self):
+        return (self.documents
+            .select_related('doctype')
+            .prefetch_related('submission_forms')
+        )
+
 def attach_to_submissions(user):
     for x in ('submitter', 'sponsor'):
         submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): user.email})
