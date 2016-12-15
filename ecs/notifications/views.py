@@ -132,7 +132,7 @@ def create_diff_notification(request, submission_form_pk=None, notification_type
     
     docstash = DocStash.objects.create(
         group='ecs.notifications.views.create_notification',
-        name='%s für %s'.format(notification_type.name, old_submission_form),
+        name='{} für {}'.format(notification_type.name, old_submission_form),
         owner=request.user,
         value={
             'type_id': notification_type_pk,
