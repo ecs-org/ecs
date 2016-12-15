@@ -60,8 +60,7 @@ class DiffNotification(models.Model):
     def apply(self):
         new_sf = self.new_submission_form
         if not self.new_submission_form.is_current and self.old_submission_form.is_current:
-            new_sf.is_acknowledged = True
-            new_sf.save()
+            new_sf.acknowledge(True)
             new_sf.mark_current()
             return True
         else:

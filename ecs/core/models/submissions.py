@@ -509,7 +509,7 @@ class SubmissionForm(models.Model):
         self.pdf_document = Document.objects.create_from_buffer(pdfdata,
             doctype='submissionform', parent_object=self, name=name,
             original_file_name=filename, version=str(self.version))
-        self.save()
+        self.save(update_fields=('pdf_document',))
 
     @property
     def version(self):
@@ -525,10 +525,14 @@ class SubmissionForm(models.Model):
     @property
     def is_current(self):
         return self.submission.current_submission_form_id == self.id
+
+    def acknowledge(self, choice):
+        self.is_acknowledged = choice
+        self.save(update_fields=('is_acknowledged',))
         
     def mark_current(self):
         self.submission.current_submission_form = self
-        self.submission.save()
+        self.submission.save(update_fields=('current_submission_form',))
         
     def allows_edits(self, user):
         s = self.submission

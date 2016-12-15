@@ -19,7 +19,6 @@ from ecs.communication.utils import send_system_message_template
 
 
 @task()
-@transaction.atomic
 def render_submission_form(submission_form_id=None):
     logger = render_submission_form.get_logger()
 
@@ -27,17 +26,19 @@ def render_submission_form(submission_form_id=None):
     # triggered on submit before the request transaction is committed, so we
     # have to wait. We should start using transaction.on_commit() as soon as
     # we've updated to Django 1.9.
-    sf = None
     for i in range(60):
-        try:
-            sf = SubmissionForm.unfiltered.select_for_update().get(id=submission_form_id)
-            break
-        except SubmissionForm.DoesNotExist:
-            time.sleep(1)
-    if not sf:
+        with transaction.atomic():
+            try:
+                sf = SubmissionForm.unfiltered.get(id=submission_form_id)
+            except SubmissionForm.DoesNotExist:
+                pass
+            else:
+                sf.render_pdf_document()
+                break
+        time.sleep(1)
+    else:
         logger.error("SubmissionForm(id=%d) didn't appear", submission_form_id)
-
-    sf.render_pdf_document()
+        return
 
 
 @task

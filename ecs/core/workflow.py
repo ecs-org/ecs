@@ -135,8 +135,7 @@ class InitialReview(Activity):
     def pre_perform(self, choice):
         s = self.workflow.data
         sf = s.newest_submission_form
-        sf.is_acknowledged = choice
-        sf.save()
+        sf.acknowledge(choice)
         on_initial_review.send(Submission, submission=s, form=sf)
 
 
@@ -196,8 +195,7 @@ class InitialB2ResubmissionReview(B2ResubmissionReview):
                 vote.is_draft = False
             vote.save()
             if is_upgrade:
-                vote.submission_form.is_acknowledged = True
-                vote.submission_form.save()
+                vote.submission_form.acknowledge(True)
                 vote.submission_form.mark_current()
 
 
