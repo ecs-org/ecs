@@ -55,7 +55,7 @@ class DiffNotification(models.Model):
         super().save()
         self.submission_forms = [self.old_submission_form]
         self.new_submission_form.is_transient = False
-        self.new_submission_form.save()
+        self.new_submission_form.save(update_fields=('is_transient',))
         
     def apply(self):
         new_sf = self.new_submission_form

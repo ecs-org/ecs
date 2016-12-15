@@ -179,7 +179,7 @@ class Submission(models.Model):
 
     def finish(self):
         self.is_finished = True
-        self.save()
+        self.save(update_fields=('is_finished',))
 
         Task.unfiltered.for_submission(self).filter(
             task_type__is_dynamic=True).open().mark_deleted()
@@ -740,7 +740,7 @@ def _post_submission_form_save(**kwargs):
     old_sf = submission.current_submission_form
     
     if not old_sf:
-        submission.current_submission_form = new_sf
+        new_sf.mark_current()
         if new_sf.is_amg:
             submission.invite_primary_investigator_to_meeting = True
         if new_sf.is_thesis:
@@ -748,7 +748,10 @@ def _post_submission_form_save(**kwargs):
             submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
         elif new_sf.is_categorized_multicentric_and_local:
             submission.workflow_lane = SUBMISSION_LANE_LOCALEC
-        submission.save()
+        submission.save(update_fields=(
+            'invite_primary_investigator_to_meeting', 'remission',
+            'workflow_lane',
+        ))
 
     on_study_change.send(Submission, submission=submission, old_form=old_sf, new_form=new_sf)
 
@@ -796,10 +799,10 @@ class Investigator(models.Model):
 @receiver(post_save, sender=Investigator)
 def _post_investigator_save(sender, **kwargs):
     investigator = kwargs['instance']
-    if not investigator.main:
-        return
-    investigator.submission_form.primary_investigator = investigator
-    investigator.submission_form.save()
+    if investigator.main:
+        sf = investigator.submission_form
+        sf.primary_investigator = investigator
+        sf.save(update_fields=('primary_investigator',))
     
 
 class InvestigatorEmployee(models.Model):

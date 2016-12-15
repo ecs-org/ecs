@@ -786,7 +786,7 @@ def change_submission_presenter(request, submission_pk=None):
     if request.method == 'POST' and form.is_valid():
         new_presenter = form.cleaned_data['presenter']
         submission.presenter = new_presenter
-        submission.save()
+        submission.save(update_fields=('presenter',))
         on_presenter_change.send(Submission, 
             submission=submission, 
             old_presenter=previous_presenter, 
@@ -814,7 +814,7 @@ def change_submission_susar_presenter(request, submission_pk=None):
     if request.method == 'POST' and form.is_valid():
         new_susar_presenter = form.cleaned_data['susar_presenter']
         submission.susar_presenter = new_susar_presenter
-        submission.save()
+        submission.save(update_fields=('susar_presenter',))
         on_susar_presenter_change.send(Submission, 
             submission=submission, 
             old_susar_presenter=previous_susar_presenter, 

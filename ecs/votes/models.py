@@ -96,7 +96,7 @@ class Vote(models.Model):
 
         submission = self.get_submission()
         submission.is_expired = True
-        submission.save()
+        submission.save(update_fields=('is_expired',))
 
         Task.unfiltered.for_submission(submission).filter(
             task_type__is_dynamic=True).open().mark_deleted()
@@ -108,7 +108,7 @@ class Vote(models.Model):
 
         submission = self.get_submission()
         submission.is_expired = False
-        submission.save()
+        submission.save(update_fields=('is_expired',))
 
     @property
     def version_number(self):
