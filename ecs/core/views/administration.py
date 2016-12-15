@@ -1,4 +1,3 @@
-import mimetypes
 from django.shortcuts import render
 
 from ecs.core.models import AdvancedSettings, EthicsCommission

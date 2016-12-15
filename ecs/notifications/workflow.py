@@ -8,7 +8,7 @@ from ecs.meetings.signals import on_meeting_start, on_meeting_end
 from ecs.notifications.models import (
     Notification, CompletionReportNotification, ProgressReportNotification,
     SafetyNotification, CenterCloseNotification, AmendmentNotification,
-    NOTIFICATION_MODELS, NotificationAnswer,
+    NOTIFICATION_MODELS,
 )
 
 

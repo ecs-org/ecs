@@ -27,7 +27,6 @@ from ecs.core.models.managers import (
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document
 from ecs.users.utils import get_user, create_phantom_user, sudo
-from ecs.authorization import AuthorizationManager
 from ecs.core.signals import on_study_change
 from ecs.votes.models import Vote
 from ecs.notifications.models import Notification

@@ -4,8 +4,6 @@ from django.template import Library, Node, TemplateSyntaxError
 from django.utils.translation import ugettext as _
 from django.core.cache import cache
 from django.conf import settings
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from ecs.core import paper_forms
 from ecs.core.models import Submission, AdvancedSettings, EthicsCommission

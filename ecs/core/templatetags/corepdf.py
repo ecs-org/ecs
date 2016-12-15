@@ -1,7 +1,5 @@
-import os
 import base64
 
-from django.conf import settings
 from django.template import Library, Node
 from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _

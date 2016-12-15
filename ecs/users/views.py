@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import random
 from collections import defaultdict
 
 from django.http import Http404, HttpResponse
@@ -28,7 +27,7 @@ from ecs.users.forms import RegistrationForm, ActivationForm, RequestPasswordRes
 from ecs.users.models import UserProfile, Invitation, LoginHistory
 from ecs.users.forms import EmailLoginForm, IndispositionForm, SetPasswordForm, PasswordChangeForm, LoginHistoryFilterForm
 from ecs.users.utils import get_user, create_user, user_flag_required, user_group_required
-from ecs.communication.utils import send_message, send_system_message_template
+from ecs.communication.utils import send_system_message_template
 from ecs.utils.browserutils import UA
 
 
