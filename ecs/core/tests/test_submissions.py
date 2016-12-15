@@ -4,7 +4,6 @@ from django.utils import timezone
 
 from ecs.core.models import Submission, SubmissionForm, EthicsCommission, Investigator
 from ecs.documents.models import Document, DocumentType
-from ecs.core.models.submissions import attach_to_submissions
 from ecs.utils.testcases import EcsTestCase
 from ecs.users.utils import get_or_create_user, create_user
 
@@ -372,8 +371,18 @@ class SubmissionAttachUserTest(EcsTestCase):
 
     def test_submission_attach_user(self):
         '''Tests if a user can be attached to a study as submitter and as sponsor.'''
+
+        for x in ('submitter', 'sponsor'):
+            submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): self.user.email})
+            for sf in submission_forms:
+                setattr(sf, x, self.user)
+                sf.save()
+
+        investigator_by_email = Investigator.objects.filter(email=self.user.email)
+        for inv in investigator_by_email:
+            inv.user = self.user
+            inv.save()
         
-        attach_to_submissions(self.user)        
         self.sf = SubmissionForm.objects.get(project_title="High Risk Test Study")
         self.assertEqual(self.sf.sponsor, self.user)
         self.assertEqual(self.sf.submitter, self.user)

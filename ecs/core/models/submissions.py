@@ -725,18 +725,6 @@ class SubmissionForm(models.Model):
             .prefetch_related('submission_forms')
         )
 
-def attach_to_submissions(user):
-    for x in ('submitter', 'sponsor'):
-        submission_forms = SubmissionForm.objects.filter(**{'{0}_email'.format(x): user.email})
-        for sf in submission_forms:
-            setattr(sf, x, user)
-            sf.save()
-
-    investigator_by_email = Investigator.objects.filter(email=user.email)
-    for inv in investigator_by_email:
-        inv.user = user
-        inv.save()
-
 
 @receiver(post_save, sender=SubmissionForm)
 def _post_submission_form_save(**kwargs):
