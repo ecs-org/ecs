@@ -88,50 +88,57 @@
     <span class="value">{{ submission_form.subject_count }}</span>
 </p>
 
-<p class="border_bottom">
-    2.10 Charakterisierung der Prüfungsteilnehmer/innen : 
-    2.10.1 Mindestalter: 
-    <span class="value"> {{ submission_form.subject_minage }} </span> 
-    2.10.2 Höchstalter: 
-    <span class="value"> {{ submission_form.subject_maxage }} </span>
-</p>
+<div class="border_bottom">
+    2.10 Charakterisierung der Prüfungsteilnehmer/innen:
 
-<div class="indented">
-    <p>
-        2.10.3 Sind auch nicht persönlich Einwilligungsfähige einschließbar? 
-        {{ submission_form.subject_noncompetents|checkbox }} ja 
-        {{ submission_form.subject_noncompetents|not|checkbox }} nein
-    </p>
+    <div class="indented">
+        <p>
+            <span>
+                2.10.1 Mindestalter:
+                <span class="value"> {{ submission_form.subject_minage|default_if_none:'-' }} </span>
+            </span>
+            <span class="indented">
+                2.10.2 Höchstalter:
+                <span class="value"> {{ submission_form.subject_maxage|default_if_none:'-' }} </span>
+            </span>
+        </p>
 
-    <p>
-        2.10.4 Einschließbar sind 
-        {% if submission_form.subject_childbearing %}
-            {{ True|checkbox }}
-        {% else %}
-            {{ submission_form.subject_females|checkbox }}
-        {% endif %}
-        <span class="underline">weibliche</span> (und/oder)
-        {{ submission_form.subject_males|checkbox }} <span class="underline">männliche</span> Teilnehmer/innen.
-    </p>
+        <p>
+            2.10.3 Sind auch nicht persönlich Einwilligungsfähige einschließbar?
+            {{ submission_form.subject_noncompetents|checkbox }} ja 
+            {{ submission_form.subject_noncompetents|not|checkbox }} nein
+        </p>
 
-    <p>
-        2.10.5 Sind gebärfähige Frauen einschließbar? (Bei Studien nach AMG/MPG ist bei Einschluss gebärfähiger  Frauen ein monatlicher Schwangerschaftstest erforderlich)
-        <div class="indented">
-            {% if submission_form.subject_females %}
-                {{ submission_form.subject_childbearing|checkbox }} ja
-                {{ False|checkbox }} nur gebährfähige
-                {{ submission_form.subject_childbearing|not|checkbox }} nein
-            {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
-                {{ False|checkbox }} ja
-                {{ True|checkbox }} nur gebährfähige
-                {{ False|checkbox }} nein
+        <p>
+            2.10.4 Einschließbar sind
+            {% if submission_form.subject_childbearing %}
+                {{ True|checkbox }}
             {% else %}
-                {{ False|checkbox }} ja
-                {{ False|checkbox }} nur gebährfähige
-                {{ False|checkbox }} nein
+                {{ submission_form.subject_females|checkbox }}
             {% endif %}
-        </div>
-    </p>
+            <span class="underline">weibliche</span> (und/oder)
+            {{ submission_form.subject_males|checkbox }} <span class="underline">männliche</span> Teilnehmer/innen.
+        </p>
+
+        <p>
+            2.10.5 Sind gebärfähige Frauen einschließbar? (Bei Studien nach AMG/MPG ist bei Einschluss gebärfähiger  Frauen ein monatlicher Schwangerschaftstest erforderlich)
+            <div class="indented">
+                {% if submission_form.subject_females %}
+                    {{ submission_form.subject_childbearing|checkbox }} ja
+                    {{ False|checkbox }} nur gebährfähige
+                    {{ submission_form.subject_childbearing|not|checkbox }} nein
+                {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
+                    {{ False|checkbox }} ja
+                    {{ True|checkbox }} nur gebährfähige
+                    {{ False|checkbox }} nein
+                {% else %}
+                    {{ False|checkbox }} ja
+                    {{ False|checkbox }} nur gebährfähige
+                    {{ False|checkbox }} nein
+                {% endif %}
+            </div>
+        </p>
+    </div>
 </div>
 
 <p class="border_bottom">
