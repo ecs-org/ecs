@@ -20,15 +20,6 @@
 {% block header_actions %}
     {{ block.super }}
     <div class="header_actions">
-        {% if submission_form|allows_edits_by:user %}
-            <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">{% trans 'Edit' %}</a>
-        {% endif %}
-        {% if submission_form|allows_amendments_by:user %}
-            {% for notification_type in diff_notification_types %}
-                <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">{{ notification_type.name }}</a>
-            {% endfor %}
-        {% endif %}
-        
         {% if not request.task_management.form %}
             {% with external_review_task=submission.external_review_task %}
                 {% if external_review_task %}
@@ -39,6 +30,24 @@
             {% endwith %}
         {% endif %}
     </div>
+{% endblock %}
+
+
+{% block submission_action_buttons %}
+    <li class="nav-item float-xs-right">
+        {% if submission_form|allows_edits_by:user %}
+            <a class="btn btn-primary" href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">
+                {% trans 'Edit' %}
+            </a>
+        {% endif %}
+        {% if submission_form|allows_amendments_by:user %}
+            {% for notification_type in diff_notification_types %}
+                <a class="btn btn-primary" href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">
+                    {{ notification_type.name }}
+                </a>
+            {% endfor %}
+        {% endif %}
+    </li>
 {% endblock %}
 
 
