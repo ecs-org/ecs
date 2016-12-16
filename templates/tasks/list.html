@@ -7,7 +7,9 @@
 {% block headertitle %}{% trans "Tasks" %}{% endblock %}
 
 {% block content %}
-    {% include "tasks/tasks_full.inc" %}
+    <div class="container">
+        {% include "tasks/tasks_full.inc" %}
+    </div>
 {% endblock %}
 
 {% block jsbottom %}
