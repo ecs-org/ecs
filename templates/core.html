@@ -194,6 +194,11 @@
         
     <div id="header" class="bg-faded p-1">
         <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
+
+        {% if request.task_management.form %}
+            {% include 'tasks/manage_task.html' with form=request.task_management.form %}
+        {% endif %}
+
         <div id="headernav">
             {% block headernav %}
                 {% if user.profile.is_indisposed %}
@@ -208,10 +213,6 @@
         </div>
         {% block header_actions %}
         {% endblock %}
-
-        {% if request.task_management.form %}
-            {% include 'tasks/manage_task.html' with form=request.task_management.form %}
-        {% endif %}
     </div>
 
     <div id="content" class="container-fluid my-1">
