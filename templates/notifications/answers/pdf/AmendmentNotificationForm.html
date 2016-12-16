@@ -18,8 +18,11 @@
     {% if notification.amendmentnotification.is_substantial and display_biased %}
         <p>
             {% db_setting 'member_list_url' as url %}
-            Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der
-            Adresse <a href="{{ url }}">{{ url }}</a> abrufbar.
+            Die aktuelle Mitgliederliste der Ethik-Kommission ist unter folgender Adresse abrufbar:<br>
+            <a href="{{ url }}">{{ url }}</a>
+        </p>
+
+        <p>
             Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt
             als befangen anzusehen waren und daher laut Geschäftsordnung an der
             Entscheidungsfindung/Abstimmung nicht teilgenommen haben:

@@ -106,7 +106,11 @@
 
 <p>
     {% db_setting 'member_list_url' as url %}
-    Die aktuelle Mitgliederliste der Ethik-Kommission ist unter der Adresse <a href="{{ url }}">{{ url }}</a> abrufbar.
+    Die aktuelle Mitgliederliste der Ethik-Kommission ist unter folgender Adresse abrufbar:<br>
+    <a href="{{ url }}">{{ url }}</a>
+</p>
+
+<p>
     Mitglieder der Ethik-Kommission, die für diesen Tagesordnungspunkt als befangen anzusehen waren und daher laut Geschäftsordnung an der Entscheidungsfindung/Abstimmung nicht teilgenommen haben: {% for bef in submission.biased_board_members.all %}{{ bef }}{% if not forloop.last %}, {% endif %}{% empty %}<strong>keine</strong>{% endfor %}
 </p>
 
@@ -114,7 +118,10 @@
 {% if extra %}<p>{{ extra }}</p>{% endif %}
 
 <h2 class="metadata">Download</h2>
-<p>Dieses Dokument ist für berechtigte Benutzer/innen in digitaler Form unter der Adresse <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a> abrufbar.</p>
+<p>
+    Dieses Dokument ist für berechtigte Benutzer/innen in digitaler Form unter folgender Adresse abrufbar:<br>
+    <a href="{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">{{ ABSOLUTE_URL_PREFIX }}{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}</a>
+</p>
 
 {% if not vote.needs_signature and vote.published_by %}
     <p>Freigegeben von: <b>{{ vote.published_by|full_name }}</b>.</p>
