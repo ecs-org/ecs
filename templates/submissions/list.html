@@ -73,18 +73,6 @@
                         </h5>
 
                         <div class="my-1">
-                            {% if submission_form|allows_edits_by:user %}
-                                <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">
-                                    {% trans "Edit" %}
-                                </a>
-                            {% endif %}
-                            {% if submission_form|allows_amendments_by:user and not docstash.value.notification_type %}
-                                {% for notification_type in diff_notification_types %}
-                                    <a href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">
-                                        {{ notification_type.name }}
-                                    </a>
-                                {% endfor %}
-                            {% endif %}
                             {% if user.profile.is_internal %}
                                 {% with submission.paper_submission_task as paper_submission_review_task %}
                                     {% if paper_submission_review_task %}
