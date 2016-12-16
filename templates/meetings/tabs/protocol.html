@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n widget_tweaks %}
 
 <form action="{{ request.path }}" method="post" class="open-in-widget">
     {% csrf_token %}
@@ -11,7 +11,7 @@
             <label for="{{ form.text.id_for_label }}">
                 {{ form.instance }}, {{ form.instance.title }}
             </label>
-            {{ form.text }}
+            {% render_field form.text class+="form-control" %}
         </fieldset>
     {% endfor %}
 
