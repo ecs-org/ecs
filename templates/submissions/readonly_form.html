@@ -318,7 +318,7 @@
         </div>
     {% endif %}
     {% if user.profile.show_task_widget %}
-        <div id="tasks_tab" class="collapse">
+        <div id="tasks_tab" class="container collapse">
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' submission_pk=submission.pk %}"></div>
         </div>
         {% if user.profile.is_internal %}

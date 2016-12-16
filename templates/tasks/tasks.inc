@@ -1,6 +1,6 @@
 {% load i18n tasks %}
 
-<div class="dashboard_widget half float-xs-left">
+<div class="dashboard_widget float-xs-left {% if submission %}w-100{% else %}half{% endif %}">
     <div class="card">
         <div class="card-block">
             <h3 class="card-title mb-0">{% trans "My Tasks" %}</h3>
@@ -76,7 +76,7 @@
 </div>
 
 {% if user.profile.can_have_open_tasks %}
-    <div class="dashboard_widget float-xs-left {% if submission %}half{% else %}w-100{% endif %}">
+    <div class="dashboard_widget float-xs-left w-100">
         <div class="card-group">
 
             {% if not submission %}
