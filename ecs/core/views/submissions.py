@@ -927,18 +927,6 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
             if task.data.submission_form.submission == s:
                 s.b2_resubmission_task = task
 
-    checklist_ct = ContentType.objects.get_for_model(Checklist)
-    external_review_tasks = tasks.filter(content_type=checklist_ct,
-        data_id__in=Checklist.objects.filter(submission__in=visible_submission_pks).values('pk').query,
-        task_type__workflow_node__uid='external_review')
-    for s in submissions.object_list:
-        if isinstance(s, DocStash):
-            continue
-        for task in external_review_tasks:
-            if task.data.submission == s:
-                s.external_review_task = task
-
-
     # save the filter in the user settings
     if 'tags' in filterform.cleaned_data:
         filterform.cleaned_data['tags'] = \
