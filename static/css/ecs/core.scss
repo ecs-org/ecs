@@ -10,56 +10,6 @@
     }
 }
 
-.header_actions {
-    position: absolute;
-    right: 10px;
-    top: 0;
-    padding: 5px;
-    display: block;
-    width: 100px;
-    text-align: center;
-    border-radius: 5px;
-
-    a {
-        padding: 2px 3px;
-        margin-bottom: 3px;
-        display: block;
-        cursor: pointer;
-        z-index: 100;
-        color: $grey-20;
-        font-size: 12px;
-        background: $grey-95;
-        border: 1px solid $grey-70;
-        border-radius: 3px;
-    }
-    a:active {
-        background: $grey-90;
-        color: $grey-20;
-    }
-    a:hover {
-        text-decoration: none;
-        border: 1px solid $grey-70;
-    }
-    .button_save {
-        background: $grey-95;
-        border: 1px solid $lightskyblue;
-    }
-    .button_save_change {
-        background: $grey-60;
-        border: 1px solid $lightskyblue;
-    }
-    .button_submit {
-        background: #54aade;
-        border: 1px solid #7bc4f0;
-        color: $white;
-        margin: 0px;
-    }
-    .button_submit_valid {
-        background: #84cefb;
-        border: 1px solid #61b6e9;
-    }
-}
-
 /* table border definitions */
 
 .meeting_detail th,

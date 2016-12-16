@@ -17,22 +17,6 @@
 {% endblock %}
 
 
-{% block header_actions %}
-    {{ block.super }}
-    <div class="header_actions">
-        {% if not request.task_management.form %}
-            {% with external_review_task=submission.external_review_task %}
-                {% if external_review_task %}
-                    <a href="{{ external_review_task.url }}">
-                        {% trans 'Start External Review' %}
-                    </a>
-                {% endif %}
-            {% endwith %}
-        {% endif %}
-    </div>
-{% endblock %}
-
-
 {% block submission_action_buttons %}
     <li class="nav-item float-xs-right">
         {% if submission_form|allows_edits_by:user %}

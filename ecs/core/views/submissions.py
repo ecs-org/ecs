@@ -249,15 +249,6 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         except KeyError:
             pass
 
-    checklist_ct = ContentType.objects.get_for_model(Checklist)
-    external_review_tasks = Task.objects.open().filter(
-        content_type=checklist_ct, task_type__workflow_node__uid='external_review',
-        data_id__in=submission.checklists.values('pk').query)
-    try:
-        submission.external_review_task = external_review_tasks[0]
-    except IndexError:
-        pass
-
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
