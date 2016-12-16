@@ -7,6 +7,7 @@
 {% block quicksearch_keyword %}{{ keyword|default:'' }}{% endblock %}
 
 {% block content %}
+<div class="container">
 
 {% include "submissions/filterform.inc" %}
 
@@ -162,6 +163,7 @@
 
 {% include 'paginator.inc' with page=submissions %}
 
+</div>
 {% endblock %}
 
 {% block jsbottom %}
