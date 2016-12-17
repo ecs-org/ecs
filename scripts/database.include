@@ -110,10 +110,6 @@ prepare_database() {
 
     echo "./manage.py bootstrap"
     ./manage.py bootstrap || exit 1
-
-    if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
-        ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
-    fi
 }
 
 legacy_migrate() {

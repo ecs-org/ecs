@@ -137,6 +137,9 @@ dev_update(){
         prepare_was_run=true
         opt=$(if test $mig_change = "true" -o $restore_dump = "true"; then echo "--restore-dump"; fi)
         prepare_database $opt
+        if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
+            ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
+        fi
     fi
 
     ./manage.py compilemessages
