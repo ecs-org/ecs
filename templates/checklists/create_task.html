@@ -1,16 +1,16 @@
 {% load i18n %}
 
-<h3 class="mt-1">{% trans 'Request Review' %}</h3>
+<h3 class="my-1">{% trans 'Request Review' %}</h3>
 
 <form action="{{ request.path }}" method="POST" class="open-in-widget">
     {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        {% if form_stage2 %}
-            {{ form_stage2.as_table }}
-        {% endif %}
-    </table>
+    {% for field in form %}
+        {% include "bootstrap/form_field.html" with inline=True %}
+    {% endfor %}
     {% if form_stage2 %}
+        {% for field in form_stage2 %}
+            {% include "bootstrap/form_field.html" with inline=True %}
+        {% endfor %}
         <input type="submit" class="btn btn-primary" value="{% trans 'Request Review' %}">
     {% endif %}
 </form>
