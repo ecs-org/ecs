@@ -20,7 +20,7 @@
         {% include "notifications/submission_data.html" %}
     {% endwith %}
 
-    <form action="{{ request.path }}" method="post" enctype="multipart/form-data" class="form_main bound_to_task">
+    <form action="{{ request.path }}" method="post" class="bound_to_task">
         {% csrf_token %}
         {% for field in form %}
             {% include 'bootstrap/form_field.html' %}
@@ -41,8 +41,7 @@
     {{ block.super }}
     <script type="text/javascript"> 
         $(function(){
-            ecs.setupFormFieldHelpers();
-            var toolbar_items = [
+            new ecs.textarea.TextArea('#id_text', [
                 {% if answer and user.profile.is_internal %}
                     ecs.textarea.toolbarItems.versionHistory(
                         "{{ _('History')|escapejs }} ({{ answer_version }})",
@@ -53,8 +52,7 @@
                     "{{ _('Insert Boilerplate')|escapejs }}",
                     "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
                 )
-            ];
-            ecs.textarea.installToolbar('#id_text', toolbar_items);
+            ]);
         });
     </script>
 {% endblock %}
