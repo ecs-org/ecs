@@ -1,46 +1,48 @@
 {% load i18n %}
 
-{% if biased_users %}
-    <table class="table table-sm">
-        <thead>
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>{% trans 'Name' %}</th>
+            <th>{% trans 'Organization' %}</th>
+            <th>{% trans 'E-Mail' %}</th>
+            <th>{% trans 'Assigned Tasks' %}</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in biased_users %}
             <tr>
-                <th>{% trans 'Name' %}</th>
-                <th>{% trans 'Organization' %}</th>
-                <th>{% trans 'E-Mail' %}</th>
-                <th>{% trans 'Assigned Tasks' %}</th>
-                <th></th>
-                <th></th>
+                <td>{{ user }}</td>
+                <td>{{ user.profile.organisation }}</td>
+                <td>{{ user.email|default:'' }}</td>
+                <td>
+                    <ul class="list-unstyled text-danger">
+                        {% for task in user.assigned_tasks %}
+                            <li>{{ task.task_type }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk to_user_pk=user.pk %}" target="_blank">
+                        <span class="fa fa-envelope-o"></span>
+                        {% trans "Send Message" %}
+                    </a>
+                </td>
+                <td>
+                    <a class="fa fa-ban text-danger open-in-widget" href="{% url 'ecs.core.views.submissions.remove_biased_board_member' submission_pk=submission.pk user_pk=user.pk %}"></a>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            {% for user in biased_users %}
-                <tr>
-                    <td>{{ user }}</td>
-                    <td>{{ user.profile.organisation }}</td>
-                    <td>{{ user.email|default:'' }}</td>
-                    <td>
-                        <ul class="list-unstyled text-danger">
-                            {% for task in user.assigned_tasks %}
-                                <li>{{ task.task_type }}</li>
-                            {% endfor %}
-                        </ul>
-                    </td>
-                    <td>
-                        <a href="{% url 'ecs.communication.views.new_thread' submission_pk=submission.pk to_user_pk=user.pk %}" target="_blank">
-                            <span class="fa fa-envelope-o"></span>
-                            {% trans "Send Message" %}
-                        </a>
-                    </td>
-                    <td>
-                        <a class="fa fa-ban text-danger open-in-widget" href="{% url 'ecs.core.views.submissions.remove_biased_board_member' submission_pk=submission.pk user_pk=user.pk %}"></a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <em>{% trans 'No board members selected.' %}</em>
-{% endif %}
+        {% empty %}
+            <tr class="text-xs-center text-muted">
+                <td colspan="6">
+                    <em>{% trans 'No board members selected.' %}</em>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
 <form action="{{ request.path }}" method="POST" class="container open-in-widget">
     {% csrf_token %}
