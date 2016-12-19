@@ -50,7 +50,7 @@ def handle_download(request, doc, view=False):
     return response
 
 
-def handle_view(request, doc, page=None):
+def handle_view(request, doc):
     ref_key = uuid4().hex
     cache.set('document-ref-{}'.format(ref_key), doc.id, timeout=60)
 
@@ -62,8 +62,6 @@ def handle_view(request, doc, page=None):
     })
     url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
         settings.STATIC_URL, params)
-    if page:
-        url = '{}#page={}'.format(url, int(page))
     return redirect(url)
 
 
