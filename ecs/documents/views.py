@@ -1,4 +1,4 @@
-from urllib.parse import urlencode
+from urllib.parse import urlencode, quote
 from uuid import uuid4
 
 from django.shortcuts import render, redirect, get_object_or_404
@@ -54,12 +54,22 @@ def handle_view(request, doc):
     ref_key = uuid4().hex
     cache.set('document-ref-{}'.format(ref_key), doc.id, timeout=60)
 
+    title_bits = [str(doc.doctype), doc.name]
+    sf = doc.submission_forms.first()
+    if sf:
+        title_bits.insert(0, sf.submission.get_ec_number_display())
+    n = doc.notifications.first()
+    if n:
+        title_bits.insert(0, str(n))
+    title = '{} (Version: {})'.format(' - '.join(title_bits), doc.version)
+
     params = urlencode({
         'file': reverse(
             'ecs.documents.views.download_once',
             kwargs={'ref_key': ref_key}
-        )
-    })
+        ),
+        'title': title,
+    }, quote_via=quote)
     url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
         settings.STATIC_URL, params)
     return redirect(url)

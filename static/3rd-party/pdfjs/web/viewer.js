@@ -8115,6 +8115,9 @@ function webViewerInitialized() {
   if (file) {
     PDFViewerApplication.open(file);
   }
+
+  if ('title' in params)
+      document.title = params.title;
 }
 
 document.addEventListener('pagerendered', function (e) {
