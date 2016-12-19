@@ -6,7 +6,7 @@
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-<div class="administration_detail form_main container">
+<div class="administration_detail container">
     <h2>{{ form.instance }} ({{ form.instance.email }})</h2>
     <p>
         <a href="{% url 'ecs.users.views.administration' %}">
@@ -27,7 +27,6 @@
   {{ block.super }}
     <script type="text/javascript">
       $(function(){
-          ecs.setupFormFieldHelpers();
           $('#id_user-groups, #id_user-task_types, #id_user-medical_categories').select2();
       });
     </script>
