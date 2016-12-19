@@ -39,7 +39,7 @@
       </p>
       {% endif %}
 
-      {% include 'bootstrap/form_field.html' with field=form.subject %}
+      {% include 'bootstrap/form_field.html' with field=form.subject inline=True %}
 
       {% if form.instance.thread %}
         <p>

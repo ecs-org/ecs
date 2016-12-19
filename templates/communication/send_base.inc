@@ -1,15 +1,15 @@
 {% load core %}
 
 {% if form.receiver %}
-<p>
-    <label for="{{ form.receiver.auto_id }}" class="receiver">Empfänger</label>
+<div class="row">
+    <label class="col-md-2" for="{{ form.receiver.auto_id }}" class="receiver">Empfänger</label>
     {% if to_user %}
-        <div class="ml-1">
+        <div class="col-md-10 ml-1">
             {{ to_user }}
             <input type="hidden" name="receiver" value="{{ to_user.pk }}"/>
         </div>
     {% else %}
-        <div class="ml-1">
+        <div class="col-md-10 col-form-label">
              {% for choice in form.fields.receiver_type.choices %}
                <div>
                   <label for="{{ form.receiver_type.auto_id }}_{{ forloop.counter0 }}">
@@ -35,7 +35,7 @@
             {% endif %}
         </div>
     {% endif %}
-</p>
+</div>
 {% endif %}
 
 {% include 'bootstrap/form_field.html' with field=form.text %}

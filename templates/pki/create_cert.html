@@ -15,7 +15,7 @@
     <form action="{{ request.path }}" method="post" autocomplete="off">
         {% csrf_token %}
         {% for field in form %}
-            {% include "bootstrap/form_field.html" %}
+            {% include "bootstrap/form_field.html" with inline=True %}
         {% endfor %}
         <input class="btn btn-primary" type="submit" value="{% trans 'Create Certificate' %}" />
     </form>

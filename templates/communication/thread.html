@@ -76,10 +76,7 @@
 <form action="{{ request.path }}" method="post">
     {% csrf_token %}
     {% if form.to %}
-        <div class="form-group">
-            <label for="{{ form.to.id_for_label }}">{{ form.to.label }}</label>
-            {{ form.to }}
-        </div>
+        {% include 'bootstrap/form_field.html' with field=form.to inline=True %}
     {% endif %}
 
     {% include 'bootstrap/form_field.html' with field=form.text %}
