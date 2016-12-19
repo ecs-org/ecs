@@ -78,10 +78,10 @@
     </table>
 {% endif %}
 {% if user.profile.is_executive_board_member %}
-    <form action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
+    <form class="container" action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
         {% csrf_token %}
         {% for field in temporary_auth_form %}
-            {% include 'bootstrap/form_field.html' %}
+            {% include 'bootstrap/form_field.html' with inline=True %}
         {% endfor %}
         <input class="btn btn-primary mb-1" type="submit" value="{% trans 'Authorize' %}"/>
     </form>
