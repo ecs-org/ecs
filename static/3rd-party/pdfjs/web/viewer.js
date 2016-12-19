@@ -5615,31 +5615,35 @@ var HandTool = (function HandToolClosure() {
   function HandTool(options) {
     this.container = options.container;
     this.toggleHandTool = options.toggleHandTool;
+    this.secondaryToggleHandTool = options.secondaryToggleHandTool;
 
     this.wasActive = false;
 
     this.handTool = new GrabToPan({
       element: this.container,
       onActiveChanged: function(isActive) {
-        if (!this.toggleHandTool) {
+        if (!this.toggleHandTool || !this.secondaryToggleHandTool) {
           return;
         }
         if (isActive) {
-          this.toggleHandTool.title =
+          this.toggleHandTool.classList.add('toggled');
+          this.toggleHandTool.title = this.secondaryToggleHandTool.title =
             mozL10n.get('hand_tool_disable.title', null, 'Disable hand tool');
-          this.toggleHandTool.firstElementChild.textContent =
+          this.secondaryToggleHandTool.firstElementChild.textContent =
             mozL10n.get('hand_tool_disable_label', null, 'Disable hand tool');
         } else {
-          this.toggleHandTool.title =
+          this.toggleHandTool.classList.remove('toggled');
+          this.toggleHandTool.title = this.secondaryToggleHandTool.title =
             mozL10n.get('hand_tool_enable.title', null, 'Enable hand tool');
-          this.toggleHandTool.firstElementChild.textContent =
+          this.secondaryToggleHandTool.firstElementChild.textContent =
             mozL10n.get('hand_tool_enable_label', null, 'Enable hand tool');
         }
       }.bind(this)
     });
 
-    if (this.toggleHandTool) {
+    if (this.toggleHandTool && this.secondaryToggleHandTool) {
       this.toggleHandTool.addEventListener('click', this.toggle.bind(this));
+      this.secondaryToggleHandTool.addEventListener('click', this.toggle.bind(this));
 
       window.addEventListener('localized', function (evt) {
         Preferences.get('enableHandToolOnLoad').then(function resolved(value) {
@@ -7027,7 +7031,8 @@ var PDFViewerApplication = {
 
     this.handTool = new HandTool({
       container: container,
-      toggleHandTool: appConfig.secondaryToolbar.toggleHandTool
+      toggleHandTool: appConfig.toolbar.toggleHandTool,
+      secondaryToggleHandTool: appConfig.secondaryToolbar.toggleHandTool
     });
 
     this.pdfDocumentProperties =
@@ -8751,6 +8756,7 @@ function getViewerConfiguration() {
       zoomOut: document.getElementById('zoomOut'),
       viewFind: document.getElementById('viewFind'),
       presentationModeButton: document.getElementById('presentationMode'),
+      toggleHandTool: document.getElementById('toggleHandTool'),
     },
     secondaryToolbar: {
       toolbar: document.getElementById('secondaryToolbar'),
@@ -8762,7 +8768,7 @@ function getViewerConfiguration() {
       pageRotateCw: document.getElementById('pageRotateCw'),
       pageRotateCcw: document.getElementById('pageRotateCcw'),
       documentPropertiesButton: document.getElementById('documentProperties'),
-      toggleHandTool: document.getElementById('toggleHandTool'),
+      toggleHandTool: document.getElementById('secondaryToggleHandTool'),
     },
     fullscreen: {
       contextFirstPage: document.getElementById('contextFirstPage'),
