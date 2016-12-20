@@ -13,6 +13,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.core.cache import cache
+from django.views.decorators.cache import cache_page
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
@@ -1172,6 +1173,7 @@ def my_submissions(request):
 
 
 @forceauth.exempt
+@cache_page(60 * 60)
 def catalog(request, year=None):
     with sudo():
         votes = (Vote.objects
@@ -1211,6 +1213,7 @@ def catalog(request, year=None):
 
 
 @forceauth.exempt
+@cache_page(60 * 60)
 def catalog_json(request):
     data = [{
         'version': '2.0',
