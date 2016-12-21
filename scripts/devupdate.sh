@@ -4,24 +4,30 @@ usage(){
     cat << EOF
 Usage:  $0 [--restore-dump] init
         $0 [--restore-dump] pull [--force] [branchname [--force]]
-        $0 dumpdb [targetdumpname]
         $0 freshdb
+        $0 dumpdb [targetdumpname]
+        $0 transferdb user@host source command to cat a gzipped dump
 
-init    = install/renew all system setup regardless of current state.
-            does not touch sourcecode, is safe to use.
-pull    = fetch,update current source to origin/branchname(HEAD)
-            and run needed devserver updates. restore from dump if needed.
-            "pull" will refuse to run if there are uncommited changes/additions
-            or unpushed changes existing in the repository.
-dumpdb  = dump current database and write it to /app/ecs.pgdump
-freshdb = destroy current database and create a new empty ecs database
+init        = install/renew all system setup regardless of current state.
+              does not touch sourcecode, is safe to use.
+pull        = fetch,update current source to origin/branchname(HEAD)
+              and run needed devserver updates. restore from dump if needed.
+              "pull" will refuse to run if there are uncommited changes,
+              additions or unpushed changes existing in the repository.
 
+freshdb     = destroy current database and create a new empty ecs database
+dumpdb      = dump current database and write it to /app/ecs.pgdump.gz
+transferdb  = drop and recreate db on localhost, execute sourcecommand on user@host
+              to transfer a gzipped database dump to localhost,
+              import into database and migrate on localhost.
+              You need to have ssh agent forwarding active to use this function.
+              Example:
+              "devupate.sh transferdb root@host.domain cat /data/ecs-pgdump/ecs.pgdump.gz"
 Option:
     "--force" will ignore and *OVERWRITE* unpushed changes in target branch
     "--restore-dump" will mandatory restore database from dump
         dump will be selected from first existing file of list:
-        $HOME/{./ ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback}/ecs.pgdump
-
+        $HOME/{./ ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback}/ecs.pgdump[.gz]
 Testing:
     isclean [--ignore-unpushed] = run abort_ifnot_cleanrepo
     get_dumpfilename = get first used dumpfile
@@ -29,9 +35,7 @@ Env:
     ECS_DUMP_FILENAME="/path/to/custom.pgdump"
         to restore from a non default dump.
     ECS_DEV_AUTOSTART="false" to your .profile,
-        devupdate.sh will not restart devserver
-
-    current autostart: $ECS_DEV_AUTOSTART
+        devupdate.sh will not restart devserver. current autostart: $ECS_DEV_AUTOSTART
 
 EOF
     exit 1
@@ -221,7 +225,31 @@ main(){
         sudo systemctl stop devserver
         . $HOME/env/bin/activate
         fresh_database
-        deactivate
+        if test "$ECS_DEV_AUTOSTART" = "true"; then
+            sudo systemctl start devserver
+        fi
+        ;;
+    transferdb)
+        if test -z "$3"; then usage; fi
+        ssh_user_host="$2"
+        shift 2
+        ssh_cmd="$@"
+        sudo systemctl stop devserver
+        . $HOME/env/bin/activate
+        sudo -u postgres dropdb ecs
+        recreate_database
+        echo "Transfering database dump using '$ssh_cmd' on host $ssh_user_host, this will take some time"
+        (set -o pipefail && ssh $ssh_user_host "$ssh_cmd" | gzip -d | \
+            pg_restore -1 --format=custom --schema=public --no-owner --dbname=ecs)
+        if test "$?" -ne 0; then
+            echo "Error transfering dump"
+            exit 1
+        fi
+        echo "migrate database, this will take some time"
+        prepare_database
+        if test "$ECS_USERSWITCHER_ENABLED" = "true"; then
+            ./manage.py userswitcher ${ECS_USERSWITCHER_PARAMETER:--it}
+        fi
         if test "$ECS_DEV_AUTOSTART" = "true"; then
             sudo systemctl start devserver
         fi

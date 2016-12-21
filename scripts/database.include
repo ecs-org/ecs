@@ -7,7 +7,10 @@ get_dumpfilename(){
         echo "${ECS_DUMP_FILENAME}"
     else
         for i in . ecs-pgdump ecs-pgdump-iso ecs-pgdump-fallback; do
-            if test -e $HOME/$i/ecs.pgdump; then
+            if test -e $HOME/$i/ecs.pgdump.gz; then
+                echo "$HOME/$i/ecs.pgdump.gz"
+                break
+            elif test -e $HOME/$i/ecs.pgdump; then
                 echo "$HOME/$i/ecs.pgdump"
                 break
             fi
@@ -17,12 +20,14 @@ get_dumpfilename(){
 
 dump_database(){
     local dbdump
-    dbdump=$HOME/ecs.pgdump
+    dbdump=$HOME/ecs.pgdump.gz
     if test "$1" != ""; then
         dbdump=$1
     fi
-    echo "create a database dump at $dbdump, this might take up to 10 minutes"
-    if pg_dump --encoding="utf-8" --format=custom -Z6 -f ${dbdump}.new -d ecs; then
+    echo "create a database dump at $dbdump, this might take some time"
+    (set -o pipefail && pg_dump --encoding='utf-8' --format=custom -Z0 -d ecs | \
+        /bin/gzip --rsyncable > ${dbdump}.new)
+    if test "$?" -eq 0; then
         mv ${dbdump}.new ${dbdump}
     else
         echo "Error: could not create dump $dbdump"
@@ -40,7 +45,7 @@ recreate_database() {
 
 fresh_database() {
     # to be called with: activated environment, CWD=rootdir of sourcecode
-    local dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump
+    local dbdump=$HOME/ecs-pgdump-fallback/ecs.pgdump.gz
     echo "destroying and recreating empty/fresh database"
     sudo -u postgres dropdb ecs
     recreate_database
@@ -81,8 +86,15 @@ prepare_database() {
             sudo -u postgres dropdb ecs
         fi
         recreate_database
-        echo "restore from dump (this might take up to 10 minutes): $dumpfilename"
-        pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
+        echo "restore from dump (this might take some time): $dumpfilename"
+        if test "$(file -N -b --mime-type $dumpfilename)" = "application/gzip"; then
+            echo "found gzipped dump"
+            (set -o pipefail && cat $dumpfilename | gzip -d | \
+                pg_restore -1 --format=custom --schema=public --no-owner --dbname=ecs)
+        else
+            echo "found normal dump"
+            pg_restore --format=custom --schema=public --no-owner --dbname=ecs --jobs="$(nproc)" $dumpfilename
+        fi
     else
         if test $err -eq 8; then
             firstrun="true"
