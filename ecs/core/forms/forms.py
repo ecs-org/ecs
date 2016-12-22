@@ -313,6 +313,9 @@ class InvestigatorEmployeeForm(forms.ModelForm):
         model = InvestigatorEmployee
         exclude = ('investigator',)
 
+    def has_changed(self):
+        return bool(set(self.changed_data) - set(('investigator_index',)))
+
     def save(self, commit=True):
         instance = super(InvestigatorEmployeeForm, self).save(commit=commit)
         instance.investigator_index = self.cleaned_data['investigator_index']
