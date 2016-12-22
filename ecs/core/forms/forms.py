@@ -191,7 +191,10 @@ class ParticipatingCenterNonSubjectForm(forms.ModelForm):
 
 class ReadonlyBaseFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
-        return [form.save(commit=commit) for form in self.forms if form.is_valid()]
+        return [
+            form.save(commit=commit) for form in self.forms
+            if form.is_valid() and form.has_changed()
+        ]
 
 ParticipatingCenterNonSubjectFormSet = formset_factory(
     ParticipatingCenterNonSubjectForm, formset=ReadonlyBaseFormSet, extra=0)
