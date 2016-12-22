@@ -1,8 +1,8 @@
 {% extends 'notifications/view/ReportNotificationForm.html' %}
 {% load i18n %}
 {% block table_rows %}
-    {{ block.super }}
     {% with notification.completionreportnotification as notification %}
+        {{ block.super }}
         <tr>
             <th class="text-nowrap">Die Studie wurde abgebrochen</th>
             <td>{{ notification.study_aborted|yesno:"Ja,Nein" }}</td>

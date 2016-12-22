@@ -1,8 +1,8 @@
 {% extends 'notifications/view/ReportNotificationForm.html' %}
 {% load i18n %}
 {% block table_rows %}
-    {{ block.super }}
     {% with notification.progressreportnotification as notification %}
+        {{ block.super }}
         <tr>
             <th class="text-nowrap">Votumsverlängerungsantrag</th>
             <td>Ja</td>
