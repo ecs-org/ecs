@@ -294,7 +294,10 @@ class BaseInvestigatorFormSet(ReadonlyFormSetMixin, BaseFormSet):
 
     def clean(self):
         super().clean()
-        changed_forms = [form for form in self.forms[:self.total_form_count()] if form.is_valid() and form.has_changed()]
+        changed_forms = [
+            form for form in self.forms[:self.total_form_count()]
+            if form.is_valid() and form.has_changed()
+        ]
         if len(changed_forms) < 1:
             raise forms.ValidationError(_('At least one centre is required.'))
 
