@@ -21,7 +21,7 @@ from ecs.core.models import (
 )
 
 from ecs.utils.formutils import require_fields
-from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, ReadonlyTextarea, ReadonlyTextInput, \
+from ecs.core.forms.fields import StrippedTextInput, NullBooleanField, \
     EmailUserSelectWidget, AutocompleteModelChoiceField, DateTimeField
 from ecs.core.forms.utils import ReadonlyFormMixin, ReadonlyFormSetMixin
 from ecs.users.utils import get_current_user
@@ -127,7 +127,9 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
             if isinstance(field, forms.EmailField):
                 field.widget = StrippedTextInput()
                 if self.readonly:
-                    field.widget.mark_readonly()
+                    field.widget.attrs['readonly'] = 'readonly'
+                    field.widget.attrs['placeholder'] = \
+                        '-- {0} --'.format(_('No information given'))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -186,10 +188,6 @@ class ParticipatingCenterNonSubjectForm(forms.ModelForm):
     class Meta:
         model = ParticipatingCenterNonSubject
         fields = ('name', 'ethics_commission', 'investigator_name')
-        widgets = {
-            'name': ReadonlyTextInput(attrs={'size': 40}),
-            'investigator_name': ReadonlyTextInput(attrs={'size': 30}),
-        }
 
 class ReadonlyBaseFormSet(ReadonlyFormSetMixin, BaseFormSet):
     def save(self, commit=True):
@@ -202,10 +200,6 @@ class ForeignParticipatingCenterForm(forms.ModelForm):
     class Meta:
         model = ForeignParticipatingCenter
         exclude = ('submission_form',)
-        widgets = {
-            'name': ReadonlyTextInput(attrs={'size': 50}),
-            'investigator_name': ReadonlyTextInput(attrs={'size': 40}),
-        }
 
 ForeignParticipatingCenterFormSet = formset_factory(
     ForeignParticipatingCenterForm, formset=ReadonlyBaseFormSet, extra=0)
@@ -214,11 +208,6 @@ class NonTestedUsedDrugForm(forms.ModelForm):
     class Meta:
         model = NonTestedUsedDrug
         exclude = ('submission_form',)
-        widgets = {
-            'generic_name': ReadonlyTextInput(),
-            'preparation_form': ReadonlyTextInput(),
-            'dosage': ReadonlyTextInput(),
-        }
 
 NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm,
     formset=ReadonlyBaseFormSet, extra=0)
@@ -230,10 +219,10 @@ class MeasureForm(forms.ModelForm):
         model = Measure
         exclude = ('submission_form',)
         widgets = {
-            'type': ReadonlyTextarea(),
-            'count': ReadonlyTextarea(),
-            'period': ReadonlyTextarea(),
-            'total': ReadonlyTextarea(),
+            'type': forms.Textarea(),
+            'count': forms.Textarea(),
+            'period': forms.Textarea(),
+            'total': forms.Textarea(),
         }
 
 class RoutineMeasureForm(MeasureForm):

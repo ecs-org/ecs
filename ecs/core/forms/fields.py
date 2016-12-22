@@ -88,41 +88,13 @@ class AutocompleteModelMultipleChoiceField(AutocompleteFieldMixin, forms.ModelMu
         pass
 
 
-class ReadonlyTextMixin(object):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.readonly = False
-
-    def mark_readonly(self):
-        self.readonly = True
-
-    def render(self, name, value, attrs=None):
-        if not self.readonly:
-            return super().render(name, value, attrs=attrs)
-        else:
-            if attrs is None: attrs = {}
-            if not value:
-                if 'class' in attrs:
-                    attrs['class'] += ' empty'
-                else:
-                    attrs['class'] = 'empty'
-            attrs['readonly'] = 'readonly'
-            empty_str = '-- {0} --'.format(_('No information given'))
-            return super().render(name, value or empty_str, attrs=attrs)
-
-class ReadonlyTextInput(ReadonlyTextMixin, forms.TextInput):
-    pass
-
-class ReadonlyTextarea(ReadonlyTextMixin, forms.Textarea):
-    pass
-
-
-class StrippedTextInput(ReadonlyTextInput):
+class StrippedTextInput(forms.TextInput):
     def value_from_datadict(self, *args, **kwargs):
         v = super().value_from_datadict(*args, **kwargs)
         if v is not None:
             v = v.strip()
         return v
+
 
 class EmailUserSelectWidget(forms.TextInput):
     def render(self, name, value, attrs=None):
