@@ -9,3 +9,9 @@ uwsgi:
   buffer-size: 8192
   chdir: /app/ecs
   module: ecs.wsgi
+  # friendly reload if resident memory size exceeds 1G
+  reload-on-rss: 1024
+  # forcefully reload if resident memory size exceeds 1,5G
+  evil-reload-on-rss: 1500
+  # reloads the worker after 100 managed requests
+  max-requests: 100
