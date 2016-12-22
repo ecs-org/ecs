@@ -273,7 +273,7 @@ def auth_user_testusers():
     boardtestusers = (
          ('b.member1.klph', ('KlPh',)),
          ('b.member2.radio.klph', ('Radio', 'KlPh', )),
-         ('b.member3.anästh', ('Anästh',)),
+         ('b.member3.anaesth', ('Anästh',)),
          ('b.member4.chir', ('Chir',)),
          ('b.member5.nephro', ('Nephro',)),
          ('b.member6.psychol', ('Psychol',)),
