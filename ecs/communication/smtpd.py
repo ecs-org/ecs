@@ -53,9 +53,9 @@ class EcsMailReceiver(smtpd.SMTPServer):
         for part in msg.walk():
             content_type = part.get_content_type()
             if content_type == 'text/plain':
-                plain = part.get_payload()
+                plain = part.get_payload(decode=True)
             elif content_type == 'text/html':
-                html = html2text(part.get_payload())
+                html = html2text(part.get_payload(decode=True))
             elif content_type.startswith('multipart/'):
                 continue
             else:
