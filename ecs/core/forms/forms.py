@@ -213,7 +213,7 @@ NonTestedUsedDrugFormSet = formset_factory(NonTestedUsedDrugForm,
     formset=ReadonlyBaseFormSet, extra=0)
 
 class MeasureForm(forms.ModelForm):
-    category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.1'}))
+    category = forms.CharField(widget=forms.HiddenInput(), initial='6.1')
 
     class Meta:
         model = Measure
@@ -226,7 +226,7 @@ class MeasureForm(forms.ModelForm):
         }
 
 class RoutineMeasureForm(MeasureForm):
-    category = forms.CharField(widget=forms.HiddenInput(attrs={'value': '6.2'}))
+    category = forms.CharField(widget=forms.HiddenInput(), initial='6.2')
 
 MeasureFormSet = formset_factory(MeasureForm, formset=ReadonlyBaseFormSet,
     extra=0)
