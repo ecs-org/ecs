@@ -107,7 +107,6 @@ class ReadonlyTextMixin(object):
                 else:
                     attrs['class'] = 'empty'
             attrs['readonly'] = 'readonly'
-            attrs['disabled'] = 'disabled'
             empty_str = '-- {0} --'.format(_('No information given'))
             return super().render(name, value or empty_str, attrs=attrs)
 
