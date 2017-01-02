@@ -18,6 +18,7 @@ weasyprint                      # PDF rendering
 requests          # for raven
 raven             # sentry integration
 uwsgi             # container wsgi runner
+uwsgi_exporter
 
 # preprocessing, combining, compressing of js and css
 django_compressor

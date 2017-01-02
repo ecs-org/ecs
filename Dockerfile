@@ -52,6 +52,7 @@ RUN ./scripts/create-version-file.sh /app/ecs /app/ecs/ecs/version.py || true
 
 VOLUME ["/app/ecs-storage-vault"]
 EXPOSE 5000
+EXPOSE 1717
 
 USER root
 ENTRYPOINT ["/docker-entrypoint.sh"]
