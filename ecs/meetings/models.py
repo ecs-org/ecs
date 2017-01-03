@@ -177,7 +177,8 @@ class MeetingManager(AuthorizationManager):
                     start += month
                     deadline += month
                     deadline_thesis += month
-            title = start.strftime(ugettext('%B Meeting %Y (automatically generated)'))
+            title = timezone.localtime(start).strftime(
+                ugettext('%B Meeting %Y (automatically generated)'))
             m = Meeting.objects.create(start=start, deadline=deadline,
                 deadline_diplomathesis=deadline_thesis, title=title)
             return m

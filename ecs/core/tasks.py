@@ -11,6 +11,7 @@ from django.db import transaction
 from django.db.models import Min
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 
 from ecs.core.models import Submission, SubmissionForm, Investigator
 from ecs.core.forms import AllSubmissionsFilterForm
@@ -157,7 +158,7 @@ def xls_export(user_id=None, filters=None):
 
     # format helpers
     _b = lambda x: _('Yes') if x else _('No')
-    _d = lambda x: x.strftime('%d.%m.%Y') if x else None
+    _d = lambda x: timezone.localtime(x).strftime('%d.%m.%Y') if x else None
 
     for i, submission in enumerate(submissions, 3):
         sf = submission.current_submission_form

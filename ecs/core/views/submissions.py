@@ -1182,8 +1182,12 @@ def catalog_json(request):
                 'title_en': sf.project_title,
                 'ec_number': sf.submission.get_ec_number_display(),
                 'sponsor': sf.sponsor_name,
-                'date_of_vote': vote.published_at.strftime('%Y-%m-%d'),
-                'date_of_first_meeting': vote.first_meeting_start.strftime('%Y-%m-%d'),
+                'date_of_vote':
+                    timezone.localtime(vote.published_at)
+                        .strftime('%Y-%m-%d'),
+                'date_of_first_meeting':
+                    timezone.localtime(vote.first_meeting_start)
+                        .strftime('%Y-%m-%d'),
                 'other_investigators_count': len(sf.non_system_ec_investigators),
             }
             if sf.project_type_education_context:

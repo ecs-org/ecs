@@ -71,14 +71,18 @@ class Document(models.Model):
         t = "Sonstige Unterlagen"
         if self.doctype_id:
             t = self.doctype.name
-        return '{0} {1}-{2} vom {3}'.format(t, self.name, self.version, self.date.strftime('%d.%m.%Y'))
+        return '{} {}-{} vom {}'.format(t, self.name, self.version,
+            timezone.localtime(self.date).strftime('%d.%m.%Y'))
 
     def get_filename(self):
         if self.mimetype == 'application/vnd.ms-excel': # HACK: we want .xls not .xlb for excel files
             ext = '.xls'
         else:
             ext = mimetypes.guess_extension(self.mimetype) or '.bin'
-        name_slices = [self.doctype.name if self.doctype else 'Unterlage', self.name, self.version, self.date.strftime('%Y.%m.%d')]
+        name_slices = [
+            self.doctype.name if self.doctype else 'Unterlage', self.name,
+            self.version, timezone.localtime(self.date).strftime('%Y.%m.%d')
+        ]
         if self.parent_object and hasattr(self.parent_object, 'get_filename_slice'):
             name_slices.insert(0, self.parent_object.get_filename_slice())
         name = slugify('-'.join(name_slices))

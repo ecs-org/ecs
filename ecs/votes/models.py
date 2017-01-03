@@ -140,9 +140,11 @@ class Vote(models.Model):
         if self.top:
             top = str(self.top)
             meeting = self.top.meeting
-            filename = '%s-%s-%s-vote_%s.pdf' % (meeting.title, meeting.start.strftime('%d-%m-%Y'), top, vote_name)
+            filename = '{}-{}-{}-vote_{}.pdf'.format(meeting.title,
+                timezone.localtime(meeting.start).strftime('%d-%m-%Y'),
+                top, vote_name)
         else:
-            filename = 'vote_%s.pdf' % (vote_name)
+            filename = 'vote_{}.pdf'.format(vote_name)
         return filename.replace(' ', '_')
 
     def get_render_context(self):

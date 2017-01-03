@@ -12,10 +12,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 from django.utils.text import slugify
+from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.db.models import Q, Max, Prefetch
-from django.utils import timezone
 from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
@@ -716,9 +716,9 @@ def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def agenda_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-%s.pdf' % (
-        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda'))
-    )
+    filename = '{}-{}-{}.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'),
+        slugify(_('agenda')))
     pdf = meeting.get_agenda_pdf(request)
     return pdf_response(pdf, filename=filename)
 
@@ -727,14 +727,19 @@ def send_agenda_to_board(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
     agenda_pdf = meeting.get_agenda_pdf(request)
-    agenda_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('agenda')))
+    agenda_filename = '{}-{}-{}.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'),
+        slugify(_('agenda')))
     timetable_pdf = meeting.get_timetable_pdf(request)
-    timetable_filename = '%s-%s-%s.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot')))
+    timetable_filename = '{}-{}-{}.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'),
+        slugify(_('time slot')))
     attachments = (
         (agenda_filename, agenda_pdf, 'application/pdf'),
         (timetable_filename, timetable_pdf, 'application/pdf'),
     )
-    subject = _('EC Meeting %s') % (meeting.start.strftime('%d.%m.%Y'),)
+    subject = _('EC Meeting {}').format(
+        timezone.localtime(meeting.start).strftime('%d.%m.%Y'))
     reply_to = AdvancedSettings.objects.get().contact_email
 
     users = User.objects.filter(meeting_participations__entry__meeting=meeting).distinct()
@@ -784,7 +789,8 @@ def send_expedited_reviewer_invitations(request, meeting_pk=None):
             medical_categories__in=categories.values('pk'))
         start = form.cleaned_data['start']
         for user in users:
-            subject = _('Expedited Review at {0}').format(start.strftime('%d.%m.%Y'))
+            subject = _('Expedited Review at {}').format(
+                timezone.localtime(start).strftime('%d.%m.%Y'))
             send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
         form = ExpeditedReviewerInvitationForm(None)
 
@@ -826,7 +832,8 @@ def send_protocol(request, meeting_pk=None):
     meeting.save()
 
     protocol_pdf = meeting.get_protocol_pdf(request)
-    protocol_filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
+    protocol_filename = '{}-{}-protocol.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'))
     attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)
     
     for user in User.objects.filter(Q(meeting_participations__entry__meeting=meeting) | Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)).distinct():
@@ -840,7 +847,8 @@ def send_protocol(request, meeting_pk=None):
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def protocol_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-protocol.pdf' % (slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'))
+    filename = '{}-{}-protocol.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'))
     with sudo():
         pdf = meeting.get_protocol_pdf(request)
     return pdf_response(pdf, filename=filename)
@@ -848,9 +856,9 @@ def protocol_pdf(request, meeting_pk=None):
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def timetable_pdf(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '%s-%s-%s.pdf' % (
-        slugify(meeting.title), meeting.start.strftime('%d-%m-%Y'), slugify(_('time slot'))
-    )
+    filename = '{}-{}-{}.pdf'.format(slugify(meeting.title),
+        timezone.localtime(meeting.start).strftime('%d-%m-%Y'),
+        slugify(_('time slot')))
     with sudo():
         pdf = meeting.get_timetable_pdf(request)
     return pdf_response(pdf, filename=filename)
