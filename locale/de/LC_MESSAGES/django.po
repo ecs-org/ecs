@@ -3138,6 +3138,9 @@ msgstr "Befangene Parteien"
 msgid "This form has not been submitted yet."
 msgstr "Dieses Formular wurde noch nicht eingereicht."
 
+msgid "Not submitted yet."
+msgstr "Noch nicht eingereicht."
+
 msgid "change"
 msgstr "ändern"
 

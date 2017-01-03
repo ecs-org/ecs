@@ -66,8 +66,12 @@
                         <td>
                             {% if sf.is_notification_update %}
                                 {% with sf.new_for_notification.all.0 as notif %}
-                                    {% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk as url %}
-                                    <a href="{{ url }}">{% trans 'Amendment' %}</a>
+                                    {% if notif %}
+                                        {% url 'ecs.notifications.views.view_notification' notification_pk=notif.pk as url %}
+                                        <a href="{{ url }}">{% trans 'Amendment' %}</a>
+                                    {% else %}
+                                        <em>{% trans 'Not submitted yet.' %}</em>
+                                    {% endif %}
                                 {% endwith %}
                             {% else %}
                                 –
