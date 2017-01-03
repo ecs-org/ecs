@@ -1,59 +1,47 @@
 {% load core widget_tweaks %}
 
-{# Template parameters: #}
-{# inline: Display label and field beside each other. #}
-{# paper_info: Display paperform labels and numbers. #}
-
 {% with field|get_field_info as field_info %}
-    <div class="form-group{% if inline %} row{% endif %}{% if field.errors %} has-danger{% endif %}">
+    <div class="form-group row{% if field.errors %} has-danger{% endif %}">
         {% if field.field|type_name == "BooleanField" %}
-            <div class="form-check {% if inline %}col-md-10 push-md-2{% endif %}">
+            <div class="form-check col-md-9 push-md-3">
                 <label class="form-check-label">
                     {% render_field field class+="form-check-input" %}
                     <span class="pl-1">
-                        {% if paper_info %}
-                            {{ field_info.label|default:field.label }}
-                            {% if field_info.number %}
-                                <small class="text-muted">
-                                    [{{ field_info.number }}]
-                                </small>
-                            {% endif %}
-                        {% else %}
-                            {{ field.label }}
+                        {{ field_info.label|default:field.label }}
+                        {% if field_info.number %}
+                            <small class="text-muted">
+                                [{{ field_info.number }}]
+                            </small>
                         {% endif %}
                         {% if field.field.required %}
                             <span class="text-danger">*</span>
                         {% endif %}
                     </span>
                 </label>
-                {% if paper_info and field_info.help_text %}
+                {% if field_info.help_text %}
                     <div class="text-muted">
                         {{ field_info.help_text }}
                     </div>
                 {% endif %}
             </div>
         {% else %}
-            <label {% if inline %}class="col-md-2 col-form-label overflow-wrap-break-word"{% endif %} for="{{ field.id_for_label }}">
-                {% if paper_info %}
-                    {{ field_info.label|default:field.label }}
-                    {% if field_info.number %}
-                        <small class="text-muted">
-                            [{{ field_info.number }}]
-                        </small>
-                    {% endif %}
-                {% else %}
-                    {{ field.label }}
+            <label class="col-md-3 col-form-label overflow-wrap-break-word" for="{{ field.id_for_label }}">
+                {{ field_info.label|default:field.label }}
+                {% if field_info.number %}
+                    <small class="text-muted">
+                        [{{ field_info.number }}]
+                    </small>
                 {% endif %}
                 {% if field.field.required %}
                     <span class="text-danger">*</span>
                 {% endif %}
-                {% if paper_info and field_info.help_text %}
+                {% if field_info.help_text %}
                     <div class="text-muted">
                         {{ field_info.help_text }}
                     </div>
                 {% endif %}
             </label>
-            <div {% if inline %}class="col-md-10"{% endif %}>
+            <div class="col-md-9">
                 {% if field.field|type_name == "DateTimeField" %}
                     <div class="DateTimeField input-group">
                         {% render_field field class+="form-control" error_class="form-control-danger" %}
@@ -68,7 +56,7 @@
             </div>
         {% endif %}
         {% if field.errors %}
-            <div class="form-control-feedback {% if inline %}col-md-10 push-md-2{% endif %}">
+            <div class="form-control-feedback col-md-9 push-md-3">
                 {% for error in field.errors %}
                     <p>{{ error }}</p>
                 {% endfor %}

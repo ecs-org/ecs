@@ -649,7 +649,7 @@ msgid "studies"
 msgstr "Studien"
 
 msgid "Statement/Conclusion/Notice"
-msgstr "Begründung/Stellungnahme/Mitteilung"
+msgstr "Begründung / Stellungnahme / Mitteilung"
 
 msgid "Type"
 msgstr "Typ"

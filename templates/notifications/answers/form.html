@@ -23,7 +23,7 @@
     <form action="{{ request.path }}" method="post" class="bound_to_task">
         {% csrf_token %}
         {% for field in form %}
-            {% include 'bootstrap/form_field.html' %}
+            {% include 'notifications/form_field.html' %}
         {% endfor %}
     </form>
 

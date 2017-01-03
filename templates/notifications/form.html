@@ -67,11 +67,11 @@
                 {% for legend, fields in tab.fieldsets %}
                     <div class="fieldset_{{ forloop.counter }}">
                         {% if legend %}
-                            <h3>{{ legend }}</h3>
+                            <h3 class="mb-1">{{ legend }}</h3>
                         {% endif %}
                         {% for field_name in fields %}
                             {% with form|getitem:field_name as field %}
-                                {% include "bootstrap/form_field.html" with paper_info=True %}
+                                {% include "notifications/form_field.html" %}
                             {% endwith %}
                         {% endfor %}
                     </div>
