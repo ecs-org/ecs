@@ -239,7 +239,7 @@ def _render_value(val):
         return str(val)
     elif isinstance(val, datetime.date):
         return val.strftime(DATE_FORMAT)
-    elif isinstance(val, datetime.date):
+    elif isinstance(val, datetime.datetime):
         return val.strftime(DATETIME_FORMAT)
     return str(val)
 
