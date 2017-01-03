@@ -723,10 +723,7 @@ class SubmissionForm(models.Model):
 
     @property
     def documents_for_diff(self):
-        return (self.documents
-            .select_related('doctype')
-            .prefetch_related('submission_forms')
-        )
+        return self.documents.select_related('doctype')
 
 
 @receiver(post_save, sender=SubmissionForm)

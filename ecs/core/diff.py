@@ -193,13 +193,19 @@ class DocumentListDiffNode(ListDiffNode):
         changed = sorted(old ^ new,
             key=lambda d: (d.doctype.identifier, d.date, d.name))
 
-        diffs = []
-        for doc in changed:
-            if doc in new:
-                diffs.append(('+', diff_model_instances(None, doc, ignore_old=True)))
-            elif doc in old:
-                diffs.append(('-', diff_model_instances(doc, None, ignore_new=True)))
-        self.diffs = diffs
+        self.diffs = []
+
+        if changed:
+            differ = DocumentDiffer(
+                submission_form=changed[0].submission_forms.first())
+
+            for doc in changed:
+                if doc in new:
+                    self.diffs.append(
+                        ('+', differ.diff(None, doc, ignore_old=True)))
+                elif doc in old:
+                    self.diffs.append(
+                        ('-', differ.diff(doc, None, ignore_new=True)))
 
     def html(self, plain=False):
         return "\n".join(d.html(plain=plain) for op, d in self.diffs)
@@ -351,14 +357,16 @@ class AtomicModelDiffer(ModelDiffer):
 class DocumentDiffer(AtomicModelDiffer):
     model = Document
 
+    def __init__(self, submission_form=None):
+        super().__init__()
+        self.submission_form = submission_form
+
     def format(self, doc):
         def _render(plainhtml=False):
-            submission_form = doc.submission_forms.all()[0]
-            assert submission_form is not None
             data = {
                 'doc': doc,
                 'plainhtml': plainhtml,
-                'submission_form': submission_form,
+                'submission_form': self.submission_form,
                 'user': get_current_user(),
             }
             return render_html(HttpRequest(), 'submissions/diff/document.inc', data)
@@ -461,7 +469,6 @@ _differs = {
         identify='name',
     ),
     EthicsCommission: AtomicModelDiffer(),
-    Document: DocumentDiffer(),
     User: UserDiffer(),
 }
 
