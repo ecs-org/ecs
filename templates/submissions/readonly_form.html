@@ -391,7 +391,7 @@
             if (!$('#id_invoice_differs_from_sponsor').is(':checked'))
                 $('#tabs-4 .fieldset_2').hide();
 
-            $('#tabs_submission a').each(function() {
+            $('#tabs_submission a.nav-link').each(function() {
                 var container = $($(this).attr('href'));
                 container.find('input[type="checkbox"]:not(:checked)')
                     .closest('.BooleanField')
