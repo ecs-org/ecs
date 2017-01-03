@@ -9,6 +9,7 @@ from django_countries import countries
 
 from django.utils.translation import ugettext as _
 from django.utils.encoding import force_text
+from django.utils import timezone
 from django.db import models
 from django.db.models import Manager, QuerySet
 from django.http import HttpRequest
@@ -240,7 +241,7 @@ def _render_value(val):
     elif isinstance(val, datetime.date):
         return val.strftime(DATE_FORMAT)
     elif isinstance(val, datetime.datetime):
-        return val.strftime(DATETIME_FORMAT)
+        return timezone.localtime(val).strftime(DATETIME_FORMAT)
     return str(val)
 
 
