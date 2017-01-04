@@ -721,10 +721,6 @@ class SubmissionForm(models.Model):
     def study_plan_dataprotection_full(self):
         return self.study_plan_dataprotection_choice == 'anonymous'
 
-    @property
-    def documents_for_diff(self):
-        return self.documents.select_related('doctype')
-
 
 @receiver(post_save, sender=SubmissionForm)
 def _post_submission_form_save(**kwargs):
