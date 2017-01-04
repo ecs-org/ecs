@@ -511,11 +511,12 @@ def meeting_assistant(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def meeting_assistant_start(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
+    nocheck = request.GET.get('nocheck', False) if settings.DEBUG else False
 
     for top in meeting.timetable_entries.filter(submission__isnull=False):
         with sudo():
             recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'thesis_recommendation_review', 'expedited_recommendation', 'localec_recommendation']).open().exists()
-        if recommendation_exists:
+        if recommendation_exists and not nocheck:
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,
@@ -525,7 +526,7 @@ def meeting_assistant_start(request, meeting_pk=None):
             vote_preparation_exists = Task.objects.filter(
                 task_type__workflow_node__uid='vote_preparation'
             ).for_submission(top.submission).open().exists()
-        if vote_preparation_exists:
+        if vote_preparation_exists and not nocheck:
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
                 'meeting': meeting,

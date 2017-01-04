@@ -85,6 +85,8 @@
         $('a.start_meeting').click(function(ev) {
             ev.preventDefault();
             var href = $(this).attr('href');
+            if (ev.altKey)
+                href += '?nocheck=nocheck';
             var widget = $(this).parents('.ecs-Widget').data('widget');
             ecs.confirm({
                 question: '{{ _('Do you want to start the meeting?')|escapejs }}',
