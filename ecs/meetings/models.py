@@ -7,8 +7,8 @@ from django.db.models import F, Prefetch
 from django.dispatch import receiver
 from django.db.models.signals import post_delete, post_save
 from django.contrib.auth.models import User
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ugettext
+from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.text import slugify
 from django.conf import settings
 from django.utils import timezone
 
@@ -21,11 +21,12 @@ from ecs.core.models.constants import (
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
 )
 from ecs.utils import cached_property
-from ecs.utils.viewutils import render_pdf
+from ecs.utils.viewutils import render_pdf, render_pdf_context
 from ecs.users.utils import sudo
 from ecs.tasks.models import Task, TaskType
 from ecs.votes.models import Vote
 from ecs.core.models.core import AdvancedSettings
+from ecs.documents.models import Document
 from ecs.notifications.models import NotificationAnswer, SafetyNotification
 from ecs.meetings.signals import on_meeting_top_add, on_meeting_top_delete, on_meeting_top_index_change
 
@@ -187,13 +188,17 @@ class Meeting(models.Model):
     start = models.DateTimeField()
     title = models.CharField(max_length=200)
     optimization_task_id = models.TextField(null=True)
-    submissions = models.ManyToManyField('core.Submission', through='TimetableEntry', related_name='meetings')
+    submissions = models.ManyToManyField('core.Submission',
+        through='TimetableEntry', related_name='meetings')
     started = models.DateTimeField(null=True)
     ended = models.DateTimeField(null=True)
     comments = models.TextField(null=True, blank=True)
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
     agenda_sent_at = models.DateTimeField(null=True)
+    protocol = models.ForeignKey(Document, related_name="protocol_for_meeting",
+        null=True, on_delete=models.SET_NULL)
+    protocol_rendering_started_at = models.DateTimeField(null=True)
     protocol_sent_at = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
@@ -420,7 +425,7 @@ class Meeting(models.Model):
             'meeting': self,
         })
         
-    def get_protocol_pdf(self, request):
+    def get_protocol_pdf(self):
         timetable_entries = list(self.timetable_entries.all())
         timetable_entries.sort(key=lambda e: e.agenda_index)
 
@@ -472,7 +477,7 @@ class Meeting(models.Model):
         else:
             answers = None
 
-        return render_pdf(request, 'meetings/pdf/protocol.html', {
+        return render_pdf_context('meetings/pdf/protocol.html', {
             'meeting': self,
             'tops': tops,
             'substantial_amendments':
@@ -481,6 +486,15 @@ class Meeting(models.Model):
             'b1ized': b1ized,
             'answers': answers,
         })
+
+    def render_protocol_pdf(self):
+        pdfdata = self.get_protocol_pdf()
+        filename = '{}-{}-protocol.pdf'.format(slugify(self.title),
+            timezone.localtime(self.start).strftime('%d-%m-%Y'))
+        self.protocol = Document.objects.create_from_buffer(pdfdata,
+            doctype='meeting_protocol', parent_object=self, name=filename,
+            original_file_name=filename)
+        self.save(update_fields=('protocol',))
 
     def _get_timeframe_for_user(self, user):
         entries = list(self.timetable_entries.filter(

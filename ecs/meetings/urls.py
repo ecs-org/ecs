@@ -46,6 +46,7 @@ urlpatterns = (
     url(r'^(?P<meeting_pk>\d+)/timetable_pdf/$', views.timetable_pdf),
     url(r'^(?P<meeting_pk>\d+)/timetablepart/$', views.timetable_htmlemailpart),
     url(r'^(?P<meeting_pk>\d+)/protocol/edit/$', views.edit_protocol),
+    url(r'^(?P<meeting_pk>\d+)/protocol/pdf/render/$', views.render_protocol_pdf),
     url(r'^(?P<meeting_pk>\d+)/protocol/pdf/$', views.protocol_pdf),
     url(r'^(?P<meeting_pk>\d+)/protocol/send/$', views.send_protocol),
 )

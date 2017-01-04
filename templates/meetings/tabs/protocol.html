@@ -15,8 +15,7 @@
             </fieldset>
         {% endfor %}
 
-        <a href="" class="btn btn-primary submit-in-widget">Speichern</a>
-        <a class="send_emails btn btn-danger" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">{% trans 'Send protocol' %}</a>
+        <button class="btn btn-primary submit-in-widget">Speichern</button>
     </form>
 </div>
 

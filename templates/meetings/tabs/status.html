@@ -50,18 +50,6 @@
             <td>{{ meeting.ended|date:'d.m.Y H:i' }}</td>
         </tr>
     {% endif %}
-    <tr>
-        <th>{% trans "Agenda" %}</th>
-        <td>
-            <a href="{% url 'ecs.meetings.views.agenda_pdf' meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
-            {% if user|is_member_of:'EC-Office' %}
-                | <a class="send_emails" href="{% url 'ecs.meetings.views.send_agenda_to_board' meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
-                {% if meeting.agenda_sent_at %}
-                    ({% trans 'Last sent' %}: {{ meeting.agenda_sent_at|date:'d.m.Y H:i' }})
-                {% endif %}
-            {% endif %}
-        </td>
-    </tr>
     {% if user|is_member_of:'EC-Office' %}
         <tr>
             <th>{% trans "Expedited Reviewer Invitations" %}:</th>
@@ -71,18 +59,60 @@
         </tr>
     {% endif %}
     <tr>
-        <th>{% trans "Timetable" %}</th>
-        <td><a href="{% url 'ecs.meetings.views.timetable_pdf' meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>
-    </tr>
-    <tr>
-        <th>{% trans "Protocol" %}</th>
+        <th>{% trans "Agenda" %}</th>
         <td>
-            <a href="{% url 'ecs.meetings.views.protocol_pdf' meeting_pk=meeting.pk %}">{% trans "Protocol PDF" %}</a>
-            {% if user|is_member_of:'EC-Office' and meeting.protocol_sent_at %}
-                ({% trans 'Sent at' %} {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
+            <a href="{% url 'ecs.meetings.views.agenda_pdf' meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
+            {% if user|is_member_of:'EC-Office' %}
+                <div>
+                    <a class="send_emails" href="{% url 'ecs.meetings.views.send_agenda_to_board' meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
+                    {% if meeting.agenda_sent_at %}
+                        ({% trans 'Last sent' %}:
+                        {{ meeting.agenda_sent_at|date:'d.m.Y H:i' }})
+                    {% endif %}
+                </div>
             {% endif %}
         </td>
     </tr>
+    <tr>
+        <th>{% trans "Timetable" %}</th>
+        <td><a href="{% url 'ecs.meetings.views.timetable_pdf' meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>
+    </tr>
+    {% if user.profile.is_internal %}
+        <tr>
+            <th>{% trans "Protocol" %}</th>
+            <td>
+                {% if meeting.protocol_id %}
+                    <a href="{% url 'ecs.meetings.views.protocol_pdf' meeting_pk=meeting.pk %}">
+                        <span class="fa fa-file-pdf-o"></span>
+                        {% trans 'Download PDF' %}
+                    </a>
+                {% elif meeting.protocol_rendering_started_at %}
+                    {% trans 'PDF is being rendered' %}
+                    <i class="fa fa-spinner fa-spin"></i>
+                {% else %}
+                    <a href="{% url 'ecs.meetings.views.render_protocol_pdf' meeting_pk=meeting.pk %}">
+                        {% trans "Render PDF" %}
+                    </a>
+                {% endif %}
+
+                {% if meeting.protocol_sent_at %}
+                    <div>
+                        ({% trans 'Sent at' %}
+                        {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
+                    </div>
+                {% elif meeting.protocol_id %}
+                    | <a href="{% url 'ecs.meetings.views.render_protocol_pdf' meeting_pk=meeting.pk %}">
+                        {% trans "Discard and rerender PDF" %}
+                    </a>
+                    {% if user|is_member_of:'EC-Office' and meeting.ended %}
+                        | <a class="send_emails" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">
+                            {% trans 'Send protocol' %}
+                        </a>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
 </table>
 
 <h2>{% trans 'Statistics' %} <small>({{ cumulative_count }} Studien)</small></h2>

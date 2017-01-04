@@ -2726,6 +2726,12 @@ msgstr "Versendet am"
 msgid "Gesamt"
 msgstr ""
 
+msgid "Discard and rerender PDF"
+msgstr "Verwerfen und neu erstellen"
+
+msgid "Render PDF"
+msgstr "PDF erstellen"
+
 msgid "AMG/MPG"
 msgstr ""
 
@@ -3018,7 +3024,7 @@ msgid "No title."
 msgstr "Titel"
 
 msgid "PDF is being rendered"
-msgstr "PDF wird gerendert"
+msgstr "PDF wird erstellt"
 
 msgid "Categories"
 msgstr "Fachgebiete"

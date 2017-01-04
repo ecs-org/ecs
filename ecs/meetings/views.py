@@ -849,16 +849,17 @@ def edit_protocol(request, meeting_pk=None):
 
 @user_group_required('EC-Office')
 def send_protocol(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk, protocol_sent_at=None)
+    meeting = get_object_or_404(Meeting, ended__isnull=False,
+        protocol_sent_at=None, pk=meeting_pk)
 
     meeting.protocol_sent_at = timezone.now()
     meeting.save()
 
-    protocol_pdf = meeting.get_protocol_pdf(request)
-    protocol_filename = '{}-{}-protocol.pdf'.format(slugify(meeting.title),
-        timezone.localtime(meeting.start).strftime('%d-%m-%Y'))
-    attachments = ((protocol_filename, protocol_pdf, 'application/pdf'),)
-    
+    protocol_pdf = meeting.protocol.retrieve_raw().read()
+    attachments = (
+        (meeting.protocol.original_file_name, protocol_pdf, 'application/pdf'),
+    )
+
     for user in User.objects.filter(Q(meeting_participations__entry__meeting=meeting) | Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)).distinct():
         htmlmail = str(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
         deliver(user.email, subject=_('Meeting Protocol'), message=None,
@@ -867,14 +868,35 @@ def send_protocol(request, meeting_pk=None):
 
     return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
+
+@user_flag_required('is_internal')
+def render_protocol_pdf(request, meeting_pk=None):
+    meeting = get_object_or_404(Meeting.unfiltered.select_for_update(),
+        protocol_rendering_started_at=None, pk=meeting_pk)
+
+    meeting.protocol_rendering_started_at = timezone.now()
+    meeting.save(update_fields=('protocol_rendering_started_at',))
+    if meeting.protocol:
+        meeting.protocol.delete()
+
+    from ecs.meetings.tasks import render_protocol_pdf
+    render_protocol_pdf.apply_async(kwargs={
+        'meeting_id': meeting.pk,
+        'user_id': request.user.id,
+    })
+    return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
+
+
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def protocol_pdf(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    filename = '{}-{}-protocol.pdf'.format(slugify(meeting.title),
-        timezone.localtime(meeting.start).strftime('%d-%m-%Y'))
-    with sudo():
-        pdf = meeting.get_protocol_pdf(request)
-    return pdf_response(pdf, filename=filename)
+    meeting = get_object_or_404(Meeting, protocol__isnull=False, pk=meeting_pk)
+
+    response = FileResponse(meeting.protocol.retrieve_raw(),
+        content_type=meeting.protocol.mimetype)
+    response['Content-Disposition'] = \
+        'attachment;filename={}'.format(meeting.protocol.original_file_name)
+    return response
+
 
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def timetable_pdf(request, meeting_pk=None):

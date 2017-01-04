@@ -1,10 +1,10 @@
 import random, itertools, math, os, time
+
 from celery.task import task, periodic_task
 from celery.schedules import crontab
 
 from django.conf import settings
 from django.db import transaction
-
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation, random_replacement_mutation
 from ecs.meetings.models import Meeting
@@ -85,6 +85,18 @@ def optimize_timetable_task(meeting_id=None, algorithm=None, algorithm_parameter
         Meeting.objects.filter(pk=meeting_id).update(optimization_task_id=None)
 
     return retval
+
+
+@task()
+@transaction.atomic
+def render_protocol_pdf(meeting_id=None, user_id=None):
+    meeting = Meeting.objects.get(id=meeting_id)
+
+    try:
+        meeting.render_protocol_pdf()
+    finally:
+        meeting.protocol_rendering_started_at = None
+        meeting.save(update_fields=('protocol_rendering_started_at',))
 
 
 @periodic_task(run_every=crontab(hour=3, minute=28))
