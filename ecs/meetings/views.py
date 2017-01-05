@@ -265,40 +265,55 @@ def notification_list(request, meeting_pk=None):
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    
-    doctypes = ('patientinformation', 'checklist')
-    files = set()
-    
-    filename_bits = [slugify(meeting.title)]
 
     checklist_ct = ContentType.objects.get_for_model(Checklist)
-    def _add(submission):
-        sf = submission.current_submission_form
-        docs = sf.documents.filter(doctype__identifier__in=doctypes)
-        docs |= Document.objects.filter(content_type=checklist_ct, object_id__in=Checklist.objects.filter(status='review_ok', submission=submission))
-        for doc in docs.order_by('pk'):
-            files.add((submission, doc))
-        files.add((submission, sf.pdf_document))
+    filename_bits = [slugify(meeting.title)]
 
     with sudo():
         if submission_pk:
             submission = get_object_or_404(meeting.submissions, pk=submission_pk)
-            _add(submission)
+            sf = submission.current_submission_form
+
+            docs = [sf.pdf_document]
+            docs += sf.documents.filter(doctype__identifier='patientinformation')
+            docs += Document.objects.filter(
+                content_type=checklist_ct,
+                object_id__in=Checklist.objects.filter(
+                    status='review_ok', submission=submission)
+            )
+
             filename_bits.append(submission.get_filename_slice())
         else:
-            for submission in meeting.submissions.order_by('pk'):
-                _add(submission)
+            submissions = meeting.submissions
+            sfs = SubmissionForm.objects.filter(
+                current_for_submission__in=submissions.values('id'))
+
+            docs = Document.objects.filter(
+                Q(submission_form__in=sfs.values('id')) |
+                Q(
+                    submission_forms__in=sfs.values('id'),
+                    doctype__identifier='patientinformation',
+                ) |
+                Q(
+                    content_type=checklist_ct,
+                    object_id__in=Checklist.objects.filter(
+                        status='review_ok',
+                        submission__in=submissions.values('id')
+                    )
+                )
+            )
 
     h = hashlib.sha1()
-    for submission, doc in files:
-        h.update('({}:{})'.format(submission.pk, doc.pk).encode('ascii'))
+
+    h.update(','.join(sorted(str(doc.pk) for doc in docs)).encode('ascii'))
 
     cache_file = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, '%s.zip' % h.hexdigest())
-    
+
     if not os.path.exists(cache_file):
         zf = zipfile.ZipFile(cache_file, 'w')
         try:
-            for submission, doc in files:
+            for doc in docs:
+                submission = doc.parent_object.submission
                 path = [submission.get_filename_slice(), doc.get_filename()]
                 if not submission_pk:
                     path.insert(0, submission.get_workflow_lane_display())
