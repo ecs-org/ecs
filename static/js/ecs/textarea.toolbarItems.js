@@ -12,11 +12,13 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                         textarea.prop('selectionStart'),
                         textarea.prop('selectionEnd'))
                 };
-                var container = $('<div>', {'class': 'boilerplate_selector'});
-                var searchInput = $('<input>', {type: 'text', value: status.value});
-                var resultList = $('<div>', {'class': 'resultlist'});
-                container.append(searchInput);
-                container.append(resultList);
+                var container = $('<div>', {'class': 'boilerplate_container'});
+                var selector = $('<div>', {'class': 'boilerplate_selector'});
+                var searchInput = $('<input>', {type: 'text', value: status.value, 'class': 'form-control'});
+                var resultList = $('<div>', {'class': 'list-group resultlist'});
+                selector.append(searchInput);
+                selector.append(resultList);
+                container.append(selector);
                 $(textarea).before(container);
                 var dispose = function() {
                     $(window).off('click', dispose);
@@ -47,12 +49,13 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                                     return;
                                 }
                                 $(window).click(dispose);
-                                container.css('display', 'block');
+                                container.show();
                                 searchInput.focus();
                             }
                             resultList.html('');
                             results.forEach(function(text) {
                                 var display = $('<a>', {
+                                    class: 'list-group-item',
                                     html: '<strong>' + text.slug + '</strong>: ' + text.text,
                                     click: function(ev) {
                                         ev.preventDefault();

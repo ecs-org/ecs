@@ -1,50 +1,23 @@
 @import "ecs/variables.scss";
 
-.boilerplate_selector {
+.boilerplate_container {
     display: none;
-    position: absolute;
-    width: 300px;
-    height: auto;
-    left: 140px;
-    background: $white;
-    border: 3px solid $lightskyblue;
-    z-index: 1000;
+    position: relative;
 
-    a {
-        display: block;
-        color: $black;
-        max-height: 34px;
-        overflow: hidden;
-        padding: 2px;
+    .boilerplate_selector {
+        position: absolute;
+        width: 100%;
+        z-index: 1000;
 
-        &:nth-child(2n) {
-            background: #eee;
-            border-top: 1px solid #ddd;
-            border-bottom: 1px solid #ddd;
-        }
-
-        &:hover {
+        a:hover {
             text-decoration: none;
             background: $lightskyblue;
+            cursor: pointer;
+        }
+
+        .resultlist {
+            max-height: 20rem;
+            overflow: auto;
         }
     }
-
-    .resultlist {
-        max-height: 200px;
-        overflow: auto;
-    }
-
-    input[type=text] {
-        width: 295px;
-        height: 25px;
-        padding: 5px;
-        display: block !important;
-    }
-}
-
-.boilerplate_text {
-    padding: 10px;
-    border: 1px solid $grey-60;
-    background: $white;
-    border-radius: 5px;
 }
