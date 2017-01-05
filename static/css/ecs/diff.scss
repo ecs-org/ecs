@@ -24,9 +24,11 @@ ul.diff {
     }
     .deleted{
         color: #d50000;
+        text-decoration: line-through;
     }
     .inserted{
         color: #00a400;
+        font-weight: bold;
     }
     .indent {
         margin-left: 20px;
