@@ -66,9 +66,7 @@
         <tr>
             <th>{% trans "Expedited Reviewer Invitations" %}:</th>
             <td>
-                <div class="row">
-                    <div class="col-lg-8 col-xl-6" data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
-                </div>
+                <div data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
             </td>
         </tr>
     {% endif %}
