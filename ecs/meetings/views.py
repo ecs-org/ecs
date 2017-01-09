@@ -124,8 +124,12 @@ def open_tasks(request, meeting=None):
 
     open_tasks = OrderedDict()
     for top in tops:
-        with sudo():
-            ts = list(Task.objects.for_submission(top.submission).open().select_related('task_type', 'assigned_to', 'assigned_to__profile'))
+        ts = list(
+            Task.unfiltered.for_submission(top.submission).open()
+                .select_related('task_type', 'task_type__group', 'assigned_to',
+                    'assigned_to__profile', 'medical_category')
+                .order_by('created_at')
+        )
         if len(ts):
             open_tasks[top] = ts
     
