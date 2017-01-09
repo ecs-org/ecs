@@ -70,3 +70,6 @@ class StorageVault(object):
             settings.STORAGE_VAULT['encryption_uid'],
             settings.STORAGE_VAULT['signature_uid']
         )
+
+    def __delitem__(self, identifier):
+        os.remove(self._gen_path(identifier))

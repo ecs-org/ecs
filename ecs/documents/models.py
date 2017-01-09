@@ -3,7 +3,10 @@ import mimetypes
 import logging
 import uuid
 
+from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -102,6 +105,17 @@ class Document(models.Model):
 
     def retrieve_raw(self):
         return getVault()[self.uuid.hex]
+
+
+@receiver(post_delete, sender=Document)
+def on_document_delete(sender, **kwargs):
+    try:
+        del getVault()[kwargs['instance'].uuid.hex]
+    except FileNotFoundError:
+        # Ignore missing documents in debug mode, so documents can be deleted
+        # when the storage vault is missing. Otherwise this is a fatal error.
+        if not settings.DEBUG:
+            raise
 
 
 class DownloadHistory(models.Model):
