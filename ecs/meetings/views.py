@@ -463,7 +463,7 @@ def edit_user_constraints(request, meeting_pk=None, user_pk=None):
 def meeting_assistant_quickjump(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
     top = None
-    q = request.GET.get('q', '').strip().upper()
+    q = request.POST.get('q', '').strip().upper()
 
     m = re.match('(\d{4})(?:/(\d{4}))?$', q)
     if m:
