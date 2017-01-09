@@ -65,6 +65,8 @@ class BaseNotificationReview(Activity):
             prev = trail[0]
             if prev.node.uid == 'start':
                 prev = prev.trail.first()
+            elif prev.node.uid == 'wait_for_meeting':
+                prev = prev.trail.first().trail.first()
             if prev:
                 token.task.review_for = prev.task
                 token.task.save()
