@@ -256,11 +256,14 @@ def notification_list(request, meeting_pk=None):
         b1ized = b1ized.filter(published_at__lte=end)
         answers = answers.filter(published_at__lte=end)
 
+    substantial_amendments = meeting.amendments.prefetch_related(
+        Prefetch('submission_forms',
+            queryset=SubmissionForm.unfiltered.select_related('submission'))
+    ).order_by('submission_forms__submission__ec_number')
+
     return render(request, 'meetings/tabs/notifications.html', {
         'meeting': meeting,
-        'substantial_amendments':
-            meeting.amendments
-                .order_by('submission_forms__submission__ec_number'),
+        'substantial_amendments': substantial_amendments,
         'b1ized': b1ized,
         'answers': answers,
     })
