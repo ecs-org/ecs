@@ -18,11 +18,6 @@
 {% block content %}
 
     {% if diff %}
-        <a href="{% url 'view_submission' submission_pk=submission.pk %}#status_tab">
-            <span class="fa fa-backward"></span>
-            {% trans "Back to the Study" %}
-        </a>
-
         <div class="my-1">
             <div class="btn-group diff-toggles">
                 <button class="btn btn-outline-danger" data-toggle-value="old">
