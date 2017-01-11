@@ -13,7 +13,11 @@ django-countries
 django-widget-tweaks
 celery[redis]<4.0.0
 redis
-weasyprint                      # PDF rendering
+
+# weasyprint                    # for PDF rendering
+# v0.34 + a fix to work around an AssertionError in the line wrapping code
+# We should switch back to the version on pypi during the next upgrade.
+git+https://github.com/Kozea/WeasyPrint.git@5aa34d7dbb6c5e45e8653e6fde26befe4831b7a2
 
 requests          # for raven
 raven             # sentry integration

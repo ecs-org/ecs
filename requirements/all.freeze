@@ -55,6 +55,6 @@ unittest-xml-reporting==2.1.0
 urllib3==1.19.1
 uWSGI==2.0.14
 uwsgi-exporter==0.1.2
-WeasyPrint==0.33
+git+https://github.com/Kozea/WeasyPrint.git@5aa34d7dbb6c5e45e8653e6fde26befe4831b7a2
 webencodings==0.5
 xlwt==1.1.2
