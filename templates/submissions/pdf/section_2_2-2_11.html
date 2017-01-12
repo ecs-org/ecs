@@ -125,15 +125,15 @@
             <div class="indented">
                 {% if submission_form.subject_females %}
                     {{ submission_form.subject_childbearing|checkbox }} ja
-                    {{ False|checkbox }} nur gebährfähige
+                    {{ False|checkbox }} nur gebärfähige
                     {{ submission_form.subject_childbearing|not|checkbox }} nein
                 {% elif not submission_form.subject_females and submission_form.subject_childbearing %}
                     {{ False|checkbox }} ja
-                    {{ True|checkbox }} nur gebährfähige
+                    {{ True|checkbox }} nur gebärfähige
                     {{ False|checkbox }} nein
                 {% else %}
                     {{ False|checkbox }} ja
-                    {{ False|checkbox }} nur gebährfähige
+                    {{ False|checkbox }} nur gebärfähige
                     {{ False|checkbox }} nein
                 {% endif %}
             </div>
