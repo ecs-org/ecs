@@ -972,8 +972,10 @@ def meeting_details(request, meeting_pk=None, active=None):
         'b3_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3b').values('submission_form__submission').query),
         'b3_not_examined_submissions': submissions.filter(pk__in=Vote.objects.filter(result='3a').values('submission_form__submission').query),
         'substantial_amendments':
-            meeting.amendments
-                .order_by('submission_forms__submission__ec_number'),
+            meeting.amendments.prefetch_related(
+                Prefetch('submission_forms',
+                    queryset=SubmissionForm.unfiltered.select_related('submission'))
+            ).order_by('submission_forms__submission__ec_number'),
 
         'meeting': meeting,
         'expert_formset': expert_formset,
