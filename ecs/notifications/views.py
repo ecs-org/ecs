@@ -44,7 +44,8 @@ def open_notifications(request):
     )
     stashed_notifications = DocStash.objects.filter(
         owner=request.user, group='ecs.notifications.views.create_notification',
-        current_version__gte=0)
+        current_version__gte=0
+    ).order_by('-modtime')
     context = {
         'title': title,
         'notifs': notifications,
