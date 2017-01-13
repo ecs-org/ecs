@@ -4,6 +4,10 @@
 {% block htmlcss %}
     {{ block.super }}
     <style type="text/css">
+        html {
+            font-size: 75%;     /* 12px, assuming a default font size of 16px */
+        }
+
         div.card div.testinginfo {
             border-left: solid 0.5rem #0275d8;
         }
