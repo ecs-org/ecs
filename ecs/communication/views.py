@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
@@ -12,6 +12,7 @@ from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
 from ecs.users.utils import user_flag_required
+from ecs.users.models import UserProfile
 
 
 def new_thread(request, submission_pk=None, to_user_pk=None):
@@ -92,8 +93,29 @@ def unstar(request, thread_pk=None):
 def dashboard_widget(request):
     qs = Thread.objects.for_widget(request.user).select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',
-        'last_message__sender__profile', 'last_message__receiver__profile',
         'submission',
+    ).only(
+        'starred_by_sender', 'starred_by_receiver',
+        'subject', 'sender_id', 'receiver_id',
+
+        'last_message__unread', 'last_message__timestamp',
+        'last_message__sender_id', 'last_message__receiver_id',
+        'last_message__text',
+
+        'last_message__sender__first_name',
+        'last_message__sender__last_name',
+        'last_message__sender__email',
+
+        'last_message__receiver__first_name',
+        'last_message__receiver__last_name',
+        'last_message__receiver__email',
+
+        'submission__ec_number',
+    ).prefetch_related(
+        Prefetch('last_message__sender__profile',
+            queryset=UserProfile.objects.only('gender', 'title', 'user_id')),
+        Prefetch('last_message__receiver__profile',
+            queryset=UserProfile.objects.only('gender', 'title', 'user_id')),
     ).order_by('-last_message__timestamp')
 
     try:
@@ -178,8 +200,29 @@ def list_threads(request, submission_pk=None):
 
     queryset = queryset.select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',
-        'last_message__sender__profile', 'last_message__receiver__profile',
         'submission',
+    ).only(
+        'starred_by_sender', 'starred_by_receiver',
+        'subject', 'sender_id', 'receiver_id',
+
+        'last_message__unread', 'last_message__timestamp',
+        'last_message__sender_id', 'last_message__receiver_id',
+        'last_message__text',
+
+        'last_message__sender__first_name',
+        'last_message__sender__last_name',
+        'last_message__sender__email',
+
+        'last_message__receiver__first_name',
+        'last_message__receiver__last_name',
+        'last_message__receiver__email',
+
+        'submission__ec_number',
+    ).prefetch_related(
+        Prefetch('last_message__sender__profile',
+            queryset=UserProfile.objects.only('gender', 'title', 'user_id')),
+        Prefetch('last_message__receiver__profile',
+            queryset=UserProfile.objects.only('gender', 'title', 'user_id')),
     ).order_by('-last_message__timestamp')
 
     paginator = Paginator(queryset, 20)

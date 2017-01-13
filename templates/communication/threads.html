@@ -76,7 +76,7 @@
                 {% if not submission_pk %}
                     <td class="text-nowrap align-middle">
                         {% if thread.submission %}
-                            <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}">
+                            <a href="{% url 'view_submission' submission_pk=thread.submission.id %}">
                                 {{ thread.submission|ec_number }}
                             </a>
                         {% endif %}
