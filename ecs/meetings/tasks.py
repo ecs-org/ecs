@@ -1,13 +1,19 @@
 import random, itertools, math, os, time
+import io
+import zipfile
 
 from celery.task import task, periodic_task
 from celery.schedules import crontab
 
 from django.conf import settings
 from django.db import transaction
+from django.contrib.contenttypes.models import ContentType
+from django.utils import timezone
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation, random_replacement_mutation
 from ecs.meetings.models import Meeting
+from ecs.checklists.models import Checklist
+from ecs.documents.models import Document
 
 
 def optimize_random(timetable, func, params):
@@ -110,3 +116,48 @@ def cull_zip_cache():
         age = time.time() - os.path.getmtime(path)
         if age > settings.ECS_DOWNLOAD_CACHE_MAX_AGE:
             os.remove(path)
+
+
+@periodic_task(run_every=crontab(hour=4, minute=7))
+def gen_meeting_zip():
+    try:
+        meeting = Meeting.objects.next()
+    except Meeting.DoesNotExist:
+        return
+
+    checklist_ct = ContentType.objects.get_for_model(Checklist)
+
+    zip_buf = io.BytesIO()
+    with zipfile.ZipFile(zip_buf, 'w') as zf:
+        for submission in meeting.submissions(manager='unfiltered').all():
+            sf = submission.current_submission_form
+
+            docs = []
+            if sf.pdf_document:
+                docs.append(sf.pdf_document)
+            docs += sf.documents.filter(doctype__identifier='patientinformation')
+            docs += Document.objects.filter(
+                content_type=checklist_ct,
+                object_id__in=submission.checklists.filter(status='review_ok'),
+            )
+
+            path = [
+                submission.get_workflow_lane_display(),
+                submission.get_filename_slice(),
+            ]
+            for doc in docs:
+                zi = zipfile.ZipInfo(
+                    filename='/'.join(path + [doc.get_filename()]),
+                    date_time=timezone.localtime(doc.date).timetuple()[:6],
+                )
+                zi.compress_type = zipfile.ZIP_DEFLATED
+                zi.external_attr = 0o600 << 16
+                zf.writestr(zi, doc.retrieve_raw().read())
+
+    if meeting.documents_zip:
+        meeting.documents_zip.delete()
+
+    meeting.documents_zip = Document.objects.create_from_buffer(
+        zip_buf.getvalue(), doctype='meeting_zip', parent_object=meeting,
+        mimetype='application/zip', name=meeting.title)
+    meeting.save(update_fields=('documents_zip',))

@@ -1,9 +1,7 @@
 from datetime import timedelta
 import zipfile
-import hashlib
-import os
-import os.path
 import re
+import io
 from collections import OrderedDict
 
 from django.conf import settings
@@ -273,69 +271,46 @@ def notification_list(request, meeting_pk=None):
 def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    checklist_ct = ContentType.objects.get_for_model(Checklist)
-    filename_bits = [slugify(meeting.title)]
+    if not submission_pk:
+        if not meeting.documents_zip:
+            raise Http404()
 
-    with sudo():
-        if submission_pk:
-            submission = get_object_or_404(meeting.submissions, pk=submission_pk)
-            sf = submission.current_submission_form
+        doc = meeting.documents_zip
+        response = FileResponse(doc.retrieve_raw(), content_type=doc.mimetype)
+        response['Content-Disposition'] = \
+            'attachment; filename="{}.zip"'.format(slugify(meeting.title))
+        return response
 
-            docs = [sf.pdf_document]
-            docs += sf.documents.filter(doctype__identifier='patientinformation')
-            docs += Document.objects.filter(
-                content_type=checklist_ct,
-                object_id__in=Checklist.objects.filter(
-                    status='review_ok', submission=submission)
+    submission = get_object_or_404(meeting.submissions(manager='unfiltered'),
+        pk=submission_pk)
+    sf = submission.current_submission_form
+
+    docs = []
+    if sf.pdf_document:
+        docs.append(sf.pdf_document)
+    docs += sf.documents.filter(doctype__identifier='patientinformation')
+    docs += Document.objects.filter(
+        content_type=ContentType.objects.get_for_model(Checklist),
+        object_id__in=submission.checklists.filter(status='review_ok'),
+    )
+
+    zip_buf = io.BytesIO()
+    with zipfile.ZipFile(zip_buf, 'w') as zf:
+        path = [submission.get_filename_slice()]
+        for doc in docs:
+            zi = zipfile.ZipInfo(
+                filename='/'.join(path + [doc.get_filename()]),
+                date_time=timezone.localtime(doc.date).timetuple()[:6],
             )
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            zi.external_attr = 0o600 << 16
+            zf.writestr(zi, doc.retrieve(request.user, 'meeting-zip').read())
 
-            filename_bits.append(submission.get_filename_slice())
-        else:
-            submissions = meeting.submissions
-            sfs = SubmissionForm.objects.filter(
-                current_for_submission__in=submissions.values('id'))
-
-            docs = Document.objects.filter(
-                Q(submission_form__in=sfs.values('id')) |
-                Q(
-                    submission_forms__in=sfs.values('id'),
-                    doctype__identifier='patientinformation',
-                ) |
-                Q(
-                    content_type=checklist_ct,
-                    object_id__in=Checklist.objects.filter(
-                        status='review_ok',
-                        submission__in=submissions.values('id')
-                    )
-                )
-            )
-
-    h = hashlib.sha1()
-
-    h.update(','.join(sorted(str(doc.pk) for doc in docs)).encode('ascii'))
-
-    cache_file = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, '%s.zip' % h.hexdigest())
-
-    if not os.path.exists(cache_file):
-        zf = zipfile.ZipFile(cache_file, 'w')
-        try:
-            for doc in docs:
-                submission = doc.parent_object.submission
-                path = [submission.get_filename_slice(), doc.get_filename()]
-                if not submission_pk:
-                    path.insert(0, submission.get_workflow_lane_display())
-                zf.writestr('/'.join(path),
-                    doc.retrieve(request.user, 'meeting-zip').read())
-        finally:
-            zf.close()
-    else:
-        os.utime(cache_file, None)
-
-    response = FileResponse(open(cache_file, 'rb'),
-        content_type='application/octet-stream')
-    response['Content-Disposition'] = 'attachment; filename="%s.ZIP"' % '_'.join(filename_bits)
-    response['Content-Length'] = str(os.path.getsize(cache_file))
+    response = HttpResponse(zip_buf.getvalue(), content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename="{}_{}.zip"'.format(
+        slugify(meeting.title), submission.get_filename_slice())
     return response
+
 
 @user_group_required('EC-Office')
 def add_free_timetable_entry(request, meeting_pk=None):

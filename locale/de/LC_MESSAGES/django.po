@@ -2768,6 +2768,12 @@ msgstr "Substantielle Amendments"
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
+msgid "Created on %(date)s at %(time)s"
+msgstr "Erstellt am %(date)s um %(time)s"
+
+msgid "Not available yet!"
+msgstr "Noch nicht verfügbar!"
+
 msgid "Download documents (zip)"
 msgstr "Herunterladen(zip)"
 

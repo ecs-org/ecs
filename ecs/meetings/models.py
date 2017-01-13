@@ -200,6 +200,8 @@ class Meeting(models.Model):
         null=True, on_delete=models.SET_NULL)
     protocol_rendering_started_at = models.DateTimeField(null=True)
     protocol_sent_at = models.DateTimeField(null=True)
+    documents_zip = models.ForeignKey(Document, related_name='zip_for_meeting',
+        null=True, on_delete=models.SET_NULL)
     expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
     expert_assignment_user = models.ForeignKey('auth.User', null=True)

@@ -58,6 +58,7 @@ class Submission(models.Model):
     current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     objects = SubmissionManager()
+    unfiltered = models.Manager()
     
     @property
     def newest_submission_form(self):

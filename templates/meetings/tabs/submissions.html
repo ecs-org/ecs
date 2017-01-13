@@ -2,9 +2,21 @@
 
 <h2>{% trans 'Submissions' %}</h2>
 
-<a class="btn btn-outline-primary" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}">
-    {% trans 'Download all documents for this meeting (zip)' %}
-</a>
+{% if meeting.documents_zip %}
+    <a class="btn btn-outline-primary" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk %}">
+        {% trans 'Download all documents for this meeting (zip)' %}
+        <div class="text-muted">
+            {% blocktrans trimmed with date=meeting.documents_zip.date|date:'d.m.Y' time=meeting.documents_zip.date|date:'H:i' %}
+                Created on {{ date }} at {{ time }}
+            {% endblocktrans %}
+        </div>
+    </a>
+{% else %}
+    <button class="btn btn-secondary" disabled>
+        {% trans 'Download all documents for this meeting (zip)' %}
+        <div class="text-danger">{% trans 'Not available yet!' %}</div>
+    </button>
+{% endif %}
 
 <ul class="list-group mt-2">
 {% for top in tops %}
