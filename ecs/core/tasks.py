@@ -4,7 +4,8 @@ import hashlib
 from io import BytesIO
 
 import xlwt
-from celery.task import task
+from celery.task import task, periodic_task
+from celery.schedules import crontab
 
 from django.conf import settings
 from django.db import transaction
@@ -251,3 +252,16 @@ def xls_export(user_id=None, filters=None):
 
     send_system_message_template(user, _('XLS-Export done'),
         'submissions/xls_export_done.txt', {'shasum': h.hexdigest()})
+
+
+@periodic_task(run_every=crontab(hour=3, minute=28))
+def cull_cache_dir():
+    logger = cull_cache_dir.get_logger()
+    logger.info("culling download cache")
+    for path in os.listdir(settings.ECS_DOWNLOAD_CACHE_DIR):
+        if path.startswith('.'):
+            continue
+        path = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, path)
+        age = time.time() - os.path.getmtime(path)
+        if age > settings.ECS_DOWNLOAD_CACHE_MAX_AGE:
+            os.remove(path)

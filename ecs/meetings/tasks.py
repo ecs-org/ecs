@@ -1,11 +1,10 @@
-import random, itertools, math, os, time
+import random, itertools, math
 import io
 import zipfile
 
 from celery.task import task, periodic_task
 from celery.schedules import crontab
 
-from django.conf import settings
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
@@ -103,19 +102,6 @@ def render_protocol_pdf(meeting_id=None, user_id=None):
     finally:
         meeting.protocol_rendering_started_at = None
         meeting.save(update_fields=('protocol_rendering_started_at',))
-
-
-@periodic_task(run_every=crontab(hour=3, minute=28))
-def cull_zip_cache():
-    logger = cull_zip_cache.get_logger()
-    logger.info("culling download cache")
-    for path in os.listdir(settings.ECS_DOWNLOAD_CACHE_DIR):
-        if path.startswith('.'):
-            continue
-        path = os.path.join(settings.ECS_DOWNLOAD_CACHE_DIR, path)
-        age = time.time() - os.path.getmtime(path)
-        if age > settings.ECS_DOWNLOAD_CACHE_MAX_AGE:
-            os.remove(path)
 
 
 @periodic_task(run_every=crontab(hour=4, minute=7))
