@@ -10,7 +10,7 @@
         <ul class="list-group list-group-flush">
             {% for task_type in task_type_list %}
                 <li class="list-group-item d-block">
-                    <span class="tag tag-default tag-pill float-right">{{ task_type.list|length }}</span>
+                    <span class="badge badge-default badge-pill float-right">{{ task_type.list|length }}</span>
                     <h4>{{ task_type.grouper|task_type_name }}</h4>
                     <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                         <a href="{% url 'ecs.tasks.views.do_task' task_pk=task.pk %}">{{ task.data }}</a>
@@ -43,7 +43,7 @@
             <ul class="list-group list-group-flush">
                 {% for task_type in task_type_list %}
                     <li class="list-group-item d-block clearfix">
-                        <span class="tag tag-default tag-pill float-right">
+                        <span class="badge badge-default badge-pill float-right">
                             {{ task_type.list|length }}
                         </span>
                         {% if task_type.list|length > 1 %}
@@ -184,7 +184,7 @@
                 <ul class="list-group list-group-flush">
                     {% for task_type in task_type_list %}
                         <li class="list-group-item d-block clearfix">
-                            <span class="tag tag-default tag-pill float-right">
+                            <span class="badge badge-default badge-pill float-right">
                                 {{ task_type.list|length }}
                             </span>
                             {% if task_type.list|length > 1 %}
