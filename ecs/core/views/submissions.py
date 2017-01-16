@@ -43,7 +43,7 @@ from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import ChecklistAnswerFormSet
 from ecs.notifications.models import (
     Notification, NotificationType, CenterCloseNotification,
-    AmendmentNotification,
+    AmendmentNotification, SafetyNotification, NotificationAnswer,
 )
 
 from ecs.core.workflow import ChecklistReview
@@ -246,11 +246,22 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
     external_review_checklists = submission.checklists.filter(blueprint__slug='external_review')
     notifications = (submission.notifications
-        .select_related('safetynotification', 'type', 'user', 'user__profile', 'answer')
-        .prefetch_related(Prefetch('submission_forms',
-            queryset=SubmissionForm.objects
-                .select_related('submission')
-                .order_by('submission__ec_number')))
+        .only(
+            'timestamp', 'type_id',
+
+            'user__first_name', 'user__last_name', 'user__email',
+        )
+        .select_related('type')
+        .prefetch_related(
+            Prefetch('user__profile', queryset=
+                UserProfile.objects.only('gender', 'title', 'user_id')),
+            Prefetch('safetynotification', queryset=
+                SafetyNotification.objects.only('safety_type')),
+            Prefetch('answer', queryset=
+                NotificationAnswer.objects
+                    .only('notification_id', 'is_rejected')
+            ),
+        )
         .order_by('-timestamp'))
     votes = submission.votes
 

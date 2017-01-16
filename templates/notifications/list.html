@@ -32,7 +32,7 @@
                         <a href="{% url 'readonly_submission_form' submission_form_pk=submission_form.pk %}">
                             {{ submission_form.submission|ec_number }}
                         </a>
-                        {{ submission_form.project_title }}
+                        {{ submission_form.german_project_title|default:submission_form.project_title }}
                     </li>
                 {% endfor %}
                 </ul>

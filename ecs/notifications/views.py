@@ -11,10 +11,11 @@ from ecs.utils.viewutils import render_html, redirect_to_next_url
 from ecs.docstash.decorators import with_docstash
 from ecs.docstash.models import DocStash
 from ecs.core.forms.layout import get_notification_form_tabs
-from ecs.core.models import SubmissionForm, Investigator
+from ecs.core.models import Submission, SubmissionForm, Investigator
 from ecs.documents.models import Document
 from ecs.notifications.models import (
     Notification, NotificationType, NotificationAnswer, CenterCloseNotification,
+    SafetyNotification,
 )
 from ecs.notifications.forms import (
     NotificationAnswerForm, RejectableNotificationAnswerForm,
@@ -35,11 +36,24 @@ def open_notifications(request):
     notifications = (Notification.objects
         .pending()
         .annotate(min_ecn=Min('submission_forms__submission__ec_number'))
-        .select_related('safetynotification', 'type')
-        .prefetch_related(Prefetch('submission_forms',
-            queryset=SubmissionForm.objects
-                .select_related('submission')
-                .order_by('submission__ec_number')))
+        .only('timestamp', 'type_id')
+        .select_related('type')
+        .prefetch_related(
+            Prefetch('safetynotification', queryset=
+                SafetyNotification.objects.only('safety_type')),
+            Prefetch('answer', queryset=
+                NotificationAnswer.objects
+                    .only('notification_id', 'is_rejected')
+            ),
+            Prefetch('submission_forms', queryset=
+                SubmissionForm.unfiltered.only(
+                    'project_title', 'german_project_title', 'submission_id',
+                ).prefetch_related(
+                    Prefetch('submission',
+                        queryset=Submission.unfiltered.only('ec_number')),
+                ).order_by('submission__ec_number')
+            ),
+        )
         .order_by('min_ecn')
     )
     stashed_notifications = DocStash.objects.filter(
