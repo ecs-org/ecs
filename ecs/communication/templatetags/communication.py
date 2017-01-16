@@ -1,7 +1,6 @@
 from django.template import Library, Node, TemplateSyntaxError
-from django.db.models import Sum, Case, When, IntegerField
 
-from ecs.communication.models import Thread
+from ecs.communication.models import Thread, Message
 
 
 register = Library()
@@ -43,15 +42,11 @@ class UnreadMsgCountNode(Node):
 
     def render(self, context):
         user = context['user']
-        count = Thread.objects.by_user(user).annotate(
-            unread_count=Sum(
-                Case(
-                    When(messages__receiver=user, messages__unread=True, then=1),
-                    default=0,
-                    output_field=IntegerField()
-                )
-            )
-        ).filter(unread_count__gt=0).count()
+        count = Thread.objects.by_user(user).filter(
+            id__in=Message.objects.filter(
+                receiver=user, unread=True,
+            ).values('thread_id')
+        ).count()
 
         if self.varname:
             context[self.varname] = count

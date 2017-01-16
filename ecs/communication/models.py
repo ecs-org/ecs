@@ -39,8 +39,8 @@ class Thread(models.Model):
     last_message = models.OneToOneField('Message', null=True, related_name='head')
     related_thread = models.ForeignKey('self', null=True)
 
-    starred_by_sender = models.BooleanField(default=False)
-    starred_by_receiver = models.BooleanField(default=False)
+    starred_by_sender = models.BooleanField(default=False, db_index=True)
+    starred_by_receiver = models.BooleanField(default=False, db_index=True)
 
     objects = ThreadQuerySet.as_manager()
 
@@ -119,7 +119,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, related_name='outgoing_messages')
     receiver = models.ForeignKey(User, related_name='incoming_messages')
     timestamp = models.DateTimeField(auto_now_add=True)
-    unread = models.BooleanField(default=True)
+    unread = models.BooleanField(default=True, db_index=True)
     text = models.TextField()
 
     rawmsg = models.TextField(null=True)
