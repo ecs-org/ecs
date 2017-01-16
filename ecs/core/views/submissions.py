@@ -1092,7 +1092,12 @@ def all_submissions(request):
 
 def assigned_submissions(request):
     submissions = Submission.objects.reviewed_by_user(request.user)
-    return submission_list(request, submissions, filtername='submission_filter_assigned', filter_form=AssignedSubmissionsFilterForm, title=_('Assigned Studies'))
+
+    return submission_list(request, submissions,
+        filtername='submission_filter_assigned',
+        filter_form=AssignedSubmissionsFilterForm,
+        title=_('Assigned Studies'),
+    )
 
 
 def my_submissions(request):
