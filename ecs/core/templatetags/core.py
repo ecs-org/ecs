@@ -75,7 +75,7 @@ def smart_truncate(s, n):
 @register.filter
 def has_submissions(user):
     return (
-        Submission.objects.mine(user).exists() or
+        Submission.unfiltered.mine(user).exists() or
         DocStash.objects.filter(
             group='ecs.core.views.submissions.create_submission_form',
             owner=user, current_version__gte=0

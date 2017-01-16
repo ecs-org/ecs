@@ -1101,7 +1101,7 @@ def assigned_submissions(request):
 
 
 def my_submissions(request):
-    submissions = Submission.objects.mine(request.user)
+    submissions = Submission.unfiltered.mine(request.user)
 
     stashed = (DocStash.objects
         .filter(group='ecs.core.views.submissions.create_submission_form',

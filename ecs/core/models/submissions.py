@@ -21,8 +21,8 @@ from ecs.core.models.constants import (
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import (
-    SubmissionManager, SubmissionFormManager, InvestigatorManager,
-    TemporaryAuthorizationManager,
+    SubmissionManager, SubmissionQuerySet, SubmissionFormManager,
+    InvestigatorManager, TemporaryAuthorizationManager,
 )
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document
@@ -58,8 +58,8 @@ class Submission(models.Model):
     current_pending_vote = models.OneToOneField('votes.Vote', null=True, related_name='_currently_pending_for')
 
     objects = SubmissionManager()
-    unfiltered = models.Manager()
-    
+    unfiltered = SubmissionQuerySet.as_manager()
+
     @property
     def newest_submission_form(self):
         return self.forms.all().order_by('-pk')[0]
