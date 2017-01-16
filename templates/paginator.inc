@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<nav class="text-xs-center paginator">
+<nav class="text-center paginator">
   <ul class="pagination">
     {% if page.has_previous %}
         <li class="page-item">

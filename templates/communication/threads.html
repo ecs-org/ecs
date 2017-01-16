@@ -48,7 +48,7 @@
                 <th>{% trans "Submission" %}</th>
             {% endif %}
             <th>{% trans "Subject" %}</th>
-            <th class="text-xs-right">{% trans "Date" %}</th>
+            <th class="text-right">{% trans "Date" %}</th>
             <th></th>
         </tr>
     </thead>
@@ -88,7 +88,7 @@
                         {{ thread.subject|truncatewords:10 }}
                     </a>
                 </td>
-                <td class="text-nowrap align-middle text-xs-right">
+                <td class="text-nowrap align-middle text-right">
                     {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
                     {{ thread.last_message.timestamp|date:'H:i'}}
                 </td>
@@ -103,7 +103,7 @@
             </tr>
         {% empty %}
             <tr>
-                <td class="text-xs-center text-muted" colspan="6">
+                <td class="text-center text-muted" colspan="6">
                     <em>{% trans 'No messages yet!' %}</em>
                 </td>
             </tr>

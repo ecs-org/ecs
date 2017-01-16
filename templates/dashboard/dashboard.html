@@ -9,7 +9,7 @@
       
 {% block content %}
     <div class="clearfix">
-        <div class="dashboard_widget half {% if user.profile.show_task_widget %}float-xs-left{% else %}mx-auto{% endif %}" data-widget-url="{% url 'ecs.communication.views.dashboard_widget' %}">
+        <div class="dashboard_widget half {% if user.profile.show_task_widget %}float-left{% else %}mx-auto{% endif %}" data-widget-url="{% url 'ecs.communication.views.dashboard_widget' %}">
         </div>
         {% if user.profile.show_task_widget %}
             <div data-widget-url="{% url 'ecs.tasks.views.my_tasks' %}">

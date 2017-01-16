@@ -23,12 +23,12 @@
                 {{ form.text|add_class:'form-control' }}
             {% endif %}
 
-            <div class="text-xs-center">
+            <div class="text-center">
                 {% if top.is_break %}
                     <h1 class="text-danger my-1">PAUSE</h1>
                 {% endif %}
             </div>
-            <div class="text-xs-center mt-1">
+            <div class="text-center mt-3">
                 <a id="complete" class="btn btn-primary btn-block" href="">Fertig</a>
             </div>
         </div>
@@ -38,14 +38,14 @@
           <h3>Votum</h3>
             <div class="meeting_assistant_block">
                           
-              <div class="float-xs-left">
+              <div class="float-left">
                   {% if form.result.errors %}
                       <span class="errors">{{ form.result.errors }}</span>
                   {% endif %}
                   {{ form.result }}
               </div>
   
-              <div class="float-xs-left">
+              <div class="float-left">
                 <a id="complete" class="btn btn-primary btn-block {% if vote and not top.is_open %}active{% endif %}" href="">Fertig</a>
                 <a id="save" class="btn btn-secondary btn-block" href="">Nur Speichern<br><small>Nicht abgeschlossen</small></a>
               </div>

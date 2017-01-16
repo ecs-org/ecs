@@ -15,7 +15,7 @@
                     {% endif %}
                 </span>
                 <span class="preview text-muted">{{ message|preview:80 }}</span>
-                <span class="text-muted float-xs-right">
+                <span class="text-muted float-right">
                     {{ message.timestamp|naturalday:'d.m.Y' }} {{ message.timestamp|date:'H:i' }} Uhr
                 </span>
             </div>
@@ -26,7 +26,7 @@
     {% endfor %}
 </div>
 {% empty %}
-<div class="m-2 text-xs-center">
+<div class="m-2 text-center">
     <em>{% trans 'No messages yet!' %}</em>
 </div>
 {% endfor %}

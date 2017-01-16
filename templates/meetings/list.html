@@ -24,10 +24,10 @@
         <thead>
             <tr>
                 <th>{% trans 'Title' %}</th>
-                <th class="text-xs-center pr-1" colspan="2">
+                <th class="text-center pr-1" colspan="2">
                     {% trans 'Deadline for Thesis Submission' %}
                 </th>
-                <th class="text-xs-center" colspan="2">
+                <th class="text-center" colspan="2">
                     {% trans 'Deadline for Submission' %}
                 </th>
                 <th>{% trans 'Scheduled for' %}</th>
@@ -43,13 +43,13 @@
                         {{ meeting.title }}
                     </a>
                 </td>
-                <td class="text-xs-right px-1">
+                <td class="text-right px-1">
                     {{ meeting.deadline_diplomathesis|date:'d.m.Y' }}
                 </td>
                 <td class="px-1">
                     {{ meeting.deadline_diplomathesis|date:'H:i' }}
                 </td>
-                <td class="text-xs-right px-1">
+                <td class="text-right px-1">
                     {{ meeting.deadline|date:'d.m.Y' }}
                 </td>
                 <td class="px-1">

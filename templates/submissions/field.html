@@ -26,7 +26,7 @@
                         </div>
                     {% endif %}
                     {% if field.errors and field.errors.0 != _('This field is required.') %}
-                        <div class="alert alert-danger text-xs-center">{{ field.errors }}</div>
+                        <div class="alert alert-danger text-center">{{ field.errors }}</div>
                     {% endif %}
                 </div>
             </div>
@@ -55,7 +55,7 @@
             <div class="col-md-9">
                 {% render_field field class+="form-control" %}
                 {% if field.errors and field.errors.0 != _('This field is required.') %}
-                    <div class="alert alert-danger text-xs-center">{{ field.errors }}</div>
+                    <div class="alert alert-danger text-center">{{ field.errors }}</div>
                 {% endif %}
             </div>
     </li>

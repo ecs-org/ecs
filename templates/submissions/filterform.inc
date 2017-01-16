@@ -22,7 +22,7 @@
                 {% render_field filterform.tags class+="form-control" %}
             </li>
             {% if allow_export %}
-                <li class="text-xs-right">
+                <li class="text-right">
                     {% url 'ecs.core.views.submissions.xls_export' as export_url %}
                     <a class="btn btn-block btn-primary mt-1" href="{{ export_url }}">
                         {% trans 'Export' %} <i class="fa fa-file-excel-o"></i>

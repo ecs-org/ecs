@@ -1,6 +1,6 @@
 {% load i18n tasks %}
 
-<div class="dashboard_widget float-xs-left {% if submission %}w-100{% else %}half{% endif %}">
+<div class="dashboard_widget float-left {% if submission %}w-100{% else %}half{% endif %}">
     <div class="card">
         <div class="card-block">
             <h3 class="card-title mb-0">{% trans "My Tasks" %}</h3>
@@ -10,7 +10,7 @@
         <ul class="list-group list-group-flush">
             {% for task_type in task_type_list %}
                 <li class="list-group-item">
-                    <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
+                    <span class="tag tag-default tag-pill float-right">{{ task_type.list|length }}</span>
                     <h4>{{ task_type.grouper|task_type_name }}</h4>
                     <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                         <a href="{% url 'ecs.tasks.views.do_task' task_pk=task.pk %}">{{ task.data }}</a>
@@ -43,11 +43,11 @@
             <ul class="list-group list-group-flush">
                 {% for task_type in task_type_list %}
                     <li class="list-group-item clearfix">
-                        <span class="tag tag-default tag-pill float-xs-right">
+                        <span class="tag tag-default tag-pill float-right">
                             {{ task_type.list|length }}
                         </span>
                         {% if task_type.list|length > 1 %}
-                            <form class="float-xs-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                            <form class="float-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                 {% csrf_token %}
                                 {% for task in task_type.list %}
                                     <input type="hidden" name="task_id" value="{{ task.id }}" />
@@ -75,7 +75,7 @@
 </div>
 
 {% if user.profile.can_have_open_tasks %}
-    <div class="dashboard_widget float-xs-left w-100">
+    <div class="dashboard_widget float-left w-100">
         <div class="card-group">
 
             {% if not submission %}
@@ -184,11 +184,11 @@
                 <ul class="list-group list-group-flush">
                     {% for task_type in task_type_list %}
                         <li class="list-group-item clearfix">
-                            <span class="tag tag-default tag-pill float-xs-right">
+                            <span class="tag tag-default tag-pill float-right">
                                 {{ task_type.list|length }}
                             </span>
                             {% if task_type.list|length > 1 %}
-                                <form class="float-xs-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                <form class="float-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                     {% csrf_token %}
                                     {% for task in task_type.list %}
                                         <input type="hidden" name="task_id" value="{{ task.id }}" />

@@ -28,7 +28,7 @@
                 {% if current_docstash_key %}
                     <tr>
                         <td>{{ submission_forms|length|add:1 }}</td>
-                        <td colspan="4" class="text-xs-center">
+                        <td colspan="4" class="text-center">
                             <i>{% trans "This form has not been submitted yet." %}</i>
                         </td>
                         <td>
@@ -107,7 +107,7 @@
                     {% endfor %}
                     {% if current_form_idx < submission_forms|length|add:-1 %}
                         <tr class="expand_submission_forms">
-                            <td colspan=6 class="text-xs-center text-muted">
+                            <td colspan=6 class="text-center text-muted">
                                 <span class="fa fa-caret-down"></span>
                             </td>
                         </tr>

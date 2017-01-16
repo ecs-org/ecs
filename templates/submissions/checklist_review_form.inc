@@ -8,7 +8,7 @@
 
 {% for form in formset %}
     <div class="row">
-        <label class="col-xs-12" for="{{ form.answer.id_for_label }}">
+        <label class="col-12" for="{{ form.answer.id_for_label }}">
             {{ form.answer.label }}
             {% if form.instance.question.requires_comment %}
                 <span class="text-danger">*</span>

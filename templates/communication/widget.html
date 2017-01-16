@@ -2,7 +2,7 @@
 
 <div class="card">
     <div class="card-block">
-        <ul class="pagination pagination-sm my-0 float-xs-right">
+        <ul class="pagination pagination-sm my-0 float-right">
             {% if page.has_previous %}
                 <li class="page-item">
                     <a class="page-link open-in-widget" href="{{ request.path }}?p=1">
@@ -66,15 +66,15 @@
     <ul class="list-group list-group-flush">
     {% for thread in page.object_list %}
         <li class="list-group-item px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
-            <div class="row mx-0 flex-items-xs-middle">
+            <div class="row mx-0 flex-items-middle">
                 {% if thread|starred_by:user %}
                     {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                    <a class="open-in-widget col-xs-1" href="{{ unstar_url }}?next={{ request.path|urlencode }}">
+                    <a class="open-in-widget col-1" href="{{ unstar_url }}?next={{ request.path|urlencode }}">
                         <span class="fa fa-2x fa-star text-warning"></span>
                     </a>
                 {% else %}
                     {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                    <a class="open-in-widget col-xs-1" href="{{ star_url }}?next={{ request.path|urlencode }}">
+                    <a class="open-in-widget col-1" href="{{ star_url }}?next={{ request.path|urlencode }}">
                         <span class="fa fa-2x fa-star-o text-muted"></span>
                     </a>
                 {% endif %}
@@ -86,7 +86,7 @@
                         <span class="fa fa-envelope-o"></span>
                         {% trans 'von' %} {{ thread.last_message.sender }}
                     {% endif %}
-                    <span class="float-xs-right">
+                    <span class="float-right">
                         {{ thread.last_message.timestamp|naturalday:'d.m.Y' }},
                         {{ thread.last_message.timestamp|date:'H:i'}}
                     </span>
@@ -97,7 +97,7 @@
                         {{ thread.subject|truncatewords:10 }}
                     </a>
                 </div>
-                <div class="col-xs-1 px-0">
+                <div class="col-1 px-0">
                 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
                     {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
                     <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
@@ -108,7 +108,7 @@
             </div>
         </li>
     {% empty %}
-        <li class="list-group-item text-xs-center text-muted">
+        <li class="list-group-item text-center text-muted">
             <em>{% trans 'No messages yet!' %}</em>
         </li>
     {% endfor %}

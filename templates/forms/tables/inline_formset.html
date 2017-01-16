@@ -32,7 +32,7 @@
         {% empty %}
             {% if readonly %}
                 <tr>
-                    <td class="text-xs-center text-muted" colspan="{{ formset.empty_form.visible_fields|length|add:1 }}">
+                    <td class="text-center text-muted" colspan="{{ formset.empty_form.visible_fields|length|add:1 }}">
                         <em>{% trans 'No information given' %}</em>
                     </td>
                 </tr>

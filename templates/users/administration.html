@@ -31,10 +31,10 @@
             </strong>
             <span>{{ profile.email }}</span>
             {% if profile.profile.is_indisposed %}
-                <span class="float-xs-right mx-1">[{% trans 'Indisposed' %}]</span>
+                <span class="float-right mx-1">[{% trans 'Indisposed' %}]</span>
             {% endif %}
             {% if not profile.is_active %}
-                <span class="float-xs-right mx-1">[{% trans 'Inactive' %}]</span>
+                <span class="float-right mx-1">[{% trans 'Inactive' %}]</span>
             {% endif %}
         </div>
         <div class="body">

@@ -14,7 +14,7 @@
 {% include 'paginator.inc' with page=submissions %}
 
 {% if warning %}
-    <div class="alert alert-warning text-xs-center my-1">
+    <div class="alert alert-warning text-center my-1">
         {{ warning }}
     </div>
 {% endif %}
@@ -155,7 +155,7 @@
             {% endif %}
         </li>
     {% empty %}
-        <li class="list-group-item text-xs-center"><em>{% trans "No Submissions." %}</em></li>
+        <li class="list-group-item text-center"><em>{% trans "No Submissions." %}</em></li>
     {% endfor %}
 </ul>
 

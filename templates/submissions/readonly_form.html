@@ -18,7 +18,7 @@
 
 
 {% block submission_action_buttons %}
-    <li class="nav-item float-xs-right">
+    <li class="nav-item float-right">
         {% if submission_form|allows_edits_by:user %}
             <a class="btn btn-primary" href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk %}">
                 {% trans 'Edit' %}
@@ -165,7 +165,7 @@
                     von {{ notification.user }}
                 </li>
             {% empty %}
-                <li class="list-group-item text-xs-center">
+                <li class="list-group-item text-center">
                     <em>{% trans "There are no open notifications." %}</em>
                 </li>
             {% endfor %}
@@ -199,7 +199,7 @@
                     {% endif %}
                 </li>
             {% empty %}
-                <li class="list-group-item text-xs-center">
+                <li class="list-group-item text-center">
                     <em>{% trans "There are no answered notifications." %}</em>
                 </li>
             {% endfor %}

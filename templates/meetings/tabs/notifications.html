@@ -26,7 +26,7 @@
                     {{ sf.german_project_title|default:sf.project_title }}
 
                     <div class="row mt-1">
-                        <div class="col-md-4 col-xs-12">
+                        <div class="col-md-4 col-12">
                             <strong>{% trans 'Submitter' %}</strong>
                             <div>
                                 {% if not sf.submitter.first_name or not sf.submitter.last_name %}
@@ -36,11 +36,11 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="col-md-4 col-xs-12">
+                        <div class="col-md-4 col-12">
                             <strong>{% trans 'Sponsor/CRO' %}</strong>
                             <div>{{ sf.sponsor_name }}</div>
                         </div>
-                        <div class="col-md-4 col-xs-12">
+                        <div class="col-md-4 col-12">
                             <strong>{% trans 'Submitter Organisation' %}</strong>
                             <div>{{ sf.submitter_organisation }}</div>
                         </div>
@@ -76,15 +76,15 @@
                         {% if notification.centerclosenotification %}
                             {% with ccn=notification.centerclosenotification %}
                                 <div class="row my-1">
-                                    <div class="col-md-4 col-xs-12">
+                                    <div class="col-md-4 col-12">
                                         <strong>{% trans 'Investigator Organisation' %}</strong>
                                         <div>{{ ccn.investigator.organisation }}</div>
                                     </div>
-                                    <div class="col-md-4 col-xs-12">
+                                    <div class="col-md-4 col-12">
                                         <strong>{% trans 'Ethics Commission' %}</strong>
                                         <div>{{ ccn.investigator.ethics_commission }}</div>
                                     </div>
-                                    <div class="col-md-4 col-xs-12">
+                                    <div class="col-md-4 col-12">
                                         <strong>{% trans 'Investigator contact' %}</strong>
                                         <div>{{ ccn.investigator.contact }}</div>
                                     </div>

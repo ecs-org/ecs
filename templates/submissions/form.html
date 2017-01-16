@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block submission_action_buttons %}
-    <li class="nav-item float-xs-right">
+    <li class="nav-item float-right">
         <small class="mr-1 text-muted last_save">&nbsp;</small>
         <a href="" id="save-button" class="btn btn-secondary">{% trans "Just Save" %}</a>
         <a href="" id="submit-button" class="btn btn-primary">
@@ -46,7 +46,7 @@
 {% endblock %}
 
 {% block section_6_1 %}
-    <div class="alert alert-info text-xs-center">
+    <div class="alert alert-info text-center">
         Bitte beachten Sie die
         <a href="{% static 'help/index.html' %}">Hinweise in den Hilfeseiten</a>
     </div>
@@ -240,7 +240,7 @@
                         });
                         modal.find('.modal-dialog').addClass('modal-sm');
                         modal.find('.modal-content').html('\
-                            <div class="modal-body text-xs-center">\
+                            <div class="modal-body text-center">\
                                 <span class="fa fa-spinner fa-pulse fa-2x mr-1"></span>\
                                 {% if notification_type %}\
                                     {{ _("Your are being redirected to the notification form")|escapejs }}\

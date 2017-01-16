@@ -1,7 +1,7 @@
 {% load core i18n %}
 
 {% if form.errors %}
-    <div class="alert alert-danger text-xs-center">
+    <div class="alert alert-danger text-center">
         {{ form.errors }}
     </div>
 {% endif %}

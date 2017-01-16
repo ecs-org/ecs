@@ -74,7 +74,7 @@
                     Antwort
                     {% if user.profile.is_internal %}
                         {% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=answer.pk as history_url %}
-                        <a class="fa fa-history text-primary float-xs-right" href="javascript:void(ecs.fieldhistory.show('{{ history_url }}'))"></a>
+                        <a class="fa fa-history text-primary float-right" href="javascript:void(ecs.fieldhistory.show('{{ history_url }}'))"></a>
                     {% endif %}
                 </h2>
                 <div class="card-block">
