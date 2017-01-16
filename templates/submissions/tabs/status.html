@@ -77,7 +77,7 @@
                         </td>
                         <td>
                             {% if forloop.first %}
-                                {% if sf.pdf_document %}
+                                {% if sf.pdf_document_id %}
                                     <a href="{% url 'ecs.core.views.submissions.submission_form_pdf' submission_form_pk=sf.pk %}">
                                         <span class="fa fa-file-pdf-o"></span>
                                         {% trans 'Download PDF' %}
@@ -94,11 +94,13 @@
                                     PDF Debug
                                 </a><br>
                             {% endif %}
-                            {% if sf == submission.current_submission_form and sf|allows_export_by:user %}
-                                <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}">
-                                    <span class="fa fa-file-archive-o"></span>
-                                    {% trans "Export" %}
-                                </a><br>
+                            {% if sf == submission.current_submission_form %}
+                                {% if user.profile.is_internal or user == submission.presenter %}
+                                    <a href="{% url 'ecs.core.views.submissions.export_submission' submission_pk=submission.pk %}">
+                                        <span class="fa fa-file-archive-o"></span>
+                                        {% trans "Export" %}
+                                    </a><br>
+                                {% endif %}
                             {% endif %}
                         </td>
                     </tr>

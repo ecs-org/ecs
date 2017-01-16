@@ -546,9 +546,6 @@ class SubmissionForm(models.Model):
                 return s.is_active
         return False
 
-    def allows_export(self, user):
-        return user.profile.is_internal or user == self.submission.presenter
-
     @property
     def is_amg(self):
         return self.project_type_drug

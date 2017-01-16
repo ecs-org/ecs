@@ -43,6 +43,7 @@ from ecs.core.forms.utils import submission_form_to_dict
 from ecs.checklists.forms import ChecklistAnswerFormSet
 from ecs.notifications.models import (
     Notification, NotificationType, CenterCloseNotification,
+    AmendmentNotification,
 )
 
 from ecs.core.workflow import ChecklistReview
@@ -55,6 +56,7 @@ from ecs.votes.models import Vote
 from ecs.core.diff import diff_submission_forms
 from ecs.communication.utils import send_message_template
 from ecs.utils import forceauth
+from ecs.users.models import UserProfile
 from ecs.users.utils import sudo, user_flag_required, get_user
 from ecs.tasks.models import Task
 from ecs.tasks.utils import get_obj_tasks, task_required, with_task_management
@@ -225,12 +227,22 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
             answers = checklist.answers.filter(q)
             checklist_summary.append((checklist, answers))
 
-    submission_forms = list(submission.forms
-        .prefetch_related('new_for_notification')
-        .order_by('-created_at'))
+    submission_forms = list(
+        submission.forms(manager='unfiltered').only(
+            'submission_id', 'is_acknowledged', 'presenter_id', 'created_at',
+            'is_notification_update', 'pdf_document_id',
+
+            'presenter__first_name', 'presenter__last_name', 'presenter__email',
+        ).prefetch_related(
+            Prefetch('new_for_notification', queryset=
+                AmendmentNotification.objects.only('new_submission_form_id')),
+            Prefetch('presenter__profile', queryset=
+                UserProfile.objects.only('gender', 'title', 'user_id')),
+        ).order_by('-created_at')
+    )
     for sf, prev in zip(submission_forms, submission_forms[1:]):
         sf.previous_form = prev
-    current_form_idx = [sf == submission.current_submission_form for sf in submission_forms].index(True)
+    current_form_idx = [sf.id == submission.current_submission_form_id for sf in submission_forms].index(True)
 
     external_review_checklists = submission.checklists.filter(blueprint__slug='external_review')
     notifications = (submission.notifications
