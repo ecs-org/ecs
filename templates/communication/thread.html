@@ -22,19 +22,14 @@
 {% block content %}
 <div class="communication_thread container">
 
-<div class="mb-1">
-    <a href="{% url 'ecs.communication.views.list_threads' %}">
-        <span class="fa fa-backward"></span>
-        {% trans "To the communication overview" %}
-    </a>
-    {% if thread.submission %}
-        <br>
+{% if thread.submission %}
+    <div class="mb-1">
         <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab">
             <span class="fa fa-backward"></span>
             {% trans "To the Study" %}
         </a>
-    {% endif %}
-</div>
+    </div>
+{% endif %}
 
 {% for message in thread.message_list %}
     <div class="card message">
