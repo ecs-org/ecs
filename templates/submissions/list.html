@@ -44,115 +44,113 @@
                     </div>
                 {% endwith %}
             {% else %}
-                {% with submission.current_submission_form as submission_form %}
-                    {% with submission.get_current_docstash as docstash %}
-                        <h5 class="font-weight-normal">
-                            {% if docstash %}
-                                <span class="fa fa-wrench text-info"></span>
-                            {% endif %}
-                            {% if docstash.value.notification_type %}
-                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
-                                    {{ submission|ec_number }}
-                                </a>
+                {% with docstash=submission.current_docstash %}
+                    <h5 class="font-weight-normal">
+                        {% if docstash %}
+                            <span class="fa fa-wrench text-info"></span>
+                        {% endif %}
+                        {% if docstash.value.notification_type %}
+                            <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
+                                {{ submission|ec_number }}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'view_submission' submission_pk=submission.pk %}">
+                                {{ submission|ec_number }}
+                            </a>
+                        {% endif %}
+                        {% if docstash and docstash.value.notification_type %}
+                            <strong>{{ docstash.value.notification_type }}</strong> für
+                        {% endif %}
+                        {% if docstash %}
+                            {% if docstash.name %}
+                                {{ docstash.name }}
                             {% else %}
-                                <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                                    {{ submission|ec_number }}
-                                </a>
+                                <i>{% trans "No title." %}</i>
                             {% endif %}
-                            {% if docstash and docstash.value.notification_type %}
-                                <strong>{{ docstash.value.notification_type }}</strong> für
-                            {% endif %}
-                            {% if docstash %}
-                                {% if docstash.name %}
-                                    {{ docstash.name }}
-                                {% else %}
-                                    <i>{% trans "No title." %}</i>
-                                {% endif %}
-                            {% else %}
-                                {{ submission.project_title_display }}
-                            {% endif %}
-                        </h5>
+                        {% else %}
+                            {{ submission.project_title_display }}
+                        {% endif %}
+                    </h5>
 
-                        <div class="my-1">
-                            {% if user.profile.is_internal %}
-                                {% with submission.paper_submission_task as paper_submission_review_task %}
-                                    {% if paper_submission_review_task %}
-                                        <a href="{{ paper_submission_review_task.url }}">
-                                            {% trans "Paper Submission Review" %}
-                                        </a>
-                                    {% endif %}
-                                {% endwith %}
-                            {% endif %}
-                        </div>
-            
-                        <div class="row">
-                            <div class="col-md-6">
-                                <strong>{% trans "Meetings" %}:</strong>
-                                {% for meeting in submission.meetings.all %}
-                                    {% if user.profile.is_internal %}
-                                        <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">
-                                            {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
-                                        </a>
-                                    {% else %}
+                    <div class="my-1">
+                        {% if user.profile.is_internal %}
+                            {% with submission.paper_submission_task as paper_submission_review_task %}
+                                {% if paper_submission_review_task %}
+                                    <a href="{{ paper_submission_review_task.url }}">
+                                        {% trans "Paper Submission Review" %}
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>{% trans "Meetings" %}:</strong>
+                            {% for meeting in submission.meetings.all %}
+                                {% if user.profile.is_internal %}
+                                    <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}">
                                         {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
-                                    {% endif %}
-                                    {% if not forloop.last %}|{% endif %}
+                                    </a>
+                                {% else %}
+                                    {{ meeting.start|date:'d.m.Y' }} ({{ meeting.title }})
+                                {% endif %}
+                                {% if not forloop.last %}|{% endif %}
+                            {% empty %}
+                                <i>-</i>
+                            {% endfor %}
+                        </div>
+
+                        {% if user.profile.is_internal %}
+                            <div class="col-md-6">
+                                <strong>{% trans 'Categories' %}:</strong>
+                                {% for category in submission.medical_categories.all %}
+                                    <i>{{ category }}</i>
+                                    {% if not forloop.last %}, {% endif %}
                                 {% empty %}
                                     <i>-</i>
                                 {% endfor %}
                             </div>
+                        {% endif %}
+                    </div>
 
-                            {% if user.profile.is_internal %}
-                                <div class="col-md-6">
-                                    <strong>{% trans 'Categories' %}:</strong>
-                                    {% for category in submission.medical_categories.all %}
-                                        <i>{{ category }}</i>
-                                        {% if not forloop.last %}, {% endif %}
-                                    {% empty %}
-                                        <i>-</i>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                    {% if docstash %}
+                        <div class="info">
+                            Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ submission.forms.count|add:1 }})
+                            <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">
+                                {% trans 'Delete Changes' %}
+                            </a>
                         </div>
-        
-                        {% if docstash %}
-                            <div class="info">
-                                Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr (Version {{ submission.forms.count|add:1 }})
-                                <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">
-                                    {% trans 'Delete Changes' %}
-                                </a>
-                            </div>
-                        {% endif %}
-        
-                        {% if user.profile.is_internal %}
-                            <div>
-                                {% include 'tags/list.inc' with tags=submission.tags.all only %}
-                            </div>
-                        {% endif %}
-        
-                        {% if submission.resubmission_task %}
-                            <div class="text-danger">
-                                <span class="fa fa-exclamation-triangle"></span>
-                                {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
-                            </div>
-                        {% endif %}
-        
-                        {% if submission.b2_resubmission_task %}
-                            <div class="alert alert-danger">
-                                <span class="fa fa-exclamation-triangle"></span>
-                                {% trans "Die Studie hat ein B2 Votum erhalten." %}
-                            </div>
-                        {% endif %}
-        
-                        {% if matched_document.parent_object == submission or matched_document.parent_object.submission == submission %}
-                            <div class="matched_document">
-                                {% trans 'Document' %}: 
-                                <a href="{% url 'ecs.core.views.submissions.submission_form_pdf_view' submission_form_pk=matched_document.submission_form.pk %}" target="_blank">
-                                    {{ matched_document }}
-                                </a>
-                            </div>
-                        {% endif %}
-                    {% endwith %}
+                    {% endif %}
+
+                    {% if user.profile.is_internal %}
+                        <div>
+                            {% include 'tags/list.inc' with tags=submission.tags.all only %}
+                        </div>
+                    {% endif %}
+
+                    {% if submission.resubmission_task %}
+                        <div class="text-danger">
+                            <span class="fa fa-exclamation-triangle"></span>
+                            {% trans "Die Studie wurde in der eingereichten Form von der Ethik-Kommission abgelehnt. Sie können die Studie neu einreichen." %}
+                        </div>
+                    {% endif %}
+
+                    {% if submission.b2_resubmission_task %}
+                        <div class="alert alert-danger">
+                            <span class="fa fa-exclamation-triangle"></span>
+                            {% trans "Die Studie hat ein B2 Votum erhalten." %}
+                        </div>
+                    {% endif %}
+
+                    {% if matched_document.parent_object == submission or matched_document.parent_object.submission == submission %}
+                        <div class="matched_document">
+                            {% trans 'Document' %}:
+                            <a href="{% url 'ecs.core.views.submissions.submission_form_pdf_view' submission_form_pk=matched_document.submission_form.pk %}" target="_blank">
+                                {{ matched_document }}
+                            </a>
+                        </div>
+                    {% endif %}
                 {% endwith %}
             {% endif %}
         </li>

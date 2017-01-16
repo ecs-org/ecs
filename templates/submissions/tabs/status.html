@@ -25,8 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% with submission.get_current_docstash as docstash %}
-                {% if docstash %}
+                {% if current_docstash_key %}
                     <tr>
                         <td>{{ submission_forms|length|add:1 }}</td>
                         <td colspan="4" class="text-xs-center">
@@ -34,7 +33,7 @@
                         </td>
                         <td>
                             {% if submission_form|allows_edits_by:user %}
-                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
+                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=current_docstash_key %}">
                                     <span class="fa fa-pencil"></span>
                                     {% trans 'Edit' %}
                                 </a>
@@ -42,7 +41,6 @@
                         </td>
                     </tr>
                 {% endif %}
-                {% endwith %}
                 {% with submission.newest_submission_form as newest_form %}
                     {% for sf in submission_forms %}
                     <tr class="{% if not sf.is_acknowledged %}table-danger{% elif sf == submission.current_submission_form %}table-info{% endif %} {% if forloop.counter0 > current_form_idx %}collapse{% endif %}">

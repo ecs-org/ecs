@@ -5,7 +5,6 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.utils.translation import ugettext as _, ugettext_lazy
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 
@@ -31,7 +30,6 @@ from ecs.core.signals import on_study_change
 from ecs.votes.models import Vote
 from ecs.notifications.models import Notification
 from ecs.users.utils import get_current_user
-from ecs.docstash.models import DocStash
 from ecs.utils.viewutils import render_pdf_context
 from ecs.tasks.models import Task
 
@@ -184,14 +182,6 @@ class Submission(models.Model):
 
         Task.unfiltered.for_submission(self).filter(
             task_type__is_dynamic=True).open().mark_deleted()
-
-    def get_current_docstash(self):
-        return DocStash.objects.get(
-            group='ecs.core.views.submissions.create_submission_form',
-            owner=get_current_user,
-            content_type=ContentType.objects.get_for_model(self.__class__),
-            object_id=self.pk,
-        )
 
     def schedule_to_meeting(self):
         visible = self.workflow_lane == SUBMISSION_LANE_BOARD

@@ -22,6 +22,7 @@ from ecs.documents.views import handle_download
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import (
     Submission, SubmissionForm, Investigator, TemporaryAuthorization,
+    MedicalCategory,
 )
 from ecs.checklists.models import ChecklistBlueprint, Checklist
 from ecs.meetings.models import Meeting
@@ -240,6 +241,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 .order_by('submission__ec_number')))
         .order_by('-timestamp'))
     votes = submission.votes
+
+    current_docstash_key = DocStash.objects.filter(
+        group='ecs.core.views.submissions.create_submission_form',
+        owner=request.user,
+        content_type=ContentType.objects.get_for_model(Submission),
+        object_id=submission.id,
+    ).values_list('key', flat=True).first()
     
     stashed_notifications = []
     for d in DocStash.objects.filter(owner=request.user, group='ecs.notifications.views.create_notification'):
@@ -271,6 +279,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'external_review_checklists': external_review_checklists,
         'temporary_auth': submission.temp_auth.order_by('end'),
         'temporary_auth_form': TemporaryAuthorizationForm(),
+        'current_docstash_key': current_docstash_key,
     }
 
     center_close_notifications = CenterCloseNotification.objects.filter(
@@ -871,13 +880,23 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     submissions = (filterform.filter_submissions(submissions, request.user)
         .exclude(current_submission_form=None)
         .select_related('current_submission_form')
-        .prefetch_related(Prefetch('meetings',
-            queryset=Meeting.unfiltered.order_by('start')))
-        .distinct()
+        .only(
+            'ec_number',
+
+            'current_submission_form__project_title',
+            'current_submission_form__german_project_title',
+        ).prefetch_related(
+            Prefetch('meetings', queryset=
+                Meeting.unfiltered.only('start', 'title').order_by('start')),
+        ).distinct()
         .order_by('-ec_number'))
 
     if request.user.profile.is_internal:
-        submissions = submissions.prefetch_related('tags')
+        submissions = submissions.prefetch_related(
+            'tags',
+            Prefetch('medical_categories',
+                queryset=MedicalCategory.objects.order_by('abbrev')),
+        )
 
     if stashed_submission_forms:
         submissions = list(stashed_submission_forms) + list(submissions)
@@ -895,7 +914,7 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
 
     tasks = Task.objects.open()
 
-    # get related tasks for every submission
+    # get related objects for every submission
     submission_ct = ContentType.objects.get_for_model(Submission)
     vote_ct = ContentType.objects.get_for_model(Vote)
     resubmission_tasks = tasks.filter(content_type=submission_ct, data_id__in=visible_submission_pks,
@@ -905,6 +924,12 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     b2_resubmission_tasks = tasks.filter(content_type=vote_ct,
         data_id__in=Vote.objects.filter(submission_form__submission__pk__in=visible_submission_pks).values('pk').query,
         task_type__workflow_node__uid='b2_resubmission')
+    stashes = DocStash.objects.filter(
+        group='ecs.core.views.submissions.create_submission_form',
+        content_type=ContentType.objects.get_for_model(Submission),
+        owner=request.user, object_id__in=visible_submission_pks,
+    )
+
     for s in submissions.object_list:
         if isinstance(s, DocStash):
             continue
@@ -917,6 +942,9 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         for task in b2_resubmission_tasks:
             if task.data.submission_form.submission == s:
                 s.b2_resubmission_task = task
+        for stash in stashes:
+            if stash.object_id == s.id:
+                s.current_docstash = stash
 
     # save the filter in the user settings
     if 'tags' in filterform.cleaned_data:
