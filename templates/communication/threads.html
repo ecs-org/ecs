@@ -1,6 +1,6 @@
 {% load humanize i18n core communication %}
 
-<form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline open-in-widget">
+<form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline open-in-widget d-flex justify-content-around">
     {% csrf_token %}
     <ul class="list-unstyled">
         <li>
