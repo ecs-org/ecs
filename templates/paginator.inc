@@ -1,7 +1,7 @@
 {% load i18n %}
 
-<nav class="text-center paginator">
-  <ul class="pagination">
+<nav class="paginator">
+  <ul class="pagination justify-content-center">
     {% if page.has_previous %}
         <li class="page-item">
             <a class="page-link" href="{{ request.path }}?page=1" data-page="1">
