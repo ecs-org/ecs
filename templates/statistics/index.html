@@ -5,7 +5,7 @@
 {% block headertitle %}{% blocktrans %}Statistics for the year of {{ current_year }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="container my-3">
         <div class="btn-group mb-3">
             {% for year in years %}
                 {% if year == current_year %}
@@ -17,7 +17,7 @@
         </div>
 
         {% for section in stats.values %}
-            <h2>
+            <h2 class="mt-3">
                 {{ section.label }}
             </h2>
             <ul class="list-group mb-3">

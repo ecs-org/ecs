@@ -11,7 +11,7 @@
     {% else %}
         <div class="col-md-10 col-form-label">
              {% for choice in form.fields.receiver_type.choices %}
-               <div>
+               <div class="mb-2">
                   <label for="{{ form.receiver_type.auto_id }}_{{ forloop.counter0 }}">
                       <input id="{{ form.receiver_type.auto_id}}_{{ forloop.counter0 }}" type="radio" name="{{ form.receiver_type.html_name }}" value="{{ choice.0 }}"{% if choice.0 == form.receiver_type.data %} checked="checked"{% endif %}{% if not form.receiver_type.data and not forloop.counter0 %} checked="checked"{% endif %}>
                       {{ choice.1 }}

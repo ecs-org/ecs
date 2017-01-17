@@ -15,7 +15,7 @@
 
         {% include 'paginator.inc' with page=payments %}
     
-        <ul class="list-group">
+        <ul class="list-group mb-3">
             {% for payment in payments.object_list %}
                 <li class="list-group-item d-block">
                     <a href="{% url 'ecs.billing.views.view_checklist_payment' payment_pk=payment.pk %}">

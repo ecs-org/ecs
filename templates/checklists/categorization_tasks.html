@@ -6,7 +6,7 @@
     <tbody>
         {% for task_type, task in tasks %}
             <tr>
-                <th>{{ task_type }}</th>
+                <th class="pr-5">{{ task_type }}</th>
                 <td>
                     {% if task.closed_at %}
                         <span class="btn btn-outline-primary disabled">

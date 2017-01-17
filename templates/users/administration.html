@@ -19,7 +19,7 @@
 
 {% include 'paginator.inc' with page=users %}
 
-<ul class="user_list list-group">
+<ul class="user_list list-group mb-3">
 {% for profile in users.object_list %}
     <li class="list-group-item d-block user collapsed{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
         <div class="head">
