@@ -10,8 +10,12 @@
         <ul class="list-group list-group-flush">
             {% for task_type in task_type_list %}
                 <li class="list-group-item d-block">
-                    <span class="badge badge-default badge-pill float-right">{{ task_type.list|length }}</span>
-                    <h4>{{ task_type.grouper|task_type_name }}</h4>
+                    <h4>
+                        {{ task_type.grouper|task_type_name }}
+                        <span class="badge badge-default badge-pill float-right">
+                            {{ task_type.list|length }}
+                        </span>
+                    </h4>
                     <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                         <a href="{% url 'ecs.tasks.views.do_task' task_pk=task.pk %}">{{ task.data }}</a>
                         {% if not task.accepted %}
@@ -43,22 +47,23 @@
             <ul class="list-group list-group-flush">
                 {% for task_type in task_type_list %}
                     <li class="list-group-item d-block clearfix">
-                        <span class="badge badge-default badge-pill float-right">
-                            {{ task_type.list|length }}
-                        </span>
-                        {% if task_type.list|length > 1 %}
-                            <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                                {% csrf_token %}
-                                {% for task in task_type.list %}
-                                    <input type="hidden" name="task_id" value="{{ task.id }}" />
-                                {% endfor %}
-                                <a class="submit-in-widget" href="">
-                                    {% trans 'Accept all' %}
-                                </a>
-                            </form>
-                        {% endif %}
-
-                        <h4>{{ task_type.grouper|task_type_name }}</h4>
+                        <h4>
+                            {{ task_type.grouper|task_type_name }}
+                            <span class="badge badge-default badge-pill float-right">
+                                {{ task_type.list|length }}
+                            </span>
+                            {% if task_type.list|length > 1 %}
+                                <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                    {% csrf_token %}
+                                    {% for task in task_type.list %}
+                                        <input type="hidden" name="task_id" value="{{ task.id }}" />
+                                    {% endfor %}
+                                    <a class="submit-in-widget" href="">
+                                        <small>{% trans 'Accept all' %}</small>
+                                    </a>
+                                </form>
+                            {% endif %}
+                        </h4>
                         <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                             <form class="open-in-widget d-inline-block" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                 {% csrf_token %}
@@ -176,7 +181,7 @@
             {% endif %}
 
             <div class="card mb-2">
-                <div class="card-block">
+                <div class="card-block no-flex-grow">
                     <h3 class="card-title mb-0">{% trans "Open Tasks" %}</h3>
                 </div>
 
@@ -184,22 +189,23 @@
                 <ul class="list-group list-group-flush">
                     {% for task_type in task_type_list %}
                         <li class="list-group-item d-block clearfix">
-                            <span class="badge badge-default badge-pill float-right">
-                                {{ task_type.list|length }}
-                            </span>
-                            {% if task_type.list|length > 1 %}
-                                <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
-                                    {% csrf_token %}
-                                    {% for task in task_type.list %}
-                                        <input type="hidden" name="task_id" value="{{ task.id }}" />
-                                    {% endfor %}
-                                    <a class="submit-in-widget" href="">
-                                        {% trans 'Accept all' %}
-                                    </a>
-                                </form>
-                            {% endif %}
-
-                            <h4>{{ task_type.grouper|task_type_name }}</h4>
+                            <h4>
+                                {{ task_type.grouper|task_type_name }}
+                                <span class="badge badge-default badge-pill float-right">
+                                    {{ task_type.list|length }}
+                                </span>
+                                {% if task_type.list|length > 1 %}
+                                    <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                        {% csrf_token %}
+                                        {% for task in task_type.list %}
+                                            <input type="hidden" name="task_id" value="{{ task.id }}" />
+                                        {% endfor %}
+                                        <a class="submit-in-widget px-3" href="">
+                                            <small>{% trans 'Accept all' %}</small>
+                                        </a>
+                                    </form>
+                                {% endif %}
+                            </h4>
                             <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
                                 <form class="open-in-widget d-inline-block" method="post" action="{% url 'ecs.tasks.views.accept_task' task_pk=task.pk %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                     {% csrf_token %}
