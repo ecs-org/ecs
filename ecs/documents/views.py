@@ -61,7 +61,8 @@ def handle_view(request, doc):
     n = doc.notifications.first()
     if n:
         title_bits.insert(0, str(n))
-    title = '{} (Version: {})'.format(' - '.join(title_bits), doc.version)
+    title = '{} (Version: {} vom {})'.format(' - '.join(title_bits),
+        doc.version, doc.date.strftime('%d.%m.%Y'))
 
     params = urlencode({
         'file': reverse(
