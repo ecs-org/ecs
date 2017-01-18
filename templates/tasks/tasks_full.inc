@@ -12,7 +12,7 @@
                 <span class="tag tag-default tag-pill float-xs-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
-                    <a href="{{ task.url }}">{{ task.data }}</a>
+                    <a href="{% url 'ecs.tasks.views.do_task' task_pk=task.pk %}">{{ task.data }}</a>
                     {% if not task.accepted %}
                         <span class="fa fa-exclamation text-info" title="{% trans 'assigned' %}"></span>
                         {% if task.task_type.is_delegatable %}
