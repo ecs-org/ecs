@@ -283,6 +283,7 @@ def reopen_task(request, task_pk=None):
     new_task = task.reopen(user=request.user)
     return redirect(new_task.url)
 
+
 def do_task(request, task_pk=None):
     task = get_object_or_404(Task, assigned_to=request.user, pk=task_pk)
     url = task.url
@@ -290,4 +291,12 @@ def do_task(request, task_pk=None):
         url = task.afterlife_url
         if url is None:
             raise Http404()
+    return redirect(url)
+
+
+def preview_task(request, task_pk=None):
+    task = get_object_or_404(Task, pk=task_pk)
+    url = task.get_preview_url()
+    if not url:
+        raise Http404()
     return redirect(url)

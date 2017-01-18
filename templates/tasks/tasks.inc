@@ -64,11 +64,8 @@
                                 {% csrf_token %}
                                 <a class="submit-in-widget" href="">{{ task.data }}</a>
                             </form>
-                            {% with task.get_preview_url as preview_url %}
-                                {% if preview_url %}
-                                    <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
-                                {% endif %}
-                            {% endwith %}
+                            {% url 'ecs.tasks.views.preview_task' task_pk=task.pk as preview_url %}
+                            <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                         </li> {% endfor %} </ul>
                     </li>
                 {% endfor %}
@@ -208,11 +205,8 @@
                                     {% csrf_token %}
                                     <a class="submit-in-widget" href="">{{ task.data }}</a>
                                 </form>
-                                {% with task.get_preview_url as preview_url %}
-                                    {% if preview_url %}
-                                        <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
-                                    {% endif %}
-                                {% endwith %}
+                                {% url 'ecs.tasks.views.preview_task' task_pk=task.pk as preview_url %}
+                                <a class="fa fa-search text-info" title="{% trans "Preview" %}" href="{{ preview_url }}"></a>
                             </li> {% endfor %} </ul>
                         </li>
                     {% empty %}

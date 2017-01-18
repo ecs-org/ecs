@@ -14,4 +14,5 @@ urlpatterns = (
     url(r'^(?P<task_pk>\d+)/decline/full/$', views.decline_task_full),
     url(r'^(?P<task_pk>\d+)/reopen/$', views.reopen_task),
     url(r'^(?P<task_pk>\d+)/do/$', views.do_task),
+    url(r'^(?P<task_pk>\d+)/preview/$', views.preview_task),
 )

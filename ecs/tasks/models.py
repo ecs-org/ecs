@@ -142,22 +142,18 @@ class Task(models.Model):
         return rval
 
     def get_preview_url(self):
-        from ecs.core.models import Submission
-        from ecs.votes.models import Vote
         from ecs.notifications.models import Notification
 
         if isinstance(self.data, Notification):
-            return reverse('ecs.notifications.views.view_notification', kwargs={'notification_pk': self.data.pk})
+            return reverse('ecs.notifications.views.view_notification',
+                kwargs={'notification_pk': self.data.pk})
 
-        submission_form = None
-        if self.content_type == ContentType.objects.get_for_model(Submission):
-            submission_form = self.data.current_submission_form
-        elif self.content_type == ContentType.objects.get_for_model(Vote):
-            submission_form = self.data.submission_form
-        if submission_form:
-            return reverse('readonly_submission_form', kwargs={'submission_form_pk': submission_form.pk})
-        else:
+        submission = self.data.get_submission()
+        if not submission:
             return None
+
+        return reverse('view_submission',
+            kwargs={'submission_pk': submission.pk})
 
     @property
     def managed_transparently(self):
