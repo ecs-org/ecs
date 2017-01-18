@@ -30,11 +30,9 @@
 {% block content %}
     {% include 'pdf/ec_head.inc' %}
     <h1>
-        {{ checklist.blueprint }} für {{ checklist.submission }}
-        {% with checklist.submission as submission %}
-        {% if submission %}
-            <br>{{ submission.project_title_display }}
-        {% endif %}
+        {% with submission=checklist.submission %}
+            {{ checklist.blueprint }} für {{ submission|ec_number }}<br>
+            <small>{{ submission.project_title_display }}</small>
         {% endwith %}
     </h1>
 
