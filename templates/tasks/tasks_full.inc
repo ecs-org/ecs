@@ -30,8 +30,10 @@
             </li>
         {% endfor %}
     </ul>
+</div>
 
-    {% if proxy_tasks %}
+{% if proxy_tasks %}
+    <div class="card">
         <div class="card-block">
             <h3 class="card-title mb-0">{% trans "Proxy Tasks" %}</h3>
         </div>
@@ -70,8 +72,8 @@
                 </li>
             {% endfor %}
         </ul>
-    {% endif %}
-</div>
+    </div>
+{% endif %}
 
 {% if user.profile.can_have_open_tasks %}
     <div class="card-group">
