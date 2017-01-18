@@ -7247,12 +7247,12 @@ var PDFViewerApplication = {
   setTitleUsingUrl: function pdfViewSetTitleUsingUrl(url) {
     this.url = url;
     try {
-      this.setTitle(decodeURIComponent(
-        pdfjsLib.getFilenameFromUrl(url)) || url);
+      /* this.setTitle(decodeURIComponent(
+        pdfjsLib.getFilenameFromUrl(url)) || url); */
     } catch (e) {
       // decodeURIComponent may throw URIError,
       // fall back to using the unprocessed url in that case
-      this.setTitle(url);
+      /* this.setTitle(url); */
     }
   },
 
@@ -7719,9 +7719,11 @@ var PDFViewerApplication = {
         pdfTitle = info['Title'];
       }
 
+      /*
       if (pdfTitle) {
         self.setTitle(pdfTitle + ' - ' + document.title);
       }
+      */
 
       if (info.IsAcroFormPresent) {
         console.warn('Warning: AcroForm/XFA is not supported');
@@ -8117,7 +8119,7 @@ function webViewerInitialized() {
   }
 
   if ('title' in params)
-      document.title = params.title;
+      PDFViewerApplication.setTitle(params.title);
 }
 
 document.addEventListener('pagerendered', function (e) {
