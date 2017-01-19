@@ -118,8 +118,8 @@ class Task(models.Model):
 
     assigned_at = models.DateTimeField(null=True)
     assigned_to = models.ForeignKey(User, null=True, related_name='tasks')
-    closed_at = models.DateTimeField(null=True)
-    deleted_at = models.DateTimeField(null=True)
+    closed_at = models.DateTimeField(null=True, db_index=True)
+    deleted_at = models.DateTimeField(null=True, db_index=True)
     
     accepted = models.BooleanField(default=False)
 

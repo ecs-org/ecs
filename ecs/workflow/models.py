@@ -148,7 +148,7 @@ class Node(models.Model):
     outputs = models.ManyToManyField('self', related_name='inputs', through='Edge', symmetrical=False)
     is_start_node = models.BooleanField(default=False)
     is_end_node = models.BooleanField(default=False)
-    uid = models.CharField(max_length=100, null=True)
+    uid = models.CharField(max_length=100, null=True, db_index=True)
 
     def __str__(self):
         if self.name:
