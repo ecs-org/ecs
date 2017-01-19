@@ -15,18 +15,20 @@
 {% block headertitle %}Neu: {{ notification_type.name }}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_notification" class="nav nav-tabs mb-3 tab_headers collapsed">
-        {% for tab, fieldsets in tabs %}
-            <li class="nav-item">
-                <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+    <div id="tabs_notification" class="collapse">
+        <ul class="nav nav-tabs mb-3 tab_headers">
+            {% for tab, fieldsets in tabs %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+                </li>
+            {% endfor %}
+            <li class="nav-item ml-auto">
+                <small class="mr-3 text-muted last_save">&nbsp;</small>
+                <a href="" id="save-button" class="btn btn-secondary">{% trans "Save" %}</a>
+                <a href="" id="submit-button" class="btn btn-primary">{% trans "Submit" %}</a>
             </li>
-        {% endfor %}
-        <li class="nav-item float-right">
-            <small class="mr-3 text-muted last_save">&nbsp;</small>
-            <a href="" id="save-button" class="btn btn-secondary">{% trans "Save" %}</a>
-            <a href="" id="submit-button" class="btn btn-primary">{% trans "Submit" %}</a>
-        </li>
-    </ul>
+        </ul>
+    </div>
 
 <form action="" method="post" enctype="multipart/form-data" class="form_main notifications">
     {% csrf_token %}
