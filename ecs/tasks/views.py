@@ -1,8 +1,9 @@
 import random
 from functools import reduce
+from collections import defaultdict
 
 from django.core.urlresolvers import reverse
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import Http404, QueryDict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.contenttypes.models import ContentType
@@ -10,7 +11,8 @@ from django.views.decorators.http import require_POST
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.users.utils import user_flag_required, sudo
-from ecs.core.models import Submission
+from ecs.users.models import UserProfile
+from ecs.core.models import Submission, SubmissionForm, Investigator
 from ecs.core.models.constants import (
     SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED,
     SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC,
@@ -21,7 +23,9 @@ from ecs.tasks.forms import TaskListFilterForm
 from ecs.tasks.signals import task_declined
 from ecs.tasks.tasks import send_delete_message
 from ecs.votes.models import Vote
-from ecs.notifications.models import NOTIFICATION_MODELS, Notification
+from ecs.notifications.models import (
+    NOTIFICATION_MODELS, Notification, SafetyNotification,
+)
 from ecs.meetings.models import Meeting
 
 
@@ -58,8 +62,11 @@ def delete_task(request, submission_pk=None, task_pk=None):
 def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ignore_task_types=True):
     submission = None
     all_tasks = (Task.objects.for_user(request.user).for_widget().open()
-        .select_related('task_type', 'task_type__workflow_node')
-        .order_by('task_type__workflow_node__uid', 'created_at', 'assigned_at'))
+        .select_related('task_type__workflow_node')
+        .only(
+            'accepted', 'content_type_id', 'data_id',
+            'task_type__workflow_node__uid', 'task_type__is_delegatable',
+        ).order_by('task_type__workflow_node__uid', 'created_at', 'assigned_at'))
 
     if submission_pk:
         submission = get_object_or_404(Submission, pk=submission_pk)
@@ -202,6 +209,121 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
             if task_types:
                 open_tasks = open_tasks.filter(task_type__workflow_node__uid__in=
                     task_types.values('workflow_node__uid'))
+
+    def _prefetch_data(tasks):
+        tasks_by_submission = defaultdict(list)
+        submission_ct = ContentType.objects.get_for_model(Submission)
+        for task in tasks:
+            if task.content_type_id == submission_ct.id:
+                tasks_by_submission[task.data_id].append(task)
+        submissions = Submission.objects.filter(
+            id__in=tasks_by_submission.keys(),
+        ).only('ec_number')
+        for submission in submissions:
+            for task in tasks_by_submission[submission.id]:
+                task._data_cache = submission
+
+        tasks_by_checklist = defaultdict(list)
+        checklist_ct = ContentType.objects.get_for_model(Checklist)
+        for task in tasks:
+            if task.content_type_id == checklist_ct.id:
+                tasks_by_checklist[task.data_id].append(task)
+        checklists = Checklist.objects.filter(
+            id__in=tasks_by_checklist.keys(),
+        ).select_related(
+            'blueprint', 'submission', 'submission__current_submission_form',
+            'last_edited_by',
+        ).only(
+            'last_edited_by', 'user_id',
+
+            'submission__ec_number',
+            'submission__current_submission_form_id',
+            'submission__presenter_id', 'submission__susar_presenter_id',
+
+            'submission__current_submission_form__submitter_id',
+            'submission__current_submission_form__sponsor_id',
+
+            'blueprint__multiple', 'blueprint__name',
+            'blueprint__reviewer_is_anonymous',
+
+            'last_edited_by__first_name',
+            'last_edited_by__last_name',
+            'last_edited_by__email',
+            'last_edited_by__profile__gender',
+            'last_edited_by__profile__title',
+        ).prefetch_related(
+            Prefetch('submission__current_submission_form__investigators',
+                queryset=Investigator.objects
+                    .only('user_id', 'submission_form_id',)
+            ),
+            Prefetch('last_edited_by__profile', queryset=
+                UserProfile.objects.only('user_id', 'gender', 'title')
+            ),
+        )
+        for checklist in checklists:
+            for task in tasks_by_checklist[checklist.id]:
+                task._data_cache = checklist
+
+        tasks_by_notification = defaultdict(list)
+        notification_ct = ContentType.objects.get_for_model(SafetyNotification)
+        for task in tasks:
+            if task.content_type_id == notification_ct.id:
+                tasks_by_notification[task.data_id].append(task)
+        notifications = SafetyNotification.objects.filter(
+            id__in=tasks_by_notification.keys(),
+        ).select_related('type').only(
+            'safety_type', 'type__name',
+        ).prefetch_related(
+            Prefetch('submission_forms', queryset=
+                SubmissionForm.objects.select_related('submission')
+                    .only('submission__ec_number')
+            ),
+        )
+        for notification in notifications:
+            for task in tasks_by_notification[notification.id]:
+                task._data_cache = notification
+                task._data_cache._safetynotification_cache = notification
+
+        for model in NOTIFICATION_MODELS:
+            if model == SafetyNotification:
+                continue
+
+            tasks_by_notification = defaultdict(list)
+            notification_ct = ContentType.objects.get_for_model(model)
+            for task in tasks:
+                if task.content_type_id == notification_ct.id:
+                    tasks_by_notification[task.data_id].append(task)
+            notifications = model.objects.filter(
+                id__in=tasks_by_notification.keys(),
+            ).select_related('type').only('type__name').prefetch_related(
+                Prefetch('submission_forms', queryset=
+                    SubmissionForm.objects.select_related('submission')
+                        .only('submission__ec_number')
+                ),
+            )
+            for notification in notifications:
+                for task in tasks_by_notification[notification.id]:
+                    task._data_cache = notification
+                    task._data_cache._safetynotification_cache = None
+
+        tasks_by_vote = defaultdict(list)
+        vote_ct = ContentType.objects.get_for_model(Vote)
+        for task in tasks:
+            if task.content_type_id == vote_ct.id:
+                tasks_by_vote[task.data_id].append(task)
+        votes = Vote.objects.filter(id__in=tasks_by_vote.keys()).select_related(
+            'submission_form', 'submission_form__submission',
+        ).only(
+            'result', 'submission_form__id',
+            'submission_form__submission__ec_number',
+        )
+        for vote in votes:
+            for task in tasks_by_vote[vote.id]:
+                task._data_cache = vote
+
+    _prefetch_data(my_tasks)
+    _prefetch_data(proxy_tasks)
+    _prefetch_data(open_tasks)
 
     data = {
         'submission': submission,
