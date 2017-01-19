@@ -21,7 +21,7 @@ def checklist_blueprints():
         dict(slug='insurance_review', name=_("Insurance Review")),
         dict(slug='gcp_review', name=_("GCP Review")),
         dict(slug='specialist_review', name=_("Specialist Review"), multiple=True),
-        dict(slug='external_review', name=_("External Review"), multiple=True, reviewer_is_anonymous=True, allow_pdf_download=True),
+        dict(slug='external_review', name=_("External Review"), multiple=True, reviewer_is_anonymous=True),
     )
 
     for blueprint in blueprints:

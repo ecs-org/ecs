@@ -281,30 +281,28 @@
 
     {% for checklist, formset in checklist_reviews %}
     <div id="checklist_{{ checklist.pk }}_review_form" class="container collapse">
-        {% if formset.readonly and checklist.blueprint.allow_pdf_download and checklist.pdf_document and not checklist.status == 'new'%}
-            {% if checklist.status == 'review_ok' or user.profile.is_internal %}
-                {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
-                <p>
+        {% if formset.readonly and checklist.pdf_document and not checklist.status == 'new' %}
+            {% url 'ecs.checklists.views.checklist_pdf' checklist_pk=checklist.pk as pdf_url %}
+            <p>
+                <a class="btn btn-outline-primary" href="{{ pdf_url }}">
+                    <span class="fa fa-file-pdf-o"></span>
+                    <span>
+                        {% if checklist.blueprint.slug == 'external_review' and checklist.status != 'review_ok' %}
+                            {% trans 'Download unpublished Version as PDF' %}
+                        {% else %}
+                            {% trans "Download PDF" %}
+                        {% endif %}
+                    <span>
+                </a>
+
+                {% if debug %}
+                    {% url 'ecs.checklists.views.checklist_pdf_debug' checklist_pk=checklist.pk as pdf_url %}
                     <a class="btn btn-outline-primary" href="{{ pdf_url }}">
                         <span class="fa fa-file-pdf-o"></span>
-                        <span>
-                            {% if checklist.status == 'review_ok' %}
-                                {% trans "Download PDF" %}
-                            {% else %}
-                                {% trans 'Download unpublished Version as PDF' %}
-                            {% endif %}
-                        <span>
+                        PDF Debug
                     </a>
-
-                    {% if debug %}
-                        {% url 'ecs.checklists.views.checklist_pdf_debug' checklist_pk=checklist.pk as pdf_url %}
-                        <a class="btn btn-outline-primary" href="{{ pdf_url }}">
-                            <span class="fa fa-file-pdf-o"></span>
-                            PDF Debug
-                        </a>
-                    {% endif %}
-                </p>
-            {% endif %}
+                {% endif %}
+            </p>
         {% endif %}
         {% include 'submissions/checklist_review_form.html' %}
         {% if formset.reopen_task and formset.readonly %}

@@ -325,6 +325,7 @@ class ChecklistReview(Activity):
         else:
             checklist.status = 'completed'
             checklist.save()
+            checklist.render_pdf_document()
 
 @receiver(post_save, sender=Checklist)
 def unlock_checklist_review(sender, **kwargs):

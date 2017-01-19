@@ -24,14 +24,12 @@ def checklist_comments(request, checklist_pk=None, flavour='negative'):
 
 
 def checklist_pdf(request, checklist_pk=None):
-    checklist = get_object_or_404(Checklist, pk=checklist_pk,
-        blueprint__allow_pdf_download=True)
+    checklist = get_object_or_404(Checklist, pk=checklist_pk)
     return handle_download(request, checklist.pdf_document)
 
 
 def checklist_pdf_debug(request, checklist_pk=None):
-    checklist = get_object_or_404(Checklist, pk=checklist_pk,
-        blueprint__allow_pdf_download=True)
+    checklist = get_object_or_404(Checklist, pk=checklist_pk)
     response = HttpResponse(checklist.render_pdf(),
         content_type='application/pdf')
     response['Content-Disposition'] = 'attachment;filename=debug.pdf'

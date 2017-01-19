@@ -17,7 +17,6 @@ class ChecklistBlueprint(models.Model):
     slug = models.CharField(max_length=50, db_index=True, unique=True)
     multiple = models.BooleanField(default=False)
     reviewer_is_anonymous = models.BooleanField(default=False)
-    allow_pdf_download = models.BooleanField(default=False)
 
     def __str__(self):
         return _(self.name)
