@@ -20,45 +20,49 @@
 {% block headertitle %}{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_overview" class="nav nav-tabs mb-3 tab_headers collapse">
-        <li class="nav-item">
-            <a class="nav-link" href="#status_tab">{% trans "Status" %}</a>
-        </li>
-        {% if user.profile.is_internal %}
+    <div class="collapse" id="tabs_overview">
+        <ul class="nav nav-tabs mb-3 tab_headers">
             <li class="nav-item">
-                <a class="nav-link" href="#open_tasks_tab">{% trans "Open Tasks" %}</a>
+                <a class="nav-link" href="#status_tab">{% trans "Status" %}</a>
+            </li>
+            {% if user.profile.is_internal %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#open_tasks_tab">{% trans "Open Tasks" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#tops_tab">{% trans "TOPs" %}</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="#submissions_tab">{% trans "Submissions" %}</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#tops_tab">{% trans "TOPs" %}</a>
+                <a class="nav-link" href="#notifications_tab">{% trans "Notifications" %}</a>
             </li>
-        {% endif %}
-        <li class="nav-item">
-            <a class="nav-link" href="#submissions_tab">{% trans "Submissions" %}</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#notifications_tab">{% trans "Notifications" %}</a>
-        </li>
-        {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
-            <li class="nav-item">
-                <a class="nav-link" href="#protocol_tab">{% trans 'Protocol' %}</a>
-            </li>
-        {% endif %}
-    </ul>
-    {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-        <ul id="tabs_planning" class="nav nav-tabs mb-3 tab_headers collapse">
-            <li class="nav-item">
-                <a class="nav-link" href="#experts_tab"{% if active == 'experts' %} class="active"{% endif %}>{% trans "Spezialistenzuordnung" %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#timetable_tab"{% if active == 'timetable' %} class="active"{% endif %}>{% trans "Timetable" %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#assistant_tab"{% if active == 'assistant' %} class="active"{% endif %}>{% trans "Sitzungsassistent" %}</a>
-            </li>
+            {% if user|is_member_of:'EC-Office' and meeting.ended and not meeting.protocol_sent_at %}
+                <li class="nav-item">
+                    <a class="nav-link" href="#protocol_tab">{% trans 'Protocol' %}</a>
+                </li>
+            {% endif %}
         </ul>
+    </div>
+    {% if user|is_member_of:"EC-Office" and not meeting.ended %}
+        <div class="collapse" id="tabs_planning">
+            <ul class="nav nav-tabs mb-3 tab_headers">
+                <li class="nav-item">
+                    <a class="nav-link" href="#experts_tab"{% if active == 'experts' %} class="active"{% endif %}>{% trans "Spezialistenzuordnung" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#timetable_tab"{% if active == 'timetable' %} class="active"{% endif %}>{% trans "Timetable" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#assistant_tab"{% if active == 'assistant' %} class="active"{% endif %}>{% trans "Sitzungsassistent" %}</a>
+                </li>
+            </ul>
+        </div>
     {% endif %}
 
-<div id="tabs">
+<div id="tabs" class="my-3">
     <div id="status_tab" class="collapse">
         {% include 'meetings/tabs/status.html' %}
     </div>
