@@ -15,7 +15,7 @@ ecs.Tab.prototype = {
     },
     setSelected: function(selected) {
         this.toggleClass('active', selected);
-        this.panel.toggleClass('in', selected);
+        this.panel.toggleClass('show', selected);
         this.group.selectedTab = this;
 
         if (selected) {
@@ -55,7 +55,7 @@ ecs.TabGroup = function(controller, header, container, tabs) {
 ecs.TabGroup.prototype = {
     setSelected: function(selected) {
         this.header.toggleClass('active', selected);
-        this.container.toggleClass('in', selected);
+        this.container.toggleClass('show', selected);
         if (selected && this.selectedTab)
             window.location.hash = this.selectedTab.header.attr('href');
     }
