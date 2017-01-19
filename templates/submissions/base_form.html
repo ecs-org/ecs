@@ -13,15 +13,17 @@
 
 {% block content %}
     {% block tab_headers %}
-        <ul id="tabs_submission" class="nav nav-tabs tab_headers collapse mb-3">
-            {% for tab, fieldsets in tabs %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
-                </li>
-            {% endfor %}
-            {% block submission_action_buttons %}
-            {% endblock %}
-        </ul>
+        <div id="tabs_submission" class="collapse">
+            <ul class="nav nav-tabs tab_headers mb-3">
+                {% for tab, fieldsets in tabs %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
+                    </li>
+                {% endfor %}
+                {% block submission_action_buttons %}
+                {% endblock %}
+            </ul>
+        </div>
     {% endblock %}
 
       <div class="form_main{% if readonly %} readonly{% endif %}">
