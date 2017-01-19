@@ -171,7 +171,7 @@
             {% endfor %}
         </ul>
         {% if stashed_notifications %}
-            <h3>Nicht eingereichte Meldungen</h3>
+            <h3 class="mt-1">Nicht eingereichte Meldungen</h3>
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
         {% if submission.presenter == user or submission.susar_presenter == user %}
