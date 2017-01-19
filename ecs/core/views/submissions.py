@@ -274,11 +274,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
     
     stashed_notifications = []
     for d in DocStash.objects.filter(owner=request.user, group='ecs.notifications.views.create_notification'):
-        try:
-            if str(submission_form.pk) in d.value['form'].data['submission_forms']:
-                stashed_notifications.append(d)
-        except KeyError:
-            pass
+        if not d.POST:
+            continue
+
+        submission_form_pks = d.POST.getlist('submission_forms',
+            d.POST.getlist('submission_form', []))
+        if any(str(sf.pk) in submission_form_pks for sf in submission_forms):
+            stashed_notifications.append(d)
 
     context = {
         'form': form,
