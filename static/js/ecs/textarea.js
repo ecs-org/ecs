@@ -31,7 +31,8 @@ ecs.textarea.TextArea = function(textarea, items, options) {
 ecs.textarea.TextArea.prototype = {
     updateHeight: function() {
         var top = $(document).scrollTop();
-        this.textarea.height(0).height(this.textarea.prop('scrollHeight'));
+        var padding = this.textarea.innerHeight() - this.textarea.height();
+        this.textarea.height(0).height(this.textarea.prop('scrollHeight') - padding);
         $(document).scrollTop(top);
     },
     installToolbarItem: function(item) {
