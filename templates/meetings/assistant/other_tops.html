@@ -116,6 +116,16 @@
             </ul>
         {% endif %}
 
-        <input class="btn btn-primary" type="submit" value="{% trans "Approve" %}" />
+        <button id="other_tops_save_button" class="btn btn-primary" type="submit">
+            {% trans "Approve" %}
+        </button>
     </form>
+
+    <script type="text/javascript">
+        $('#other_tops_save_button').click(function(ev) {
+            var btn = $(this);
+            btn.html('<span class="fa fa-spinner fa-spin"></span>');
+            btn.prop('disabled', true);
+        });
+    </script>
 {% endblock %}
