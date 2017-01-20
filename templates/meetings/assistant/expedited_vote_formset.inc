@@ -14,16 +14,14 @@
                 {% sudo %}
                 {% with submission.paper_submission_review_task as task %}
                 {% if task and not task.closed_at %}
-                <div class="reviews">
-                    <ul>
-                        <li class="negative complete">
+                    <div class="alert alert-danger">
+                        <strong>
                             {{ task.task_type }}
-                            {% if task.assigned_to %}
-                                ({{ task.assigned_to }})
-                            {% endif %}
-                        </li>
-                    </ul>
-                </div>
+                        </strong>
+                        {% if task.assigned_to %}
+                            ({{ task.assigned_to }})
+                        {% endif %}
+                    </div>
                 {% endif %}
                 {% endwith %}
                 {% endsudo %}

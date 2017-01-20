@@ -276,7 +276,7 @@
             }
         }
 
-        .reviews, .column_main form {
+        .column_main form {
             display: inline-block;
         }
         .column_main form {
@@ -299,69 +299,6 @@
 #meeting_assistant .navigation a.btn {
     padding: 3px;
     font-size: 10px;
-}
-
-#meeting_assistant .reviews {
-    a:hover {
-        text-decoration: none;
-    }
-
-    a.textblock {
-        display: block;
-        clear: both;
-        font-size: 12px;
-        padding: 2px 4px;
-        margin-top: 2px;
-        background: #efefef;
-        border-radius: 3px;
-    }
-
-    ul {
-        margin: 5px !important;
-
-        li {
-            display: block;
-            padding: 3px;
-            margin-bottom: 5px;
-            border-radius: 3px;
-            font-weight: bolder;
-
-            &.absent {
-                background: #ededed;
-                border: 1px solid $grey-80;
-            }
-
-            &.positive {
-                background: #CDFC97;
-                border: 1px solid #8bf82b;
-                color: #253D0A;
-
-                &.comments {
-                    background: #E3FFC4;
-                    border: 1px solid #8bf82b;
-                    color: #253D0A;
-                }
-            }
-
-            &.negative {
-                background: #FCBBB5;
-                border: 1px solid red;
-                color: #3F0000;
-
-                &.comments {
-                    background: #F9D4C7;
-                    border: 1px solid #df430d;
-                    color: #3F0000;
-                }
-            }
-
-            &.incomplete {
-                background: #ededed;
-                border: 1px solid $grey-80;
-                color: $black;
-            }
-        }
-    }
 }
 
 #meeting_comments_form {
