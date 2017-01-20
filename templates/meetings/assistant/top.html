@@ -61,26 +61,32 @@
 {% endblock %}
 
 {% block meeting_assistant_navigation %}
-    {% if top.next_open %}
-        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">
-            Nächstes offenes TOP ({{ top.next_open }})
-        </a>
-    {% endif %}
+    <div class="btn-group-vertical btn-block">
     {% if top.previous_open %}
-        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">
+        <a class="btn btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous_open.pk %}">
             Vorheriges offenes TOP ({{ top.previous_open }})
         </a>
     {% endif %}
-    {% if top.next %}
-        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">
-            Nächstes TOP ({{ top.next }})
+    {% if top.next_open %}
+        <a class="btn btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next_open.pk %}">
+            Nächstes offenes TOP ({{ top.next_open }})
         </a>
     {% endif %}
+    </div>
+
+    <div class="btn-group-vertical btn-block">
     {% if top.previous %}
-        <a class="btn btn-block btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">
+        <a class="btn btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.previous.pk %}">
             Vorheriges TOP ({{ top.previous }})
         </a>
     {% endif %}
+    {% if top.next %}
+        <a class="btn btn-secondary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.next.pk %}">
+            Nächstes TOP ({{ top.next }})
+        </a>
+    {% endif %}
+    </div>
+
     {{ block.super }}
 {% endblock %}
 
