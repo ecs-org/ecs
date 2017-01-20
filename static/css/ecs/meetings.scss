@@ -216,7 +216,7 @@
 
     #meeting_assistant_body {
         position: relative;
-        display: table-row;
+        display: flex;
         float: left;
         width: 71%;
         padding: 5px;
@@ -254,19 +254,13 @@
         }
 
         .column {
-            display: table-cell;
-            margin-top: 10px;
-            vertical-align: top;
             max-width: 250px;
             min-width: 140px;
         }
 
         .column_main {
-            display: table-cell;
             min-width: 350px;
-            max-width: 500px;
-            padding-right: 5px;
-            border-right: 1px solid $grey-80;
+            flex-grow: 1;
 
             .ecs-TextAreaToolbar {
                 margin-left: 20px;
@@ -275,20 +269,7 @@
                 left: 20px;
             }
         }
-
-        .column_main form {
-            display: inline-block;
-        }
-        .column_main form {
-            padding: 5px;
-        }
     }
-}
-
-#meeting_assistant_form textarea {
-    border: 1px solid #ddd;
-    width: 90%;
-    margin: 0 0 10px 10px;
 }
 
 #content .meeting_assistant_block {
