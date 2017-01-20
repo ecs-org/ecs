@@ -563,56 +563,74 @@ def meeting_assistant_comments(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def meeting_assistant_other_tops(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
+
+    def _prefetch_entries(entries):
+        return entries.select_related(
+            'submission', 'submission__current_submission_form',
+            'submission__current_pending_vote',
+        ).only(
+            'meeting_id',
+            'submission__ec_number',
+            'submission__current_submission_form__project_title',
+            'submission__current_submission_form__german_project_title',
+            'submission__current_pending_vote__result',
+            'submission__current_pending_vote__text',
+        ).order_by('submission__ec_number')
+
+    def _prefetch_amendments(amendments):
+        return amendments.select_related(
+            'new_submission_form', 'new_submission_form__submission',
+        ).only(
+            'meeting_id',
+            'new_submission_form__submission__ec_number',
+            'new_submission_form__project_title',
+            'new_submission_form__german_project_title',
+        ).prefetch_related(
+            Prefetch('answer', queryset=
+                NotificationAnswer.objects
+                    .only('notification_id', 'is_rejected', 'text')
+            ),
+        ).order_by('submission_forms__submission__ec_number')
+
     thesis_vote_formset = ExpeditedVoteFormSet(request.POST or None,
-        queryset=meeting.retrospective_thesis_entries, prefix='thesis')
+        queryset=_prefetch_entries(meeting.retrospective_thesis_entries),
+        prefix='thesis')
     expedited_vote_formset = ExpeditedVoteFormSet(request.POST or None,
-        queryset=meeting.expedited_entries, prefix='expedited')
+        queryset=_prefetch_entries(meeting.expedited_entries),
+        prefix='expedited')
     localec_vote_formset = ExpeditedVoteFormSet(request.POST or None,
-        queryset=meeting.localec_entries, prefix='localec')
+        queryset=_prefetch_entries(meeting.localec_entries), prefix='localec')
     amendment_vote_formset = AmendmentVoteFormSet(request.POST or None,
-        queryset=meeting.amendments.filter(
+        queryset=_prefetch_amendments(meeting.amendments.filter(
             answer__is_valid=False
-        ).order_by('submission_forms__submission__ec_number'),
-        prefix='amendment')
+        )), prefix='amendment')
 
     if request.method == 'POST':
-        if thesis_vote_formset.is_valid():
-            thesis_vote_formset.save()
-            thesis_vote_formset = ExpeditedVoteFormSet(None,
-                queryset=meeting.retrospective_thesis_entries, prefix='thesis')
-        if expedited_vote_formset.is_valid():
-            expedited_vote_formset.save()
-            expedited_vote_formset = ExpeditedVoteFormSet(None,
-                queryset=meeting.expedited_entries, prefix='expedited')
-        if localec_vote_formset.is_valid():
-            localec_vote_formset.save()
-            localec_vote_formset = ExpeditedVoteFormSet(None,
-                queryset=meeting.localec_entries, prefix='localec')
-        if amendment_vote_formset.is_valid():
-            amendment_vote_formset.save()
-            amendment_vote_formset = AmendmentVoteFormSet(None,
-                queryset=meeting.amendments.filter(
-                    answer__is_valid=False
-                ).order_by('submission_forms__submission__ec_number'),
-                prefix='amendment')
+        thesis_vote_formset.save()
+        expedited_vote_formset.save()
+        localec_vote_formset.save()
+        amendment_vote_formset.save()
+
+        return redirect('ecs.meetings.views.meeting_assistant_other_tops',
+            meeting_pk=meeting_pk)
 
     return render(request, 'meetings/assistant/other_tops.html', {
         'retrospective_thesis_entries':
-            meeting.retrospective_thesis_entries.filter(
+            _prefetch_entries(meeting.retrospective_thesis_entries.filter(
                 vote__isnull=False, vote__is_draft=False
-            ).order_by('submission__ec_number'),
+            )),
         'expedited_entries':
-            meeting.expedited_entries.filter(
+            _prefetch_entries(meeting.expedited_entries.filter(
                 vote__isnull=False, vote__is_draft=False
-            ).order_by('submission__ec_number'),
+            )),
         'localec_entries':
-            meeting.localec_entries.filter(
+            _prefetch_entries(meeting.localec_entries.filter(
                 vote__isnull=False, vote__is_draft=False
-            ).order_by('submission__ec_number'),
+            )),
         'amendment_entries':
-            meeting.amendments.filter(
+            _prefetch_amendments(meeting.amendments.filter(
                 answer__is_valid=True
-            ).order_by('submission_forms__submission__ec_number'),
+            )),
         'meeting': meeting,
         'last_top': meeting.active_top,
         'thesis_vote_formset': thesis_vote_formset,

@@ -4,6 +4,7 @@
 {% block meeting_assistant_body %}
     <form action="{% url 'ecs.meetings.views.meeting_assistant_other_tops' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
+
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
         {% if retrospective_thesis_entries %}
           <div class="inline_element odd">
@@ -74,9 +75,9 @@
                 <ul>
                     {% for entry in amendment_entries %}
                         <li {% if entry.answer.is_rejected %}class="text-danger"{% endif %}>
-                            {% with submission=entry.get_submission %}
-                                {{ submission.get_ec_number_display }}
-                                {{ submission.project_title_display }}
+                            {% with sf=entry.new_submission_form %}
+                                {{ sf.submission.get_ec_number_display }}
+                                {{ sf.german_project_title|default:sf.project_title }}
                             {% endwith %}
                         </li>
                     {% endfor %}
@@ -96,10 +97,10 @@
                             {{ form.accept_prepared_answer }}
                         </td>
                         <td>
-                            {% with submission=form.instance.get_submission %}
-                                {{ submission.get_ec_number_display }}
-                                {{ submission.project_title_display }}
-                            {% endwith %}<br>
+                            {% with sf=form.instance.new_submission_form %}
+                                {{ sf.submission.get_ec_number_display }}
+                                {{ sf.german_project_title|default:sf.project_title }}
+                            {% endwith %}
                             {% with answer=form.instance.answer %}
                                 {% trans 'Reject' %}: {{ answer.is_rejected|yesno }}
                                 {% if answer.text %}
