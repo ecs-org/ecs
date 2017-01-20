@@ -5,113 +5,116 @@
     <form action="{% url 'ecs.meetings.views.meeting_assistant_other_tops' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
 
+        {{ thesis_vote_formset.management_form }}
+        {{ expedited_vote_formset.management_form }}
+        {{ localec_vote_formset.management_form }}
+        {{ amendment_vote_formset.management_form }}
+
         <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
+
         {% if retrospective_thesis_entries %}
-          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
-            <ul>
+            <ul class="list-group mb-1">
             {% for entry in retrospective_thesis_entries %}
-                <li>
+                <li class="list-group-item">
                     {{ entry.submission|ec_number }}
                     {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>
-          </div>
         {% endif %}
-        <div class="inline_element even">
-        <h4>{% trans "Not Approved" %}</h4>
+
+        {% if thesis_vote_formset|length %}
+            <h4>{% trans "Not Approved" %}</h4>
             {% with thesis_vote_formset as formset %}
                 {% include 'meetings/assistant/expedited_vote_formset.inc' %}
             {% endwith %}
-        </div>
+        {% endif %}
 
         <h3>{% trans "Expedited Submissions" %}</h3>
+
         {% if expedited_entries %}
-          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
-            <ul>
+            <ul class="list-group mb-1">
             {% for entry in expedited_entries %}
-                <li>
+                <li class="list-group-item">
                     {{ entry.submission|ec_number }}
                     {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>
-          </div>
         {% endif %}
-        <div class="inline_element even">
-        <h4>{% trans "Not Approved" %}</h4>
+
+        {% if expedited_vote_formset|length %}
+            <h4>{% trans "Not Approved" %}</h4>
             {% with expedited_vote_formset as formset %}
                 {% include 'meetings/assistant/expedited_vote_formset.inc' %}
             {% endwith %}
-        </div>
+        {% endif %}
+
 
         <h3>{% trans "Local-EC Submissions" %}</h3>
+
         {% if localec_entries %}
-          <div class="inline_element odd">
             <h4>{% trans "Approved" %}</h4>
-            <ul>
+            <ul class="list-group mb-1">
             {% for entry in localec_entries %}
-                <li>
+                <li class="list-group-item">
                     {{ entry.submission|ec_number }}
                     {{ entry.submission.project_title_display }}
                 </li>
             {% endfor %}
             </ul>
-          </div>
         {% endif %}
-        <div class="inline_element even">
-        <h4>{% trans "Not Approved" %}</h4>
+
+        {% if localec_vote_formset|length %}
+            <h4>{% trans "Not Approved" %}</h4>
             {% with localec_vote_formset as formset %}
                 {% include 'meetings/assistant/expedited_vote_formset.inc' %}
             {% endwith %}
-        </div>
+        {% endif %}
+
 
         <h3>{% trans 'Amendments' %}</h3>
+
         {% if amendment_entries %}
-            <div class="inline_element odd">
-                <h4>{% trans "Approved" %}</h4>
-                <ul>
-                    {% for entry in amendment_entries %}
-                        <li {% if entry.answer.is_rejected %}class="text-danger"{% endif %}>
-                            {% with sf=entry.new_submission_form %}
-                                {{ sf.submission.get_ec_number_display }}
-                                {{ sf.german_project_title|default:sf.project_title }}
-                            {% endwith %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        <div class="inline_element even">
-            <h4>{% trans "Not Approved" %}</h4>
-            {{ amendment_vote_formset.management_form }}
-            <table>
-                {% for form in amendment_vote_formset.forms %}
-                    <tr {% if form.instance.answer.is_rejected %}class="text-danger"{% endif %}>
-                        <td>
-                            {% for hidden in form.hidden_fields %}
-                                {{ hidden }}
-                            {% endfor %}
-                            {{ form.accept_prepared_answer }}
-                        </td>
-                        <td>
-                            {% with sf=form.instance.new_submission_form %}
-                                {{ sf.submission.get_ec_number_display }}
-                                {{ sf.german_project_title|default:sf.project_title }}
-                            {% endwith %}
-                            {% with answer=form.instance.answer %}
-                                {% trans 'Reject' %}: {{ answer.is_rejected|yesno }}
-                                {% if answer.text %}
-                                    <p>{{ answer.text|linebreaksbr }}</p>
-                                {% endif %}
-                            {% endwith %}
-                        </td>
-                    </tr>
+            <h4>{% trans "Approved" %}</h4>
+            <ul class="list-group mb-1">
+                {% for entry in amendment_entries %}
+                    <li class="list-group-item {% if entry.answer.is_rejected %}text-danger{% endif %}">
+                        {% with sf=entry.new_submission_form %}
+                            {{ sf.submission.get_ec_number_display }}
+                            {{ sf.german_project_title|default:sf.project_title }}
+                        {% endwith %}
+                    </li>
                 {% endfor %}
-            </table>
-        </div>
+            </ul>
+        {% endif %}
+
+        {% if amendment_vote_formset|length %}
+            <h4>{% trans "Not Approved" %}</h4>
+            <ul class="list-group mb-1">
+                {% for form in amendment_vote_formset.forms %}
+                    <li class="list-group-item {% if form.instance.answer.is_rejected %}text-danger{% endif %}">
+                        {% for hidden in form.hidden_fields %}
+                            {{ hidden }}
+                        {% endfor %}
+                        {{ form.accept_prepared_answer }}
+
+                        {% with sf=form.instance.new_submission_form %}
+                            {{ sf.submission.get_ec_number_display }}
+                            {{ sf.german_project_title|default:sf.project_title }}
+                        {% endwith %}
+                        {% with answer=form.instance.answer %}
+                            {% trans 'Reject' %}: {{ answer.is_rejected|yesno }}
+                            {% if answer.text %}
+                                <p>{{ answer.text|linebreaksbr }}</p>
+                            {% endif %}
+                        {% endwith %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <input class="btn btn-primary" type="submit" value="{% trans "Approve" %}" />
     </form>

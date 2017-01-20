@@ -1,12 +1,14 @@
 {% load core i18n userutils %}
 
-{{ formset.management_form }}
-<table>
+<ul class="list-group mb-1">
 {% for form in formset.forms %}
-    <tr{% if not form.instance.submission.current_pending_vote %} class="text-danger"{% endif %}>
-        <td>{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}{{ form.accept_prepared_vote }}</td>
-        <td>
-            {% with form.instance.submission as submission %}
+    <li class="list-group-item {% if not form.instance.submission.current_pending_vote %}text-danger{% endif %}">
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {{ form.accept_prepared_vote }}
+
+        {% with submission=form.instance.submission %}
             {{ submission|ec_number }}: {{ submission.project_title_display }}<br>
             {% with submission.current_pending_vote as vote %}
             {% trans 'Prepared Vote' %}: {% if vote %}B{{ vote.result }}{% if vote.text %}<p>{{ vote.text|linebreaksbr }}</p>{% endif %}{% else %}<em>{% trans 'No vote!' %}</em>{% endif %}
@@ -25,8 +27,7 @@
                 {% endif %}
                 {% endwith %}
                 {% endsudo %}
-            {% endwith %}
-        </td>
-    </tr>
+        {% endwith %}
+    </li>
 {% endfor %}
-</table>
+</ul>

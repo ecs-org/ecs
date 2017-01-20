@@ -228,31 +228,6 @@
             margin-bottom: 5px;
         }
 
-        .inline_element {
-            display: block;
-            margin: 5px 10px;
-            padding: 5px;
-
-            ul {
-                margin: 0 0 0 5px;
-                li {
-                    padding: 2px 0;
-                }
-            }
-        }
-
-        .odd {
-            background: $beige;
-        }
-
-        .even {
-            background: $beige-dark;
-        }
-
-        input[type=submit] {
-            margin: 10px;
-        }
-
         .column {
             max-width: 250px;
             min-width: 140px;
@@ -276,15 +251,7 @@
 }
 
 #meeting_comments_form {
-    padding: 10px;
-
     textarea {
-        float: left;
         width: 400px;
-    }
-
-    input[type="submit"] {
-        float: left;
-        clear: both;
     }
 }
