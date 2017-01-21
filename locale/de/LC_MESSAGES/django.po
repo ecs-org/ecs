@@ -2518,7 +2518,7 @@ msgid "No vote!"
 msgstr "Kein Votum!"
 
 msgid "Retrospective Thesis Submissions"
-msgstr "Retrospektive Diplomarbeiten/Dissertationen"
+msgstr "Retrospektive Diplomarbeiten / Dissertationen"
 
 msgid "Approved"
 msgstr "Bestätigt"
@@ -2739,7 +2739,7 @@ msgstr "Geschlecht"
 
 #, fuzzy
 msgid "Retro. Thesis"
-msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
+msgstr "Letzter Einreichtermin für Diplomarbeiten / Dissertationen"
 
 #, fuzzy
 msgid "Dissertation"
