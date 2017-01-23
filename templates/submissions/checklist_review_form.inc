@@ -1,7 +1,7 @@
 {% load i18n widget_tweaks %}
 
 {% if not formset.readonly %}
-    <form action="{{ request.path }}" method="post" class="review bound_to_task">
+    <form action="{{ request.path }}" method="post" class="bound_to_task">
     {% csrf_token %}
     {{ formset.management_form }}
 {% endif %}

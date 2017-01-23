@@ -7,7 +7,7 @@
 {% endif %}
 
 {% if not review_form.readonly %}
-    <form action="{{ request.path }}" method="post" class="review bound_to_task">
+    <form action="{{ request.path }}" method="post" class="bound_to_task">
     {% csrf_token %}
 {% endif %}
 

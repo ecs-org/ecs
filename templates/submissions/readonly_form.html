@@ -352,32 +352,43 @@
             ecs.setupForms();
             ecs.setupWidgets();
 
-            $('form.review textarea:not([disabled])').each(function(){
-                new ecs.textarea.TextArea(this, [
-                    {% if user.profile.is_internal %}
-                        ecs.textarea.toolbarItems.boilerplate(
-                            "{% trans 'Insert Boilerplate' %}",
-                            "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
-                        )
-                    {% endif %}
-                ]);
+            $('#checklist_summary_tab textarea').each(function() {
+                new ecs.textarea.TextArea(this);
             });
 
             {% for checklist, formset in checklist_reviews %}
-                {% if not formset.readonly %}
-                    {% if user.profile.is_internal or checklist.last_edited_by == user %}
-                        {% for form in formset %}
+                {% for form in formset %}
+                    new ecs.textarea.TextArea('#{{ form.comment.id_for_label }}', [
+                        {% if user.profile.is_internal and not formset.readonly %}
+                            ecs.textarea.toolbarItems.boilerplate(
+                                "{% trans 'Insert Boilerplate' %}",
+                                "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                            )
+                        {% endif %}
+                    ]);
+                    {% if not formset.readonly %}
+                        {% if user.profile.is_internal or checklist.last_edited_by == user %}
                             ecs.textarea.installToolbarItem('#{{ form.comment.id_for_label }}',
                                 ecs.textarea.toolbarItems.versionHistory(
                                     "{% trans 'History' %}",
                                     "{% url 'ecs.core.views.fieldhistory.field_history' model_name='checklist_answer' pk=form.instance.pk %}"
                                 )
                             );
-                        {% endfor %}
+                        {% endif %}
                     {% endif %}
-                {% endif %}
+                {% endfor %}
             {% endfor %}
 
+            {% if vote_review_form %}
+                new ecs.textarea.TextArea('#{{ vote_review_form.text.id_for_label }}', [
+                    {% if user.profile.is_internal and not vote_review_form.readonly %}
+                        ecs.textarea.toolbarItems.boilerplate(
+                            "{% trans 'Insert Boilerplate' %}",
+                            "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                        )
+                    {% endif %}
+                ]);
+            {% endif %}
             {% if user.profile.is_internal and not vote_review_form.readonly and vote_review_form.instance.pk %}
                 ecs.textarea.installToolbarItem(
                     '#{{ vote_review_form.text.id_for_label }}',
