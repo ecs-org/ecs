@@ -46,14 +46,14 @@
                         <span class="text-danger">*</span>
                     {% endif %}
                 </span>
+            </label>
+            <div class="col-md-9">
+                {% render_field field class+="form-control" %}
                 {% if not readonly and field_info.help_text %}
                     <div class="text-muted">
                         {{ field_info.help_text }}
                     </div>
                 {% endif %}
-            </label>
-            <div class="col-md-9">
-                {% render_field field class+="form-control" %}
                 {% if field.errors and field.errors.0 != _('This field is required.') %}
                     <div class="alert alert-danger text-center">{{ field.errors }}</div>
                 {% endif %}
