@@ -7,6 +7,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 
 from ecs.documents.models import Document
 from ecs.documents.forms import DocumentForm
@@ -62,7 +63,7 @@ def handle_view(request, doc):
     if n:
         title_bits.insert(0, str(n))
     title = '{} (Version: {} vom {})'.format(' - '.join(title_bits),
-        doc.version, doc.date.strftime('%d.%m.%Y'))
+        doc.version, timezone.localtime(doc.date).strftime('%d.%m.%Y'))
 
     params = urlencode({
         'file': reverse(
