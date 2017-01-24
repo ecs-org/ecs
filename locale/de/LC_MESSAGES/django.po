@@ -2490,10 +2490,8 @@ msgstr ""
 msgid "Comments"
 msgstr "Kommentare"
 
-#, fuzzy
-#| msgid "Open TOPs"
 msgid "Other TOPs"
-msgstr "Offene TOPs"
+msgstr "Weitere TOPs"
 
 msgid "Do you want to start the meeting?"
 msgstr "Wollen Sie die Sitzung starten?"
