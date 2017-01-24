@@ -22,6 +22,7 @@
 {% endblock %}
 
 {% block htmlbody %}
+<div class="content-container">
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
         <button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarcontent">
             <span class="navbar-toggler-icon"></span>
@@ -198,7 +199,7 @@
             {% current_version %}
         </small>
     </div>
-        
+
     <div id="header" class="bg-faded p-3">
         <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
 
@@ -233,6 +234,10 @@
         {% block content %}
         {% endblock %}
     </div>
+
+</div>
+
+<div id="scratchpad"></div>
 {% endblock %}
 
 {% block jsbottom %}
@@ -265,30 +270,20 @@
 
             $(document).on('click', 'a.scratchpad', function(ev) {
                 ev.preventDefault();
+                var container = $('#scratchpad');
 
-                var modal = ecs.popup();
-                modal.find('.modal-content').load($(this).attr('href'), function() {
-                    var textarea = modal.find('textarea[name="text"]');
-                    var len = textarea.val().length;
-                    textarea.focus();
-                    textarea.get(0).setSelectionRange(len, len);
-                });
-
-                modal.on('hide.bs.modal', function() {
-                    var form = modal.find('form');
-                    if (form.length)
-                        $.post(form.attr('action'), form.serialize());
-                });
-
-                modal.on('click', 'a', function(ev) {
-                    ev.preventDefault();
-
-                    var form = modal.find('form');
+                if (container.is(':visible')) {
+                    var form = container.find('form');
                     if (form.length)
                         $.post(form.attr('action'), form.serialize());
 
-                    modal.find('.modal-content').load($(this).attr('href'));
-                });
+                    container.hide();
+                    container.html('');
+                    return;
+                }
+
+                container.css('display', 'flex');
+                container.load($(this).attr('href'));
             });
 
             $.fn.select2.defaults.set('placeholder', '\u2026');

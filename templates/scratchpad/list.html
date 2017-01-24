@@ -1,0 +1,52 @@
+{% load i18n core %}
+
+<div class="p-3 text-center">
+    <h3>{% trans "List of scratchpads" %}</h3>
+</div>
+
+<div class="list-group px-3">
+    {% for scratchpad in scratchpads %}
+        {% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk as url %}
+        <a class="list-group-item d-block" href="{{ url }}">
+            <h6 class="list-group-item-heading">
+                {% if scratchpad.submission %}
+                    {% blocktrans with ec_number=scratchpad.submission|ec_number trimmed %}
+                        Scratchpad for submission {{ ec_number }}
+                    {% endblocktrans %}
+                {% else %}
+                    {% trans "Global scratchpad" %}
+                {% endif %}
+            </h6>
+            <div class="list-group-item-text">
+                {% blocktrans with modified_at=scratchpad.modified_at|date:"d.m.Y, H:i" trimmed %}
+                    Last Change: {{ modified_at }}
+                {% endblocktrans %}
+            </div>
+        </a>
+    {% empty %}
+        <i>{% trans "No scratchpad" %}</i>
+    {% endfor %}
+</div>
+
+<div class="p-3">
+    <button class="btn btn-secondary btn-block">
+        {% trans "Close" %}
+    </button>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var container = $('#scratchpad');
+
+        container.find('button').click(function(ev) {
+            ev.preventDefault();
+            container.hide();
+            container.html('');
+        });
+
+        container.find('a').click(function(ev) {
+            ev.preventDefault();
+            container.load($(this).attr('href'));
+        });
+    })();
+</script>

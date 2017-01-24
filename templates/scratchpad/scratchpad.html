@@ -1,0 +1,80 @@
+{% load i18n core widget_tweaks %}
+
+<div class="p-3 text-center">
+    {% url 'ecs.scratchpad.views.popup_list' as list_url %}
+    <a class="btn btn-secondary float-right" href="{{ list_url }}" title="{% trans "Show all my scratchpads" %}">
+        <span class="fa fa-exchange"></span>
+    </a>
+
+    <h3>
+        {% if submission %}
+            {% blocktrans with ec_number=submission|ec_number trimmed %}
+                Scratchpad for submission {{ ec_number }}
+            {% endblocktrans %}
+        {% else %}
+            {% trans "Global scratchpad" %}
+        {% endif %}
+    </h3>
+
+    <div class="text-muted">
+        {% blocktrans with modified_at=scratchpad.modified_at|date:"d.m.Y, H:i" trimmed %}
+            Last Change: {{ modified_at }}
+        {% endblocktrans %}
+    </div>
+</div>
+
+{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk as url %}
+<form class="px-3" action="{{ url }}{% if submission %}?submission={{ submission.pk }}{% endif %}" method="post">
+    {% csrf_token %}
+    {% render_field form.text class+='form-control' rows=1 %}
+</form>
+
+<div class="p-3">
+    <button class="btn btn-primary btn-block">{% trans "Save and close" %}</button>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var container = $('#scratchpad');
+
+        container.find('button').click(function(ev) {
+            ev.preventDefault();
+            var button = $(this);
+            var form = container.find('form');
+
+            button.html('<span class="fa fa-spinner fa-spin"></span>');
+
+            $.post(form.attr('action'), form.serialize(), function() {
+                container.hide();
+                container.html('');
+            });
+        });
+
+        container.find('a').click(function(ev) {
+            ev.preventDefault();
+            var link = $(this);
+            var form = container.find('form');
+
+            link.html('<span class="fa fa-spinner fa-spin"></span>');
+
+            $.post(form.attr('action'), form.serialize(), function() {
+                container.load(link.attr('href'));
+            });
+        });
+
+        var textarea = $('#{{ form.text.id_for_label }}');
+
+        {% if user.profile.is_internal %}
+            new ecs.textarea.TextArea(textarea, [
+                ecs.textarea.toolbarItems.boilerplate(
+                    "{{ _('Insert Boilerplate')|escapejs }}",
+                    "{% url 'ecs.boilerplate.views.select_boilerplate' %}"
+                )
+            ], {update_height: false});
+        {% endif %}
+
+        var len = textarea.val().length;
+        textarea.focus();
+        textarea.get(0).setSelectionRange(len, len);
+    })();
+</script>
