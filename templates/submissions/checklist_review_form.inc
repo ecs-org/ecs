@@ -9,10 +9,12 @@
 {% for form in formset %}
     <div class="row">
         <label class="col-12" for="{{ form.answer.id_for_label }}">
-            {{ form.answer.label }}
-            {% if form.instance.question.requires_comment %}
-                <span class="text-danger">*</span>
-            {% endif %}
+            {% spaceless %}
+                <span>{{ form.answer.label }}</span>
+                {% if form.instance.question.requires_comment %}
+                    <span class="text-danger">&nbsp;*</span>
+                {% endif %}
+            {% endspaceless %}
         </label>
 
         <div class="form-group col-sm-2 col-lg-1">

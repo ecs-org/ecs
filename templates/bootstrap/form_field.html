@@ -34,24 +34,19 @@
             </div>
         {% else %}
             <label {% if inline %}class="col-md-2 col-form-label overflow-wrap-break-word"{% endif %} for="{{ field.id_for_label }}">
-                {% if paper_info %}
-                    {{ field_info.label|default:field.label }}
-                    {% if field_info.number %}
-                        <small class="text-muted">
-                            [{{ field_info.number }}]
-                        </small>
+                {% spaceless %}
+                    {% if paper_info %}
+                        <span>{{ field_info.label|default:field.label }}</span>
+                        {% if field_info.number %}
+                            <small class="text-muted">&nbsp;[{{ field_info.number }}]</small>
+                        {% endif %}
+                    {% else %}
+                        <span>{{ field.label }}</span>
                     {% endif %}
-                {% else %}
-                    {{ field.label }}
-                {% endif %}
-                {% if field.field.required %}
-                    <span class="text-danger">*</span>
-                {% endif %}
-                {% if paper_info and field_info.help_text %}
-                    <div class="text-muted">
-                        {{ field_info.help_text }}
-                    </div>
-                {% endif %}
+                    {% if field.field.required %}
+                        <span class="text-danger">&nbsp;*</span>
+                    {% endif %}
+                {% endspaceless %}
             </label>
             <div {% if inline %}class="col-md-10"{% endif %}>
                 {% if field.field|type_name == "DateTimeField" %}
@@ -64,6 +59,11 @@
                     </div>
                 {% else %}
                     {% render_field field class+="form-control" error_class="form-control-danger" %}
+                {% endif %}
+                {% if paper_info and field_info.help_text %}
+                    <div class="form-text text-muted">
+                        {{ field_info.help_text }}
+                    </div>
                 {% endif %}
             </div>
         {% endif %}

@@ -34,18 +34,18 @@
     {% else %}
         <li class="form-group row {{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-danger {% endif %}">
             <label class="col-md-3 col-form-label" for="{{ field.id_for_label }}">
-                {% if readonly and field_info.help_text %}
-                    <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
-                {% endif %}
-                <span>
-                {{ field_info.label|default:field.label }}
+                {% spaceless %}
+                    {% if readonly and field_info.help_text %}
+                        <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>&nbsp;
+                    {% endif %}
+                    <span>{{ field_info.label|default:field.label }}</span>
                     {% if field_info.number %}
-                        <small class="text-muted">[{{ field_info.number }}]</small>
+                        <small class="text-muted">&nbsp;[{{ field_info.number }}]</small>
                     {% endif %}
                     {% if field.field.required %}
-                        <span class="text-danger">*</span>
+                        <span class="text-danger">&nbsp;*</span>
                     {% endif %}
-                </span>
+                {% endspaceless %}
             </label>
             <div class="col-md-9">
                 {% render_field field class+="form-control" %}

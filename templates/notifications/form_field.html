@@ -26,20 +26,18 @@
             </div>
         {% else %}
             <label class="col-md-3 col-form-label overflow-wrap-break-word" for="{{ field.id_for_label }}">
-                {{ field_info.label|default:field.label }}
-                {% if field_info.number %}
-                    <small class="text-muted">
-                        [{{ field_info.number }}]
-                    </small>
-                {% endif %}
-                {% if field.field.required %}
-                    <span class="text-danger">*</span>
-                {% endif %}
-                {% if field_info.help_text %}
-                    <div class="text-muted">
-                        {{ field_info.help_text }}
-                    </div>
-                {% endif %}
+                {% spaceless %}
+                    <span>{{ field_info.label|default:field.label }}</span>
+                    {% if field_info.number %}
+                        <small class="text-muted">&nbsp;[{{ field_info.number }}]</small>
+                    {% endif %}
+                    {% if field.field.required %}
+                        <span class="text-danger">&nbsp;*</span>
+                    {% endif %}
+                    {% if field_info.help_text %}
+                        <div class="text-muted">{{ field_info.help_text }}</div>
+                    {% endif %}
+                {% endspaceless %}
             </label>
             <div class="col-md-9">
                 {% if field.field|type_name == "DateTimeField" %}
