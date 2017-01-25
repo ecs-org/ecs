@@ -5,11 +5,11 @@
 
 {% with profile_user.profile as profile %}
 <div class="container">
-    <h2>{{ profile_user }}
-    <a class="ml-3 btn btn-primary btn-sm" href="{% url 'ecs.users.views.edit_profile' %}">{% trans "Edit Profile" %}</a>
-    <a class="btn btn-primary btn-sm" href="{% url 'ecs.users.views.change_password' %}">{% trans "Change Password" %}</a>
-    </h2>
-    
+    <h2>{{ profile_user }}</h2>
+    <div class="mb-3">
+        <a class="btn btn-primary" href="{% url 'ecs.users.views.edit_profile' %}">{% trans "Edit Profile" %}</a>
+        <a class="btn btn-primary" href="{% url 'ecs.users.views.change_password' %}">{% trans "Change Password" %}</a>
+    </div>
     {% include "users/base_profile.inc" %}
 </div>
 {% endwith %}
