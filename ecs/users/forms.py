@@ -157,6 +157,15 @@ class AdministrationFilterForm(forms.Form):
     keyword = forms.CharField(required=False, label=_('Name/Email'))
     page = forms.CharField(required=False, widget=forms.HiddenInput())
 
+    def __init__(self, data=None):
+        super().__init__(data=data)
+
+        self.fields['task_types'].choices = sorted([
+            (tt.pk, '{} | {}'.format(tt.group.name, tt.trans_name))
+            for tt in self.fields['task_types'].queryset
+        ], key=lambda x: x[1])
+
+
 class UserDetailsForm(forms.ModelForm):
     gender = forms.ChoiceField(choices=UserProfile._meta.get_field('gender').choices, label=_('gender'))
     title = forms.CharField(max_length=UserProfile._meta.get_field('title').max_length, required=False, label=_('title'))
