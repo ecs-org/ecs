@@ -1,5 +1,5 @@
 import math
-import random
+from random import SystemRandom
 import string
 
 from django.conf import settings
@@ -43,7 +43,9 @@ class Certificate(models.Model):
         passphrase_len = math.ceil(
             PASSPHRASE_ENTROPY / math.log2(len(PASSPHRASE_CHARS)))
         passphrase = ''.join(
-            random.choice(PASSPHRASE_CHARS) for i in range(passphrase_len))
+            SystemRandom().choice(PASSPHRASE_CHARS)
+            for i in range(passphrase_len)
+        )
 
         from ecs.pki import openssl
         data = openssl.make_cert(subject, pkcs12, passphrase=passphrase,
