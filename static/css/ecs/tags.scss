@@ -11,3 +11,9 @@
         color: inherit !important;
     }
 }
+
+/* Color field for new tags was too small */
+
+input#id_color {
+    height: 2rem;
+}
