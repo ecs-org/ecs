@@ -1,8 +1,8 @@
 {% load humanize core communication i18n %}
 
 {% for thread in threads %}
-<div class="communication_thread">
-    <h3>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h3>
+<div class="communication_thread my-3">
+    <h4>{{ thread.subject }} ({{ thread.sender }} &lt;-&gt; {{ thread.receiver }})</h4>
 
     {% for message in thread.message_list %}
         <div class="card mb-2 message">
@@ -31,7 +31,7 @@
 </div>
 {% endfor %}
 
-<div>
+<div class="mb-3">
     <span class="fa fa-info text-info"></span>
     {% if show_system_messages %}
         {% trans 'System messages are shown.' %}
