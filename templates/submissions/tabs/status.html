@@ -25,17 +25,26 @@
                 </tr>
             </thead>
             <tbody>
-                {% if current_docstash_key %}
+                {% if current_docstash %}
                     <tr>
                         <td>{{ submission_forms|length|add:1 }}</td>
                         <td colspan="4" class="text-center">
                             <i>{% trans "This form has not been submitted yet." %}</i>
+                            <div class="text-muted">
+                                {% blocktrans with modified_at=current_docstash.modtime|date:'d.m.Y, H:i' trimmed %}
+                                    Last Change: {{ modified_at }}
+                                {% endblocktrans %}
+                            </div>
                         </td>
                         <td>
                             {% if submission_form|allows_edits_by:user %}
-                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=current_docstash_key %}">
+                                <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=current_docstash.key %}">
                                     <span class="fa fa-pencil"></span>
                                     {% trans 'Edit' %}
+                                </a><br>
+                                <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=current_docstash.key %}?next={{ request.path|urlencode }}">
+                                    <span class="fa fa-trash-o"></span>
+                                    {% trans 'Delete Changes' %}
                                 </a>
                             {% endif %}
                         </td>

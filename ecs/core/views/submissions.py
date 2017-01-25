@@ -266,12 +266,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         .order_by('-timestamp'))
     votes = submission.votes
 
-    current_docstash_key = DocStash.objects.filter(
+    current_docstash = DocStash.objects.filter(
         group='ecs.core.views.submissions.create_submission_form',
         owner=request.user,
         content_type=ContentType.objects.get_for_model(Submission),
         object_id=submission.id,
-    ).values_list('key', flat=True).first()
+    ).only('key', 'owner', 'modtime').first()
     
     stashed_notifications = []
     for d in DocStash.objects.filter(owner=request.user, group='ecs.notifications.views.create_notification'):
@@ -305,7 +305,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'external_review_checklists': external_review_checklists,
         'temporary_auth': submission.temp_auth.order_by('end'),
         'temporary_auth_form': TemporaryAuthorizationForm(prefix='temp_auth'),
-        'current_docstash_key': current_docstash_key,
+        'current_docstash': current_docstash,
     }
 
     center_close_notifications = CenterCloseNotification.objects.filter(

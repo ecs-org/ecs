@@ -432,6 +432,19 @@
             }).hover(function(ev) {
                 $(this).toggleClass('table-active', ev.type == 'mouseenter');
             });
+
+	    $('a.delete_docstash').click(function(ev) {
+		ev.preventDefault();
+		var href = $(this).attr('href');
+		ecs.confirm({
+		    question: '{% trans 'Do you want to delete the submission draft?' %}',
+                    ok: '{{ _("Delete")|escapejs }}',
+                    cancel: '{{ _("Don't Delete")|escapejs }}',
+		    success: function() {
+			window.location.href = href;
+		    }
+		});
+	    });
         });
     </script>
 {% endblock %}
