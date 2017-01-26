@@ -1,7 +1,7 @@
 {% load i18n %}
 
 {% for comment in comments %}
-    <div class="card comment">
+    <div class="card mb-2 comment">
         <div class="card-header">
             {{ comment.author }} {% trans 'on the' %}
             {{ comment.timestamp|date:'d.m.Y H:i' }}
@@ -30,7 +30,7 @@
     </div>
 {% endfor %}
 
-<div class="card hidden-xs-up new-comment-form">
+<div class="card mb-2 hidden-xs-up new-comment-form">
     <div class="card-block text-center">
         <span class="fa fa-2x fa-spinner fa-spin"></span>
     </div>

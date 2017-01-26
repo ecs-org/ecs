@@ -1,6 +1,6 @@
 {% load i18n tasks %}
 
-<div class="card">
+<div class="card mb-2">
     <div class="card-block">
         <h3 class="card-title mb-0">{% trans "My Tasks" %}</h3>
     </div>
@@ -33,7 +33,7 @@
 </div>
 
 {% if proxy_tasks %}
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-block">
             <h3 class="card-title mb-0">{% trans "Proxy Tasks" %}</h3>
         </div>
@@ -75,7 +75,7 @@
 {% if user.profile.can_have_open_tasks %}
     <div class="card-group">
 
-        <div class="card no-flex-grow">
+        <div class="card no-flex-grow mb-2">
             <div class="card-block">
                 <form id="{{ form_id }}" method="post">
                     {% csrf_token %}
@@ -185,7 +185,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-block">
                 <h3 class="card-titld mb-0">{% trans "Open Tasks" %}</h3>
             </div>

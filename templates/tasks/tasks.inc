@@ -1,7 +1,7 @@
 {% load i18n tasks %}
 
 <div class="dashboard_widget float-left {% if submission %}w-100{% else %}half{% endif %}">
-    <div class="card">
+    <div class="card mb-2">
         <div class="card-block">
             <h3 class="card-title mb-0">{% trans "My Tasks" %}</h3>
         </div>
@@ -34,7 +34,7 @@
     </div>
 
     {% if proxy_tasks %}
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-block">
                 <h3 class="card-title mb-0">{% trans "Proxy Tasks" %}</h3>
             </div>
@@ -79,7 +79,7 @@
         <div class="card-group">
 
             {% if not submission %}
-                <div class="card text-nowrap no-flex-grow">
+                <div class="card text-nowrap no-flex-grow mb-2">
                     <div class="card-block">
                         <form id="{{ form_id }}" action="{{ request.path }}" method="post" class="open-in-widget">
                             {% csrf_token %}
@@ -175,7 +175,7 @@
                 </div>
             {% endif %}
 
-            <div class="card">
+            <div class="card mb-2">
                 <div class="card-block">
                     <h3 class="card-title mb-0">{% trans "Open Tasks" %}</h3>
                 </div>
