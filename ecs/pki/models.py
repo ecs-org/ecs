@@ -38,7 +38,7 @@ class Certificate(models.Model):
         if not cn:
             cn = get_full_name(user)
         ec = EthicsCommission.objects.get(uuid=settings.ETHICS_COMMISSION_UUID)
-        subject = '/CN={}/O={}/emailAddress={}'.format(cn, ec.name, user.email)
+        subject = '/CN={}/O={}/emailAddress={}'.format(cn, ec.name[:64], user.email)
 
         passphrase_len = math.ceil(
             PASSPHRASE_ENTROPY / math.log2(len(PASSPHRASE_CHARS)))

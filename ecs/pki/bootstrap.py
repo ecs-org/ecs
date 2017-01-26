@@ -13,7 +13,7 @@ def setup_ca():
     print('creating dummy CA')
     if not CertificateAuthority.objects.exists():
         ec = EthicsCommission.objects.get(uuid=settings.ETHICS_COMMISSION_UUID)
-        subject = '/CN={}/O={}'.format(settings.DOMAIN, ec.name)
+        subject = '/CN={}/O={}'.format(settings.DOMAIN, ec.name[:64])
         openssl.setup(subject)
 
     if not os.path.exists(settings.ECS_CA_ROOT):
