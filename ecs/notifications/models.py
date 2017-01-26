@@ -123,7 +123,8 @@ class Notification(models.Model):
                 .distinct()
                 .values_list('submission__ec_number', flat=True)
         )
-        return '{}-{}{}'.format(slugify(ec_num), slugify(self.type.name), suffix)
+        base = '{}-{}'.format(slugify(ec_num), slugify(self.type.name))
+        return base[:(250 - len(suffix))] + suffix
 
     def render_pdf(self):
         tpl = self.type.get_template('notifications/pdf/%s.html')
@@ -138,7 +139,7 @@ class Notification(models.Model):
         assert self.pdf_document is None
         pdfdata = self.render_pdf()
         self.pdf_document = Document.objects.create_from_buffer(pdfdata,
-            doctype='notification', parent_object=self, name=str(self),
+            doctype='notification', parent_object=self, name=str(self)[:250],
             original_file_name=self.get_filename())
         self.save()
 
