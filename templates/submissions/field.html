@@ -18,13 +18,14 @@
                             {% if field.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
+                            {% if not readonly and field_info.help_text %}
+                                <br>
+                                <span class="pl-3 text-muted">
+                                    {{ field_info.help_text }}
+                                </span>
+                            {% endif %}
                         </span>
                     </label>
-                    {% if not readonly and field_info.help_text %}
-                        <div class="text-muted">
-                            {{ field_info.help_text }}
-                        </div>
-                    {% endif %}
                     {% if field.errors and field.errors.0 != _('This field is required.') %}
                         <div class="alert alert-danger text-center">{{ field.errors }}</div>
                     {% endif %}
