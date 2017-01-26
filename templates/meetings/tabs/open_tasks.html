@@ -1,11 +1,11 @@
 {% load core i18n %}
 
-<table class="table table-sm mb-1">
+<table class="table table-sm mb-3">
     {% for top, tasks in open_tasks.items %}
         <thead>
             <tr>
                 <td colspan="5">
-                    <h4{% if not forloop.first %} class="mt-2"{% endif%}>
+                    <h4{% if not forloop.first %} class="mt-4"{% endif%}>
                         {{ top }}:
                         <a href="{% url 'view_submission' submission_pk=top.submission.pk %}" target="_blank">{{ top.submission|ec_number }}</a>
                         {{ top.submission.project_title_display }}

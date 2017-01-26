@@ -4,7 +4,7 @@
   <h1>Es läuft derzeit eine Optimierung!</h1>
 {% endif %}
 {% if recommendations_not_done %}
-    <div class="text-danger m-2">
+    <div class="text-danger m-4">
         <strong>Achtung: Es sind noch nicht alle Empfehlungen fertig abgegeben.</strong>
     </div>
 {% endif %}
@@ -46,7 +46,7 @@
             </h4>
             {% with entry|last_recessed_vote as vote %}
                 {% if vote %}
-                    <span class="float-right mr-1">
+                    <span class="float-right mr-3">
                         ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})
                     </span>
                 {% endif %}

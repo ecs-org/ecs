@@ -47,7 +47,7 @@
                             {{ task_type.list|length }}
                         </span>
                         {% if task_type.list|length > 1 %}
-                            <form class="float-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                            <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                 {% csrf_token %}
                                 {% for task in task_type.list %}
                                     <input type="hidden" name="task_id" value="{{ task.id }}" />
@@ -188,7 +188,7 @@
                                 {{ task_type.list|length }}
                             </span>
                             {% if task_type.list|length > 1 %}
-                                <form class="float-right mr-1 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
+                                <form class="float-right mr-3 open-in-widget" method="post" action="{% url 'ecs.tasks.views.accept_tasks' %}{% if submission %}?submission={{ submission.pk }}{% endif %}">
                                     {% csrf_token %}
                                     {% for task in task_type.list %}
                                         <input type="hidden" name="task_id" value="{{ task.id }}" />

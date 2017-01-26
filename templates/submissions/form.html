@@ -20,7 +20,7 @@
 
 {% block submission_action_buttons %}
     <li class="nav-item float-right">
-        <small class="mr-1 text-muted last_save">&nbsp;</small>
+        <small class="mr-3 text-muted last_save">&nbsp;</small>
         <a href="" id="save-button" class="btn btn-secondary">{% trans "Just Save" %}</a>
         <a href="" id="submit-button" class="btn btn-primary">
             {% if submission and submission.current_submission_form %}
@@ -88,14 +88,14 @@
             new ecs.FormFieldController({
                 fields: '#id_project_type_reg_drug',
                 disable: true,
-                sourceFieldClass: 'pl-3',
+                sourceFieldClass: 'pl-5',
                 sources: 'input[id^=id_project_type_reg_drug_]'
             });
 
             new ecs.FormFieldController({
                 fields: '#id_project_type_medical_device',
                 disable: true,
-                sourceFieldClass: 'pl-3',
+                sourceFieldClass: 'pl-5',
                 sources: 'input[id^=id_project_type_medical_device_]',
                 toggleTab: {
                     tab: setup.tabController.getTab('#tabs-7'),
@@ -241,7 +241,7 @@
                         modal.find('.modal-dialog').addClass('modal-sm');
                         modal.find('.modal-content').html('\
                             <div class="modal-body text-center">\
-                                <span class="fa fa-spinner fa-pulse fa-2x mr-1"></span>\
+                                <span class="fa fa-spinner fa-pulse fa-2x mr-3"></span>\
                                 {% if notification_type %}\
                                     {{ _("Your are being redirected to the notification form")|escapejs }}\
                                 {% else %}\

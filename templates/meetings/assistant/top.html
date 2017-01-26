@@ -2,7 +2,7 @@
 {% load core i18n userutils meetingutils widget_tweaks %}
 
 {% block meeting_assistant_body %}
-  <div class="column_main mr-1">
+  <div class="column_main mr-3">
     <form id="meeting_assistant_form" action="{% url 'ecs.meetings.views.meeting_assistant_top' meeting_pk=meeting.pk top_pk=top.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="fa fa-search text-info" href="{% url 'view_submission' submission_pk=submission.pk %}" target="_blank"></a>{% endif %}</h3>
@@ -25,10 +25,10 @@
 
             <div class="text-center">
                 {% if top.is_break %}
-                    <h1 class="text-danger my-1">PAUSE</h1>
+                    <h1 class="text-danger my-3">PAUSE</h1>
                 {% endif %}
             </div>
-            <div class="text-center mt-3">
+            <div class="text-center mt-5">
                 <a id="complete" class="btn btn-primary btn-block" href="">Fertig</a>
             </div>
         </div>

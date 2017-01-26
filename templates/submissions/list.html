@@ -14,12 +14,12 @@
 {% include 'paginator.inc' with page=submissions %}
 
 {% if warning %}
-    <div class="alert alert-warning text-center my-1">
+    <div class="alert alert-warning text-center my-3">
         {{ warning }}
     </div>
 {% endif %}
 
-<ul class="list-group mx-1">
+<ul class="list-group mx-3">
     {% for submission in submissions.object_list %}
         <li class="list-group-item">
             {% if submission|is_docstash %}
@@ -31,7 +31,7 @@
                         {% endif %}
                         {{ docstash.name|default:"<i>Unbenannt</i>" }}
                     </h5>
-                    <div class="my-1">
+                    <div class="my-3">
                         <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
                             {% trans 'Edit' %}
                         </a> | 
@@ -72,7 +72,7 @@
                         {% endif %}
                     </h5>
 
-                    <div class="my-1">
+                    <div class="my-3">
                         {% if user.profile.is_internal %}
                             {% with submission.paper_submission_task as paper_submission_review_task %}
                                 {% if paper_submission_review_task %}

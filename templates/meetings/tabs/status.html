@@ -1,6 +1,6 @@
 {% load core i18n userutils %}
 <div class="container">
-<table class="table table-sm mb-1">
+<table class="table table-sm mb-3">
     <colgroup>
         <col class="bg-faded">
         <col class="w-100">
@@ -22,7 +22,7 @@
         <td>{{ meeting.deadline|date:'d.m.Y' }}</td>
     </tr>
     <tr>
-        <th class="pr-1">{% trans "Deadline for Thesis Submission" %}</th>
+        <th class="pr-3">{% trans "Deadline for Thesis Submission" %}</th>
         <td>{{ meeting.deadline_diplomathesis|date:'d.m.Y' }}</td>
     </tr>
     <tr>
@@ -117,7 +117,7 @@
 
 <h2>{% trans 'Statistics' %} <small>({{ cumulative_count }} Studien)</small></h2>
 
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
   <li class="list-group-item">
     <h5 class="list-group-item-heading">
         {% trans "board" %}
@@ -128,7 +128,7 @@
         {% trans "AMG" %}
         ({{ amg_submissions|length }})
     </h6>
-    <p class="list-group-item-text mb-1">
+    <p class="list-group-item-text mb-3">
         {% with amg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
 
@@ -136,7 +136,7 @@
         {% trans "MPG" %}
         ({{ mpg_submissions|length }})
     </h6>
-    <p class="list-group-item-text mb-1">
+    <p class="list-group-item-text mb-3">
         {% with mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
 
@@ -144,7 +144,7 @@
         {% trans "AMG/MPG" %}
         ({{ amg_mpg_submissions|length }})
     </h6>
-    <p class="list-group-item-text mb-1">
+    <p class="list-group-item-text mb-3">
         {% with amg_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
 
@@ -185,7 +185,7 @@
   </li>
 </ul>
 
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
   <li class="list-group-item">
     <h5 class="list-group-item-heading">
         {% trans "Dissertation" %}
@@ -242,7 +242,7 @@
   </li>
 </ul>
 
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
   <li class="list-group-item">
     <h5 class="list-group-item-heading">
         {% trans 'Substantial amendments' %}

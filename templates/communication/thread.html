@@ -23,7 +23,7 @@
 <div class="communication_thread container">
 
 {% if thread.submission %}
-    <div class="mb-1">
+    <div class="mb-3">
         <a href="{% url 'view_submission' submission_pk=thread.submission.pk %}#communication_tab">
             <span class="fa fa-backward"></span>
             {% trans "To the Study" %}
@@ -52,12 +52,12 @@
     </div>
 {% endfor %}
 
-<div class="mt-1 ml-1">
+<div class="mt-3 ml-3">
     <a href="" class="collapse_all">{% trans "Collapse all" %}</a>
     | <a href="" class="expand_all">{% trans "Expand all" %}</a>
 </div>
 
-<div class="related_thread mt-1">
+<div class="related_thread mt-3">
 {% if thread.related_thread %}
 {% if user == thread.related_thread.sender or user == thread.related_thread.receiver %}
     Den betreffenden Nachrichtenstrang finden Sie
@@ -77,7 +77,7 @@
     {% include 'bootstrap/form_field.html' with field=form.text %}
 
     {% if form.non_field_errors %}
-        <div class="alert alert-danger mt-1 mb-0" role="alert">
+        <div class="alert alert-danger mt-3 mb-0" role="alert">
             {% for error in form.non_field_errors %}
                 <p>{{ error }}</p>
             {% endfor %}

@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container my-1">
+    <div class="container my-3">
         <a class="btn btn-secondary btn-sm" href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}" class="button_submit">
             {% trans 'Download payment as xls file' %}
         </a>
 
-        <h2 class="mt-1">{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
+        <h2 class="mt-3">{% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}</h2>
         <table class="table table-sm">
             <tr>
                 <th>{% trans 'Reviewer' %}</th>

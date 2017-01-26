@@ -21,16 +21,16 @@
         {% if submissions %}
             <form action="" method="post">
                 {% csrf_token %}
-                <ul class="form-check list-group mb-1">
+                <ul class="form-check list-group mb-3">
                     {% for submission in submissions %}
                         <li class="list-group-item">
                             <label class="d-block form-check-label">
                                 <input class="form-check-input" type="checkbox" name="bill_{{ submission.pk }}" checked="checked" />
-                                <div class="ml-1">
+                                <div class="ml-3">
                                     <a href="{% url 'view_submission' submission_pk=submission.pk %}">{{ submission|ec_number }} </a>
                                     {{ submission.project_title_display }}
                                 </div>
-                                <div class="row mt-1 px-1">
+                                <div class="row mt-3 px-3">
                                     <div class="col-sm-6">
                                         <strong>{% trans 'Sponsor' %}:</strong> {{ submission.current_submission_form.sponsor_name }}
                                     </div>
@@ -46,7 +46,7 @@
                 <input class="btn btn-primary" type="submit" value="{% trans 'Create settlement' %}"/>
             </form>
         {% else %}
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
                 <li class="list-group-item text-center">
                     <em>{% trans 'No submission yet.' %}</em>
                 </li>

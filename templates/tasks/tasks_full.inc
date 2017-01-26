@@ -46,7 +46,7 @@
                         {{ task_type.list|length }}
                     </span>
                     {% if task_type.list|length > 1 %}
-                        <form class="float-right mr-1" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
+                        <form class="float-right mr-3" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
                             {% csrf_token %}
                             {% for task in task_type.list %}
                                 <input type="hidden" name="task_id" value="{{ task.id }}" />
@@ -177,7 +177,7 @@
                         <span class="fa fa-bookmark"></span>
                         {% trans "Bookmark" %}
                     </a>
-                    <div class="mt-1">
+                    <div class="mt-3">
                         <span class="fa fa-info text-info"></span>
                         {% trans "Drag the bookmark link to your bookmark bar to save it." %}
                     </div>
@@ -198,7 +198,7 @@
                             {{ task_type.list|length }}
                         </span>
                         {% if task_type.list|length > 1 %}
-                            <form class="float-right mr-1" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
+                            <form class="float-right mr-3" method="post" action="{% url 'ecs.tasks.views.accept_tasks_full' %}">
                                 {% csrf_token %}
                                 {% for task in task_type.list %}
                                     <input type="hidden" name="task_id" value="{{ task.id }}" />

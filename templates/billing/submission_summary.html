@@ -10,12 +10,12 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container my-1">
-        <a class="btn btn-secondary btn-sm mt-1" href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}" class="button_submit">
+    <div class="container my-3">
+        <a class="btn btn-secondary btn-sm mt-3" href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}" class="button_submit">
             {% trans 'Download Invoice as xls file' %}
         </a>
 
-        <h2 class="mt-1">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</h2>
+        <h2 class="mt-3">{% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}</h2>
         {% with invoice.stats as stats %}
         <table class="table table-sm">
             {% for item in stats.summary.values %}

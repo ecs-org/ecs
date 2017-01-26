@@ -15,14 +15,14 @@
 {% block headertitle %}Neu: {{ notification_type.name }}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_notification" class="nav nav-tabs mb-1 tab_headers collapsed">
+    <ul id="tabs_notification" class="nav nav-tabs mb-3 tab_headers collapsed">
         {% for tab, fieldsets in tabs %}
             <li class="nav-item">
                 <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
             </li>
         {% endfor %}
         <li class="nav-item float-right">
-            <small class="mr-1 text-muted last_save">&nbsp;</small>
+            <small class="mr-3 text-muted last_save">&nbsp;</small>
             <a href="" id="save-button" class="btn btn-secondary">{% trans "Save" %}</a>
             <a href="" id="submit-button" class="btn btn-primary">{% trans "Submit" %}</a>
         </li>
@@ -42,7 +42,7 @@
                 {% if tab.slug == 'changes' %}
                     <div class="field">
                         {% if notification_type.includes_diff %}
-                            <div class="mb-1">
+                            <div class="mb-3">
                                 <div class="btn-group diff-toggles">
                                     <button class="btn btn-outline-danger" data-toggle-value="old">
                                         {% trans "old" %} (-)
@@ -67,7 +67,7 @@
                 {% for legend, fields in tab.fieldsets %}
                     <div class="fieldset_{{ forloop.counter }}">
                         {% if legend %}
-                            <h3 class="mb-1">{{ legend }}</h3>
+                            <h3 class="mb-3">{{ legend }}</h3>
                         {% endif %}
                         {% for field_name in fields %}
                             {% with form|getitem:field_name as field %}

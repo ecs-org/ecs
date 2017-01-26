@@ -24,7 +24,7 @@
         <thead>
             <tr>
                 <th>{% trans 'Title' %}</th>
-                <th class="text-center pr-1" colspan="2">
+                <th class="text-center pr-3" colspan="2">
                     {% trans 'Deadline for Thesis Submission' %}
                 </th>
                 <th class="text-center" colspan="2">
@@ -43,25 +43,25 @@
                         {{ meeting.title }}
                     </a>
                 </td>
-                <td class="text-right px-1">
+                <td class="text-right px-3">
                     {{ meeting.deadline_diplomathesis|date:'d.m.Y' }}
                 </td>
-                <td class="px-1">
+                <td class="px-3">
                     {{ meeting.deadline_diplomathesis|date:'H:i' }}
                 </td>
-                <td class="text-right px-1">
+                <td class="text-right px-3">
                     {{ meeting.deadline|date:'d.m.Y' }}
                 </td>
-                <td class="px-1">
+                <td class="px-3">
                     {{ meeting.deadline|date:'H:i' }}
                 </td>
-                <td class="pr-1">
+                <td class="pr-3">
                     {{ meeting.start|date:'d.m.Y' }}
                 </td>
-                <td class="pr-1">
+                <td class="pr-3">
                     {{ meeting.start|date:'H:i' }}
                 </td>
-                <td class="pr-1">
+                <td class="pr-3">
                     {{ meeting.end|date:'H:i' }}
                 </td>
             </tr>

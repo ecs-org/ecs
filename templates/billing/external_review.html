@@ -22,16 +22,16 @@
         {% if checklists %}
             <form action="" method="post">
                 {% csrf_token %}
-                <ul class="form-check list-group mb-1">
+                <ul class="form-check list-group mb-3">
                     {% for checklist in checklists %}
                         {% with checklist.submission as submission %}
                             <li class="list-group-item">
                                 <label class="d-block form-check-label">
                                     <input class="form-check-input" type="checkbox" name="pay_{{ checklist.pk }}" checked="checked" /> 
-                                    <div class="ml-1">
+                                    <div class="ml-3">
                                         {{ checklist }} ({{ submission|ec_number }}: {{ submission.project_title_display }})
                                     </div>
-                                    <div class="ml-1 mt-1">
+                                    <div class="ml-3 mt-3">
                                         <strong>{{ price.price|euro }}</strong> ({{ price.text }})
                                     </div>
                                 </label>
@@ -42,7 +42,7 @@
                 <input class="btn btn-primary" type="submit" value="{% trans 'Create settlement' %}"/>
             </form>
         {% else %}
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
                 <li class="list-group-item text-center">
                     <em>{% trans 'No review yet.' %}</em>
                 </li>

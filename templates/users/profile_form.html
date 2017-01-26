@@ -7,7 +7,7 @@
 
         <form action="" method="post">
             {% csrf_token %}
-            <h3 class="mb-1">{% trans "Personal details" %}</h3>
+            <h3 class="mb-3">{% trans "Personal details" %}</h3>
                 {% for field in form %}
                     {% if field.name == "iban" %}
                         <p>{% trans "If you work for the ethics commission as an external reviewer, you have to fill out the following fields" %}:</p>

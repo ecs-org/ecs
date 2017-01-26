@@ -7,7 +7,7 @@
                 <div class="form-check mb-0 {{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-danger{% endif %}">
                     <label class="form-check-label" for="{{ field.id_for_label }}">
                         {% render_field field class+="form-check-input" %}
-                        <span class="pl-1">
+                        <span class="pl-3">
                             {% if readonly and field_info.help_text %}
                                 <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>
                             {% endif %}

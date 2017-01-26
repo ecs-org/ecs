@@ -34,7 +34,7 @@
             </li>
         </ul>
 
-        <div class="tab-content mt-1">
+        <div class="tab-content mt-3">
             <div class="tab-pane container active" id="customization_tab">
                 {% include 'bootstrap/form_field.html' with field=form.default_contact inline=True %}
                 {% include 'bootstrap/form_field.html' with field=form.logo_file inline=True %}
@@ -84,7 +84,7 @@
         </div>
 
         {% if form.non_field_errors %}
-            <div class="alert alert-danger mt-1 mb-0">
+            <div class="alert alert-danger mt-3 mb-0">
                 {% for error in form.non_field_errors %}
                     <p>{{ error }}</p>
                 {% endfor %}

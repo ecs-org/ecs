@@ -3,7 +3,7 @@
 <div class="form_main">
 {% if next_tops %}
 <h2>{% trans 'Next TOPs' %}</h2>
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
 {% for top in next_tops %}
     <li class="list-group-item">
         {{ top }} - 
@@ -29,7 +29,7 @@
     {% else %}
         <h4><i>{% trans "No board member." %}</i></h4>
     {% endif %}
-    <ul class="list-group mb-1">
+    <ul class="list-group mb-3">
     {% for top in tops %}
         <li class="list-group-item">
             {{ top }} - 
@@ -51,7 +51,7 @@
 
 {% if closed_tops %}
 <h2>{% trans "Finished TOPs" %}</h2>
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
 {% for top in closed_tops %}
     <li class="list-group-item">
         {{ top }} - 

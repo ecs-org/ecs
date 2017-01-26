@@ -262,5 +262,5 @@
 </table>
 
 {% if user.profile.is_internal %}
-    <div class="mt-2" data-widget-url="{% url 'ecs.core.views.comments.index' submission_pk=submission.pk %}"></div>
+    <div class="mt-4" data-widget-url="{% url 'ecs.core.views.comments.index' submission_pk=submission.pk %}"></div>
 {% endif %}

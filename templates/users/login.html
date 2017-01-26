@@ -40,10 +40,10 @@
                 Internet Explorer 10+ oder neuere.
                 Ältere Browser sind nicht geeignet und führen zu Fehlern.
                 Neuere/Unbekannte können funktionieren.
-                <p class="mt-1"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
+                <p class="mt-3"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
             </div>
         {% endif %}
-        <div class="public_area" class="mb-1">
+        <div class="public_area" class="mb-3">
           <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
           | <a href="{% static 'help/index.html' %}" target="_blank">{% trans 'Online Help Pages' %}</a>
         </div>
@@ -75,10 +75,10 @@
                     {% render_field form.password class+="form-control" placeholder=form.password.label %}
                 {% endif %}
             </div>
-            <input type="submit" value="Login" id="login_button" class="btn btn-primary btn-block mt-1" {% if not request.ua.is_supported or request.ua.is_crawler %}style="display:none;"{% endif %} />
+            <input type="submit" value="Login" id="login_button" class="btn btn-primary btn-block mt-3" {% if not request.ua.is_supported or request.ua.is_crawler %}style="display:none;"{% endif %} />
             <input type="hidden" name="next" value="{{ next }}" />
             {% if form.non_field_errors %}
-                <div class="alert alert-danger mt-1 mb-0">
+                <div class="alert alert-danger mt-3 mb-0">
                     {% for error in form.non_field_errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
@@ -87,7 +87,7 @@
         </form>
     </div>
 
-    <div class="pw_reg" class="mt-1 ml-1">
+    <div class="pw_reg" class="mt-3 ml-3">
         <a href="{% url 'ecs.users.views.register' %}">Registrieren</a> | <a href="{% url 'ecs.users.views.request_password_reset' %}">Passwort vergessen/zurücksetzen</a>
     </div>
     

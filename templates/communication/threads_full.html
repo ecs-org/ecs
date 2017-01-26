@@ -12,7 +12,7 @@
     <div class="container">
         {% include 'communication/threads.html' %}
 
-        <div class="hint mt-1">
+        <div class="hint mt-3">
           <span class="fa fa-info text-info"></span>
           {% db_setting 'contact_email' as email %}
           {% blocktrans with contact_email=email %}

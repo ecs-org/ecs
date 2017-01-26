@@ -55,7 +55,7 @@
 {% block content %}
     <div class="readonly">
         {% block tab_headers %}
-            <ul id="tabs_general" class="nav nav-tabs mb-1 tab_headers collapse">
+            <ul id="tabs_general" class="nav nav-tabs mb-3 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#status_tab">{% trans 'Status' %}</a></li>
                 {% if categorization_form %}
                     <li class="nav-item"><a class="nav-link {% if not categorization_form.readonly or categorization_review %}active{% endif %}" href="#categorization_tab">{% trans "Categorization" %}</a></li>
@@ -74,7 +74,7 @@
             {{ block.super }}
 
             {% if checklist_reviews or user.profile.is_internal %}
-            <ul id="tabs_checklists" class="nav nav-tabs mb-1 tab_headers collapse">
+            <ul id="tabs_checklists" class="nav nav-tabs mb-3 tab_headers collapse">
                 {% if user.profile.is_internal %}
                     <li class="nav-item"><a class="nav-link" href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                 {% endif %}
@@ -84,19 +84,19 @@
             </ul>
             {% endif %}
 
-            <ul id="tabs_votes" class="nav nav-tabs mb-1 tab_headers collapse">
+            <ul id="tabs_votes" class="nav nav-tabs mb-3 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
                 {% if vote_review_form %}
                     <li class="nav-item"><a class="nav-link {% if not vote_review_form.readonly %}active{% endif %}" href="#vote_review_tab">Votum</a></li>
                 {% endif %}
             </ul>
 
-            <ul id="tabs_notifications" class="nav nav-tabs mb-1 tab_headers collapse">
+            <ul id="tabs_notifications" class="nav nav-tabs mb-3 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#pending_notifications_tab">{% trans "Pending Notifications" %}</a></li>
                 <li class="nav-item"><a class="nav-link" href="#answered_notifications_tab">{% trans "Answered Notifications" %}</a></li>
             </ul>
 
-            <ul id="tabs_communication" class="nav nav-tabs mb-1 tab_headers collapse">
+            <ul id="tabs_communication" class="nav nav-tabs mb-3 tab_headers collapse">
                 <li class="nav-item"><a class="nav-link" href="#communication_tab">{% trans "My Communication" %}</a></li>
                 {% if user.profile.is_internal %}
                     <li class="nav-item"><a class="nav-link" href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>
@@ -171,12 +171,12 @@
             {% endfor %}
         </ul>
         {% if stashed_notifications %}
-            <h3 class="mt-1">Nicht eingereichte Meldungen</h3>
+            <h3 class="mt-3">Nicht eingereichte Meldungen</h3>
             {% include 'notifications/stashed_notification_list.html' %}
         {% endif %}
         {% if submission.presenter == user or submission.susar_presenter == user %}
             {% url 'ecs.notifications.views.select_notification_creation_type' as create_url %}
-            <a class="btn btn-outline-primary mt-1" href="{{ create_url }}">
+            <a class="btn btn-outline-primary mt-3" href="{{ create_url }}">
                 {% trans "Create a new notification" %}
             </a>
         {% endif %}
@@ -206,7 +206,7 @@
         </ul>
         {% if submission.presenter == user %}
             {% url 'ecs.notifications.views.select_notification_creation_type' as create_url %}
-            <a class="btn btn-outline-primary mt-1" href="{{ create_url }}">
+            <a class="btn btn-outline-primary mt-3" href="{{ create_url }}">
                 {% trans "Create a new notification" %}
             </a>
         {% endif %}
@@ -325,7 +325,7 @@
             <div id="workflow_log" class="collapse">
                 <div data-widget-url="{% url 'ecs.tasks.views.task_backlog' submission_pk=submission.pk %}"></div>
                 {% if submission.allows_dynamic_task_creation %}
-                    <div class="container mt-2" data-widget-url="{% url 'ecs.checklists.views.create_task' submission_pk=submission.pk %}"></div>
+                    <div class="container mt-4" data-widget-url="{% url 'ecs.checklists.views.create_task' submission_pk=submission.pk %}"></div>
                 {% endif %}
             </div>
         {% endif %}

@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="container">
-        <div class="btn-group mb-1">
+        <div class="btn-group mb-3">
             {% for year in years %}
                 {% if year == current_year %}
                     <button class="btn btn-primary active">{{ year }}</button>
@@ -20,7 +20,7 @@
             <h2>
                 {{ section.label }}
             </h2>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
                 {% for entry in section %}
                     <li class="list-group-item">
                         {{ entry.label }} <small class="text-muted">({{ entry.paper_number }})</small>

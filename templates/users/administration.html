@@ -31,10 +31,10 @@
             </strong>
             <span>{{ profile.email }}</span>
             {% if profile.profile.is_indisposed %}
-                <span class="float-right mx-1">[{% trans 'Indisposed' %}]</span>
+                <span class="float-right mx-3">[{% trans 'Indisposed' %}]</span>
             {% endif %}
             {% if not profile.is_active %}
-                <span class="float-right mx-1">[{% trans 'Inactive' %}]</span>
+                <span class="float-right mx-3">[{% trans 'Inactive' %}]</span>
             {% endif %}
         </div>
         <div class="body">
@@ -54,7 +54,7 @@
             </form>
             {% with profile as profile_user %}
                 {% with profile_user.profile as profile %}
-                    <table class="table table-sm mt-1">
+                    <table class="table table-sm mt-3">
                         <tr><th class="bg-faded">Organisation:</th><td class="w-100">{{ profile.organisation }}</td></tr>
                         <tr><th class="bg-faded">Position:</th><td class="w-100">{{ profile.jobtitle }}</td></tr>
                         <tr><th class="bg-faded">E-Mail:</th><td class="w-100">{{ profile_user.email }}</td></tr>

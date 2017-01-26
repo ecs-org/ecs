@@ -20,7 +20,7 @@
 {% block headertitle %}{{ meeting.start|date:'d.m.Y, H:i' }} Uhr: {{ meeting.title|default:"<em>Unbenannt</em>" }}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_overview" class="nav nav-tabs mb-1 tab_headers collapse">
+    <ul id="tabs_overview" class="nav nav-tabs mb-3 tab_headers collapse">
         <li class="nav-item">
             <a class="nav-link" href="#status_tab">{% trans "Status" %}</a>
         </li>
@@ -45,7 +45,7 @@
         {% endif %}
     </ul>
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
-        <ul id="tabs_planning" class="nav nav-tabs mb-1 tab_headers collapse">
+        <ul id="tabs_planning" class="nav nav-tabs mb-3 tab_headers collapse">
             <li class="nav-item">
                 <a class="nav-link" href="#experts_tab"{% if active == 'experts' %} class="active"{% endif %}>{% trans "Spezialistenzuordnung" %}</a>
             </li>

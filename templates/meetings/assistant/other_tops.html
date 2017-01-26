@@ -14,7 +14,7 @@
 
         {% if retrospective_thesis_entries %}
             <h4>{% trans "Approved" %}</h4>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
             {% for entry in retrospective_thesis_entries %}
                 <li class="list-group-item">
                     {{ entry.submission|ec_number }}
@@ -35,7 +35,7 @@
 
         {% if expedited_entries %}
             <h4>{% trans "Approved" %}</h4>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
             {% for entry in expedited_entries %}
                 <li class="list-group-item">
                     {{ entry.submission|ec_number }}
@@ -57,7 +57,7 @@
 
         {% if localec_entries %}
             <h4>{% trans "Approved" %}</h4>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
             {% for entry in localec_entries %}
                 <li class="list-group-item">
                     {{ entry.submission|ec_number }}
@@ -79,7 +79,7 @@
 
         {% if amendment_entries %}
             <h4>{% trans "Approved" %}</h4>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
                 {% for entry in amendment_entries %}
                     <li class="list-group-item {% if entry.answer.is_rejected %}text-danger{% endif %}">
                         {% with sf=entry.new_submission_form %}
@@ -93,7 +93,7 @@
 
         {% if amendment_vote_formset|length %}
             <h4>{% trans "Not Approved" %}</h4>
-            <ul class="list-group mb-1">
+            <ul class="list-group mb-3">
                 {% for form in amendment_vote_formset.forms %}
                     <li class="list-group-item {% if form.instance.answer.is_rejected %}text-danger{% endif %}">
                         {% for hidden in form.hidden_fields %}

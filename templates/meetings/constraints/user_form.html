@@ -12,7 +12,7 @@
     <div>
         <a href="{% url 'ecs.meetings.views.meeting_details' meeting_pk=meeting.pk %}#timetable_tab">Zurück zur Zeitplanung für dieses Meeting</a>
     </div>
-    <form action="{{ request.path }}" method="post" class="mt-2">
+    <form action="{{ request.path }}" method="post" class="mt-4">
         {% csrf_token %}
         {% include "forms/tables/inline_formset.html" %}
         <input class="btn btn-primary" type="submit" value="{% trans "Save" %}" name="submit"/>

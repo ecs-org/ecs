@@ -35,7 +35,7 @@
 </table>
 
 {% if temporary_auth or user.profile.is_executive_board_member %}
-    <h3 class="mt-2">{% trans 'Temporary Authorization' %}</h3>
+    <h3 class="mt-4">{% trans 'Temporary Authorization' %}</h3>
     <table class="table table-sm">
         <thead>
             <tr>
@@ -89,11 +89,11 @@
         {% for field in temporary_auth_form %}
             {% include 'bootstrap/form_field.html' with inline=True %}
         {% endfor %}
-        <input class="btn btn-primary mb-1" type="submit" value="{% trans 'Authorize' %}"/>
+        <input class="btn btn-primary mb-3" type="submit" value="{% trans 'Authorize' %}"/>
     </form>
 {% endif %}
 
 {% if user.profile.is_internal %}
-    <h3 class="mt-2">{% trans "Biased Parties" %}</h3>
+    <h3 class="mt-4">{% trans "Biased Parties" %}</h3>
     <div data-widget-url="{% url 'ecs.core.views.submissions.biased_board_members' submission_pk=submission.pk %}"></div>
 {% endif %}

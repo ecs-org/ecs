@@ -4,7 +4,7 @@
 <div class="row">
     <label class="col-md-2" for="{{ form.receiver.auto_id }}" class="receiver">Empfänger</label>
     {% if to_user %}
-        <div class="col-md-10 ml-1">
+        <div class="col-md-10 ml-3">
             {{ to_user }}
             <input type="hidden" name="receiver" value="{{ to_user.pk }}"/>
         </div>
@@ -41,7 +41,7 @@
 {% include 'bootstrap/form_field.html' with field=form.text %}
 
 {% if form.non_field_errors %}
-    <div class="alert alert-danger mt-1 mb-0" role="alert">
+    <div class="alert alert-danger mt-3 mb-0" role="alert">
         {% for error in form.non_field_errors %}
             <p>{{ error }}</p>
         {% endfor %}

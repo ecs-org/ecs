@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<h3 class="my-1">{% trans 'Request Review' %}</h3>
+<h3 class="my-3">{% trans 'Request Review' %}</h3>
 
 <form action="{{ request.path }}" method="POST" class="open-in-widget">
     {% csrf_token %}

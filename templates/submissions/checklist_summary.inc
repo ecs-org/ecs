@@ -1,13 +1,13 @@
 {% load core i18n userutils %}
 
 {% for checklist, answers in checklist_summary %}
-    <div class="mb-3">
+    <div class="mb-4">
         <h4 class="checklist">
             {{ checklist.blueprint.name }}:
             {{ checklist.last_edited_by|formal_name }}
         </h4>
         {% for answer in answers %}
-            <div class="ml-1 mb-1">
+            <div class="ml-3 mb-3">
                 {{ answer.question.number}}. {{ answer.question.text }}:
                 {% if not answer.is_answered %}
                     <span class="text-muted">
@@ -24,7 +24,7 @@
                 {% endif %}
                 <br>
                 {% if answer.comment %}
-                    <textarea class="form-control mt-1" readonly>{{ answer.comment }}</textarea>
+                    <textarea class="form-control mt-3" readonly>{{ answer.comment }}</textarea>
                 {% endif %}
             </div>
         {% endfor %}

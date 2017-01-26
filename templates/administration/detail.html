@@ -13,7 +13,7 @@
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_administration" class="nav nav-tabs mb-1 tab_headers">
+    <ul id="tabs_administration" class="nav nav-tabs mb-3 tab_headers">
         <li class="nav-item">
             <a class="nav-link {% if active == 'user_administration' %}active{% endif %}" href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a>
         </li>

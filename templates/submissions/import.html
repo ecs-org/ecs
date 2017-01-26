@@ -5,7 +5,7 @@
 {% block headertitle %}{% trans "Import" %}{% endblock %}
 
 {% block content %}
-<div class="my-1 container">
+<div class="my-3 container">
     <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
@@ -13,7 +13,7 @@
                 {% include 'bootstrap/form_field.html' with field=form.file inline=True %}
             </div>
             <div class="col-md-3">
-                <button type="submit" class="mx-1 btn btn-block btn-primary">
+                <button type="submit" class="mx-3 btn btn-block btn-primary">
                     Importieren
                 </button>
             </div>

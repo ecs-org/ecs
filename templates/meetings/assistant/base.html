@@ -60,7 +60,7 @@
                         {% endif %}
 
                         {% url 'ecs.meetings.views.meeting_assistant_quickjump' meeting_pk=meeting.pk as quickjump_url%}
-                        <form action="{{ quickjump_url }}" method="POST" class="open-in-widget mt-1">
+                        <form action="{{ quickjump_url }}" method="POST" class="open-in-widget mt-3">
                             {% csrf_token %}
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control" name="q" placeholder="Suche" />
@@ -74,8 +74,8 @@
             </div>
         {% endwith %}
     </div>
-    <div id="meeting_assistant_body" class="p-3">
-        {% if not meeting.open_tops.exists and meeting.started and not meeting.ended %}<div class="mb-1 text-center text-danger">Alle TOPs wurden geschlossen. <b>Achtung: Weitere TOPs überprüfen.</b> Sie können die Sitzung jetzt beenden.</div>{% endif %}
+    <div id="meeting_assistant_body" class="p-4">
+        {% if not meeting.open_tops.exists and meeting.started and not meeting.ended %}<div class="mb-3 text-center text-danger">Alle TOPs wurden geschlossen. <b>Achtung: Weitere TOPs überprüfen.</b> Sie können die Sitzung jetzt beenden.</div>{% endif %}
         {% block meeting_assistant_body %}{% endblock %}
         {% block meeting_assistant_sidebar %}{% endblock %}
     </div>

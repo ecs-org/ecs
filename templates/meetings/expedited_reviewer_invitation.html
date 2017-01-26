@@ -11,7 +11,7 @@
         </div>
     </form>
     {% if meeting.expedited_reviewer_invitation_sent_for %}
-        <div class="col-xs-12 mt-1">
+        <div class="col-xs-12 mt-3">
             {% with meeting.expedited_reviewer_invitation_sent_for as sent_for %}
                 {% with meeting.expedited_reviewer_invitation_sent_at as sent_at %}
                     Letzter kommunizierter Termin: {{ sent_for|date:'d.m.Y H:i' }}

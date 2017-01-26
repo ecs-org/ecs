@@ -13,7 +13,7 @@
 
 {% block content %}
     {% block tab_headers %}
-        <ul id="tabs_submission" class="nav nav-tabs tab_headers collapse mb-1">
+        <ul id="tabs_submission" class="nav nav-tabs tab_headers collapse mb-3">
             {% for tab, fieldsets in tabs %}
                 <li class="nav-item">
                     <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
@@ -30,7 +30,7 @@
                 <div id="tabs-{{ forloop.counter }}" class="collapse {% if tab.slug != 'measures' %}container{% endif %}">
                     
                     {% if unacknowledged_forms %}
-                        <div class="alert alert-info text-center font-weight-bold mb-1">
+                        <div class="alert alert-info text-center font-weight-bold mb-3">
                             {% if unacknowledged_forms == 1 %}
                                 Es gibt eine neuere, unbestätigte Version.
                             {% else %}
@@ -43,7 +43,7 @@
                     {% if tab.slug == 'measures' %}
 
                         {% block section_6_1 %}
-                            <h3 class="my-2">
+                            <h3 class="my-4">
                                 Ausschließlich studienbezogene Maßnahmen 
                                 <small class="text-muted">[6.1]</small>
                             </h3>
@@ -52,7 +52,7 @@
                             {% endwith %}
                         {% endblock %}
 
-                        <h3 class="my-2">
+                        <h3 class="my-4">
                             Invasive/strahlenbelastende Maßnahmen im Rahmen der
                             Routineversorgung während der Studiendauer
                             <small class="text-muted">[6.2]</small>
@@ -61,7 +61,7 @@
                             {% include "forms/tables/inline_formset.html" %}
                         {% endwith %}
 
-                        <h3 class="my-2">
+                        <h3 class="my-4">
                             Im Rahmen der Studie verabreichte Medikamente, deren
                             Wirksamkeit und/oder Sicherheit nicht Gegenstand der
                             Prüfung sind
@@ -86,7 +86,7 @@
                         
                     {% elif tab.slug == 'centers' %}
                     
-                        <h3 class="my-2">{% trans 'centers (subject)' %}</h3>
+                        <h3 class="my-4">{% trans 'centers (subject)' %}</h3>
 
                         {% if investigator_formset.non_form_errors %}
                             <div class="alert alert-danger text-center pb-0">
@@ -135,7 +135,7 @@
                                     </div>
                                 </div>
                                 <div class="">
-                                    <h4 class="my-2">
+                                    <h4 class="my-4">
                                         Verantwortliche Mitarbeiter/innen an der klinischen Studie (an Ihrer Prüfstelle)
                                     </h4>
                                     {% if investigatoremployee_formset.non_form_errors %}
@@ -211,7 +211,7 @@
                     {% for legend, fields in tab.fieldsets %}
                         <div class="field fieldset_{{ forloop.counter }}">
                             {% if legend %}
-                                <h3 class="my-2">{{ legend }}</h3>
+                                <h3 class="my-4">{{ legend }}</h3>
                             {% endif %}
                             {% if fields.name == 'centers_abroad' %}
                                 {% with foreignparticipatingcenter_formset as formset %}

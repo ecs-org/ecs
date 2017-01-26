@@ -1,6 +1,6 @@
 {% load core i18n userutils %}
 
-<ul class="list-group mb-1">
+<ul class="list-group mb-3">
 {% for form in formset.forms %}
     <li class="list-group-item {% if not form.instance.submission.current_pending_vote %}text-danger{% endif %}">
         {% for hidden in form.hidden_fields %}
