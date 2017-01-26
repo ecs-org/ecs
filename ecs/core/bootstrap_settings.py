@@ -7,6 +7,7 @@ developers = (
 )
 
 # 2016-12-05 list updated from: https://www.medunigraz.at/ethikkommission/Forum/Mitglieder/frame.htm
+# 2017-01-26 added Karl Landsteiner Privatuniversität
 
 commissions = [{
     'uuid': '23d805c6b5f14d8b9196a12005fd2961',
@@ -95,4 +96,7 @@ commissions = [{
 }, {
     'uuid': 'c890205dcb7543c8a76bf324512c5f81',
     'name': 'Ethikkommission des Krankenhaus St. Josef',
+}, {
+    'uuid': 'dc1b115d9809461ba3ea9450b079ddd6',
+    'name': 'Kommission für Scientific Integrity und Ethik der Karl Landsteiner Privatuniversität',
 }]
