@@ -862,7 +862,8 @@ def delete_docstash_entry(request):
 
 def export_submission(request, submission_pk):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    if not submission.current_submission_form.allows_export(request.user):
+    if not request.user.profile.is_internal and \
+        request.user != submission.presenter:
         raise Http404()
     serializer = Serializer()
     with tempfile.TemporaryFile(mode='w+b') as tmpfile:
