@@ -156,6 +156,8 @@
             });
             submissionFormSelect.change();
 
+            submissionFormsSelect.add(submissionFormSelect).select2();
+
             $('.upload_container').load(
                 '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');
 
