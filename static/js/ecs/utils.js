@@ -76,10 +76,12 @@ ecs.InvestigatorFormset = function(container, readonly) {
     this.employee_formset = new ecs.InlineFormSet('.investigatoremployee_formset', {
         prefix: 'investigatoremployee',
         onFormAdded: (function(form, index) {
-            var index = this.inline_formset.forms.findIndex(function(el) {
-                return el.has(form).length;
-            });
-            form.find('input[name$=-investigator_index]').val(index);
+            for (var i = 0; i < this.inline_formset.forms.length; i++) {
+                if (this.inline_formset.forms[i].has(form).length) {
+                    form.find('input[name$=-investigator_index]').val(i);
+                    break;
+                }
+            }
         }).bind(this)
     });
 };

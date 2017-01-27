@@ -56,10 +56,12 @@ ecs.InlineFormSet.prototype = {
             click: (function(ev) {
                 ev.preventDefault();
                 var form = $(ev.target).parents(this.options.formSelector);
-                var index = this.forms.findIndex(function(el) {
-                    return el.is(form);
-                });
-                this.remove(index);
+                for (var i = 0; i < this.forms.length; i++) {
+                    if (this.forms[i].is(form)) {
+                        this.remove(i);
+                        break;
+                    }
+                }
             }).bind(this)
         });
     },
