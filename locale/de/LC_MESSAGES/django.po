@@ -2963,7 +2963,7 @@ msgid "No board members selected."
 msgstr "Kein Sitzungsmitglied ausgewählt."
 
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 msgid "Catalog of Approved Studies"
 msgstr "Register der befürworteten Studien"
