@@ -23,7 +23,7 @@
                 {% csrf_token %}
                 <ul class="form-check list-group mb-3">
                     {% for submission in submissions %}
-                        <li class="list-group-item">
+                        <li class="list-group-item d-block">
                             <label class="d-block form-check-label">
                                 <input class="form-check-input" type="checkbox" name="bill_{{ submission.pk }}" checked="checked" />
                                 <div class="ml-3">
@@ -47,7 +47,7 @@
             </form>
         {% else %}
             <ul class="list-group mb-3">
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans 'No submission yet.' %}</em>
                 </li>
             </ul>

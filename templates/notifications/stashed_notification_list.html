@@ -2,7 +2,7 @@
 <ul class="list-group">
     {% for docstash in stashed_notifications %}
         {% if docstash.value %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 <a href="{% url 'ecs.notifications.views.create_notification' notification_type_pk=docstash.value.type_id docstash_key=docstash.key %}">
                     {{ docstash.name|default:"<strong>Unbenannt</strong>" }}
                 </a>

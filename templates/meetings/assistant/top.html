@@ -95,7 +95,7 @@
         <ul class="list-group">
           {% for blueprint, checklists in checklist_review_states %}
             {% for task, checklist in checklists %}
-              <li class="list-group-item {% if not checklist or not task.closed_at or not checklist.is_complete %}list-group-item-warning{% elif checklist.is_positive %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
+              <li class="list-group-item d-block {% if not checklist or not task.closed_at or not checklist.is_complete %}list-group-item-warning{% elif checklist.is_positive %}list-group-item-success{% else %}list-group-item-danger{% endif %}">
                 <div class="font-weight-bold">
                     {{ task.task_type }}
                 </div>
@@ -126,7 +126,7 @@
               {% sudo %}
               {% with submission.paper_submission_review_task as task %}
               {% if task and not task.closed_at %}
-                  <li class="list-group-item list-group-item-danger font-weight-bold">
+                  <li class="list-group-item d-block list-group-item-danger font-weight-bold">
                     <strong>
                         {{ task.task_type }}
                     </strong>

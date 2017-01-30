@@ -7,7 +7,7 @@
 
 <div class="modal-body list-group">
     {% for scratchpad in scratchpads %}
-        <a class="list-group-item" href="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}">
+        <a class="list-group-item d-block" href="{% url 'ecs.scratchpad.views.popup' scratchpad_pk=scratchpad.pk %}">
             <h6 class="list-group-item-heading">
                 {% if scratchpad.submission %}
                     {% blocktrans with scratchpad.submission|ec_number as ec_number %}Scratchpad for submission {{ ec_number }}{% endblocktrans %}

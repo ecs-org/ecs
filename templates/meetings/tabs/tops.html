@@ -5,7 +5,7 @@
 <h2>{% trans 'Next TOPs' %}</h2>
 <ul class="list-group mb-3">
 {% for top in next_tops %}
-    <li class="list-group-item">
+    <li class="list-group-item d-block">
         {{ top }} - 
         {% if top.submission %}
             {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
@@ -31,7 +31,7 @@
     {% endif %}
     <ul class="list-group mb-3">
     {% for top in tops %}
-        <li class="list-group-item">
+        <li class="list-group-item d-block">
             {{ top }} - 
             {% if top.submission %}
                 {{ top.submission|ec_number }} {{ top.submission.current_submission_form.get_type_display }}<br />
@@ -53,7 +53,7 @@
 <h2>{% trans "Finished TOPs" %}</h2>
 <ul class="list-group mb-3">
 {% for top in closed_tops %}
-    <li class="list-group-item">
+    <li class="list-group-item d-block">
         {{ top }} - 
         {% if top.submission %}
             {{ top.submission|ec_number }}: ({% if top.vote.result %}B{{ top.vote.result }}{% else %}<i>{% trans "No Vote yet!" %}</i>{% endif %})

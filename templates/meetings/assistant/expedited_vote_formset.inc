@@ -2,7 +2,7 @@
 
 <ul class="list-group mb-3">
 {% for form in formset.forms %}
-    <li class="list-group-item {% if not form.instance.submission.current_pending_vote %}text-danger{% endif %}">
+    <li class="list-group-item d-block {% if not form.instance.submission.current_pending_vote %}text-danger{% endif %}">
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}

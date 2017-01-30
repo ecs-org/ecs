@@ -21,7 +21,7 @@
 
 <ul class="user_list list-group">
 {% for profile in users.object_list %}
-    <li class="list-group-item user collapsed{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
+    <li class="list-group-item d-block user collapsed{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
         <div class="head">
             <strong>
                 {{ profile|formal_name }}

@@ -21,7 +21,7 @@
 
 <ul class="list-group mx-3">
     {% for submission in submissions.object_list %}
-        <li class="list-group-item">
+        <li class="list-group-item d-block">
             {% if submission|is_docstash %}
                 {% with submission as docstash %}
                     <h5 class="font-weight-normal">
@@ -155,7 +155,7 @@
             {% endif %}
         </li>
     {% empty %}
-        <li class="list-group-item text-center"><em>{% trans "No Submissions." %}</em></li>
+        <li class="list-group-item d-block text-center"><em>{% trans "No Submissions." %}</em></li>
     {% endfor %}
 </ul>
 

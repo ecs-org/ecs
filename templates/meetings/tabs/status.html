@@ -118,7 +118,7 @@
 <h2>{% trans 'Statistics' %} <small>({{ cumulative_count }} Studien)</small></h2>
 
 <ul class="list-group mb-3">
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "board" %}
         <span class="tag tag-default tag-pill float-right">{{ board_submissions|length }}</span>
@@ -156,7 +156,7 @@
         {% with not_amg_and_not_mpg_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Retro. Thesis" %}
         <span class="tag tag-default tag-pill float-right">{{ retrospective_thesis_submissions|length }}</span>
@@ -165,7 +165,7 @@
         {% with retrospective_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Expedited" %}
         <span class="tag tag-default tag-pill float-right">{{ expedited_submissions|length }}</span>
@@ -174,7 +174,7 @@
         {% with expedited_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Local EC" %}
         <span class="tag tag-default tag-pill float-right">{{ localec_submissions|length }}</span>
@@ -186,7 +186,7 @@
 </ul>
 
 <ul class="list-group mb-3">
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Dissertation" %}
         <span class="tag tag-default tag-pill float-right">{{ dissertation_submissions|length }}</span>
@@ -195,7 +195,7 @@
         {% with dissertation_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Diploma Thesis" %}
         <span class="tag tag-default tag-pill float-right">{{ diploma_thesis_submissions|length }}</span>
@@ -204,7 +204,7 @@
         {% with diploma_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Multicentric, Main EC" %}
         <span class="tag tag-default tag-pill float-right">{{ amg_multi_main_submissions|length }}</span>
@@ -213,7 +213,7 @@
         {% with amg_multi_main_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "Billable" %}
         <span class="tag tag-default tag-pill float-right">{{ billable_submissions|length }}</span>
@@ -222,7 +222,7 @@
         {% with billable_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "B3 (examined)" %}
         <span class="tag tag-default tag-pill float-right">{{ b3_examined_submissions|length }}</span>
@@ -231,7 +231,7 @@
         {% with b3_examined_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans "B3 (not examined)" %}
         <span class="tag tag-default tag-pill float-right">{{ b3_not_examined_submissions|length }}</span>
@@ -243,7 +243,7 @@
 </ul>
 
 <ul class="list-group mb-3">
-  <li class="list-group-item">
+  <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
         {% trans 'Substantial amendments' %}
         <span class="tag tag-default tag-pill float-right">{{ substantial_amendments.count }}</span>

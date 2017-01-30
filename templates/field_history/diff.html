@@ -7,7 +7,7 @@
 
 <div class="modal-body list-group field_history">
     {% for change in history %}
-        <div class="list-group-item change">
+        <div class="list-group-item d-block change">
             <h5 class="list-group-item-heading">
                 Version {{ forloop.revcounter }}
                 <small class="text-muted">({{ change.timestamp|date:'d.m.Y, H:i:s' }}, {{ change.user }})</small>

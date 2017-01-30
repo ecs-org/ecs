@@ -5,7 +5,7 @@
 
     <ul class="list-group mb-4">
         {% for amendment in substantial_amendments %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 {% with submission=amendment.get_submission %}
                     <strong>{{ submission.get_ec_number_display }}</strong>
                     {{ submission.project_title_display }}
@@ -20,7 +20,7 @@
 
     <ul class="list-group mb-4">
         {% for b1 in b1ized.all %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 {% with sf=b1.submission_form %}
                     <strong>{{ sf.submission.get_ec_number_display }}</strong>
                     {{ sf.german_project_title|default:sf.project_title }}
@@ -57,7 +57,7 @@
     <ul class="list-group mb-4">
         {% for answer in type.list %}
             {% with notification=answer.notification %}
-                <li class="list-group-item">
+                <li class="list-group-item d-block">
                     {% if notification.safetynotification %}
                         <h6 class="list-group-item-heading">
                             {{ notification.safetynotification.get_safety_type_display }}

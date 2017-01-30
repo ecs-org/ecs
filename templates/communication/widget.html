@@ -65,7 +65,7 @@
 
     <ul class="list-group list-group-flush">
     {% for thread in page.object_list %}
-        <li class="list-group-item px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
+        <li class="list-group-item d-block px-0 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}font-weight-bold{% endif %}">
             <div class="row mx-0 flex-items-middle">
                 {% if thread|starred_by:user %}
                     {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
@@ -108,7 +108,7 @@
             </div>
         </li>
     {% empty %}
-        <li class="list-group-item text-center text-muted">
+        <li class="list-group-item d-block text-center text-muted">
             <em>{% trans 'No messages yet!' %}</em>
         </li>
     {% endfor %}

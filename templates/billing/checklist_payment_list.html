@@ -17,7 +17,7 @@
     
         <ul class="list-group">
             {% for payment in payments.object_list %}
-                <li class="list-group-item">
+                <li class="list-group-item d-block">
                     <a href="{% url 'ecs.billing.views.view_checklist_payment' payment_pk=payment.pk %}">
                         {% blocktrans with payment.created_at|date:'d.m.Y' as date %}Payment of {{ date }}{% endblocktrans %}
                     </a>:
@@ -32,7 +32,7 @@
                     {{ payment.total|euro }}
                 </li>
             {% empty %}
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans 'No payment yet.' %}</em>
                 </li>
             {% endfor %}

@@ -20,7 +20,7 @@
 
     <ul class="list-group">
         {% for notification in notifs %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 <h5>{{ notification.timestamp|date:'d.m.Y' }}
                     <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
                         <strong>{{ notification.short_name }}</strong>
@@ -38,7 +38,7 @@
                 </ul>
             </li>
         {% empty %}
-            <li class="list-group-item text-center">
+            <li class="list-group-item d-block text-center">
                 <em>{% trans 'There are no notifications yet.' %}</em>
             </li>
         {% endfor %}

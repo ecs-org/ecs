@@ -27,7 +27,7 @@
             <ul class="list-group">
         {% endif %}
     {% endifchanged %}
-    <li class="list-group-item {% if meeting.started and not meeting.ended and active_top_pk == top.pk %}list-group-item-info{% endif %} {% if not top.is_open and not meeting.ended %}disabled{% endif %}">
+    <li class="list-group-item d-block {% if meeting.started and not meeting.ended and active_top_pk == top.pk %}list-group-item-info{% endif %} {% if not top.is_open and not meeting.ended %}disabled{% endif %}">
         <strong>TOP {{ forloop.counter }}</strong>
         {% if top.submission %}
             <a class="fa fa-download text-primary" title="{% trans 'Download documents (zip)' %}" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"></a>

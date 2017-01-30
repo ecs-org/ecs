@@ -17,7 +17,7 @@
 
         <ul class="list-group">
             {% for invoice in invoices.object_list %}
-                <li class="list-group-item">
+                <li class="list-group-item d-block">
                     <a href="{% url 'ecs.billing.views.view_invoice' invoice_pk=invoice.pk %}">
                         {% blocktrans with invoice.created_at|date:'d.m.Y' as date %}Invoice of {{ date }}{% endblocktrans %}
                     </a>:
@@ -32,7 +32,7 @@
                     {{ invoice.stats.total|euro }}
                 </li>
             {% empty %}
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans 'No invoice yet.' %}</em>
                 </li>
             {% endfor %}

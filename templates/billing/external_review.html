@@ -25,7 +25,7 @@
                 <ul class="form-check list-group mb-3">
                     {% for checklist in checklists %}
                         {% with checklist.submission as submission %}
-                            <li class="list-group-item">
+                            <li class="list-group-item d-block">
                                 <label class="d-block form-check-label">
                                     <input class="form-check-input" type="checkbox" name="pay_{{ checklist.pk }}" checked="checked" /> 
                                     <div class="ml-3">
@@ -43,7 +43,7 @@
             </form>
         {% else %}
             <ul class="list-group mb-3">
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans 'No review yet.' %}</em>
                 </li>
             </ul>

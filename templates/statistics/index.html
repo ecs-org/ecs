@@ -22,7 +22,7 @@
             </h2>
             <ul class="list-group mb-3">
                 {% for entry in section %}
-                    <li class="list-group-item">
+                    <li class="list-group-item d-block">
                         {{ entry.label }} <small class="text-muted">({{ entry.paper_number }})</small>
                         <span class="tag tag-default tag-pill float-right">{{ entry.count }}</span>
                         {% if entry.with_listing %}

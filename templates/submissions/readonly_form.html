@@ -155,7 +155,7 @@
         <h3>{% trans "Open Notifications" %}</h3>
         <ul class="list-group">
             {% for notification in open_notifications %}
-                <li class="list-group-item">
+                <li class="list-group-item d-block">
                     <h5>
                         {{ notification.timestamp|date:'d.m.Y' }}
                         <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
@@ -165,7 +165,7 @@
                     von {{ notification.user }}
                 </li>
             {% empty %}
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans "There are no open notifications." %}</em>
                 </li>
             {% endfor %}
@@ -185,7 +185,7 @@
         <h3>{% trans "Answered Notifications" %}</h3>
         <ul class="list-group">
             {% for notification in answered_notifications %}
-                <li class="list-group-item {% if notification.answer.is_rejected %}list-group-item-danger{% endif %}">
+                <li class="list-group-item d-block {% if notification.answer.is_rejected %}list-group-item-danger{% endif %}">
                     <h5>
                         {{ notification.timestamp|date:'d.m.Y' }}
                         <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
@@ -199,7 +199,7 @@
                     {% endif %}
                 </li>
             {% empty %}
-                <li class="list-group-item text-center">
+                <li class="list-group-item d-block text-center">
                     <em>{% trans "There are no answered notifications." %}</em>
                 </li>
             {% endfor %}
@@ -234,7 +234,7 @@
         {% if published_votes %}
             <ul class="list-group">
                 {% for vote in published_votes %}
-                    <li class="list-group-item {% if vote == submission.current_published_vote %}list-group-item-info{% endif %}">
+                    <li class="list-group-item d-block {% if vote == submission.current_published_vote %}list-group-item-info{% endif %}">
                         {{ vote.result_text }}
                         {% if vote.top %}
                              (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }})

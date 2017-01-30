@@ -8,7 +8,7 @@
     {% regroup my_tasks by task_type.workflow_node.uid as task_type_list %}
     <ul class="list-group list-group-flush">
         {% for task_type in task_type_list %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 <span class="tag tag-default tag-pill float-right">{{ task_type.list|length }}</span>
                 <h4>{{ task_type.grouper|task_type_name }}</h4>
                 <ul class="list-inline"> {% for task in task_type.list %} <li class="list-inline-item">
@@ -25,7 +25,7 @@
                 </li> {% endfor %} </ul>
             </li>
         {% empty %}
-            <li class="list-group-item">
+            <li class="list-group-item d-block">
                 <em>{% trans "There are no tasks for you." %}</em>
             </li>
         {% endfor %}
@@ -41,7 +41,7 @@
         {% regroup proxy_tasks by task_type.workflow_node.uid as task_type_list %}
         <ul class="list-group list-group-flush">
             {% for task_type in task_type_list %}
-                <li class="list-group-item clearfix">
+                <li class="list-group-item d-block clearfix">
                     <span class="tag tag-default tag-pill float-right">
                         {{ task_type.list|length }}
                     </span>
@@ -193,7 +193,7 @@
             {% regroup open_tasks by task_type.workflow_node.uid as task_type_list %}
             <ul class="list-group list-group-flush">
                 {% for task_type in task_type_list %}
-                    <li class="list-group-item clearfix">
+                    <li class="list-group-item d-block clearfix">
                         <span class="tag tag-default tag-pill float-right">
                             {{ task_type.list|length }}
                         </span>
@@ -220,7 +220,7 @@
                         </li> {% endfor %} </ul>
                     </li>
                 {% empty %}
-                    <li class="list-group-item">
+                    <li class="list-group-item d-block">
                         <em>{% trans "There are no tasks for you." %}</em>
                     </li>
                 {% endfor %}
