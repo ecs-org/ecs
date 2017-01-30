@@ -304,7 +304,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         'diff_notification_types': NotificationType.objects.filter(includes_diff=True).order_by('name'),
         'external_review_checklists': external_review_checklists,
         'temporary_auth': submission.temp_auth.order_by('end'),
-        'temporary_auth_form': TemporaryAuthorizationForm(),
+        'temporary_auth_form': TemporaryAuthorizationForm(prefix='temp_auth'),
         'current_docstash_key': current_docstash_key,
     }
 
@@ -1271,7 +1271,7 @@ def catalog_json(request):
 @user_flag_required('is_executive_board_member')
 def grant_temporary_access(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
-    form = TemporaryAuthorizationForm(request.POST or None)
+    form = TemporaryAuthorizationForm(request.POST or None, prefix='temp_auth')
     if form.is_valid():
         temp_auth = form.save(commit=False)
         temp_auth.submission = submission
