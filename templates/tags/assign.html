@@ -16,18 +16,23 @@
 <div id="tag_assign_form" class="collapse">
     <form action="{{ request.path }}" method="POST" class="open-in-widget">
         {% csrf_token %}
-        {{ form.tags }}
-        <input type="submit" class="btn btn-primary submit-in-widget" value="{% trans 'save' %}"/>
+        <div class="row">
+            <div class="col-md-9">
+                {{ form.tags }}
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-primary btn-block submit-in-widget" value="{% trans 'save' %}"/>
+            </div>
+        </div>
     </form>
 </div>
 
 <script type="text/javascript">
-    /*
-     * Initialize select2 the first time the form is shown. Otherwise
-     * select2 exhibits display bugs due to the target element not being
-     * visible.
-     */
-    $('#tag_assign_form').one('shown.bs.collapse', function() {
-        $('#{{ form.tags.id_for_label|escapejs }}').select2({'width': '100%'});
-    });
+    (function() {
+        var input = $('#{{ form.tags.id_for_label }}');
+        input.select2({
+            width: '100%',
+            dropdownParent: input.parent(),
+        });
+    })();
 </script>

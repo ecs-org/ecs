@@ -177,7 +177,12 @@
             });
 
             {% if filterform.tags %}
-                form.find('#id_tags').select2({'width': '250px', 'placeholder': '{{ filterform.tags.label|escapejs }}'});
+                var input_tags = form.find('#{{ filterform.tags.id_for_label }}');
+                input_tags.select2({
+                    placeholder: '{{ filterform.tags.label|escapejs }}',
+                    width: '250px',
+                    dropdownParent: input_tags.parent(),
+                });
             {% endif %}
 
 	    $('#submission_list_filter').find('input, select').change(function() {

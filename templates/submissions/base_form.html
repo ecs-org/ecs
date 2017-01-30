@@ -244,14 +244,16 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function() {
-            /*
-             * Initialize select2 the first time the tab is shown. Otherwise
-             * select2 exhibits display bugs due to the target element not being
-             * visible.
-             */
-            $('#tabs-6').one('tab-show', function() {
-                $('#id_substance_registered_in_countries').select2();
-                $('#id_substance_p_c_t_countries').select2();
+            var input_reg_countries = $('#id_substance_registered_in_countries');
+            input_reg_countries.select2({
+                width: '100%',
+                dropdownParent: input_reg_countries.parent(),
+            });
+
+            var input_p_c_t_countries = $('#id_substance_p_c_t_countries');
+            input_p_c_t_countries.select2({
+                width: '100%',
+                dropdownParent: input_p_c_t_countries.parent(),
             });
         });
     </script>

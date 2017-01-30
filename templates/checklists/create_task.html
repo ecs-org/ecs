@@ -36,8 +36,12 @@
         {% endif %}
 
         {% if form_stage2 %}
-            $('#{{ form_stage2.assign_to.auto_id }}').select2(
-                {placeholder: null});
+            var input = $('#{{ form_stage2.assign_to.auto_id }}');
+            input.select2({
+                placeholder: null,
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
         {% endif %}
     })();
 </script>

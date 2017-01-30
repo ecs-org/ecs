@@ -46,10 +46,22 @@
 
 <form action="{{ request.path }}" method="POST" class="container open-in-widget">
     {% csrf_token %}
-    {{ form.biased_board_member }}
-    <input type="submit" class="btn btn-primary submit-in-widget" value="{% trans 'Add' %}"/>
+    <div class="row">
+        <div class="col-md-10">
+            {{ form.biased_board_member }}
+        </div>
+        <div class="col-md-2">
+            <input type="submit" class="btn btn-primary btn-block submit-in-widget" value="{% trans 'Add' %}"/>
+        </div>
+    </div>
 </form>
 
 <script type="text/javascript">
-    $('#{{ form.biased_board_member.id_for_label|escapejs }}').select2();
+    (function() {
+        var input = $('#{{ form.biased_board_member.id_for_label }}');
+        input.select2({
+            width: '100%',
+            dropdownParent: input.parent(),
+        });
+    })();
 </script>

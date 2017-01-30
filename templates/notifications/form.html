@@ -156,7 +156,13 @@
             });
             submissionFormSelect.change();
 
-            submissionFormsSelect.add(submissionFormSelect).select2();
+            submissionFormsSelect.add(submissionFormSelect).each(function() {
+                var input = $(this);
+                input.select2({
+                    width: '100%',
+                    dropdownParent: input.parent(),
+                });
+            });
 
             $('.upload_container').load(
                 '{% url 'ecs.notifications.views.upload_document_for_notification' docstash_key=request.docstash.key %}');

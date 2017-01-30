@@ -22,7 +22,12 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#id_communication_proxy').select2({'minimumInputLength': 3});
+            var input = $('#{{ form.communication_proxy.id_for_label }}');
+            input.select2({
+                minimumInputLength: 3,
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
         });
     </script>
 {% endblock %}

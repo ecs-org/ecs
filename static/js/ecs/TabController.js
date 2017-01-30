@@ -28,8 +28,6 @@ ecs.Tab.prototype = {
                 if (textarea)
                     textarea.updateHeight();
             });
-
-            this.panel.trigger('tab-show');
         }
     },
     setDisabled: function(disabled) {

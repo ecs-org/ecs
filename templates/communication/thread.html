@@ -109,7 +109,12 @@
                     )
                 {% endif %}
             ]);
-            $('#id_to').select2();
+
+            var input = $('#{{ form.to.id_for_label }}');
+            input.select2({
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
 
             textarea.focus();
         });

@@ -26,7 +26,11 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#id_user').select2({width: '100%'});
+            var input = $('#{{ form.user.id_for_label }}');
+            input.select2({
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
         });
     </script>
 {% endblock %}

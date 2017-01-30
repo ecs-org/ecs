@@ -69,6 +69,7 @@ class ChecklistTaskCreationStage2Form(forms.Form):
         self.fields['assign_to'].queryset = queryset
         if not task_type.is_delegatable:
             self.fields['assign_to'].required = True
+            self.fields['assign_to'].empty_label = '\u2026'
         else:
             self.fields['assign_to'].empty_label = _('<group>')
 

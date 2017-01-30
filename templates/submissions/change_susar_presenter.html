@@ -18,7 +18,12 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('select#id_susar_presenter').select2({'minimumInputLength': 3});
+            var input = $('select#{{ form.susar_presenter.id_for_label }}');
+            input.select2({
+                minimumInputLength: 3,
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
         });
     </script>
 {% endblock %}

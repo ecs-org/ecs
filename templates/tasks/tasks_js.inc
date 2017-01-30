@@ -2,7 +2,11 @@
 
 <script type="text/javascript">
     $(function(){
-        $('#{{ form_id }} select[name=task_types]').select2();
+        var input = $('#{{ form_id }} select[name=task_types]');
+        input.select2({
+            width: '100%',
+            dropdownParent: input.parent(),
+        });
 
         $('#{{ form_id }}').find('select, input').change(function() {
             ecs.stopPageLoad();

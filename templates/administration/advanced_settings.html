@@ -97,11 +97,15 @@
     {{ block.super }}
     <script type="text/javascript">
         $(function(){
-            $('#id_advanced_settings-default_contact').select2();
-        });
+            var input = $('#{{ form.default_contact.id_for_label }}');
+            input.select2({
+                width: '100%',
+                dropdownParent: input.parent(),
+            });
 
-        $('.tab-pane:has(.has-danger)').each(function() {
-            $('.nav-link[href="#' + $(this).prop('id') + '"]').addClass('text-danger');
+            $('.tab-pane:has(.has-danger)').each(function() {
+                $('.nav-link[href="#' + $(this).prop('id') + '"]').addClass('text-danger');
+            });
         });
     </script>
 {% endblock %}

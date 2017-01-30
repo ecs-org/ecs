@@ -28,7 +28,17 @@
                 )
             ]);
 
-            $('#id_groups, #id_medical_categories, #id_task_types').select2();
+            $(
+                '#{{ form.groups.id_for_label }}, ' +
+                '#{{ form.task_types.id_for_label}}, ' +
+                '#{{ form.medical_categories.id_for_label }}'
+            ).each(function() {
+                var input = $(this);
+                input.select2({
+                    width: '100%',
+                    dropdownParent: input.parent(),
+                });
+            });
         });
     </script>
 {% endblock %}

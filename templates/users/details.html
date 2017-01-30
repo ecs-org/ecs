@@ -24,11 +24,21 @@
 {% endblock %}
 
 {% block jsbottom %}
-  {{ block.super }}
+    {{ block.super }}
     <script type="text/javascript">
-      $(function(){
-          $('#id_user-groups, #id_user-task_types, #id_user-medical_categories').select2();
-      });
+        $(function(){
+            $(
+                '#{{ form.groups.id_for_label }}, ' +
+                '#{{ form.task_types.id_for_label}}, ' +
+                '#{{ form.medical_categories.id_for_label }}'
+            ).each(function() {
+                var input = $(this);
+                input.select2({
+                    width: '100%',
+                    dropdownParent: input.parent(),
+                });
+            });
+        });
     </script>
 {% endblock %}
 
