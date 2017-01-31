@@ -3,14 +3,14 @@
 
 {% block actions %}
     {{ block.super }}
-    <a class="highlight" href="{% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="retry" %}">{% trans 'Try again' %}</a>
-{% endblock %}
 
-{% block navbottom %}
-    <table>
-        <div class="error">
-            {{ error|escape }}<br />
-            {{ cause|escape }}
-        </div>
-    </table>
+    {% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="retry" as retry_url %}
+    <a class="btn btn-primary btn-block mb-3" href="{{ retry_url }}">
+        {% trans 'Try again' %}
+    </a>
+
+    <div class="alert alert-danger mt-5">
+        <strong>{{ error|escape }}</strong>
+        {{ cause|escape }}
+    </div>
 {% endblock %}

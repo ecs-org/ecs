@@ -6,20 +6,33 @@
 
 {% block content %}
 <div id="batch_sign">
-<div class="nav">
-    <div class="actions">
+    <div class="sign-nav">
         {% block actions %}
-        <a href="{% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="skip" %}">{% trans 'Skip' %}</a>
-        <a href="{% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="pushback" %}">{% trans 'Push back' %}</a>
-        <a href="{% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="cancel" %}">{% trans 'Cancel' %}</a>
+            {% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="skip" as skip_url %}
+            <a class="btn btn-secondary btn-block mb-3" href="{{ skip_url }}">
+                {% trans 'Skip' %}
+            </a>
+
+            {% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="pushback" as pushback_url %}
+            <a class="btn btn-secondary btn-block mb-3" href="{{ pushback_url }}">
+                {% trans 'Push back' %}
+            </a>
+
+            {% url 'ecs.signature.views.batch_action' pdf_id=pdf_id action="cancel" as cancel_url %}
+            <a class="btn btn-secondary btn-block mb-3" href="{{ cancel_url }}">
+                {% trans 'Cancel' %}
+            </a>
         {% endblock %}
     </div>
 
-    {% block navbottom %}{% endblock %}
-</div>
-<div class="preview">
-    <iframe frameborder="0" scrolling="auto" src="{% url 'ecs.signature.views.sign_preview' pdf_id=pdf_id %}">{% trans "Your browser does not support iframes." %}</iframe>
-</div>
-<div style="clear:both;"></div>
+    <div class="card preview">
+        <div class="card-block">
+            <iframe frameborder="0" scrolling="auto" src="{% url 'ecs.signature.views.sign_preview' pdf_id=pdf_id %}">
+                {% trans "Your browser does not support iframes." %}
+            </iframe>
+        </div>
+    </div>
+
+    <div style="clear:both;"></div>
 </div>
 {% endblock %}

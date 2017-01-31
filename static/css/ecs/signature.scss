@@ -2,60 +2,21 @@
 
 #batch_sign {
     position: relative;
-    display: block;
-    .nav {
+
+    .sign-nav {
         position: relative;
         width: 220px;
-        padding: 10px;
-
-        .actions a {
-            display: block;
-            width: 200px;
-            text-align: center;
-            background-color: #eeeeff;
-            border: 1px solid #bbbbbb;
-            border-radius: 3px;
-            color: #333333;
-            margin-bottom: 5px;
-            padding: 3px;
-            font-weight: bold;
-            text-decoration: none;
-            &.highlight {
-                border-color: #00dd00;
-            }
-        }
-        .mocca {
-            margin-top: 30px;
-            width: 210px;
-            height: 250px;
-        }
-        .error {
-            margin-top: 30px;
-            color: red;
-            font-weight: bold;
-            border: 2px solid red;
-            border-radius: 5px;
-            padding: 5px;
-            width: 200px;
-        }
-        min-height: 500px;
     }
 
     .preview {
         position: absolute;
         left: 250px;
-        top: 0px;
-        bottom: 0px;
-        right: 10px;
-        padding: 30px;
-        background-color: white;
-        border: 3px solid #bbbbbb;
-        border-radius: 5px;
-        height: 440px;
+        top: 0;
+        right: 0;
 
         iframe {
             width: 100%;
-            height: 100%;
+            height: 500px;
         }
     }
 }

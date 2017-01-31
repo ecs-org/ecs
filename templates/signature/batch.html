@@ -1,6 +1,10 @@
 {% extends "signature/batch_base.html" %}
 {% load i18n %}
 
-{% block navbottom %}
-    <iframe class="mocca" frameborder="0" scrolling="no" src="{{ sign_url }}">{% trans "Your browser does not support iframes." %}</iframe>
+{% block actions %}
+    {{ block.super }}
+
+    <iframe class="mocca mt-5" frameborder="0" scrolling="no" src="{{ sign_url }}">
+        {% trans "Your browser does not support iframes." %}
+    </iframe>
 {% endblock %}
