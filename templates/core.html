@@ -5,19 +5,19 @@
 {% block htmlcss %}
     {{ block.super }}
     {% compress css %}
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/base.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/core.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/forms.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/notification.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/diff.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/meetings.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/communication.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/dashboard.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/administration.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/boilerplate.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/signature.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/statistics.scss' %} />
-        <link rel="stylesheet" type="text/x-scss" href={% static 'css/ecs/tags.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/base.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/core.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/forms.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/notification.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/diff.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/meetings.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/communication.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/dashboard.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/administration.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/boilerplate.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/signature.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/statistics.scss' %} />
+        <link rel="stylesheet" type="text/x-scss" href={% static 'css/tags.scss' %} />
     {% endcompress %}
 {% endblock %}
 
@@ -244,17 +244,17 @@
     {{ block.super }}
 
     {% compress js %}
-        <script type="text/javascript" src={% static 'js/ecs/__init__.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/TabController.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/TabbedForm.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/InlineFormset.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/fieldhistory.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/textarea.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/textarea.toolbarItems.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/utils.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/widgets.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/tasks.js' %}></script>
-        <script type="text/javascript" src={% static 'js/ecs/communication.js' %}></script>
+        <script type="text/javascript" src={% static 'js/__init__.js' %}></script>
+        <script type="text/javascript" src={% static 'js/TabController.js' %}></script>
+        <script type="text/javascript" src={% static 'js/TabbedForm.js' %}></script>
+        <script type="text/javascript" src={% static 'js/InlineFormset.js' %}></script>
+        <script type="text/javascript" src={% static 'js/fieldhistory.js' %}></script>
+        <script type="text/javascript" src={% static 'js/textarea.js' %}></script>
+        <script type="text/javascript" src={% static 'js/textarea.toolbarItems.js' %}></script>
+        <script type="text/javascript" src={% static 'js/utils.js' %}></script>
+        <script type="text/javascript" src={% static 'js/widgets.js' %}></script>
+        <script type="text/javascript" src={% static 'js/tasks.js' %}></script>
+        <script type="text/javascript" src={% static 'js/communication.js' %}></script>
     {% endcompress %}
 
     <script type="text/javascript">
