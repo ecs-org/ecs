@@ -33,7 +33,7 @@
 
 <h4>Die Kommission fasst folgenden Beschluss:</h4>
 
-<p>{% include 'votes/pdf/vote_result.inc' with result=vote.result %}<p>
+<p>{% include 'votes/pdf/vote_result.html' with result=vote.result %}<p>
 
 {% if past_votes %}
     {% for vote in past_votes %}

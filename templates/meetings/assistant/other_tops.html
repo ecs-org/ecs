@@ -27,7 +27,7 @@
         {% if thesis_vote_formset|length %}
             <h4>{% trans "Not Approved" %}</h4>
             {% with thesis_vote_formset as formset %}
-                {% include 'meetings/assistant/expedited_vote_formset.inc' %}
+                {% include 'meetings/assistant/expedited_vote_formset.html' %}
             {% endwith %}
         {% endif %}
 
@@ -48,7 +48,7 @@
         {% if expedited_vote_formset|length %}
             <h4>{% trans "Not Approved" %}</h4>
             {% with expedited_vote_formset as formset %}
-                {% include 'meetings/assistant/expedited_vote_formset.inc' %}
+                {% include 'meetings/assistant/expedited_vote_formset.html' %}
             {% endwith %}
         {% endif %}
 
@@ -70,7 +70,7 @@
         {% if localec_vote_formset|length %}
             <h4>{% trans "Not Approved" %}</h4>
             {% with localec_vote_formset as formset %}
-                {% include 'meetings/assistant/expedited_vote_formset.inc' %}
+                {% include 'meetings/assistant/expedited_vote_formset.html' %}
             {% endwith %}
         {% endif %}
 

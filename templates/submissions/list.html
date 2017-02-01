@@ -9,9 +9,9 @@
 {% block content %}
 <div class="container">
 
-{% include "submissions/filterform.inc" %}
+{% include "submissions/filterform.html" %}
 
-{% include 'paginator.inc' with page=submissions %}
+{% include 'paginator.html' with page=submissions %}
 
 {% if warning %}
     <div class="alert alert-warning text-center my-3">
@@ -94,7 +94,7 @@
 
                 {% if user.profile.is_internal %}
                     <div>
-                        {% include 'tags/list.inc' with tags=submission.tags.all only %}
+                        {% include 'tags/list.html' with tags=submission.tags.all only %}
                     </div>
                 {% endif %}
 
@@ -127,7 +127,7 @@
     {% endfor %}
 </ul>
 
-{% include 'paginator.inc' with page=submissions %}
+{% include 'paginator.html' with page=submissions %}
 
 </div>
 {% endblock %}

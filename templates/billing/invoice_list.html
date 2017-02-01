@@ -13,7 +13,7 @@
     <div class="container">
         <h2>{% trans 'Old Invoices' %}</h2>
 
-        {% include 'paginator.inc' with page=invoices %}
+        {% include 'paginator.html' with page=invoices %}
 
         <ul class="list-group mb-3">
             {% for invoice in invoices.object_list %}
@@ -37,6 +37,6 @@
                 </li>
             {% endfor %}
         </ul>
-        {% include 'paginator.inc' with page=invoices %}
+        {% include 'paginator.html' with page=invoices %}
     </div>
 {% endblock %}

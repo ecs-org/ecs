@@ -4,7 +4,7 @@
 {% block title %}Meldung{% endblock %}
 
 {% block content %}
-    {% include 'pdf/ec_head.inc' %}
+    {% include 'pdf/ec_head.html' %}
     <div class="header">
         <h1>{% block answer_title %}Antwort zur Meldung vom {{ notification.timestamp|date:'d.m.Y' }}<br/>{{ notification.short_name }}{% endblock %}</h1>
     </div>

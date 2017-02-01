@@ -6,7 +6,7 @@
             <td style="width: 5%;">[X]</td>
             <td style="width: 95%;">
                 {% if vote %}
-                    {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
+                    {% include 'votes/pdf/vote_result.html' with result=vote.result %}
                 {% else %}
                     Es liegt kein Votum vor.
                 {% endif %}

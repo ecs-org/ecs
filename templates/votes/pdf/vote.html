@@ -4,7 +4,7 @@
 {% block title %}{{ vote }}{% endblock %}
 
 {% block content %}
-{% include 'pdf/ec_head.inc' %}
+{% include 'pdf/ec_head.html' %}
 
 <h1 class="metadata">{{ vote }}</h1>
 <center><p><b>
@@ -70,7 +70,7 @@
                 <span class="checkbox">X</span>
             </td>
             <td style="width: 95%;">
-                {% include 'votes/pdf/vote_result.inc' with result=vote.result %}
+                {% include 'votes/pdf/vote_result.html' with result=vote.result %}
             </td>
         </tr>
     </tbody>

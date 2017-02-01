@@ -135,7 +135,7 @@
                 {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
             </p>
             {% with categorization_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
+                {% include 'submissions/review_form.html' %}
             {% endwith %}
             {% if categorization_form.reopen_task %}
                 <p><a class="btn btn-outline-primary" href="{% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk %}">{% trans 'Reopen' %}</a></p>
@@ -228,7 +228,7 @@
             {% endwith %}
 
             {% with vote_review_form as review_form %}
-                {% include 'submissions/review_form.inc' %}
+                {% include 'submissions/review_form.html' %}
             {% endwith %}
 
             {% if debug and vote_review_form.instance.pk %}
@@ -275,7 +275,7 @@
 
     {% if user.profile.is_internal %}
         <div id="checklist_summary_tab" class="container collapse">
-            {% include 'submissions/checklist_summary.inc' %}
+            {% include 'submissions/checklist_summary.html' %}
         </div>
     {% endif %}
 
@@ -306,7 +306,7 @@
                 </p>
             {% endif %}
         {% endif %}
-        {% include 'submissions/checklist_review_form.inc' %}
+        {% include 'submissions/checklist_review_form.html' %}
         {% if formset.reopen_task and formset.readonly %}
             {% url 'ecs.tasks.views.reopen_task' task_pk=formset.reopen_task.pk as reopen_url %}
             <p>

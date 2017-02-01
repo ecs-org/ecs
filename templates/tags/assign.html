@@ -2,7 +2,7 @@
 
 {% with tags=submission.tags.all %}
     {% if tags %}
-        {% include 'tags/list.inc' with tags=tags only %}
+        {% include 'tags/list.html' with tags=tags only %}
     {% else %}
         <em>{% trans 'No tags yet.' %}</em>
     {% endif %}

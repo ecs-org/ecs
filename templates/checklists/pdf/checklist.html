@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'pdf/ec_head.inc' %}
+    {% include 'pdf/ec_head.html' %}
     <h1>
         {% with submission=checklist.submission %}
             {{ checklist.blueprint }} für {{ submission|ec_number }}<br>

@@ -13,7 +13,7 @@
 
 {% for field_name in review_form.fields %}
     {% with review_form|getitem:field_name as field %}
-        {% include "submissions/review_field.inc" %}
+        {% include "submissions/review_field.html" %}
     {% endwith %}
 {% endfor %}
 

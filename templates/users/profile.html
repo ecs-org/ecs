@@ -10,7 +10,7 @@
         <a class="btn btn-primary" href="{% url 'ecs.users.views.edit_profile' %}">{% trans "Edit Profile" %}</a>
         <a class="btn btn-primary" href="{% url 'ecs.users.views.change_password' %}">{% trans "Change Password" %}</a>
     </div>
-    {% include "users/base_profile.inc" %}
+    {% include "users/base_profile.html" %}
 </div>
 {% endwith %}
 

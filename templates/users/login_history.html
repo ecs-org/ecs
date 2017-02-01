@@ -15,7 +15,7 @@
         <input class="btn btn-primary" type="submit" value="{% trans "Send" %}">
     </form>
 
-    {% include 'paginator.inc' %}
+    {% include 'paginator.html' %}
 
     <ul>
     {% for event in page.object_list %}
@@ -28,7 +28,7 @@
     {% endfor %}
     </ul>
 
-    {% include 'paginator.inc' %}
+    {% include 'paginator.html' %}
 
 {% endblock %}
 

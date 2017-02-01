@@ -17,7 +17,7 @@
     <input class="btn btn-primary" type="submit" value="{% trans 'Search' %}" />
 </form>
 
-{% include 'paginator.inc' with page=users %}
+{% include 'paginator.html' with page=users %}
 
 <ul class="user_list list-group mb-3">
 {% for profile in users.object_list %}
@@ -76,7 +76,7 @@
 {% endfor %}
 </ul>
 
-{% include 'paginator.inc' with page=users %}
+{% include 'paginator.html' with page=users %}
 
 {% endblock %}
 

@@ -8,12 +8,12 @@
 
 {% block content %}
     <div class="container">
-        {% include "tasks/tasks_full.inc" %}
+        {% include "tasks/tasks_full.html" %}
     </div>
 {% endblock %}
 
 {% block jsbottom %}
     {{ block.super }}
-    {% include "tasks/tasks_js.inc" %}
+    {% include "tasks/tasks_js.html" %}
 {% endblock %}
 

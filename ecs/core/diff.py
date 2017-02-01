@@ -372,7 +372,7 @@ class DocumentDiffer(AtomicModelDiffer):
                 'submission_form': self.submission_form,
                 'user': get_current_user(),
             }
-            return render_html(HttpRequest(), 'submissions/diff/document.inc', data)
+            return render_html(HttpRequest(), 'submissions/diff/document.html', data)
         return _render
 
 
