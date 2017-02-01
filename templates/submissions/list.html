@@ -24,23 +24,22 @@
         <li class="list-group-item d-block">
             {% if submission|is_docstash %}
                 {% with submission as docstash %}
+                    <a class="delete_docstash btn btn-outline-danger float-right" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">
+                        {% trans 'Delete' %}
+                    </a>
                     <h5 class="font-weight-normal">
                         <span class="fa fa-wrench text-info"></span>
-                        {% if docstash.value.notification_type %}
-                            <strong>{{ docstash.value.notification_type }}</strong> für
-                        {% endif %}
-                        {{ docstash.name|default:"<i>Unbenannt</i>" }}
-                    </h5>
-                    <div class="my-3">
                         <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=docstash.key %}">
-                            {% trans 'Edit' %}
-                        </a> | 
-                        <a class="delete_docstash" href="{% url 'ecs.core.views.submissions.delete_docstash_entry' docstash_key=docstash.key %}?next={{ request.path|urlencode }}">
-                            {% trans 'Delete' %}
+                            {% if docstash.value.notification_type %}
+                                <strong>{{ docstash.value.notification_type }}</strong> für
+                            {% endif %}
+                            {{ docstash.name|default:"<i>Unbenannt</i>" }}
                         </a>
-                    </div>
-                    <div>
-                        Letzte Änderung: {{ docstash.modtime|date:"d.m.Y, H:i:s" }} Uhr
+                    </h5>
+                    <div class="text-muted">
+                        {% blocktrans with modified_at=docstash.modtime|date:'d.m.Y, H:i' trimmed %}
+                            Last Change: {{ modified_at }}
+                        {% endblocktrans %}
                     </div>
                 {% endwith %}
             {% else %}
@@ -51,7 +50,7 @@
                     {{ submission.project_title_display }}
                 </h5>
 
-                <div class="my-3">
+                <div class="my-2">
                     {% if user.profile.is_internal %}
                         {% with submission.paper_submission_task as paper_submission_review_task %}
                             {% if paper_submission_review_task %}
