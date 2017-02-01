@@ -16,7 +16,7 @@
             <li><a class="open-in-widget" href="{% url 'ecs.meetings.views.optimize_timetable_long' meeting_pk=meeting.pk algorithm='ga' %}">Lange optimieren</a></li>
         </ol>
     {% endif %}
-    <div class="waiting_time">
+    <div class="my-2">
     Wartezeit: 
         sum={{ meeting.metrics.waiting_time_total|simple_timedelta_format|default:'-' }},
         avg={{ meeting.metrics.waiting_time_avg|simple_timedelta_format|default:'-' }}, 
@@ -24,12 +24,12 @@
         min={{ meeting.metrics.waiting_time_min|simple_timedelta_format|default:'-' }},
         var={{ meeting.metrics.waiting_time_variance|simple_timedelta_format|default:'-' }},
     </div>
-    <div class="constraints_hurt">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
+    <div class="my-2">Verletzte Einschränkungen: {{ meeting.metrics.constraint_violation_total }}</div>
     <div class="score">Score: {{ score }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
-            <span class="dragHandle">
+            <span class="dragHandle bg-primary text-white">
                 {{ entry }}
                 {% if not readonly %}
                     <div class="text-center">
@@ -85,24 +85,27 @@
     </ol>
     <div id="userlist">
         <h4>Teilnehmer ({{ meeting.users_with_constraints|length }})</h4>
-        <ul>
+        <ul class="list-group list-group-flush">
             {% for user in meeting.users_with_constraints %}
-                <li><span class="user">{{ user }}</span>
+                <li class="list-group-item p-2"><span class="user">{{ user }}</span>
                     <div class="info">
                     {% with meeting.metrics.waiting_time_per_user|getitem:user as waiting_time %}
                         {% if waiting_time %}
-                            <span class="waiting_time">Wartezeit: {{ waiting_time|simple_timedelta_format }}</span>
+                            <span class="text-muted">Wartezeit: {{ waiting_time|simple_timedelta_format }}</span>
                         {% endif %}
                     {% endwith %}
                     {% if user.constraints %}
-                        <ul class="constraints">
+                        <ul class="list-unstyled">
                             {% for constraint in user.constraints %}
-                                <li><span class="constraint_status">{{ meeting.metrics.constraint_violations|getitem:constraint|yesno:'1,0' }}</span>{{ constraint.start_time|time:"H:i" }} - {{ constraint.end_time|time:"H:i" }} ({{ constraint.get_weight_display }})</li>
+                            <li class="mt-1 {% if meeting.metrics.constraint_violations|getitem:constraint %}text-danger{% else %}text-success{% endif %}">
+                                    {{ constraint.start_time|time:"H:i" }} - {{ constraint.end_time|time:"H:i" }}
+                                    ({{ constraint.get_weight_display }})
+                                </li>
                             {% endfor %}
                         </ul>
                     {% endif %}
                     {% if not readonly %}
-                        <span class="contraints_edit"><a href="{% url 'ecs.meetings.views.edit_user_constraints' meeting_pk=meeting.pk user_pk=user.pk %}">Einschränkungen bearbeiten</a></span>
+                        <div><a href="{% url 'ecs.meetings.views.edit_user_constraints' meeting_pk=meeting.pk user_pk=user.pk %}">Einschränkungen bearbeiten</a></div>
                     {% endif %}
                     </div>
                 </li>
@@ -118,11 +121,6 @@
             window.location.reload();
         }, 10000);
     {% else %}
-        $('.constraint_status').each(function() {
-            var span = $(this);
-            span.css('background-color',
-                (parseFloat(span.html()) == 0) ? 'green' : 'red');
-        });
         $('.entry form input').keydown(function(ev){
             if (ev.key == 'Enter')
                 $(this).parents('form').submit();

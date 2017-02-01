@@ -98,7 +98,7 @@ class AtomicDiffNode(DiffNode):
             if isinstance(new, collections.Callable):
                 new = new(plainhtml=plain)
             result.append('<span class="inserted">+ %s</span>' % force_text(new))
-        return '<span class="atomic">%s</span>' % ''.join(result)
+        return '<div class="atomic">%s</div>' % ''.join(result)
         
 
 

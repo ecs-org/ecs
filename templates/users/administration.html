@@ -21,7 +21,7 @@
 
 <ul class="user_list list-group mb-3">
 {% for profile in users.object_list %}
-    <li class="list-group-item d-block user collapsed{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
+    <li class="list-group-item d-block user{% if profile.profile.is_indisposed %} list-group-item-warning{% endif %}{% if not profile.is_active %} list-group-item-danger{% endif %}">
         <div class="head">
             <strong>
                 {{ profile|formal_name }}
@@ -37,7 +37,7 @@
                 <span class="float-right mx-3">[{% trans 'Inactive' %}]</span>
             {% endif %}
         </div>
-        <div class="body">
+        <div class="body collapse">
             <a href="{% url 'ecs.users.views.details' user_pk=profile.pk %}">{% trans 'Edit Details' %}</a>
             | <a href="{% url 'ecs.users.views.indisposition' user_pk=profile.pk %}">
                     {% if profile.profile.is_indisposed %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
@@ -98,7 +98,7 @@
                 var user = $(this);
                 user.find('.head').click(function(ev) {
                     ev.preventDefault();
-                    user.toggleClass('collapsed');
+                    user.find('.body').toggleClass('show');
                 });
             });
 

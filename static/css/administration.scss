@@ -1,19 +1,5 @@
 /* user administration */
 
-.administration_detail {
-    .user_list {
-        .user {
-            .body {
-            }
-            &.collapsed {
-                .body {
-                    display: none;
-                }
-            }
-        }
-    }
-}
-
 table.cert_list tr.invalid {
     text-decoration: line-through;
 }

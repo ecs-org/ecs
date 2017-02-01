@@ -1,5 +1,3 @@
-@import "variables.scss";
-
 .boilerplate_container {
     display: none;
     position: relative;
@@ -8,12 +6,6 @@
         position: absolute;
         width: 100%;
         z-index: 1000;
-
-        a:hover {
-            text-decoration: none;
-            background: $lightskyblue;
-            cursor: pointer;
-        }
 
         .resultlist {
             max-height: 20rem;

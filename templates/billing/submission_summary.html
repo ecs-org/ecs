@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="container my-3">
-        <a class="btn btn-secondary btn-sm mt-3" href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}" class="button_submit">
+        <a class="btn btn-secondary" href="{% url 'ecs.billing.views.invoice_pdf' invoice_pk=invoice.pk %}">
             {% trans 'Download Invoice as xls file' %}
         </a>
 

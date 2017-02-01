@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="container my-3">
-        <a class="btn btn-secondary btn-sm" href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}" class="button_submit">
+        <a class="btn btn-secondary" href="{% url 'ecs.billing.views.checklist_payment_pdf' payment_pk=payment.pk %}">
             {% trans 'Download payment as xls file' %}
         </a>
 

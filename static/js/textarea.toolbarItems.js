@@ -55,8 +55,9 @@ ecs.textarea.toolbarItems.boilerplate = function(label, url) {
                             resultList.html('');
                             results.forEach(function(text) {
                                 var display = $('<a>', {
-                                    class: 'list-group-item',
+                                    class: 'list-group-item list-group-item-action d-block',
                                     html: '<strong>' + text.slug + '</strong>: ' + text.text,
+                                    href: '#',
                                     click: function(ev) {
                                         ev.preventDefault();
                                         insert(text.text);
