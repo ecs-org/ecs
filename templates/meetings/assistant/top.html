@@ -20,7 +20,8 @@
             {% endif %}
         {% endif %}
         <span class="meta">
-            Geplante Startzeit: {{ top.start|date:'H:i:s' }} Uhr, Geplante Dauer: {{ top.duration|simple_timedelta_format }}
+            Geplante Startzeit: {{ top.start|date:'H:i' }} Uhr,
+            Geplante Dauer: {{ top.duration|simple_timedelta_format }}
         </span>
     {% if not submission %}
         <div class="meeting_assistant_block">
