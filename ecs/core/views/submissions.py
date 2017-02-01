@@ -951,11 +951,6 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
     b2_resubmission_tasks = tasks.filter(content_type=vote_ct,
         data_id__in=Vote.objects.filter(submission_form__submission__pk__in=visible_submission_pks).values('pk').query,
         task_type__workflow_node__uid='b2_resubmission')
-    stashes = DocStash.objects.filter(
-        group='ecs.core.views.submissions.create_submission_form',
-        content_type=ContentType.objects.get_for_model(Submission),
-        owner=request.user, object_id__in=visible_submission_pks,
-    )
 
     for s in submissions.object_list:
         if isinstance(s, DocStash):
@@ -969,9 +964,6 @@ def submission_list(request, submissions, stashed_submission_forms=None, templat
         for task in b2_resubmission_tasks:
             if task.data.submission_form.submission == s:
                 s.b2_resubmission_task = task
-        for stash in stashes:
-            if stash.object_id == s.id:
-                s.current_docstash = stash
 
     # save the filter in the user settings
     if 'tags' in filterform.cleaned_data:
