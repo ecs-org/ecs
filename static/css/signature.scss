@@ -4,6 +4,10 @@
     .sign-nav {
         position: relative;
         width: 220px;
+
+        iframe {
+            min-height: 250px;
+        }
     }
 
     .preview {
