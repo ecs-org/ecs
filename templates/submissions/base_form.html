@@ -72,7 +72,22 @@
                         {% with nontesteduseddrug_formset as formset %}
                             {% include "forms/tables/inline_formset.html" %}
                         {% endwith %}
-                        
+
+                    {% elif tab.slug == 'biometrics' and not readonly %}
+
+                        <div class="alert alert-info text-center mt-3">
+                            Hier nur Kurzinformationen in Stichworten,
+                            ausführlicher - wenn erforderlich - unter Punkt 7.15
+                            und 7.16.
+                        </div>
+
+                    {% elif tab.slug == 'insurance' and not readonly %}
+
+                        <div class="alert alert-info text-center mt-3">
+                            Diese Angaben müssen in der Patienten- /
+                            Probandeninformation enthalten sein!
+                        </div>
+
                     {% elif tab.slug == 'documents' %}
                     
                         {% if not readonly %}
