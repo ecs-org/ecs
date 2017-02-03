@@ -9,25 +9,7 @@ from ecs.core.models.constants import (
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
     SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
 )
-from ecs.votes.constants import PERMANENT_VOTE_RESULTS, POSITIVE_VOTE_RESULTS, NEGATIVE_VOTE_RESULTS
 from ecs.meetings.models import Meeting
-
-def get_vote_filter_q(**kwargs):
-    accepted_votes = set()
-    f = {}
-    if kwargs.get('positive', False):
-        accepted_votes |= set(POSITIVE_VOTE_RESULTS)
-    if kwargs.get('negative', False):
-        accepted_votes |= set(NEGATIVE_VOTE_RESULTS)
-    if kwargs.get('permanent', False):
-        if accepted_votes:
-            accepted_votes &= set(PERMANENT_VOTE_RESULTS)
-        else:
-            accepted_votes = set(PERMANENT_VOTE_RESULTS)
-    f['votes__result__in'] = accepted_votes
-    if kwargs.get('published', True):
-        f['votes__published_at__isnull'] = False
-    return Q(**f)
 
 
 class SubmissionQuerySet(models.QuerySet):
@@ -42,10 +24,6 @@ class SubmissionQuerySet(models.QuerySet):
 
     def amg_mpg(self):
         return self.amg() & self.mpg()
-
-    def with_vote(self, **kwargs):
-        from ecs.core.models import SubmissionForm
-        return self.filter(id__in=SubmissionForm.objects.with_vote(**kwargs).values('submission_id').query)
 
     def expedited(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_EXPEDITED)
@@ -114,21 +92,6 @@ class SubmissionManager(AuthorizationManager.from_queryset(SubmissionQuerySet)):
         # XXX: We really shouldn't be using distinct() here - it hurts
         # performance.
         return SubmissionQuerySet(self.model).distinct()
-
-
-class SubmissionFormQuerySet(models.QuerySet):
-    def current(self):
-        return self.filter(submission__current_submission_form__id=models.F('id'))
-
-    def with_vote(self, **kwargs):
-        return self.filter(get_vote_filter_q(**kwargs))
-
-    def with_any_vote(self, **kwargs):
-        from ecs.core.models import Submission
-        return self.filter(submission__id__in=Submission.objects.with_vote(**kwargs).values('id').query)
-
-
-SubmissionFormManager = AuthorizationManager.from_queryset(SubmissionFormQuerySet)
 
 
 class InvestigatorQuerySet(models.QuerySet):

@@ -11,6 +11,7 @@ from django.utils import timezone
 from django_countries import countries
 from django_countries.fields import CountryField
 
+from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
     MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
@@ -20,8 +21,8 @@ from ecs.core.models.constants import (
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import (
-    SubmissionManager, SubmissionQuerySet, SubmissionFormManager,
-    InvestigatorManager, TemporaryAuthorizationManager,
+    SubmissionManager, SubmissionQuerySet, InvestigatorManager,
+    TemporaryAuthorizationManager,
 )
 from ecs.core.parties import get_involved_parties, get_reviewing_parties, get_presenting_parties
 from ecs.documents.models import Document
@@ -119,11 +120,8 @@ class Submission(models.Model):
 
     @property
     def is_active(self):
-        return (
-            self.current_published_vote and
-            self.current_published_vote.is_positive and
-            self.current_published_vote.is_permanent
-        )
+        vote = self.current_published_vote
+        return (vote and vote.is_positive and vote.is_permanent)
 
     @property
     def lifecycle_phase(self):
@@ -260,7 +258,7 @@ class SubmissionForm(models.Model):
     # denormalization
     primary_investigator = models.OneToOneField('core.Investigator', null=True)
 
-    objects = SubmissionFormManager()
+    objects = AuthorizationManager()
     unfiltered = models.Manager()
     
     # 1.4 (via self.documents)

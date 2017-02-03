@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 
 from ecs.notifications.models import NotificationAnswer
-from ecs.core.models import SubmissionForm, Investigator
+from ecs.core.models import Submission, SubmissionForm, Investigator
 from ecs.users.utils import get_current_user
 from ecs.utils.formutils import require_fields
 from ecs.notifications.models import (
@@ -46,10 +46,10 @@ class AmendmentAnswerForm(RejectableNotificationAnswerForm):
 
 
 def get_usable_submission_forms():
-    submission_forms = (SubmissionForm.objects
-        .with_any_vote(permanent=True, positive=True, published=True)
-        .current())
-    return submission_forms.order_by('submission__ec_number')
+    submissions = Submission.objects.filter(current_published_vote__result='1')
+    return SubmissionForm.unfiltered.filter(
+        id__in=submissions.values('current_submission_form_id')
+    ).order_by('submission__ec_number')
 
 
 class NotificationForm(forms.ModelForm):
