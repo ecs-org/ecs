@@ -72,7 +72,7 @@ def handle_view(request, doc):
         ),
         'title': title,
     }, quote_via=quote)
-    url = '{}3rd-party/pdfjs/web/viewer.html?{}'.format(
+    url = '{}3rd-party/pdfjs-1.5.188/web/viewer.html?{}'.format(
         settings.STATIC_URL, params)
     return redirect(url)
 

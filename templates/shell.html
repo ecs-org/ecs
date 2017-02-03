@@ -6,29 +6,29 @@
         {% block htmlmeta %}{% endblock %}
         <title>{% block htmltitle %}{% ec_name %}{% endblock %}</title>
         {% block htmlcss %}
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/jquery-ui/jquery-ui.min.css' %} />
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2/select2.min.css' %} />
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/tether/tether.min.css' %} />
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap/bootstrap.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/jquery-ui-1.12.1/jquery-ui.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/select2-4.0.3/select2.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/tether-1.3.3/tether.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap-4.0.0-alpha6/bootstrap.min.css' %} />
             <link rel="stylesheet" type="text/css" href={% static '3rd-party/font-awesome-4.6.3/css/font-awesome.min.css' %} />
-            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker3.standalone.min.css' %} />
+            <link rel="stylesheet" type="text/css" href={% static '3rd-party/bootstrap-datepicker-1.6.4/bootstrap-datepicker3.standalone.min.css' %} />
         {% endblock %}         
     </head>
     <body>
         {% block htmlbody %}{% endblock %}
         {% block jsbottom %}
-            <script type="text/javascript" src={% static '3rd-party/jquery.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/jquery-3.1.1.min.js' %}></script>
             <script type="text/javascript" src={% static '3rd-party/jquery-migrate-3.0.0.min.js' %}></script>
             {% if debug %}
                 <script type="text/javascript">
                     jQuery.migrateMute = false;
                 </script>
             {% endif %}
-            <script type="text/javascript" src={% static '3rd-party/jquery-ui/jquery-ui.min.js' %}></script>
-            <script type="text/javascript" src={% static '3rd-party/select2/select2.min.js' %}></script>
-            <script type="text/javascript" src={% static '3rd-party/tether/tether.min.js' %}></script>
-            <script type="text/javascript" src={% static '3rd-party/bootstrap/bootstrap.min.js' %}></script>
-            <script type="text/javascript" src={% static '3rd-party/bootstrap-datepicker/bootstrap-datepicker.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/jquery-ui-1.12.1/jquery-ui.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/select2-4.0.3/select2.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/tether-1.3.3/tether.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/bootstrap-4.0.0-alpha6/bootstrap.min.js' %}></script>
+            <script type="text/javascript" src={% static '3rd-party/bootstrap-datepicker-1.6.4/bootstrap-datepicker.min.js' %}></script>
         {% endblock %}
     </body>
 </html>
