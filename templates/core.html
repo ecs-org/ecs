@@ -210,8 +210,9 @@
                 {% if user.profile.is_indisposed %}
                 <div>
                   {% url 'ecs.users.views.profile' as profile_url %}
-                  {% blocktrans with profile_url as profile_url %}
-                      You are currently marked indisposed. To reclaim your tasks, please visit your <a href="{{ profile_url }}">profile</a>.
+                  {% blocktrans trimmed %}
+                      You are currently marked indisposed. To reclaim your tasks,
+                      please visit your <a href="{{ profile_url }}">profile</a>.
                   {% endblocktrans %}
                 </div>
                 {% endif %}

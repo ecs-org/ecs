@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-13 14:37+0100\n"
+"POT-Creation-Date: 2017-02-03 15:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -60,6 +60,9 @@ msgstr "Firma"
 
 msgid "UID-Nr."
 msgstr "UID-Nr."
+
+msgid "EudraCT-Nr."
+msgstr "EudraCT-Nr."
 
 msgid "applicant"
 msgstr "Antragsteller"
@@ -183,6 +186,9 @@ msgstr "Diese Aufgabe existiert bereits."
 msgid "There is an external review review in progress"
 msgstr "Das letzte Gutachten wurde noch nicht überprüft"
 
+msgid "Finish"
+msgstr "Fertig"
+
 msgid "Request for review"
 msgstr "Bitte um Begutachtung"
 
@@ -285,6 +291,12 @@ msgstr "Keine Angaben"
 msgid "Yes"
 msgstr "Ja"
 
+msgid "invoice recipient"
+msgstr "Rechnungsempfänger"
+
+msgid "sponsor"
+msgstr "Sponsor"
+
 msgid "centers (non subject)"
 msgstr "Zentren im Inland, die nicht Gegenstand der Einreichung sind"
 
@@ -321,9 +333,6 @@ msgstr ""
 msgid "Please enter a time in the format HH: MM."
 msgstr "Bitte geben Sie eine Uhrzeit im Format HH:MM ein."
 
-msgid "No information given"
-msgstr "Keine Angaben"
-
 msgid "Yes, also childbearing"
 msgstr "Ja, auch gebärfähige Frauen"
 
@@ -335,6 +344,9 @@ msgstr "Ja, aber nur gebärfähige Frauen"
 
 msgid "The account beneficiary is not the sponsor"
 msgstr "Der Sponsor ist nicht der Rechnungsempfänger"
+
+msgid "No information given"
+msgstr "Keine Angaben"
 
 msgid "Please enter a valid e-mail address"
 msgstr "Bitte geben Sie eine gültige E-mail Adresse an"
@@ -497,12 +509,6 @@ msgstr "Prüfungsteilnehmer"
 
 msgid "outline"
 msgstr "Kurzfassung"
-
-msgid "sponsor"
-msgstr "Sponsor"
-
-msgid "invoice recipient"
-msgstr "Rechnungsempfänger"
 
 msgid "drug trial"
 msgstr "Arzneimittelstudie"
@@ -719,6 +725,9 @@ msgstr "Name"
 msgid "investigator"
 msgstr "Prüfarzt"
 
+msgid "ethics commission"
+msgstr "Ethik-Kommission"
+
 msgid "study reference"
 msgstr "Studienbezug"
 
@@ -748,9 +757,6 @@ msgstr "Projekttitel (englisch)"
 
 msgid "date of protocol"
 msgstr "Datum des Protokolls"
-
-msgid "EudraCT-Nr."
-msgstr "EudraCT-Nr."
 
 msgid "ISRCTN-Nr."
 msgstr "ISRCTN-Nr."
@@ -1342,9 +1348,6 @@ msgstr "vom Sponsor autorisierte Person/Organisation"
 msgid "study site"
 msgstr "Prüfzentrum"
 
-msgid "ethics commission"
-msgstr "Ethik-Kommission"
-
 msgid "principal investigator"
 msgstr "Koordinierende/r Prüfärztin/arzt"
 
@@ -1396,6 +1399,33 @@ msgstr "Koordinierende/r Prüfärztin/arzt"
 msgid "Temporary Authorization"
 msgstr "Befristete Autorisierung"
 
+msgid "Submissions"
+msgstr "Einreichungen"
+
+msgid "Medical Categories"
+msgstr "Medizinische Kategorien"
+
+msgid "Vote"
+msgstr "Votum"
+
+msgid "valid until"
+msgstr "gültig bis"
+
+msgid "first acknowledged form"
+msgstr "Datum der Erstbestätigung"
+
+msgid "Organisation"
+msgstr "Organisation"
+
+msgid "email"
+msgstr "E-Mail"
+
+msgid "contact person"
+msgstr "Kontaktperson"
+
+msgid "same as sponsor"
+msgstr "wie Sponsor"
+
 msgid "XLS-Export done"
 msgstr "XLS-Export fertig"
 
@@ -1426,50 +1456,18 @@ msgstr "Änderungen an Studie EK-Nr. {ec_number}"
 msgid "Submission not accepted"
 msgstr "Einreichung nicht akzeptiert"
 
-#, fuzzy
-#| msgid "Comments"
 msgid "Comment"
-msgstr "Kommentare"
-
-msgid "Vote"
-msgstr "Votum"
+msgstr "Kommentar"
 
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 #, python-brace-format
 msgid "{task} reopened"
 msgstr "{task} neu geöffnet"
 
-msgid "Your review is incomplete."
-msgstr "Das Gutachten ist nicht vollständig."
-
 msgid "This form can't be submitted at the moment."
 msgstr "Dieses Formular kann im Moment nicht eingereicht werden."
-
-msgid "Submissions"
-msgstr "Einreichungen"
-
-msgid "Medical Categories"
-msgstr "Medizinische Kategorien"
-
-msgid "valid until"
-msgstr "gültig bis"
-
-msgid "first acknowledged form"
-msgstr "Datum der Erstbestätigung"
-
-msgid "Organisation"
-msgstr "Organisation"
-
-msgid "email"
-msgstr "E-Mail"
-
-msgid "contact person"
-msgstr "Kontaktperson"
-
-msgid "same as sponsor"
-msgstr "wie Sponsor"
 
 msgid ""
 "The XLS export has been started. You will get a message when the file is "
@@ -1498,9 +1496,6 @@ msgstr "Bestätigen"
 
 msgid "Reject"
 msgstr "Ablehnen"
-
-msgid "Finish"
-msgstr "Fertig"
 
 msgid "Executive Review"
 msgstr "Begutachtung Executive"
@@ -1607,6 +1602,14 @@ msgstr "Rechnung"
 msgid "Checklist Payment"
 msgstr "Es gibt noch keine Checkliste."
 
+msgid "Meeting Protocol"
+msgstr "Sitzungsprotokoll"
+
+#, fuzzy
+#| msgid "Meetings"
+msgid "Meeting ZIP"
+msgstr "Sitzungen"
+
 msgid "no file"
 msgstr "keine Datei"
 
@@ -1623,10 +1626,6 @@ msgstr ""
 #, python-brace-format
 msgid "Large number of downloads by {user}"
 msgstr "Große Anzahl an Downloads von {user}"
-
-#, fuzzy
-msgid "Ready for Review"
-msgstr "Gutachten Statistik"
 
 msgid "date and time"
 msgstr "Datum und Uhrzeit"
@@ -1727,16 +1726,11 @@ msgstr "Tagesordnung"
 msgid "time slot"
 msgstr "Zeitfenster"
 
-#, python-format
-msgid "EC Meeting %s"
-msgstr "EK Sitzung %s"
+msgid "EC Meeting {}"
+msgstr "EK Sitzung {}"
 
-#, python-brace-format
-msgid "Expedited Review at {0}"
-msgstr "Expedited Review am {0}"
-
-msgid "Meeting Protocol"
-msgstr "Sitzungsprotokoll"
+msgid "Expedited Review at {}"
+msgstr "Expedited Review am {}"
 
 msgid ""
 "The expert assignment has been saved. The experts will be invited to the "
@@ -1782,10 +1776,8 @@ msgstr "Andere Sicherheitsmeldung"
 msgid "Substantial"
 msgstr ""
 
-#, fuzzy
-#| msgid "Batch Signature"
 msgid "Needs signature"
-msgstr "Stapelsignatur"
+msgstr "Unterschrift notwendig"
 
 msgid ""
 "Aus der Sicht des Sponsors ergeben sich derzeit keine Veränderungen des "
@@ -1804,9 +1796,6 @@ msgstr "Negativ beurteilt"
 msgid "New Notification Answer"
 msgstr "Neue Meldungsantwort"
 
-msgid "Die Ethikkommission bestätigt den Erhalt der Sicherheitsmeldung."
-msgstr ""
-
 msgid "Open Notifications"
 msgstr "Offene Meldungen"
 
@@ -1821,9 +1810,6 @@ msgstr "Weitere Begutachtung erforderlich"
 
 msgid "A certificate with this CN already exists."
 msgstr ""
-
-msgid "The passphrases do not match."
-msgstr "Die Passwörter stimmen nicht überein."
 
 msgid "Your Client Certificate"
 msgstr "Ihr Client-Zertifikat"
@@ -1909,15 +1895,6 @@ msgstr "Sie müssen einen Benutzer auswählen."
 
 msgid "Fill out the form completely to complete the task."
 msgstr "Füllen Sie das Formular vollständig aus um die Aufgabe abzuschliessen."
-
-msgid "Deadline"
-msgstr "Stichtag"
-
-msgid "Oldest"
-msgstr "Alter, ältere zuerst"
-
-msgid "Newest"
-msgstr "Alter, neuere zuerst"
 
 #, python-brace-format
 msgid "{task} completed"
@@ -2019,9 +1996,8 @@ msgstr "Aufgabenarten"
 msgid "Name/Email"
 msgstr "Name/Email"
 
-#, python-brace-format
-msgid "{0} is a specialist in following meetings: {1}"
-msgstr "{0} ist als Spezialist in folgenden Sitzungen zugeteilt: {1}"
+msgid "{} is a specialist in following meetings: {}"
+msgstr "{} ist als Spezialist in folgenden Sitzungen zugeteilt: {}"
 
 msgid "{} requires group {}, but it is not selected"
 msgstr "{} erfordert die {} Gruppe, die aber nicht ausgewählt ist"
@@ -2284,87 +2260,8 @@ msgstr "Wollen Sie den Kommentar löschen?"
 msgid "Don't Delete"
 msgstr "Nicht Löschen"
 
-msgid "Communication"
-msgstr "Nachrichten"
-
-msgid "Date"
-msgstr "Datum"
-
-msgid "Subject"
-msgstr "Betreff"
-
-msgid "Read"
-msgstr "Gelesen"
-
-msgid "Page"
-msgstr "Seite"
-
-msgid "of"
-msgstr "von"
-
-msgid "New Message"
-msgstr "Neue Nachricht"
-
-msgid "Back to the communication overview"
-msgstr "Zurück zur Nachrichtenübersicht"
-
-msgid "Back to the Study"
-msgstr "Zurück zur Studie"
-
-msgid "Old/New"
-msgstr "Alt/Neu"
-
-msgid "To the communication overview"
-msgstr "Zur Nachrichtenübersicht"
-
-msgid "To the Study"
-msgstr "Zur Studie"
-
 msgid "Me"
 msgstr "Ich"
-
-msgid "Collapse all"
-msgstr "Alle einklappen"
-
-msgid "Expand all"
-msgstr "Alle ausklappen"
-
-msgid "Send"
-msgstr "Abschicken"
-
-msgid "Incoming"
-msgstr "Einkommend"
-
-msgid "Outgoing"
-msgstr "Ausgehend"
-
-msgid "Pending"
-msgstr "Ausstehend"
-
-msgid "Von/An"
-msgstr "Von/An"
-
-msgid "an"
-msgstr "an"
-
-msgid "von"
-msgstr "von"
-
-#, python-format
-msgid ""
-"\n"
-"        To write a message, open the read-only view of a study and change to "
-"the communication tab.\n"
-"        For general Questions write an email to <a href=\"mailto:%(contact_email)s"
-"\">%(contact_email)s</a>.\n"
-"    "
-msgstr ""
-"\n"
-"        Um eine neue Nachricht zu erstellen, wechseln Sie in die betreffende "
-"Studie in den Reiter Nachrichten.\n"
-"        Für allgemeine Fragen schreiben sie eine E-Mail an <a href="
-"\"mailto:%(contact_email)s\">%(contact_email)s</a>.\n"
-"    "
 
 msgid "No messages yet!"
 msgstr "Es gibt noch keine Nachrichten!"
@@ -2381,38 +2278,69 @@ msgstr "Systemnachrichten werden nicht angezeigt."
 msgid "Show system messages"
 msgstr "Systemnachrichten anzeigen"
 
-#, fuzzy, python-format
-#| msgid ""
-#| "\n"
-#| "          You are currently marked indisposed. To reclaim your tasks, "
-#| "please visit your <a href=\"%(profile_url)s\">profile</a>.\n"
-#| "      "
-msgid ""
-"\n"
-"                          You are currently marked indisposed. To reclaim "
-"your tasks, please visit your <a href=\"%(profile_url)s\">profile</a>.\n"
-"                      "
-msgstr ""
-"\n"
-"          Sie sind derzeit als abwesend markiert. Um Ihre Aufgaben "
-"zurückzuholen  besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>.\n"
-"      "
+msgid "New Message"
+msgstr "Neue Nachricht"
 
-msgid "Task Management Widget verstecken/wiederherstellen"
-msgstr ""
+msgid "Back to the communication overview"
+msgstr "Zurück zur Nachrichtenübersicht"
 
-msgid "Site Notice"
-msgstr "Impressum"
+msgid "Back to the Study"
+msgstr "Zurück zur Studie"
 
-msgid "Click here to get help."
-msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
+msgid "To the Study"
+msgstr "Zur Studie"
+
+msgid "Collapse all"
+msgstr "Alle einklappen"
+
+msgid "Expand all"
+msgstr "Alle ausklappen"
+
+msgid "Send"
+msgstr "Abschicken"
+
+msgid "Incoming"
+msgstr "Einkommend"
+
+msgid "Outgoing"
+msgstr "Ausgehend"
+
+msgid "Starred"
+msgstr "Mit Stern"
+
+msgid "Not Starred"
+msgstr "Ohne Stern"
+
+msgid "Von/An"
+msgstr "Von/An"
+
+msgid "Submission"
+msgstr "Einreichung"
+
+msgid "Subject"
+msgstr "Betreff"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "an"
+msgstr "an"
+
+msgid "von"
+msgstr "von"
+
+msgid "Communication"
+msgstr "Nachrichten"
 
 #, python-format
-msgid "Show my scratchpad for submission %(ec_number)s"
-msgstr "Notizblock für die Studie %(ec_number)s aufschlagen"
-
-msgid "Show my scratchpad"
-msgstr "Notizblock aufschlagen"
+msgid ""
+"To write a message, open the read-only view of a study and change to the "
+"communication tab. For general Questions write an email to <a href=\"mailto:"
+"%(contact_email)s\">%(contact_email)s</a>."
+msgstr ""
+"Um eine neue Nachricht zu erstellen, wechseln Sie in die betreffende Studie "
+"in den Reiter Nachrichten. Für allgemeine Fragen schreiben sie eine E-Mail "
+"an <a href=\"mailto:%(contact_email)s\">%(contact_email)s</a>."
 
 msgid "Dashboard"
 msgstr "Übersicht"
@@ -2429,14 +2357,21 @@ msgstr "Neuer Antrag"
 msgid "Import"
 msgstr "Import"
 
-msgid "Study Notifications"
-msgstr "Studien Meldungen"
-
 msgid "New Notification"
 msgstr "Neue Meldung"
 
 msgid "New Meeting"
 msgstr "Neue Sitzung"
+
+msgid "Click here to get help."
+msgstr "Klicken Sie hier, um zur Online-Hilfe zu gelangen."
+
+#, python-format
+msgid "Show my scratchpad for submission %(ec_number)s"
+msgstr "Notizblock für die Studie %(ec_number)s aufschlagen"
+
+msgid "Show my scratchpad"
+msgstr "Notizblock aufschlagen"
 
 msgid "Accounting of fees"
 msgstr "Gebührenabrechnung"
@@ -2446,6 +2381,17 @@ msgstr "Statistik"
 
 msgid "PKI"
 msgstr ""
+
+msgid "Search"
+msgstr "Suchen"
+
+#, python-format
+msgid ""
+"You are currently marked indisposed. To reclaim your tasks, please visit "
+"your <a href=\"%(profile_url)s\">profile</a>."
+msgstr ""
+"Sie sind derzeit als abwesend markiert. Um Ihre Aufgaben zurückzuholen "
+"besuchen Sie Ihr <a href=\"%(profile_url)s\">Profil</a>."
 
 msgid "Download"
 msgstr "Download"
@@ -2467,25 +2413,14 @@ msgstr ""
 "Bitte um etwas Geduld, die Datei wird gerade hochgeladen und von uns "
 "weiterverarbeitet"
 
-#, fuzzy
-#| msgid "version"
 msgid "Versions"
-msgstr "Version"
+msgstr "Versionen"
 
 msgid "No text"
 msgstr "Kein Text"
 
 msgid "This field is required."
 msgstr "Dieses Feld ist erforderlich"
-
-msgid "Search"
-msgstr "Suchen"
-
-msgid "last edited"
-msgstr "zuletzt bearbeitet"
-
-msgid "ago by"
-msgstr ""
 
 msgid "Comments"
 msgstr "Kommentare"
@@ -2532,10 +2467,8 @@ msgstr "Expedited"
 msgid "Local-EC Submissions"
 msgstr "Lokale EK"
 
-#, fuzzy
-#| msgid "Amendment"
 msgid "Amendments"
-msgstr "Amendment"
+msgstr "Amendments"
 
 msgid "Approve"
 msgstr "Bestätigen"
@@ -2600,8 +2533,14 @@ msgstr "Neue Sitzung"
 msgid "edit meeting"
 msgstr "Sitzung bearbeiten"
 
-msgid "Ansehen"
-msgstr ""
+msgid "Deadline for Thesis Submission"
+msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
+
+msgid "Deadline for Submission"
+msgstr "Letzter Einreichtermin"
+
+msgid "Scheduled for"
+msgstr "Geplant für"
 
 #, python-format
 msgid "Dear(f) %(recipient)s"
@@ -2676,18 +2615,6 @@ msgstr "Person"
 msgid "assigned"
 msgstr "zugeteilt"
 
-msgid "Send protocol"
-msgstr "Protokoll versenden"
-
-msgid "Scheduled for"
-msgstr "Geplant für"
-
-msgid "Deadline for Submission"
-msgstr "Letzter Einreichtermin"
-
-msgid "Deadline for Thesis Submission"
-msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
-
 msgid "Ended"
 msgstr "Beendet"
 
@@ -2696,6 +2623,9 @@ msgstr "Gestartet um"
 
 msgid "Ended at"
 msgstr "Beendet um"
+
+msgid "Expedited Reviewer Invitations"
+msgstr "Expedited Review bis"
 
 msgid "Agenda"
 msgstr "Tagesordnung"
@@ -2709,26 +2639,26 @@ msgstr "Agenda an die Sitzungsmitglieder versenden"
 msgid "Last sent"
 msgstr "Zuletzt versendet"
 
-msgid "Expedited Reviewer Invitations"
-msgstr "Expedited Review bis"
-
 msgid "Timetable PDF"
 msgstr "Zeitplan-PDF"
 
-msgid "Protocol PDF"
-msgstr "Protokoll PDF"
+msgid "Download PDF"
+msgstr "Als PDF herunterladen"
+
+msgid "PDF is being rendered"
+msgstr "PDF wird erstellt"
+
+msgid "Render PDF"
+msgstr "PDF erstellen"
 
 msgid "Sent at"
 msgstr "Versendet am"
 
-msgid "Gesamt"
-msgstr ""
-
 msgid "Discard and rerender PDF"
 msgstr "Verwerfen und neu erstellen"
 
-msgid "Render PDF"
-msgstr "PDF erstellen"
+msgid "Send protocol"
+msgstr "Protokoll versenden"
 
 msgid "AMG/MPG"
 msgstr ""
@@ -2766,6 +2696,7 @@ msgstr "Substantielle Amendments"
 msgid "Download all documents for this meeting (zip)"
 msgstr "Alle Dokumente der Sitzung herunterladen (zip)"
 
+#, python-format
 msgid "Created on %(date)s at %(time)s"
 msgstr "Erstellt am %(date)s um %(time)s"
 
@@ -2810,12 +2741,6 @@ msgstr "Sehr geehrte %(receiver)s!"
 msgid "Dear(m) %(receiver)s"
 msgstr "Sehr geehrter %(receiver)s!"
 
-msgid "Distribute"
-msgstr "Verteilen"
-
-msgid "Download PDF"
-msgstr "Als PDF herunterladen"
-
 msgid "Submit"
 msgstr "Einreichen"
 
@@ -2838,6 +2763,10 @@ msgstr "Es existieren derzeit keine Studienmeldungen."
 #| msgid "Do you want to delete the submission draft?"
 msgid "Do you want to delete the notification draft?"
 msgstr "Wollen Sie den Einreichungsentwurf löschen?"
+
+#, python-format
+msgid "Last Change: %(modified_at)s"
+msgstr "Letzte Änderung: %(modified_at)s"
 
 msgid "Changes"
 msgstr "Änderungen"
@@ -2871,6 +2800,16 @@ msgstr "Anzahl SUSAR"
 msgid "Back to open notifications"
 msgstr "Zurück zu den offenen Meldungen"
 
+msgid "Page"
+msgstr "Seite"
+
+msgid "of"
+msgstr "von"
+
+msgid "Back to the certificate list"
+msgstr "Zurück zur Zertifikat-Liste"
+
+#, python-format
 msgid ""
 "The client certificate for %(user)s has been created. It has been sent to "
 "%(email)s per email. The passphrase is as follows. Please make sure to "
@@ -2886,34 +2825,27 @@ msgstr "Widerrufen"
 msgid "Create new certificate"
 msgstr "Neues Zertifikat erstellen"
 
-msgid "Back to the certificate list"
-msgstr "Zurück zur Zertifikat-Liste"
-
 msgid "Create Certificate"
 msgstr "Zertifikat Erstellen"
+
+msgid "List of scratchpads"
+msgstr "Liste der Notizblöcke"
 
 #, python-format
 msgid "Scratchpad for submission %(ec_number)s"
 msgstr "Notizblock für die Studie %(ec_number)s"
-
-msgid "Show all my scratchpads"
-msgstr "Zur Liste der Notizblöcke"
-
-#, python-format
-msgid "Last Change: %(modified_at)s"
-msgstr "Letzte Änderung: %(modified_at)s"
-
-msgid "Save and close"
-msgstr "Speichern und schließen"
-
-msgid "List of scratchpads"
-msgstr "Liste der Notizblöcke"
 
 msgid "Global scratchpad"
 msgstr "Allgemeiner Notizblock"
 
 msgid "No scratchpad"
 msgstr "Kein Notizblock"
+
+msgid "Show all my scratchpads"
+msgstr "Zur Liste der Notizblöcke"
+
+msgid "Save and close"
+msgstr "Speichern und schließen"
 
 msgid "Your browser does not support iframes."
 msgstr ""
@@ -2941,10 +2873,7 @@ msgstr "Statistik %(current_year)s"
 msgid "Statistics for the year of %(current_year)s"
 msgstr "Statistik für das Jahr %(current_year)s"
 
-msgid "Submission"
-msgstr "Einreichung"
-
-msgid "At least on protocol is required."
+msgid "At least one protocol is required."
 msgstr "Es ist mindestens ein Protokoll erforderlich."
 
 msgid "Organization"
@@ -2968,6 +2897,9 @@ msgstr "Hinzufügen"
 msgid "Catalog of Approved Studies"
 msgstr "Register der befürworteten Studien"
 
+msgid "Years"
+msgstr ""
+
 #, python-format
 msgid "and one other study site"
 msgid_plural "and %(other_ec_count)s other study sites"
@@ -2984,6 +2916,13 @@ msgid "No Checklist with unexpected answers or unexpected comments yet."
 msgstr ""
 "Es gibt noch keine Checkliste mit unerwarteten Antworten oder einem nicht "
 "verpflichtenden Kommentar zu einer erwarteten Antwort."
+
+#, fuzzy
+msgid "finished"
+msgstr "Abgeschlossene TOPs"
+
+msgid "Export"
+msgstr "Export"
 
 msgid "Just Save"
 msgstr "Nur Speichern"
@@ -3016,25 +2955,8 @@ msgstr "Sie werden zum Meldungsformular weitergeleitet"
 msgid "Your study is being submitted"
 msgstr "Ihre Studie wird eingereicht"
 
-msgid "Export"
-msgstr "Export"
-
-msgid "Edit"
-msgstr "Bearbeiten"
-
-#, fuzzy
-#| msgid "title"
-msgid "No title."
-msgstr "Titel"
-
-msgid "PDF is being rendered"
-msgstr "PDF wird erstellt"
-
 msgid "Categories"
 msgstr "Fachgebiete"
-
-msgid "Delete Changes"
-msgstr "Änderungen verwerfen"
 
 msgid ""
 "Die Studie wurde in der eingereichten Form von der Ethik-Kommission "
@@ -3056,20 +2978,8 @@ msgstr "Wollen Sie den Einreichungsentwurf löschen?"
 msgid "See Section 9.Documents"
 msgstr "Siehe Punkt 9.Unterlagen"
 
-#, fuzzy
-msgid "finished"
-msgstr "Abgeschlossene TOPs"
-
-msgid "Start External Review"
-msgstr "Gutachten starten"
-
-#, python-format
-msgid "save %(review)s"
-msgstr "%(review)s speichern"
-
-#, python-format
-msgid "complete %(review)s"
-msgstr "%(review)s abschicken"
+msgid "Edit"
+msgstr "Bearbeiten"
 
 msgid "General"
 msgstr "Generell"
@@ -3129,15 +3039,16 @@ msgstr "Unveröffentlichte Version als PDF herunterladen"
 msgid "Write a new message"
 msgstr "Neue Nachricht"
 
-msgid "Do you want to close the review and send it to the EC?"
-msgstr ""
-"Wollen sie das Gutachten abschließen und an die Ethik-Kommission senden?"
-
 msgid "Involvement"
 msgstr "Beteiligung"
 
 msgid "Timeframe"
 msgstr "Zeitraum"
+
+#, fuzzy
+#| msgid "Temporary Authorization"
+msgid "No temporary authorizations yet."
+msgstr "Befristete Autorisierung"
 
 msgid "Authorize"
 msgstr "Autorisieren"
@@ -3147,6 +3058,9 @@ msgstr "Befangene Parteien"
 
 msgid "This form has not been submitted yet."
 msgstr "Dieses Formular wurde noch nicht eingereicht."
+
+msgid "Delete Changes"
+msgstr "Änderungen verwerfen"
 
 msgid "Not submitted yet."
 msgstr "Noch nicht eingereicht."
@@ -3198,34 +3112,25 @@ msgstr "Meine Aufgaben"
 msgid "Decline"
 msgstr "Ablehnen"
 
+msgid "There are no tasks for you."
+msgstr "Sie haben derzeit keine Aufgaben."
+
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"
-
-msgid "Preview"
-msgstr "Vorschau"
 
 msgid "Accept all"
 msgstr "Alle annehmen"
 
-msgid "Sort by"
-msgstr "Sortieren nach"
+msgid "Preview"
+msgstr "Vorschau"
 
-msgid "thesis"
-msgstr "Diplomarbeit"
-
-msgid "local_ec"
-msgstr "Lokale EK"
-
-msgid "There are no tasks for you."
-msgstr "Sie haben derzeit keine Aufgaben."
+msgid "Bookmark"
+msgstr "Lesezeichen"
 
 msgid "Drag the bookmark link to your bookmark bar to save it."
 msgstr ""
 "Ziehen Sie den Lesezeichen-Link auf Ihre Lesezeichen-Leiste um ihn zu "
 "speichern."
-
-msgid "Bookmark"
-msgstr "Lesezeichen"
 
 msgid "List of Users"
 msgstr "Liste der Benutzer"
@@ -3307,12 +3212,3 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Einstellungen"
-
-#~ msgid "This account is inactive."
-#~ msgstr "Dieser Zugang ist deaktiviert."
-
-#~ msgid "Open"
-#~ msgstr "Offen"
-
-#~ msgid "Proxy"
-#~ msgstr "Vertretung"
