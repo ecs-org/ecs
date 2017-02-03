@@ -757,7 +757,7 @@ class Investigator(models.Model):
     objects = InvestigatorManager()
     
     class Meta:
-        ordering = ['id']
+        ordering = ['-main', 'id']
 
     def save(self, **kwargs):
         if self.email and not self.submission_form.submission.is_transient:
