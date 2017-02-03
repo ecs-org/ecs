@@ -199,25 +199,27 @@
     </div>
 
     <div id="header" class="bg-faded p-3">
-        <h1 id="headertitle">{% block headertitle %}{% endblock %}</h1>
+        <h1 id="headertitle" class="text-truncate" tabindex="-1">
+            {% block headertitle %}{% endblock %}
+        </h1>
 
         {% if request.task_management.form %}
             {% include 'tasks/manage_task.html' with form=request.task_management.form %}
         {% endif %}
+    </div>
 
-        <div id="headernav">
-            {% block headernav %}
-                {% if user.profile.is_indisposed %}
-                <div>
-                  {% url 'ecs.users.views.profile' as profile_url %}
-                  {% blocktrans trimmed %}
-                      You are currently marked indisposed. To reclaim your tasks,
-                      please visit your <a href="{{ profile_url }}">profile</a>.
-                  {% endblocktrans %}
-                </div>
-                {% endif %}
-            {% endblock %}
-        </div>
+    <div class="bg-faded px-3">
+        {% block headernav %}
+            {% if user.profile.is_indisposed %}
+            <div>
+              {% url 'ecs.users.views.profile' as profile_url %}
+              {% blocktrans trimmed %}
+                  You are currently marked indisposed. To reclaim your tasks,
+                  please visit your <a href="{{ profile_url }}">profile</a>.
+              {% endblocktrans %}
+            </div>
+            {% endif %}
+        {% endblock %}
     </div>
 
     <div id="content" class="container-fluid my-3">

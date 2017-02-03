@@ -51,12 +51,6 @@ body {
     }
 }
 
-
-.task_back_log tr.deleted {
-    text-decoration: line-through;
-}
-
-
 /* content */
 
 .ecs-TextAreaToolbar {
@@ -133,4 +127,14 @@ nav.navbar .navbar-brand img {
 
 .text-black {
     color: #000;
+}
+
+/* tasks */
+
+.task_back_log tr.deleted {
+    text-decoration: line-through;
+}
+
+.task_back_log tr.task:not(.text-muted):not(.deleted) {
+    font-weight:bold;
 }

@@ -58,10 +58,10 @@
                 <td class="pr-3">
                     {% if thread|starred_by:user %}
                         {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-                        <a class="open-in-widget fa fa-2x fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+                        <a class="open-in-widget fa fa-2x fa-star text-warning" title="{% trans "Remove star" %}" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
                     {% else %}
                         {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-                        <a class="open-in-widget fa fa-2x fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+                        <a class="open-in-widget fa fa-2x fa-star-o text-muted" title="{% trans "Add star" %}" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
                     {% endif %}
                 </td>
                 <td class="text-nowrap align-middle">
@@ -96,7 +96,7 @@
                 {% if thread.last_message.unread and thread.last_message.receiver_id == user.id %}
                     {% url 'ecs.communication.views.mark_read' thread_pk=thread.pk as mark_read_url %}
                     <a class="open-in-widget" href="{{ mark_read_url }}?next={{ request.path|urlencode }}">
-                        <span class="fa fa-2x fa-check text-primary"></span>
+                        <span class="fa fa-2x fa-check text-primary" title="{% trans "Mark as read" %}"></span>
                     </a>
                 {% endif %}
                 </td>

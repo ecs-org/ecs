@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-03 15:46+0100\n"
+"POT-Creation-Date: 2017-02-03 19:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1634,7 +1634,7 @@ msgid "deadline"
 msgstr "Letzter Einreichtermin"
 
 msgid "deadline thesis"
-msgstr "Letzter Einreichtermin für Diplomarbeiten/Dissertationen"
+msgstr "Letzter Einreichtermin für Diplomarbeiten / Dissertationen"
 
 msgid "duration"
 msgstr "Dauer"
@@ -2287,6 +2287,12 @@ msgstr "Zurück zur Nachrichtenübersicht"
 msgid "Back to the Study"
 msgstr "Zurück zur Studie"
 
+msgid "Remove star"
+msgstr "Stern entfernen"
+
+msgid "Add star"
+msgstr "Stern hinzufügen"
+
 msgid "To the Study"
 msgstr "Zur Studie"
 
@@ -2328,6 +2334,9 @@ msgstr "an"
 
 msgid "von"
 msgstr "von"
+
+msgid "Mark as read"
+msgstr "Als gelesen markieren"
 
 msgid "Communication"
 msgstr "Nachrichten"

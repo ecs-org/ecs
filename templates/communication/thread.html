@@ -7,10 +7,10 @@
 {% block headertitle %}
     {% if thread|starred_by:user %}
         {% url 'ecs.communication.views.unstar' thread_pk=thread.pk as unstar_url %}
-        <a class="fa fa-star text-warning" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
+        <a class="fa fa-star text-warning" title="{% trans "Remove star" %}" href="{{ unstar_url }}?next={{ request.path|urlencode }}"></a>
     {% else %}
         {% url 'ecs.communication.views.star' thread_pk=thread.pk as star_url %}
-        <a class="fa fa-star-o text-muted" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
+        <a class="fa fa-star-o text-muted" title="{% trans "Add star" %}" href="{{ star_url }}?next={{ request.path|urlencode }}"></a>
     {% endif %}
     {{ thread|remote:user }} -
     {% if thread.submission %}

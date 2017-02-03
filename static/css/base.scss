@@ -13,10 +13,11 @@ body {
 }
 
 #headertitle {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     line-height: normal;
+
+    &:focus {
+        white-space: normal;
+    }
 }
 
 /* general content-specific */

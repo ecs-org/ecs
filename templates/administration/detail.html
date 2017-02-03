@@ -1,19 +1,10 @@
 {% extends 'core.html' %}
 {% load core i18n %}
 
-{% block headernav %}
-    <ul class="nav nav-pills tab_header_groups hidden-xs-up">
-        <li class="nav-item">
-            <a class="nav-link active" href="#tabs_administration">{% trans "Administration" %}</a>
-        </li>
-    </ul>
-    {{ block.super }}
-{% endblock %}
-
 {% block headertitle %}{% trans "Administration" %}{% endblock %}
 
 {% block content %}
-    <ul id="tabs_administration" class="nav nav-tabs mb-3 tab_headers">
+    <ul class="nav nav-tabs mb-3 tab_headers">
         <li class="nav-item">
             <a class="nav-link {% if active == 'user_administration' %}active{% endif %}" href="{% url 'ecs.users.views.administration' %}">{% trans "User Administration" %}</a>
         </li>
