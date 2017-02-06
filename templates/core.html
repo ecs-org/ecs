@@ -28,7 +28,8 @@
         <a class="navbar-brand" href="{% url 'ecs.dashboard.views.view_dashboard' %}">
             <img src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
         </a>
-        <div class="collapse navbar-collapse" id="navbarcontent">
+        <div class="collapse navbar-collapse flex-column" id="navbarcontent">
+            <div class="d-flex flex-column flex-lg-row">
             <ul class="nav navbar-nav">
                 <li class="nav-item">
                     <a href="{% url 'ecs.dashboard.views.view_dashboard' %}" class="nav-link text-primary">
@@ -114,7 +115,7 @@
                     </li>
                 {% endif %}
             </ul>
-            <ul class="nav navbar-nav ml-auto mr-1">
+            <ul class="nav navbar-nav ml-lg-auto mr-1">
                 <li class="nav-item">
                     <a href="{% static 'help/index.html' %}" target="_blank" class="nav-link py-0 fa fa-question-circle-o fa-2x text-primary" title="{% trans "Click here to get help." %}"></a>
                 </li>
@@ -179,27 +180,28 @@
                     </span>
                 </div>
             </form>
+            </div>
+            <div class="clearfix">
+                {% userswitcher %}
+                <small class="float-right">
+                    {% if user.profile.is_internal %}
+                        {% get_breadcrumbs as crumbs %}
+                        {% if crumbs %}
+                            {% for submission in crumbs %}
+                                <a href="{% url 'view_submission' submission_pk=submission.pk %}">
+                                    {{ submission|ec_number }} |
+                                </a>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                    {% current_version %}
+                </small>
+            </div>
         </div>
     </nav>
-    <div class="px-3 pb-3 bg-faded clearfix">
-        {% userswitcher %}
-        <small class="float-right">
-            {% if user.profile.is_internal %}
-                {% get_breadcrumbs as crumbs %}
-                {% if crumbs %}
-                    {% for submission in crumbs %}
-                        <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                            {{ submission|ec_number }} | 
-                        </a>
-                    {% endfor %}
-                {% endif %}
-            {% endif %}
-            {% current_version %}
-        </small>
-    </div>
 
-    <div id="header" class="bg-faded p-3">
-        <h1 id="headertitle" class="text-truncate" tabindex="-1">
+    <div id="header" class="bg-faded px-3 pb-3 pt-1">
+        <h1 id="headertitle" class="text-truncate m-0" tabindex="-1">
             {% block headertitle %}{% endblock %}
         </h1>
 
