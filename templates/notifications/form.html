@@ -2,7 +2,7 @@
 {% load core i18n notifications %}
 
 {% block headernav %}
-    <ul class="nav nav-tabs tab_header_groups hidden-xs-up">
+    <ul class="nav nav-tabs flex-wrap tab_header_groups hidden-xs-up">
         <li class="nav-item">
             <a class="nav-link" href="#tabs_notification">{% trans "New Notification" %}</a>
         </li>
@@ -16,7 +16,7 @@
 
 {% block content %}
     <div id="tabs_notification" class="collapse">
-        <ul class="nav nav-tabs mb-3 tab_headers">
+        <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
             {% for tab, fieldsets in tabs %}
                 <li class="nav-item">
                     <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>

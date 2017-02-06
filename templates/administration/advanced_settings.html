@@ -13,7 +13,7 @@
     <form action="{{ request.path }}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs flex-wrap">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#customization_tab">
                     {% trans 'Customization' %}

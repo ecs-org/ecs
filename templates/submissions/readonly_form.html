@@ -37,7 +37,7 @@
 
 {% block headernav %}
   <div class="readonly">
-    <ul class="tab_header_groups nav nav-tabs">
+    <ul class="tab_header_groups nav nav-tabs flex-wrap">
     {% block tab_header_groups %}
         <li class="nav-item"><a class="nav-link" href="#tabs_general">{% trans "General" %}</a></li>
         {{ block.super }}
@@ -56,7 +56,7 @@
     <div class="readonly">
         {% block tab_headers %}
             <div id="tabs_general" class="collapse">
-                <ul class="nav nav-tabs mb-3 tab_headers">
+                <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
                     <li class="nav-item"><a class="nav-link" href="#status_tab">{% trans 'Status' %}</a></li>
                     {% if categorization_form %}
                         <li class="nav-item"><a class="nav-link {% if not categorization_form.readonly or categorization_review %}active{% endif %}" href="#categorization_tab">{% trans "Categorization" %}</a></li>
@@ -77,7 +77,7 @@
 
             {% if checklist_reviews or user.profile.is_internal %}
             <div id="tabs_checklists" class="collapse">
-                <ul class="nav nav-tabs mb-3 align-items-end tab_headers">
+                <ul class="nav nav-tabs flex-wrap mb-3 align-items-end tab_headers">
                     {% if user.profile.is_internal %}
                         <li class="nav-item"><a class="nav-link" href="#checklist_summary_tab">{% trans "Checklist Summary" %}</a></li>
                     {% endif %}
@@ -89,7 +89,7 @@
             {% endif %}
             
             <div id="tabs_votes" class="collapse">
-                <ul class="nav nav-tabs mb-1 tab_headers ">
+                <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
                     <li class="nav-item"><a class="nav-link" href="#published_votes_tab">{% trans "Published Votes" %}</a></li>
                     {% if vote_review_form %}
                         <li class="nav-item"><a class="nav-link {% if not vote_review_form.readonly %}active{% endif %}" href="#vote_review_tab">Votum</a></li>
@@ -98,14 +98,14 @@
             </div>
 
             <div id="tabs_notifications" class="collapse">
-                <ul class="nav nav-tabs mb-3 tab_headers">
+                <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
                     <li class="nav-item"><a class="nav-link" href="#pending_notifications_tab">{% trans "Pending Notifications" %}</a></li>
                     <li class="nav-item"><a class="nav-link" href="#answered_notifications_tab">{% trans "Answered Notifications" %}</a></li>
                 </ul>
             </div>
 
             <div id="tabs_communication" class="collapse">
-                <ul class="nav nav-tabs mb-3 tab_headers">
+                <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
                     <li class="nav-item"><a class="nav-link" href="#communication_tab">{% trans "My Communication" %}</a></li>
                     {% if user.profile.is_internal %}
                         <li class="nav-item"><a class="nav-link" href="#communication_overview_tab">{% trans "Communication Overview" %}</a></li>

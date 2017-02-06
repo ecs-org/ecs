@@ -2,7 +2,7 @@
 {% load core i18n userutils %}
 
 {% block headernav %}
-    <ul class="nav nav-tabs tab_header_groups">
+    <ul class="nav nav-tabs flex-wrap tab_header_groups">
         <li class="nav-item">
             <a class="nav-link" href="#tabs_overview">{% trans "Overview" %}</a>
         </li>
@@ -21,7 +21,7 @@
 
 {% block content %}
     <div class="collapse" id="tabs_overview">
-        <ul class="nav nav-tabs mb-3 tab_headers">
+        <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
             <li class="nav-item">
                 <a class="nav-link" href="#status_tab">{% trans "Status" %}</a>
             </li>
@@ -48,7 +48,7 @@
     </div>
     {% if user|is_member_of:"EC-Office" and not meeting.ended %}
         <div class="collapse" id="tabs_planning">
-            <ul class="nav nav-tabs mb-3 tab_headers">
+            <ul class="nav nav-tabs flex-wrap mb-3 tab_headers">
                 <li class="nav-item">
                     <a class="nav-link" href="#experts_tab"{% if active == 'experts' %} class="active"{% endif %}>{% trans "Spezialistenzuordnung" %}</a>
                 </li>

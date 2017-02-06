@@ -2,7 +2,7 @@
 {% load core i18n widget_tweaks %}
 
 {% block headernav %}
-    <ul class="tab_header_groups nav nav-tabs hidden-xs-up">
+    <ul class="tab_header_groups nav nav-tabs flex-wrap hidden-xs-up">
         {% block tab_header_groups %}
             <li class="nav-item"><a class="nav-link" href="#tabs_submission">{% trans "Submission" %}</a></li>
         {% endblock %}
@@ -14,7 +14,7 @@
 {% block content %}
     {% block tab_headers %}
         <div id="tabs_submission" class="collapse">
-            <ul class="nav nav-tabs tab_headers mb-3">
+            <ul class="nav nav-tabs flex-wrap tab_headers mb-3">
                 {% for tab, fieldsets in tabs %}
                     <li class="nav-item">
                         <a class="nav-link" href="#tabs-{{ forloop.counter }}">{{ tab }}</a>
