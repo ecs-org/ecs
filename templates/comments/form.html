@@ -45,9 +45,11 @@
     textarea.on('input', check_empty);
     check_empty();
 
-    button.click(function() {
+    button.click(function(ev) {
+        ev.preventDefault();
         textarea.off('input', check_empty);
         button.prop('disabled', true);
         button.html('<span class="fa fa-spinner fa-spin"></span>');
+        button.closest('form').submit();
     });
 </script>
