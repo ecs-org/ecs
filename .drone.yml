@@ -24,18 +24,3 @@ publish:
     labels:
       - coverage
       - reporting
-
-notify:
-  downstream:
-    repositories:
-      - ecs/cloneecs
-
-  irc:
-    prefix: build
-    nick: ecsdrone
-    channel: ecsdev
-    server:
-      host: irc.oftc.net
-      port: 6697
-      tls: true
-      password: $$IRCPASSWORD
