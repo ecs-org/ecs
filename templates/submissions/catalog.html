@@ -11,6 +11,9 @@
         div.card div.testinginfo {
             border-left: solid 0.5rem #0275d8;
         }
+        img#headerimage {
+            max-height:50px;
+        }
     </style>
 {% endblock %}
 
@@ -18,7 +21,7 @@
 <div class="mx-4 mt-3">
     <div>
         <a href="/">
-            <img class="logo" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
+            <img id="headerimage" class="logo mb-3" src="{% url 'ecs.core.views.logo' %}" alt="Logo"/>
         </a>
     </div>
 
