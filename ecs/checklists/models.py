@@ -56,6 +56,7 @@ class Checklist(models.Model):
     last_edited_by = models.ForeignKey('auth.user', related_name='edited_checklists')
 
     objects = AuthorizationManager()
+    unfiltered = models.Manager()
 
     class Meta:
         unique_together = (('blueprint', 'submission', 'user'),)

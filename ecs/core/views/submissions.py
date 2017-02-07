@@ -538,10 +538,10 @@ def checklist_review(request, submission_form_pk=None, blueprint_pk=None):
     blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
 
     user = request.user if blueprint.multiple else get_user('root@system.local')
-    with sudo():
-        checklist, created = Checklist.objects.update_or_create(
-            blueprint=blueprint, submission=submission_form.submission,
-            user=user, defaults={'last_edited_by': request.user})
+    checklist, created = Checklist.unfiltered.select_for_update().update_or_create(
+        blueprint=blueprint, submission=submission_form.submission, user=user,
+        defaults={'last_edited_by': request.user},
+    )
     if created:
         for question in blueprint.questions.order_by('text'):
             checklist.answers.get_or_create(question=question)
