@@ -4,30 +4,64 @@
     <colgroup>
         <col class="bg-faded">
         <col class="w-100">
+        <col>
     </colgroup>
+
     <tr>
         <th>{% trans "Title" %}</th>
-        <td>{{ meeting.title|default:"<em>Unbenannt</em>" }}</td>
-    </tr>
-    <tr>
-        <th>{% trans "Scheduled for" %}</th>
-        <td>{{ meeting.start|date:'d.m.Y H:i' }}
-            {% if not meeting.started and user.profile.is_internal %} 
-                <a href="{% url 'ecs.meetings.views.edit_meeting' meeting_pk=meeting.pk %}">{% trans "edit" %}</a>
+        <td>
+            {{ meeting.title }}
+        </td>
+        <td>
+            {% if not meeting.started and user.profile.is_internal %}
+                <a class="btn btn-primary" href="{% url 'ecs.meetings.views.edit_meeting' meeting_pk=meeting.pk %}">
+                    {% trans 'Edit' %}
+                </a>
             {% endif %}
         </td>
     </tr>
     <tr>
+        <th>{% trans "Scheduled for" %}</th>
+        <td colspan="2">
+            {{ meeting.start|date:'d.m.Y H:i' }}
+        </td>
+    </tr>
+    <tr>
         <th>{% trans "Deadline for Submission" %}</th>
-        <td>{{ meeting.deadline|date:'d.m.Y' }}</td>
+        <td colspan="2">
+            {{ meeting.deadline|date:'d.m.Y' }}
+        </td>
     </tr>
     <tr>
         <th class="pr-3">{% trans "Deadline for Thesis Submission" %}</th>
-        <td>{{ meeting.deadline_diplomathesis|date:'d.m.Y' }}</td>
+        <td colspan="2">
+            {{ meeting.deadline_diplomathesis|date:'d.m.Y' }}
+        </td>
     </tr>
+    {% if user|is_member_of:'EC-Office' %}
+        <tr>
+            <th>{% trans "Expedited Reviewer Invitations" %}:</th>
+            <td colspan="2">
+                {{ meeting.deadline_expedited_review|date:'d.m.Y'|default:'-' }}
+                {% if meeting.deadline_expedited_review %}
+                    {% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk as url %}
+                    <a class="send_emails ml-3" href="{{ url }}">
+                        <span class="fa fa-paper-plane-o"></span>
+                        {% trans 'Send Invitations' %}
+                    </a>
+                {% endif %}
+                {% if meeting.expedited_reviewer_invitation_sent_at %}
+                    <div class="text-muted">
+                        {% trans 'Last sent' %}:
+                        {{ meeting.expedited_reviewer_invitation_sent_at|date:'d.m.Y H:i' }}
+                    </div>
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
     <tr>
         <th>{% trans "Status" %}</th>
-        <td>
+        <td colspan="2">
             {% if meeting.started and meeting.ended %}
                 {% trans "Ended" %}
             {% else %}{% if meeting.started %}
@@ -41,46 +75,49 @@
     {% if meeting.started %}
         <tr>
             <th>{% trans "Started at" %}</th>
-            <td>{{ meeting.started|date:'d.m.Y H:i' }}</td>
+            <td colspan="2">
+                {{ meeting.started|date:'d.m.Y H:i' }}
+            </td>
         </tr>
     {% endif %}
     {% if meeting.ended %}
         <tr>
             <th>{% trans "Ended at" %}</th>
-            <td>{{ meeting.ended|date:'d.m.Y H:i' }}</td>
-        </tr>
-    {% endif %}
-    {% if user|is_member_of:'EC-Office' %}
-        <tr>
-            <th>{% trans "Expedited Reviewer Invitations" %}:</th>
-            <td>
-                <div data-widget-url="{% url 'ecs.meetings.views.send_expedited_reviewer_invitations' meeting_pk=meeting.pk %}"></div>
+            <td colspan="2">
+                {{ meeting.ended|date:'d.m.Y H:i' }}
             </td>
         </tr>
     {% endif %}
     <tr>
-        <th>{% trans "Agenda" %}</th>
-        <td>
-            <a href="{% url 'ecs.meetings.views.agenda_pdf' meeting_pk=meeting.pk %}">{% trans "Agenda PDF" %}</a>
+        <th>{% trans "Timetable" %}</th>
+        <td colspan="2">
+            <a href="{% url 'ecs.meetings.views.agenda_pdf' meeting_pk=meeting.pk %}">
+                <span class="fa fa-file-pdf-o"></span>
+                {% trans "Agenda PDF" %}
+            </a>
+            <a class="ml-3" href="{% url 'ecs.meetings.views.timetable_pdf' meeting_pk=meeting.pk %}">
+                <span class="fa fa-file-pdf-o"></span>
+                {% trans "Timetable PDF" %}
+            </a>
             {% if user|is_member_of:'EC-Office' %}
-                <div>
-                    <a class="send_emails" href="{% url 'ecs.meetings.views.send_agenda_to_board' meeting_pk=meeting.pk %}">{% trans "Send agenda to board" %}</a>
-                    {% if meeting.agenda_sent_at %}
-                        ({% trans 'Last sent' %}:
-                        {{ meeting.agenda_sent_at|date:'d.m.Y H:i' }})
-                    {% endif %}
-                </div>
+                {% url 'ecs.meetings.views.send_agenda_to_board' meeting_pk=meeting.pk as url %}
+                <a class="send_emails ml-3" href="{{ url }}">
+                    <span class="fa fa-paper-plane-o"></span>
+                    {% trans "Send agenda" %}
+                </a>
+                {% if meeting.agenda_sent_at %}
+                    <div class="text-muted">
+                        {% trans 'Last sent' %}:
+                        {{ meeting.agenda_sent_at|date:'d.m.Y H:i' }}
+                    </div>
+                {% endif %}
             {% endif %}
         </td>
-    </tr>
-    <tr>
-        <th>{% trans "Timetable" %}</th>
-        <td><a href="{% url 'ecs.meetings.views.timetable_pdf' meeting_pk=meeting.pk %}">{% trans "Timetable PDF" %}</a></td>
     </tr>
     {% if user.profile.is_internal %}
         <tr>
             <th>{% trans "Protocol" %}</th>
-            <td>
+            <td colspan="2">
                 {% if meeting.protocol_id %}
                     <a href="{% url 'ecs.meetings.views.protocol_pdf' meeting_pk=meeting.pk %}">
                         <span class="fa fa-file-pdf-o"></span>
@@ -96,16 +133,19 @@
                 {% endif %}
 
                 {% if meeting.protocol_sent_at %}
-                    <div>
-                        ({% trans 'Sent at' %}
-                        {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }})
+                    <div class="text-muted">
+                        {% trans 'Sent at' %}
+                        {{ meeting.protocol_sent_at|date:'d.m.Y H:i' }}
                     </div>
                 {% elif meeting.protocol_id %}
-                    | <a href="{% url 'ecs.meetings.views.render_protocol_pdf' meeting_pk=meeting.pk %}">
+                    <a class="ml-3" href="{% url 'ecs.meetings.views.render_protocol_pdf' meeting_pk=meeting.pk %}">
+                        <span class="fa fa-refresh"></span>
                         {% trans "Discard and rerender PDF" %}
                     </a>
-                    {% if user|is_member_of:'EC-Office' and meeting.ended %}
-                        | <a class="send_emails" href="{% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk %}">
+                    {% if user|is_member_of:'EC-Office' and meeting.ended or True %}
+                        {% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk as url %}
+                        <a class="send_emails ml-3" href="{{ url }}">
+                            <span class="fa fa-paper-plane-o"></span>
                             {% trans 'Send protocol' %}
                         </a>
                     {% endif %}

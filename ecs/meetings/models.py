@@ -195,6 +195,7 @@ class Meeting(models.Model):
     comments = models.TextField(null=True, blank=True)
     deadline = models.DateTimeField(null=True)
     deadline_diplomathesis = models.DateTimeField(null=True)
+    deadline_expedited_review = models.DateTimeField(null=True)
     agenda_sent_at = models.DateTimeField(null=True)
     protocol = models.ForeignKey(Document, related_name="protocol_for_meeting",
         null=True, on_delete=models.SET_NULL)
@@ -202,7 +203,6 @@ class Meeting(models.Model):
     protocol_sent_at = models.DateTimeField(null=True)
     documents_zip = models.ForeignKey(Document, related_name='zip_for_meeting',
         null=True, on_delete=models.SET_NULL)
-    expedited_reviewer_invitation_sent_for = models.DateTimeField(null=True)
     expedited_reviewer_invitation_sent_at = models.DateTimeField(null=True)
     expert_assignment_user = models.ForeignKey('auth.User', null=True)
 

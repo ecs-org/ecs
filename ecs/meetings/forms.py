@@ -22,10 +22,15 @@ class MeetingForm(forms.ModelForm):
     deadline = DateTimeField(initial=timezone.now, label=_('deadline'))
     deadline_diplomathesis = DateTimeField(initial=timezone.now,
         label=_('deadline thesis'))
+    deadline_expedited_review = DateTimeField(initial=timezone.now,
+        required=False, label=_('Expedited Reviewer Invitations'))
 
     class Meta:
         model = Meeting
-        fields = ('start', 'title', 'deadline', 'deadline_diplomathesis')
+        fields = (
+            'start', 'title', 'deadline', 'deadline_diplomathesis',
+            'deadline_expedited_review',
+        )
         labels = {
             'title': _('title'),
         }
@@ -224,10 +229,6 @@ class AmendmentVoteForm(forms.ModelForm):
 
 AmendmentVoteFormSet = modelformset_factory(AmendmentNotification, extra=0,
     can_delete=False, form=AmendmentVoteForm)
-
-
-class ExpeditedReviewerInvitationForm(forms.Form):
-    start = DateTimeField(initial=lambda: timezone.now() + timedelta(days=7))
 
 
 class ManualTimetableEntryCommentForm(forms.ModelForm):

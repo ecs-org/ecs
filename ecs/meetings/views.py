@@ -35,8 +35,8 @@ from ecs.meetings.forms import (
     MeetingForm, TimetableEntryForm, FreeTimetableEntryForm,
     UserConstraintFormSet, SubmissionReschedulingForm,
     AssignedMedicalCategoryFormSet, MeetingAssistantForm, ExpeditedVoteFormSet,
-    AmendmentVoteFormSet, ExpeditedReviewerInvitationForm,
-    ManualTimetableEntryCommentForm, ManualTimetableEntryCommentFormset,
+    AmendmentVoteFormSet, ManualTimetableEntryCommentForm,
+    ManualTimetableEntryCommentFormset,
 )
 from ecs.communication.utils import send_system_message_template
 from ecs.documents.models import Document
@@ -797,27 +797,22 @@ def send_agenda_to_board(request, meeting_pk=None):
 def send_expedited_reviewer_invitations(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
-    form = ExpeditedReviewerInvitationForm(request.POST or None)
+    categories = MedicalCategory.objects.filter(
+        submissions__in=meeting.submissions.expedited())
+    users = User.objects.filter(profile__is_board_member=True,
+        medical_categories__in=categories.values('pk'))
+    start = meeting.deadline_expedited_review
+    for user in users:
+        subject = _('Expedited Review at {}').format(
+            timezone.localtime(start).strftime('%d.%m.%Y'))
+        send_system_message_template(user, subject,
+            'meetings/messages/expedited_reviewer_invitation.txt',
+            {'start': start})
 
-    if request.method == 'POST' and form.is_valid():
-        categories = MedicalCategory.objects.filter(submissions__in=meeting.submissions.expedited())
-        users = User.objects.filter(profile__is_board_member=True,
-            medical_categories__in=categories.values('pk'))
-        start = form.cleaned_data['start']
-        for user in users:
-            subject = _('Expedited Review at {}').format(
-                timezone.localtime(start).strftime('%d.%m.%Y'))
-            send_system_message_template(user, subject, 'meetings/messages/expedited_reviewer_invitation.txt', {'start': start})
-        form = ExpeditedReviewerInvitationForm(None)
+    meeting.expedited_reviewer_invitation_sent_at = timezone.now()
+    meeting.save(update_fields=('expedited_reviewer_invitation_sent_at',))
 
-        meeting.expedited_reviewer_invitation_sent_at = timezone.now()
-        meeting.expedited_reviewer_invitation_sent_for = start
-        meeting.save()
-
-    return render(request, 'meetings/expedited_reviewer_invitation.html', {
-        'form': form,
-        'meeting': meeting,
-    })
+    return redirect('ecs.meetings.views.meeting_details', meeting_pk=meeting.pk)
 
 
 @user_group_required('EC-Office')

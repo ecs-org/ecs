@@ -2630,8 +2630,8 @@ msgstr "Tagesordnung"
 msgid "Agenda PDF"
 msgstr "Tagesordnung PDF"
 
-msgid "Send agenda to board"
-msgstr "Agenda an die Sitzungsmitglieder versenden"
+msgid "Send agenda"
+msgstr "Agenda versenden"
 
 msgid "Last sent"
 msgstr "Zuletzt versendet"
