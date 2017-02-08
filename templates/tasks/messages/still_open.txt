@@ -1,5 +1,5 @@
 {% extends 'msg_core.txt' %}
 
 {% block content %}
-{{ task.assigned_to }} hat die Aufgabe "{{ task.task_type }}" noch nicht abgeschlossen.
+{% if task.assigned_to %}{{ task.assigned_to }} hat die Aufgabe "{{ task.task_type }}" noch nicht abgeschlossen.{% else %}Die Aufgabe "{{ task.task_type }}" wurde noch nicht abgeschlossen.{% endif %}
 {% endblock %}
