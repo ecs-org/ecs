@@ -44,8 +44,9 @@ class ChecklistTaskCreationForm(forms.Form):
     reminder_message_timeout = forms.ChoiceField(choices=(
             (None, _('No')),
             (1, _('After one day')),
+            (2, _('After two days')),
             (7, _('After one week')),
-            (14, _('After two week')),
+            (14, _('After two weeks')),
         ), required=False,
         label=_('Remember me when the task hasn\'t been done'))
 
