@@ -60,8 +60,6 @@ def login(request, *args, **kwargs):
         request.ua = UA(ua_str)
         if request.ua.is_unsupported:
             return redirect(staticfiles_storage.url('help/html5.html'))
-        elif request.ua.is_tmp_unsupported:
-            return render(request, 'browser_temporarily_unsupported.html', {})
 
     kwargs.setdefault('template_name', 'users/login.html')
     kwargs['authentication_form'] = EmailLoginForm

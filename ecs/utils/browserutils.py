@@ -7,8 +7,7 @@ __all__ = ['UA']
 
 BROWSER_SUPPORT_OK = 1
 BROWSER_SUPPORT_NO = 2
-BROWSER_SUPPORT_TMP_NO = 3
-BROWSER_SUPPORT_CRAWLER = 4
+BROWSER_SUPPORT_CRAWLER = 3
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG if settings.DEBUG else logging.INFO)
@@ -35,17 +34,14 @@ def parse_ua(ua_str):
             ua[x]['version'] = Version(ua[x]['version'])
     return ua
 
-def supported_starting(name, version, tmp_unsupported=None):
+def supported_starting(name, version):
     version = Version(version)
-    tmp_unsupported = tmp_unsupported or []
 
     def _fn(ua):
         ua = parse_ua(ua)
         if 'browser' in ua and 'name' in ua['browser'] and 'version' in ua['browser']:
             b = ua['browser']
             if b['name'] == name:
-                if any(b['version'] == v for v in tmp_unsupported):
-                    return BROWSER_SUPPORT_TMP_NO
                 if b['version'] >= version:
                     return BROWSER_SUPPORT_OK
                 else:
@@ -100,5 +96,4 @@ class UA(object):
 
     is_supported = property(lambda self: self.support == BROWSER_SUPPORT_OK)
     is_unsupported = property(lambda self: self.support == BROWSER_SUPPORT_NO)
-    is_tmp_unsupported = property(lambda self: self.support == BROWSER_SUPPORT_TMP_NO)
     is_crawler = property(lambda self: self.support == BROWSER_SUPPORT_CRAWLER)
