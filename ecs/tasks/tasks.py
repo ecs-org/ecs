@@ -38,7 +38,7 @@ def send_delete_message(task, user):
 @periodic_task(run_every=crontab(minute=0))
 def send_reminder_messages():
     now = timezone.now()
-    tasks = (Task.objects
+    tasks = (Task.objects.open()
         .filter(reminder_message_sent_at=None,
             reminder_message_timeout__isnull=False)
         .annotate(deadline=RawSQL('created_at + reminder_message_timeout', ()))
@@ -48,4 +48,4 @@ def send_reminder_messages():
         send_task_message(task, _('{task} still open'), 'still_open.txt')
 
         task.reminder_message_sent_at = now
-        task.save()
+        task.save(update_fields=('reminder_message_sent_at',))
