@@ -27,20 +27,58 @@
             <ul class="list-group">
         {% endif %}
     {% endifchanged %}
-    <li class="list-group-item d-block {% if meeting.started and not meeting.ended and active_top_pk == top.pk %}list-group-item-info{% endif %} {% if not top.is_open and not meeting.ended %}disabled{% endif %}">
-        <strong>TOP {{ forloop.counter }}</strong>
+    <li class="list-group-item d-block {% if meeting.started and not meeting.ended and active_top_pk == top.pk %}list-group-item-info{% endif %} {% if not top.is_open and not meeting.ended %}text-muted{% endif %}">
         {% if top.submission %}
-            <a class="fa fa-download text-primary" title="{% trans 'Download documents (zip)' %}" href="{% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk %}"></a>
-            {% with top.submission.current_submission_form as sf %}
-                {% if sf.is_amg or sf.is_mpg %}({% if sf.is_amg %}AMG{% endif %}{% if sf.is_amg and sf.is_mpg %}/{% endif %}{% if sf.is_mpg %}MPG{% endif %}){% endif %}
-            {% endwith %}
-            {{ top.submission|ec_number }} {{ top.submission.project_title_display }}
+            <div class="d-flex align-items-baseline">
+                <strong>TOP {{ forloop.counter }}</strong>
+
+                {% if not top.timetable_index|is_none %}
+                    <span class="ml-3">
+                        {{ top.start|date:'H:i' }} - {{ top.end|date:'H:i' }}
+                    </span>
+                {% endif %}
+
+                {% url 'ecs.meetings.views.download_zipped_documents' meeting_pk=meeting.pk submission_pk=top.submission.pk as zip_url %}
+                <a class="ml-3" href="{{ zip_url }}" title="{% trans 'Download documents (zip)' %}">
+                    <span class="fa fa-download"></span>
+                </a>
+
+                {% if top.submission.is_accessible %}
+                    {% url 'ecs.scratchpad.views.popup' as scratchpad_url %}
+                    <a class="ml-3 scratchpad" href="{{ scratchpad_url }}?submission={{ top.submission.pk }}" title="{% trans 'Scratchpad' %}">
+                        <span class="fa fa-sticky-note"></span>
+                    </a>
+                {% endif %}
+
+                {% with type_display=top.submission.current_submission_form.get_type_display %}
+                    <span class="text-muted mx-auto">
+                        {{ type_display }}
+                    </span>
+                {% endwith %}
+
+                {% if not top.is_open and top.vote.result %}
+                    <span class="badge badge-default badge-pill">
+                        B{{ top.vote.result }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <div class="mt-2">
+                {% if top.submission.is_accessible %}
+                    <a href="{% url 'view_submission' submission_pk=top.submission.pk %}" target="_blank">
+                        {{ top.submission|ec_number }}
+                    </a>
+                {% else %}
+                    {{ top.submission|ec_number }}
+                {% endif %}
+                {{ top.submission.project_title_display }}
+            </div>
 
             {% if user.profile.is_omniscient_member %}
-                {% with doc=top.submission.current_submission_form.pdf_document %}
-                    <div class="row mt-3">
-                        <strong class="col-md-3">{{ doc.doctype }}</strong>
-                        <div class="col-md-9">
+                <dl class="row mt-2">
+                    {% with doc=top.submission.current_submission_form.pdf_document %}
+                        <dt class="col-md-3">{{ doc.doctype }}</dt>
+                        <dd class="col-md-9">
                             {% url 'ecs.meetings.views.download_document' meeting_pk=meeting.pk document_pk=doc.pk as download_url %}
                             {% url 'ecs.meetings.views.view_document' meeting_pk=meeting.pk document_pk=doc.pk as view_url %}
                             <a href="{{ view_url }}" target="_blank">
@@ -51,15 +89,13 @@
                                 | <a href="{{ download_url }}">{% trans "Download" %}</a>
                             {% endif %}
                             <br>
-                        </div>
-                    </div>
-                {% endwith %}
+                        </dd>
+                    {% endwith %}
 
-                {% regroup top.submission.current_submission_form.documents.all by doctype as documents %}
-                {% for document in documents %}
-                    <div class="row">
-                        <strong class="col-md-3">{{ document.grouper }}</strong>
-                        <div class="col-md-9">
+                    {% regroup top.submission.current_submission_form.documents.all by doctype as documents %}
+                    {% for document in documents %}
+                        <dt class="col-md-3">{{ document.grouper }}</dt>
+                        <dd class="col-md-9">
                             {% for doc in document.list %}
                                 {% url 'ecs.meetings.views.download_document' meeting_pk=meeting.pk document_pk=doc.pk as download_url %}
                                 {% url 'ecs.meetings.views.view_document' meeting_pk=meeting.pk document_pk=doc.pk as view_url %}
@@ -72,12 +108,31 @@
                                 {% endif %}
                                 <br>
                             {% endfor %}
-                        </div>
-                    </div>
-                {% endfor %}
+                        </dd>
+                    {% endfor %}
+                </dl>
             {% endif %}
         {% else %}
-            {{ top.title }}
+            <strong>TOP {{ forloop.counter }}</strong>
+
+            {% if not top.timetable_index|is_none %}
+                <span class="ml-3">
+                    {{ top.start|date:'H:i' }} - {{ top.end|date:'H:i' }}
+                </span>
+            {% endif %}
+
+            <div class="mt-2">
+                {{ top.title }}
+            </div>
+        {% endif %}
+
+        {% if top.participations.all|length %}
+            <div class="mt-2">
+                Teilnehmer:
+                {% for participation in top.participations.all %}
+                    {{ participation.user }}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </div>
         {% endif %}
     </li>
 {% endfor %}

@@ -17,6 +17,7 @@ from django.db.models import Q, Max, Prefetch
 from django.contrib import messages
 
 from ecs.utils.viewutils import render_html, pdf_response
+from ecs.users.models import UserProfile
 from ecs.users.utils import user_flag_required, user_group_required, sudo
 from ecs.core.models import Submission, SubmissionForm, MedicalCategory, AdvancedSettings
 from ecs.core.models.constants import SUBMISSION_TYPE_MULTICENTRIC
@@ -176,19 +177,87 @@ def tops(request, meeting=None):
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
 
+    extra_fields = ()
+    if request.user.profile.is_omniscient_member:
+        extra_fields = (
+            'submission__current_submission_form__pdf_document_id',
+
+            'submission__current_submission_form__pdf_document__doctype_id',
+            'submission__current_submission_form__pdf_document__name',
+            'submission__current_submission_form__pdf_document__version',
+            'submission__current_submission_form__pdf_document__date',
+
+            'submission__current_submission_form__pdf_document__doctype__name',
+            'submission__current_submission_form__pdf_document__doctype__is_downloadable',
+        )
+
     tops = meeting.timetable_entries.select_related(
         'submission', 'submission__current_submission_form'
+    ).only(
+        'timetable_index', 'is_open', 'duration', 'submission_id', 'meeting_id',
+
+        'submission__ec_number',
+        'submission__current_submission_form_id',
+        'submission__invite_primary_investigator_to_meeting',
+
+        'submission__current_submission_form__german_project_title',
+        'submission__current_submission_form__project_title',
+        'submission__current_submission_form__project_type_non_reg_drug',
+        'submission__current_submission_form__project_type_reg_drug',
+        'submission__current_submission_form__submission_type',
+        'submission__current_submission_form__project_type_medical_device',
+        'submission__current_submission_form__project_type_education_context',
+        'submission__current_submission_form__subject_minage',
+        'submission__current_submission_form__project_type_non_interventional_study',
+
+        *extra_fields
+    ).prefetch_related(
+        Prefetch('participations', queryset=
+            Participation.objects.select_related(
+                'user',
+            ).only(
+                'entry_id', 'user_id',
+
+                'user__first_name',
+                'user__last_name',
+                'user__email',
+            ).prefetch_related(
+                Prefetch('user__profile', queryset=
+                    UserProfile.objects.only('gender', 'title', 'user_id')
+                ),
+            ).order_by('user__email')
+        )
     ).order_by('timetable_index', 'pk')
+
     if request.user.profile.is_omniscient_member:
         tops = tops.select_related(
             'submission__current_submission_form__pdf_document',
             'submission__current_submission_form__pdf_document__doctype'
         ).prefetch_related(
             Prefetch('submission__current_submission_form__documents',
-                queryset=Document.objects
-                    .select_related('doctype')
-                    .order_by('doctype__identifier', 'date', 'name'))
+                queryset=Document.objects.select_related('doctype').only(
+                    'doctype_id', 'name', 'version', 'date',
+                    'doctype__name', 'doctype__is_downloadable',
+                ).order_by('doctype__identifier', 'date', 'name'))
         )
+
+    accessible_submissions = set(
+        Submission.objects.filter(
+            id__in=[top.submission.pk for top in tops if top.submission]
+        ).values_list('id', flat=True)
+    )
+
+    start = meeting.start
+    for entry in tops:
+        if entry.timetable_index is not None:
+            entry._start_cache = start
+            entry._end_cache = start + entry.duration
+            start += entry.duration
+
+        submission = entry.submission
+        if submission:
+            submission.current_submission_form._submission_cache = submission
+            submission.is_accessible = submission.id in accessible_submissions
 
     active_top = meeting.active_top
 
