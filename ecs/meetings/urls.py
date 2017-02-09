@@ -14,7 +14,6 @@ urlpatterns = (
     url(r'^(?P<meeting_pk>\d+)/constraints_for_user/(?P<user_pk>\d+)/$', views.edit_user_constraints),
     url(r'^(?P<meeting_pk>\d+)/edit/$', views.edit_meeting),
     url(r'^(?P<meeting_pk>\d+)/open_tasks/$', views.open_tasks),
-    url(r'^(?P<meeting_pk>\d+)/tops/$', views.tops),
     url(r'^(?P<meeting_pk>\d+)/submissions/$', views.submission_list),
     url(r'^(?P<meeting_pk>\d+)/notifications/$', views.notification_list),
     url(r'^(?P<meeting_pk>\d+)/document/(?P<document_pk>\d+)/$', views.download_document),

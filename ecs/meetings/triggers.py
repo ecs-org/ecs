@@ -8,9 +8,8 @@ from ecs.workflow.signals import token_marked_deleted
 
 
 def _flush_cache(meeting):
-    from ecs.meetings.views import submission_list, tops
+    from ecs.meetings.views import submission_list
     flush_meeting_page_cache(meeting, submission_list)
-    flush_meeting_page_cache(meeting, tops)
 
 @receiver(signals.on_meeting_start)
 def on_meeting_start(sender, **kwargs):

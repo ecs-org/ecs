@@ -29,9 +29,6 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#open_tasks_tab">{% trans "Open Tasks" %}</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#tops_tab">{% trans "TOPs" %}</a>
-                </li>
             {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="#submissions_tab">{% trans "Submissions" %}</a>
@@ -69,9 +66,6 @@
     {% if user.profile.is_internal %}
         <div id="open_tasks_tab" class="collapse">
             <div data-widget-url="{% url 'ecs.meetings.views.open_tasks' meeting_pk=meeting.pk %}"></div>
-        </div>
-        <div id="tops_tab" class="container collapse">
-            <div data-widget-url="{% url 'ecs.meetings.views.tops' meeting_pk=meeting.pk %}"{% if not meeting.ended %} data-widget-reload-interval="10"{% endif %}></div>
         </div>
     {% endif %}
     <div id="submissions_tab" class="container collapse">

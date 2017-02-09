@@ -137,42 +137,6 @@ def open_tasks(request, meeting=None):
         'open_tasks': open_tasks,
     })
 
-@user_flag_required('is_internal')
-@cache_meeting_page()
-def tops(request, meeting=None):
-    tops = list(meeting.timetable_entries.exclude(timetable_index=None).order_by('timetable_index').select_related('submission', 'submission__current_submission_form'))
-
-    next_tops = [t for t in tops if t.is_open][:3]
-    closed_tops = [t for t in tops if not t.is_open]
-
-    open_tops = {}
-    for top in [t for t in tops if t.is_open]:
-        if top.submission:
-            medical_categories = meeting.medical_categories.exclude(specialist=None).filter(
-                category__in=top.submission.medical_categories.values('pk').query)
-            bms = tuple(User.objects
-                .filter(pk__in=medical_categories.values('specialist').query)
-                .order_by('last_name', 'first_name').distinct())
-        else:
-            bms = ()
-        if bms in open_tops:
-            open_tops[bms].append(top)
-        else:
-            open_tops[bms] = [top]
-
-    open_tops = OrderedDict(
-        (k, open_tops[k])
-        for k in sorted(open_tops.keys(),
-            key=lambda us: tuple((u.last_name, u.first_name, u.id) for u in us))
-    )
-
-    return render_html(request, 'meetings/tabs/tops.html', {
-        'meeting': meeting,
-        'next_tops': next_tops,
-        'open_tops': open_tops,
-        'closed_tops': closed_tops,
-    })
-
 @user_flag_required('is_internal', 'is_board_member', 'is_resident_member', 'is_omniscient_member')
 def submission_list(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
