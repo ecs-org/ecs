@@ -507,8 +507,8 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
 
     return render(request, 'meetings/assistant/quickjump_error.html', {
         'meeting': meeting,
-        'tops': tops,
         'last_top': meeting.active_top,
+        'query': q,
     })
 
 @user_group_required('EC-Office')
