@@ -106,13 +106,13 @@ ecs.InvestigatorFormset.prototype = {
         var ul = $('.investigator_list');
         ul.html('');
 
-        this.inline_formset.forms.forEach(function(form, i){
-            var li = $('<li>', { 'class': 'btn btn-group p-0 mr-1 mb-1'});
+        this.inline_formset.forms.forEach(function(form, i) {
+            var li = $('<li>', { 'class': 'btn-group mr-2 mb-2'});
             li.toggleClass('readonly', this.readonly);
             li.toggleClass('errors', !!form.find('.has-danger').length);
 
             var a = $('<button>', {
-                'class': 'btn btn-outline-primary',
+                'class': 'btn',
                 html: 'Zentrum ' + (i + 1),
                 click: (function(ev){
                     ev.preventDefault();
@@ -120,6 +120,11 @@ ecs.InvestigatorFormset.prototype = {
                 }).bind(this)
             });
             li.append(a);
+
+            if (form.is('.closed'))
+                a.addClass('btn-secondary');
+            else
+                a.addClass('btn-outline-primary');
 
             if (!this.readonly && this.inline_formset.forms.length > 1) {
                 var removeLink = $('<button>', {
