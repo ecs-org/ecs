@@ -37,7 +37,7 @@
                             </div>
                         </td>
                         <td>
-                            {% if submission_form|allows_edits_by:user %}
+                            {% if submission_form|allows_edits_by:user or submission_form|allows_amendments_by:user %}
                                 <a href="{% url 'ecs.core.views.submissions.create_submission_form' docstash_key=current_docstash.key %}">
                                     <span class="fa fa-pencil"></span>
                                     {% trans 'Edit' %}
