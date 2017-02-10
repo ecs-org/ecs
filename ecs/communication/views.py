@@ -1,13 +1,14 @@
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Q, Prefetch
+from django.db.models.expressions import RawSQL
 from django.core.paginator import Paginator, EmptyPage
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext as _
 
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import Submission
-from ecs.communication.models import Thread
+from ecs.communication.models import Thread, Message
 from ecs.communication.forms import SendMessageForm, ReplyDelegateForm
 from ecs.communication.forms import ThreadListFilterForm
 from ecs.communication.utils import send_message
@@ -167,7 +168,8 @@ def list_threads(request, submission_pk=None):
             request.POST or usersettings.communication_filter or filter_defaults)
         filterform.is_valid() # force clean
 
-        usersettings.communication_filter = filterform.cleaned_data
+        usersettings.communication_filter = filterform.cleaned_data.copy()
+        usersettings.communication_filter.pop('query', None)
         usersettings.save()
 
         template = 'communication/threads_full.html'
@@ -197,6 +199,12 @@ def list_threads(request, submission_pk=None):
         )
     else:
         queryset = queryset.none()
+
+    if filters.get('query'):
+        queryset = queryset.annotate(
+            match=RawSQL("searchvector @@ plainto_tsquery('german', %s)",
+                (filters['query'],))
+        ).filter(match=True)
 
     queryset = queryset.select_related(
         'last_message', 'last_message__sender', 'last_message__receiver',

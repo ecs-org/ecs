@@ -1,4 +1,4 @@
-{% load humanize i18n core communication %}
+{% load humanize i18n core communication widget_tweaks %}
 
 <form id="thread_list_filter" action="{{ request.path }}" method="post" class="form-inline open-in-widget d-flex justify-content-around">
     {% csrf_token %}
@@ -24,6 +24,11 @@
             {{ filterform.unstarred }}
             <span class="fa fa-star-o"></span>
             {% trans "Not Starred" %}
+        </li>
+    </ul>
+    <ul class="list-unstyled">
+        <li>
+            {% render_field filterform.query class+='form-control' placeholder=filterform.query.label %}
         </li>
     </ul>
     {{ filterform.page }}
