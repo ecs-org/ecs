@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-08 12:29+0100\n"
+"POT-Creation-Date: 2017-02-14 11:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1775,7 +1775,7 @@ msgid "Other Safety Report"
 msgstr "Andere Sicherheitsmeldung"
 
 msgid "Substantial"
-msgstr ""
+msgstr "Substantiell"
 
 msgid "Needs signature"
 msgstr "Unterschrift notwendig"
@@ -2349,7 +2349,7 @@ msgid ""
 "%(contact_email)s\">%(contact_email)s</a>."
 msgstr ""
 "Um eine neue Nachricht zu erstellen, wechseln Sie in die betreffende Studie "
-"in den Reiter Nachrichten. Für allgemeine Fragen schreiben sie eine E-Mail "
+"in den Reiter Nachrichten. Für allgemeine Fragen schreiben Sie eine E-Mail "
 "an <a href=\"mailto:%(contact_email)s\">%(contact_email)s</a>."
 
 msgid "Dashboard"
@@ -2781,10 +2781,8 @@ msgstr "Letzte Änderung: %(modified_at)s"
 msgid "Changes"
 msgstr "Änderungen"
 
-#, fuzzy
-#| msgid "Meetings"
 msgid "Meeting"
-msgstr "Sitzungen"
+msgstr "Sitzung"
 
 msgid "Has the study been started?"
 msgstr "Wurde die Studie begonnen?"
@@ -2991,6 +2989,9 @@ msgstr "Siehe Punkt 9.Unterlagen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
+msgid "New %(notification_type_name)s"
+msgstr "Neues %(notification_type_name)s"
+
 msgid "General"
 msgstr "Generell"
 
@@ -3123,7 +3124,7 @@ msgid "Decline"
 msgstr "Ablehnen"
 
 msgid "There are no tasks for you."
-msgstr "Sie haben derzeit keine Aufgaben."
+msgstr "Keine Aufgaben."
 
 msgid "Proxy Tasks"
 msgstr "Vertretungsaufgaben"

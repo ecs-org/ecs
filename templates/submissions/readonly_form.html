@@ -27,7 +27,9 @@
         {% if submission_form|allows_amendments_by:user %}
             {% for notification_type in diff_notification_types %}
                 <a class="btn btn-primary" href="{% url 'ecs.core.views.submissions.copy_latest_submission_form' submission_pk=submission.pk notification_type_pk=notification_type.pk %}">
-                    {{ notification_type.name }}
+                    {% blocktrans with notification_type_name=notification_type.name trimmed %}
+                        New {{ notification_type_name }}
+                    {% endblocktrans %}
                 </a>
             {% endfor %}
         {% endif %}
