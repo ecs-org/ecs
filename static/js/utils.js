@@ -112,12 +112,12 @@ ecs.InvestigatorFormset.prototype = {
             li.toggleClass('errors', !!form.find('.has-danger').length);
 
             var a = $('<button>', {
-                'class': 'btn',
-                html: 'Zentrum ' + (i + 1),
+                'class': 'btn text-truncate',
                 click: (function(ev){
                     ev.preventDefault();
                     this.show(i);
-                }).bind(this)
+                }).bind(this),
+                css: {'max-width': '20rem'}
             });
             li.append(a);
 
@@ -125,6 +125,12 @@ ecs.InvestigatorFormset.prototype = {
                 a.addClass('btn-secondary');
             else
                 a.addClass('btn-outline-primary');
+
+            var org = form.find('input[name$="-organisation"]');
+            org.change(function() {
+                a.text(org.val().trim() || ('Zentrum ' + (i + 1)));
+            });
+            org.change();
 
             if (!this.readonly && this.inline_formset.forms.length > 1) {
                 var removeLink = $('<button>', {
