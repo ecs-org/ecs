@@ -85,7 +85,7 @@ ecs.TabController = function(tabGroupContainers) {
     }, null, this));
     this.selectTab(initialSelection || this.tabs[0]);
     if (window.location.hash)
-        $(window).scrollTop(0);
+        $('.content-container').scrollTop(0);
 
     $(window).on('hashchange', this.onHashChange.bind(this));
 };
