@@ -101,7 +101,6 @@ class UserSettings(models.Model):
     submission_filter_mine = JSONField()
     submission_filter_assigned = JSONField()
     task_filter = models.TextField(null=True)
-    communication_filter = JSONField()
     useradministration_filter = JSONField()
 
 @receiver(post_save, sender=User)

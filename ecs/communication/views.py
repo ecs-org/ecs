@@ -154,24 +154,14 @@ def list_threads(request, submission_pk=None):
     for key in ('incoming', 'outgoing', 'starred', 'unstarred'):
         filter_defaults[key] = 'on'
 
+    filterform = ThreadListFilterForm(request.POST or filter_defaults)
+    filterform.is_valid() # force clean
+
+
     if submission_pk:
-        queryset = queryset.filter(submission_id=submission_pk)
-
-        filterform = ThreadListFilterForm(request.POST or filter_defaults)
-        filterform.is_valid() # force clean
-
         template = 'communication/threads_submission.html'
+        queryset = queryset.filter(submission_id=submission_pk)
     else:
-        usersettings = request.user.ecs_settings
-
-        filterform = ThreadListFilterForm(
-            request.POST or usersettings.communication_filter or filter_defaults)
-        filterform.is_valid() # force clean
-
-        usersettings.communication_filter = filterform.cleaned_data.copy()
-        usersettings.communication_filter.pop('query', None)
-        usersettings.save()
-
         template = 'communication/threads_full.html'
 
     filters = filterform.cleaned_data
