@@ -32,13 +32,19 @@
                 <div id="tabs-{{ forloop.counter }}" class="collapse {% if tab.slug != 'measures' %}container{% endif %}">
                     
                     {% if unacknowledged_forms %}
-                        <div class="alert alert-info text-center font-weight-bold mb-3">
-                            {% if unacknowledged_forms == 1 %}
-                                Es gibt eine neuere, unbestätigte Version.
-                            {% else %}
-                                Es gibt {{ unacknowledged_forms }} neuere, unbestätigte Versionen.
-                            {% endif %}
-                            <span class="fa fa-info text-info" title="Neue Versionen werden erst nach Bestätigung der EK angezeigt. Um Änderungen zu kontrollieren verwenden Sie bitte die Versionsgeschichte im Generell-Status Reiter."></span>
+                        <div class="alert alert-info text-center mb-3">
+                            <strong>
+                                {% if unacknowledged_forms == 1 %}
+                                    Es gibt eine neuere, unbestätigte Version.
+                                {% else %}
+                                    Es gibt {{ unacknowledged_forms }} neuere, unbestätigte Versionen.
+                                {% endif %}
+                            </strong>
+                            <div>
+                                Neue Versionen werden erst nach Bestätigung der EK angezeigt.
+                                Um Änderungen zu kontrollieren verwenden Sie bitte die
+                                Versionsgeschichte im Generell-Status Reiter.
+                            </div>
                         </div>
                         {% endif %}
                                             
