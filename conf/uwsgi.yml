@@ -10,7 +10,7 @@ uwsgi:
   chdir: /app/ecs
   module: ecs.wsgi
   # activate uwsgi metrics
-  stats: 127.0.0.1:8017
+  stats: :8017
   stats-http: true
   # friendly reload if resident memory size exceeds 1G
   reload-on-rss: 1024

@@ -22,7 +22,6 @@ git+https://github.com/Kozea/WeasyPrint.git@5aa34d7dbb6c5e45e8653e6fde26befe4831
 requests          # for raven
 raven             # sentry integration
 uwsgi             # container wsgi runner
-uwsgi_exporter
 
 # preprocessing, combining, compressing of js and css
 django_compressor

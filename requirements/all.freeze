@@ -31,7 +31,6 @@ pexpect==4.2.1
 pickleshare==0.7.4
 Pillow==4.0.0
 pkg-resources==0.0.0
-prometheus-client==0.0.18
 psycopg2==2.6.2
 ptyprocess==0.5.1
 pycparser==2.17
@@ -45,7 +44,6 @@ raven==5.32.0
 rcssmin==1.0.6
 redis==2.10.5
 requests==2.12.4
-requests-unixsocket==0.1.5
 rjsmin==1.0.12
 simplegeneric==0.8.1
 six==1.10.0
@@ -53,9 +51,7 @@ sqlparse==0.2.2
 tinycss==0.4
 traitlets==4.3.1
 unittest-xml-reporting==2.1.0
-urllib3==1.19.1
 uWSGI==2.0.14
-uwsgi-exporter==0.1.2
 git+https://github.com/Kozea/WeasyPrint.git@5aa34d7dbb6c5e45e8653e6fde26befe4831b7a2
 webencodings==0.5
 xlwt==1.2.0
