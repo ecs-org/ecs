@@ -12,3 +12,6 @@ Environment="PATH=/app/env/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 Restart=always
 User=app
 Group=app
+
+[Install]
+WantedBy=multi-user.target
