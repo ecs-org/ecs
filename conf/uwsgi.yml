@@ -1,7 +1,7 @@
 uwsgi:
   master: true
-  # reasonable number of workers = cores + 2
-  workers: %(%k + 2)
+  # reasonable number of workers = cores + 1
+  workers: %(%k + 1)
   enable-threads: true
   uwsgi-socket: 127.0.0.1:8000
   pidfile: /app/uwsgi.pid
@@ -12,9 +12,10 @@ uwsgi:
   # activate uwsgi metrics
   stats: :8017
   stats-http: true
-  # friendly reload if resident memory size exceeds 1G
-  reload-on-rss: 1024
-  # forcefully reload if resident memory size exceeds 2,5G
-  evil-reload-on-rss: 2500
-  # reloads the worker after 100 managed requests
-  max-requests: 100
+  # uwsgi rss size on production (2017.01.28 - 2017.02.12) Avg. 90mb , Max. 281mb
+  # friendly reload if resident memory size exceeds 2 x Avg.
+  reload-on-rss: 180
+  # forcefully reload if resident memory size exceeds 2 x Max. or 8 x Avg.
+  evil-reload-on-rss: 720
+  # reloads the worker after 1000 managed requests
+  max-requests: 1000
