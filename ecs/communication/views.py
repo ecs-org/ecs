@@ -151,7 +151,7 @@ def list_threads(request, submission_pk=None):
     queryset = Thread.objects.by_user(request.user)
 
     filter_defaults = {'page': '1'}
-    for key in ('incoming', 'outgoing', 'starred', 'unstarred'):
+    for key in ('incoming', 'outgoing', 'starred', 'unstarred', 'read', 'unread'):
         filter_defaults[key] = 'on'
 
     filterform = ThreadListFilterForm(request.POST or filter_defaults)
@@ -187,6 +187,17 @@ def list_threads(request, submission_pk=None):
             Q(starred_by_receiver=False, receiver=request.user) |
             Q(starred_by_sender=False, sender=request.user)
         )
+    else:
+        queryset = queryset.none()
+
+    if filters['read'] and filters['unread']:
+        pass
+    elif filters['read']:
+        queryset = queryset.exclude(
+            last_message__receiver=request.user, last_message__unread=True)
+    elif filters['unread']:
+        queryset = queryset.filter(
+            last_message__receiver=request.user, last_message__unread=True)
     else:
         queryset = queryset.none()
 

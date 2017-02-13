@@ -28,6 +28,18 @@
     </ul>
     <ul class="list-unstyled">
         <li>
+            {{ filterform.read }}
+            <span class="fa fa-check-square"></span>
+            {% trans "Read" %}
+        </li>
+        <li>
+            {{ filterform.unread }}
+            <span class="fa fa-check-square-o"></span>
+            {% trans "Unread" %}
+        </li>
+    </ul>
+    <ul class="list-unstyled">
+        <li>
             {% render_field filterform.query class+='form-control' placeholder=filterform.query.label %}
         </li>
     </ul>

@@ -2318,6 +2318,12 @@ msgstr "Mit Stern"
 msgid "Not Starred"
 msgstr "Ohne Stern"
 
+msgid "Read"
+msgstr "Gelesen"
+
+msgid "Unread"
+msgstr "Ungelesen"
+
 msgid "Von/An"
 msgstr "Von/An"
 
