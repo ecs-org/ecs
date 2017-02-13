@@ -62,8 +62,14 @@ def handle_view(request, doc):
     n = doc.notifications.first()
     if n:
         title_bits.insert(0, str(n))
-    title = '{} (Version: {} vom {})'.format(' - '.join(title_bits),
-        doc.version, timezone.localtime(doc.date).strftime('%d.%m.%Y'))
+
+    version = '{} vom {}'.format(doc.version,
+        timezone.localtime(doc.date).strftime('%d.%m.%Y'))
+
+    if request.user.profile.is_internal:
+        title = '{} - {}'.format(version, ' - '.join(title_bits))
+    else:
+        title = '{} (Version: {})'.format(' - '.join(title_bits), version)
 
     params = urlencode({
         'file': reverse(
