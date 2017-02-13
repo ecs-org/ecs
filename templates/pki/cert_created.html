@@ -13,7 +13,7 @@
     </a>
 
     <p class="mt-4">
-    {% blocktrans trimmed with user=user|full_name email=user.email %}
+    {% blocktrans trimmed with user=target_user|full_name email=target_user.email %}
         The client certificate for {{ user }} has been created. It has been sent
         to {{ email }} per email. The passphrase is as follows. Please make sure
         to transmit the passphrase via a secure channel Do not send it via email!

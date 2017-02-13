@@ -52,7 +52,7 @@ def create_cert(request):
 
         return render(request, 'pki/cert_created.html', {
             'passphrase': passphrase,
-            'user': user,
+            'target_user': user,
         })
 
     return render(request, 'pki/create_cert.html', {
