@@ -147,8 +147,7 @@ class ListDiffNode(DiffNode):
             self.diffs = []
             return
 
-        fields = differ.get_field_names()
-        key = lambda x: [getattr(x, f) for f in fields]
+        key = lambda x: [getattr(x, f) for f in differ.get_field_names()]
         self.old = sorted(self.old, key=key)
         self.new = sorted(self.new, key=key)
 
@@ -256,30 +255,17 @@ def _render_value(val):
 
 
 class ModelDiffer(object):
-    exclude = ()
-    fields = ()
-    match_fields = None
-    follow = ()
-    identify = None
-    label_map = {}
-
     def __init__(self, model=None, exclude=None, fields=None, match_fields=None,
         follow=None, identify=None, label_map=None):
 
         if model:
             self.model = model
-        if exclude:
-            self.exclude = exclude
-        if fields:
-            self.fields = fields
-        if match_fields:
-            self.match_fields = match_fields
-        if follow:
-            self.follow = follow
-        if identify:
-            self.identify = identify
-        if label_map:
-            self.label_map = label_map
+        self.exclude = exclude
+        self.fields = fields
+        self.match_fields = match_fields
+        self.follow = follow
+        self.identify = identify
+        self.label_map = label_map or {}
 
     def get_field_names(self):
         names = paper_forms.get_field_names_for_model(self.model)
