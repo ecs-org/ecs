@@ -147,10 +147,6 @@ class ListDiffNode(DiffNode):
             self.diffs = []
             return
 
-        key = lambda x: [getattr(x, f) for f in differ.fields]
-        self.old = sorted(self.old, key=key)
-        self.new = sorted(self.new, key=key)
-
         diffs = []
         for old in self.old:
             omf = [getattr(old, f) for f in differ.match_fields]
