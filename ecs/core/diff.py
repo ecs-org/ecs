@@ -147,7 +147,7 @@ class ListDiffNode(DiffNode):
             self.diffs = []
             return
 
-        key = lambda x: [getattr(x, f) for f in differ.get_field_names()]
+        key = lambda x: [getattr(x, f) for f in differ.fields]
         self.old = sorted(self.old, key=key)
         self.new = sorted(self.new, key=key)
 
@@ -255,30 +255,15 @@ def _render_value(val):
 
 
 class ModelDiffer(object):
-    def __init__(self, model=None, exclude=None, fields=None, match_fields=None,
-        follow=None, identify=None, label_map=None):
+    def __init__(self, model=None, fields=None, match_fields=None,
+        identify=None, label_map=None):
 
         if model:
             self.model = model
-        self.exclude = exclude
         self.fields = fields
         self.match_fields = match_fields
-        self.follow = follow
         self.identify = identify
         self.label_map = label_map or {}
-
-    def get_field_names(self):
-        names = paper_forms.get_field_names_for_model(self.model)
-        for f in self.model._meta.fields:
-            if not f.name in names:
-                names.append(f.name)
-        if self.fields:
-            names = [n for n in names if n in self.fields]
-        if self.follow:
-            names += self.follow
-        if self.exclude:
-            names = [n for n in names if not n in self.exclude]
-        return names
 
     def diff_field(self, name, old, new, **kwargs):
         old_val = getattr(old, name, None)
@@ -311,7 +296,7 @@ class ModelDiffer(object):
             
     def diff(self, old, new, **kwargs):
         d = []
-        for name in self.get_field_names():
+        for name in self.fields:
             field_info = paper_forms.get_field_info(self.model, name, None)
 
             if name in self.label_map:
@@ -373,7 +358,7 @@ class SubmissionFormDiffer(ModelDiffer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        for name in self.get_field_names():
+        for name in self.fields:
             if name.startswith('invoice_'):
                 fi = paper_forms.get_field_info(self.model, name, None)
                 self.label_map[name] = '{}: {} {}'.format(
@@ -382,13 +367,6 @@ class SubmissionFormDiffer(ModelDiffer):
                 fi = paper_forms.get_field_info(self.model, name, None)
                 self.label_map[name] = '{}: {} {}'.format(
                     _('sponsor'), fi.number, fi.label)
-
-    def get_field_names(self):
-        names = super().get_field_names()
-        if 'documents' in names:
-            names.remove('documents')
-            names.insert(0, 'documents')
-        return names
 
     def diff_field(self, name, old, new, **kwargs):
         if name in ('substance_registered_in_countries', 'substance_p_c_t_countries'):
@@ -406,14 +384,93 @@ class SubmissionFormDiffer(ModelDiffer):
 
 _differs = {
     SubmissionForm: SubmissionFormDiffer(SubmissionForm,
-        exclude=('id', 'submission', 'current_for', 'primary_investigator', 'current_for_submission', 
-            'pdf_document', 'is_acknowledged',
-            'created_at', 'presenter', 'sponsor', 'submitter', 'is_transient',
-            'is_notification_update',),
-        follow=(
+        fields = (
+            'documents', 'project_title', 'eudract_number', 'sponsor_name',
+            'sponsor_contact_gender', 'sponsor_contact_title',
+            'sponsor_contact_first_name', 'sponsor_contact_last_name',
+            'sponsor_address', 'sponsor_zip_code', 'sponsor_city',
+            'sponsor_phone', 'sponsor_fax', 'sponsor_email', 'sponsor_uid',
+            'invoice_name', 'invoice_contact_gender', 'invoice_contact_title',
+            'invoice_contact_first_name', 'invoice_contact_last_name',
+            'invoice_address', 'invoice_zip_code', 'invoice_city',
+            'invoice_phone', 'invoice_fax', 'invoice_email', 'invoice_uid',
+            'project_type_non_reg_drug', 'project_type_reg_drug',
+            'project_type_reg_drug_within_indication',
+            'project_type_reg_drug_not_within_indication',
+            'project_type_medical_method', 'project_type_medical_device',
+            'project_type_medical_device_with_ce',
+            'project_type_medical_device_without_ce',
+            'project_type_medical_device_performance_evaluation',
+            'project_type_basic_research', 'project_type_genetic_study',
+            'project_type_misc', 'project_type_education_context',
+            'project_type_register', 'project_type_biobank',
+            'project_type_retrospective', 'project_type_questionnaire',
+            'project_type_psychological_study', 'project_type_nursing_study',
+            'project_type_non_interventional_study',
+            'project_type_gender_medicine', 'specialism',
+            'pharma_checked_substance', 'pharma_reference_substance',
+            'medtech_checked_product', 'medtech_reference_substance',
+            'clinical_phase', 'already_voted', 'subject_count',
+            'subject_minage', 'subject_maxage', 'subject_males',
+            'subject_females_childbearing', 'subject_females',
+            'subject_childbearing', 'subject_noncompetents', 'subject_duration',
+            'subject_duration_active', 'subject_duration_controls',
+            'subject_planned_total_duration', 'submission_type',
+            'substance_registered_in_countries',
+            'substance_preexisting_clinical_tries', 'substance_p_c_t_countries',
+            'substance_p_c_t_phase', 'substance_p_c_t_period',
+            'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules',
+            'substance_p_c_t_final_report', 'medtech_product_name',
+            'medtech_manufacturer', 'medtech_certified_for_exact_indications',
+            'medtech_certified_for_other_indications', 'medtech_ce_symbol',
+            'medtech_manual_included', 'medtech_technical_safety_regulations',
+            'medtech_departure_from_regulations', 'insurance_not_required',
+            'insurance_name', 'insurance_address', 'insurance_phone',
+            'insurance_contract_number', 'insurance_validity',
+            'additional_therapy_info', 'german_project_title', 'german_summary',
+            'german_preclinical_results', 'german_primary_hypothesis',
+            'german_inclusion_exclusion_crit', 'german_ethical_info',
+            'german_protected_subjects_info', 'german_recruitment_info',
+            'german_consent_info', 'german_risks_info', 'german_benefits_info',
+            'german_relationship_info', 'german_concurrent_study_info',
+            'german_sideeffects_info', 'german_statistical_info',
+            'german_dataprotection_info', 'german_aftercare_info',
+            'german_payment_info', 'german_abort_info',
+            'german_dataaccess_info', 'german_financing_info',
+            'german_additional_info', 'study_plan_blind', 'study_plan_open',
+            'study_plan_randomized', 'study_plan_parallelgroups',
+            'is_monocentric', 'study_plan_single_blind',
+            'study_plan_controlled', 'study_plan_cross_over', 'is_multicentric',
+            'study_plan_double_blind', 'study_plan_placebo',
+            'study_plan_factorized', 'study_plan_pilot_project',
+            'study_plan_observer_blinded', 'study_plan_equivalence_testing',
+            'study_plan_misc', 'study_plan_number_of_groups',
+            'study_plan_stratification', 'study_plan_sample_frequency',
+            'study_plan_primary_objectives', 'study_plan_null_hypothesis',
+            'study_plan_alternative_hypothesis',
+            'study_plan_secondary_objectives', 'study_plan_alpha',
+            'study_plan_alpha_sided', 'study_plan_power',
+            'study_plan_statalgorithm', 'study_plan_multiple_test',
+            'study_plan_multiple_test_correction_algorithm',
+            'study_plan_dropout_ratio',
+            'study_plan_population_intention_to_treat',
+            'study_plan_population_per_protocol',
+            'study_plan_interim_evaluation', 'study_plan_abort_crit',
+            'study_plan_planned_statalgorithm',
+            'study_plan_dataquality_checking', 'study_plan_datamanagement',
+            'study_plan_biometric_planning',
+            'study_plan_statistics_implementation',
+            'study_plan_dataprotection_choice',
+            'study_plan_dataprotection_reason', 'study_plan_dataprotection_dvr',
+            'study_plan_dataprotection_anonalgoritm',
+            'submitter_contact_gender', 'submitter_contact_title',
+            'submitter_contact_first_name', 'submitter_contact_last_name',
+            'submitter_email', 'submitter_organisation', 'submitter_jobtitle',
+            'submitter_is_coordinator', 'submitter_is_main_investigator',
+            'submitter_is_sponsor', 'submitter_is_authorized_by_sponsor',
             'participatingcenternonsubject_set',
             'foreignparticipatingcenter_set', 'investigators', 'measures',
-            'nontesteduseddrug_set', 'documents',
+            'nontesteduseddrug_set',
         ),
         label_map=dict([
             ('participatingcenternonsubject_set', _('centers (non subject)')),
@@ -426,36 +483,40 @@ _differs = {
         ]),
     ),
     Investigator: ModelDiffer(Investigator,
-        exclude=('id', 'submission_form'),
+        fields=(
+            'organisation', 'ethics_commission', 'main', 'contact_gender',
+            'contact_title', 'contact_first_name', 'contact_last_name', 'phone',
+            'mobile', 'fax', 'email', 'jus_practicandi', 'specialist',
+            'certified', 'subject_count', 'user', 'employees',
+        ),
         match_fields=('organisation', 'ethics_commission'),
-        follow=('employees',),
         identify='organisation',
         label_map={
             'employees': _('Mitarbeiter'),
         }
     ),
     InvestigatorEmployee: ModelDiffer(InvestigatorEmployee,
-        exclude=('id', 'investigator'), 
+        fields=('sex', 'title', 'firstname', 'surname', 'organisation'),
         match_fields=('firstname', 'surname'),
         identify='full_name',
     ),
     Measure: ModelDiffer(Measure, 
-        exclude=('id', 'submission_form'), 
+        fields=('category', 'type', 'count', 'period', 'total'),
         match_fields=('category', 'type'),
         identify='type',
     ),
     NonTestedUsedDrug: ModelDiffer(NonTestedUsedDrug,
-        exclude=('id', 'submission_form'),
+        fields=('generic_name', 'preparation_form', 'dosage'),
         match_fields=('generic_name', 'preparation_form'),
         identify='generic_name',
     ),
     ParticipatingCenterNonSubject: ModelDiffer(ParticipatingCenterNonSubject,
-        exclude=('id', 'submission_form',),
+        fields=('name', 'ethics_commission', 'investigator_name'),
         match_fields=('name', 'ethics_commission'),
         identify='name',
     ),
     ForeignParticipatingCenter: ModelDiffer(ForeignParticipatingCenter,
-        exclude=('id', 'submission_form',),
+        fields=('name', 'investigator_name'),
         match_fields=('name',),
         identify='name',
     ),
