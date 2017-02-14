@@ -290,6 +290,14 @@
                 scratchpad.load($(this).attr('href'));
             });
 
+            $(window).unload(function() {
+                if (scratchpad.is(':visible')) {
+                    var form = scratchpad.find('form');
+                    if (form.length)
+                        $.post(form.attr('action'), form.serialize());
+                }
+            });
+
             $.fn.select2.defaults.set('placeholder', '\u2026');
             $.fn.select2.defaults.set('dropdownAutoWidth', true);
         });
