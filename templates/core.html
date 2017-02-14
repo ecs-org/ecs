@@ -271,22 +271,23 @@
 
             $('#userswitcher_input').select2({placeholder: null});
 
+            var scratchpad = $('#scratchpad');
+
             $(document).on('click', 'a.scratchpad', function(ev) {
                 ev.preventDefault();
-                var container = $('#scratchpad');
 
-                if (container.is(':visible')) {
-                    var form = container.find('form');
+                if (scratchpad.is(':visible')) {
+                    var form = scratchpad.find('form');
                     if (form.length)
                         $.post(form.attr('action'), form.serialize());
 
-                    container.hide();
-                    container.html('');
+                    scratchpad.hide();
+                    scratchpad.html('');
                     return;
                 }
 
-                container.css('display', 'flex');
-                container.load($(this).attr('href'));
+                scratchpad.css('display', 'flex');
+                scratchpad.load($(this).attr('href'));
             });
 
             $.fn.select2.defaults.set('placeholder', '\u2026');
