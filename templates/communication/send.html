@@ -24,7 +24,6 @@
 
         {% include 'bootstrap/form_field.html' with field=form.subject inline=True %}
 
-        {% if form.receiver %}
         <div class="row">
             <label class="col-md-2" for="{{ form.receiver.auto_id }}" class="receiver">Empfänger</label>
             {% if to_user %}
@@ -60,7 +59,6 @@
                 </div>
             {% endif %}
         </div>
-        {% endif %}
 
         {% include 'bootstrap/form_field.html' with field=form.text %}
 
