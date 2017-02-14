@@ -65,18 +65,17 @@ def handle_view(request, doc):
 
     version = '{} vom {}'.format(doc.version,
         timezone.localtime(doc.date).strftime('%d.%m.%Y'))
-
     if request.user.profile.is_internal:
-        title = '{} - {}'.format(version, ' - '.join(title_bits))
+        title_bits.insert(0, version)
     else:
-        title = '{} (Version: {})'.format(' - '.join(title_bits), version)
+        title_bits.append(version)
 
     params = urlencode({
         'file': reverse(
             'ecs.documents.views.download_once',
             kwargs={'ref_key': ref_key}
         ),
-        'title': title,
+        'title': ' - '.join(title_bits),
     }, quote_via=quote)
     url = '{}3rd-party/pdfjs-1.5.188/web/viewer.html?{}'.format(
         settings.STATIC_URL, params)
