@@ -14,14 +14,18 @@ class InvolvedPartiesChoiceField(forms.ModelChoiceField):
         super().__init__(User.objects.none(), *args, **kwargs)
 
     def set_submission(self, submission):
-        self.involved_parties = submission.current_submission_form.get_involved_parties()
-        self.queryset = User.objects.filter(is_active=True, pk__in=[u.pk for u in self.involved_parties.get_users().difference([get_current_user()])])
-
-    def label_from_instance(self, user):
-        for p in self.involved_parties:
-            if p.user == user:
-                return '{0} ({1})'.format(user, p.involvement)
-        return str(user)
+        involved_parties = submission.current_submission_form.get_involved_parties()
+        self.queryset = User.objects.filter(
+            is_active=True,
+            pk__in=[
+                u.pk for u in
+                involved_parties.get_users().difference([get_current_user()])
+            ],
+        )
+        self.choices = [
+            (self.prepare_value(p.user), '{} [{}]'.format(p.user, p.involvement))
+            for p in involved_parties
+        ]
 
 class SendMessageForm(forms.ModelForm):
     subject = Thread._meta.get_field('subject').formfield(label=_('Subject'))
