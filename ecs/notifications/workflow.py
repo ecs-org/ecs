@@ -116,7 +116,7 @@ class SimpleNotificationReview(BaseNotificationReview):
 
     def get_choices(self):
         return (
-            (True, _('Ready'), 'info'),
+            (True, _('Ready'), 'success'),
             (False, _('Reject'), 'danger'),
         )
 
