@@ -1,61 +1,28 @@
 {% extends "core.html" %}
 {% load i18n core communication %}
 
+{% block htmltitle %}{% trans 'New Message' %} | {{ block.super }}{% endblock %}
 {% block menuSelection %}communication{% endblock %}
 
 {% block headertitle %}
-    {% if submission %}
-        {{ submission|ec_number }} -
-    {% endif %}
     {% trans "New Message" %}
+    {% if submission %}
+        -
+        <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab" target="_blank">
+            {{ submission|ec_number }}
+        </a>
+        <small title="{{ submission.project_title_display }}">
+            {{ submission.project_title_display }}
+        </small>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
 <div class="message_display container">
-  <div class="mb-3">
-      <a href="{% url 'ecs.communication.views.list_threads' %}">
-          <span class="fa fa-backward"></span>
-          {% trans "Back to the communication overview" %}
-      </a>
-      {% if submission %}
-          <br>
-          <a href="{% url 'view_submission' submission_pk=submission.pk %}#communication_tab">
-              <span class="fa fa-backward"></span>
-              {% trans "Back to the Study" %}
-          </a>
-      {% endif %}
-  </div>
   <form action="{{ request.path }}" method="post" class="form message open-in-widget">
       {% csrf_token %}
-      {% if submission %}
-          <h4 class="text-muted">Studie {{ submission|ec_number }}: {{ submission.project_title_display }}</h4>
-          <hr>
-      {% endif %}
-
-      {% if task %}
-      <p>
-          <label>Task</label>
-          <span>{{ task }}</span>
-      </p>
-      {% endif %}
 
       {% include 'bootstrap/form_field.html' with field=form.subject inline=True %}
-
-      {% if form.instance.thread %}
-        <p>
-        <label for="id_participants">antworten an:</label><br />
-        </p>
-        {% for user in thread.get_participants %}
-          <p>
-          <input id="id_{{ user.pk }}" type="checkbox" name="{{ user.pk }}"/>
-          {% if user.profile.is_internal %}
-            <label for="id_{{ user.pk }}">{{ user.first_name }} {{ user.last_name }}</label><br />
-          {% else %}
-            <label for="id_{{ user.pk }}">External: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</label><br />
-          {% endif %}
-          </p>
-        {% endfor %}
-      {% endif %}
 
       {% include 'communication/send_base.html' %}
       <input type="submit" class="btn btn-primary" value="Nachricht abschicken" />

@@ -107,9 +107,6 @@ class Thread(models.Model):
 
         self.save()
 
-    def get_participants(self):
-        return User.objects.filter(Q(outgoing_messages__thread=self) | Q(incoming_messages__thread=self)).distinct()
-
     def message_list(self):
         return self.messages.order_by('timestamp')
 
