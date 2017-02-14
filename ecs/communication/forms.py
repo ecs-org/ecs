@@ -24,7 +24,7 @@ class InvolvedPartiesChoiceField(forms.ModelChoiceField):
         return str(user)
 
 class SendMessageForm(forms.ModelForm):
-    subject = Thread._meta.get_field('subject').formfield()
+    subject = Thread._meta.get_field('subject').formfield(label=_('Subject'))
     receiver_involved = InvolvedPartiesChoiceField(required=False)
     receiver_person = AutocompleteModelChoiceField(
         'users', User.objects.filter(is_active=True), required=False)

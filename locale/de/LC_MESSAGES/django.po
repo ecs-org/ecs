@@ -3056,10 +3056,8 @@ msgstr "Beteiligung"
 msgid "Timeframe"
 msgstr "Zeitraum"
 
-#, fuzzy
-#| msgid "Temporary Authorization"
 msgid "No temporary authorizations yet."
-msgstr "Befristete Autorisierung"
+msgstr "Keine befristete Autorisierung vorhanden."
 
 msgid "Authorize"
 msgstr "Autorisieren"
