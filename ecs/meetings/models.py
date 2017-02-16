@@ -360,7 +360,8 @@ class Meeting(models.Model):
                 datetime.combine(start_date, constraint.end_time),
                 timezone.get_current_timezone())
             participations = Participation.objects.filter(entry__meeting=self,
-                user=constraint.user, ignored_for_optimization=False)
+                user=constraint.user, ignored_for_optimization=False,
+                entry__timetable_index__isnull=False)
             for participation in participations:
                 start = participation.entry.start
                 end = participation.entry.end
