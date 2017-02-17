@@ -39,3 +39,10 @@ def send_download_warnings():
         send_message_template(sender, receiver, subject,
             'documents/messages/download_warning.txt',
             {'user': user,'count': count})
+
+
+@periodic_task(run_every=crontab(day_of_month=1, hour=0, minute=15))
+def expire_download_history():
+    DownloadHistory.objects.filter(
+        downloaded_at__lt=timezone.now() - timedelta(days=365 * 3),
+    ).delete()
