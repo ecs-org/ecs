@@ -46,7 +46,7 @@ class VoteReviewForm(ReadonlyFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         user = get_current_user()
-        if not self.readonly and user.profile.is_executive_board_member:
+        if not self.readonly and user.profile.is_executive:
             self.fields['result'] = Vote._meta.get_field('result').formfield(
                 initial=self.instance.result)
 

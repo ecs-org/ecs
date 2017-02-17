@@ -75,7 +75,7 @@ def upcoming_meetings(request):
 def past_meetings(request):
     return meeting_list(request, Meeting.objects.past().order_by('-start'), title=_('Past Meetings'))
 
-@user_flag_required('is_executive_board_member')
+@user_flag_required('is_executive')
 def reschedule_submission(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = SubmissionReschedulingForm(request.POST or None, submission=submission)

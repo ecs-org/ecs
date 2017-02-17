@@ -34,7 +34,7 @@
     </tbody>
 </table>
 
-{% if temporary_auth or user.profile.is_executive_board_member %}
+{% if temporary_auth or user.profile.is_executive %}
     <h3 class="mt-4">{% trans 'Temporary Authorization' %}</h3>
     <table class="table table-sm">
         <thead>
@@ -64,7 +64,7 @@
                             {% trans "Send Message" %}
                         </a>
                     </td>
-                        {% if ta.is_active and user.profile.is_executive_board_member %}
+                        {% if ta.is_active and user.profile.is_executive %}
                             <td>
                                 <a href="{% url 'ecs.core.views.submissions.revoke_temporary_access' submission_pk=submission.pk temp_auth_pk=ta.pk %}">
                                     <span class="fa fa-ban text-danger"></span>
@@ -83,7 +83,7 @@
         </tbody>
     </table>
 {% endif %}
-{% if user.profile.is_executive_board_member %}
+{% if user.profile.is_executive %}
     <form class="container" action="{% url 'ecs.core.views.submissions.grant_temporary_access' submission_pk=submission.pk %}" method="post">
         {% csrf_token %}
         {% for field in temporary_auth_form %}

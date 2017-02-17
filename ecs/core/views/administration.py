@@ -5,7 +5,7 @@ from ecs.core.forms import AdvancedSettingsForm, EthicsCommissionFormSet
 from ecs.users.utils import user_group_required
 
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def advanced_settings(request):
     instance = AdvancedSettings.objects.get(pk=1)
     form = AdvancedSettingsForm(request.POST or None, request.FILES or None,

@@ -129,7 +129,7 @@
                                 <span class="fa fa-cog fa-2x text-primary py-0"></span>
                             </a>
                             <div class="dropdown-menu">
-                                {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive Board Member" %}
+                                {% if user|is_member_of:"EC-Office" or user|is_member_of:"EC-Executive" %}
                                     <a class="dropdown-item" href="{% url 'ecs.users.views.administration' %}">
                                         {% trans "User Administration" %}
                                     </a>

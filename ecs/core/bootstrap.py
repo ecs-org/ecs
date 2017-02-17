@@ -43,7 +43,7 @@ def submission_workflow():
     specialist_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='specialist_review')
     gcp_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='gcp_review')
 
-    EXECUTIVE_GROUP = 'EC-Executive Board Member'
+    EXECUTIVE_GROUP = 'EC-Executive'
     OFFICE_GROUP = 'EC-Office'
     BOARD_MEMBER_GROUP = 'Board Member'
     INSURANCE_REVIEW_GROUP = 'Insurance Reviewer'
@@ -129,7 +129,7 @@ def submission_workflow():
 def auth_groups():
     groups = (
         'Board Member',
-        'EC-Executive Board Member',
+        'EC-Executive',
         'EC-Office',
         'EC-Signing',
         'External Reviewer',
@@ -259,7 +259,7 @@ def auth_user_testusers():
         ('sponsor', None),
         ('investigator', None),
         ('office', 'EC-Office'),
-        ('executive', 'EC-Executive Board Member'),
+        ('executive', 'EC-Executive'),
         ('signing', 'EC-Signing'),
         ('signing_fail', 'EC-Signing'),
         ('signing_mock', 'EC-Signing'),
@@ -292,7 +292,7 @@ def auth_user_testusers():
             if group:
                 group = Group.objects.get(name=group)
                 user.groups.add(group)
-                if group.name in ('EC-Executive Board Member', 'EC-Office', 'EC-Signing'):
+                if group.name in ('EC-Executive', 'EC-Office', 'EC-Signing'):
                     uids = set(user.profile.task_uids)
                     uids.update(group.task_types.values_list(
                         'workflow_node__uid', flat=True).distinct())

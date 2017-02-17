@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     is_board_member = models.BooleanField(default=False)
     is_resident_member = models.BooleanField(default=False)
     is_omniscient_member = models.BooleanField(default=False)
-    is_executive_board_member = models.BooleanField(default=False)
+    is_executive = models.BooleanField(default=False)
     is_internal = models.BooleanField(default=False)
     can_have_tasks = models.BooleanField(default=False)
     can_have_open_tasks = models.BooleanField(default=False)
@@ -59,15 +59,15 @@ class UserProfile(models.Model):
         self.is_board_member = 'Board Member' in groups
         self.is_resident_member = 'Resident Board Member' in groups
         self.is_omniscient_member = 'Omniscient Board Member' in groups
-        self.is_executive_board_member = 'EC-Executive Board Member' in groups
+        self.is_executive = 'EC-Executive' in groups
         self.is_internal = bool(groups & {
-            'EC-Executive Board Member',
+            'EC-Executive',
             'EC-Office',
             'EC-Signing',
         })
         self.can_have_tasks = bool(groups & {
             'Board Member',
-            'EC-Executive Board Member',
+            'EC-Executive',
             'EC-Office',
             'EC-Signing',
             'GCP Reviewer',
@@ -78,7 +78,7 @@ class UserProfile(models.Model):
         })
         self.can_have_open_tasks = bool(groups & {
             'Board Member',
-            'EC-Executive Board Member',
+            'EC-Executive',
             'EC-Office',
             'EC-Signing',
             'GCP Reviewer',

@@ -11,7 +11,7 @@ from ecs.integration.utils import setup_workflow_graph
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups'))
 def vote_workflow():
-    EXECUTIVE_GROUP = 'EC-Executive Board Member'
+    EXECUTIVE_GROUP = 'EC-Executive'
     OFFICE_GROUP = 'EC-Office'
     SIGNING_GROUP = 'EC-Signing'
 

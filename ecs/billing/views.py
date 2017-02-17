@@ -90,7 +90,7 @@ class SimpleXLS(object):
             self.sheet.row(i).height = 255 * int(math.ceil(float(characters)/80))
         self.xls.save(f)
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def submission_billing(request):
     with sudo():
         categorization_tasks = Task.objects.filter(task_type__workflow_node__uid='categorization').closed()
@@ -159,19 +159,19 @@ def submission_billing(request):
         'submissions': unbilled_submissions,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def view_invoice(request, invoice_pk=None):
     invoice = get_object_or_404(Invoice, pk=invoice_pk)
     return render(request, 'billing/submission_summary.html', {
         'invoice': invoice,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def invoice_pdf(request, invoice_pk=None):
     invoice = get_object_or_404(Invoice, pk=invoice_pk)
     return handle_download(request, invoice.document)
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def invoice_list(request):
     invoices = Invoice.objects.all().order_by('-created_at')
     paginator = Paginator(invoices, 25)
@@ -183,7 +183,7 @@ def invoice_list(request):
         'invoices': invoices,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def external_review_payment(request):
     checklists = Checklist.objects.filter(blueprint__slug='external_review').exclude(status__in=['new', 'dropped']).filter(
         Q(billing_state=None)|Q(billing_state__isnull=False, billing_state__billed_at=None))
@@ -236,19 +236,19 @@ def external_review_payment(request):
         'price': price,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def view_checklist_payment(request, payment_pk=None):
     payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
     return render(request, 'billing/external_review_summary.html', {
         'payment': payment,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def checklist_payment_pdf(request, payment_pk=None):
     payment = get_object_or_404(ChecklistPayment, pk=payment_pk)
     return handle_download(request, payment.document)
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def checklist_payment_list(request):
     payments = ChecklistPayment.objects.all().order_by('-created_at')
     paginator = Paginator(payments, 25)

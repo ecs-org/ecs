@@ -354,7 +354,7 @@
                     dropdownParent: input_medcat.parent(),
                 });
             {% endif %}
-            {% if user.profile.is_executive_board_member %}
+            {% if user.profile.is_executive %}
                 var input_ta_user = $('#{{ temporary_auth_form.user.id_for_label }}');
                 input_ta_user.select2({
                     minimumInputLength: 3,

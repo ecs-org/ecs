@@ -146,8 +146,7 @@ class AdministrationFilterForm(forms.Form):
         queryset=Group.objects.all(), label=_('Groups'))
     task_types = forms.ModelMultipleChoiceField(required=False,
         queryset=TaskType.objects
-            .filter(group__name__in=(
-                'EC-Executive Board Member', 'EC-Office', 'EC-Signing'))
+            .filter(group__name__in=('EC-Executive', 'EC-Office', 'EC-Signing'))
             .order_by('workflow_node__uid', '-pk')
             .distinct('workflow_node__uid'),
         label=_('Task Types')
@@ -173,8 +172,7 @@ class UserDetailsForm(forms.ModelForm):
     last_name = forms.CharField(max_length=User._meta.get_field('last_name').max_length, label=_('Last name'))
     task_types = forms.ModelMultipleChoiceField(required=False,
         queryset=TaskType.objects
-            .filter(group__name__in=(
-                'EC-Executive Board Member', 'EC-Office', 'EC-Signing'))
+            .filter(group__name__in=('EC-Executive', 'EC-Office', 'EC-Signing'))
             .order_by('workflow_node__uid', '-pk')
             .distinct('workflow_node__uid'),
         label=_('Task Types')

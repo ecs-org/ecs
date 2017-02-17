@@ -131,7 +131,7 @@
             {% with submission.presenter.profile.organisation as organisation %}
                 {{ submission.presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
-            {% if user.profile.is_executive_board_member or user == submission.presenter %}
+            {% if user.profile.is_executive or user == submission.presenter %}
                 | <a href="{% url 'ecs.core.views.submissions.change_submission_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -142,7 +142,7 @@
             {% with submission.susar_presenter.profile.organisation as organisation %}
                 {{ submission.susar_presenter }}{% if organisation %} ({{ organisation }}){% endif %}
             {% endwith %}
-            {% if user.profile.is_executive_board_member or user == submission.susar_presenter %}
+            {% if user.profile.is_executive or user == submission.susar_presenter %}
                 | <a href="{% url 'ecs.core.views.submissions.change_submission_susar_presenter' submission_pk=submission.pk %}">{% trans "change" %}</a>
             {% endif %}
         </td>
@@ -233,7 +233,7 @@
                 </div>
             {% endfor %}
             {% endsudo %}
-            {% if user.profile.is_executive_board_member and submission.is_reschedulable %}
+            {% if user.profile.is_executive and submission.is_reschedulable %}
                 <a href="{% url 'ecs.meetings.views.reschedule_submission' submission_pk=submission.pk %}">{% trans 'Reschedule' %}</a>
             {% endif %}
         </td>

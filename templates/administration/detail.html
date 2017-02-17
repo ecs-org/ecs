@@ -11,7 +11,7 @@
         <li class="nav-item">
             <a class="nav-link {% if active == 'user_invite' %}active{% endif %}" href="{% url 'ecs.users.views.invite' %}">{% trans "Invite User" %}</a>
         </li>
-        {% if user.profile.is_executive_board_member %}
+        {% if user.profile.is_executive %}
             <li class="nav-item">
                 <a class="nav-link {% if active == 'login_history' %}active{% endif %}" href="{% url 'ecs.users.views.login_history' %}">{% trans 'Login History' %}</a>
             </li>

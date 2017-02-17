@@ -68,8 +68,7 @@ authorization.register(Vote, factory=VoteQFactory)
 class TaskQFactory(authorization.QFactory):
     def get_q(self, user):
         task_types = TaskType.objects.filter(
-            ~Q(group__name__in=(
-                'EC-Executive Board Member', 'EC-Office', 'EC-Signing')) |
+            ~Q(group__name__in=('EC-Executive', 'EC-Office', 'EC-Signing')) |
             Q(workflow_node__uid__in=user.profile.task_uids),
             group__in=user.groups.values('pk')
         )

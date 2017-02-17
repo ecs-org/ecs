@@ -169,9 +169,9 @@ class NotificationFormTest(LoginTestCase):
         presenter = self.create_user('test_presenter')
         office = self.create_user('test_office', profile_extra={'is_internal': True})
         office.groups.add(Group.objects.get(name='EC-Office'))
-        executive = self.create_user('text_executive', profile_extra={'is_internal': True, 'is_executive_board_member': True})
+        executive = self.create_user('text_executive', profile_extra={'is_internal': True, 'is_executive': True})
         executive.groups.add(
-            Group.objects.get(name='EC-Executive Board Member'),
+            Group.objects.get(name='EC-Executive'),
             Group.objects.get(name='EC-Office'),
         )
 

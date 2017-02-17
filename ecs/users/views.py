@@ -245,7 +245,7 @@ def notify_return(request):
     return redirect('ecs.users.views.profile')
 
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def indisposition(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     form = IndispositionForm(request.POST or None, instance=user.profile)
@@ -264,7 +264,7 @@ def indisposition(request, user_pk=None):
 
 
 @require_POST
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def toggle_active(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     if user.is_active:
@@ -276,7 +276,7 @@ def toggle_active(request, user_pk=None):
     return redirect('ecs.users.views.administration')
 
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def details(request, user_pk=None):
     user = get_object_or_404(User, pk=user_pk)
     form = UserDetailsForm(request.POST or None, instance=user, prefix='user')
@@ -321,7 +321,7 @@ def details(request, user_pk=None):
         'form': form,
     })
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def administration(request, limit=20):
     usersettings = request.user.ecs_settings
 
@@ -393,7 +393,7 @@ def administration(request, limit=20):
     })
 
 
-@user_group_required('EC-Office', 'EC-Executive Board Member')
+@user_group_required('EC-Office', 'EC-Executive')
 def invite(request):
     form = InvitationForm(request.POST or None)
     comment = None
@@ -453,7 +453,7 @@ def accept_invitation(request, invitation_uuid=None):
         'form': form,
     })
 
-@user_flag_required('is_executive_board_member')
+@user_flag_required('is_executive')
 def login_history(request):
     end = timezone.now()
     start = end - timedelta(days=1)

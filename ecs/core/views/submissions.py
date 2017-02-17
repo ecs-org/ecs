@@ -327,7 +327,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         vote = submission.current_pending_vote or submission.current_published_vote
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
         context['categorization_form'] = CategorizationForm(instance=submission, readonly=True)
-        if request.user.profile.is_executive_board_member and \
+        if request.user.profile.is_executive and \
             submission.allows_categorization():
             reopen_task = Task.unfiltered.for_data(submission).filter(
                 task_type__workflow_node__uid='categorization',
@@ -411,7 +411,7 @@ def categorization(request, submission_pk=None):
     return response
 
 
-@user_flag_required('is_executive_board_member')
+@user_flag_required('is_executive')
 def reopen_categorization(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
 
@@ -801,7 +801,7 @@ def create_submission_form(request):
 
 def change_submission_presenter(request, submission_pk=None):
     profile = request.user.profile
-    if profile.is_executive_board_member:
+    if profile.is_executive:
         submission = get_object_or_404(Submission, pk=submission_pk)
     else:
         submission = get_object_or_404(Submission, pk=submission_pk, presenter=request.user)
@@ -829,7 +829,7 @@ def change_submission_presenter(request, submission_pk=None):
 
 def change_submission_susar_presenter(request, submission_pk=None):
     profile = request.user.profile
-    if profile.is_executive_board_member:
+    if profile.is_executive:
         submission = get_object_or_404(Submission, pk=submission_pk)
     else:
         submission = get_object_or_404(Submission, pk=submission_pk, susar_presenter=request.user)
@@ -1260,7 +1260,7 @@ def catalog_json(request):
     return JsonResponse(data, safe=False)
 
 
-@user_flag_required('is_executive_board_member')
+@user_flag_required('is_executive')
 def grant_temporary_access(request, submission_pk=None):
     submission = get_object_or_404(Submission, pk=submission_pk)
     form = TemporaryAuthorizationForm(request.POST or None, prefix='temp_auth')
@@ -1271,7 +1271,7 @@ def grant_temporary_access(request, submission_pk=None):
     return redirect(reverse('ecs.core.views.submissions.view_submission', kwargs={'submission_pk': submission_pk}) + '#involved_parties_tab')
 
 
-@user_flag_required('is_executive_board_member')
+@user_flag_required('is_executive')
 def revoke_temporary_access(request, submission_pk=None, temp_auth_pk=None):
     temp_auth = get_object_or_404(TemporaryAuthorization, pk=temp_auth_pk)
     temp_auth.end = timezone.now()
