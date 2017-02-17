@@ -44,6 +44,11 @@ class VoteReview(Activity):
             token.task.save()
         return token
 
+    def post_perform(self, option, token=None):
+        vote = self.workflow.data
+        vote.is_final_version = False
+        vote.save(update_fields=('is_final_version',))
+
 
 class VoteSigning(Activity):
     class Meta:
