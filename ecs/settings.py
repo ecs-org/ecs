@@ -302,6 +302,7 @@ CELERY_IMPORTS = (
     'ecs.integration.tasks',
     'ecs.meetings.tasks',
     'ecs.tasks.tasks',
+    'ecs.users.tasks',
     'ecs.votes.tasks',
 )
 CELERY_TASK_SERIALIZER = 'pickle'
