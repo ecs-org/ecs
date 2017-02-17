@@ -93,7 +93,8 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
     proxy_tasks = (all_tasks
         .for_submissions(
             Submission.objects.exclude(biased_board_members=request.user))
-        .filter(assigned_to__profile__is_indisposed=True))
+        .filter(assigned_to__profile__is_indisposed=True)
+        .exclude(assigned_to=request.user))
 
     if not submission and filterform.is_valid():
         cd = filterform.cleaned_data
