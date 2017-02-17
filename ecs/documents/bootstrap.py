@@ -25,6 +25,10 @@ def document_types():
             _("Request for Authorisation, Notification of Amendment Form, Declaration of the end of the clinical trial")),
         Args(_("adverse reaction report"), "adversereaction", _("Med Watch report, CIOMS form etc.")),
         Args(_("Statement on a review"), "reviewstatement", _(" ")),
+        Args(_("Questionnaire"), "questionnaire", ''),
+        Args(_("Signed Page"), "signed_page", ''),
+        Args(_("Manual"), "manual", ''),
+        Args(_("Declaration of conformity"), "conformity_declaration", ''),
         Args(_("other"), "other", _("Patient diaries, patient card, technical information, questionnaires, etc.")),
 
         # internal document types; not user visible
