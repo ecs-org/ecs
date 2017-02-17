@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-14 11:13+0100\n"
+"POT-Creation-Date: 2017-02-17 13:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -207,6 +207,9 @@ msgstr "Fallen lassen"
 msgid "Query regarding review"
 msgstr "Rückfrage zum Gutachten"
 
+msgid "Subject"
+msgstr "Betreff"
+
 msgid "Ethics Commission"
 msgstr "Ethik-Kommission"
 
@@ -221,6 +224,9 @@ msgstr "Antwort"
 
 msgid "Delegate to"
 msgstr "Abgeben an"
+
+msgid "Search"
+msgstr "Suchen"
 
 #, python-brace-format
 msgid "[ECS{ec_number}] {subject}."
@@ -611,6 +617,9 @@ msgstr "Herr"
 
 msgid "Finished"
 msgstr "Beendet"
+
+msgid "Unknown (local EC)"
+msgstr "Unbekannt (lokale EK)"
 
 msgid "Expired"
 msgstr "Abgelaufen"
@@ -2330,9 +2339,6 @@ msgstr "Von/An"
 msgid "Submission"
 msgstr "Einreichung"
 
-msgid "Subject"
-msgstr "Betreff"
-
 msgid "Date"
 msgstr "Datum"
 
@@ -2397,9 +2403,6 @@ msgstr "Statistik"
 
 msgid "PKI"
 msgstr ""
-
-msgid "Search"
-msgstr "Suchen"
 
 #, python-format
 msgid ""
@@ -2995,6 +2998,7 @@ msgstr "Siehe Punkt 9.Unterlagen"
 msgid "Edit"
 msgstr "Bearbeiten"
 
+#, python-format
 msgid "New %(notification_type_name)s"
 msgstr "Neues %(notification_type_name)s"
 

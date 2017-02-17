@@ -128,8 +128,12 @@ class Submission(models.Model):
         if self.is_finished:
             return _('Finished')
         elif self.is_expired:
+            if self.is_localec:
+                return _('Unknown (local EC)')
             return _('Expired')
         elif self.is_active:
+            if self.is_localec:
+                return _('Unknown (local EC)')
             return _('Active')
         elif self.current_submission_form.is_acknowledged:
             return _('Acknowledged')
