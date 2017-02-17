@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 17:17+0100\n"
+"POT-Creation-Date: 2017-02-17 17:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1519,24 +1519,11 @@ msgstr "Neu öffnen"
 msgid "Covering Letter"
 msgstr "Covering Letter"
 
-msgid "Cover letter / covering letter to the Ethics Commission"
-msgstr "Anschreiben / Begleitschreiben an die Ethikkommission"
-
 msgid "patient information"
 msgstr "Patienteninformation"
 
-msgid ""
-"Patients / subjects / children / youths / parents / genetic information, "
-"information for non competent patients"
-msgstr ""
-"Patienten / Probanden / Kinder / Jugendliche / Eltern / Genetische- "
-"Information, Information für nicht einwilligungsfähige Patienten"
-
 msgid "insurancecertificate"
 msgstr "Versicherungsbestätigung"
-
-msgid " "
-msgstr ""
 
 msgid "study protocol"
 msgstr "Studienprotokoll (Prüfplan)"
@@ -1547,20 +1534,11 @@ msgstr "Prüferinformation (Investigator's Brochure)"
 msgid "Amendment"
 msgstr "Amendment"
 
-msgid "Protocol changes"
-msgstr "Protokolländerungen"
-
 msgid "Curriculum Vitae (CV)"
 msgstr "Lebenslauf (CV)"
 
-msgid "CV"
-msgstr "Lebenslauf"
-
 msgid "Conflict of Interest"
 msgstr "Conflict of Interest"
-
-msgid "can also be a Financial Disclosure Form"
-msgstr "kann auch ein Financial Disclosure Form sein"
 
 msgid "Case Report Form (CRF)"
 msgstr "Fallbericht-Formular (CRF)"
@@ -1568,16 +1546,8 @@ msgstr "Fallbericht-Formular (CRF)"
 msgid "EudraCT Form"
 msgstr "EudraCT-Formular"
 
-msgid ""
-"Request for Authorisation, Notification of Amendment Form, Declaration of "
-"the end of the clinical trial"
-msgstr ""
-
 msgid "adverse reaction report"
 msgstr "Nebenwirkungsbericht"
-
-msgid "Med Watch report, CIOMS form etc."
-msgstr "Med Watch-Bericht, CIOMS-Formular etc."
 
 msgid "Statement on a review"
 msgstr "Stellungnahme zum Gutachten"
@@ -1596,10 +1566,6 @@ msgstr "Konformitätserklärung"
 
 msgid "other"
 msgstr "Sonstige"
-
-msgid ""
-"Patient diaries, patient card, technical information, questionnaires, etc."
-msgstr "Patiententagebuch, Patientenkarte, Fachinformation, Fragebögen etc."
 
 msgid "Submission Form"
 msgstr "Einreichformular"
