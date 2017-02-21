@@ -314,7 +314,7 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
 
 @user_group_required('EC-Office')
 def add_free_timetable_entry(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     form = FreeTimetableEntryForm(request.POST or None)
     if form.is_valid():
         meeting.add_entry(**form.cleaned_data)
@@ -326,7 +326,7 @@ def add_free_timetable_entry(request, meeting_pk=None):
 
 @user_group_required('EC-Office')
 def add_timetable_entry(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     is_break = request.GET.get('break', False)
     if is_break:
         entry = meeting.add_break(duration=timedelta(minutes=30))
@@ -339,7 +339,7 @@ def add_timetable_entry(request, meeting_pk=None):
 
 @user_group_required('EC-Office')
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     entry = get_object_or_404(meeting.timetable_entries, pk=entry_pk)
     if entry.submission:
         raise Http404(_("only tops without associated submission can be deleted"))
@@ -348,7 +348,7 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
 
 @user_group_required('EC-Office')
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     entry = get_object_or_404(meeting.timetable_entries, pk=entry_pk)
     form = TimetableEntryForm(request.POST)
     if form.is_valid():
@@ -361,7 +361,7 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
 
 @user_group_required('EC-Office')
 def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     p = get_object_or_404(Participation, user=user_pk, entry=entry_pk)
     p.ignored_for_optimization = not p.ignored_for_optimization
     p.save()
@@ -369,7 +369,7 @@ def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
 
 @user_group_required('EC-Office')
 def move_timetable_entry(request, meeting_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     from_index = int(request.GET.get('from_index'))
     to_index = int(request.GET.get('to_index'))
     meeting[from_index].index = to_index
@@ -398,7 +398,7 @@ def timetable_editor(request, meeting_pk=None):
 
 @user_group_required('EC-Office')
 def optimize_timetable(request, meeting_pk=None, algorithm=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     if not meeting.optimization_task_id:
         meeting.optimization_task_id = "xxx:fake"
         meeting.save()
@@ -407,7 +407,7 @@ def optimize_timetable(request, meeting_pk=None, algorithm=None):
 
 @user_group_required('EC-Office')
 def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     if not meeting.optimization_task_id:
         meeting.optimization_task_id = "xxx:fake"
         meeting.save()
@@ -419,7 +419,7 @@ def optimize_timetable_long(request, meeting_pk=None, algorithm=None):
 
 @user_group_required('EC-Office')
 def edit_user_constraints(request, meeting_pk=None, user_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk)
+    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
     user = get_object_or_404(User, pk=user_pk)
     formset = UserConstraintFormSet(request.POST or None, prefix='constraint', queryset=user.meeting_constraints.filter(meeting=meeting))
     if formset.is_valid():
@@ -921,7 +921,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         prefix='experts', queryset=meeting.medical_categories.all())
 
     if request.method == 'POST' and expert_formset.is_valid() and \
-        request.user.profile.is_internal:
+        request.user.profile.is_internal and meeting.started is None:
 
         previous_experts = dict(
             meeting.medical_categories.values_list('pk', 'specialist_id'))
