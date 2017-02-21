@@ -25,12 +25,10 @@ class Command(BaseCommand):
         html = tpl.render({
             'version': ecxf.version,
             'fields': ecxf.docs(),
-        }).encode('utf-8')
+        })
             
         with open(options['outfile'], 'wb') as f:                    
             if options['output_type'] == "html":
-                f.write(html)
+                f.write(html.encode('utf-8'))
             else:
                 f.write(html2pdf(html))
-
-    
