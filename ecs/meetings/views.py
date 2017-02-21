@@ -340,7 +340,7 @@ def add_timetable_entry(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    entry = get_object_or_404(TimetableEntry, pk=entry_pk)
+    entry = get_object_or_404(meeting.timetable_entries, pk=entry_pk)
     if entry.submission:
         raise Http404(_("only tops without associated submission can be deleted"))
     entry.delete()
@@ -349,7 +349,7 @@ def remove_timetable_entry(request, meeting_pk=None, entry_pk=None):
 @user_group_required('EC-Office')
 def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk)
-    entry = get_object_or_404(TimetableEntry, pk=entry_pk)
+    entry = get_object_or_404(meeting.timetable_entries, pk=entry_pk)
     form = TimetableEntryForm(request.POST)
     if form.is_valid():
         entry.duration = form.cleaned_data['duration']
@@ -642,7 +642,7 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
 @user_group_required('EC-Office')
 def meeting_assistant_top(request, meeting_pk=None, top_pk=None):
     meeting = get_object_or_404(Meeting, pk=meeting_pk, started__isnull=False)
-    top = get_object_or_404(TimetableEntry, pk=top_pk)
+    top = get_object_or_404(meeting.timetable_entries, pk=top_pk)
     simple_save = request.POST.get('simple_save', False)
     autosave = request.POST.get('autosave', False)
     try:
