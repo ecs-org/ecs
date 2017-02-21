@@ -17,8 +17,8 @@ from reversion import revisions as reversion
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.core import MedicalCategory
 from ecs.core.models.constants import (
-    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_RETROSPECTIVE_THESIS,
-    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
+    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_SIMPLE, SUBMISSION_LANE_EXPEDITED,
+    SUBMISSION_LANE_LOCALEC,
 )
 from ecs.utils import cached_property
 from ecs.utils.viewutils import render_pdf, render_pdf_context
@@ -151,11 +151,11 @@ class MeetingManager(AuthorizationManager):
             accepted_sf = submission.forms.filter(is_acknowledged=True).order_by('created_at')[0]
         except IndexError:
             accepted_sf = submission.current_submission_form
-        is_thesis = submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
+        is_simple = submission.workflow_lane == SUBMISSION_LANE_SIMPLE
 
         grace_period = getattr(settings, 'ECS_MEETING_GRACE_PERIOD', timedelta(0))
         meetings = self.filter(deadline__gt=first_sf.created_at).filter(deadline__gt=accepted_sf.created_at-grace_period)
-        if is_thesis:
+        if is_simple:
             meetings = self.filter(deadline_diplomathesis__gt=first_sf.created_at).filter(deadline_diplomathesis__gt=accepted_sf.created_at-grace_period)
 
         now = timezone.now()
@@ -173,8 +173,8 @@ class MeetingManager(AuthorizationManager):
                 start = last_meeting.start + month
                 deadline = last_meeting.deadline + month
                 deadline_thesis = last_meeting.deadline_diplomathesis + month
-                while ((not is_thesis and (first_sf.created_at >= deadline or accepted_sf.created_at-grace_period >= deadline)) or
-                    (is_thesis and (first_sf.created_at >= deadline_thesis or accepted_sf.created_at-grace_period >= deadline_thesis)) or start <= now):
+                while ((not is_simple and (first_sf.created_at >= deadline or accepted_sf.created_at-grace_period >= deadline)) or
+                    (is_simple and (first_sf.created_at >= deadline_thesis or accepted_sf.created_at-grace_period >= deadline_thesis)) or start <= now):
                     start += month
                     deadline += month
                     deadline_thesis += month
@@ -210,8 +210,8 @@ class Meeting(models.Model):
     unfiltered = models.Manager()
 
     @property
-    def retrospective_thesis_entries(self):
-        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+    def simple_entries(self):
+        return self.timetable_entries.filter(submission__workflow_lane=SUBMISSION_LANE_SIMPLE)
 
     @property
     def expedited_entries(self):
@@ -223,7 +223,7 @@ class Meeting(models.Model):
 
     @property
     def additional_entries(self):
-        entries = self.retrospective_thesis_entries.all() | self.expedited_entries.all() | self.localec_entries.all()
+        entries = self.simple_entries.all() | self.expedited_entries.all() | self.localec_entries.all()
         return entries.order_by('pk')
 
     def __str__(self):

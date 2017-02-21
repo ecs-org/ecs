@@ -17,10 +17,10 @@ from ecs.core.workflow import (
     InitialB2ResubmissionReview,
 )
 from ecs.core.workflow import (
-    is_retrospective_thesis, is_acknowledged, is_expedited,
-    has_thesis_recommendation, has_localec_recommendation,
+    is_acknowledged, is_simple, is_expedited,
+    has_simple_recommendation, has_localec_recommendation,
     needs_expedited_recategorization, is_acknowledged_and_initial_submission,
-    is_still_b2, needs_executive_b2_review, needs_thesis_vote_preparation,
+    is_still_b2, needs_executive_b2_review, needs_simple_vote_preparation,
     needs_expedited_vote_preparation, needs_localec_recommendation,
     needs_localec_vote_preparation, needs_categorization_review,
 )
@@ -34,7 +34,7 @@ def sites():
 
 @bootstrap.register(depends_on=('ecs.integration.bootstrap.workflow_sync', 'ecs.core.bootstrap.auth_groups', 'ecs.checklists.bootstrap.checklist_blueprints'))
 def submission_workflow():
-    thesis_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='thesis_review')
+    simple_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='simple_review')
     expedited_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='expedited_review')
     localec_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='localec_review')
     statistical_review_checklist_blueprint = ChecklistBlueprint.objects.get(slug='statistic_review')
@@ -70,9 +70,9 @@ def submission_workflow():
             'specialist_review': Args(ChecklistReview, data=specialist_review_checklist_blueprint, name=_("Specialist Review"), group=SPECIALIST_GROUP, is_delegatable=False, is_dynamic=True),
             'gcp_review': Args(ChecklistReview, data=gcp_review_checklist_blueprint, name=_("GCP Review"), group=GCP_REVIEW_GROUP, is_dynamic=True),
 
-            # retrospective thesis lane
+            # simple lane
             'initial_thesis_review': Args(InitialReview, name=_("Initial Thesis Review"), group=OFFICE_GROUP),
-            'thesis_recommendation': Args(ChecklistReview, data=thesis_review_checklist_blueprint, name=_("Thesis Recommendation"), group=OFFICE_GROUP),
+            'simple_recommendation': Args(ChecklistReview, data=simple_review_checklist_blueprint, name=_("Simple Recommendation"), group=OFFICE_GROUP),
 
             # expedited_lane
             'expedited_recommendation_split': Args(ExpeditedRecommendationSplit, name=_("Expedited Recommendation Split")),
@@ -81,12 +81,12 @@ def submission_workflow():
             # local ec lane
             'localec_recommendation': Args(ChecklistReview, data=localec_review_checklist_blueprint, name=_("Local EC Recommendation"), group=EXECUTIVE_GROUP),
 
-            # retrospective thesis, expedited and local ec lanes
+            # non-standard lanes
             'vote_preparation': Args(VotePreparation, name=_("Vote Preparation"), group=OFFICE_GROUP),
         },
         edges={
-            ('start', 'initial_review'): Args(guard=is_retrospective_thesis, negated=True),
-            ('start', 'initial_thesis_review'): Args(guard=is_retrospective_thesis),
+            ('start', 'initial_review'): Args(guard=is_simple, negated=True),
+            ('start', 'initial_thesis_review'): Args(guard=is_simple),
 
             ('initial_review', 'initial_review_barrier'): None,
             ('initial_thesis_review', 'initial_review_barrier'): None,
@@ -99,10 +99,10 @@ def submission_workflow():
             ('b2_review', 'b2_resubmission'): Args(guard=is_still_b2),
             ('executive_b2_review', 'b2_review'): None,
 
-            # retrospective thesis lane
-            ('categorization', 'thesis_recommendation'): Args(guard=is_retrospective_thesis),
-            ('thesis_recommendation', 'categorization'): Args(guard=has_thesis_recommendation, negated=True),
-            ('thesis_recommendation', 'vote_preparation'): Args(guard=needs_thesis_vote_preparation),
+            # simple lane
+            ('categorization', 'simple_recommendation'): Args(guard=is_simple),
+            ('simple_recommendation', 'categorization'): Args(guard=has_simple_recommendation, negated=True),
+            ('simple_recommendation', 'vote_preparation'): Args(guard=needs_simple_vote_preparation),
 
             # expedited lane
             ('categorization', 'expedited_recommendation_split'): None,

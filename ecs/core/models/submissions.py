@@ -14,10 +14,11 @@ from django_countries.fields import CountryField
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.names import NameField
 from ecs.core.models.constants import (
-    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
-    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
-    SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
-    SUBMISSION_TYPE_MULTICENTRIC,
+    MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES,
+    SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_SIMPLE,
+    SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
+    SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC,
+    SUBMISSION_TYPE_MULTICENTRIC_LOCAL, SUBMISSION_TYPE_MULTICENTRIC,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import (
@@ -732,7 +733,7 @@ def _post_submission_form_save(**kwargs):
             submission.invite_primary_investigator_to_meeting = True
         if new_sf.is_thesis:
             submission.remission = True
-            submission.workflow_lane = SUBMISSION_LANE_RETROSPECTIVE_THESIS
+            submission.workflow_lane = SUBMISSION_LANE_SIMPLE
         elif new_sf.is_categorized_multicentric_and_local:
             submission.workflow_lane = SUBMISSION_LANE_LOCALEC
         submission.save(update_fields=(

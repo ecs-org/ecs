@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 17:30+0100\n"
+"POT-Creation-Date: 2017-02-22 16:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,9 +94,8 @@ msgstr "Sozialversicherungs-Nr."
 msgid "Shorthand Symbol"
 msgstr "Kürzel"
 
-#, fuzzy
-msgid "Thesis Review"
-msgstr "Formale Prüfung Diplomarbeit"
+msgid "Simple Review"
+msgstr "Einfache Empfehlung"
 
 msgid "Expedited Review"
 msgstr "Expedited Empfehlung"
@@ -263,18 +262,18 @@ msgstr "Unterschrift Prüfung"
 msgid "Initial Thesis Review"
 msgstr "Diplomarbeit Formale Prüfung"
 
-msgid "Thesis Recommendation"
-msgstr "Thesis Empfehlung"
+msgid "Simple Recommendation"
+msgstr "Empfehlung - Einfach (Retr., Dipl./Diss., NIS)"
 
 #, fuzzy
 msgid "Expedited Recommendation Split"
 msgstr "Expedited Empfehlung"
 
 msgid "Expedited Recommendation"
-msgstr "Expedited Empfehlung"
+msgstr "Empfehlung - Expedited"
 
 msgid "Local EC Recommendation"
-msgstr "Begleitende EK Empfehlung"
+msgstr "Empfehlung - Lokale EK"
 
 msgid "Vote Preparation"
 msgstr "Votumsvorbereitung"
@@ -399,8 +398,8 @@ msgstr "Nicht Eingestuft"
 msgid "board"
 msgstr "Standard"
 
-msgid "Thesis"
-msgstr "Diplomarbeit"
+msgid "simple"
+msgstr "Einfach (Retr., Dipl./Diss., NIS)"
 
 msgid "Expedited"
 msgstr "Expedited"
@@ -605,9 +604,6 @@ msgstr "vollständig anonymisiert"
 
 msgid "expedited"
 msgstr "Expedited"
-
-msgid "retrospective thesis"
-msgstr "Retr. Diplomarbeiten/Diss."
 
 msgid "Ms"
 msgstr "Frau"
@@ -2269,12 +2265,6 @@ msgstr "Systemnachrichten anzeigen"
 msgid "New Message"
 msgstr "Neue Nachricht"
 
-msgid "Back to the communication overview"
-msgstr "Zurück zur Nachrichtenübersicht"
-
-msgid "Back to the Study"
-msgstr "Zurück zur Studie"
-
 msgid "Remove star"
 msgstr "Stern entfernen"
 
@@ -2449,8 +2439,9 @@ msgstr "Vorbereitetes Votum"
 msgid "No vote!"
 msgstr "Kein Votum!"
 
-msgid "Retrospective Thesis Submissions"
-msgstr "Retrospektive Diplomarbeiten / Dissertationen"
+msgid "Simple Submissions"
+msgstr ""
+"Einfache Einreichungen (retrospektiv, Diplomarbeiten/Dissertationen, NIS)"
 
 msgid "Approved"
 msgstr "Bestätigt"
@@ -2664,13 +2655,8 @@ msgstr ""
 msgid "Andere"
 msgstr "Geschlecht"
 
-#, fuzzy
-msgid "Retro. Thesis"
-msgstr "Letzter Einreichtermin für Diplomarbeiten / Dissertationen"
-
-#, fuzzy
 msgid "Dissertation"
-msgstr "Diplomarbeit / Dissertation"
+msgstr "Dissertation"
 
 msgid "Diploma Thesis"
 msgstr "Diplomarbeit"
@@ -3120,6 +3106,9 @@ msgstr "Alle annehmen"
 
 msgid "Preview"
 msgstr "Vorschau"
+
+msgid "Thesis"
+msgstr "Diplomarbeit"
 
 msgid "Bookmark"
 msgstr "Lesezeichen"

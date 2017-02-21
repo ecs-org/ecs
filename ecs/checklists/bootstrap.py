@@ -13,7 +13,7 @@ from ecs.checklists.workflow import is_external_review_checklist, checklist_revi
 @bootstrap.register()
 def checklist_blueprints():
     blueprints = (
-        dict(slug='thesis_review', name=_("Thesis Review")),
+        dict(slug='simple_review', name=_("Simple Review")),
         dict(slug='expedited_review', name=_("Expedited Review"), multiple=True),
         dict(slug='localec_review', name=_("Local-EC Review")),
         dict(slug='statistic_review', name=_("Statistical Review")),

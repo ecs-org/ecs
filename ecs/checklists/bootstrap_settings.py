@@ -1,8 +1,8 @@
 from ecs.utils import Args
 
 checklist_questions = {
-    'thesis_review': [
-        Args('1', 'Handelt es sich um eine retrospektive Diplomstudie und geben Sie eine positive Empfehlung ab?'),  # XXX: dont change this number
+    'simple_review': [
+        Args('1', 'Entspricht das Projekt den Kriterien einer einfachen Studie (retrospektiv, Diplomarbeite/Dissertatione, NIS) und kann ohne ausführliche Diskussion in der Sitzung positiv beurteilt werden?'),   # XXX: dont change this number
     ],
     'statistic_review': [
         Args('1', 'Ist das Studienziel ausreichend definiert?'),

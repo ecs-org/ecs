@@ -7,7 +7,7 @@ from ecs.workflow import Activity, guard, register
 from ecs.workflow.patterns import Generic
 from ecs.users.utils import get_current_user, sudo
 from ecs.core.models import Submission
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS
+from ecs.core.models.constants import SUBMISSION_LANE_SIMPLE
 from ecs.core.signals import on_initial_review, on_categorization
 from ecs.checklists.models import ChecklistBlueprint, Checklist, ChecklistAnswer
 from ecs.checklists.utils import get_checklist_answer
@@ -35,23 +35,19 @@ def is_acknowledged_and_initial_submission(wf):
 # lane guards #
 ###############
 @guard(model=Submission)
-def is_retrospective_thesis(wf):
-    return wf.data.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS
+def is_simple(wf):
+    return wf.data.workflow_lane == SUBMISSION_LANE_SIMPLE
 
 @guard(model=Submission)
 def is_expedited(wf):
     return wf.data.is_expedited
 
-@guard(model=Submission)
-def is_expedited_or_retrospective_thesis(wf):
-    return is_expedited(wf) or is_retrospective_thesis(wf)
-
 #########################
 # recommendation guards #
 #########################
 @guard(model=Submission)
-def has_thesis_recommendation(wf):
-    return bool(get_checklist_answer(wf.data, 'thesis_review', 1))
+def has_simple_recommendation(wf):
+    return bool(get_checklist_answer(wf.data, 'simple_review', 1))
 
 @guard(model=Submission)
 def has_localec_recommendation(wf):
@@ -67,8 +63,8 @@ def needs_paper_submission_review(wf):
 
 @guard(model=Submission)
 @block_duplicate_task('vote_preparation')
-def needs_thesis_vote_preparation(wf):
-    return has_thesis_recommendation(wf)
+def needs_simple_vote_preparation(wf):
+    return has_simple_recommendation(wf)
 
 @guard(model=Submission)
 @block_duplicate_task('vote_preparation')

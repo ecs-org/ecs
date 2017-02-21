@@ -6,8 +6,8 @@ from django.utils import timezone
 
 from ecs.authorization import AuthorizationManager
 from ecs.core.models.constants import (
-    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
-    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
+    SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_SIMPLE,
+    SUBMISSION_LANE_BOARD
 )
 from ecs.meetings.models import Meeting
 
@@ -31,8 +31,8 @@ class SubmissionQuerySet(models.QuerySet):
     def localec(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_LOCALEC)
         
-    def for_thesis_lane(self):
-        return self.filter(workflow_lane=SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+    def simple(self):
+        return self.filter(workflow_lane=SUBMISSION_LANE_SIMPLE)
         
     def for_board_lane(self):
         return self.filter(workflow_lane=SUBMISSION_LANE_BOARD)

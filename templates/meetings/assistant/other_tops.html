@@ -5,17 +5,17 @@
     <form action="{% url 'ecs.meetings.views.meeting_assistant_other_tops' meeting_pk=meeting.pk %}" method="post" class="open-in-widget">
         {% csrf_token %}
 
-        {{ thesis_vote_formset.management_form }}
+        {{ simple_vote_formset.management_form }}
         {{ expedited_vote_formset.management_form }}
         {{ localec_vote_formset.management_form }}
         {{ amendment_vote_formset.management_form }}
 
-        <h3>{% trans "Retrospective Thesis Submissions" %}</h3>
+        <h3>{% trans "Simple Submissions" %}</h3>
 
-        {% if retrospective_thesis_entries %}
+        {% if simple_entries %}
             <h4>{% trans "Approved" %}</h4>
             <ul class="list-group mb-3">
-            {% for entry in retrospective_thesis_entries %}
+            {% for entry in simple_entries %}
                 <li class="list-group-item d-block">
                     {{ entry.submission|ec_number }}
                     {{ entry.submission.project_title_display }}
@@ -24,9 +24,9 @@
             </ul>
         {% endif %}
 
-        {% if thesis_vote_formset|length %}
+        {% if simple_vote_formset|length %}
             <h4>{% trans "Not Approved" %}</h4>
-            {% with thesis_vote_formset as formset %}
+            {% with simple_vote_formset as formset %}
                 {% include 'meetings/assistant/expedited_vote_formset.html' %}
             {% endwith %}
         {% endif %}

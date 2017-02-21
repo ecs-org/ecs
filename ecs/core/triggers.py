@@ -8,7 +8,7 @@ from ecs.tasks.models import Task
 from ecs.users.utils import sudo, get_current_user
 from ecs.users.utils import get_office_user
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS
-from ecs.core.models.constants import SUBMISSION_LANE_RETROSPECTIVE_THESIS, \
+from ecs.core.models.constants import SUBMISSION_LANE_SIMPLE, \
     SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_BOARD, SUBMISSION_LANE_LOCALEC
 
 
@@ -121,10 +121,10 @@ def on_initial_review(sender, **kwargs):
 
 
 LANE_TASKS = {
-    SUBMISSION_LANE_RETROSPECTIVE_THESIS : (
+    SUBMISSION_LANE_SIMPLE : (
         'initial_thesis_review',
-        'thesis_recommendation',
-        'thesis_recommendation_review',
+        'simple_recommendation',
+        'simple_recommendation_review',
     ),
     SUBMISSION_LANE_EXPEDITED : (
         'expedited_recommendation',
@@ -138,7 +138,7 @@ LANE_TASKS = {
 }
 
 VOTE_PREPARATION_SOURCES = {
-    SUBMISSION_LANE_RETROSPECTIVE_THESIS: 'thesis_recommendation_review',
+    SUBMISSION_LANE_SIMPLE: 'simple_recommendation_review',
     SUBMISSION_LANE_EXPEDITED: 'expedited_recommendation',
     SUBMISSION_LANE_LOCALEC: 'localec_recommendation',
 }
@@ -157,7 +157,7 @@ def on_categorization(sender, **kwargs):
             if not submission.workflow_lane == lane:
                 tasks.filter(task_type__workflow_node__uid__in=uids).mark_deleted()
 
-        if submission.workflow_lane == SUBMISSION_LANE_RETROSPECTIVE_THESIS:
+        if submission.workflow_lane == SUBMISSION_LANE_SIMPLE:
             for task in tasks.filter(task_type__workflow_node__uid='initial_review'):
                 if task.workflow_node.graph.nodes.filter(uid='initial_thesis_review').exists():
                     task.mark_deleted()

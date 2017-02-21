@@ -14,8 +14,8 @@ from ecs.users.utils import user_flag_required, sudo
 from ecs.users.models import UserProfile
 from ecs.core.models import Submission, SubmissionForm, Investigator
 from ecs.core.models.constants import (
-    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED,
-    SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC,
+    SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_SIMPLE,
+    SUBMISSION_LANE_LOCALEC,
 )
 from ecs.checklists.models import Checklist
 from ecs.tasks.models import Task
@@ -103,7 +103,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         no_meeting = cd['no_meeting']
         lane_board = cd['lane_board']
         lane_expedited = cd['lane_expedited']
-        lane_retrospective_thesis = cd['lane_retrospective_thesis']
+        lane_simple = cd['lane_simple']
         lane_localec = cd['lane_localec']
         lane_none = cd['lane_none']
         amg = cd['amg']
@@ -112,7 +112,7 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
         other = cd['other']
 
         if (past_meetings and next_meeting and upcoming_meetings and no_meeting and
-            lane_board and lane_expedited and lane_retrospective_thesis and lane_localec and lane_none and
+            lane_board and lane_expedited and lane_simple and lane_localec and lane_none and
             amg and mpg and thesis and other):
             pass
         else:
@@ -139,14 +139,14 @@ def my_tasks(request, template='tasks/compact_list.html', submission_pk=None, ig
                 else:
                     submissions = submissions.none()
 
-            if not (lane_board and lane_expedited and lane_retrospective_thesis and lane_localec and lane_none):
+            if not (lane_board and lane_expedited and lane_simple and lane_localec and lane_none):
                 lanes = []
                 if lane_board:
                     lanes.append(SUBMISSION_LANE_BOARD)
                 if lane_expedited:
                     lanes.append(SUBMISSION_LANE_EXPEDITED)
-                if lane_retrospective_thesis:
-                    lanes.append(SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+                if lane_simple:
+                    lanes.append(SUBMISSION_LANE_SIMPLE)
                 if lane_localec:
                     lanes.append(SUBMISSION_LANE_LOCALEC)
                 q = Q(workflow_lane__in=lanes)

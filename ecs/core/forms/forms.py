@@ -362,7 +362,7 @@ _labels = {
 
     'not_categorized': _('Not Categorized'),
     'board': _('board'),
-    'thesis': _('Thesis'),
+    'simple': _('simple'),
     'expedited': _('Expedited'),
     'local_ec': _('Local EC'),
 
@@ -421,13 +421,13 @@ class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
     def _filter_by_lane(self, submissions, user):
         from ecs.core.models.constants import (
             SUBMISSION_LANE_EXPEDITED, SUBMISSION_LANE_LOCALEC,
-            SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_BOARD
+            SUBMISSION_LANE_SIMPLE, SUBMISSION_LANE_BOARD
         )
         lanes = []
         if self.cleaned_data['board']:
             lanes.append(SUBMISSION_LANE_BOARD)
-        if self.cleaned_data['thesis']:
-            lanes.append(SUBMISSION_LANE_RETROSPECTIVE_THESIS)
+        if self.cleaned_data['simple']:
+            lanes.append(SUBMISSION_LANE_SIMPLE)
         if self.cleaned_data['expedited']:
             lanes.append(SUBMISSION_LANE_EXPEDITED)
         if self.cleaned_data['local_ec']:
@@ -487,7 +487,7 @@ class SubmissionFilterForm(forms.Form, metaclass=SubmissionFilterFormMetaclass):
 
 FILTER_MEETINGS = ('past_meetings', 'next_meeting', 'upcoming_meetings', 'no_meeting')
 FILTER_TYPE = ('amg', 'mpg', 'other')
-FILTER_LANE = ('board', 'thesis', 'expedited', 'local_ec', 'not_categorized')
+FILTER_LANE = ('board', 'simple', 'expedited', 'local_ec', 'not_categorized')
 FILTER_VOTES = ('b2', 'b3', 'other_votes', 'no_votes')
 FILTER_ASSIGNMENT = ('mine', 'assigned', 'other_studies')
 

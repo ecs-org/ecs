@@ -384,7 +384,7 @@ def timetable_editor(request, meeting_pk=None):
         recommendations_not_done = Task.objects.for_submissions(
             meeting.timetable_entries.filter(submission__isnull=False).values('pk')
         ).filter(task_type__workflow_node__uid__in=[
-            'thesis_recommendation', 'thesis_recommendation_review',
+            'simple_recommendation', 'simple_recommendation_review',
             'expedited_recommendation', 'localec_recommendation'
         ]).open().exists()
 
@@ -512,7 +512,7 @@ def meeting_assistant_start(request, meeting_pk=None):
 
     for top in meeting.timetable_entries.filter(submission__isnull=False):
         with sudo():
-            recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['thesis_recommendation', 'thesis_recommendation_review', 'expedited_recommendation', 'localec_recommendation']).open().exists()
+            recommendation_exists = Task.objects.for_submission(top.submission).filter(task_type__workflow_node__uid__in=['simple_recommendation', 'simple_recommendation_review', 'expedited_recommendation', 'localec_recommendation']).open().exists()
         if recommendation_exists and not nocheck:
             return render(request, 'meetings/assistant/error.html', {
                 'active': 'assistant',
@@ -592,8 +592,8 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
             ),
         ).order_by('submission_forms__submission__ec_number')
 
-    thesis_vote_formset = ExpeditedVoteFormSet(request.POST or None,
-        queryset=_prefetch_entries(meeting.retrospective_thesis_entries),
+    simple_vote_formset = ExpeditedVoteFormSet(request.POST or None,
+        queryset=_prefetch_entries(meeting.simple_entries),
         prefix='thesis')
     expedited_vote_formset = ExpeditedVoteFormSet(request.POST or None,
         queryset=_prefetch_entries(meeting.expedited_entries),
@@ -606,7 +606,7 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
         )), prefix='amendment')
 
     if request.method == 'POST':
-        thesis_vote_formset.save()
+        simple_vote_formset.save()
         expedited_vote_formset.save()
         localec_vote_formset.save()
         amendment_vote_formset.save()
@@ -615,8 +615,8 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
             meeting_pk=meeting_pk)
 
     return render(request, 'meetings/assistant/other_tops.html', {
-        'retrospective_thesis_entries':
-            _prefetch_entries(meeting.retrospective_thesis_entries.filter(
+        'simple_entries':
+            _prefetch_entries(meeting.simple_entries.filter(
                 vote__isnull=False, vote__is_draft=False
             )),
         'expedited_entries':
@@ -633,7 +633,7 @@ def meeting_assistant_other_tops(request, meeting_pk=None):
             )),
         'meeting': meeting,
         'last_top': meeting.active_top,
-        'thesis_vote_formset': thesis_vote_formset,
+        'simple_vote_formset': simple_vote_formset,
         'expedited_vote_formset': expedited_vote_formset,
         'localec_vote_formset': localec_vote_formset,
         'amendment_vote_formset': amendment_vote_formset,
@@ -976,7 +976,7 @@ def meeting_details(request, meeting_pk=None, active=None):
         'amg_mpg_submissions': submissions.for_board_lane().amg_mpg(),
         'not_amg_and_not_mpg_submissions': submissions.for_board_lane().not_amg_and_not_mpg(),
 
-        'retrospective_thesis_submissions': submissions.for_thesis_lane(),
+        'simple_submissions': submissions.simple(),
         'expedited_submissions': submissions.expedited(),
         'localec_submissions': submissions.localec(),
 

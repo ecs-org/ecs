@@ -17,7 +17,7 @@
                     {% trans 'Comments' %}
                 </a>
                 {% if not meeting.ended %}
-                {% if meeting.retrospective_thesis_entries.exists or meeting.expedited_entries.exists or meeting.localec_entries.exists or meeting.amendments.exists %}
+                {% if meeting.simple_entries.exists or meeting.expedited_entries.exists or meeting.localec_entries.exists or meeting.amendments.exists %}
                     <a class="btn btn-block btn-outline-primary open-in-widget" href="{% url 'ecs.meetings.views.meeting_assistant_other_tops' meeting_pk=meeting.pk %}">
                         {% trans 'Other TOPs' %}
                     </a>
@@ -28,7 +28,7 @@
                 <li>TOPs: {{ meeting|length }}</li>
                 <li>Offene TOPs: {{ open_top_count }}</li>
                 <li>Offene TOPs mit Votum: {{ meeting.open_tops_with_vote.count }}</li>
-                <li>Diplomarbeiten: {{ meeting.retrospective_thesis_entries.count }}</li>
+                <li>Diplomarbeiten: {{ meeting.simple_entries.count }}</li>
                 <li>Expedited: {{ meeting.expedited_entries.count }}</li>
                 <li>Lokale EK: {{ meeting.localec_entries.count }}</li>
                 <li>Amendments: {{ meeting.amendments.count }}</li>

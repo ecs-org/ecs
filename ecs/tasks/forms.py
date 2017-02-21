@@ -72,7 +72,7 @@ class TaskListFilterForm(forms.Form):
 
     lane_board = forms.BooleanField(required=False, initial=True)
     lane_expedited = forms.BooleanField(required=False, initial=True)
-    lane_retrospective_thesis = forms.BooleanField(required=False, initial=True)
+    lane_simple = forms.BooleanField(required=False, initial=True)
     lane_localec = forms.BooleanField(required=False, initial=True)
     lane_none = forms.BooleanField(required=False, initial=True)
 

@@ -207,13 +207,13 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
 
             task = (get_obj_tasks((ChecklistReview,), submission, data=checklist.blueprint)
                 .filter(assigned_to=request.user, deleted_at=None)
-                .exclude(task_type__workflow_node__uid='thesis_recommendation_review')  # XXX: legacy
+                .exclude(task_type__workflow_node__uid='simple_recommendation_review')  # XXX: legacy
                 .order_by('-closed_at')
                 .first())
 
             if task and task.closed_at and (
                 task.task_type.workflow_node.uid not in (
-                    'thesis_recommendation', 'expedited_recommendation',
+                    'simple_recommendation', 'expedited_recommendation',
                     'localec_recommendation',
                 ) or submission.meetings.filter(started=None).exists()
             ):
@@ -598,7 +598,7 @@ def vote_preparation(request, submission_form_pk=None):
     elif submission_form.submission.is_localec:
         blueprint_slug = 'localec_review'
     else:
-        blueprint_slug = 'thesis_review'
+        blueprint_slug = 'simple_review'
 
     checklists = Checklist.objects.filter(submission=submission_form.submission,
         blueprint__slug=blueprint_slug, status='completed')

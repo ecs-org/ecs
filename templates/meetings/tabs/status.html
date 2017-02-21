@@ -158,11 +158,11 @@
   </li>
   <li class="list-group-item d-block">
     <h5 class="list-group-item-heading">
-        {% trans "Retro. Thesis" %}
-        <span class="badge badge-default badge-pill float-right">{{ retrospective_thesis_submissions|length }}</span>
+        {% trans "simple" %}
+        <span class="badge badge-default badge-pill float-right">{{ simple_submissions|length }}</span>
     </h5>
     <p class="list-group-item-text">
-        {% with retrospective_thesis_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
+        {% with simple_submissions as submissions %}{% include 'submissions/compact_list.html' %}{% endwith %}
     </p>
   </li>
   <li class="list-group-item d-block">
