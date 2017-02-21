@@ -11,8 +11,7 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-o', action='store', dest='outfile', help='output file', default=None),
         make_option('-t', dest='output_type', action='store', default='html', 
-        help="""--type can be one of 'html' or 'pdf'
--o outputfile"""),
+            help="one of 'html' or 'pdf'"),
     )
 
     def handle(self, **options):
