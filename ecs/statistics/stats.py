@@ -2,8 +2,12 @@ from copy import deepcopy
 from collections import OrderedDict
 
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import F, Prefetch
 
-from ecs.core.models import Submission
+from ecs.core.models import (
+    Submission, Investigator, ParticipatingCenterNonSubject,
+    ForeignParticipatingCenter,
+)
 from ecs.votes.models import Vote
 
 
@@ -69,12 +73,42 @@ def collect_submission_stats_for_year(year):
     votes = Vote.objects.exclude(published_at=None)
     submissions = (Submission.objects
         .for_year(year)
-        .filter(id__in=votes.values('submission_form__submission__id').query)
-        .order_by('ec_number').select_related('current_submission_form'))
+        .filter(id__in=votes.values('submission_form__submission__id'))
+        .select_related('current_submission_form', 'current_published_vote')
+        .only(
+            'current_submission_form_id', 'current_published_vote_id',
+            'ec_number', 'remission',
+
+            'current_submission_form__submission_type',
+            'current_submission_form__project_type_non_reg_drug',
+            'current_submission_form__project_type_reg_drug',
+            'current_submission_form__project_type_medical_device',
+            'current_submission_form__medtech_ce_symbol',
+            'current_submission_form__medtech_certified_for_exact_indications',
+            'current_submission_form__medtech_certified_for_other_indications',
+
+            'current_published_vote__result',
+        ).prefetch_related(
+            Prefetch('current_submission_form__investigators', queryset=
+                Investigator.objects.non_system_ec().only('submission_form_id'),
+                to_attr='non_system_ec_investigators'),
+            Prefetch('current_submission_form__participatingcenternonsubject_set', queryset=
+                ParticipatingCenterNonSubject.objects.only('submission_form_id')),
+            Prefetch('current_submission_form__foreignparticipatingcenter_set', queryset=
+                ForeignParticipatingCenter.objects.only('submission_form_id')),
+        ).order_by('ec_number').select_related('current_submission_form'))
+
+    first_votes = Vote.objects.filter(
+        submission_form__submission__in=[s.id for s in submissions],
+        published_at__isnull=False,
+    ).annotate(submission_id=F('submission_form__submission_id')).order_by(
+        'submission_form__submission_id', 'published_at',
+    ).distinct('submission_form__submission_id').only('result')
+    first_votes = {v.submission_id: v for v in first_votes}
 
     for s in submissions:
         sf = s.current_submission_form
-        first_vote = s.votes.exclude(published_at=None).order_by('published_at')[0]
+        first_vote = first_votes[s.id]
 
         classification = {
             'submissions.total': True,

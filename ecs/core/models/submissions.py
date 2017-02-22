@@ -569,7 +569,11 @@ class SubmissionForm(models.Model):
         return (
             self.is_categorized_multicentric_and_main or
             self.is_categorized_multicentric_and_local or
-            self.investigators.non_system_ec().exists() or
+            (
+                bool(self.non_system_ec_investigators)  # prefetch
+                if hasattr(self, 'non_system_ec_investigators')
+                else self.investigators.non_system_ec().exists()
+            ) or
             self.participatingcenternonsubject_set.exists() or
             self.foreignparticipatingcenter_set.exists()
         )
