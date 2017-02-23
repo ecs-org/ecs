@@ -766,6 +766,8 @@ def create_submission_form(request):
                 investigator.submission_form = submission_form
                 investigator.save()
             for employee in employees:
+                if employee.investigator_index >= len(investigators):
+                    continue
                 employee.investigator = investigators[employee.investigator_index]
                 employee.save()
 
