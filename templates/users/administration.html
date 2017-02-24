@@ -40,8 +40,8 @@
         <div class="body collapse">
             <a href="{% url 'ecs.users.views.details' user_pk=profile.pk %}">{% trans 'Edit Details' %}</a>
             | <a href="{% url 'ecs.users.views.indisposition' user_pk=profile.pk %}">
-                    {% if profile.profile.is_indisposed %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
-                </a>
+                {% if profile.profile.is_indisposed %}{% trans "Unmark Indisposed" %}{% else %}{% trans "Mark Indisposed" %}{% endif %}
+            </a>
             | <form class="d-inline" action="{% url 'ecs.users.views.toggle_active' user_pk=profile.pk %}" method="post">
                 {% csrf_token %}
                 <a href="" class="submit_parent">
