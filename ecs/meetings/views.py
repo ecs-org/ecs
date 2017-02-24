@@ -457,7 +457,7 @@ def meeting_assistant_quickjump(request, meeting_pk=None):
             pass
 
     if not top:
-        m = re.match('(?:TOP)?(\d+)$', q)
+        m = re.match(r'(?:TOP)\s*?(\d+)$', q)
         if m:
             idx = int(m.group(1)) - 1
             try:
