@@ -43,9 +43,13 @@
                 <p class="mt-3"><a id="show_login" href="" class="alert-link">Ich möchte es auf eigenes Risiko trotzdem versuchen.</a></p>
             </div>
         {% endif %}
-        <div class="public_area" class="mb-3">
-          <a href="{% url 'ecs.core.views.submissions.catalog' %}">{% trans 'Public Catalog' %}</a>
-          | <a href="{% static 'help/index.html' %}" target="_blank">{% trans 'Online Help Pages' %}</a>
+        <div class="d-flex justify-content-between mb-1">
+            <a href="{% url 'ecs.core.views.submissions.catalog' %}">
+                {% trans 'Public Catalog' %}
+            </a>
+            <a href="{% static 'help/index.html' %}" target="_blank">
+                {% trans 'Online Help Pages' %}
+            </a>
         </div>
         <form method="post" action="{{ request.path }}">
             {% csrf_token %}
@@ -87,8 +91,11 @@
         </form>
     </div>
 
-    <div class="pw_reg" class="mt-3 ml-3">
-        <a href="{% url 'ecs.users.views.register' %}">Registrieren</a> | <a href="{% url 'ecs.users.views.request_password_reset' %}">Passwort vergessen/zurücksetzen</a>
+    <div class="pw_reg text-center mt-1">
+        <a href="{% url 'ecs.users.views.register' %}">Registrieren</a>
+        <a class="ml-3" href="{% url 'ecs.users.views.request_password_reset' %}">
+            Passwort vergessen/zurücksetzen
+        </a>
     </div>
     
 {% endblock %}

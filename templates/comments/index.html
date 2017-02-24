@@ -7,7 +7,7 @@
             {{ comment.timestamp|date:'d.m.Y H:i' }}
 
             {% url 'ecs.core.views.comments.edit' pk=comment.pk as edit_url %}
-            <a class="fa fa-pencil edit" href="{{ edit_url }}"></a>
+            <a class="fa fa-pencil ml-2 edit" href="{{ edit_url }}"></a>
 
             {% url 'ecs.core.views.comments.delete' pk=comment.pk as delete_url %}
             <a class="float-right delete" href="{{ delete_url }}">&times;</a>

@@ -188,8 +188,8 @@
                         {% get_breadcrumbs as crumbs %}
                         {% if crumbs %}
                             {% for submission in crumbs %}
-                                <a href="{% url 'view_submission' submission_pk=submission.pk %}">
-                                    {{ submission|ec_number }} |
+                                <a class="mr-1" href="{% url 'view_submission' submission_pk=submission.pk %}">
+                                    {{ submission|ec_number }}
                                 </a>
                             {% endfor %}
                         {% endif %}

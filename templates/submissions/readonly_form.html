@@ -197,17 +197,22 @@
         <h3>{% trans "Answered Notifications" %}</h3>
         <ul class="list-group">
             {% for notification in answered_notifications %}
-                <li class="list-group-item d-block {% if notification.answer.is_rejected %}list-group-item-danger{% endif %}">
-                    <h5>
-                        {{ notification.timestamp|date:'d.m.Y' }}
-                        <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
-                            <strong>{{ notification.short_name }}</strong>
-                        </a>
-                    </h5>
-                    von {{ notification.user }}
-                    {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
+                <li class="list-group-item align-items-start {% if notification.answer.is_rejected %}list-group-item-danger{% endif %}">
+                    <div>
+                        <h5>
+                            {{ notification.timestamp|date:'d.m.Y' }}
+                            <a href="{% url 'ecs.notifications.views.view_notification' notification_pk=notification.pk %}">
+                                <strong>{{ notification.short_name }}</strong>
+                            </a>
+                        </h5>
+                        von {{ notification.user }}
+                        {% if notification.is_rejected %}({% trans 'rejected' %}){% endif %}
+                    </div>
                     {% if user.profile.is_internal %}
-                    | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">{% trans 'History' %}</a>
+                        <a class="ml-auto" href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='notification_answer' pk=notification.answer.pk %}'))">
+                            <span class="fa fa-history"></span>
+                            {% trans 'History' %}
+                        </a>
                     {% endif %}
                 </li>
             {% empty %}
@@ -246,7 +251,7 @@
         {% if published_votes %}
             <ul class="list-group">
                 {% for vote in published_votes %}
-                    <li class="list-group-item d-block {% if vote == submission.current_published_vote %}list-group-item-info{% endif %}">
+                    <li class="list-group-item {% if vote == submission.current_published_vote %}list-group-item-info{% endif %}">
                         {{ vote.result_text }}
                         {% if vote.top %}
                              (in der Sitzung am {{ vote.top.meeting.start|date:'d.m.Y' }})
@@ -254,19 +259,26 @@
                         {% if vote.valid_until %}
                              {% trans 'valid until' %} {{ vote.valid_until|date:'d.m.Y' }}
                         {% endif %}
-                        <a href="{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">
-                            {% trans "Download" %}
-                        </a>
-                    {% if user.profile.is_internal %}
-                        | <a href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}'))">
-                            {% trans 'History' %}
-                        </a>
-                    {% endif %}
-                    {% if debug %}
-                        | <a href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote.pk %}">
-                            PDF Debug
-                        </a>
-                    {% endif %}
+                        <span class="ml-auto">
+                            <a class="ml-3" href="{% url 'ecs.votes.views.download_vote' vote_pk=vote.pk %}">
+                                <span class="fa fa-file-pdf-o"></span>
+                                {% trans "Download" %}
+                            </a>
+                            <br>
+                            {% if debug %}
+                                <a class="ml-3" href="{% url 'ecs.votes.views.vote_pdf_debug' vote_pk=vote.pk %}">
+                                    <span class="fa fa-file-pdf-o"></span>
+                                    PDF Debug
+                                </a>
+                                <br>
+                            {% endif %}
+                            {% if user.profile.is_internal %}
+                                <a class="ml-3" href="javascript:void(ecs.fieldhistory.show('{% url 'ecs.core.views.fieldhistory.field_history' model_name='vote' pk=vote.pk %}'))">
+                                    <span class="fa fa-history"></span>
+                                    {% trans 'History' %}
+                                </a>
+                            {% endif %}
+                        </span>
                     </li>
                 {% endfor %}
             </ul>
