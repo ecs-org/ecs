@@ -17,7 +17,6 @@ def mark_readonly(form):
 class ReadonlyFormMixin(object):
     def __init__(self, *args, **kwargs):
         self.readonly = kwargs.pop('readonly', False)
-        self.reopen_task = kwargs.pop('reopen_task', None)
         super().__init__(*args, **kwargs)
         if self.readonly:
             mark_readonly(self)

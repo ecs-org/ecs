@@ -397,16 +397,6 @@ def decline_task_full(request, task_pk=None):
     return decline_task(request, task_pk=task_pk, full=True)
 
 
-def reopen_task(request, task_pk=None):
-    task = get_object_or_404(Task, pk=task_pk)
-    if task.workflow_token.workflow.is_finished:
-        raise Http404()
-    if not task.node_controller.is_repeatable():
-        raise Http404()
-    new_task = task.reopen(user=request.user)
-    return redirect(new_task.url)
-
-
 def do_task(request, task_pk=None):
     task = get_object_or_404(Task, assigned_to=request.user, pk=task_pk)
     url = task.url

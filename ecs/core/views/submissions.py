@@ -217,7 +217,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                     'localec_recommendation',
                 ) or submission.meetings.filter(started=None).exists()
             ):
-                checklist_formset.reopen_task = task
+                checklist_formset.allow_reopen = True
         checklist_reviews.append((checklist, checklist_formset))
 
     checklist_summary = []
@@ -329,12 +329,12 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
         context['categorization_form'] = CategorizationForm(instance=submission, readonly=True)
         if request.user.profile.is_executive and \
             submission.allows_categorization():
-            reopen_task = Task.unfiltered.for_data(submission).filter(
+            task = Task.unfiltered.for_data(submission).filter(
                 task_type__workflow_node__uid='categorization',
                 deleted_at=None,
             ).order_by('-closed_at').first()
-            if reopen_task and reopen_task.closed_at:
-                context['categorization_form'].reopen_task = reopen_task
+            if task and task.closed_at:
+                context['categorization_form'].allow_reopen = True
 
     if not submission_form == submission.newest_submission_form:
         context['unacknowledged_forms'] = submission.forms.filter(pk__gt=submission_form.pk).count()
@@ -405,7 +405,8 @@ def categorization(request, submission_pk=None):
 
 @user_flag_required('is_executive')
 def reopen_categorization(request, submission_pk=None):
-    submission = get_object_or_404(Submission, pk=submission_pk)
+    submission = get_object_or_404(Submission.unfiltered.select_for_update(),
+        pk=submission_pk)
 
     task = Task.unfiltered.for_data(submission).filter(
         task_type__workflow_node__uid='categorization',
@@ -426,6 +427,31 @@ def reopen_categorization(request, submission_pk=None):
 
     return redirect(new_task.url)
 
+
+def reopen_checklist(request, submission_pk=None, blueprint_pk=None):
+    submission = get_object_or_404(
+        Submission.unfiltered.filter(
+            pk__in=Submission.objects.filter(pk=submission_pk).values('pk')
+        ).select_for_update()
+    )
+    blueprint = get_object_or_404(ChecklistBlueprint, pk=blueprint_pk)
+
+    task = (get_obj_tasks((ChecklistReview,), submission, data=blueprint)
+        .filter(assigned_to=request.user, deleted_at=None)
+        .exclude(task_type__workflow_node__uid='thesis_recommendation_review')  # XXX: legacy
+        .order_by('-closed_at')
+        .first())
+
+    if not task or not task.closed_at or (
+        task.task_type.workflow_node.uid in (
+            'thesis_recommendation', 'expedited_recommendation',
+            'localec_recommendation',
+        ) and not submission.meetings.filter(started=None).exists()
+    ):
+        raise Http404()
+
+    new_task = task.reopen(user=request.user)
+    return redirect(new_task.url)
 
 @task_required
 @with_task_management

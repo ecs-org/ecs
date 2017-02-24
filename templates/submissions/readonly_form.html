@@ -139,8 +139,13 @@
             {% with categorization_form as review_form %}
                 {% include 'submissions/review_form.html' %}
             {% endwith %}
-            {% if categorization_form.reopen_task %}
-                <p><a class="btn btn-outline-primary" href="{% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk %}">{% trans 'Reopen' %}</a></p>
+            {% if categorization_form.allow_reopen %}
+                <div class="my-3">
+                    {% url 'ecs.core.views.submissions.reopen_categorization' submission_pk=submission.pk as reopen_url %}
+                    <a class="btn btn-outline-primary" href="{{ reopen_url }}">
+                        {% trans 'Reopen' %}
+                    </a>
+                </div>
             {% endif %}
             {% if categorization_task %}
                 <p>
@@ -319,13 +324,13 @@
             </p>
         {% endif %}
         {% include 'submissions/checklist_review_form.html' %}
-        {% if formset.reopen_task and formset.readonly %}
-            {% url 'ecs.tasks.views.reopen_task' task_pk=formset.reopen_task.pk as reopen_url %}
-            <p>
+        {% if formset.allow_reopen and formset.readonly %}
+            {% url 'ecs.core.views.submissions.reopen_checklist' submission_pk=submission.pk blueprint_pk=checklist.blueprint.pk as reopen_url %}
+            <div class="mt-3">
                 <a class="btn btn-outline-primary" href="{{ reopen_url }}">
                     {% trans 'Reopen' %}
                 </a>
-            </p>
+            </div>
         {% endif %}
     </div>
     {% endfor %}
