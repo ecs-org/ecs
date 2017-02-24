@@ -12,7 +12,9 @@
         {% csrf_token %}
         <h3>{{ top }}, {{ submission|ec_number|default:top.title }}{% if submission %} {% with top|last_recessed_vote as vote %}{% if vote %}({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %}) {% endif %}{% endwith %}<a class="fa fa-search text-info" href="{% url 'view_submission' submission_pk=submission.pk %}" target="_blank"></a>{% endif %}</h3>
         {% if not top.is_break %}
-            {{ submission.project_title_display|default:top.title }}<br />
+            <div>
+                {{ submission.project_title_display }}
+            </div>
             {% if top.submission.invite_primary_investigator_to_meeting %}
                 {% with top.submission.current_submission_form.primary_investigator as pi %}
                 <b>Prüfer ({% if pi.user %}{{ pi.user }}{% else %}{{ pi.contact.full_name }}{% endif %}) eingeladen um {{ top.start|datetimeround:-10|date:'H:i' }} Uhr</b>
