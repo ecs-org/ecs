@@ -374,14 +374,6 @@ def view_document(request, submission_form_pk=None, document_pk=None):
     return download_document(request, submission_form_pk, document_pk, view=True)
 
 
-@user_flag_required('is_internal')
-def delete_task(request, submission_form_pk=None, task_pk=None):
-    with sudo():
-        task = get_object_or_404(Task, pk=task_pk)
-    task.mark_deleted()
-    return redirect('readonly_submission_form', submission_form_pk=submission_form_pk)
-
-
 @task_required
 @with_task_management
 def categorization(request, submission_pk=None):

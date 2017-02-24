@@ -36,8 +36,6 @@ urlpatterns = (
     url(r'^(?P<submission_pk>\d+)/temp-auth/grant/$', views.grant_temporary_access),
     url(r'^(?P<submission_pk>\d+)/temp-auth/(?P<temp_auth_pk>\d+)/revoke/$', views.revoke_temporary_access),
 
-    url(r'^(?P<submission_form_pk>\d+)/task_delete/(?P<task_pk>\d+)/$', views.delete_task),
-
     url(r'^form/(?P<submission_form_pk>\d+)/$', views.readonly_submission_form, name='readonly_submission_form'),
     url(r'^form/(?P<submission_form_pk>\d+)/pdf/$', views.submission_form_pdf),
     url(r'^form/(?P<submission_form_pk>\d+)/pdf/view/$', views.submission_form_pdf_view),
