@@ -394,11 +394,11 @@ def update_timetable_entry(request, meeting_pk=None, entry_pk=None):
 
 @user_group_required('EC-Office')
 def toggle_participation(request, meeting_pk=None, user_pk=None, entry_pk=None):
-    meeting = get_object_or_404(Meeting, pk=meeting_pk, started=None)
-    p = get_object_or_404(Participation, user=user_pk, entry=entry_pk)
-    p.ignored_for_optimization = not p.ignored_for_optimization
-    p.save()
-    return redirect('ecs.meetings.views.timetable_editor', meeting_pk=meeting.pk)
+    participations = Participation.objects.filter(entry=entry_pk, user=user_pk)
+    ignored = not participations.first().ignored_for_optimization
+    participations.update(ignored_for_optimization=ignored)
+    return redirect('ecs.meetings.views.timetable_editor',
+        meeting_pk=meeting_pk)
 
 @user_group_required('EC-Office')
 def move_timetable_entry(request, meeting_pk=None):
