@@ -54,6 +54,10 @@ def main():
     # XXX: Remove control characters, otherwise lxml will go kaboom.
     html = re.sub(r'[\x00-\x08\x0b\x0e-\x1f\x7f]', '', html)
 
+    # XXX: Remove soft hyphens, otherwise weasyprint's line breaking code will
+    # be confused and error out with an AssertionError.
+    html = html.replace('\xad', '')
+
     html = html.encode('utf-8')
     HTML(string=html, url_fetcher=_url_fetcher).write_pdf(sys.stdout.buffer)
 
