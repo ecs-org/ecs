@@ -44,9 +44,12 @@
             </div>
         {% endif %}
         <div class="d-flex justify-content-between mb-1">
-            <a href="{% url 'ecs.core.views.submissions.catalog' %}">
-                {% trans 'Public Catalog' %}
-            </a>
+            <div class="pw_reg">
+                <a href="{% url 'ecs.users.views.register' %}">Registrieren</a>
+                <a class="ml-3" href="{% url 'ecs.users.views.request_password_reset' %}">
+                    Passwort vergessen/zurücksetzen
+                </a>
+            </div>
             <a href="{% static 'help/index.html' %}" target="_blank">
                 {% trans 'Online Help Pages' %}
             </a>
@@ -91,13 +94,6 @@
         </form>
     </div>
 
-    <div class="pw_reg text-center mt-1">
-        <a href="{% url 'ecs.users.views.register' %}">Registrieren</a>
-        <a class="ml-3" href="{% url 'ecs.users.views.request_password_reset' %}">
-            Passwort vergessen/zurücksetzen
-        </a>
-    </div>
-    
 {% endblock %}
 
 {% block jsbottom %}
