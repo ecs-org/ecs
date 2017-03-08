@@ -3185,7 +3185,7 @@ msgid "Public Catalog"
 msgstr "Öffentliches Register"
 
 msgid "Online Help Pages"
-msgstr "Hilfe/Anleitungen"
+msgstr "Hilfe"
 
 msgid "Edit Profile"
 msgstr "Profil bearbeiten"
