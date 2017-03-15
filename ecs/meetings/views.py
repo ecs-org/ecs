@@ -328,16 +328,11 @@ def download_zipped_documents(request, meeting_pk=None, submission_pk=None):
     )
 
     zip_buf = io.BytesIO()
-    with zipfile.ZipFile(zip_buf, 'w') as zf:
+    with zipfile.ZipFile(zip_buf, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
         path = [submission.get_filename_slice()]
         for doc in docs:
-            zi = zipfile.ZipInfo(
-                filename='/'.join(path + [doc.get_filename()]),
-                date_time=timezone.localtime(doc.date).timetuple()[:6],
-            )
-            zi.compress_type = zipfile.ZIP_DEFLATED
-            zi.external_attr = 0o600 << 16
-            zf.writestr(zi, doc.retrieve(request.user, 'meeting-zip').read())
+            zf.writestr('/'.join(path + [doc.get_filename()]),
+                doc.retrieve(request.user, 'meeting-zip').read())
 
     response = HttpResponse(zip_buf.getvalue(), content_type='application/zip')
     response['Content-Disposition'] = 'attachment; filename="{}_{}.zip"'.format(

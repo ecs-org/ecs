@@ -7,7 +7,6 @@ from celery.schedules import crontab
 
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
-from django.utils import timezone
 
 from ecs.utils.genetic_sort import GeneticSorter, inversion_mutation, swap_mutation, displacement_mutation, random_replacement_mutation
 from ecs.meetings.models import Meeting
@@ -114,7 +113,7 @@ def gen_meeting_zip():
     checklist_ct = ContentType.objects.get_for_model(Checklist)
 
     zip_buf = io.BytesIO()
-    with zipfile.ZipFile(zip_buf, 'w') as zf:
+    with zipfile.ZipFile(zip_buf, 'w', compression=zipfile.ZIP_DEFLATED) as zf:
         for submission in meeting.submissions(manager='unfiltered').all():
             sf = submission.current_submission_form
 
@@ -132,13 +131,8 @@ def gen_meeting_zip():
                 submission.get_filename_slice(),
             ]
             for doc in docs:
-                zi = zipfile.ZipInfo(
-                    filename='/'.join(path + [doc.get_filename()]),
-                    date_time=timezone.localtime(doc.date).timetuple()[:6],
-                )
-                zi.compress_type = zipfile.ZIP_DEFLATED
-                zi.external_attr = 0o600 << 16
-                zf.writestr(zi, doc.retrieve_raw().read())
+                zf.writestr('/'.join(path + [doc.get_filename()]),
+                    doc.retrieve_raw().read())
 
     if meeting.documents_zip:
         meeting.documents_zip.delete()
