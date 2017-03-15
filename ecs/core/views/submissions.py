@@ -1070,7 +1070,8 @@ def all_submissions(request):
 
     if re.match(r'^[a-zA-Z0-9]{32}$', keyword):
         try:
-            doc = Document.objects.get(downloadhistory__uuid=keyword)
+            doc = Document.objects.get(downloadhistory__uuid=keyword,
+                doctype__identifier='submissionform')
         except Document.DoesNotExist:
             pass
         else:
