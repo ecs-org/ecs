@@ -284,7 +284,6 @@ if os.getenv('SMTP_URL'):
 
 SMTPD_CONFIG = {
     'listen_addr': ('127.0.0.1', 8025),
-    'undeliverable_maildir': os.path.join(PROJECT_DIR, '..', 'ecs-undeliverable-mail'),
     'domain': DOMAIN,
 }
 

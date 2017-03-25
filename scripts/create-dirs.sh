@@ -11,7 +11,7 @@ if test -z "$1"; then
 fi
 
 base=$1
-dirnames="storage-vault cache ca gpg undeliverable-mail pgdump pgdump-iso pgdump-fallback"
+dirnames="storage-vault cache ca gpg pgdump pgdump-iso pgdump-fallback"
 install_opts="-g app -o app"
 
 for a in $dirnames; do

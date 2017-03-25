@@ -21,7 +21,6 @@ class SmtpdTest(CommunicationTestCase):
         cls.tmpdir = tempfile.mkdtemp()
         TEST_SMTPD_CONFIG= {
             'listen_addr': ('127.0.0.1', 8024),
-            'undeliverable_maildir': os.path.join(cls.tmpdir, 'undeliverable'),
             'domain': 'ecs',
         }
         cls.OLD_SMTPD_CONFIG = settings.SMTPD_CONFIG

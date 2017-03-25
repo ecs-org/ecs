@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+import sys
 import re
 import smtpd
 import asyncore
@@ -20,7 +21,16 @@ class SMTPError(Exception):
         self.description = description
 
 
+class EcsSMTPChannel(smtpd.SMTPChannel):
+    def handle_error(self):
+        # Invoke the global exception hook to give raven a chance to report
+        # errors to sentry.
+        sys.excepthook(*sys.exc_info())
+        self.handle_close()
+
+
 class EcsMailReceiver(smtpd.SMTPServer):
+    channel_class = EcsSMTPChannel
 
     # 1MB; this seems a lot, but also includes HTML and inline images.
     MAX_MSGSIZE = 1024 * 1024
@@ -29,8 +39,6 @@ class EcsMailReceiver(smtpd.SMTPServer):
     def __init__(self):
         smtpd.SMTPServer.__init__(self, settings.SMTPD_CONFIG['listen_addr'], None,
             data_size_limit=self.MAX_MSGSIZE)
-        self.undeliverable_maildir = mailbox.Maildir(
-            settings.SMTPD_CONFIG['undeliverable_maildir'])
 
     def _find_msg(self, recipient):
         msg_uuid, domain = recipient.split('@')
@@ -84,12 +92,7 @@ class EcsMailReceiver(smtpd.SMTPServer):
                 rawmsg_msgid=msg['Message-ID'])
 
         except SMTPError as e:
-            self.undeliverable_maildir.add(data)
             return str(e)
-
-        except Exception as e:
-            self.undeliverable_maildir.add(data)
-            return '451 Unknown error while processing - try again later'
 
         return '250 Ok'
 
