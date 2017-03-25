@@ -8,12 +8,11 @@ register = Library()
 
 @register.filter
 def starred_by(thread, user):
-    if user.id == thread.sender_id:
-        return thread.starred_by_sender
-    elif user.id == thread.receiver_id:
-        return thread.starred_by_receiver
-    else:
-        assert False
+    assert user.id in (thread.sender_id, thread.receiver_id)
+    return (
+        (user.id == thread.sender_id and thread.starred_by_sender) or
+        (user.id == thread.receiver_id and thread.starred_by_receiver)
+    )
 
 
 @register.filter

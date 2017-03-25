@@ -45,22 +45,20 @@ class Thread(models.Model):
     objects = ThreadQuerySet.as_manager()
 
     def star(self, user):
+        assert user.id in (self.sender_id, self.receiver_id)
         if user.id == self.sender_id:
             self.starred_by_sender = True
-        elif user.id == self.receiver_id:
+        if user.id == self.receiver_id:
             self.starred_by_receiver = True
-        else:
-            assert False
-        self.save()
+        self.save(update_fields=('starred_by_sender', 'starred_by_receiver'))
 
     def unstar(self, user):
+        assert user.id in (self.sender_id, self.receiver_id)
         if user.id == self.sender_id:
             self.starred_by_sender = False
-        elif user.id == self.receiver_id:
+        if user.id == self.receiver_id:
             self.starred_by_receiver = False
-        else:
-            assert False
-        self.save()
+        self.save(update_fields=('starred_by_sender', 'starred_by_receiver'))
 
     def add_message(self, user, text, rawmsg_msgid=None, rawmsg=None, reply_receiver=None):
         assert user.id in (self.sender_id, self.receiver_id)
