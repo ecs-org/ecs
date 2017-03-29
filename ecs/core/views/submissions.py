@@ -23,7 +23,7 @@ from ecs.documents.views import handle_download
 from ecs.utils.viewutils import redirect_to_next_url
 from ecs.core.models import (
     Submission, SubmissionForm, Investigator, TemporaryAuthorization,
-    MedicalCategory,
+    MedicalCategory, EthicsCommission,
 )
 from ecs.checklists.models import ChecklistBlueprint, Checklist
 from ecs.meetings.models import Meeting
@@ -1230,7 +1230,9 @@ def catalog(request, year=None):
 def catalog_json(request):
     data = [{
         'version': '2.0',
-        'copyright': 'CC BY-SA 3.0',
+        'copyright': '(C) under the Creative Commons License BY-SA 3.0: {0}'.format(
+            EthicsCommission.objects.get(
+                uuid=settings.ETHICS_COMMISSION_UUID).name),
         'copyright_url': 'http://creativecommons.org/licenses/by-sa/3.0/at/',
     }]
     
