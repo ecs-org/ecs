@@ -58,11 +58,13 @@ def send_temporary_vote_reminder_submitter(vote):
     send_vote_reminder(vote, subject, 'temporary_reminder_submitter.txt', recipients)
 
 
-def send_temporary_vote_reminder_office(vote):
-    recipients = [get_office_user()]
+def send_temporary_vote_reminder(vote):
+    sf = vote.get_submission().current_submission_form
+    recipients = sf.get_presenting_parties().get_users()
+    recipients.add(get_office_user())
 
     subject = _('Temporary vote for Submission {ec_number}')
-    send_vote_reminder(vote, subject, 'temporary_reminder_office.txt', recipients)
+    send_vote_reminder(vote, subject, 'temporary_reminder.txt', recipients)
 
 
 @periodic_task(run_every=timedelta(days=1))
@@ -99,12 +101,12 @@ def send_reminder_messages(today=None):
         .annotate(published_date=Func(F('published_at'), function='DATE')))
 
     for vote in tmp_votes.filter(
-            published_date=Func(today - timedelta(days=150), function='DATE')):
+            published_date=Func(today - timedelta(days=183), function='DATE')):
         send_temporary_vote_reminder_submitter(vote)
 
     for vote in tmp_votes.filter(
-            published_date=Func(today - timedelta(days=240), function='DATE')):
-        send_temporary_vote_reminder_office(vote)
+            published_date=Func(today - timedelta(days=365), function='DATE')):
+        send_temporary_vote_reminder(vote)
 
 
 @periodic_task(run_every=crontab(hour=3, minute=58))
