@@ -6,7 +6,7 @@ Django>=1.8,<1.9
 django-extensions
 django-picklefield		# for docstash
 django-reversion
-pylibmc				# for caching
+pylibmc                 # for caching
 httpagentparser			# for ecs.utils.browserutils
 diff-match-patch		# for ecs.core.diff
 django-countries
@@ -14,11 +14,7 @@ django-widget-tweaks
 celery[redis]<4.0.0
 redis
 
-# weasyprint                    # for PDF rendering
-# v0.34 + a fix to work around an AssertionError in the line wrapping code
-# We should switch back to the version on pypi during the next upgrade.
-git+https://github.com/Kozea/WeasyPrint.git@5aa34d7dbb6c5e45e8653e6fde26befe4831b7a2
-
+WeasyPrint        # for PDF rendering
 requests          # for raven
 raven             # sentry integration
 uwsgi             # container wsgi runner
@@ -28,7 +24,3 @@ django_compressor
 pyScss
 
 xlwt	# excel generation
-
-# django-rosetta is used only for doc.ecsdev.ep3.at , but we keep it in the main
-# requirements for now
-# django-rosetta
