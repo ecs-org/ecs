@@ -285,6 +285,7 @@ if os.getenv('SMTP_URL'):
 SMTPD_CONFIG = {
     'listen_addr': ('127.0.0.1', 8025),
     'domain': DOMAIN,
+    'store_exceptions': False,
 }
 
 

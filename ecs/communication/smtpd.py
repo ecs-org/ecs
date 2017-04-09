@@ -1,17 +1,24 @@
 #!/usr/bin/env python
 import sys
+import os
 import re
+import logging
 import smtpd
 import asyncore
 import email
 import mailbox
+import base64
 from datetime import timedelta
+
+import chardet
 
 from django.conf import settings
 from django.utils import timezone
 
 from ecs.communication.models import Message
 from ecs.communication.mailutils import html2text
+
+logger = logging.getLogger(__name__)
 
 
 class SMTPError(Exception):
@@ -29,6 +36,22 @@ class EcsSMTPChannel(smtpd.SMTPChannel):
         self.handle_close()
 
 
+def _get_content(message_part):
+    payload = message_part.get_payload(decode=True)
+    
+    if message_part.get_content_charset() is None:
+        charset = chardet.detect(payload)['encoding']
+        logger.info(
+            'no content charset declared, detection result: {0}'.format(charset))
+    else:
+        charset = message_part.get_content_charset()
+        
+    logger.debug('message-part: type: {0} charset: {1}'.format(
+        message_part.get_content_type(), charset))
+    content = str(payload, charset, "replace")
+    return content
+
+
 class EcsMailReceiver(smtpd.SMTPServer):
     channel_class = EcsSMTPChannel
 
@@ -38,7 +61,12 @@ class EcsMailReceiver(smtpd.SMTPServer):
 
     def __init__(self):
         smtpd.SMTPServer.__init__(self, settings.SMTPD_CONFIG['listen_addr'], None,
-            data_size_limit=self.MAX_MSGSIZE)
+            data_size_limit=self.MAX_MSGSIZE, decode_data=False)
+        self.logger = logging.getLogger('EcsMailReceiver')
+        self.store_exceptions = settings.SMTPD_CONFIG.get('store_exceptions', False)
+        if self.store_exceptions:
+            self.undeliverable_maildir = mailbox.Maildir(
+                os.path.join(settings.PROJECT_DIR, '..', 'ecs-undeliverable'))
 
     def _find_msg(self, recipient):
         msg_uuid, domain = recipient.split('@')
@@ -60,39 +88,55 @@ class EcsMailReceiver(smtpd.SMTPServer):
 
         for part in msg.walk():
             content_type = part.get_content_type()
-            if content_type == 'text/plain':
-                plain = part.get_payload(decode=True)
-            elif content_type == 'text/html':
-                html = html2text(part.get_payload(decode=True))
-            elif content_type.startswith('multipart/'):
+            if content_type.startswith('multipart/'):
                 continue
+            elif content_type == 'text/plain':
+                logger.debug('message: message-part: text/plain')
+                plain = _get_content(part)
+            elif content_type == 'text/html':
+                logger.debug('message: message-part: text/html')
+                html = html2text(_get_content(part))
             else:
                 raise SMTPError(554,
-                    'Invalid message format - attachment not allowed')
-
+                    'Invalid message format - invalid content type {0}'.format(
+                    part.get_content_type()))
+    
         if not plain and not html:
             raise SMTPError(554, 'Invalid message format - empty message')
 
-        return plain or html
+        text = plain or html
+        return text
 
-    def process_message(self, peer, mailfrom, rcpttos, data):
+    def process_message(self, peer, mailfrom, rcpttos, data, **kwargs):
         try:
             if len(rcpttos) > 1:
                 raise SMTPError(554, 'Too many recipients')
 
-            msg = email.message_from_string(data)
+            msg = email.message_from_bytes(data)
             text = self._get_text(msg)
-
             orig_msg = self._find_msg(rcpttos[0])
             thread = orig_msg.thread
+            # XXX: rawmsg can include multiple content-charsets and should be a binaryfield
+            # as a workaround we convert to base64
             thread.messages.filter(
-                receiver=orig_msg.receiver,
-            ).update(unread=False)
-            thread.add_message(orig_msg.receiver, text, rawmsg=data,
+                receiver=orig_msg.receiver).update(unread=False)
+            thread_msg = thread.add_message(orig_msg.receiver, text,
+                rawmsg=base64.b64encode(data),
                 rawmsg_msgid=msg['Message-ID'])
-
+            logger.info(
+                'Accepted email from {0} via {1} to {2} id {3} thread {4} orig_msg {5} message {6}'.format(
+                mailfrom, orig_msg.receiver.email, orig_msg.sender.email, 
+                msg['Message-ID'], thread.pk, orig_msg.pk, thread_msg.pk))
+            
         except SMTPError as e:
+            logger.info('Rejected email: {0}'.format(e))
             return str(e)
+
+        except Exception as e:
+            logger.error('email raised exception: {0}'.format(e))
+            if self.store_exceptions:
+                self.undeliverable_maildir.add(data)
+            raise
 
         return '250 Ok'
 

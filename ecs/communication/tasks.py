@@ -34,14 +34,17 @@ def forward_messages():
             ec_number = ''
             if submission:
                 ec_number = ' ' + submission.get_ec_number_display()
+            subject = _('[ECS{ec_number}] {subject}.').format(
+                ec_number=ec_number, subject=msg.thread.subject)
             msg.smtp_delivery_state = 'started'
             msg.save()
             msgid, rawmsg = deliver_to_recipient(
                 msg.receiver.email,
-                subject=_('[ECS{ec_number}] {subject}.').format(ec_number=ec_number, subject=msg.thread.subject),
+                subject=subject,
                 message=msg.text,
                 from_email='{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
             )
+            logger.info('Forward to {0}: {1}'.format(msg.receiver.email, subject))
             msg.smtp_delivery_state = 'success'
             msg.rawmsg_msgid = msgid
             msg.rawmsg = rawmsg.as_string()
@@ -50,4 +53,3 @@ def forward_messages():
             msg.smtp_delivery_state = 'failure'
 
         msg.save()
-

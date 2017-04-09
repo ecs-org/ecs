@@ -47,8 +47,8 @@ fi
 cmd=$1
 shift
 
-# recreating working directories with correct ownership
-/app/ecs/scripts/create-dirs.sh --chown /app
+# recreate working directories
+/app/ecs/scripts/create-dirs.sh /app
 
 if [[ "$cmd" =~ ^(worker|beat|smtpd|migrate|run|_prepare)$ ]]; then
     # needs running as app user
@@ -86,15 +86,15 @@ _user)
     case "$sub" in
     worker)
         echo "execute celery worker"
-        exec /app/env/bin/celery --events -A ecs worker -l warning
+        exec /app/env/bin/celery worker -A ecs --events -l info
         ;;
     beat)
         echo "execute celery beat"
-        exec /app/env/bin/celery -A ecs beat -l warning
+        exec /app/env/bin/celery beat -A ecs -l info
         ;;
     smtpd)
         echo "execute smtpd"
-        exec /app/ecs/manage.py smtpd
+        exec /app/ecs/manage.py smtpd -l info
         ;;
     migrate)
         prepare_database

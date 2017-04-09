@@ -6,6 +6,7 @@ cairocffi==0.8.0
 CairoSVG==2.0.1
 celery==3.1.25
 cffi==1.9.1
+chardet==2.3.0
 contextlib2==0.5.4
 coverage==4.3.1
 cssselect==1.0.1
