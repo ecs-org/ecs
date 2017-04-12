@@ -25,14 +25,6 @@ If you use vagrant, clone this repository to your local machine, add [vagrant-pa
 + login via ssh and execute
 
 ```
-# install git, clone ecs repository and start bootstrap-devserver.sh script
-apt-get -y update && apt-get -y install git
-mkdir -p /app/ecs; git clone https://github.com/ecs-org/ecs /app/ecs
-chmod +x /app/ecs/scripts/*.sh; /app/ecs/scripts/bootstrap-devserver.sh --yes
-```
-
-+ alternative, using only the bootstrap script:
-```
 curl https://raw.githubusercontent.com/ecs-org/ecs/master/scripts/bootstrap-devserver.sh > /tmp/bootstrap.sh
 chmod +x /tmp/bootstrap.sh; /tmp/bootstrap.sh --yes
 ```
