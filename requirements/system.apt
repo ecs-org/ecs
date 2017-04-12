@@ -25,6 +25,7 @@ python3-venv
 python3-pip
 
 # language support
+locales
 gettext
 
 # needed for psql, createuser, createdb, pg_dump, pg_restore
