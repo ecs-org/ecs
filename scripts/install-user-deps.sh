@@ -27,6 +27,7 @@ if test -d $envdir; then
     rm -rf $envdir
 fi
 
-python3 -m venv $envdir
+# XXX use upgraded pip and virtualenv, see install-os-deps.sh
+/usr/local/bin/virtualenv $envdir
 . $envdir/bin/activate
 pip install $reqs

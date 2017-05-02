@@ -33,7 +33,6 @@ pep8==1.7.0
 pexpect==4.2.1
 pickleshare==0.7.4
 Pillow==4.0.0
-pkg-resources==0.0.0
 psycopg2==2.6.2
 ptyprocess==0.5.1
 pycparser==2.17

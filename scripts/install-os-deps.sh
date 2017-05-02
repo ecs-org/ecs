@@ -96,6 +96,11 @@ if $withpostgres; then
     apt-get install -y postgresql postgresql-contrib
 fi
 
+# XXX pip and virtualenv is broken on xenial, update from pypi
+# https://github.com/pypa/pip/issues/3282
+echo "debug: upgrading pip and virtualenv"
+easy_install3 -U pip virtualenv
+
 if $autoremove; then
     echo "remove installed but unused packages"
     apt-get autoremove -y
