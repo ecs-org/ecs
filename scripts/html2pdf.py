@@ -58,6 +58,11 @@ def main():
     # be confused and error out with an AssertionError.
     html = html.replace('\xad', '')
 
+    # XXX: Replace unicode line separator character with a plain newline
+    # character, otherwise weasyprint's line breaking code will be confused
+    # and error out with an AssertionError.
+    html = html.replace('\u2028', '\n')
+
     html = html.encode('utf-8')
     HTML(string=html, url_fetcher=_url_fetcher).write_pdf(sys.stdout.buffer)
 
