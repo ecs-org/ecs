@@ -142,7 +142,7 @@
                         <span class="fa fa-refresh"></span>
                         {% trans "Discard and rerender PDF" %}
                     </a>
-                    {% if user|is_member_of:'EC-Office' and meeting.ended or True %}
+                    {% if user|is_member_of:'EC-Office' and meeting.ended %}
                         {% url 'ecs.meetings.views.send_protocol' meeting_pk=meeting.pk as url %}
                         <a class="send_emails ml-3" href="{{ url }}">
                             <span class="fa fa-paper-plane-o"></span>
