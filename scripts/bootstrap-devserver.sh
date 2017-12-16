@@ -19,10 +19,9 @@ export LANG=en_US.UTF-8
 timedatectl set-timezone "Europe/Vienna"
 printf "LANG=en_US.UTF-8\nLANGUAGE=en_US:en\nLC_MESSAGES=POSIX\n" > /etc/default/locale
 
-for i in apt-daily.service apt-daily.timer unattended-upgrades.service; do
-    systemctl disable $i
-    systemctl stop $i
-    ln -sf /dev/null /etc/systemd/system/$i
+# disable automatic system update, because appliance-update will call it unconditionaly
+for i in apt-daily.service apt-daily.timer unattended-upgrades.service apt-daily-upgrade.service apt-daily-upgrade.timer ; do
+    systemctl disable $i; systemctl stop $i; systemctl mask $i
 done
 systemctl daemon-reload
 
