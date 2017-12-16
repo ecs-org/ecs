@@ -45,7 +45,12 @@ def _get_content(message_part):
             'no content charset declared, detection result: {0}'.format(charset))
     else:
         charset = message_part.get_content_charset()
-        
+
+    if charset in ['iso-8859-8-i', 'iso-8859-8-e']:
+        # XXX https://bugs.python.org/issue18624
+        logger.debug('aliasing charset iso-8859-8 for {0}'.format(charset))
+        charset = 'iso-8859-8'
+
     logger.debug('message-part: type: {0} charset: {1}'.format(
         message_part.get_content_type(), charset))
     content = str(payload, charset, "replace")
