@@ -45,7 +45,10 @@ class UserProfile(models.Model):
     fax = models.CharField(max_length=45, blank=True)
 
     social_security_number = models.CharField(max_length=10, blank=True)
-
+    signing_connector = models.CharField(max_length=9, choices=(
+        ('bku', _('localbku')),
+        ('onlinebku', _('onlinebku')),
+        ('mobilebku', _('mobilebku'))), default= 'onlinebku')
     # 0 = never send messages, is editable via profile, activate via registration sets this to 5 minutes
     forward_messages_after_minutes = models.PositiveIntegerField(null=False, blank=False, default=0)
 

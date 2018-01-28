@@ -1963,6 +1963,18 @@ msgstr "Telefon"
 msgid "Fax"
 msgstr "Fax"
 
+msgid "Signature Environment"
+msgstr "Signaturumgebung"
+
+msgid "localbku"
+msgstr "lokale BKU"
+
+msgid "onlinebku"
+msgstr "online BKU (veraltet)"
+
+msgid "mobilebku"
+msgstr "Handysignatur"
+
 msgid "Both"
 msgstr "Beide"
 

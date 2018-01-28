@@ -117,7 +117,7 @@ class ProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ('gender', 'title', 'first_name', 'last_name', 'organisation', 'jobtitle',
             'address1', 'address2', 'zip_code', 'city', 'phone', 'fax', 'iban', 'swift_bic',
-            'social_security_number', 'forward_messages_after_minutes',
+            'social_security_number', 'signing_connector', 'forward_messages_after_minutes',
         )
         labels = {
             'gender': _('Gender'),
@@ -133,6 +133,7 @@ class ProfileForm(forms.ModelForm):
             'phone': _('Phone'),
             'fax': _('Fax'),
             'social_security_number': _('Social Security Number'),
+            'signing_connector': _('Signature Environment'),
         }
 
 
