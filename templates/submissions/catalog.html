@@ -29,11 +29,11 @@
         <div class="mx-auto"><h1>{% trans "Catalog of Approved Studies" %}</h1></div>
         <div class="btn-group mx-auto" role="group" aria-label="{% trans 'Years' %}">
             {% for date in years %}
-                <a class="px-4 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a> 
+                <a class="px-4 btn btn-primary{% if date.year == year %} active{% endif %}" href="{% url 'ecs.core.views.submissions.catalog' year=date.year %}">{{ date.year }}</a>
             {% endfor %}
         </div>
     </div>
-    
+
     {% for vote in votes %}
         {% with vote.submission_form as sf %}
             <div class="card card-outline-primary mb-2">
@@ -60,7 +60,7 @@
                     {% for investigator in sf.system_ec_investigators %}
                         <div class="testinginfo pl-3">
                             <p><strong>Prüfzentrum:</strong> {{ investigator.organisation }}</p>
-                            <p><strong>Verantwortliche/r Prüfärtzin/arzt:</strong> {{ investigator.contact }}</p>
+                            <p><strong>Verantwortliche/r Prüfärztin/arzt:</strong> {{ investigator.contact }}</p>
                         </div>
                     {% endfor %}
                     {% with sf.non_system_ec_investigators|length as other_ec_count %}
