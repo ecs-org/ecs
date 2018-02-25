@@ -4,7 +4,7 @@
 {% block content %}
 Das Votum für die Studie {{ submission|ec_number }} "{{ submission.project_title_display }}" vom {{ vote.top.meeting.start|default:vote.published_at|date:'d.m.Y' }} läuft in drei Wochen ab.
 Stellen Sie bitte zeitgerecht den Antrag auf Verlängerung des Votums.
-Steigen Sie dazu ins ECS ein, gehen Sie im Seitenmenü rechts auf "Studien Meldungen" > "Neue Meldung",
+Steigen Sie dazu ins ECS ein, gehen Sie im Menü oben auf "Studien" > "Neue Meldung",
 wählen Sie dann "Verlängerung der Gültigkeit des Votums" und machen Sie die erforderlichen Angaben.
 
 Achtung: Sollte es sich bei Ihrer Studie um eine multizentrische Arzneimittelprüfung handeln,
