@@ -11,10 +11,10 @@
     </div>
 
     <p>
-        Beginn: {{ meeting.start|date:'H:i' }}<br />
-        Ende: {{ meeting.end|date:'H:i' }}
+        Beginn: {{ meeting.started|date:'H:i' }}<br />
+        Ende: {{ meeting.ended|date:'H:i' }}
     </p>
-    
+
     {% if meeting.comments %}
     <p>
         {{ meeting.comments|linebreaksbr }}
