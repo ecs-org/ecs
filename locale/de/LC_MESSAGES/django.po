@@ -592,7 +592,7 @@ msgid "multicentric, main ethics commission"
 msgstr "multizentrisch, Leit-Ethikkommission"
 
 msgid "multicentric, local ethics commission"
-msgstr "multizentrisch, lokale Ethikkommision"
+msgstr "multizentrisch, lokale Ethikkommission"
 
 msgid "individual-related"
 msgstr "personenbezogen"
