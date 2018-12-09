@@ -8,6 +8,7 @@ developers = (
 
 # 2016-12-05 list updated from: https://www.medunigraz.at/ethikkommission/Forum/Mitglieder/frame.htm
 # 2017-01-26 added Karl Landsteiner Privatuniversität
+# 2018-12-06 added Ethik-Kommission der Vinzenz Gruppe Wien
 
 commissions = [{
     'uuid': '23d805c6b5f14d8b9196a12005fd2961',
@@ -99,4 +100,7 @@ commissions = [{
 }, {
     'uuid': 'dc1b115d9809461ba3ea9450b079ddd6',
     'name': 'Kommission für Scientific Integrity und Ethik der Karl Landsteiner Privatuniversität',
+}, {
+    'uuid': '50dba0126a0746dc8802e6c0e0199dad',
+    'name': 'Ethik-Kommission der Vinzenz Gruppe Wien',
 }]
