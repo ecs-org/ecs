@@ -868,6 +868,8 @@ def send_protocol(request, meeting_pk=None):
     meeting = get_object_or_404(Meeting, ended__isnull=False,
         protocol_sent_at=None, pk=meeting_pk)
 
+    limit_protocol_delivery =
+        AdvancedSettings.objects.get('limit_protocol_delivery_to_receiver_group')
     meeting.protocol_sent_at = timezone.now()
     meeting.save()
 
@@ -876,8 +878,13 @@ def send_protocol(request, meeting_pk=None):
         (meeting.protocol.original_file_name, protocol_pdf, 'application/pdf'),
     )
 
-    for user in User.objects.filter(Q(meeting_participations__entry__meeting=meeting) | Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)).distinct():
-        htmlmail = str(render_html(request, 'meetings/messages/protocol.html', {'meeting': meeting, 'recipient': user}))
+    receiver_list = Q(groups__name__in=settings.ECS_MEETING_PROTOCOL_RECEIVER_GROUPS)
+    if not limit_protocol_delivery:
+        receiver_list = receiver_list | Q(meeting_participations__entry__meeting=meeting)
+
+    for user in User.objects.filter(receiver_list).distinct():
+        htmlmail = str(render_html(request, 'meetings/messages/protocol.html',
+            {'meeting': meeting, 'recipient': user}))
         deliver(user.email, subject=_('Meeting Protocol'), message=None,
             message_html=htmlmail, from_email=settings.DEFAULT_FROM_EMAIL,
             attachments=attachments)

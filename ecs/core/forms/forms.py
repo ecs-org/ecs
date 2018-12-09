@@ -567,6 +567,7 @@ class AdvancedSettingsForm(forms.ModelForm):
         model = AdvancedSettings
         fields = (
             'default_contact', 'display_notifications_in_protocol',
+            'limit_protocol_delivery_to_receiver_group',
             'display_biased_in_amendment_answer_pdf',
             'require_internal_vote_review', 'logo_file', 'print_logo_file',
             'address', 'meeting_address', 'contact_email', 'contact_url',
@@ -577,6 +578,8 @@ class AdvancedSettingsForm(forms.ModelForm):
         labels = {
             'display_notifications_in_protocol':
                 _('Display Notifications in Protocol'),
+            'limit_protocol_delivery_to_receiver_group':
+                _('Limit Protocol-Email delivery to Protocol-Receiver-Group '),
             'display_biased_in_amendment_answer_pdf':
                 _('Display biased board member in amendment answer PDF'),
             'require_internal_vote_review': _('Require internal vote review'),
