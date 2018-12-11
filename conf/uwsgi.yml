@@ -19,3 +19,6 @@ uwsgi:
   evil-reload-on-rss: 720
   # reloads the worker after 1000 managed requests
   max-requests: 1000
+  # ignore SIGPIPE events
+  #   writing to a closed pipe/socket/fd, probably the client disconnected
+  ignore-sigpipe: true
