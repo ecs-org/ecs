@@ -9,6 +9,10 @@ developers = (
 # 2016-12-05 list updated from: https://www.medunigraz.at/ethikkommission/Forum/Mitglieder/frame.htm
 # 2017-01-26 added Karl Landsteiner Privatuniversität
 # 2018-12-06 added Ethik-Kommission der Vinzenz Gruppe Wien
+# 2019-02-04 added "Nicht verwenden: " to name of three EC's
+#            55ae93ec9df04d6abfc8d233ec5ccf8e
+#            5615dfbaf8c8445d960d1e2cd9c00dc3
+#            c890205dcb7543c8a76bf324512c5f81
 
 commissions = [{
     'uuid': '23d805c6b5f14d8b9196a12005fd2961',
@@ -24,7 +28,7 @@ commissions = [{
     'name': 'Ethikkommission Forschungsinstitut des Wiener Roten Kreuzes',
 }, {
     'uuid': '55ae93ec9df04d6abfc8d233ec5ccf8e',
-    'name': 'Ethikkommission Krankenhaus Barmh.Schwestern - Wien',
+    'name': 'Nicht verwenden: Ethikkommission Krankenhaus Barmh.Schwestern - Wien',
 }, {
     'uuid': '7cd6d52120b3474ba502931b9f60a5f3',
     'name': 'Ethikkommission Confraternit\u00e4t-Priv.Klin. Josefstadt und Priv.Klin. D\u00f6bling',
@@ -42,7 +46,7 @@ commissions = [{
     'name': 'Ethikkommission Rheuma-Zentrum Wien-Oberlaa',
 }, {
     'uuid': '5615dfbaf8c8445d960d1e2cd9c00dc3',
-    'name': 'Ethikkommission Krankenhaus des G\u00f6ttlichen Heilandes',
+    'name': 'Nicht verwenden: Ethikkommission Krankenhaus des G\u00f6ttlichen Heilandes',
 }, {
     'uuid': '4d3a2d5f138940f293ee87fe6ec1d5b2',
     'name': 'Ethikkommission Evangelisches Krankenhaus',
@@ -96,7 +100,7 @@ commissions = [{
     'name': 'Ethikkommission des Landes K\u00e4rnten',
 }, {
     'uuid': 'c890205dcb7543c8a76bf324512c5f81',
-    'name': 'Ethikkommission des Krankenhaus St. Josef',
+    'name': 'Nicht verwenden: Ethikkommission des Krankenhaus St. Josef',
 }, {
     'uuid': 'dc1b115d9809461ba3ea9450b079ddd6',
     'name': 'Kommission für Scientific Integrity und Ethik der Karl Landsteiner Privatuniversität',
