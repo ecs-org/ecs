@@ -99,7 +99,8 @@ fi
 # XXX pip and virtualenv is broken on xenial, update from pypi
 # https://github.com/pypa/pip/issues/3282
 echo "debug: upgrading pip and virtualenv"
-easy_install3 -U pip virtualenv
+easy_install3 -U pip
+/usr/local/bin/pip3 install -U virtualenv
 
 if $autoremove; then
     echo "remove installed but unused packages"
