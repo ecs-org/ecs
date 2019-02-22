@@ -7,7 +7,7 @@ from celery.schedules import crontab
 
 from ecs.users.models import LoginHistory
 
-
+# run once per month on the first day of the month at 0:20
 @periodic_task(run_every=crontab(day_of_month=1, hour=0, minute=20))
 def expire_login_history():
     LoginHistory.objects.filter(

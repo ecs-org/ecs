@@ -15,7 +15,7 @@ from ecs.users.utils import get_user, get_office_user
 
 WEEKLY_DOWNLOAD_THRESHOLD = 150
 
-
+# run once per week on sunday at 23:59
 @periodic_task(run_every=crontab(day_of_week=0, hour=23, minute=59))
 def send_download_warnings():
     now = timezone.now()
@@ -40,7 +40,7 @@ def send_download_warnings():
             'documents/messages/download_warning.txt',
             {'user': user,'count': count})
 
-
+# run once per month on the first day of the month at 0:15
 @periodic_task(run_every=crontab(day_of_month=1, hour=0, minute=15))
 def expire_download_history():
     DownloadHistory.objects.filter(

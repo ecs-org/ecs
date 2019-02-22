@@ -253,7 +253,7 @@ def xls_export(user_id=None, filters=None):
     send_system_message_template(user, _('XLS-Export done'),
         'submissions/xls_export_done.txt', {'shasum': h.hexdigest()})
 
-
+# run once per day at 03:28
 @periodic_task(run_every=crontab(hour=3, minute=28))
 def cull_cache_dir():
     logger = cull_cache_dir.get_logger()

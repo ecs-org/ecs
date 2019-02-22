@@ -102,7 +102,7 @@ def render_protocol_pdf(meeting_id=None, user_id=None):
         meeting.protocol_rendering_started_at = None
         meeting.save(update_fields=('protocol_rendering_started_at',))
 
-
+# run once per day at 04:07
 @periodic_task(run_every=crontab(hour=4, minute=7))
 def gen_meeting_zip():
     try:

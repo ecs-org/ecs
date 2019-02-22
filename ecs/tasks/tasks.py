@@ -35,6 +35,7 @@ def send_delete_message(task, user):
     send_task_message(task, _('{task} deleted'), 'deleted.txt', {'user': user})
 
 
+# run once per hour at minute 0 of hour
 @periodic_task(run_every=crontab(minute=0))
 def send_reminder_messages():
     now = timezone.now()

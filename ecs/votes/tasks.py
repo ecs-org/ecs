@@ -67,7 +67,8 @@ def send_temporary_vote_reminder(vote):
     send_vote_reminder(vote, subject, 'temporary_reminder.txt', recipients)
 
 
-@periodic_task(run_every=timedelta(days=1))
+# run once per day at 09:00
+@periodic_task(run_every=crontab(hour=9, minute=0))
 def send_reminder_messages(today=None):
     if today is None:
         today = timezone.now().date()
@@ -108,7 +109,7 @@ def send_reminder_messages(today=None):
             published_date=Func(today - timedelta(days=365), function='DATE')):
         send_temporary_vote_reminder(vote)
 
-
+# run once per day at 03:58
 @periodic_task(run_every=crontab(hour=3, minute=58))
 def expire_votes():
     now = timezone.now()
