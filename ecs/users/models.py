@@ -44,7 +44,6 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=50, blank=True)
     fax = models.CharField(max_length=45, blank=True)
 
-    social_security_number = models.CharField(max_length=10, blank=True)
     signing_connector = models.CharField(max_length=9, choices=(
         ('bku', _('localbku')),
         ('onlinebku', _('onlinebku')),

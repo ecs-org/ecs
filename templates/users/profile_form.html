@@ -12,7 +12,7 @@
                     {% if field.name == "iban" %}
                         <p>{% trans "If you work for the ethics commission as an external reviewer, you have to fill out the following fields" %}:</p>
                     {% endif %}
-                    {% if field.name == "forward_messages_after_minutes" %}
+                    {% if field.name == "signing_connector" %}
                         <h3>{% trans "Settings" %}</h3>
                     {% endif %}
                     {% include "bootstrap/form_field.html" with inline=True %}

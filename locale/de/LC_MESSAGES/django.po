@@ -88,9 +88,6 @@ msgstr "IBAN"
 msgid "SWIFT-BIC"
 msgstr "SWIFT-BIC"
 
-msgid "Social Security Number"
-msgstr "Sozialversicherungs-Nr."
-
 msgid "Shorthand Symbol"
 msgstr "Kürzel"
 

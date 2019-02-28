@@ -18,7 +18,7 @@
     <tr><th class="bg-faded">Gruppen</th><td class="w-100">{% for group in profile_user.groups.all %}{{ group }}{% if not forloop.last %}, {% endif %}{% empty %}–{% endfor %}</td></tr>
     <tr><th class="bg-faded">Status</th><td class="w-100">
         <div>
-            {% trans "Indisposed" %}: 
+            {% trans "Indisposed" %}:
             {{ profile.is_indisposed|yesno:'ja,nein' }}
             {% if user == profile_user and profile.is_indisposed %}
                 <a href="{% url 'ecs.users.views.notify_return' %}">{% trans 'Reset' %}</a>
@@ -27,5 +27,4 @@
     </td></tr>
     <tr><th class="bg-faded">IBAN</th><td class="w-100">{{ profile.iban }}</td></tr>
     <tr><th class="bg-faded">SWIFT-BIC</th><td class="w-100">{{ profile.swift_bic }}</td></tr>
-    <tr><th class="bg-faded">Sozialversicherungsnummer</th><td class="w-100">{{ profile.social_security_number }}</td></tr>
 </table>
