@@ -215,6 +215,8 @@ def medcategories():
         ('Datenbank', 'Datenbank'),
         ('StrahlenTh', 'Strahlentherapie'),
         ('KJP', 'Kinder- und Jugendpsychiatrie'),
+        ('Neonat', 'Neonatologie'),
+        ('Ursprung', 'Ursprungsstudie'),
     )
     return categories
 
