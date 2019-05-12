@@ -228,11 +228,11 @@ def medical_categories():
             abbrev=abbrev, defaults={'name': name})
 
 
-@bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
+# @bootstrap.register(depends_on=('ecs.core.bootstrap.auth_groups',))
 def auth_user_developers():
     ''' Developer Account Creation '''
-    from ecs.core.bootstrap_settings import developers
-
+    developers = (
+    )
     for first, last, email, gender in developers:
         user, created = get_or_create_user(email)
         user.first_name = first

@@ -1,11 +1,3 @@
-developers = (
-    ('Felix', 'Erkinger', 'felix@erkinger.at', 'm'),
-    ('Martin', 'Natano', 'natano@natano.net', 'm'),
-    ('Markus', 'Froehlich', 'froema@ep3.at', 'm'),
-    ('Esther', 'Neumann', 'es_data@yahoo.de', 'f'),
-    ('Philipp', 'Grabenhofer', 'kewagi@icloud.com', 'm'),
-)
-
 # 2016-12-05 list updated from: https://www.medunigraz.at/ethikkommission/Forum/Mitglieder/frame.htm
 # 2017-01-26 added Karl Landsteiner Privatuniversität
 # 2018-12-06 added Ethik-Kommission der Vinzenz Gruppe Wien
