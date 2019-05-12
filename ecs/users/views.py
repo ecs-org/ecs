@@ -412,7 +412,8 @@ def invite(request):
             'invitation_text': form.cleaned_data['invitation_text'],
             'link': link,
         }))
-        transferlist = deliver(user.email, subject, None, settings.DEFAULT_FROM_EMAIL, message_html=htmlmail)
+        transferlist = deliver(user.email, subject, None,
+            settings.DEFAULT_FROM_EMAIL, message_html=htmlmail, nofilter=True)
         msgid, rawmail = transferlist[0]    # raises IndexError if delivery failed
 
         if user.groups.filter(name='EC-Signing').exists():
