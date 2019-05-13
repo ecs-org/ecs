@@ -83,7 +83,8 @@ def decrypt_verify(sourcefile, gpghome, decrypt_owner, verify_owner=None):
     if verify_owner is not None:
         err = err.decode('utf-8')
         m = re.search(r'gpg: Good signature from "([^"]*)"', err)
-        if not m or not m.group(1) == verify_owner:
+        if not m or (m.group(1) != verify_owner and
+            m.group(1) != verify_owner+ ' <'+ verify_owner+ '>'):
             raise KeyError('could not verify that signer was keyowner: {} , cmd line was: {} , output was: {}'.format(verify_owner, cmd, err))
 
     destfile.seek(0)
