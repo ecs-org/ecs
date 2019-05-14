@@ -28,6 +28,7 @@ if test -d $envdir; then
 fi
 
 # XXX use upgraded pip and virtualenv, see install-os-deps.sh
-/usr/local/bin/virtualenv $envdir
+realpython=$(echo $(which -a python3)| tr " " "\n"| grep "/usr"| sort -r| head -n 1)
+$realpython -m venv $envdir
 . $envdir/bin/activate
 pip install $reqs
