@@ -1,0 +1,13 @@
+{% extends 'public.html' %}
+{% load i18n %}
+
+{% block content %}
+
+    {{ block.super }}
+    <div class="alert alert-danger">
+        <h3 class="alert-heading">Die Anmeldung mittels Einladung ist fehlgeschlagen</h3>
+        Die Gültigkeitsdauer Ihrer Einladung ist abgelaufen, oder wurde bereits verwendet.
+        <p>Sie können das Service <a href="{% url 'ecs.users.views.request_password_reset' %}" class="alert-link">Passwort zurücksetzen</a> verwenden um einen neuen gültigen Link per Email zu erhalten um ihren Account zu aktivieren.</p>
+    </div>
+
+{% endblock %}

@@ -48,6 +48,7 @@ _password_reset_token_factory = TimestampedTokenFactory(
     settings.PASSWORD_RESET_SECRET, 'ecs.users.password_reset')
 _registration_token_factory = TimestampedTokenFactory(
     settings.REGISTRATION_SECRET, 'ecs.users.registration', ttl=86400)
+    # 86400 = 1 Day
 
 @forceauth.exempt
 @ratelimit_post(minutes=5, requests=15, key_field='username')
@@ -107,7 +108,7 @@ def register(request):
     form = RegistrationForm(request.POST or None)
     if form.is_valid():
         token = _registration_token_factory.generate_token(form.cleaned_data)
-        activation_url = request.build_absolute_uri(reverse('ecs.users.views.activate', kwargs={'token': token}))        
+        activation_url = request.build_absolute_uri(reverse('ecs.users.views.activate', kwargs={'token': token}))
         htmlmail = str(render_html(request, 'users/registration/activation_email.html', {
             'activation_url': activation_url,
             'form': form,
@@ -402,7 +403,6 @@ def invite(request):
         user = form.save()
 
         invitation = Invitation.objects.create(user=user)
-
         subject = 'Erstellung eines Zugangs zum ECS'
         link = request.build_absolute_uri(
             reverse('ecs.users.views.accept_invitation',
@@ -431,9 +431,13 @@ def invite(request):
 @forceauth.exempt
 def accept_invitation(request, invitation_uuid=None):
     try:
-        invitation = Invitation.objects.new().get(uuid=invitation_uuid)
+        invitation = Invitation.objects.get(uuid=invitation_uuid)
     except Invitation.DoesNotExist:
         raise Http404
+
+    # XXX Invitations are only valid once and for a period of 14 Days
+    if invitation.is_used or invitation.created_at < (timezone.now() - timedelta(days=14)):
+        return render(request, 'users/password_reset/invitation_token_invalid.html', {})
 
     user = invitation.user
     form = SetPasswordForm(invitation.user, request.POST or None)
@@ -444,7 +448,7 @@ def accept_invitation(request, invitation_uuid=None):
         profile.is_phantom = False
         profile.forward_messages_after_minutes = 5
         profile.save()
-        invitation.is_accepted = True
+        invitation.is_used = True
         invitation.save()
         user = auth.authenticate(email=invitation.user.email, password=form.cleaned_data['new_password1'])
         auth.login(request, user)

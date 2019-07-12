@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django_extensions.db.fields.json import JSONField
 from django.utils.translation import ugettext_lazy as _
-
+from django.utils import timezone
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name='profile')
@@ -115,7 +115,7 @@ def _post_user_save(sender, **kwargs):
 
 class InvitationQuerySet(models.QuerySet):
     def new(self):
-        return self.filter(is_accepted=False)
+        return self.filter(is_used=False)
 
 class InvitationManager(models.Manager.from_queryset(InvitationQuerySet)):
     def get_queryset(self):
@@ -126,7 +126,8 @@ class InvitationManager(models.Manager.from_queryset(InvitationQuerySet)):
 class Invitation(models.Model):
     user = models.ForeignKey(User, related_name='ecs_invitations')
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, db_index=True)
-    is_accepted = models.BooleanField(default=False)
+    is_used = models.BooleanField(default=False, db_index=True)
+    created_at = models.DateTimeField(default=timezone.now, db_index=True)
 
     objects = InvitationManager()
 
