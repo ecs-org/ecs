@@ -18,6 +18,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib import messages
 
+from raven.contrib.django.raven_compat.models import client
+
 from ecs.documents.models import Document
 from ecs.documents.views import handle_download
 from ecs.utils.viewutils import redirect_to_next_url
@@ -756,6 +758,15 @@ def create_submission_form(request):
 
         formsets_valid = all([formset.is_valid() for formset in formsets.values()]) # non-lazy validation of formsets
         valid = form.is_valid() and formsets_valid and protocol_uploaded and not 'upload' in request.POST
+
+        # debug helper for non submitable submission forms (see #712)
+        # TODO: only call sentry if #712 like form errors occured
+        for fs in formsets.values():
+            if not fs.is_valid():
+                client.captureException(extra={
+                    'submission': submission,
+                    'fs_errors': fs.errors, })
+
         if valid and submission and not notification_type and \
             not submission.current_submission_form.allows_resubmission(request.user):
 
