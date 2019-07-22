@@ -70,6 +70,8 @@ def login(request, *args, **kwargs):
             ip=request.META['REMOTE_ADDR'])
 
         profile = request.user.profile
+        if profile.is_phantom:
+            profile.is_phantom = False
         old_session_key = profile.session_key
         profile.session_key = request.session.session_key
         profile.save()
