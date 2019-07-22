@@ -38,11 +38,10 @@ class EcsSMTPChannel(smtpd.SMTPChannel):
 
 def _get_content(message_part):
     payload = message_part.get_payload(decode=True)
-    
+
     if message_part.get_content_charset() is None:
         charset = chardet.detect(payload)['encoding']
-        logger.info(
-            'no content charset declared, detection result: {0}'.format(charset))
+        logger.debug('no content charset declared, detection result: {0}'.format(charset))
     else:
         charset = message_part.get_content_charset()
 
@@ -53,9 +52,8 @@ def _get_content(message_part):
 
     logger.debug('message-part: type: {0} charset: {1}'.format(
         message_part.get_content_type(), charset))
-    content = str(payload, charset, "replace")
+    content = str(payload, charset, 'replace')
     return content
-
 
 class EcsMailReceiver(smtpd.SMTPServer):
     channel_class = EcsSMTPChannel
@@ -68,7 +66,7 @@ class EcsMailReceiver(smtpd.SMTPServer):
         smtpd.SMTPServer.__init__(self, settings.SMTPD_CONFIG['listen_addr'], None,
             data_size_limit=self.MAX_MSGSIZE, decode_data=False)
         self.logger = logging.getLogger('EcsMailReceiver')
-        self.store_exceptions = settings.SMTPD_CONFIG.get('store_exceptions', False)
+        self.store_exceptions = settings.SMTPD_CONFIG.get('store_exceptions', True)
         if self.store_exceptions:
             self.undeliverable_maildir = mailbox.Maildir(
                 os.path.join(settings.PROJECT_DIR, '..', 'ecs-undeliverable'))
@@ -104,8 +102,8 @@ class EcsMailReceiver(smtpd.SMTPServer):
             else:
                 raise SMTPError(554,
                     'Invalid message format - invalid content type {0}'.format(
-                    part.get_content_type()))
-    
+                        part.get_content_type()))
+
         if not plain and not html:
             raise SMTPError(554, 'Invalid message format - empty message')
 
@@ -121,18 +119,36 @@ class EcsMailReceiver(smtpd.SMTPServer):
             text = self._get_text(msg)
             orig_msg = self._find_msg(rcpttos[0])
             thread = orig_msg.thread
-            # XXX: rawmsg can include multiple content-charsets and should be a binaryfield
-            # as a workaround we convert to base64
+
+            creator = msg.get('Auto-Submitted', None)
+            # XXX email header are case insentitiv matched,
+            # 'auto-submitted' will be matched too it there is no 'Auto-Submitted'
+            if creator in (None, '', 'no'):
+                creator = 'human'
+            elif creator[11] == 'auto-notify':
+                creator = 'auto-notify'
+            elif creator in ('auto-generated', 'auto-replied'):
+                pass
+            else:
+                creator = 'auto-custom'
+
             thread.messages.filter(
                 receiver=orig_msg.receiver).update(unread=False)
+
+            # TODO rawmsg can include multiple content-charsets and should be a binaryfield
+            # as a workaround we convert to base64
             thread_msg = thread.add_message(orig_msg.receiver, text,
                 rawmsg=base64.b64encode(data),
-                rawmsg_msgid=msg['Message-ID'])
+                incoming_msgid=msg['Message-ID'],
+                in_reply_to=orig_msg,
+                creator=creator)
+
             logger.info(
-                'Accepted email from {0} via {1} to {2} id {3} thread {4} orig_msg {5} message {6}'.format(
-                mailfrom, orig_msg.receiver.email, orig_msg.sender.email, 
-                msg['Message-ID'], thread.pk, orig_msg.pk, thread_msg.pk))
-            
+                'Accepted email (creator= {8})from {0} via {1} to {2} id {3} in-reply-to {4} thread {5} orig_msg {6} message {7}'.format(
+                    mailfrom, orig_msg.receiver.email, orig_msg.sender.email,
+                    msg['Message-ID'], orig_msg.outgoing_msgid, thread.pk,
+                    orig_msg.pk, thread_msg.pk, creator))
+
         except SMTPError as e:
             logger.info('Rejected email: {0}'.format(e))
             return str(e)

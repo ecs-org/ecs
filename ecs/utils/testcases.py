@@ -24,7 +24,7 @@ class EcsTestCase(TestCase):
         ContentType.objects.clear_cache()
         clear_workflow_caches()
 
-        get_or_create_user('root@system.local', is_superuser=True)
+        get_or_create_user('root@system.local', is_superuser=True, is_staff=True)
 
         settings.STORAGE_VAULT['dir'] = tempfile.mkdtemp()
         settings.EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'

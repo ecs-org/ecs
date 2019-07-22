@@ -254,11 +254,15 @@ class NotificationAnswer(models.Model):
                 submission.finish()
             presenting_parties = submission.current_submission_form.get_presenting_parties()
             _ = ugettext
-            presenting_parties.send_message(_('New Notification Answer'), 'notifications/answers/new_message.txt', context={
-                'notification': self.notification,
-                'answer': self,
-                'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
-            }, submission=submission)
+            presenting_parties.send_message(
+                _('New Notification Answer'),
+                'notifications/answers/new_message.txt',
+                context={
+                    'notification': self.notification,
+                    'answer': self,
+                    'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX,
+                },
+                submission=submission)
 
 
 NOTIFICATION_MODELS = (

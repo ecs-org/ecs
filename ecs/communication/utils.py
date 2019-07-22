@@ -4,7 +4,7 @@ from django.template import loader
 from django.conf import settings
 
 from ecs.communication.models import Thread
-from ecs.users.utils import get_user, get_current_user
+from ecs.users.utils import get_user, get_office_user
 
 
 def msg_fun(func):
@@ -25,16 +25,28 @@ def msg_fun(func):
 
     return _inner
 
+
 @msg_fun
-def send_message(sender, receiver, subject, text, submission=None, reply_receiver=None):
+def send_message(sender, receiver, subject, text, submission=None, reply_receiver=None,
+    rawmsg=None, outgoing_msgid=None, incoming_msgid=None, in_reply_to=None, creator=None):
+
     thread = Thread.objects.create(
         subject=subject,
-        sender=sender, 
+        sender=sender,
         receiver=receiver,
         submission=submission,
     )
-    thread.add_message(sender, text, reply_receiver=reply_receiver)
+    if str(sender.email) == 'root@system.local':
+        creator = 'auto-self'
+        if not reply_receiver:
+            reply_receiver = get_office_user(submission=submission)
+
+    thread.add_message(sender, text,
+        reply_receiver=reply_receiver, rawmsg=rawmsg,
+        outgoing_msgid=outgoing_msgid, incoming_msgid=incoming_msgid,
+        in_reply_to=in_reply_to, creator=creator)
     return thread
+
 
 @msg_fun
 def send_message_template(sender, receiver, subject, template, context, *args, **kwargs):
@@ -58,6 +70,6 @@ def send_message_template(sender, receiver, subject, template, context, *args, *
 
     return send_message(sender, receiver, subject, text, *args, **kwargs)
 
+
 def send_system_message_template(*args, **kwargs):
-    kwargs.setdefault('reply_receiver', get_current_user())
     return send_message_template(get_user('root@system.local'), *args, **kwargs)

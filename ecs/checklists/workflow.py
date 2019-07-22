@@ -113,7 +113,9 @@ class ExternalReviewReview(Activity):
             if not c.pdf_document:
                 c.render_pdf_document()
             presenting_parties = c.submission.current_submission_form.get_presenting_parties()
-            presenting_parties.send_message(_('External Review'), 'checklists/external_review_publish.txt',
+            presenting_parties.send_message(
+                _('External Review'),
+                'checklists/external_review_publish.txt',
                 {'checklist': c, 'ABSOLUTE_URL_PREFIX': settings.ABSOLUTE_URL_PREFIX},
                 submission=c.submission)
         elif c.status == 'review_fail':

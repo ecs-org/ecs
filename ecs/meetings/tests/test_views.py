@@ -135,7 +135,7 @@ class ViewTestCase(EcsTestCase):
         response = self.client.get(quickjump_url + '?q=')
         self.assertTrue(response.status_code, 200)
         
-        response = self.client.get(quickjump_url + '?q=TOP 1')
-        self.assertTrue(response.status_code, 302)
-        self.assertEqual(urlsplit(response['Location']).path, reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))
-
+        response = self.client.get(quickjump_url + '?q=TOP 1', follow=True)
+        last_url, status_code = response.redirect_chain[-1]
+        self.assertTrue(status_code, 302)
+        self.assertEqual(urlsplit(last_url).path, reverse('ecs.meetings.views.meeting_assistant_top', kwargs={'meeting_pk': meeting.pk, 'top_pk': e0.pk}))

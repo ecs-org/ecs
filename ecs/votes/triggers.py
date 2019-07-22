@@ -27,8 +27,12 @@ def on_vote_published(sender, **kwargs):
                 reply_receiver = task.assigned_to
             except IndexError:
                 pass
-        parties.send_message(_('Vote {ec_number}').format(ec_number=vote.get_ec_number()), 'submissions/vote_publish.txt',
-            {'vote': vote}, submission=sf.submission, reply_receiver=reply_receiver)
+        parties.send_message(
+            _('Vote {ec_number}').format(ec_number=vote.get_ec_number()),
+            'submissions/vote_publish.txt',
+            {'vote': vote},
+            submission=sf.submission,
+            reply_receiver=reply_receiver)
     receivers = set()
     if (sf.is_amg and not sf.is_categorized_multicentric_and_local) or sf.is_mpg:
         receivers |= set(settings.ECS_AMG_MPG_VOTE_RECEIVERS)

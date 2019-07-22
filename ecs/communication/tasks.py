@@ -1,13 +1,9 @@
-import traceback
 from datetime import timedelta
 
 from celery.task import periodic_task
-from django.utils.translation import ugettext as _
 from django.utils import timezone
 
 from ecs.communication.models import Message
-from ecs.communication.mailutils import deliver_to_recipient
-from ecs.users.utils import get_full_name
 from ecs.utils.celeryutils import translate
 
 # run once every minute
@@ -29,27 +25,17 @@ def forward_messages():
     logger.info('Forwarding {0} messages'.format(len(messages)))
 
     for msg in messages:
-        try:
-            submission = msg.thread.submission
-            ec_number = ''
-            if submission:
-                ec_number = ' ' + submission.get_ec_number_display()
-            subject = _('[ECS{ec_number}] {subject}.').format(
-                ec_number=ec_number, subject=msg.thread.subject)
-            msg.smtp_delivery_state = 'started'
-            msg.save()
-            msgid, rawmsg = deliver_to_recipient(
-                msg.receiver.email,
-                subject=subject,
-                message=msg.text,
-                from_email='{0} <{1}>'.format(get_full_name(msg.sender), msg.return_address),
-            )
-            logger.info('Forward to {0}: {1}'.format(msg.receiver.email, subject))
-            msg.smtp_delivery_state = 'success'
-            msg.rawmsg_msgid = msgid
-            msg.rawmsg = rawmsg.as_string()
-        except:
-            traceback.print_exc()
-            msg.smtp_delivery_state = 'failure'
-
-        msg.save()
+        forwarded = msg.forward_smtp()
+        if forwarded:
+            if msg.incoming_msgid:
+                logger.info('Forward from {0} (in reply to {1} , {2}) to {3} (as {4}) about {5}'.format(
+                            msg.sender.email, msg.incoming_msgid,
+                            msg.in_reply_to.outgoing_msgid, msg.receiver.email,
+                            msg.outgoing_msgid, msg.smtp_subject))
+            else:
+                logger.info('Forward from {0} to {1} (as {2}) about {3}'.format(
+                            msg.sender.email, msg.receiver.email,
+                            msg.outgoing_msgid, msg.smtp_subject))
+        else:
+            logger.info('Not forwarding ({0}) {1}: {2}'.format(
+                        msg.creator, msg.receiver.email, msg.smtp_subject))

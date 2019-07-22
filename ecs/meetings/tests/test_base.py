@@ -137,6 +137,7 @@ class MeetingModelTest(EcsTestCase):
         
         schedule(2)
         check_next(2)
+        unschedule(2)
         
         schedule(0)
         check_next(0)
@@ -150,4 +151,3 @@ class MeetingModelTest(EcsTestCase):
         unschedule(0)
         check_next(1)
         
-
