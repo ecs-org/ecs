@@ -67,7 +67,8 @@ class EcsMailReceiver(smtpd.SMTPServer):
             data_size_limit=self.MAX_MSGSIZE, decode_data=False)
         self.logger = logging.getLogger('EcsMailReceiver')
         self.store_exceptions = settings.SMTPD_CONFIG.get('store_exceptions', True)
-        if self.store_exceptions:
+        self.store_rejected = settings.SMTPD_CONFIG.get('store_rejected', False)
+        if self.store_exceptions or self.store_rejected:
             self.undeliverable_maildir = mailbox.Maildir(
                 os.path.join(settings.PROJECT_DIR, '..', 'ecs-undeliverable'))
 
@@ -150,7 +151,10 @@ class EcsMailReceiver(smtpd.SMTPServer):
                     orig_msg.pk, thread_msg.pk, creator))
 
         except SMTPError as e:
-            logger.info('Rejected email: {0}'.format(e))
+            logger.info('Rejected email: from {0} via {1} to {2}: {3}'.format(
+                        mailfrom, orig_msg.receiver.email, orig_msg.sender.email, e))
+            if self.store_rejected:
+                self.undeliverable_maildir.add(data)
             return str(e)
 
         except Exception as e:

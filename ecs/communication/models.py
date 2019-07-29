@@ -16,6 +16,7 @@ DELIVERY_STATES = (
     ("started", "started"),
     ("success", "success"),
     ("failure", "failure"),
+    ("inactiv", "inactiv"),
 )
 
 # https://tools.ietf.org/html/rfc3834
