@@ -178,6 +178,6 @@ def on_categorization(sender, **kwargs):
             task_type__workflow_node__uid='specialist_review',
             deleted_at=None,
         )
-        entry = submission.timetable_entries.get()
+        entry = submission.timetable_entries.order_by('-meeting__start').first()
         for task in specialist_reviews:
             entry.participations.create(user=task.assigned_to, task=task)
