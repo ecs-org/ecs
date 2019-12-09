@@ -322,7 +322,7 @@ def readonly_submission_form(request, submission_form_pk=None, submission_form=N
                 form.close_date = n['close_date']
                 break
 
-    presenting_users = submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
+    presenting_users = submission.current_submission_form.get_presenting_parties().get_users().union([submission.presenter, submission.susar_presenter])
     if not request.user in presenting_users:
         vote = submission.current_pending_vote or submission.current_published_vote
         context['vote_review_form'] = VoteReviewForm(instance=vote, readonly=True)
