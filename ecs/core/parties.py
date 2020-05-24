@@ -1,9 +1,12 @@
+import logging
 from django.utils.translation import ugettext as _
 from django.utils import timezone
 
 from ecs.users.utils import sudo, get_current_user
 from ecs.communication.utils import send_system_message_template
 from ecs.tasks.models import Task
+
+logger = logging.getLogger(__name__)
 
 
 class Party(object):
@@ -74,6 +77,7 @@ def get_presenting_parties(sf):
         email=sf.sponsor_email, user=sf.sponsor, involvement=_("Sponsor"))
     for i in sf.investigators.filter(main=True):
         parties.add(organization=i.organisation, name=i.contact.full_name, user=i.user, email=i.email, involvement=_("Primary Investigator"))
+    logger.warn(str(parties))
     return parties
 
 def get_reviewing_parties(sf, active=None):
