@@ -5,6 +5,8 @@
 #            55ae93ec9df04d6abfc8d233ec5ccf8e
 #            5615dfbaf8c8445d960d1e2cd9c00dc3
 #            c890205dcb7543c8a76bf324512c5f81
+# 2020-05-31 changed representation of uuid: e4dcd05a31ad475ca72dea7b84ef030e to
+#            Ethikkommission der Medizinischen Fakultät der JKU
 
 commissions = [{
     'uuid': '23d805c6b5f14d8b9196a12005fd2961',
@@ -56,7 +58,7 @@ commissions = [{
     'name': 'Ethikkommission Krankenhaus Elisabethinen',
 }, {
     'uuid': 'e4dcd05a31ad475ca72dea7b84ef030e',
-    'name': 'Ethikkommission des Landes Ober\u00f6sterreich',
+    'name': 'Ethikkommission der Medizinischen Fakult\u00e4t der JKU',
 }, {
     'uuid': 'e269491bb9c040aaad6a5f11df343f38',
     'name': 'Ethikkommission Krankenhaus Barmh.Br\u00fcder - Linz',
