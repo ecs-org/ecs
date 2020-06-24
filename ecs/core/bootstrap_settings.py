@@ -2,11 +2,15 @@
 # 2017-01-26 added Karl Landsteiner Privatuniversität
 # 2018-12-06 added Ethik-Kommission der Vinzenz Gruppe Wien
 # 2019-02-04 added "Nicht verwenden: " to name of three EC's
-#            55ae93ec9df04d6abfc8d233ec5ccf8e
-#            5615dfbaf8c8445d960d1e2cd9c00dc3
-#            c890205dcb7543c8a76bf324512c5f81
+#               55ae93ec9df04d6abfc8d233ec5ccf8e
+#               5615dfbaf8c8445d960d1e2cd9c00dc3
+#               c890205dcb7543c8a76bf324512c5f81
 # 2020-05-31 changed representation of uuid: e4dcd05a31ad475ca72dea7b84ef030e to
-#            Ethikkommission der Medizinischen Fakultät der JKU
+#               Ethikkommission der Medizinischen Fakultät der JKU
+# 2020-06-24 added "Nicht verwenden: " to name of three EC's
+#               e269491bb9c040aaad6a5f11df343f38
+#               1cca34032077445d95dabf7802fade28
+#               6688ce16a3b84d42b1531389e6039891
 
 commissions = [
     {
@@ -71,7 +75,7 @@ commissions = [
     },
     {
         "uuid": "6688ce16a3b84d42b1531389e6039891",
-        "name": "Ethikkommission Krankenhaus Elisabethinen",
+        "name": "Nicht verwenden: Ethikkommission Krankenhaus Elisabethinen",
     },
     {
         "uuid": "e4dcd05a31ad475ca72dea7b84ef030e",
@@ -79,11 +83,11 @@ commissions = [
     },
     {
         "uuid": "e269491bb9c040aaad6a5f11df343f38",
-        "name": "Ethikkommission Krankenhaus Barmh.Br\u00fcder - Linz",
+        "name": "Nicht verwenden: Ethikkommission Krankenhaus Barmh.Br\u00fcder - Linz",
     },
     {
         "uuid": "1cca34032077445d95dabf7802fade28",
-        "name": "Ethikkommission Krankenhaus Barmh.Schwestern - Linz",
+        "name": "Nicht verwenden: Ethikkommission Krankenhaus Barmh.Schwestern - Linz",
     },
     {
         "uuid": "39cbb589ef044d27bceb6ee5ac796ae7",
