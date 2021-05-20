@@ -31,4 +31,5 @@ fi
 realpython=$(echo $(which -a python3)| tr " " "\n"| grep "/usr"| sort -r| head -n 1)
 $realpython -m venv $envdir
 . $envdir/bin/activate
+pip install cffi==1.13.2
 pip install $reqs
