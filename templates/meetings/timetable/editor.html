@@ -28,58 +28,61 @@
     <div class="score">Score: {{ score }}</div>
     <ol id="timetable">
     {% for entry in meeting %}
-        <li id="entry_{{ entry.pk }}" class="entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
+        <li id="entry_{{ entry.pk }}" class="d-flex entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
             <span class="dragHandle bg-primary text-white">
                 {{ entry }}
                 {% if not readonly %}
                     <div class="text-center">
                         <span class="fa fa-bars fa-2x"></span>
                     </div>
-                {% endif %}</span>
-            <h4>
-                {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
-                {{ entry.title }}
-                {% if entry.submission %}
-                    <a href="{% url 'view_submission' submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
-                    {{ entry.submission.project_title_display }}
                 {% endif %}
-            </h4>
-            {% with entry|last_recessed_vote as vote %}
-                {% if vote %}
-                    <span class="float-right mr-3">
-                        ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})
-                    </span>
-                {% endif %}
-            {% endwith %}
-            {% if not readonly %}
-                {% if not entry.submission %}
-                    <a class="open-in-widget remove fa fa-times text-danger" href="{% url 'ecs.meetings.views.remove_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}"></a>
-                {% endif %}
-                <form action="{% url 'ecs.meetings.views.update_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}" method="post" class="open-in-widget">
-                    {% csrf_token %}
-                    <input type="text" value="{{ entry.duration }}" name="duration" class="duration" />
-                    <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start" />
-                </form>
-            {% endif %}
-            {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
-            {% if not entry.is_break%}
-                {% if entry.submission or entry.users %}
-                <span class="users">Teilnehmer: 
-                    {% if entry.submission.invite_primary_investigator_to_meeting %}
-                        {% with entry.submission.current_submission_form.primary_investigator as pi %}
-                        Prüfer ({{ pi.contact.full_name }}){% if entry.users %},{% endif %}
-                        {% endwith %}
+            </span>
+            <div syle="flex: 1 0 0">
+                <h4>
+                    {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
+                    {{ entry.title }}
+                    {% if entry.submission %}
+                        <a href="{% url 'view_submission' submission_pk=entry.submission.pk %}" target="_blank">{{ entry.submission|ec_number }}</a>
+                        {{ entry.submission.project_title_display }}
                     {% endif %}
-                    {% for user, ignored in entry.users %}
-                        <a href="{% url 'ecs.meetings.views.toggle_participation' meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                </span>
+                </h4>
+                {% with entry|last_recessed_vote as vote %}
+                    {% if vote %}
+                        <span class="float-right mr-3">
+                            ({% trans "Recessed" %}, {% if vote.result == '3a' %}{% trans "not examined" %}{% else %}{% trans "examined" %}{% endif %})
+                        </span>
+                    {% endif %}
+                {% endwith %}
+                {% if not readonly %}
+                    {% if not entry.submission %}
+                        <a class="open-in-widget remove fa fa-times text-danger" href="{% url 'ecs.meetings.views.remove_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}"></a>
+                    {% endif %}
+                    <form action="{% url 'ecs.meetings.views.update_timetable_entry' meeting_pk=meeting.pk entry_pk=entry.pk %}" method="post" class="open-in-widget">
+                        {% csrf_token %}
+                        <input type="text" value="{{ entry.duration }}" name="duration" class="duration" />
+                        <input type="text" value="{{ entry.optimal_start|default:'' }}" name="optimal_start" class="optimal_start" />
+                    </form>
                 {% endif %}
-            {% else %}
-                <span>
-                    Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
-                </span>
-            {% endif %}
+                {% if entry.is_expedited %}E{% endif %} {% if entry.is_retrospective %}R{% endif %} {% if entry.is_thesis %}T{% endif %}
+                {% if not entry.is_break%}
+                    {% if entry.submission or entry.users %}
+                    <span class="users">Teilnehmer: 
+                        {% if entry.submission.invite_primary_investigator_to_meeting %}
+                            {% with entry.submission.current_submission_form.primary_investigator as pi %}
+                            Prüfer ({{ pi.contact.full_name }}){% if entry.users %},{% endif %}
+                            {% endwith %}
+                        {% endif %}
+                        {% for user, ignored in entry.users %}
+                            <a href="{% url 'ecs.meetings.views.toggle_participation' meeting_pk=meeting.pk user_pk=user.pk entry_pk=entry.pk %}" class="open-in-widget{% if ignored %} ignored{% endif %}">{{ user }}</a>{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </span>
+                    {% endif %}
+                {% else %}
+                    <span>
+                        Brötchen: {% trans 'before' %}: {{ entry.broetchen.0 }}, {% trans 'waiting' %}: {{ entry.broetchen.1 }}, {% trans 'after' %}: {{ entry.broetchen.2 }}
+                    </span>
+                {% endif %}    
+            </div>
         </li>
     {% endfor %}
     </ol>
