@@ -29,7 +29,7 @@
     <ol id="timetable">
     {% for entry in meeting %}
         <li id="entry_{{ entry.pk }}" class="d-flex entry{% if entry.is_break %} break{% endif %}{% if not entry.submission %} free{% endif %}{% if entry in meeting.timetable_entries_which_violate_constraints %} violates_constraint{% endif %}{% if entry.has_ignored_participations %} has_ignored_participations{% endif %}">
-            <span class="dragHandle bg-primary text-white">
+            <span class="dragHandle bg-primary text-white" style="flex: 1 0 auto">
                 {{ entry }}
                 {% if not readonly %}
                     <div class="text-center">
@@ -37,7 +37,7 @@
                     </div>
                 {% endif %}
             </span>
-            <div syle="flex: 1 0 0">
+            <div class="overflow-hidden" syle="flex: 1 0 0">
                 <h4>
                     {{ entry.start|date:'H:i' }} - {{ entry.end|date:'H:i' }}
                     {{ entry.title }}
