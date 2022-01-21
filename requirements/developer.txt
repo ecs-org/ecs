@@ -1,4 +1,4 @@
-ipython==4.1.1
+ipython==7.16.3
 pyflakes
 pep8
 django-debug-toolbar
