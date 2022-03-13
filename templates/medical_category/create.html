@@ -1,0 +1,20 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block headertitle %}{% trans "medical_categories" %}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% include "bootstrap/form_field.html" with inline=True %}
+        {% endfor %}
+        <div class="my-4">
+            <input class="btn btn-primary" type="submit" value="{% trans "Add" %}" />
+        </div>
+    </form>
+</div>
+
+{% endblock %}
