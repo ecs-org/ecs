@@ -15,4 +15,5 @@ urlpatterns = (
     url(r'^submission/', include('ecs.core.urls.submission')),
     url(r'^comments/', include('ecs.core.urls.comments')),
     url(r'^catalog/', include('ecs.core.urls.catalog')),
+    url(r'^medical-category/', include('ecs.core.urls.medical_category'))
 )

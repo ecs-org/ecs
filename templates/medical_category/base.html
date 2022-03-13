@@ -1,0 +1,22 @@
+{% extends 'core.html' %}
+{% load i18n %}
+
+{% block htmltitle %}{% trans "header title" %} | {{ block.super }}{% endblock %}
+{% block headertitle %}{% trans "some title" %}{% endblock %}
+
+{% block content %}
+
+{% include 'paginator.html' with page=medical_category %}
+
+<ul class="list-group mb-3">
+    {% for singleCategory in medical_category %}
+        <li class="list-group-item d-block">
+            {{ singleCategory }}
+        </li>
+    {% endfor %}
+    </ul>
+    {{ test }}
+
+{% include 'paginator.html' with page=medical_category %}
+
+{% endblock %}
