@@ -9,7 +9,7 @@ def administration(request):
     limit = 20
     page = request.GET.get('page', 1)
 
-    medical_category_list = MedicalCategory.objects.distinct()
+    medical_category_list = MedicalCategory.objects.distinct().order_by('is_disabled', 'name')
     paginator = Paginator(medical_category_list, limit, allow_empty_first_page=True)
     try:
         medical_category = paginator.page(page)
@@ -58,3 +58,9 @@ def update_medical_category(request, pk):
     return render(request, 'medical_category/update.html', {
         'form': form
     })
+
+def toggle_disabled(request, pk):
+    medical_category = MedicalCategory.objects.filter(id=pk).first()
+    if medical_category is not None:
+        MedicalCategory.objects.filter(id=pk).update(is_disabled=(not medical_category.is_disabled))
+    return redirect('ecs.core.views.medical_category.administration')

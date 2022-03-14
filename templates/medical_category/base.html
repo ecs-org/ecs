@@ -17,7 +17,7 @@
                     <span>{{ singleCategory.name }} ({{ singleCategory.abbrev }})</span>
                     <div>
                         <a class="btn btn-primary mr-3" href="{% url 'ecs.core.views.medical_category.update_medical_category' pk=singleCategory.id %}">{% trans 'edit' %}</a>
-                        <a class="btn btn-secondary">{% trans 'Deactivate' %}</a>
+                        <a class="btn btn-secondary" href="{% url 'ecs.core.views.medical_category.toggle_disabled' pk=singleCategory.id %}">{% trans 'Deactivate' %}</a>
                     </div>
                 </div>
             </li>

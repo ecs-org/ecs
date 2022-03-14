@@ -19,6 +19,7 @@ class EthicsCommission(models.Model):
 class MedicalCategory(models.Model):
     name = models.CharField(max_length=60)
     abbrev = models.CharField(max_length=12, unique=True)
+    is_disabled = models.BooleanField(default=False)
     users = models.ManyToManyField(User, related_name='medical_categories')
 
     def __str__(self):
