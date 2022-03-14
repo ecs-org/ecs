@@ -16,7 +16,7 @@
                 <div class="d-flex justify-content-between">
                     <span>{{ singleCategory.name }} ({{ singleCategory.abbrev }})</span>
                     <div>
-                        <button class="btn btn-primary mr-3">{% trans 'edit' %}</button>
+                        <button class="btn btn-primary mr-3" onclick="window.location='/core/medical-category/{{ singleCategory.id }}'">{% trans 'edit' %}</button>
                         <button class="btn btn-secondary">{% trans 'Deactivate' %}</button>
                     </div>
                 </div>

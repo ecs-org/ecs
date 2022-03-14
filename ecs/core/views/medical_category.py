@@ -31,3 +31,22 @@ def create_medical_category(request):
     return render(request, 'medical_category/create.html', {
         'form': form
     })
+
+def update_medical_category(request, pk):
+    if request.method == 'POST' and request.POST:
+        form = MedicalCategoryCreationForm(request.POST)
+        if form.is_valid():
+            name = form.data.get('name')
+            abbrev = form.data.get('abbrev')
+            MedicalCategory.objects.filter(id=pk).update(name=name, abbrev=abbrev)
+            return redirect('ecs.core.views.medical_category.index')
+    else:
+        medical_category = MedicalCategory.objects.filter(id=pk).first()
+        form = MedicalCategoryCreationForm({
+            "name": medical_category.name,
+            "abbrev": medical_category.abbrev
+        })
+
+    return render(request, 'medical_category/update.html', {
+        'form': form
+    })
