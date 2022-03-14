@@ -12,12 +12,18 @@
     {% include 'paginator.html' with page=medical_category %}
     <ul class="list-group mb-3">
         {% for singleCategory in medical_category %}
-            <li class="list-group-item d-block">
-                <div class="d-flex justify-content-between">
+            <li class="list-group-item d-block" {% if singleCategory.is_disabled %}style="background-color: #f7f7f7;"{% endif %}>
+                <div class="d-flex justify-content-between align-items-center">
                     <span>{{ singleCategory.name }} ({{ singleCategory.abbrev }})</span>
                     <div>
-                        <a class="btn btn-primary mr-3" href="{% url 'ecs.core.views.medical_category.update_medical_category' pk=singleCategory.id %}">{% trans 'edit' %}</a>
-                        <a class="btn btn-secondary" href="{% url 'ecs.core.views.medical_category.toggle_disabled' pk=singleCategory.id %}">{% trans 'Deactivate' %}</a>
+                        <a class="btn btn-secondary" href="{% url 'ecs.core.views.medical_category.toggle_disabled' pk=singleCategory.id %}">
+                            {% if singleCategory.is_disabled %}
+                                {% trans 'Activate' %}
+                            {% else %}
+                                {% trans 'Deactivate' %}
+                            {% endif %}
+                        </a>
+                        <a class="btn btn-primary ml-3" href="{% url 'ecs.core.views.medical_category.update_medical_category' pk=singleCategory.id %}">{% trans 'edit' %}</a>
                     </div>
                 </div>
             </li>
