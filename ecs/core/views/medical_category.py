@@ -44,7 +44,8 @@ def update_medical_category(request, pk):
         if form.is_valid():
             name = form.data.get('name')
             abbrev = form.data.get('abbrev')
-            isAbbrevUnique = MedicalCategory.objects.filter(abbrev=abbrev).first() is None
+            medical_category = MedicalCategory.objects.filter(id=pk).first()
+            isAbbrevUnique = medical_category.abbrev == abbrev or MedicalCategory.objects.filter(abbrev=abbrev).first() is None
             if isAbbrevUnique:
                 MedicalCategory.objects.filter(id=pk).update(name=name, abbrev=abbrev)
                 return redirect('ecs.core.views.medical_category.administration')
