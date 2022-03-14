@@ -3220,3 +3220,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Einstellungen"
+
+msgid "create_new_category"
+msgstr "Neue Kategorie erstellen"

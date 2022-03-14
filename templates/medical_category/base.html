@@ -1,22 +1,30 @@
 {% extends 'core.html' %}
 {% load i18n %}
 
-{% block htmltitle %}{% trans "header title" %} | {{ block.super }}{% endblock %}
-{% block headertitle %}{% trans "some title" %}{% endblock %}
+{% block headertitle %}{% trans "medical_categories" %}{% endblock %}
 
 {% block content %}
 
-{% include 'paginator.html' with page=medical_category %}
 
-<ul class="list-group mb-3">
-    {% for singleCategory in medical_category %}
-        <li class="list-group-item d-block">
-            {{ singleCategory }}
-        </li>
-    {% endfor %}
-    </ul>
-    {{ test }}
+<div class="container">
+    <button class="btn btn-primary mr-3" onclick="window.location='/core/medical-category/new'">{% trans "create_new_category" %}</button>
 
-{% include 'paginator.html' with page=medical_category %}
+    {% include 'paginator.html' with page=medical_category %}
+    <ul class="list-group mb-3">
+        {% for singleCategory in medical_category %}
+            <li class="list-group-item d-block">
+                <div class="d-flex justify-content-between">
+                    <span>{{ singleCategory.name }} ({{ singleCategory.abbrev }})</span>
+                    <div>
+                        <button class="btn btn-primary mr-3">{% trans 'edit' %}</button>
+                        <button class="btn btn-secondary">{% trans 'Deactivate' %}</button>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>    
+    {% include 'paginator.html' with page=medical_category %}
+
+</div>
 
 {% endblock %}
