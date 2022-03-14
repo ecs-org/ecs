@@ -7,7 +7,7 @@
 
 
 <div class="container">
-    <button class="btn btn-primary mr-3" onclick="window.location='/core/medical-category/new'">{% trans "create_new_category" %}</button>
+    <a class="btn btn-primary mr-3" href="{% url 'ecs.core.views.medical_category.create_medical_category' %}">{% trans "create_new_category" %}</a>
 
     {% include 'paginator.html' with page=medical_category %}
     <ul class="list-group mb-3">
@@ -16,8 +16,8 @@
                 <div class="d-flex justify-content-between">
                     <span>{{ singleCategory.name }} ({{ singleCategory.abbrev }})</span>
                     <div>
-                        <button class="btn btn-primary mr-3" onclick="window.location='/core/medical-category/{{ singleCategory.id }}'">{% trans 'edit' %}</button>
-                        <button class="btn btn-secondary">{% trans 'Deactivate' %}</button>
+                        <a class="btn btn-primary mr-3" href="{% url 'ecs.core.views.medical_category.update_medical_category' pk=singleCategory.id %}">{% trans 'edit' %}</a>
+                        <a class="btn btn-secondary">{% trans 'Deactivate' %}</a>
                     </div>
                 </div>
             </li>

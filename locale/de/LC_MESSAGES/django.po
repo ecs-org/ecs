@@ -3223,3 +3223,6 @@ msgstr "Einstellungen"
 
 msgid "create_new_category"
 msgstr "Neue Kategorie erstellen"
+
+msgid "Category Administration"
+msgstr "Kategorienverwaltung"

@@ -5,7 +5,7 @@ from ecs.core.models.core import MedicalCategory
 from ecs.core.models.medical_category import MedicalCategoryCreationForm
 
 # @user_group_required('EC-Office', 'EC-Executive')
-def index(request):
+def administration(request):
     limit = 20
     page = request.GET.get('page', 1)
 
@@ -26,7 +26,7 @@ def create_medical_category(request):
         name = form.data.get('name')
         abbrev = form.data.get('abbrev')
         MedicalCategory.objects.create(name=name, abbrev=abbrev)
-        return redirect('ecs.core.views.medical_category.index')
+        return redirect('ecs.core.views.medical_category.administration')
 
     return render(request, 'medical_category/create.html', {
         'form': form
@@ -39,7 +39,7 @@ def update_medical_category(request, pk):
             name = form.data.get('name')
             abbrev = form.data.get('abbrev')
             MedicalCategory.objects.filter(id=pk).update(name=name, abbrev=abbrev)
-            return redirect('ecs.core.views.medical_category.index')
+            return redirect('ecs.core.views.medical_category.administration')
     else:
         medical_category = MedicalCategory.objects.filter(id=pk).first()
         form = MedicalCategoryCreationForm({
