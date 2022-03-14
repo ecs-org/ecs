@@ -44,8 +44,10 @@ def update_medical_category(request, pk):
         if form.is_valid():
             name = form.data.get('name')
             abbrev = form.data.get('abbrev')
-            MedicalCategory.objects.filter(id=pk).update(name=name, abbrev=abbrev)
-            return redirect('ecs.core.views.medical_category.administration')
+            isAbbrevUnique = MedicalCategory.objects.filter(abbrev=abbrev).first() is None
+            if isAbbrevUnique:
+                MedicalCategory.objects.filter(id=pk).update(name=name, abbrev=abbrev)
+                return redirect('ecs.core.views.medical_category.administration')
     else:
         medical_category = MedicalCategory.objects.filter(id=pk).first()
         form = MedicalCategoryCreationForm({
