@@ -21,12 +21,18 @@ def administration(request):
     })
 
 def create_medical_category(request):
-    form = MedicalCategoryCreationForm(request.POST)
+    form = MedicalCategoryCreationForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         name = form.data.get('name')
         abbrev = form.data.get('abbrev')
-        MedicalCategory.objects.create(name=name, abbrev=abbrev)
-        return redirect('ecs.core.views.medical_category.administration')
+        isAbbrevUnique = MedicalCategory.objects.filter(abbrev=abbrev).first() is None
+        if isAbbrevUnique:
+            MedicalCategory.objects.create(name=name, abbrev=abbrev)
+            return redirect('ecs.core.views.medical_category.administration')
+        else:
+            return render(request, 'medical_category/create.html', {
+                'form': form
+            })
 
     return render(request, 'medical_category/create.html', {
         'form': form
@@ -34,7 +40,7 @@ def create_medical_category(request):
 
 def update_medical_category(request, pk):
     if request.method == 'POST' and request.POST:
-        form = MedicalCategoryCreationForm(request.POST)
+        form = MedicalCategoryCreationForm(request.POST or None)
         if form.is_valid():
             name = form.data.get('name')
             abbrev = form.data.get('abbrev')
