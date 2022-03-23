@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from ecs.core.models import Submission
 from ecs.core.models.constants import SUBMISSION_LANE_BOARD, SUBMISSION_LANE_EXPEDITED
 from ecs.core.forms.utils import ReadonlyFormMixin
+from ecs.core.models.core import MedicalCategory
 from ecs.utils.formutils import require_fields
 
 
@@ -21,6 +22,10 @@ class CategorizationForm(ReadonlyFormMixin, forms.ModelForm):
             'remission': _('remission'),
             'invite_primary_investigator_to_meeting': _('invite_primary_investigator_to_meeting'),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['medical_categories'].queryset = MedicalCategory.objects.filter(is_disabled=False)
 
     def clean(self):
         cd = self.cleaned_data
