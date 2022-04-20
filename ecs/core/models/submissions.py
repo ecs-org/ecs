@@ -688,7 +688,7 @@ class SubmissionForm(models.Model):
         if self.is_amg:
             bits.append('{0}({1})'.format(_('AMG'), self.get_submission_type_display()))
         if self.is_mpg:
-            bits.append(_('MPG'))
+            bits.append('{0}({1})'.format(_('MPG'), self.get_submission_type_display()))
         if self.is_thesis:
             bits.append(self.get_project_type_education_context_display())
         if self.includes_minors:

@@ -132,7 +132,7 @@
                 {% if submission_form.is_amg %}
                     {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
                 {% endif %}
-                {% if submission_form.is_mpg %}{% trans "MPG" %}{% endif %}
+                {% if submission_form.is_mpg %}{% trans "MPG" %}({{ submission_form.get_submission_type_display }}){% endif %}
                 {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
                 {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
             </p>
