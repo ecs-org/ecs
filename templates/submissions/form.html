@@ -223,6 +223,14 @@
                 ecs.mainForm.submit('validate');
             });
 
+            $('#tabs-6 #id_submission_type').on('input', function() {
+                $('#tabs-7 #id_submission_type').val(this.value);
+            });
+
+            $('#tabs-7 #id_submission_type').on('input', function() {
+                $('#tabs-6 #id_submission_type').val(this.value);
+            });
+
             $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
