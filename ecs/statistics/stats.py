@@ -57,12 +57,15 @@ STATS_TEMPLATE = OrderedDict((
         _Entry('monocentric', _('Monocentric AMG studies'), '3.4'),
     )),
     ('mpg', _Section(_('In accord with MPG'),
+        _Entry('multicentric_main', _('Main Ethics Commission'), '4.1'),
+        _Entry('multicentric_local', _('Local Ethics Commission'), '4.2'),
+        _Entry('monocentric', _('Monocentric AMG studies'), '4.3'),
         _Entry('ce_certified_for_exact_indications',
-            _('CE certified for exact indications'), '4.1', with_listing=True),
+            _('CE certified for exact indications'), '4.5', with_listing=True),
         _Entry('ce_certified_for_other_indications',
-            _('CE certified for other indications'), '4.2', with_listing=True),
-        _Entry('no_ce', _('Without CE marking'), '4.3', with_listing=True),
-        _Entry('also_amg', _('Studies in accord with AMG and MPG'), '4.4', with_listing=True),
+            _('CE certified for other indications'), '4.6', with_listing=True),
+        _Entry('no_ce', _('Without CE marking'), '4.7', with_listing=True),
+        _Entry('also_amg', _('Studies in accord with AMG and MPG'), '4.8', with_listing=True),
     )),
 ))
 
@@ -126,6 +129,13 @@ def collect_submission_stats_for_year(year):
             'amg.multicentric_local':
                 sf.is_amg and sf.is_categorized_multicentric_and_local,
             'amg.monocentric': sf.is_amg and
+                sf.is_categorized_monocentric and sf.is_monocentric,
+            'mpg.multicentric_main':
+                sf.is_mpg and sf.is_categorized_multicentric_and_main or
+                (sf.is_categorized_monocentric and sf.is_multicentric),
+            'mpg.multicentric_local':
+                sf.is_mpg and sf.is_categorized_multicentric_and_local,
+            'mpg.monocentric': sf.is_mpg and
                 sf.is_categorized_monocentric and sf.is_monocentric,
             'mpg.ce_certified_for_exact_indications': sf.is_mpg and
                 sf.medtech_ce_symbol and sf.medtech_certified_for_exact_indications,
