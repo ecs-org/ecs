@@ -34,7 +34,7 @@ def on_vote_published(sender, **kwargs):
             submission=sf.submission,
             reply_receiver=reply_receiver)
     receivers = set()
-    if (sf.is_amg and not sf.is_categorized_multicentric_and_local) or sf.is_mpg:
+    if (sf.is_amg and not sf.is_categorized_multicentric_and_local) or (sf.is_mpg and not sf.is_categorized_multicentric_and_local):
         receivers |= set(settings.ECS_AMG_MPG_VOTE_RECEIVERS)
     if sf.is_categorized_multicentric_and_main:
         investigators = sf.investigators.filter(ethics_commission__vote_receiver__isnull=False)
