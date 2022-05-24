@@ -1841,6 +1841,12 @@ msgstr "Lokal zuständige Ethikkommission"
 msgid "Monocentric AMG studies"
 msgstr "Monozentrische AMG Studien"
 
+msgid "Monocentric MPG studies"
+msgstr "Monozentrische MPG Studien"
+
+msgid "Studies not categorized"
+msgstr "Nicht kategorisierte Studien nach altem ECS"
+
 msgid "CE certified for exact indications"
 msgstr "Mit CE Kennzeichen innerhalb der Zweckbestimmung"
 
