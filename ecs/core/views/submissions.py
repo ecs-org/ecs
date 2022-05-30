@@ -806,6 +806,12 @@ def create_submission_form(request):
             return redirect('readonly_submission_form',
                 submission_form_pk=submission_form.submission.current_submission_form.pk)
 
+    # logging.error(submission.current_submission_form)
+    # If this form is new, we assume it is the new medtech law
+    if submission is None:
+        is_new_mpg = True
+    is_old_mpg = submission is not None and submission.current_submission_form.is_mpg and submission.current_submission_form.submission_type is None
+
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,
@@ -813,6 +819,7 @@ def create_submission_form(request):
         'submission': submission,
         'notification_type': notification_type,
         'protocol_uploaded': protocol_uploaded,
+        'is_new_mpg': is_new_mpg
     }
     for prefix, formset in formsets.items():
         context['%s_formset' % prefix] = formset
