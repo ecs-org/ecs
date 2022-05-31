@@ -226,8 +226,8 @@
             $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
-            $('#tabs-7 #id_medtech_is_new_law').parent().parent().hide();
-            {% if is_new_mpg %}
+            var is_new_law = $('#tabs-7 #id_medtech_is_new_law').val();
+            if (is_new_law == 2) {
                 $('#tabs-6 #id_submission_type').on('input', function() {
                     $('#tabs-7 #id_submission_type').val(this.value);
                 });
@@ -235,11 +235,11 @@
                 $('#tabs-7 #id_submission_type').on('input', function() {
                     $('#tabs-6 #id_submission_type').val(this.value);
                 });
-                $('#tabs-7 #id_medtech_is_new_law').val(2);
-            {% else %}
-                $('#tabs-7 #id_medtech_is_new_law').val(3);
+            } else if (is_new_law == 3) {
+                // $('#tabs-7 #id_submission_type').val('');
                 $('#tabs-7 #id_submission_type').prop('disabled', true);
-            {% endif %}
+            }
+
             {% if valid %}
                 ecs.confirm({
                     question: '{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}',
