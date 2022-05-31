@@ -226,6 +226,14 @@
             $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
             
+            // Disabled values won't be submitted with <form>. Create a visual clone that is disabled while the other is hidden with display: none
+            // The display: none <select> will be submitted
+            var medtech_is_new_law = $('#tabs-7 #id_medtech_is_new_law');
+            var clone = medtech_is_new_law.clone();
+            clone.hide();
+            medtech_is_new_law.after(clone);
+            medtech_is_new_law.prop('disabled', true);
+
             var is_new_law = $('#tabs-7 #id_medtech_is_new_law').val();
             if (is_new_law == 2) {
                 $('#tabs-6 #id_submission_type').on('input', function() {
@@ -235,8 +243,8 @@
                 $('#tabs-7 #id_submission_type').on('input', function() {
                     $('#tabs-6 #id_submission_type').val(this.value);
                 });
-            } else if (is_new_law == 3) {
-                // $('#tabs-7 #id_submission_type').val('');
+            } else if (is_new_law == 1 || is_new_law == 3) {
+                $('#tabs-7 #id_submission_type').val('');
                 $('#tabs-7 #id_submission_type').prop('disabled', true);
             }
 
