@@ -7,16 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0044_auto_20170203_1351'),
+        ('core', '0045_submissionform_medtech_is_new_law'),
     ]
 
     operations = [
-        migrations.AddField(
+        migrations.AlterField(
             model_name='submissionform',
             name='medtech_is_new_law',
-            field=models.NullBooleanField(default=False),
+            field=models.NullBooleanField(default=True),
         ),
-        migrations.RunSQL('''
-            UPDATE core_submissionform SET medtech_is_new_law = false;
-        '''),
     ]
