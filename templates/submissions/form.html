@@ -225,7 +225,7 @@
 
             $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
-            
+
             $('#id_medtech_is_new_law').parent().parent().hide();
             var is_new_law = $('#id_medtech_is_new_law').prop("checked");
             if (is_new_law) {
