@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='submissionform',
             name='medtech_is_new_law',
-            field=models.NullBooleanField(default=False),
+            field=models.BooleanField(default=True),
         ),
         migrations.RunSQL('''
             UPDATE core_submissionform SET medtech_is_new_law = false;
