@@ -3,8 +3,10 @@ from django.core.paginator import Paginator
 
 from ecs.core.models.core import MedicalCategory
 from ecs.core.models.medical_category import MedicalCategoryCreationForm
+from ecs.users.utils import user_group_required
 
 # @user_group_required('EC-Office', 'EC-Executive')
+@user_group_required('EC-Office')
 def administration(request):
     limit = 20
     page = request.GET.get('page', 1)
@@ -20,6 +22,7 @@ def administration(request):
         'medical_category': medical_category
     })
 
+@user_group_required('EC-Office')
 def create_medical_category(request):
     form = MedicalCategoryCreationForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -38,6 +41,7 @@ def create_medical_category(request):
         'form': form
     })
 
+@user_group_required('EC-Office')
 def update_medical_category(request, pk):
     if request.method == 'POST' and request.POST:
         form = MedicalCategoryCreationForm(request.POST or None)
@@ -60,6 +64,7 @@ def update_medical_category(request, pk):
         'form': form
     })
 
+@user_group_required('EC-Office')
 def toggle_disabled(request, pk):
     medical_category = MedicalCategory.objects.filter(id=pk).first()
     if medical_category is not None:
