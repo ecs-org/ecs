@@ -952,6 +952,9 @@ msgstr "Nachkontrollen"
 msgid "Expected total duration of the study"
 msgstr "Voraussichtliche Gesamtdauer der Studie"
 
+msgid "Is new medtech law"
+msgstr "Neues MPG Recht"
+
 msgid "Submit as"
 msgstr "Einreichen als"
 
@@ -1840,6 +1843,12 @@ msgstr "Lokal zuständige Ethikkommission"
 
 msgid "Monocentric AMG studies"
 msgstr "Monozentrische AMG Studien"
+
+msgid "Monocentric MPG studies"
+msgstr "Monozentrische MPG Studien"
+
+msgid "Studies not categorized"
+msgstr "Nicht kategorisierte Studien nach altem ECS"
 
 msgid "CE certified for exact indications"
 msgstr "Mit CE Kennzeichen innerhalb der Zweckbestimmung"

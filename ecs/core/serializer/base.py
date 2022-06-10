@@ -17,7 +17,7 @@ from ecs.core.models import (
 from ecs.documents.models import Document, DocumentType
 from ecs.core.paper_forms import get_field_info
 
-CURRENT_SERIALIZER_VERSION = '1.3'
+CURRENT_SERIALIZER_VERSION = '1.4'
 DATETIME_FORMAT = '%Y-%m-%dT%H:%M:%S+01:00'
 DATE_FORMAT = '%Y-%m-%d'
 DATA_JSON_NAME = 'data.json'
@@ -58,6 +58,8 @@ CHANGELOG = (
     ('*', '1.2'),
     ('-', SubmissionForm, 'sponsor_agrees_to_publishing', True),
     ('*', '1.3'),
+    ('+', SubmissionForm, 'medtech_is_new_law', False),
+    ('*', '1.4'),
 )
 
 class FieldDocs(object):

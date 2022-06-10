@@ -363,6 +363,7 @@ class SubmissionForm(models.Model):
     # 3b (via NonTestedUsedDrugs)
     
     # 4.x
+    medtech_is_new_law = models.BooleanField(default=True)
     medtech_product_name = models.CharField(max_length=210, null=True, blank=True)
     medtech_manufacturer = models.CharField(max_length=80, null=True, blank=True)
     medtech_certified_for_exact_indications = models.NullBooleanField(blank=True)
@@ -688,7 +689,7 @@ class SubmissionForm(models.Model):
         if self.is_amg:
             bits.append('{0}({1})'.format(_('AMG'), self.get_submission_type_display()))
         if self.is_mpg:
-            bits.append(_('MPG'))
+            bits.append('{0}({1})'.format(_('MPG'), self.get_submission_type_display()))
         if self.is_thesis:
             bits.append(self.get_project_type_education_context_display())
         if self.includes_minors:
