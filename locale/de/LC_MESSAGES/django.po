@@ -952,9 +952,6 @@ msgstr "Nachkontrollen"
 msgid "Expected total duration of the study"
 msgstr "Voraussichtliche Gesamtdauer der Studie"
 
-msgid "Is new medtech law"
-msgstr "Neues MPG Recht"
-
 msgid "Submit as"
 msgstr "Einreichen als"
 
