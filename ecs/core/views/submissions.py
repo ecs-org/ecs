@@ -806,6 +806,7 @@ def create_submission_form(request):
             return redirect('readonly_submission_form',
                 submission_form_pk=submission_form.submission.current_submission_form.pk)
 
+
     context = {
         'form': form,
         'tabs': SUBMISSION_FORM_TABS,

@@ -201,6 +201,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('3.2.5', 'substance_p_c_t_gcp_rules', _('Were the clinical tests made according to GCP guidelines')),
     FieldInfo('3.2.6', 'substance_p_c_t_final_report', _('Does a final report exist?'), help_text=_("If yes, upload the investigator's brochure, relevant data or a report of the Pharmaceutical Advisory Council using the upload tab")),
     # 4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt
+    FieldInfo(None, 'medtech_is_new_law', _('Is new medtech law')),
     FieldInfo('4.1', 'medtech_product_name', _('Name of the product')),
     FieldInfo('4.2', 'medtech_manufacturer', _('Manufacturer')),
     FieldInfo('4.3', 'medtech_certified_for_exact_indications', _('Certified for this indication')),
