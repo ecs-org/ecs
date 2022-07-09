@@ -133,9 +133,6 @@
                                     <a class="dropdown-item" href="{% url 'ecs.users.views.administration' %}">
                                         {% trans "User Administration" %}
                                     </a>
-                                    <a class="dropdown-item" href="{% url 'ecs.core.views.medical_category.administration' %}">
-                                        {% trans "Category Administration" %}
-                                    </a>
                                     <a class="dropdown-item" href="{% url 'ecs.billing.views.submission_billing' %}">
                                         {% trans "Accounting of fees" %}
                                     </a>
@@ -144,6 +141,11 @@
                                     </a>
                                     <a class="dropdown-item" href="{% url 'ecs.core.views.administration.advanced_settings' %}">
                                         {% trans 'Advanced Settings' %}
+                                    </a>
+                                {% endif %}
+                                {% if user|is_member_of:"EC-Executive" %}
+                                    <a class="dropdown-item" href="{% url 'ecs.core.views.medical_category.administration' %}">
+                                        {% trans "Category Administration" %}
                                     </a>
                                 {% endif %}
                                 <a class="dropdown-item" href="{% url 'ecs.statistics.views.stats' %}">
