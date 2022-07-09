@@ -1,6 +1,6 @@
 {% extends 'shell.html' %}
 {% load compress i18n staticfiles widget_tweaks %}
-{% load alert communication core scratchpad userswitcher userutils version_tag %}
+{% load alert communication core scratchpad userswitcher userutils version_tag date_time_changed_tag %}
 
 {% block htmlcss %}
     {{ block.super }}
@@ -194,7 +194,8 @@
                             {% endfor %}
                         {% endif %}
                     {% endif %}
-                    {% current_version %}
+                    {% trans 'date of last modification:' %}
+                    {% date_time_changed %}
                 </small>
             </div>
         </div>

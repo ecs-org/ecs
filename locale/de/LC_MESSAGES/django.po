@@ -3226,3 +3226,6 @@ msgstr ""
 
 msgid "Settings"
 msgstr "Einstellungen"
+
+msgid "date of last modification:"
+msgstr "Datum der letzten Änderung:"

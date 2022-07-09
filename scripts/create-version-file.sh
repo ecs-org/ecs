@@ -10,6 +10,7 @@ creates a file with following entries:
 ECS_VERSION= "branch shorthash commitmessage"
 ECS_GIT_REV= "long git hash"
 ECS_GIT_BRANCH= "git branch name"
+ECS_CHANGED= "date and time of execution"
 
 information is taken (in order) from
     * environment variables GIT_REV and GIT_BRANCH,
@@ -44,4 +45,5 @@ cat > $versionfile << EOF
 ECS_VERSION=$ECS_VERSION
 ECS_GIT_BRANCH="$ECS_GIT_BRANCH"
 ECS_GIT_REV="$ECS_GIT_REV"
+ECS_CHANGED="$(date +"%d.%m.%Y %H:%M")"
 EOF

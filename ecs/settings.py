@@ -365,11 +365,12 @@ except ImportError:
 # try to get ECS_VERSION, ECS_GIT_REV from version.py
 if not all([k in locals() for k in ['ECS_VERSION', 'ECS_GIT_REV', 'ECS_GIT_BRANCH']]):
     try:
-        from ecs.version import ECS_VERSION, ECS_GIT_REV, ECS_GIT_BRANCH
+        from ecs.version import ECS_VERSION, ECS_GIT_REV, ECS_GIT_BRANCH, ECS_CHANGED
     except ImportError:
         ECS_VERSION = 'unknown'
         ECS_GIT_BRANCH = 'unknown'
         ECS_GIT_REV = 'badbadbadbadbadbadbadbadbadbadbadbadbad0'
+        ECS_CHANGED = 'unknown'
 
 DEFAULT_FROM_EMAIL = SERVER_EMAIL = 'noreply@{}'.format(DOMAIN)
 
