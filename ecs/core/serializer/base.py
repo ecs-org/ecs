@@ -58,8 +58,6 @@ CHANGELOG = (
     ('*', '1.2'),
     ('-', SubmissionForm, 'sponsor_agrees_to_publishing', True),
     ('*', '1.3'),
-    ('+', SubmissionForm, 'medtech_is_new_law', False),
-    ('*', '1.4'),
 )
 
 class FieldDocs(object):
