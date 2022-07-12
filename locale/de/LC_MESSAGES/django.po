@@ -591,6 +591,9 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommission"
 
+msgid "MPG \"old\""
+msgstr "MPG \"alt\""
+
 msgid "individual-related"
 msgstr "personenbezogen"
 
@@ -953,7 +956,7 @@ msgid "Expected total duration of the study"
 msgstr "Voraussichtliche Gesamtdauer der Studie"
 
 msgid "Submit as"
-msgstr "Einreichen als"
+msgstr "AMG/MPG Studie einreichen als"
 
 msgid "Registration in other states?"
 msgstr "Registrierung in anderen Staaten?"
@@ -3232,3 +3235,6 @@ msgstr "Neue Kategorie erstellen"
 
 msgid "Category Administration"
 msgstr "Kategorienverwaltung"
+
+msgid "submission_type_help"
+msgstr "Für klinische Prüfungen, die bereits vor dem 01.07.2021 bei einer Ethikkommission in Österreich eingereicht wurden ist eine Zentrumsneumeldung nach MPG \"alt\" einzureichen. Für Erstanträge ab dem 01.07.2021 gilt das Medizinproduktegesetz 2021. Gemäß § 17 gilt analog wie bei klinischen Prüfungen von Arzneimitteln das LEK/LOK-Verfahren."

@@ -37,11 +37,6 @@ AMG_REQUIRED_FIELDS = (
 AMG_FIELDS = AMG_REQUIRED_FIELDS + ('substance_registered_in_countries', 'substance_p_c_t_countries','substance_p_c_t_phase', 'substance_p_c_t_period',
     'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',)
 
-MPG_NEW_LAW_FIELDS = (
-    'medtech_is_new_law',
-    'submission_type',
-)
-
 MPG_FIELDS = (
     'medtech_checked_product', 'medtech_reference_substance',
     'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol',
@@ -123,7 +118,7 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
             'study_plan_planned_statalgorithm', 'study_plan_dataquality_checking', 'study_plan_datamanagement',
             'study_plan_biometric_planning', 'study_plan_statistics_implementation', 'study_plan_dataprotection_choice', 'study_plan_dataprotection_reason',
             'study_plan_dataprotection_dvr', 'study_plan_dataprotection_anonalgoritm', 'submitter_email',
-        ) + AMG_FIELDS + MPG_NEW_LAW_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
+        ) + AMG_FIELDS + MPG_FIELDS + INSURANCE_FIELDS
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -146,8 +141,6 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
 
         if cleaned_data.get('project_type_medical_device', False):
             require_fields(self, MPG_FIELDS)
-            if cleaned_data.get('medtech_is_new_law', False):
-                require_fields(self, MPG_NEW_LAW_FIELDS)
 
         if any(cleaned_data.get(f, False) for f in ('project_type_medical_device_without_ce', 'project_type_reg_drug', 'project_type_non_reg_drug')):
             require_fields(self, INSURANCE_FIELDS)
@@ -170,6 +163,9 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
             require_fields(self, ('substance_p_c_t_phase', 'substance_p_c_t_period', 'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',))
 
         require_fields(self, ('subject_males',))
+
+        if any(cleaned_data.get(f, False) for f in ('project_type_reg_drug', 'project_type_non_reg_drug', 'project_type_medical_device')):
+            require_fields(self, ('submission_type',))
         return cleaned_data
 
     def save(self, commit=True):

@@ -50,8 +50,9 @@ SUBMISSION_FORM_TABS = (
             'project_type_medical_method', 'project_type_medical_device', 'project_type_medical_device_with_ce', 'project_type_medical_device_without_ce',
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_nursing_study',
-            'project_type_gender_medicine', 'project_type_misc', 'project_type_education_context',
-            'specialism', 'clinical_phase', 'already_voted',
+            'project_type_gender_medicine',
+            'submission_type',
+            'project_type_misc', 'project_type_education_context', 'specialism', 'clinical_phase', 'already_voted',
         ]),
     ]),
     Tab('participants', _('participant'), [
@@ -99,7 +100,7 @@ SUBMISSION_FORM_TABS = (
     Tab('amg', _('AMG'), [
         (_('drug trial'), ['eudract_number', 'pharma_checked_substance', 'pharma_reference_substance']),
         (_('AMG'), [
-            'submission_type','substance_registered_in_countries', 'substance_preexisting_clinical_tries',
+            'substance_registered_in_countries', 'substance_preexisting_clinical_tries',
             'substance_p_c_t_countries', 'substance_p_c_t_phase', 'substance_p_c_t_period',
             'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',
 
@@ -108,8 +109,6 @@ SUBMISSION_FORM_TABS = (
     Tab('mpg', _('MPG'), [
         (_('Medical Device Study'), ['medtech_checked_product', 'medtech_reference_substance']),
         (_('MPG'), [
-            'medtech_is_new_law',
-            'submission_type',
             'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications',
             'medtech_ce_symbol', 'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
         ]),
