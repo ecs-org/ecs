@@ -224,7 +224,10 @@
             });
 
             changeSubmissionTypeSelection();
-            $('#id_project_type_non_reg_drug, #id_project_type_reg_drug, #id_project_type_medical_device').on('change', changeSubmissionTypeSelection);
+            $('#id_project_type_non_reg_drug, #id_project_type_reg_drug, #id_project_type_medical_device').on('change', function() {
+                $('#id_submission_type').val('');
+                changeSubmissionTypeSelection();
+            });
 
             function changeSubmissionTypeSelection() {
                 function hideEverything() {
