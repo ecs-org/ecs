@@ -17,7 +17,7 @@ from ecs.core.models.constants import (
     MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
     SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
     SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
-    SUBMISSION_TYPE_MULTICENTRIC,
+    SUBMISSION_TYPE_MULTICENTRIC, SUBMISSION_TYPE_OLD_LAW,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import (
@@ -255,7 +255,7 @@ class SubmissionForm(models.Model):
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
-    submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES, default=SUBMISSION_TYPE_MONOCENTRIC)
+    submission_type = models.SmallIntegerField(null=True, blank=True, choices=SUBMISSION_TYPE_CHOICES)
     presenter = models.ForeignKey(User, related_name='presented_submission_forms')
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -593,6 +593,10 @@ class SubmissionForm(models.Model):
     @property
     def is_categorized_multicentric_and_main(self):
         return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC
+    
+    @property
+    def is_categorized_old_law(self):
+        return self.submission_type == SUBMISSION_TYPE_OLD_LAW
     
     @property
     def includes_minors(self):

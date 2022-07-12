@@ -163,6 +163,9 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
             require_fields(self, ('substance_p_c_t_phase', 'substance_p_c_t_period', 'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',))
 
         require_fields(self, ('subject_males',))
+
+        if any(cleaned_data.get(f, False) for f in ('project_type_reg_drug', 'project_type_non_reg_drug', 'project_type_medical_device')):
+            require_fields(self, ('submission_type',))
         return cleaned_data
 
     def save(self, commit=True):
