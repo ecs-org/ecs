@@ -31,7 +31,10 @@
             {% with top.submission as submission %}
                 <span class="bold">#{{ top }}</span>
                 {% if submission %}
-                    <span class="bold">EK Nr.</span> {{ submission|ec_number }}<br />
+                    <span class="bold">EK Nr.</span>
+                    {{ submission|ec_number }}
+                    {{ submission.current_submission_form.get_type_display }}
+                    <br />
                     <span class="bold">Antragsteller:</span>
                         {% with submission.current_submission_form.submitter as submitter %}
                             {% if not submitter.first_name or not submitter.last_name %}
