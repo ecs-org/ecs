@@ -450,18 +450,29 @@
                 $(this).toggleClass('table-active', ev.type == 'mouseenter');
             });
 
-	    $('a.delete_docstash').click(function(ev) {
-		ev.preventDefault();
-		var href = $(this).attr('href');
-		ecs.confirm({
-		    question: '{% trans 'Do you want to delete the submission draft?' %}',
+            $('a.delete_docstash').click(function(ev) {
+                ev.preventDefault();
+                var href = $(this).attr('href');
+                ecs.confirm({
+                    question: '{% trans 'Do you want to delete the submission draft?' %}',
                     ok: '{{ _("Delete")|escapejs }}',
                     cancel: '{{ _("Don't Delete")|escapejs }}',
-		    success: function() {
-			window.location.href = href;
-		    }
-		});
-	    });
+                    success: function() {
+                        window.location.href = href;
+                    }
+                });
+            });
+
+
+            var isAmg = $('#id_project_type_non_reg_drug').is(':checked') || $('#id_project_type_reg_drug').is(':checked');
+            var isMpg = $('#id_project_type_medical_device').is(':checked');
+
+            if (!isAmg) {
+                $(".nav-link[href='#tabs-6']").addClass('disabled');
+            }
+            if (!isMpg) {
+                $(".nav-link[href='#tabs-7']").addClass('disabled');
+            }
         });
 
     </script>
