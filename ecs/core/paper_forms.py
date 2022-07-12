@@ -167,6 +167,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.16', 'project_type_non_interventional_study', _('Non-interventional Study (NIS)')),
     FieldInfo('2.1.17', 'project_type_gender_medicine', _('Gender medicine')),
     FieldInfo('2.2', 'specialism', _('special field')),
+    FieldInfo(None, 'submission_type', _('Submit as')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _('Test substances')),
     FieldInfo('2.3.2', 'pharma_reference_substance', _('Reference substance')),
@@ -191,7 +192,6 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.11.2', 'subject_duration_controls', _('Follow-up inspections')),
     FieldInfo('2.12', 'subject_planned_total_duration', _('Expected total duration of the study')),
     # 3a. Betrifft nur Studien gemäß AMG: Angaben zur Prüfsubstanz (falls nicht in Österreich registriert)
-    FieldInfo(None, 'submission_type', _('Submit as')),
     FieldInfo('3.1', 'substance_registered_in_countries', _('Registration in other states?')),
     FieldInfo('3.2', 'substance_preexisting_clinical_tries', _('Are there already results of clinical trials for the tested drug?')),
     FieldInfo('3.2.1', 'substance_p_c_t_countries', _('3.2.1 Countries in which the tests were conducted')),
@@ -201,7 +201,6 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('3.2.5', 'substance_p_c_t_gcp_rules', _('Were the clinical tests made according to GCP guidelines')),
     FieldInfo('3.2.6', 'substance_p_c_t_final_report', _('Does a final report exist?'), help_text=_("If yes, upload the investigator's brochure, relevant data or a report of the Pharmaceutical Advisory Council using the upload tab")),
     # 4. Betrifft nur Studien gemäß MPG: Angaben zum Medizinprodukt
-    FieldInfo(None, 'medtech_is_new_law', _('Is new medtech law')),
     FieldInfo('4.1', 'medtech_product_name', _('Name of the product')),
     FieldInfo('4.2', 'medtech_manufacturer', _('Manufacturer')),
     FieldInfo('4.3', 'medtech_certified_for_exact_indications', _('Certified for this indication')),

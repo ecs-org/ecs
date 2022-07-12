@@ -226,21 +226,6 @@
             $('.upload_container').load(
                 '{% url 'ecs.core.views.submissions.upload_document_for_submission' docstash_key=request.docstash.key %}');
 
-            $('#id_medtech_is_new_law').parent().parent().hide();
-            var is_new_law = $('#id_medtech_is_new_law').prop("checked");
-            if (is_new_law) {
-                $('#tabs-6 #id_submission_type').on('input', function() {
-                    $('#tabs-7 #id_submission_type').val(this.value);
-                });
-
-                $('#tabs-7 #id_submission_type').on('input', function() {
-                    $('#tabs-6 #id_submission_type').val(this.value);
-                });
-            } else {
-                $('#tabs-7 #id_submission_type').val('');
-                $('#tabs-7 #id_submission_type').prop('disabled', true);
-            }
-
             {% if valid %}
                 ecs.confirm({
                     question: '{% if notification_type %}{% trans "You filled out the form correctly. Do you want to create a notification now?" %}{% else %}{% trans "You filled out the form correctly. Do want to submit the study?" %}{% endif %}',

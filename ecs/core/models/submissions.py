@@ -363,7 +363,6 @@ class SubmissionForm(models.Model):
     # 3b (via NonTestedUsedDrugs)
     
     # 4.x
-    medtech_is_new_law = models.BooleanField(default=True)
     medtech_product_name = models.CharField(max_length=210, null=True, blank=True)
     medtech_manufacturer = models.CharField(max_length=80, null=True, blank=True)
     medtech_certified_for_exact_indications = models.NullBooleanField(blank=True)

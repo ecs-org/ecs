@@ -953,7 +953,7 @@ msgid "Expected total duration of the study"
 msgstr "Voraussichtliche Gesamtdauer der Studie"
 
 msgid "Submit as"
-msgstr "Einreichen als"
+msgstr "AMG/MPG Studie einreichen als"
 
 msgid "Registration in other states?"
 msgstr "Registrierung in anderen Staaten?"
