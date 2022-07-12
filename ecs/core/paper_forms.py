@@ -167,7 +167,7 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.16', 'project_type_non_interventional_study', _('Non-interventional Study (NIS)')),
     FieldInfo('2.1.17', 'project_type_gender_medicine', _('Gender medicine')),
     FieldInfo('2.2', 'specialism', _('special field')),
-    FieldInfo(None, 'submission_type', _('Submit as')),
+    FieldInfo(None, 'submission_type', _('Submit as'), help_text=_('submission_type_help')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _('Test substances')),
     FieldInfo('2.3.2', 'pharma_reference_substance', _('Reference substance')),
