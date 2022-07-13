@@ -3238,3 +3238,6 @@ msgstr "Kategorienverwaltung"
 
 msgid "submission_type_help"
 msgstr "Für klinische Prüfungen, die bereits vor dem 01.07.2021 bei einer Ethikkommission in Österreich eingereicht wurden ist eine Zentrumsneumeldung nach MPG \"alt\" einzureichen. Für Erstanträge ab dem 01.07.2021 gilt das Medizinproduktegesetz 2021. Gemäß § 17 gilt analog wie bei klinischen Prüfungen von Arzneimitteln das LEK/LOK-Verfahren."
+
+msgid "date of last modification:"
+msgstr "Datum der letzten Änderung:"
