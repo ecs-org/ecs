@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0045_submissionform_medtech_is_new_law'),
+        ('core', '0046_medicalcategory_is_disabled'),
     ]
 
     operations = [

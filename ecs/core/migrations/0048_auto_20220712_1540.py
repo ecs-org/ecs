@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0046_remove_submissionform_medtech_is_new_law'),
+        ('core', '0047_remove_submissionform_medtech_is_new_law'),
     ]
 
     operations = [
