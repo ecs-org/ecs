@@ -51,7 +51,7 @@ SUBMISSION_FORM_TABS = (
             'project_type_medical_device_performance_evaluation', 'project_type_basic_research', 'project_type_genetic_study', 'project_type_register',
             'project_type_biobank', 'project_type_retrospective', 'project_type_questionnaire', 'project_type_psychological_study', 'project_type_nursing_study',
             'project_type_gender_medicine',
-            'submission_type',
+            'submission_type', 'is_old_medtech',
             'project_type_misc', 'project_type_education_context', 'specialism', 'clinical_phase', 'already_voted',
         ]),
     ]),

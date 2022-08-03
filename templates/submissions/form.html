@@ -223,29 +223,19 @@
                 ecs.mainForm.submit('validate');
             });
 
-            changeSubmissionTypeSelection();
-            $('#id_project_type_non_reg_drug, #id_project_type_reg_drug, #id_project_type_medical_device').on('change', function() {
-                changeSubmissionTypeSelection();
-            });
+            changeOldMedtechState();
+            $('#id_project_type_medical_device').on('change', changeOldMedtechState)
+            function changeOldMedtechState() {
+                $('#id_is_old_medtech').prop('disabled', !$('#id_project_type_medical_device').is(':checked'));
+            }
 
-            function changeSubmissionTypeSelection() {
+            changeSubmissionTypeState();
+            $('#id_project_type_non_reg_drug, #id_project_type_reg_drug, #id_project_type_medical_device').on('change', changeSubmissionTypeState);
+            function changeSubmissionTypeState() {
                 var isAmg = $('#id_project_type_non_reg_drug').is(':checked') || $('#id_project_type_reg_drug').is(':checked');
                 var isMpg = $('#id_project_type_medical_device').is(':checked');
 
-                if (isAmg || isMpg) {
-                    $('#id_submission_type option').each(function () {
-                        if ($(this).val() != 7) {
-                            $(this).show();
-                        }
-                    });
-                } else {
-                    $('#id_submission_type').val('');
-                    $('#id_submission_type option').each(function () {
-                        if ($(this).val() != '') {
-                            $(this).hide();
-                        }
-                    });
-                }
+                $('#id_submission_type').prop('disabled', !(isAmg || isMpg));
             }
 
             $('.upload_container').load(

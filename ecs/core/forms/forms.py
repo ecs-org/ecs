@@ -38,7 +38,7 @@ AMG_FIELDS = AMG_REQUIRED_FIELDS + ('substance_registered_in_countries', 'substa
     'substance_p_c_t_application_type', 'substance_p_c_t_gcp_rules', 'substance_p_c_t_final_report',)
 
 MPG_FIELDS = (
-    'medtech_checked_product', 'medtech_reference_substance',
+    'is_old_medtech', 'medtech_checked_product', 'medtech_reference_substance',
     'medtech_product_name', 'medtech_manufacturer', 'medtech_certified_for_exact_indications', 'medtech_certified_for_other_indications', 'medtech_ce_symbol',
     'medtech_manual_included', 'medtech_technical_safety_regulations', 'medtech_departure_from_regulations',
 )
@@ -74,6 +74,8 @@ class SubmissionFormForm(ReadonlyFormMixin, forms.ModelForm):
         ('2', _('Yes, but only childbearing')),
         ('3', _('No')),
     ))
+
+    is_old_medtech = NullBooleanField(required=False)
 
     # non model fields (required for validation)
     invoice_differs_from_sponsor = forms.BooleanField(required=False, label=_('The account beneficiary is not the sponsor'))
