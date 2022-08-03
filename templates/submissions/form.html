@@ -225,48 +225,26 @@
 
             changeSubmissionTypeSelection();
             $('#id_project_type_non_reg_drug, #id_project_type_reg_drug, #id_project_type_medical_device').on('change', function() {
-                $('#id_submission_type').val('');
                 changeSubmissionTypeSelection();
             });
 
             function changeSubmissionTypeSelection() {
-                function hideEverything() {
-                    $('#id_submission_type option').each(function () {
-                        if ($(this).val() != '') {
-                            $(this).hide();
-                        }
-                    });
-                }
+                var isAmg = $('#id_project_type_non_reg_drug').is(':checked') || $('#id_project_type_reg_drug').is(':checked');
+                var isMpg = $('#id_project_type_medical_device').is(':checked');
 
-                function showBasic() {
+                if (isAmg || isMpg) {
                     $('#id_submission_type option').each(function () {
                         if ($(this).val() != 7) {
                             $(this).show();
                         }
                     });
-                }
-
-                function showOldLaw() {
+                } else {
+                    $('#id_submission_type').val('');
                     $('#id_submission_type option').each(function () {
-                        if ($(this).val() == 7) {
-                            $(this).show();
+                        if ($(this).val() != '') {
+                            $(this).hide();
                         }
                     });
-                }
-
-                var isAmg = $('#id_project_type_non_reg_drug').is(':checked') || $('#id_project_type_reg_drug').is(':checked');
-                var isMpg = $('#id_project_type_medical_device').is(':checked');
-
-                hideEverything();
-                if (isAmg && !isMpg) {
-                    showBasic();
-                } else if(!isAmg && isMpg) {
-                    showBasic();
-                    showOldLaw();
-                } else if (isAmg && isMpg) {
-                    showBasic();
-                } else {
-
                 }
             }
 
