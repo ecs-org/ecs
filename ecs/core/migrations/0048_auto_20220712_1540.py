@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='submissionform',
             name='submission_type',
-            field=models.SmallIntegerField(choices=[(1, 'monocentric'), (2, 'multicentric, main ethics commission'), (6, 'multicentric, local ethics commission'), (7, 'MPG "old"')], null=True, blank=True),
+            field=models.SmallIntegerField(choices=[(1, 'monocentric'), (2, 'multicentric, main ethics commission'), (6, 'multicentric, local ethics commission')], null=True, blank=True),
         ),
     ]

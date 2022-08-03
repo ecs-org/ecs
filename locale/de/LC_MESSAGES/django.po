@@ -591,9 +591,6 @@ msgstr "multizentrisch, Leit-Ethikkommission"
 msgid "multicentric, local ethics commission"
 msgstr "multizentrisch, lokale Ethikkommission"
 
-msgid "MPG \"old\""
-msgstr "MPG \"alt\""
-
 msgid "individual-related"
 msgstr "personenbezogen"
 

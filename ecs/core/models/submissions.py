@@ -17,7 +17,7 @@ from ecs.core.models.constants import (
     MIN_EC_NUMBER, SUBMISSION_INFORMATION_PRIVACY_CHOICES, SUBMISSION_LANE_CHOICES, SUBMISSION_LANE_EXPEDITED,
     SUBMISSION_LANE_RETROSPECTIVE_THESIS, SUBMISSION_LANE_LOCALEC, SUBMISSION_LANE_BOARD,
     SUBMISSION_TYPE_CHOICES, SUBMISSION_TYPE_MONOCENTRIC, SUBMISSION_TYPE_MULTICENTRIC_LOCAL,
-    SUBMISSION_TYPE_MULTICENTRIC, SUBMISSION_TYPE_OLD_LAW,
+    SUBMISSION_TYPE_MULTICENTRIC,
 )
 from ecs.votes.constants import PERMANENT_VOTE_RESULTS, RECESSED_VOTE_RESULTS
 from ecs.core.models.managers import (
@@ -252,6 +252,7 @@ class SubmissionForm(models.Model):
     is_notification_update = models.BooleanField(default=False)
     is_transient = models.BooleanField(default=False)
     is_acknowledged = models.BooleanField(default=False)
+    is_old_medtech = models.NullBooleanField(blank=True)
 
     project_title = models.TextField()
     eudract_number = models.CharField(max_length=60, null=True, blank=True)
@@ -594,9 +595,9 @@ class SubmissionForm(models.Model):
     def is_categorized_multicentric_and_main(self):
         return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC
     
-    @property
-    def is_categorized_old_law(self):
-        return self.submission_type == SUBMISSION_TYPE_OLD_LAW
+    # @property
+    # def is_categorized_old_law(self):
+    #     return self.submission_type == SUBMISSION_TYPE_OLD_LAW
     
     @property
     def includes_minors(self):
