@@ -16,4 +16,8 @@ class Migration(migrations.Migration):
             name='is_old_medtech',
             field=models.NullBooleanField(),
         ),
+        migrations.RunSQL('''
+            UPDATE core_submissionform SET is_old_medtech = true WHERE project_type_medical_device = true;
+            UPDATE core_submissionform SET submission_type = 1 WHERE project_type_medical_device = true and submission_type IS NULL;
+        '''),
     ]
