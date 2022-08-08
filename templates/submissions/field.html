@@ -36,8 +36,8 @@
         <li class="form-group row {{ field.field|type_name }}{% if field.field.required %} required{% endif %}{% if field.errors %} has-danger {% endif %}">
             <label class="col-md-3 col-form-label" for="{{ field.id_for_label }}">
                 {% spaceless %}
-                    {% if readonly and field_info.help_text or field_info.as_icon %}
-                        <span class="fa fa-info text-info" title="{{ field_info.help_text }}"></span>&nbsp;
+                    {% if readonly and field_info.help_text or field_info.icon_text %}
+                        <span class="fa fa-info text-info" title="{{ field_info.icon_text }}"></span>&nbsp;
                     {% endif %}
                     <span>{{ field_info.label|default:field.label }}</span>
                     {% if field_info.number %}
@@ -50,7 +50,7 @@
             </label>
             <div class="col-md-9">
                 {% render_field field class+="form-control" %}
-                {% if not readonly and field_info.help_text and not field_info.as_icon %}
+                {% if not readonly and field_info.help_text %}
                     <div class="text-muted">
                         {{ field_info.help_text }}
                     </div>

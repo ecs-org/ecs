@@ -16,12 +16,12 @@ from ecs.documents.models import Document
 _form_info = {}
 
 class FieldInfo(object):
-    def __init__(self, number, name, paper_label=None, help_text=None, as_icon=False, short_label=None, db_field=True):
+    def __init__(self, number, name, paper_label=None, help_text=None, icon_text=False, short_label=None, db_field=True):
         self.number = number
         self.name = name
         self.paper_label = paper_label
         self.help_text = help_text
-        self.as_icon= as_icon
+        self.icon_text= icon_text
         self.short_label = short_label
         self._db_field = db_field or None
 
@@ -167,8 +167,8 @@ FormInfo(SubmissionForm, fields=(
     FieldInfo('2.1.15', 'project_type_nursing_study', _('Nursing Scientific Study')),
     FieldInfo('2.1.16', 'project_type_non_interventional_study', _('Non-interventional Study (NIS)')),
     FieldInfo('2.1.17', 'project_type_gender_medicine', _('Gender medicine')),
-    FieldInfo(None, 'submission_type', _('Submit as'), help_text=_('submission_type_help'), as_icon=True),
-    FieldInfo(None, 'is_old_medtech', _('is_old_medtech'), help_text=_('is_old_medtech_help')),
+    FieldInfo(None, 'submission_type', _('Submit as')),
+    FieldInfo(None, 'is_old_medtech', _('is_old_medtech'), help_text=_('is_old_medtech_help'), icon_text=_('is_old_medtech_icon')),
     FieldInfo('2.2', 'specialism', _('special field')),
     # 2.3 Arzneimittelstudie (wenn zutreffend)
     FieldInfo('2.3.1', 'pharma_checked_substance', _('Test substances')),
