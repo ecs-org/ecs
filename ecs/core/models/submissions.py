@@ -595,10 +595,6 @@ class SubmissionForm(models.Model):
     def is_categorized_multicentric_and_main(self):
         return self.submission_type == SUBMISSION_TYPE_MULTICENTRIC
     
-    # @property
-    # def is_categorized_old_law(self):
-    #     return self.submission_type == SUBMISSION_TYPE_OLD_LAW
-    
     @property
     def includes_minors(self):
         if self.subject_minage is None:
