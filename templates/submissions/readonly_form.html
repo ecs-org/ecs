@@ -128,13 +128,7 @@
     {% if categorization_form %}
         <div id="categorization_tab" class="container collapse">
             <p>
-                Typ:
-                {% if submission_form.is_amg %}
-                    {% trans "AMG" %}(ECT:{{submission_form.eudract_number }}, {{ submission_form.get_submission_type_display }})
-                {% endif %}
-                {% if submission_form.is_mpg %}{% trans "MPG" %}({{ submission_form.get_submission_type_display }}){% endif %}
-                {% if submission_form.is_thesis %}{{ submission_form.get_project_type_education_context_display }}{% endif %}
-                {% if submission_form.includes_minors %}{% trans "minors" %}{% endif %}
+                Typ: {{ submission_form.get_type_display }}
             </p>
             {% with categorization_form as review_form %}
                 {% include 'submissions/review_form.html' %}
