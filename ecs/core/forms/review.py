@@ -25,7 +25,7 @@ class CategorizationForm(ReadonlyFormMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['medical_categories'].queryset = MedicalCategory.objects.filter(is_disabled=False)
+        self.fields['medical_categories'].queryset = MedicalCategory.objects.filter(is_disabled=False).order_by('name')
 
     def clean(self):
         cd = self.cleaned_data
