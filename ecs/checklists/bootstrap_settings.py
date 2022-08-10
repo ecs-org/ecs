@@ -67,6 +67,6 @@ checklist_questions = {
         Args('4', "Entspricht/ entsprechen die Patienten/Probandeninformation(en) den formalen, inhaltlichen und sprachlichen Anforderungen?"),
     ],
     'localec_review': [
-        Args('1', 'Die Ethikkommission bestätigt als lokale Ethikkommission im Sinne des § 19 (4) Medizinproduktegesetz 2021 die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),     # XXX: dont change this number
+        Args('1', 'Die Ethikkommission bestätigt als lokale Ethikkommission im Sinne des § 41b Abs. 5 AMG idF BGBl. I Nr. 23/2020 oder/und § 19 Abs. 4 Medizinproduktegesetz 2021 idgF die Eignung der Prüfer, seiner Mitarbeiter und die Angemessenheit der Einrichtungen in ihrem Zuständigkeitsbereich.'),     # XXX: dont change this number
     ],
 }
