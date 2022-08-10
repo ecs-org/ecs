@@ -152,7 +152,7 @@ class AdministrationFilterForm(forms.Form):
         label=_('Task Types')
     )
     medical_categories = forms.ModelMultipleChoiceField(required=False,
-        queryset=MedicalCategory.objects.all(), label=_('Medical Categories'))
+        queryset=MedicalCategory.objects.all().order_by('name'), label=_('Medical Categories'))
     keyword = forms.CharField(required=False, label=_('Name/Email'))
     page = forms.CharField(required=False, widget=forms.HiddenInput())
 
@@ -178,7 +178,7 @@ class UserDetailsForm(forms.ModelForm):
         label=_('Task Types')
     )
     medical_categories = forms.ModelMultipleChoiceField(
-        required=False, queryset=MedicalCategory.objects.all(),
+        required=False, queryset=MedicalCategory.objects.all().order_by('name'),
         label=_('Medical Categories'))
 
     class Meta:
