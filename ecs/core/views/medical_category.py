@@ -10,7 +10,7 @@ def administration(request):
     limit = 20
     page = request.GET.get('page', 1)
 
-    medical_category_list = MedicalCategory.objects.distinct().order_by('is_disabled', 'name')
+    medical_category_list = MedicalCategory.objects.all().order_by('is_disabled', 'name')
     paginator = Paginator(medical_category_list, limit, allow_empty_first_page=True)
     try:
         medical_category = paginator.page(page)
