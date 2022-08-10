@@ -25,7 +25,7 @@ class ChecklistQuestion(models.Model):
     blueprint = models.ForeignKey(ChecklistBlueprint, related_name='questions')
     number = models.CharField(max_length=5, db_index=True)
     index = models.IntegerField(db_index=True)
-    text = models.CharField(max_length=250)
+    text = models.CharField(max_length=300)
     description = models.CharField(max_length=500, null=True, blank=True)
     link = models.CharField(max_length=100, null=True, blank=True)
     is_inverted = models.BooleanField(default=False)
